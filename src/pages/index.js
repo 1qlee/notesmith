@@ -7,7 +7,7 @@ import SEO from "../components/seo"
 const IndexPage = ({ data }) => (
   <Layout>
     <SEO title="Home" />
-    <h1>{`${process.env.GATSBY_WELCOME_MESSAGE}`}</h1>
+    <h1>Hello world</h1>
     <div>
       {data.allContentfulProduct.edges.map(({ node: product}) => (
         <p>{product.productName}</p>
