@@ -29,7 +29,7 @@ module.exports = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `Karla\:400,700`,
+          `Spectral\:400,700`,
           `Lora\:400,700`
         ]
       }
@@ -51,5 +51,6 @@ module.exports = {
     // `gatsby-plugin-offline`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    `gatsby-plugin-styled-components`,
   ],
 }
