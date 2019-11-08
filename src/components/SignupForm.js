@@ -120,7 +120,7 @@ function SignupForm(props) {
     <StyledSignupForm id="signup" formHidden={props.formHidden} name="signup" method="POST" data-netlify="true" autocomplete="off">
       <CloseButton onClick={() => props.setFormHidden(true)}/>
       <StyledFieldSet>
-        <input type="hidden" name="signup" value="contact" />
+        <input type="hidden" name="form-name" value="signup" />
         <StyledLabel onClick={() => setInputFocused(true)} inputFocused={inputFocused} htmlFor="email">Enter your email address</StyledLabel>
         <StyledInput
           onFocus={() => setInputFocused(true)}
