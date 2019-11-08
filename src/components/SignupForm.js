@@ -6,23 +6,19 @@ import colors from "../styles/colors"
 const StyledSignupForm = styled.form`
   animation: slideIn 0.2s linear;
   background: ${colors.white};
-  bottom: 0;
+  bottom: 2rem;
   display: ${props => props.formHidden ? "none" : "block"};
   position: absolute;
-  transition: bottom 0.2s ease-in;
   width: 100%;
   @keyframes slideIn {
     0% {
       opacity: 0;
-      transform: translateY(100%);
-    }
-    50% {
-      opacity: 0;
-      transform: translateY(50%);
+      transform: translateY(2rem);
     }
     100% {
       opacity: 1;
-      transform: translateY(5px);
+
+      transform: translateY(0);
     }
   }
 `
@@ -124,6 +120,7 @@ function SignupForm(props) {
     <StyledSignupForm id="signup" formHidden={props.formHidden} name="signup" method="POST" data-netlify="true" autocomplete="off">
       <CloseButton onClick={() => props.setFormHidden(true)}/>
       <StyledFieldSet>
+        <input type="hidden" name="signup" value="contact" />
         <StyledLabel onClick={() => setInputFocused(true)} inputFocused={inputFocused} htmlFor="email">Enter your email address</StyledLabel>
         <StyledInput
           onFocus={() => setInputFocused(true)}

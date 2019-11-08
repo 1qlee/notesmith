@@ -6,7 +6,7 @@ import SignupForm from "./SignupForm"
 
 const StyledToastFooter = styled.footer`
   background: ${colors.white};
-  bottom: 0;
+  bottom: 2rem;
   color: ${colors.primary.normal};
   padding: 1rem;
   position: absolute;
