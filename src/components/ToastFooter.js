@@ -8,7 +8,7 @@ const StyledToastFooter = styled.footer`
   background: ${colors.white};
   bottom: 0;
   color: ${colors.primary.normal};
-  padding: 0.5rem;
+  padding: 1rem;
   position: absolute;
   text-align: center;
   text-decoration: underline;
