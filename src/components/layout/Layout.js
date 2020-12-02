@@ -1,9 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-import { useAuth0 } from "@auth0/auth0-react"
-
-import Loader from "../Loader"
 
 import "./master.css"
 import { colors } from "../../styles/variables"
@@ -18,7 +15,6 @@ const StyledLayout = styled.div`
 `
 
 const Layout = ({ children, className }) => {
-  const { loading } = useAuth0()
 
   return (
     <StyledLayout className={className}>
@@ -29,6 +25,7 @@ const Layout = ({ children, className }) => {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  className: PropTypes.string
 }
 
 export default Layout

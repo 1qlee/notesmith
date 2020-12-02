@@ -15,8 +15,11 @@ const LoaderWrapper = styled.div`
   background-color: ${colors.primary.sixHundred};
   display: flex;
   align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
 `
 
 const StyledLoader = styled.div`

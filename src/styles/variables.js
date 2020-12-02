@@ -19,8 +19,7 @@ const colors = {
     sixHundred: "#234342",
     sevenHundred: "#1c3635",
     eightHundred: "#152828",
-    nineHundred: "#093737",
-    link: "#00847f"
+    nineHundred: "#093737"
   },
   blue: {
     oneHundred: "#d1e3fa",
@@ -66,8 +65,22 @@ const colors = {
     eightHundred: "#553C9A",
     nineHundred: "#44337A"
   },
+  yellow: {
+    oneHundred: "#FEF3C7",
+    twoHundred: "#FDE68A",
+    threeHundred: "#FCD34D",
+    fourHundred: "#FBBF24",
+    fiveHundred: "#F59E0B",
+    sixHundred: "#D97706",
+    sevenHundred: "#B45309",
+    eightHundred: "#92400E",
+    nineHundred: "#78350F"
+  },
   paper: {
     cream: "#F7F5ED"
+  },
+  link: {
+    normal: "#007d79"
   },
   white: "#fff",
   cream: "#fffdd0",
@@ -82,6 +95,7 @@ const colors = {
 }
 
 const widths = {
+  sidebar: "300px",
   desktop: "1440px"
 }
 

@@ -65,7 +65,7 @@ export const Auth0Provider = ({
     setIsAuthenticated(true);
     setUser(user);
   };
-  
+
   return (
     <Auth0Context.Provider
       value={{
@@ -86,3 +86,16 @@ export const Auth0Provider = ({
     </Auth0Context.Provider>
   );
 };
+
+export const getUser = () =>
+  isBrowser() && window.localStorage.getItem("isLoggedIn")
+    ? JSON.parse(window.localStorage.getItem("isLoggedIn"))
+    : {}
+
+export const setUser = user =>
+  isBrowser() && window.localStorage.setItem("isLoggedIn", JSON.stringify(user))
+
+export const isLoggedIn = () => {
+  const user = getUser()
+  return !!user.email
+}

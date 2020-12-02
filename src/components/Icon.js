@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import { BookOpen, Book, FileText, SquareHalf, Scissors, Notebook, ShieldCheck } from "phosphor-react"
+import { BookOpen, Book, FileText, SquareHalf, Scissors, Notebook, NoteBlank, ShieldCheck } from "phosphor-react"
 
 const StyledIcon = styled.span`
   align-items: center;
@@ -11,7 +11,7 @@ const StyledIcon = styled.span`
   position: relative;
 `
 
-function Icon({ icon, size, weight, color }) {
+function Icon({ icon, size, weight, color, children }) {
   switch(icon) {
     case "Book":
       return (
@@ -37,6 +37,12 @@ function Icon({ icon, size, weight, color }) {
           <Notebook weight={weight} size={size} color={color} />
         </StyledIcon>
       )
+    case "NoteBlank":
+      return (
+        <StyledIcon>
+          <NoteBlank weight={weight} size={size} color={color} />
+        </StyledIcon>
+      )
     case "Scissors":
       return (
         <StyledIcon>
@@ -58,7 +64,7 @@ function Icon({ icon, size, weight, color }) {
     default:
       return (
         <StyledIcon>
-
+          {children}
         </StyledIcon>
       )
   }

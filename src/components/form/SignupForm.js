@@ -1,27 +1,19 @@
 import React, { useState } from "react"
-import styled from "styled-components"
-import { navigate, Link } from "gatsby"
-import { setUser, isLoggedIn } from "../../utils/auth"
-import firebase from "gatsby-plugin-firebase"
 import { colors, regex } from "../../styles/variables"
+import { navigate } from "gatsby"
+import { useFirebaseContext } from "../../utils/auth"
+import { Warning } from "phosphor-react"
 
-import { StyledFieldset, StyledLabel, StyledInput } from "../form/FormComponents"
+import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
 import Content from "../Content"
 import Icon from "../Icon"
 import SEO from "../layout/Seo"
 
-const SignupFormWrapper = styled.div`
-  border-radius: 0.25rem;
-  box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
-  padding: 2rem;
-  width: 100%;
-`
-
-const SignupForm = () => {
+const SignUpForm = () => {
+  const { signUp, sendEmailVerificationOnSignUp } = useFirebaseContext()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [showLogin, setShowLogin] = useState(true)
   const [emailError, setEmailError] = useState({
     msg: "",
     color: colors.red.sixHundred
@@ -30,21 +22,44 @@ const SignupForm = () => {
     msg: "",
     color: colors.gray.sevenHundred
   })
+  const [emailValidated, setEmailValidated] = useState()
   const [passwordValidated, setPasswordValidated] = useState()
-  const auth = firebase.auth()
 
   function handleSubmit(e) {
     e.preventDefault()
-    auth.createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      navigate("/")
+    signUp(email, password).then(userObject => {
+      userObject.user.sendEmailVerificationOnSignUp().then(value => {
+        console.log("Sending verification email...")
+        navigate("/app/dashboard")
+      }).catch(error => {
+        console.log(error.code, error.msg)
+      })
     })
     .catch(error => {
-      if (error.code == 'auth/email-already-in-use') {
-        setEmailError({
-          msg: "This email is already in use.",
-          color: colors.red.sixHundred
-        })
+      switch(error.code) {
+        case "auth/email-already-in-use":
+          setEmailError({
+            msg: "This email is already in use.",
+            color: colors.red.sixHundred
+          })
+          break
+        case "auth/invalid-email":
+          setEmailError({
+            msg: "Email was in an invalid format.",
+            color: colors.red.sixHundred
+          })
+          break
+        case "auth/operation-not-allowed":
+          setEmailError({
+            msg: "Sorry, our server is busy.",
+            color: colors.red.sixHundred
+          })
+          break
+        default:
+          setEmailError({
+            msg: "Something went wrong.",
+            color: colors.red.sixHundred
+          })
       }
     })
   }
@@ -55,6 +70,7 @@ const SignupForm = () => {
         msg: "",
         color: colors.gray.sevenHundred
       })
+      setEmailValidated(true)
       setEmail(email)
     }
     else {
@@ -62,6 +78,7 @@ const SignupForm = () => {
         msg: "Invalid format",
         color: colors.red.sixHundred
       })
+      setEmailValidated(false)
     }
   }
 
@@ -107,7 +124,7 @@ const SignupForm = () => {
 
   return (
     <>
-      <SignupFormWrapper>
+      <AuthFormWrapper>
         <SEO title="Sign Up" />
         <Content>
           <h4>Create your Notesmith account</h4>
@@ -119,7 +136,7 @@ const SignupForm = () => {
           <StyledFieldset className="is-vertical">
             <StyledLabel>Email</StyledLabel>
             <StyledInput
-              onChange={(e) => validateEmail(e.currentTarget.value)}
+              onChange={e => validateEmail(e.currentTarget.value)}
               className={emailError.msg && "is-error"}
               borderRadius="0.25rem"
               id="email"
@@ -128,7 +145,12 @@ const SignupForm = () => {
               autocomplete="email"
             />
             {emailError.msg && (
-              <small style={{position: 'absolute', top: 'calc(100% + 2px)', color: emailError.color}}>{emailError.msg}</small>
+              <ErrorLine color={emailError.color}>
+                <Icon>
+                  <Warning weight="fill" color={emailError.color} size={16} />
+                </Icon>
+                <span>{emailError.msg}</span>
+              </ErrorLine>
             )}
           </StyledFieldset>
           <StyledFieldset className="is-vertical has-space-bottom">
@@ -155,15 +177,20 @@ const SignupForm = () => {
               </div>
             )}
             {passwordError.msg && (
-              <small style={{position: 'absolute', top: 'calc(100% + 2px)', color: passwordError.color}}>{passwordError.msg}</small>
+              <ErrorLine color={passwordError.color}>
+                <Icon>
+                  <Warning weight="fill" color={passwordError.color} size={16} />
+                </Icon>
+                <span>{passwordError.msg}</span>
+              </ErrorLine>
             )}
           </StyledFieldset>
           <StyledFieldset>
             <Button
               color={colors.white}
-              background={colors.primary.sixHundred}
+              backgroundColor={colors.primary.sixHundred}
               borderRadius="0.25rem"
-              disabled={passwordValidated && email.length > 0 ? false : true}
+              disabled={passwordValidated && emailValidated && email.length > 0 ? false : true}
               type="submit"
               form="signup-form"
               width="100%"
@@ -172,9 +199,9 @@ const SignupForm = () => {
             </Button>
           </StyledFieldset>
         </form>
-      </SignupFormWrapper>
+      </AuthFormWrapper>
     </>
   )
 }
 
-export default SignupForm
+export default SignUpForm

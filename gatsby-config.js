@@ -28,8 +28,8 @@ module.exports = {
     {
       resolve: `gatsby-source-contentful`,
       options: {
-        spaceId: process.env.CONTENTFUL_SPACE_ID,
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        spaceId: process.env.CONTENTFUL_SPACE_ID || "88un70hhvnz3",
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || "8ifX-8dB75Bs8kQtc8Scea1JHkbeLwXqxpG5xVyhEJE",
         downloadLocal: true,
       },
     },
@@ -37,15 +37,8 @@ module.exports = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `Spectral\:400,400i,700`
+          `Spectral\:400,400i,700`,
         ]
-      },
-    },
-    {
-      resolve: `gatsby-plugin-auth0`,
-      options: {
-        domain: process.env.AUTH0_DOMAIN,
-        clientId: process.env.AUTH0_CLIENT_ID,
       },
     },
     {
@@ -64,14 +57,14 @@ module.exports = {
       resolve: "gatsby-plugin-firebase",
       options: {
         credentials: {
-          apiKey: process.env.GATSBY_FIREBASE_API_KEY,
-          authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN,
-          databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL,
-          projectId: process.env.GATSBY_FIREBASE_PROJECT_ID,
-          storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
-          messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
-          appId: process.env.GATSBY_FIREBASE_APP_ID,
-          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID
+          apiKey: process.env.GATSBY_FIREBASE_API_KEY || "AIzaSyAZ1VZdx66fX5ok9uW8enCjM",
+          authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN || "notesmith-765c3.firebaseapp.com",
+          databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL || "https://notesmith-765c3.firebaseio.com",
+          projectId: process.env.GATSBY_FIREBASE_PROJECT_ID || "notesmith-765c3",
+          storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET || "notesmith-765c3.appspot.com",
+          messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID || "56797146951",
+          appId: process.env.GATSBY_FIREBASE_APP_ID || "1:56797146951:web:df2b3e29b067e438962662",
+          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID || "G-9S05PJ9HT1"
         }
       }
     },

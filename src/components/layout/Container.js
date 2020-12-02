@@ -25,10 +25,7 @@ const FlexContainer = styled.div`
   align-items: ${props => props.alignItems ? props.alignItems : "flex-start"};
   justify-content: ${props => props.justifyContent ? props.justifyContent : "flex-start"};
   height: ${props => props.height ? props.height : "auto"};
-  margin: 0 auto;
-  max-width: ${props => props.maxWidth ? props.maxWidth : "1200px"};
   position: relative;
-  width: 100%;
 `
 
 export { Container, LayoutContainer, FlexContainer }

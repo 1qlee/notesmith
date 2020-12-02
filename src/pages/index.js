@@ -7,7 +7,7 @@ import Img from "gatsby-image"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
-import { SectionMain, Section, SectionLayout } from "../components/layout/Section"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import Content from "../components/Content"
 import Icon from "../components/Icon"
 import Layout from "../components/layout/Layout"
@@ -19,7 +19,6 @@ import RegisterForm from "../components/form/RegisterForm"
 
 const IndexPage = ({ data }) => {
   const [ hideNavbar, setHideNavbar ] = useState(false)
-  const [ elementPosition, setElementPosition ] = useState({ x: 20, y: 150})
   const [ sectionOnePosition, setSectionOnePosition ] = useState()
   const [ sectionTwoPosition, setSectionTwoPosition ] = useState()
   const [ sectionThreePosition, setSectionThreePosition ] = useState()
@@ -68,8 +67,6 @@ const IndexPage = ({ data }) => {
       setCurrentChapterNumber(data.sectionFour.chapterNumber)
     }
 
-    setElementPosition(currPos)
-
   }, [sectionOnePosition, sectionTwoPosition, sectionThreePosition, hideNavbar])
 
   return (
@@ -80,7 +77,7 @@ const IndexPage = ({ data }) => {
         <Section>
           <Container ref={element => setPosition(element, 1)}>
             <LayoutContainer>
-              <SectionLayout>
+              <SectionContent>
                 <Grid
                   columns="1fr 2fr"
                   columnGap={spacing.large}
@@ -105,14 +102,14 @@ const IndexPage = ({ data }) => {
                     <Img fluid={data.sectionOne.image.fluid} />
                   </Cell>
                 </Grid>
-              </SectionLayout>
+              </SectionContent>
             </LayoutContainer>
           </Container>
         </Section>
         <Section>
           <Container ref={element => setPosition(element, 2)}>
             <LayoutContainer>
-              <SectionLayout>
+              <SectionContent>
                 <Grid
                   columns="2fr 1fr"
                   columnGap={spacing.large}
@@ -125,22 +122,22 @@ const IndexPage = ({ data }) => {
                     </Container>
                   </Cell>
                   <Cell middle>
-                    <Content h4Color={colors.primary.link}>
-                      <h4>{data.sectionTwo.title}</h4>
+                    <Content h4Color={colors.link.normal} h4FontWeight="400">
+                      <h4 fontWeight="400">{data.sectionTwo.title}</h4>
                       <h2>{data.sectionTwo.chapterName}</h2>
                       {documentToReactComponents(data.sectionTwo.bodyText.json)}
-                      <List list={data.sectionTwo.data.checklist} />
                     </Content>
+                    <List list={data.sectionTwo.data.checklist} />
                   </Cell>
                 </Grid>
-              </SectionLayout>
+              </SectionContent>
             </LayoutContainer>
           </Container>
         </Section>
         <Section>
           <Container ref={element => setPosition(element, 3)}>
             <LayoutContainer>
-              <SectionLayout>
+              <SectionContent>
                 <Grid
                   flow="row"
                   rowGap={spacing.normal}
@@ -149,7 +146,7 @@ const IndexPage = ({ data }) => {
                   alignContent="baseline"
                 >
                   <Cell>
-                    <Content h4Color={colors.primary.link}>
+                    <Content h4Color={colors.link.normal} h4FontWeight="400">
                       <h4>{data.sectionThree.title}</h4>
                       <h2>{data.sectionThree.chapterName}</h2>
                       {documentToReactComponents(data.sectionThree.bodyText.json)}
@@ -160,9 +157,9 @@ const IndexPage = ({ data }) => {
                     columnGap={spacing.large}
                   >
                     {data.sectionThree.data.features.map(feature => (
-                      <Cell>
+                      <Cell key={feature.title}>
                         <Content>
-                          <Icon icon={feature.icon} weight="duotone" size="1.75rem" color={colors.primary.sixHundred} />
+                          <Icon icon={feature.icon} weight="duotone" size="1.75rem" color={feature.color} />
                           <h4 className={`is-column-heading ${feature.color}`}>{feature.title}</h4>
                           <p>{feature.description}</p>
                         </Content>
@@ -170,14 +167,14 @@ const IndexPage = ({ data }) => {
                     ))}
                   </Grid>
                 </Grid>
-              </SectionLayout>
+              </SectionContent>
             </LayoutContainer>
           </Container>
         </Section>
         <Section>
           <Container ref={element => setPosition(element, 4)}>
             <LayoutContainer>
-              <SectionLayout>
+              <SectionContent>
                 <Grid
                   flow="row"
                   rowGap={spacing.normal}
@@ -186,7 +183,7 @@ const IndexPage = ({ data }) => {
                   alignContent="baseline"
                 >
                   <Cell>
-                    <Content h4Color={colors.primary.link}>
+                    <Content h4Color={colors.link.normal} h4FontWeight="400">
                       <h4>{data.sectionFour.title}</h4>
                       <h2>{data.sectionFour.chapterName}</h2>
                       {documentToReactComponents(data.sectionFour.bodyText.json)}
@@ -198,12 +195,12 @@ const IndexPage = ({ data }) => {
                     columnGap="0"
                     rowGap="0"
                   >
-                    {data.sectionFour.contentImages.map(image => (
-                      <Img fluid={image.fluid} />
+                    {data.sectionFour.contentImages.map((image, index) => (
+                      <Img key={index} fluid={image.fluid} />
                     ))}
                   </Grid>
                 </Grid>
-              </SectionLayout>
+              </SectionContent>
             </LayoutContainer>
           </Container>
         </Section>

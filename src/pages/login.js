@@ -1,26 +1,31 @@
-import React, { useState } from "react"
+import React from "react"
 import { colors, spacing } from "../styles/variables"
-import { Link } from "gatsby"
+import { navigate, Link } from "gatsby"
+import { useFirebaseContext } from "../utils/auth"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
-import { SectionMain, Section, SectionLayout } from "../components/layout/Section"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import Content from "../components/Content"
 import LoginForm from "../components/form/LoginForm"
 import Layout from "../components/layout/Layout"
 import Logo from "../components/Logo"
 
 const Login = () => {
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const { user } = useFirebaseContext()
+
+  if (user) {
+    navigate(`/app/dashboard`, { replace: true })
+    return null
+  }
 
   return (
     <Layout className="is-full-height">
-      <SectionMain className="is-normal-padding">
+      <SectionMain className="has-vertical-padding">
         <Section>
           <Container>
             <LayoutContainer>
-              <SectionLayout>
+              <SectionContent>
                 <Grid
                   flow="row"
                   rowGap={spacing.medium}
@@ -34,8 +39,6 @@ const Login = () => {
                     </Link>
                   </Cell>
                   <Cell>
-                    <p>{email}</p>
-                    <p>{password}</p>
                     <LoginForm />
                   </Cell>
                   <Cell>
@@ -44,7 +47,7 @@ const Login = () => {
                     </Content>
                   </Cell>
                 </Grid>
-              </SectionLayout>
+              </SectionContent>
             </LayoutContainer>
           </Container>
         </Section>

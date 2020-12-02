@@ -14,6 +14,7 @@ const PageWrapper = styled.div`
 `
 
 const PageProfileCard = styled.div`
+  background-color: ${colors.paper.cream};
   box-shadow: 0 50px 100px -20px ${colors.shadow.dark};
   position: absolute;
   right: -25%;
@@ -77,21 +78,21 @@ const PageProfile = styled.div`
 const PageProfileTagLine = styled.h3`
   box-shadow: inset 0 -1px 0 ${colors.white};
   color: ${colors.white};
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 400;
   margin-bottom: 0;
-  text-transform: uppercase;
 `
 
 const PageProfileName = styled.h4`
   color: ${colors.white};
   font-size: 1rem;
   margin: 0.5rem 0 1rem 0;
+  font-weight: 400;
 `
 
 const PageProfileType = styled.span`
   background-color: ${colors.white};
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.25;
   margin: 1rem auto;
   padding: 0.25rem 0.5rem;
@@ -172,27 +173,27 @@ function PageProfileSvg(props) {
   }
 }
 
-function PageCarousel(props) {
-  const { profiles, profileImages } = props
+function PageCarousel({ profiles, profileImages }) {
   const [activeProfile, setActiveProfile] = useState(0)
 
   useEffect(() => {
-    cycleProfiles()
-  }, [])
+    let runCarousel = setInterval(cycleProfiles, 2000)
+
+    return () => {
+      clearInterval(runCarousel)
+    }
+  }, [activeProfile])
 
   function cycleProfiles() {
-    let counter = 0
-    return setInterval(() => {
-      if (counter < 4) {
-        counter++
-        return setActiveProfile(counter)
-      }
-      else {
-        counter = 0
-        setActiveProfile(counter)
-        clearInterval()
-      }
-    }, 2000)
+
+    if (activeProfile > 3) {
+      clearInterval()
+      return setActiveProfile(0)
+    }
+    else {
+      setActiveProfile(activeProfile + 1)
+    }
+
   }
 
   return (
@@ -202,7 +203,7 @@ function PageCarousel(props) {
       </PageSvgWrapper>
       <PageProfileCard>
         <PageProfile className={`color-${activeProfile}`}>
-          <PageProfileTagLine>Made By</PageProfileTagLine>
+          <PageProfileTagLine>Made by</PageProfileTagLine>
           <PageProfileName>{profiles[activeProfile].name}</PageProfileName>
           <PageProfileImage>
             <Img loading="eager" fluid={profileImages[activeProfile].fluid} />
@@ -212,7 +213,7 @@ function PageCarousel(props) {
           </PageProfileType>
           <PageProfileList>
             {profiles[activeProfile].list.map(listItem => (
-              <PageProfileListItem>{listItem}</PageProfileListItem>
+              <PageProfileListItem key={listItem}>{listItem}</PageProfileListItem>
             ))}
           </PageProfileList>
         </PageProfile>

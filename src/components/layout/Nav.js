@@ -1,15 +1,12 @@
-import React, { useState } from "react"
-import { useAuth0 } from "@auth0/auth0-react"
+import React from "react"
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import styled from "styled-components"
+import { useFirebaseContext } from "../../utils/auth"
 
-import { colors } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 
-import { FlexContainer } from "./Container"
 import Button from "../Button"
-import ClientOnly from "../ClientOnly"
-import Loader from "../Loader"
 import Logo from "../Logo"
 
 const StyledNav = styled.nav`
@@ -33,8 +30,16 @@ const HorizontalNavInnerBox = styled.div`
   border-style: solid;
   border-width: 1px 0;
   padding-left: 96px;
+  height: 78px;
   position: relative;
   top: 1rem;
+`
+
+const HorizontalNavContainer = styled.div`
+  display: flex;
+  max-width: ${widths.desktop};
+  margin: 0 auto;
+  width: 100%;
 `
 
 const VerticalNav = styled.div`
@@ -53,7 +58,7 @@ const VerticalNavInnerBox = styled.div`
   text-align: center;
   padding-top: 1rem;
   position: relative;
-  width: 79px;
+  width: 78px;
 `
 
 const VerticalNavItem = styled.div`
@@ -113,63 +118,40 @@ const NavItem = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
-`
-
-const NavButton = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-  position: relative;
-  text-align: center;
-  transition: background-color 200ms;
-  width: 300px;
-  &.is-active {
-    background-color: ${colors.white};
-    color: ${colors.gray.nineHundred};
+  &.first-item {
+    padding: 1rem 1rem 1rem 0;
   }
-  &:hover {
-    cursor: pointer;
+  &.last-item {
+    padding: 1rem 0 1rem 1rem;
   }
-`
-
-const NavLogo = styled.div`
-  position: relative;
-  padding: 1rem;
 `
 
 function Nav(props) {
-  const { isLoading, isAuthenticated, loginWithRedirect, logout, user } = useAuth0()
+  const { user, signOut, loading } = useFirebaseContext()
 
   return (
     <StyledNav>
       <HorizontalNav hideNavbar={props.hideNavbar}>
         <HorizontalNavInnerBox>
-          <FlexContainer maxWidth="1500px">
+          <HorizontalNavContainer>
             <NavSection justifyContent="flex-start">
               <Link to="/">
-                <NavLogo>
+                <NavItem className="first-item">
                   <Logo color={colors.primary.sixHundred} />
-                </NavLogo>
+                </NavItem>
               </Link>
             </NavSection>
-            <ClientOnly>
+            {!loading && (
               <NavSection justifyContent="flex-end">
-                <NavItem>
-                  <Link to="/login">Firebase Login</Link>
-                </NavItem>
-                {isAuthenticated ? (
+                {user ? (
                   <>
                     <NavItem>
-                      <Link to="account">{user.email}</Link>
+                      <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>
-                    <NavItem>
+                    <NavItem className="last-item">
                       <Button
-                        onClick={() => logout()}
-                        borderRadius="0.25rem"
                         color={colors.white}
-                        background={colors.primary.sixHundred}
-                        className="is-small"
+                        backgroundColor={colors.primary.sixHundred}
                       >
                         Log Out
                       </Button>
@@ -178,22 +160,23 @@ function Nav(props) {
                 ) : (
                   <>
                     <NavItem>
+                      <Link to="/login">Log In</Link>
+                    </NavItem>
+                    <NavItem className="last-item">
                       <Button
-                        onClick={() => loginWithRedirect({
-                          appState: { targetUrl: `${window.location.pathname}`},
-                        })}
                         color={colors.white}
-                        background={colors.primary.sixHundred}
-                        className="is-small"
+                        backgroundColor={colors.primary.sixHundred}
+                        as={Link}
+                        to="/signup"
                       >
-                        Auth0 Login
+                        Sign Up
                       </Button>
                     </NavItem>
                   </>
                 )}
               </NavSection>
-            </ClientOnly>
-          </FlexContainer>
+            )}
+          </HorizontalNavContainer>
         </HorizontalNavInnerBox>
       </HorizontalNav>
       <VerticalNav>
@@ -210,9 +193,14 @@ function Nav(props) {
   )
 }
 
+function NavProfile() {
+
+}
+
 Nav.propTypes = {
-  chapterNumber: PropTypes.string.isRequired,
-  chapterName: PropTypes.string.isRequired,
+  chapterNumber: PropTypes.string,
+  title: PropTypes.string,
+  hideNavbar: PropTypes.bool,
 }
 
 export default Nav

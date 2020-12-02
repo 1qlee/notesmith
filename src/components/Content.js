@@ -38,11 +38,12 @@ const Content = styled.div`
   h4 {
     font-size: 1rem;
     color: ${props => props.h4Color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h4FontWeight || "700"};
     &.is-column-heading {
       margin-bottom: 0.5rem;
       position: relative;
       &::after {
-        background-color: ${colors.primary.link};
+        background-color: ${colors.link.normal};
         content: "";
         height: 1rem;
         left: -1rem;
@@ -76,9 +77,10 @@ const Content = styled.div`
   }
   p {
     color: ${props => props.paragraphColor || colors.gray.sevenHundred};
-    font-size: 1rem;
     line-height: 1.5;
-    margin-bottom: 1rem;
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
   }
   small {
     color: ${props => props.smallColor || colors.gray.sevenHundred};
@@ -86,8 +88,11 @@ const Content = styled.div`
     margin: 0.5rem 0;
   }
   a {
-    color: ${props => props.linkColor || colors.primary.link};
-    cursor: pointer;
+    color: ${props => props.linkColor || colors.link.normal};
+    &:hover {
+      cursor: pointer;
+      color: ${colors.black};
+    }
   }
 `
 
