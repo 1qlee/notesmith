@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "gatsby"
+import navigate, { Link } from "gatsby"
 import Layout from "../layout/Layout"
 import { useFirebaseContext } from "../../utils/auth"
 import { colors } from "../../styles/variables"
@@ -22,7 +22,7 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <SEO title={`Dashboard - ${user.displayName}`} />
+      <SEO title="Dashboard" />
         <SectionMain className="has-no-padding has-max-height">
           <SectionApp>
             <Sidebar />

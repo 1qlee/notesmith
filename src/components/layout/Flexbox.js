@@ -5,14 +5,17 @@ const Flexbox = styled.div`
   align-items: ${props => props.alignItems};
   display: ${props => props.flex};
   justify-content: ${props => props.justifyContent};
+  flex-direction: ${props => props.flexDirection};
   margin: ${props => props.margin};
+  padding: ${props => props.padding};
   position: relative;
+  width: ${props => props.width};
 `
 
 const FlexboxButtons = styled.div`
   button, a {
     &:not(:last-child) {
-      margin-right: 1rem;
+      margin-right: 0.5rem;
     }
   }
 `

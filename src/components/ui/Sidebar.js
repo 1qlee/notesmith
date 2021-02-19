@@ -13,6 +13,7 @@ const StyledSidebar = styled.div`
 function Sidebar() {
   return (
     <StyledSidebar>
+      <Link to="/app/dashboard">Dashboard</Link>
       <Link to="/app/books">My Books</Link>
       <Link to="/app/settings">Settings</Link>
     </StyledSidebar>

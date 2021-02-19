@@ -46,7 +46,9 @@ function SignupForm(props) {
 
   return (
     <StyledSignupForm id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
-      <StyledFieldset>
+      <StyledFieldset
+        margin="1rem 0"
+      >
         <input type="hidden" name="form-name" value="signup" />
         <StyledFloatingLabel
           onClick={() => setInputFocused(true)}
@@ -61,6 +63,7 @@ function SignupForm(props) {
           onChange={e => setEmail(e.currentTarget.value)}
           inputFocused={inputFocused}
           borderRadius="0.25rem 0 0 0.25rem"
+          padding="1rem"
           id="email"
           type="email" name="email"
         />
@@ -68,9 +71,10 @@ function SignupForm(props) {
           color={colors.white}
           backgroundColor={colors.primary.sixHundred}
           borderRadius="0 0.25rem 0.25rem 0"
+          padding="1rem"
           type="submit" form="signup"
           className="is-medium"
-          >
+        >
           Sign Up
         </Button>
       </StyledFieldset>

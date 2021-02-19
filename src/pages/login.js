@@ -10,10 +10,14 @@ import Content from "../components/Content"
 import LoginForm from "../components/form/LoginForm"
 import Layout from "../components/layout/Layout"
 import Logo from "../components/Logo"
+import Loader from "../components/Loader"
 
 const Login = () => {
-  const { user } = useFirebaseContext()
+  const { user, loading } = useFirebaseContext()
 
+  if (loading) {
+    return <Loader />
+  }
   if (user) {
     navigate(`/app/dashboard`, { replace: true })
     return null

@@ -34,7 +34,9 @@ function List(props) {
     <ListWrapper>
       {list.map(listItem => (
         <ListItem key={listItem.text} className="has-icon">
-          <Icon icon={listItem.icon} weight="duotone" size="1.75rem" color={colors.primary.sixHundred} />
+          <Icon>
+            {listItem.icon}
+          </Icon>
           <p>{listItem.text}</p>
         </ListItem>
       ))}

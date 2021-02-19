@@ -2,14 +2,13 @@ import React from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
 
-const fadeIn = keyframes`
+const slideInDown = keyframes`
   from {
-    opacity: 0;
-    transform: scale(0.98);
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
   }
   to {
-    opacity: 1;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0);
   }
 `
 
@@ -24,7 +23,7 @@ const loading = keyframes`
 
 const StyledNotification = styled.div`
   align-items: center;
-  animation: ${fadeIn} 0.2s linear;
+  animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundColor};
   border-radius: 0.25rem;
   border: 2px solid ${props => props.color};
@@ -35,6 +34,7 @@ const StyledNotification = styled.div`
   padding: 1rem;
   transition: background-color 0.2s, color 0.2s;
   margin: 1rem 0;
+  z-index: 8000;
   span {
     margin-right: 1rem;
   }

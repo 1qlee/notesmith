@@ -5,7 +5,7 @@ import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
-import { FlexContainer } from "../layout/Container"
+import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 import Button from "../Button"
 import Icon from "../Icon"
@@ -77,8 +77,11 @@ const LoginForm = (props) => {
         <h4>Log into your account</h4>
       </Content>
       <form id="login-form" onSubmit={handleSubmit} style={{maxWidth:"500px"}}>
-        <StyledFieldset className="is-vertical">
-          <StyledLabel>Email</StyledLabel>
+        <StyledFieldset
+          className="is-vertical"
+          margin="1rem 0"
+        >
+          <StyledLabel htmlFor="email">Email</StyledLabel>
           <StyledInput
             onChange={(e) => setEmail(e.currentTarget.value)}
             onFocus={() => setAuthError({
@@ -90,14 +93,22 @@ const LoginForm = (props) => {
             name="email"
           />
         </StyledFieldset>
-        <StyledFieldset className="is-vertical has-space-bottom">
-          <StyledLabel>
-            <Content>
-              <FlexContainer justifyContent="space-between">
-                Password
+        <StyledFieldset
+          className="is-vertical"
+          margin="1rem 0 2rem"
+        >
+          <StyledLabel htmlFor="password">
+            <Flexbox
+              flex="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              width="100%"
+            >
+              Password
+              <Content>
                 <Link to="/forgot">Forgot your password?</Link>
-              </FlexContainer>
-            </Content>
+              </Content>
+            </Flexbox>
           </StyledLabel>
           <StyledInput
             onChange={(e) => setPassword(e.currentTarget.value)}
@@ -129,6 +140,7 @@ const LoginForm = (props) => {
             type="submit"
             form="login-form"
             width="100%"
+            className="is-medium"
             >
             Log In
           </Button>

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Layout from "../layout/Layout"
 import { useFirebaseContext } from "../../utils/auth"
-import { colors, spacing } from "../../styles/variables"
+import { colors, spacing, widths } from "../../styles/variables"
 import { WarningCircle } from "phosphor-react"
 
 import { SectionMain, SectionApp, SectionAppContent } from "../layout/Section"
@@ -17,6 +17,7 @@ import Notification from "../ui/Notification"
 
 const Settings = () => {
   const { user, sendEmailVerification } = useFirebaseContext()
+  const [verificationEmailSent, setVerificationEmailSent] = useState()
   const [notification, setNotification] = useState({
     msg: user.emailVerified ? "" : "Please verify your email address! Check your email for a verification link.",
     backgroundColor: colors.yellow.oneHundred,
@@ -25,7 +26,7 @@ const Settings = () => {
 
   return (
     <Layout>
-      <SEO title={`Settings - ${user.displayName}`} />
+      <SEO title="Settings" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
           <Sidebar />
@@ -33,7 +34,7 @@ const Settings = () => {
             <Grid
               flow="row"
               rowGap={spacing.normal}
-              columns="1fr 1fr"
+              columns={`minmax(100px, ${widths.tablet})`}
               rows="auto"
             >
               <Cell>
@@ -46,11 +47,11 @@ const Settings = () => {
                       <p>{notification.msg}</p>
                     </Content>
                     <Button
-                      backgroundColor={notification.color}
-                      color={notification.backgroundColor}
-                      onClick={sendEmailVerification}
+                      backgroundColor={verificationEmailSent ? colors.green.sixHundred : notification.color}
+                      color={verificationEmailSent ? colors.white : notification.backgroundColor}
+                      onClick={() => sendEmailVerification(setVerificationEmailSent)}
                     >
-                      Resend Email
+                      {verificationEmailSent ? `Email sent!` : `Resend email`}
                     </Button>
                   </Notification>
                 )}

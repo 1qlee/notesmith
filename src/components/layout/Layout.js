@@ -6,7 +6,7 @@ import "./master.css"
 import { colors } from "../../styles/variables"
 
 const StyledLayout = styled.div`
-  background-color: ${colors.white};
+  background-color: ${props => props.backgroundColor || colors.white};
   position: relative;
   width: 100%;
   &.is-full-height {
@@ -14,10 +14,10 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ children, className }) => {
+const Layout = ({ children, className, backgroundColor }) => {
 
   return (
-    <StyledLayout className={className}>
+    <StyledLayout className={className} backgroundColor={backgroundColor}>
       {children}
     </StyledLayout>
   )

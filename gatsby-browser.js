@@ -1,5 +1,6 @@
 import React from "react"
 import "firebase/auth"
+import "firebase/database"
 import "firebase/firestore"
 import "firebase/functions"
 import { FirebaseProvider } from "./src/utils/auth"

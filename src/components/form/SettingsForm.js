@@ -4,41 +4,200 @@ import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
 
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
-import { StyledInput, ErrorLine } from "./FormComponents"
+import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "./FormComponents"
+import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import Content from "../Content"
 import Icon from "../Icon"
 import Button from "../Button"
 
 function SettingsForm() {
-  const { user, updateEmail } = useFirebaseContext()
+  const { user, getAuthCredential } = useFirebaseContext()
+  const [loading, setLoading] = useState(false)
+  const [newPassword, setNewPassword] = useState("")
   const [newEmail, setNewEmail] = useState("")
-  const [emailError, setEmailError] = useState({})
+  const [showModal, setShowModal] = useState({
+    show: false,
+    type: "reauthentication",
+    process: "reauthentication"
+  })
+  const [passwordError, setPasswordError] = useState({
+    msg: "",
+    color: colors.red.sixHundred
+  })
+  const [emailError, setEmailError] = useState({
+    msg: "",
+    color: colors.red.sixHundred
+  })
   const [emailValidated, setEmailValidated] = useState(false)
-  const [showSettingsForm, setshowSettingsForm] = useState(false)
+  const [passwordValidated, setPasswordValidated] = useState(false)
+  const [showSettingsForm, setShowSettingsForm] = useState(false)
+  const [reauthenticatedPassword, setReauthenticatedPassword] = useState("")
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (emailValidated) {
-      console.log("Attempting to change form values...")
-      updateEmail(newEmail, setshowSettingsForm)
-    }
-  }
-
+  // validate email regex
   function validateEmail(email) {
-    if (regex.email.test(email) || email.length === 0) {
-      setEmailError({
-        msg: "",
-        color: colors.gray.sevenHundred
-      })
+    if (regex.email.test(email)) {
+      clearError("email")
       setEmailValidated(true)
       setNewEmail(email)
     }
     else {
+      setError("email", "Invalid format.")
+      setEmailValidated(false)
+    }
+  }
+
+  // validate password regex
+  function validatePassword(password) {
+    if (regex.password.test(password)) {
+      setPasswordValidated(true)
+      setNewPassword(password)
+    }
+    else {
+      setPasswordValidated(false)
+    }
+  }
+
+  // clear error messages
+  function clearError(type) {
+    if (type === "email") {
       setEmailError({
-        msg: "Invalid format",
+        msg: "",
         color: colors.red.sixHundred
       })
-      setEmailValidated(false)
+    }
+    if (type === "password") {
+      setPasswordError({
+        msg: "",
+        color: colors.red.sixHundred
+      })
+    }
+  }
+
+  // set an error message
+  function setError(type, message, color) {
+    if (type === "email") {
+      setEmailError({
+        msg: message,
+        color: color || colors.red.sixHundred
+      })
+    }
+    if (type === "password") {
+      setPasswordError({
+        msg: message,
+        color: color || colors.red.sixHundred
+      })
+    }
+  }
+
+  // hide settings form and modal
+  function saveChanges() {
+    setShowSettingsForm(false)
+    setShowModal({
+      show: false
+    })
+  }
+
+  // update email and present errors
+  function updateEmail() {
+    user.updateEmail(newEmail).then(() => {
+      saveChanges()
+    }).catch(error => {
+      // handle various error-codes and show their respective error messages
+      switch(error.code) {
+        case "auth/email-already-in-use":
+          setError("email", "Email already in use.")
+          setShowModal({
+            show: false,
+            type: "reauthentication",
+            process: "reauthentication"
+          })
+          break
+        case "auth/invalid-email":
+          setError("email", "Invalid format.")
+          setShowModal({
+            show: false,
+            type: "reauthentication",
+            process: "reauthentication"
+          })
+          break
+        case "auth/requires-recent-login":
+          setError("email", "Re-authenticate your account.")
+          clearError("password")
+          setShowModal({
+            show: true,
+            type: "reauthentication",
+            process: "reauthentication"
+          })
+          break
+        default:
+          setShowSettingsForm(true)
+      }
+    })
+  }
+
+  // function to update password
+  function updatePassword() {
+    user.updatePassword(newPassword).then(res => {
+      saveChanges()
+    }).catch(error => {
+      if (error.code === "auth/requires-recent-login") {
+        setShowModal({
+          show: true,
+          type: "reauthentication",
+          process: "changePassword"
+        })
+      }
+      else {
+        console.log(error.message)
+      }
+    })
+  }
+
+  // function to submit the main settings form
+  function handleSettingsFormSubmit(e) {
+    e.preventDefault()
+    // only allow submit if email is a valid value
+    if (emailValidated) {
+      updateEmail()
+    }
+  }
+
+  // function to submit email change
+  function handleReauthenticationSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    if (showModal.process === "reauthentication") {
+      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
+      .then(res => {
+        updateEmail()
+        clearError("email")
+        clearError("password")
+        setLoading(false)
+      }).catch(error => {
+        setError("password", "Incorrect password.")
+        setLoading(false)
+      })
+    }
+    if (showModal.process === "changePassword") {
+      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
+      .then(res => {
+        updatePassword()
+        setLoading(false)
+        clearError("password")
+      }).catch(error => {
+        setError("password", "Incorrect password.")
+        setLoading(false)
+      })
+    }
+  }
+
+  function handleChangePasswordSubmit(e) {
+    e.preventDefault()
+    if (regex.password.test(newPassword)) {
+      updatePassword(newPassword)
+    }
+    else {
+      console.log("bad password")
     }
   }
 
@@ -56,7 +215,12 @@ function SettingsForm() {
             <>
               <Button
                 backgroundColor={colors.gray.oneHundred}
-                onClick={() => setshowSettingsForm(false)}
+                onClick={() => {
+                  setShowSettingsForm(false)
+                  clearError("email")
+                  setNewEmail("")
+                  setEmailValidated(false)
+                }}
               >
                 Cancel
               </Button>
@@ -65,6 +229,7 @@ function SettingsForm() {
                 color={colors.primary.oneHundred}
                 form="settings-form"
                 type="submit"
+                disabled={!emailValidated}
               >
                 Save
               </Button>
@@ -72,14 +237,17 @@ function SettingsForm() {
           ) : (
             <Button
               backgroundColor={colors.gray.oneHundred}
-              onClick={() => setshowSettingsForm(true)}
+              onClick={() => {
+                setShowSettingsForm(true)
+                setNewEmail("")
+              }}
             >
               Edit settings
             </Button>
           )}
         </FlexboxButtons>
       </Flexbox>
-      <form id="settings-form" name="settings-form" onSubmit={e => handleSubmit(e)}>
+      <form id="settings-form" name="settings-form" onSubmit={e => handleSettingsFormSubmit(e)}>
         <Flexbox
           flex="flex"
           alignItems="flex-start"
@@ -91,7 +259,7 @@ function SettingsForm() {
             <p>You'll use this email for all communications.</p>
           </div>
           {showSettingsForm ? (
-            <div>
+            <StyledFieldset className="is-vertical">
               <StyledInput
                 className="has-width-auto"
                 borderRadius="0.25rem"
@@ -106,7 +274,7 @@ function SettingsForm() {
                   <span>{emailError.msg}</span>
                 </ErrorLine>
               )}
-            </div>
+            </StyledFieldset>
           ) : (
             <p>{user.email}</p>
           )}
@@ -124,7 +292,13 @@ function SettingsForm() {
           {showSettingsForm ? (
             <Button
               backgroundColor={colors.gray.oneHundred}
-              onClick={e => e.preventDefault()}
+              onClick={e => {
+                e.preventDefault()
+                setShowModal({
+                  show: true,
+                  type: "password"
+                })
+              }}
             >
               Change password
             </Button>
@@ -132,27 +306,99 @@ function SettingsForm() {
             <p>••••••••</p>
           )}
         </Flexbox>
-        <Flexbox
-          flex="flex"
-          alignItems="flex-start"
-          justifyContent="space-between"
-          margin="2rem 0"
-        >
-          <div>
-            <h4>Display Name</h4>
-            <p>We'll call you by this name instead.</p>
-          </div>
-          {showSettingsForm ? (
-            <StyledInput
-              className="has-width-auto"
-              borderRadius="0.25rem"
-              placeholder={user.displayName}
-            />
-          ) : (
-            <p>{user.displayName}</p>
-          )}
-        </Flexbox>
       </form>
+      {showModal.show && (
+        <Modal setShowModal={setShowModal}>
+          {showModal.type === "reauthentication" ? (
+            <>
+              <ModalHeader>
+                <h5>Please confirm your password to continue.</h5>
+              </ModalHeader>
+              <ModalContent>
+                <Content>
+                  <form id="reauthentication" noValidate
+                    onSubmit={e => handleReauthenticationSubmit(e)}
+                  >
+                    <StyledFieldset
+                      className="is-vertical"
+                      margin="1rem 0"
+                    >
+                      <StyledLabel htmlFor="current-password">Password</StyledLabel>
+                      <StyledInput
+                        borderRadius="0.25rem"
+                        id="current-password"
+                        type="password"
+                        name="current-password"
+                        onChange={e => setReauthenticatedPassword(e.currentTarget.value)}
+                      />
+                      {passwordError.msg && (
+                        <ErrorLine color={passwordError.color}>
+                          <Icon>
+                            <Warning weight="fill" color={passwordError.color} size={16} />
+                          </Icon>
+                          <span>{passwordError.msg}</span>
+                        </ErrorLine>
+                      )}
+                    </StyledFieldset>
+                  </form>
+                </Content>
+              </ModalContent>
+              <ModalFooter>
+                <Button
+                  backgroundColor={colors.primary.sixHundred}
+                  color={colors.white}
+                  width="100%"
+                  form="reauthentication"
+                  type="submit"
+                  disabled={loading}
+                  className="is-medium"
+                >
+                  Continue
+                </Button>
+              </ModalFooter>
+            </>
+          ) : (
+            <>
+              <ModalHeader>
+                <h5>Change your password</h5>
+              </ModalHeader>
+              <ModalContent>
+                <Content>
+                  <form id="change-password" noValidate onSubmit={e => handleChangePasswordSubmit(e)}>
+                    <StyledFieldset
+                      className="is-vertical"
+                      margin="1rem 0"
+                    >
+                      <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
+                      <StyledInput
+                        borderRadius="0.25rem"
+                        id="new-password"
+                        type="password"
+                        name="new-password"
+                        autocomplete="new-password"
+                        onChange={e => validatePassword(e.currentTarget.value)}
+                      />
+                    </StyledFieldset>
+                  </form>
+                </Content>
+              </ModalContent>
+              <ModalFooter>
+                <Button
+                  backgroundColor={colors.primary.sixHundred}
+                  color={colors.white}
+                  width="100%"
+                  form="change-password"
+                  type="submit"
+                  disabled={!passwordValidated || loading}
+                  className="is-medium"
+                >
+                  Change password
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </Modal>
+      )}
     </>
   )
 }

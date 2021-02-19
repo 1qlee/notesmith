@@ -11,10 +11,14 @@ import SignUpForm from "../components/form/SignUpForm"
 import Layout from "../components/layout/Layout"
 import Logo from "../components/Logo"
 import Icon from "../components/Icon"
+import Loader from "../components/Loader"
 
 const SignUp = () => {
-  const { user } = useFirebaseContext()
+  const { user, loading } = useFirebaseContext()
 
+  if (loading) {
+    return <Loader />
+  }
   if (user) {
     navigate(`/app/dashboard`, { replace: true })
     return null

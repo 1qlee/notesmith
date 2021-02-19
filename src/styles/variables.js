@@ -1,14 +1,15 @@
 const colors = {
   gray: {
-    oneHundred: "#F7FAFC",
-    twoHundred: "#EDF2F7",
-    threeHundred: "#E2E8F0",
-    fourHundred: "#CBD5E0",
-    fiveHundred: "#A0AEC0",
-    sixHundred: "#718096",
-    sevenHundred: "#4A5568",
-    eightHundred: "#2D3748",
-    nineHundred: "#1A202C"
+    oneHundred: "#F5F5F5",
+    twoHundred: "#EEEEEE",
+    threeHundred: "#E0E0E0",
+    fourHundred: "#BDBDBD",
+    fiveHundred: "#9E9E9E",
+    sixHundred: "#757575",
+    sevenHundred: "#616161",
+    eightHundred: "#424242",
+    eightHundredFifty: "#2f2f2c",
+    nineHundred: "#212121"
   },
   primary: {
     oneHundred: "#e9ecec",
@@ -80,7 +81,7 @@ const colors = {
     cream: "#F7F5ED"
   },
   link: {
-    normal: "#007d79"
+    normal: "#00706c"
   },
   white: "#fff",
   cream: "#fffdd0",
@@ -89,21 +90,27 @@ const colors = {
   shadow: {
     float: "rgba(0,0,0,0.2)",
     inset: "rgba(0,0,0,0.4)",
-    dark: "rgba(0,0,0,0.6)"
+    dark: "rgba(0,0,0,0.6)",
+    modal: "0 7px 14px 0 rgba(60,66,87,.08), 0 3px 6px 0 rgba(0,0,0,.12)"
   },
   highlighter: "#ffff00"
 }
 
 const widths = {
   sidebar: "300px",
-  desktop: "1440px"
+  modal: "480px",
+  tablet: "800px",
+  desktop: "1440px",
+  content: {
+    index: "600px"
+  }
 }
 
 const spacing = {
   normal: "1rem",
   medium: "2rem",
   large: "3rem",
-  section: "6rem"
+  section: "8rem"
 }
 
 const regex = {
@@ -111,4 +118,12 @@ const regex = {
   password: RegExp(/^.{8,256}$/)
 }
 
-export { colors, widths, spacing, regex }
+const convertToMM = pixels => {
+  return pixels * .264583
+}
+
+const convertToPx = mm => {
+  return mm * 3.7795275591
+}
+
+export { colors, widths, spacing, regex, convertToMM, convertToPx }

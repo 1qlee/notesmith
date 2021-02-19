@@ -102,7 +102,8 @@ const ChapterNameHeader = styled.div`
     color: ${props => props.color};
     margin-bottom: 0;
     font-weight: 700;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
+    font-family: "Spectral";
   }
 `
 
@@ -145,6 +146,9 @@ function Nav(props) {
               <NavSection justifyContent="flex-end">
                 {user ? (
                   <>
+                    <NavItem>
+                      <Link to="/shop">Shop</Link>
+                    </NavItem>
                     <NavItem>
                       <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>

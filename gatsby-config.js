@@ -37,7 +37,8 @@ module.exports = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `Spectral\:400,400i,700`,
+          `Crimson Pro\:400,400i,700`,
+          `Spectral\:400,700,700i`,
         ]
       },
     },

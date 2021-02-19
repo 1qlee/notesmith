@@ -154,6 +154,54 @@ const PageSvgWrapper = styled.div`
   width: 500px;
 `
 
+const profileData = [
+  {
+    "list": [
+        "Subject line",
+        "Checkboxes",
+        "Thick black lines"
+    ],
+    "name": "Christopher",
+    "type": "Recipe Book"
+  },
+  {
+    "list": [
+        "5mm dot grid",
+        "Light gray dots",
+        "Numbered pages"
+    ],
+    "name": "Cynthia",
+    "type": "Bullet Journal"
+  },
+  {
+    "list": [
+        "Isometric Grid",
+        "5mm dividers",
+        "Thin gray lines"
+    ],
+    "name": "Lu",
+    "type": "Drafting"
+  },
+  {
+    "list": [
+        "Space for photos",
+        "Thin gray lines",
+        "5mm spacing"
+    ],
+    "name": "Jamie",
+    "type": "Scrapbook"
+  },
+  {
+    "list": [
+        "10mm lined grid",
+        "Space for details",
+        "Index page"
+    ],
+    "name": "Alex",
+    "type": "Lab Book"
+  }
+]
+
 function PageProfileSvg(props) {
   const { activeProfile } = props
 
@@ -204,15 +252,15 @@ function PageCarousel({ profiles, profileImages }) {
       <PageProfileCard>
         <PageProfile className={`color-${activeProfile}`}>
           <PageProfileTagLine>Made by</PageProfileTagLine>
-          <PageProfileName>{profiles[activeProfile].name}</PageProfileName>
+          <PageProfileName>{profileData[activeProfile].name}</PageProfileName>
           <PageProfileImage>
             <Img loading="eager" fluid={profileImages[activeProfile].fluid} />
           </PageProfileImage>
           <PageProfileType className={`color-${activeProfile}`}>
-            {profiles[activeProfile].type}
+            {profileData[activeProfile].type}
           </PageProfileType>
           <PageProfileList>
-            {profiles[activeProfile].list.map(listItem => (
+            {profileData[activeProfile].list.map(listItem => (
               <PageProfileListItem key={listItem}>{listItem}</PageProfileListItem>
             ))}
           </PageProfileList>

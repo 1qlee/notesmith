@@ -5,35 +5,29 @@ const Content = styled.div`
   padding: ${props => props.colored ? "2rem" : "0"};
   border-radius: ${props => props.colored ? "1rem" : "0"};
   display: block;
-  margin: 0;
-  text-align: ${props => props.textAlign};
+  margin: ${props => props.margin};
+  max-width: ${props => props.maxWidth};
   h1,h2,h3,h4,h5,h6 {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-    margin-bottom: 2rem;
-    font-family: "Spectral", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    margin: 0 0 1rem;
     font-weight: 700;
     text-rendering: optimizeLegibility;
     line-height: 1.2;
-    text-align: ${props => props.textAlignCenter ? props.textAlignCenter : "left"};
+    text-align: ${props => props.headingTextAlign};
   }
   h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     color: ${props => props.h1Color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h1FontWeight || "700"};
   }
   h2 {
     font-size: 2rem;
     color: ${props => props.h2Color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h2FontWeight || "700"};
   }
   h3 {
     font-size: 1.5rem;
     color: ${props => props.h3Color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h3FontWeight || "700"};
   }
   h4 {
     font-size: 1rem;
@@ -43,7 +37,7 @@ const Content = styled.div`
       margin-bottom: 0.5rem;
       position: relative;
       &::after {
-        background-color: ${colors.link.normal};
+        background-color: ${props => props.headingColor || colors.primary.sixHundred};
         content: "";
         height: 1rem;
         left: -1rem;
@@ -53,31 +47,20 @@ const Content = styled.div`
         opacity: 0.1;
         width: 100%;
       }
-      &.green {
-        &::after {
-          background-color: ${colors.green.sixHundred};
-        }
-      }
-      &.red {
-        &::after {
-          background-color: ${colors.red.sixHundred};
-        }
-      }
-      &.blue {
-        &::after {
-          background-color: ${colors.blue.sixHundred};
-        }
-      }
-      &.purple {
-        &::after {
-          background-color: ${colors.purple.sixHundred};
-        }
-      }
     }
+  }
+  ul {
+    padding-left: 1.5rem;
+    font-size: ${props => props.ulFontSize || "1rem"};
+  }
+  li {
+    margin: 0.5rem 0;
   }
   p {
     color: ${props => props.paragraphColor || colors.gray.sevenHundred};
+    font-size: ${props => props.paragraphFontSize || "1rem"};
     line-height: 1.5;
+    text-align: ${props => props.paragraphTextAlign};
     &:not(:last-child) {
       margin-bottom: 1rem;
     }

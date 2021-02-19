@@ -11,7 +11,7 @@ import Icon from "../Icon"
 import SEO from "../layout/Seo"
 
 const SignUpForm = () => {
-  const { signUp, sendEmailVerificationOnSignUp } = useFirebaseContext()
+  const { signUp, sendEmailVerificationOnSignUp, firebaseDb } = useFirebaseContext()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState({
@@ -28,8 +28,13 @@ const SignUpForm = () => {
   function handleSubmit(e) {
     e.preventDefault()
     signUp(email, password).then(userObject => {
-      userObject.user.sendEmailVerificationOnSignUp().then(value => {
-        console.log("Sending verification email...")
+      const { user } = userObject
+      // Record new user in the db
+      firebaseDb.ref('users/' + user.uid).set({
+        email: user.email
+      })
+      // Send the user a verification email
+      user.sendEmailVerificationOnSignUp().then(() => {
         navigate("/app/dashboard")
       }).catch(error => {
         console.log(error.code, error.msg)
@@ -194,6 +199,7 @@ const SignUpForm = () => {
               type="submit"
               form="signup-form"
               width="100%"
+              className="is-medium"
               >
               Create account
             </Button>
