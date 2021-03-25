@@ -3,7 +3,7 @@ import { colors, convertToPx } from "../../styles/variables"
 import { Minus, Plus } from "phosphor-react"
 
 import { StyledFieldset, StyledSelect, StyledLabel, StyledInput } from "../form/FormComponents"
-import { ProductDetails } from "./ShopComponents"
+import { ProductDetails } from "../shop/ShopComponents"
 import Content from "../Content"
 import Button from "../Button"
 import Icon from "../Icon"

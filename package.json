@@ -6,8 +6,11 @@
   "author": "<wonq33@gmail.com>",
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^13.4.0",
+    "@easypost/api": "^3.10.1",
     "@n8tb1t/use-scroll-position": "^1.0.43",
     "@reach/router": "^1.3.3",
+    "@sendgrid/mail": "^7.4.2",
+    "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
     "babel-plugin-styled-components": "^1.10.6",
     "firebase": "^8.0.0",
@@ -23,16 +26,20 @@
     "gatsby-plugin-styled-components": "^3.1.16",
     "gatsby-source-contentful": "^2.1.73",
     "gatsby-source-filesystem": "^2.1.43",
+    "gatsby-source-stripe": "^3.2.1",
     "gatsby-transformer-sharp": "^2.3.9",
     "ink": "^3.0.7",
-    "phosphor-react": "^1.1.0",
+    "octobat-npm": "^2.0.5",
+    "phosphor-react": "^1.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^5.2.1",
     "react-transition-group": "^4.4.1",
+    "stripe": "^8.137.0",
     "styled-components": "^4.4.1",
-    "styled-css-grid": "^1.2.1"
+    "styled-css-grid": "^1.2.1",
+    "use-shopping-cart": "^2.4.2"
   },
   "devDependencies": {
     "prettier": "^1.19.1"

@@ -61,10 +61,10 @@ function QuantityTracker() {
 
 const Counter = styled.input`
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
-  border: ${props => props.border}};
-  border-width: 1px 0;
+  border: ${props => props.border};
   font-size: ${props => props.fontSize};
   padding: ${props => props.padding || "1rem"};
+  margin: ${props => props.margin};
   width: ${props => props.width};
   text-align: center;
   vertical-align: top;
@@ -87,11 +87,18 @@ const AuthFormWrapper = styled.div`
 const StyledFieldset = styled.fieldset`
   border: none;
   display: flex;
-  align-items: center;
   margin: ${props => props.margin};
   position: relative;
   label {
     margin-right: 1rem;
+  }
+  &.is-flex {
+    fieldset {
+      flex: 1;
+      & + fieldset {
+        margin-left: 1rem;
+      }
+    }
   }
   &.is-horizontal {
     div {
@@ -176,10 +183,13 @@ const StyledRadio = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.gray.nineHundred};
+  color: ${colors.primary.sixHundred};
+  display: block;
   font-family: "Spectral";
-  font-size: 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  text-transform: uppercase;
   width: 100%;
 `
 
@@ -206,15 +216,16 @@ const StyledFloatingLabel = styled.label`
 `
 
 const StyledInput = styled.input`
-  background: ${colors.paper.cream};
+  background-color: ${colors.paper.cream};
   box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
   border: none;
   display: block;
   font-size: 1rem;
+  line-height: 1rem;
   padding: ${props => props.padding ? props.padding : "0.5rem 1rem"};
   transition: background 0.2s, box-shadow 0.2s;
-  width: 100%;
+  width: ${props => props.width ? props.width : "100%"};
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
   }
@@ -225,20 +236,32 @@ const StyledInput = styled.input`
     box-shadow: 0 0 0 2px ${colors.gray.nineHundred}, inset 0 0 0 2px ${colors.white};
     outline: none;
   }
+  &::placeholder {
+    color: ${colors.gray.fiveHundred};
+    opacity: 1;
+  }
 `
 
 const StyledSelect = styled.select`
+  background-color: ${colors.paper.cream};
+  box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
+  border: none;
   font-size: ${props => props.fontSize};
   padding: ${props => props.padding || "1rem"};
+  height: ${props => props.height || "49px"};
   width: ${props => props.width};
+  &.is-error {
+    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
+  }
 `
 
 const ErrorLine = styled.div`
   position: relative;
   margin-top: 0.5rem;
+  margin: ${props => props.margin};
   color: ${props => props.color};
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   span + span {

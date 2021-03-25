@@ -69,7 +69,7 @@ function SignupForm(props) {
         />
         <Button
           color={colors.white}
-          backgroundColor={colors.primary.sixHundred}
+          backgroundcolor={colors.primary.sixHundred}
           borderRadius="0 0.25rem 0.25rem 0"
           padding="1rem"
           type="submit" form="signup"

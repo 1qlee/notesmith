@@ -24,7 +24,7 @@ const loading = keyframes`
 const StyledNotification = styled.div`
   align-items: center;
   animation: ${slideInDown} 0.2s ease-out;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props => props.backgroundcolor};
   border-radius: 0.25rem;
   border: 2px solid ${props => props.color};
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
@@ -52,7 +52,7 @@ const StyledNotification = styled.div`
 
 function Notification(props) {
   return (
-    <StyledNotification color={props.color} backgroundColor={props.backgroundColor} className={props.className} borderColor={props.borderColor}>
+    <StyledNotification color={props.color} backgroundcolor={props.backgroundcolor} className={props.className} borderColor={props.borderColor}>
       {props.children}
     </StyledNotification>
   )

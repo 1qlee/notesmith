@@ -1,14 +1,13 @@
 import React, { useState } from "react"
 import { colors, spacing } from "../styles/variables"
 import { SwitchTransition, CSSTransition } from "react-transition-group"
-import testImg from "./notesmith00256.png"
-import { loadStripe } from "@stripe/stripe-js"
+import testImg from "../images/book-bundle.jpg"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import Page from "../components/shop/Page"
-import EditPageForm from "../components/shop/EditPageForm"
+import EditPageForm from "../components/form/EditPageForm"
 import ProductInfo from "../components/shop/ProductInfo"
 import Button from "../components/Button"
 import Content from "../components/Content"
@@ -16,15 +15,7 @@ import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import SEO from "../components/layout/Seo"
 
-let stripePromise
-const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe("pk_test_51IDyQgIN24Fw2SWdxYeN3XD8L7tVpLQQawaAnHJJ8o9QpTmFjPFSBDkS9InCMk9jyM1X15QV96qSoMxfAoYUl3ZZ00Z8vTGVpk")
-  }
-  return stripePromise
-}
-
-const ShopPage = () => {
+const ShopPage = ({ data }) => {
   const [editMode, setEditMode] = useState(false)
   const [pageData, setPageData] = useState({
     type: "Blank",
@@ -55,10 +46,10 @@ const ShopPage = () => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr 1fr"
+                  columns="repeat(auto-fit,minmax(60px,1fr))"
                   columnGap={spacing.medium}
                 >
-                  <Cell>
+                  <Cell width={8}>
                     {editMode ? (
                       <Page
                         pageData={pageData}
@@ -68,7 +59,7 @@ const ShopPage = () => {
                       <img src={testImg} />
                     )}
                   </Cell>
-                  <Cell>
+                  <Cell width={4}>
                     <SwitchTransition mode="out-in">
                       <CSSTransition
                         key={editMode}

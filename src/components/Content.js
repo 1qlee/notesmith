@@ -8,7 +8,7 @@ const Content = styled.div`
   margin: ${props => props.margin};
   max-width: ${props => props.maxWidth};
   h1,h2,h3,h4,h5,h6 {
-    margin: 0 0 1rem;
+    margin: 0 0 0.5rem;
     font-weight: 700;
     text-rendering: optimizeLegibility;
     line-height: 1.2;
@@ -59,10 +59,10 @@ const Content = styled.div`
   p {
     color: ${props => props.paragraphColor || colors.gray.sevenHundred};
     font-size: ${props => props.paragraphFontSize || "1rem"};
-    line-height: 1.5;
+    line-height: ${props => props.paragraphLineHeight || "1.5"};
     text-align: ${props => props.paragraphTextAlign};
     &:not(:last-child) {
-      margin-bottom: 1rem;
+      margin-bottom: ${props => props.paragraphMarginBottom || "1rem"};
     }
   }
   small {

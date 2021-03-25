@@ -193,7 +193,7 @@ const SignUpForm = () => {
           <StyledFieldset>
             <Button
               color={colors.white}
-              backgroundColor={colors.primary.sixHundred}
+              backgroundcolor={colors.primary.sixHundred}
               borderRadius="0.25rem"
               disabled={passwordValidated && emailValidated && email.length > 0 ? false : true}
               type="submit"

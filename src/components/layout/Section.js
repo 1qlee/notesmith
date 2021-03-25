@@ -13,7 +13,7 @@ const SectionMain = styled.main`
     padding: 0;
   }
   &.has-max-height {
-    height: 100vh;
+    min-height: 100vh;
   }
 `
 

@@ -20,7 +20,7 @@ const Settings = () => {
   const [verificationEmailSent, setVerificationEmailSent] = useState()
   const [notification, setNotification] = useState({
     msg: user.emailVerified ? "" : "Please verify your email address! Check your email for a verification link.",
-    backgroundColor: colors.yellow.oneHundred,
+    backgroundcolor: colors.yellow.oneHundred,
     color: colors.yellow.sevenHundred,
   })
 
@@ -39,7 +39,7 @@ const Settings = () => {
             >
               <Cell>
                 {notification.msg && (
-                  <Notification color={notification.color} backgroundColor={notification.backgroundColor}>
+                  <Notification color={notification.color} backgroundcolor={notification.backgroundcolor}>
                     <Icon>
                       <WarningCircle size="2rem" weight="duotone" color={notification.color} />
                     </Icon>
@@ -47,8 +47,8 @@ const Settings = () => {
                       <p>{notification.msg}</p>
                     </Content>
                     <Button
-                      backgroundColor={verificationEmailSent ? colors.green.sixHundred : notification.color}
-                      color={verificationEmailSent ? colors.white : notification.backgroundColor}
+                      backgroundcolor={verificationEmailSent ? colors.green.sixHundred : notification.color}
+                      color={verificationEmailSent ? colors.white : notification.backgroundcolor}
                       onClick={() => sendEmailVerification(setVerificationEmailSent)}
                     >
                       {verificationEmailSent ? `Email sent!` : `Resend email`}

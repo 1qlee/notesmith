@@ -324,7 +324,7 @@ const Books = () => {
           <SectionAppContent>
             <Flexbox
               flex="flex"
-              alignItems="center"
+              alignitems="center"
               justifyContent="flex-start"
               padding="1rem 0"
             >
@@ -336,7 +336,7 @@ const Books = () => {
               />
               <Button
                 color={colors.white}
-                backgroundColor={colors.primary.sixHundred}
+                backgroundcolor={colors.primary.sixHundred}
                 borderRadius="0.25rem"
                 onClick={() => handleShowModal(true, "createbook")}
               >
@@ -395,7 +395,7 @@ const Books = () => {
                     <StyledLabel>Sizes</StyledLabel>
                     <Flexbox
                       flex="flex"
-                      alignItems="center"
+                      alignitems="center"
                       justifyContent="space-between"
                       width="100%"
                     >
@@ -489,7 +489,7 @@ const Books = () => {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundColor={colors.primary.sixHundred}
+                  backgroundcolor={colors.primary.sixHundred}
                   className="is-medium"
                   color={colors.white}
                   width="100%"
@@ -513,18 +513,18 @@ const Books = () => {
                 <Flexbox
                   flex="flex"
                   justifyContent="flex-end"
-                  alignItems="center"
+                  alignitems="center"
                 >
                   <FlexboxButtons>
                     <Button
-                      backgroundColor={colors.white}
+                      backgroundcolor={colors.white}
                       color={colors.gray.nineHundred}
                       onClick={() => handleShowModal(false, "deletebook")}
                     >
                       Cancel
                     </Button>
                     <Button
-                      backgroundColor={colors.red.sixHundred}
+                      backgroundcolor={colors.red.sixHundred}
                       color={colors.white}
                       onClick={() => deleteBook(bookToBeDeleted)}
                     >

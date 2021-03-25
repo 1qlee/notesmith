@@ -40,7 +40,7 @@ const SignUp = () => {
             columnGap="1rem"
             rows="40px"
             style={{
-              backgroundColor: colors.primary.sixHundred
+              backgroundcolor: colors.primary.sixHundred
             }}
           >
             <Cell left={2}>

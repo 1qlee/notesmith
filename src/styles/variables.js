@@ -81,7 +81,8 @@ const colors = {
     cream: "#F7F5ED"
   },
   link: {
-    normal: "#00706c"
+    normal: "#00706c",
+    hover: "#011f1e"
   },
   white: "#fff",
   cream: "#fffdd0",

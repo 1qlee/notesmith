@@ -91,6 +91,7 @@ const LoginForm = (props) => {
             id="email"
             type="email"
             name="email"
+            padding="0.75rem"
           />
         </StyledFieldset>
         <StyledFieldset
@@ -100,7 +101,7 @@ const LoginForm = (props) => {
           <StyledLabel htmlFor="password">
             <Flexbox
               flex="flex"
-              alignItems="center"
+              alignitems="center"
               justifyContent="space-between"
               width="100%"
             >
@@ -119,6 +120,7 @@ const LoginForm = (props) => {
             id="password"
             type="password"
             name="password"
+            padding="0.75rem"
           />
           {authError.msg && (
             <ErrorLine color={authError.color}>
@@ -135,13 +137,13 @@ const LoginForm = (props) => {
         <StyledFieldset>
           <Button
             color={colors.white}
-            backgroundColor={colors.primary.sixHundred}
+            backgroundcolor={colors.primary.sixHundred}
             borderRadius="0.25rem"
             type="submit"
             form="login-form"
             width="100%"
-            className="is-medium"
-            >
+            padding="1rem"
+          >
             Log In
           </Button>
         </StyledFieldset>

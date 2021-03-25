@@ -166,7 +166,7 @@ const IndexPage = ({ data }) => {
                       <p>Create a custom-made notebook that's perfect for you. Notesmith allows you to fully customize the layout of each page.</p>
                       <Link to="/shop">
                         <Button
-                          backgroundColor={colors.yellow.threeHundred}
+                          backgroundcolor={colors.yellow.threeHundred}
                           padding="1rem"
                           borderRadius="0.25rem"
                         >

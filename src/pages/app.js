@@ -1,6 +1,5 @@
 import React from "react"
 import { Router } from "@reach/router"
-import Layout from "../components/layout/Layout"
 import PrivateRoute from "../components/auth/PrivateRoute"
 import Dashboard from "../components/auth/Dashboard"
 import Editor from "../components/auth/Editor"

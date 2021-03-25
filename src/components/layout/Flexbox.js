@@ -1,8 +1,10 @@
 import styled from "styled-components"
-import PropTypes from "prop-types"
 
 const Flexbox = styled.div`
-  align-items: ${props => props.alignItems};
+  align-items: ${props => props.alignitems};
+  background-color: ${props => props.backgroundcolor};
+  border: ${props => props.border};
+  borderWidth: ${props => props.borderWidth};
   display: ${props => props.flex};
   justify-content: ${props => props.justifyContent};
   flex-direction: ${props => props.flexDirection};
@@ -10,6 +12,9 @@ const Flexbox = styled.div`
   padding: ${props => props.padding};
   position: relative;
   width: ${props => props.width};
+  &.has-border-bottom {
+    border-bottom: 1px solid ${props => props.borderColor};
+  }
 `
 
 const FlexboxButtons = styled.div`
@@ -19,12 +24,6 @@ const FlexboxButtons = styled.div`
     }
   }
 `
-
-Flexbox.propTypes = {
-  alignItems: PropTypes.string.isRequired,
-  flex: PropTypes.string.isRequired,
-  justifyContent: PropTypes.string.isRequired,
-}
 
 export {
   Flexbox,

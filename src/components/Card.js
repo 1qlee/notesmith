@@ -6,7 +6,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import Image from "./Image"
 
 const StyledCard = styled.div`
-  background-color: ${props => props.backgroundColor ? props.backgroundColor : colors.white};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   width: ${props => props.width};
 `
 
@@ -27,7 +27,7 @@ const CardContent = styled.div`
 
 function Card(props) {
   return (
-    <StyledCard width={props.width} backgroundColor={props.backgroundColor}>
+    <StyledCard width={props.width} backgroundcolor={props.backgroundcolor}>
       <Image fluid={props.fluid} />
       <CardContent>
         <h3>{props.title}</h3>

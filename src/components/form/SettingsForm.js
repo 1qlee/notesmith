@@ -205,7 +205,7 @@ function SettingsForm() {
     <>
       <Flexbox
         flex="flex"
-        alignItems="center"
+        alignitems="center"
         justifyContent="space-between"
         margin="2rem 0"
       >
@@ -214,7 +214,7 @@ function SettingsForm() {
           {showSettingsForm ? (
             <>
               <Button
-                backgroundColor={colors.gray.oneHundred}
+                backgroundcolor={colors.gray.oneHundred}
                 onClick={() => {
                   setShowSettingsForm(false)
                   clearError("email")
@@ -225,7 +225,7 @@ function SettingsForm() {
                 Cancel
               </Button>
               <Button
-                backgroundColor={colors.primary.sixHundred}
+                backgroundcolor={colors.primary.sixHundred}
                 color={colors.primary.oneHundred}
                 form="settings-form"
                 type="submit"
@@ -236,7 +236,7 @@ function SettingsForm() {
             </>
           ) : (
             <Button
-              backgroundColor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.oneHundred}
               onClick={() => {
                 setShowSettingsForm(true)
                 setNewEmail("")
@@ -250,7 +250,7 @@ function SettingsForm() {
       <form id="settings-form" name="settings-form" onSubmit={e => handleSettingsFormSubmit(e)}>
         <Flexbox
           flex="flex"
-          alignItems="flex-start"
+          alignitems="flex-start"
           justifyContent="space-between"
           margin="2rem 0"
         >
@@ -281,7 +281,7 @@ function SettingsForm() {
         </Flexbox>
         <Flexbox
           flex="flex"
-          alignItems="flex-start"
+          alignitems="flex-start"
           justifyContent="space-between"
           margin="2rem 0"
         >
@@ -291,7 +291,7 @@ function SettingsForm() {
           </div>
           {showSettingsForm ? (
             <Button
-              backgroundColor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.oneHundred}
               onClick={e => {
                 e.preventDefault()
                 setShowModal({
@@ -345,7 +345,7 @@ function SettingsForm() {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundColor={colors.primary.sixHundred}
+                  backgroundcolor={colors.primary.sixHundred}
                   color={colors.white}
                   width="100%"
                   form="reauthentication"
@@ -384,7 +384,7 @@ function SettingsForm() {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundColor={colors.primary.sixHundred}
+                  backgroundcolor={colors.primary.sixHundred}
                   color={colors.white}
                   width="100%"
                   form="change-password"

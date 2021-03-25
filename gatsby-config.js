@@ -11,6 +11,14 @@ module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
     {
+      resolve: `gatsby-source-stripe`,
+      options: {
+        objects: ['Balance', 'BalanceTransaction', 'Product', 'Price', 'ApplicationFee', 'Sku', 'Subscription'],
+        secretKey: `${process.env.GATSBY_STRIPE_SECRET_KEY_TEST}`,
+        downloadFiles: true,
+      }
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
@@ -48,10 +56,10 @@ module.exports = {
         name: `Notesmith`,
         short_name: `Notesmith`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
+        background_color: `#234342`,
+        theme_color: `#234342`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `src/images/favicon.png`, // This path is relative to the root of the site.
       },
     },
     {

@@ -16,20 +16,22 @@ const StyledModal = styled.div`
 
 const ModalBackground = styled.div`
   background-color: ${colors.gray.threeHundred};
-  height: 100%;
+  height: 100vh;
   background: ${colors.shadow.float};
   position: absolute;
-  width: 100%;
+  width: 100vw;
   z-index: 9000;
   top: 0;
   left: 0;
 `
 
 const ModalHeader = styled.div`
-  background-color: ${colors.primary.oneHundred};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
+  color: ${props => props.color};
   border-radius: 0.25rem 0.25rem 0 0;
   padding: 1rem;
   h5 {
+    color: ${props => props.color};
     font-size: 1rem;
     font-weight: 400;
   }
@@ -40,6 +42,9 @@ const ModalContent = styled.div`
 `
 
 const ModalFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: ${props => props.justifycontent};
   padding: 1rem;
   border-top: 1px solid ${colors.gray.threeHundred};
 `

@@ -1,12 +1,14 @@
 import React from "react"
-import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-import { useFirebaseContext } from "../../utils/auth"
-
 import { colors, widths } from "../../styles/variables"
+import { Link } from "gatsby"
+import { ShoppingCart, ShoppingCartSimple } from "phosphor-react"
+import { useFirebaseContext } from "../../utils/auth"
+import { useShoppingCart } from "use-shopping-cart"
 
 import Button from "../Button"
+import Icon from "../Icon"
 import Logo from "../Logo"
 
 const StyledNav = styled.nav`
@@ -26,7 +28,7 @@ const HorizontalNav = styled.div`
 
 const HorizontalNavInnerBox = styled.div`
   background-color: ${colors.paper.cream};
-  border-color: ${colors.gray.sixHundred};
+  border-color: ${colors.gray.threeHundred};
   border-style: solid;
   border-width: 1px 0;
   padding-left: 96px;
@@ -50,7 +52,7 @@ const VerticalNav = styled.div`
 `
 
 const VerticalNavInnerBox = styled.div`
-  border-color: ${colors.gray.sixHundred};
+  border-color: ${colors.gray.threeHundred};
   border-style: solid;
   border-width: 0 1px;
   height: 100%;
@@ -129,6 +131,7 @@ const NavItem = styled.div`
 
 function Nav(props) {
   const { user, signOut, loading } = useFirebaseContext()
+  const { cartCount, totalPrice } = useShoppingCart()
 
   return (
     <StyledNav>
@@ -137,9 +140,7 @@ function Nav(props) {
           <HorizontalNavContainer>
             <NavSection justifyContent="flex-start">
               <Link to="/">
-                <NavItem className="first-item">
-                  <Logo color={colors.primary.sixHundred} />
-                </NavItem>
+                <Logo color={colors.gray.nineHundred} />
               </Link>
             </NavSection>
             {!loading && (
@@ -152,12 +153,28 @@ function Nav(props) {
                     <NavItem>
                       <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>
-                    <NavItem className="last-item">
+                    <NavItem>
                       <Button
                         color={colors.white}
-                        backgroundColor={colors.primary.sixHundred}
+                        backgroundcolor={colors.primary.sixHundred}
                       >
                         Log Out
+                      </Button>
+                    </NavItem>
+                    <NavItem className="last-item">
+                      <Button
+                        className="has-icon"
+                        as={Link}
+                        to="/cart"
+                      >
+                        <Icon>
+                          <ShoppingCartSimple size="1.5rem" />
+                        </Icon>
+                        {cartCount === 1 ? (
+                          <span>{cartCount} item</span>
+                        ) : (
+                          <span>{cartCount} items</span>
+                        )}
                       </Button>
                     </NavItem>
                   </>
@@ -169,11 +186,27 @@ function Nav(props) {
                     <NavItem className="last-item">
                       <Button
                         color={colors.white}
-                        backgroundColor={colors.primary.sixHundred}
+                        backgroundcolor={colors.primary.sixHundred}
                         as={Link}
                         to="/signup"
                       >
                         Sign Up
+                      </Button>
+                    </NavItem>
+                    <NavItem className="last-item">
+                      <Button
+                        className="has-icon"
+                        as={Link}
+                        to="/cart"
+                      >
+                        <Icon>
+                          <ShoppingCartSimple size="1.5rem" />
+                        </Icon>
+                        {cartCount === 1 ? (
+                          <span>{cartCount} item</span>
+                        ) : (
+                          <span>{cartCount} items</span>
+                        )}
                       </Button>
                     </NavItem>
                   </>
