@@ -102,7 +102,7 @@ const LoginForm = (props) => {
             <Flexbox
               flex="flex"
               alignitems="center"
-              justifyContent="space-between"
+              justifycontent="space-between"
               width="100%"
             >
               Password

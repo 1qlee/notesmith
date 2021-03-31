@@ -25,7 +25,7 @@ const ShoppingCart = () => {
                   rowGap={spacing.normal}
                   columnGap={spacing.medium}
                   rows="auto"
-                  justifyContent="center"
+                  justifycontent="center"
                 >
                   <Cell width={8}>
                     <Cart />

@@ -5,11 +5,12 @@ import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 import { useShoppingCart } from "use-shopping-cart"
 
-import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { Container, LayoutContainer } from "../components/layout/Container"
+import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
-import { StyledFieldset, StyledLabel, ErrorLine } from "../components/form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../components/ui/Modal"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import { StyledFieldset, StyledLabel, ErrorLine } from "../components/form/FormComponents"
 import Button from "../components/Button"
 import ShippingInfo from "../components/checkout/ShippingInfo"
 import Breadcrumb from "../components/Breadcrumb"
@@ -25,13 +26,15 @@ import ShippingForm from "../components/form/ShippingForm"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY_TEST)
 
-const Checkout = () => {
+const Checkout = ({ location }) => {
+  const { cartDetails } = useShoppingCart()
   const [activeTab, setActiveTab] = useState(1)
   const [clientSecret, setClientSecret] = useState("")
   const [loading, setLoading] = useState(false)
   const [processing, setProcessing] = useState(false)
-  const { cartDetails } = useShoppingCart()
   const [formError, setFormError] = useState("")
+  const [selectedRate, setSelectedRate] = useState()
+  const [taxRate, setTaxRate] = useState()
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -49,6 +52,23 @@ const Checkout = () => {
   })
 
   useEffect(() => {
+    // let params = (new URL(document.location)).searchParams
+    // let step = params.get("step")
+    // console.log(step)
+    // switch(step) {
+    //   case "information":
+    //     setActiveTab(1)
+    //     break
+    //   case "shipping":
+    //     setActiveTab(2)
+    //     break
+    //   case "payment":
+    //     setActiveTab(3)
+    //     break
+    //   default:
+    //     setActiveTab(1)
+    // }
+
     // to get an existing paymentIntent from Stripe
     async function retrievePaymentIntent() {
       // show loading screen
@@ -126,6 +146,7 @@ const Checkout = () => {
     }
   }, [])
 
+  // copy of the function in ShippingForm to create a paymentIntent w user's information
   async function forceShippingSubmit() {
     // hide the error modal
     setProcessing(true)
@@ -175,11 +196,11 @@ const Checkout = () => {
                 ) : (
                   <Grid
                     rowGap={spacing.normal}
-                    columnGap={spacing.medium}
+                    columnGap={spacing.large}
                     rows="auto"
-                    justifyContent="center"
+                    justifycontent="center"
                   >
-                    <Cell width={8}>
+                    <Cell width={6}>
                       <Breadcrumb>
                         <ul>
                           <li>
@@ -188,10 +209,18 @@ const Checkout = () => {
                           <li onClick={() => setActiveTab(1)}>
                             <a className={activeTab === 1 ? "is-active" : null}>Information</a>
                           </li>
-                          <li onClick={() => setActiveTab(2)}>
-                            <a className={activeTab === 2 ? "is-active" : null}>Shipping</a>
-                          </li>
-                          {activeTab === 2 ? (
+                          {activeTab === 1 ? (
+                            <li
+                              className="is-disabled"
+                            >
+                              <a>Shipping</a>
+                            </li>
+                          ) : (
+                            <li onClick={() => setActiveTab(2)}>
+                              <a className={activeTab === 2 ? "is-active" : null}>Shipping</a>
+                            </li>
+                          )}
+                          {activeTab === 2 || activeTab === 1 ? (
                             <li
                               className="is-disabled"
                             >
@@ -240,18 +269,15 @@ const Checkout = () => {
                           setProcessing={setProcessing}
                         />
                       ) : (
-                        <>
-                          <StyledFieldset
-                            className="is-flex"
-                          >
-                            <StyledLabel>Shipping Information</StyledLabel>
-                          </StyledFieldset>
-                          <ShippingInfo
-                            customer={customer}
-                            setActiveTab={setActiveTab}
-                            address={address}
-                          />
-                        </>
+                        <ShippingInfo
+                          customer={customer}
+                          activeTab={activeTab}
+                          setActiveTab={setActiveTab}
+                          address={address}
+                          setFormError={setFormError}
+                          setTaxRate={setTaxRate}
+                          setSelectedRate={setSelectedRate}
+                        />
                       )}
                       <Elements
                         stripe={stripePromise}
@@ -265,12 +291,17 @@ const Checkout = () => {
                             setCustomer={setCustomer}
                             address={address}
                             setAddress={setAddress}
+                            selectedRate={selectedRate}
                           />
                         ) : ( null)}
                       </Elements>
                     </Cell>
-                    <Cell width={4}>
-                      <Orders hideButton={true} />
+                    <Cell width={6}>
+                      <Orders
+                        hideButton={true}
+                        selectedRate={selectedRate}
+                        taxRate={taxRate}
+                      />
                     </Cell>
                   </Grid>
                 )}
@@ -292,7 +323,7 @@ const Checkout = () => {
               <h5>Errors:</h5>
               <ul>
                 {formError.map(error => (
-                  <li>{error.message}</li>
+                  <li key={error.message}>{error.message}</li>
                 ))}
               </ul>
             </Content>

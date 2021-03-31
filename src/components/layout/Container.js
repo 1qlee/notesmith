@@ -23,7 +23,7 @@ const FlexContainer = styled.div`
   display: flex;
   flex-direction: ${props => props.direction ? props.direction : "row"};
   align-items: ${props => props.alignitems ? props.alignitems : "flex-start"};
-  justify-content: ${props => props.justifyContent ? props.justifyContent : "flex-start"};
+  justify-content: ${props => props.justifycontent ? props.justifycontent : "flex-start"};
   height: ${props => props.height ? props.height : "auto"};
   position: relative;
 `

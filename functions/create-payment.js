@@ -31,7 +31,7 @@ exports.handler = async (event) => {
       statusCode: 400,
       headers,
       body: JSON.stringify({
-        status: "missing information"
+        status: "Your cart is empty."
       })
     }
   }

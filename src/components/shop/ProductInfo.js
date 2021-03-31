@@ -2,12 +2,14 @@ import React from "react"
 import { StaticQuery, graphql } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart, formatCurrencyString } from 'use-shopping-cart'
+import { CaretDown } from "phosphor-react"
 
 import { ProductDetails } from "./ShopComponents"
 import { QuantityTracker, StyledFieldset, StyledSelect, StyledLabel } from "../form/FormComponents"
 import CheckoutForm from "../form/CheckoutForm"
 import Button from "../Button"
 import Content from "../Content"
+import Icon from "../Icon"
 
 const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
   const { addItem, redirectToCheckout } = useShoppingCart()
@@ -20,22 +22,6 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
       default:
         setBookData({...bookData, width: 528, height: 816})
     }
-  }
-
-  async function handleCheckout(e, product) {
-    e.preventDefault()
-
-    const response = await fetch("/.netlify/functions/create-session", {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({[product.product.id]: { ...product, quantity: 1 }})
-    }).then((res) => {
-      return res.json()
-    }).catch((error) => console.log(error))
-
-    redirectToCheckout({ sessionId: response.sessionId })
   }
 
   return (
@@ -74,22 +60,28 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
             >
               <div>
                 <StyledLabel>Size</StyledLabel>
-                <StyledSelect
-                  borderRadius="0.25rem"
-                  width="100%"
-                  fontSize="1.1rem"
-                  value={bookData.size}
-                  onChange={e => createBookDimensions(e.target.value)}
-                >
-                  <option value="Medium">A5 (5.5" x 8.5")</option>
-                </StyledSelect>
+                <div style={{position: 'relative'}}>
+                  <StyledSelect
+                    borderRadius="0.25rem"
+                    width="100%"
+                    height="51px"
+                    value={bookData.size}
+                    onChange={e => createBookDimensions(e.target.value)}
+                    padding="1rem 3rem 1rem 1rem"
+                  >
+                    <option value="Medium">A5 (5.5" x 8.5")</option>
+                  </StyledSelect>
+                  <Icon style={{position: 'absolute', top:"1rem", right:"1rem"}}>
+                    <CaretDown size="1rem" />
+                  </Icon>
+                </div>
               </div>
               <div>
                 <StyledLabel>Color</StyledLabel>
                 <StyledSelect
                   borderRadius="0.25rem"
                   width="100%"
-                  fontSize="1.1rem"
+                  height="51px"
                   value={bookData.color}
                   onChange={e => setBookData({...bookData, color: e.target.value})}
                 >

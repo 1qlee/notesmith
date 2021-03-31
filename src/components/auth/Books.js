@@ -325,7 +325,7 @@ const Books = () => {
             <Flexbox
               flex="flex"
               alignitems="center"
-              justifyContent="flex-start"
+              justifycontent="flex-start"
               padding="1rem 0"
             >
               <Select
@@ -396,7 +396,7 @@ const Books = () => {
                     <Flexbox
                       flex="flex"
                       alignitems="center"
-                      justifyContent="space-between"
+                      justifycontent="space-between"
                       width="100%"
                     >
                       <StyledRadio
@@ -512,7 +512,7 @@ const Books = () => {
               <ModalFooter>
                 <Flexbox
                   flex="flex"
-                  justifyContent="flex-end"
+                  justifycontent="flex-end"
                   alignitems="center"
                 >
                   <FlexboxButtons>

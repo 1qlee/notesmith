@@ -52,9 +52,9 @@ function Cart() {
       <Flexbox
         flex="flex"
         alignitems="center"
-        justifyContent="space-between"
+        justifycontent="space-between"
         padding="0 0 1rem 0"
-        borderColor={colors.gray.threeHundred}
+        bordercolor={colors.gray.threeHundred}
         className="has-border-bottom"
       >
         <TextLink
@@ -87,7 +87,7 @@ function Cart() {
               <Flexbox
                 key={index}
                 flex="flex"
-                justifyContent="space-between"
+                justifycontent="space-between"
                 padding="1rem 0"
               >
                 <Flexbox

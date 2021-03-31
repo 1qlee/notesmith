@@ -52,7 +52,7 @@ const StyledNotification = styled.div`
 
 function Notification(props) {
   return (
-    <StyledNotification color={props.color} backgroundcolor={props.backgroundcolor} className={props.className} borderColor={props.borderColor}>
+    <StyledNotification color={props.color} backgroundcolor={props.backgroundcolor} className={props.className} bordercolor={props.bordercolor}>
       {props.children}
     </StyledNotification>
   )

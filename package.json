@@ -39,6 +39,7 @@
     "stripe": "^8.137.0",
     "styled-components": "^4.4.1",
     "styled-css-grid": "^1.2.1",
+    "taxjar": "^3.2.2",
     "use-shopping-cart": "^2.4.2"
   },
   "devDependencies": {

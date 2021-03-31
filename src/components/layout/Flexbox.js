@@ -6,14 +6,14 @@ const Flexbox = styled.div`
   border: ${props => props.border};
   borderWidth: ${props => props.borderWidth};
   display: ${props => props.flex};
-  justify-content: ${props => props.justifyContent};
-  flex-direction: ${props => props.flexDirection};
+  justify-content: ${props => props.justifycontent};
+  flex-direction: ${props => props.flexdirection};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;
   width: ${props => props.width};
   &.has-border-bottom {
-    border-bottom: 1px solid ${props => props.borderColor};
+    border-bottom: 1px solid ${props => props.bordercolor};
   }
 `
 

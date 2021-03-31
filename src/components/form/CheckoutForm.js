@@ -45,7 +45,7 @@ const cardElementErrorStyle = {
   marginBottom: "1rem"
 }
 
-function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, address, setAddress }) {
+function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, address, setAddress, selectedRate }) {
   const { clearCart } = useShoppingCart()
   const [succeeded, setSucceeded] = useState(false)
   const [error, setError] = useState(null)
@@ -96,7 +96,6 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
     <form
       onSubmit={submitPaymentForm}
       id="checkout-payment-form"
-      style={{width:"500px"}}
     >
       <StyledFieldset>
         <StyledLabel htmlFor="card-element">Card Information</StyledLabel>
@@ -117,20 +116,9 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
           <span>{error}</span>
         </ErrorLine>
       )}
-      {succeeded && (
-        <p>
-          Payment succeeded, see the result in your
-          <a
-            href={`https://dashboard.stripe.com/test/payments`}
-          >
-            {" "}
-            Stripe dashboard.
-          </a> Refresh the page to pay again.
-        </p>
-      )}
       <Flexbox
         flex="flex"
-        justifyContent="space-between"
+        justifycontent="space-between"
         alignitems="center"
       >
         <TextLink
@@ -153,6 +141,7 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
           padding="1rem"
           className={processing ? "is-loading" : null}
           form="checkout-payment-form"
+          width="200px"
         >
           {processing ? (
             <Loading height="1rem" width="1rem" />

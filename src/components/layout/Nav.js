@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
-import { ShoppingCart, ShoppingCartSimple } from "phosphor-react"
+import { Tote } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
 
@@ -113,7 +113,7 @@ const NavSection = styled.div`
   align-items: center;
   display: flex;
   flex: 1 1 0;
-  justify-content: ${props => props.justifyContent};
+  justify-content: ${props => props.justifycontent};
 `
 
 const NavItem = styled.div`
@@ -138,13 +138,13 @@ function Nav(props) {
       <HorizontalNav hideNavbar={props.hideNavbar}>
         <HorizontalNavInnerBox>
           <HorizontalNavContainer>
-            <NavSection justifyContent="flex-start">
+            <NavSection justifycontent="flex-start">
               <Link to="/">
                 <Logo color={colors.gray.nineHundred} />
               </Link>
             </NavSection>
             {!loading && (
-              <NavSection justifyContent="flex-end">
+              <NavSection justifycontent="flex-end">
                 {user ? (
                   <>
                     <NavItem>
@@ -159,22 +159,6 @@ function Nav(props) {
                         backgroundcolor={colors.primary.sixHundred}
                       >
                         Log Out
-                      </Button>
-                    </NavItem>
-                    <NavItem className="last-item">
-                      <Button
-                        className="has-icon"
-                        as={Link}
-                        to="/cart"
-                      >
-                        <Icon>
-                          <ShoppingCartSimple size="1.5rem" />
-                        </Icon>
-                        {cartCount === 1 ? (
-                          <span>{cartCount} item</span>
-                        ) : (
-                          <span>{cartCount} items</span>
-                        )}
                       </Button>
                     </NavItem>
                   </>
@@ -193,24 +177,25 @@ function Nav(props) {
                         Sign Up
                       </Button>
                     </NavItem>
-                    <NavItem className="last-item">
-                      <Button
-                        className="has-icon"
-                        as={Link}
-                        to="/cart"
-                      >
-                        <Icon>
-                          <ShoppingCartSimple size="1.5rem" />
-                        </Icon>
-                        {cartCount === 1 ? (
-                          <span>{cartCount} item</span>
-                        ) : (
-                          <span>{cartCount} items</span>
-                        )}
-                      </Button>
-                    </NavItem>
                   </>
                 )}
+                <NavItem className="last-item">
+                  <Button
+                    className="has-icon"
+                    backgroundcolor={colors.white}
+                    as={Link}
+                    to="/cart"
+                  >
+                    <Icon>
+                      <Tote size="1.5rem" />
+                    </Icon>
+                    {cartCount === 1 ? (
+                      <span>{cartCount} item</span>
+                    ) : (
+                      <span>{cartCount} items</span>
+                    )}
+                  </Button>
+                </NavItem>
               </NavSection>
             )}
           </HorizontalNavContainer>

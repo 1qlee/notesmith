@@ -23,7 +23,7 @@ const Button = styled.button`
   font-size: ${props => props.fontSize || "1rem"};
   font-family: "Spectral", Georgia, serif;
   justify-content: center;
-  padding: ${props => props.padding || "0.5rem"};
+  padding: ${props => props.padding || "0.5rem 1rem"};
   text-decoration: none;
   transition: background-color 0.2s, color 0.2s;
   white-space: nowrap;
@@ -36,10 +36,16 @@ const Button = styled.button`
   &.is-loading {
     svg {
       animation: ${rotate} 0.5s linear infinite;
+      fill: ${props => props.color || colors.gray.nineHundred};
+      stroke: ${props => props.color || colors.gray.nineHundred};
     }
   }
   &:hover {
     cursor: pointer;
+  }
+  &:focus {
+    box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    outline: none;
   }
   &[disabled] {
     opacity: 0.6;

@@ -144,7 +144,7 @@ const IndexPage = ({ data }) => {
                 <Grid
                   columns="1fr"
                   columnGap={spacing.large}
-                  justifyContent="center"
+                  justifycontent="center"
                 >
                   <Content
                     headingTextAlign="center"
@@ -157,7 +157,7 @@ const IndexPage = ({ data }) => {
                     rowGap={spacing.normal}
                     columns={0}
                     rows="auto"
-                    justifyContent="center"
+                    justifycontent="center"
                   >
                     <Content
                       maxWidth={widths.content.index}
@@ -187,7 +187,7 @@ const IndexPage = ({ data }) => {
                 <Grid
                   columns="2fr 1fr"
                   columnGap={spacing.large}
-                  justifyContent="center"
+                  justifycontent="center"
                   alignContent="center"
                 >
                   <Cell>

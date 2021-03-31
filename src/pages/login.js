@@ -35,7 +35,7 @@ const Login = () => {
                   rowGap={spacing.medium}
                   columns="420px"
                   rows="auto"
-                  justifyContent="center"
+                  justifycontent="center"
                 >
                   <Cell center>
                     <Link to="/">

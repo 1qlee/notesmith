@@ -35,7 +35,7 @@ const SignUp = () => {
             height="100%"
             flow="row"
             rowGap={spacing.normal}
-            justifyContent="end"
+            justifycontent="end"
             columns="2fr 1fr"
             columnGap="1rem"
             rows="40px"
@@ -73,7 +73,7 @@ const SignUp = () => {
             rowGap={spacing.medium}
             columns="420px"
             rows="auto"
-            justifyContent="center"
+            justifycontent="center"
             alignContent="center"
           >
             <Cell center>

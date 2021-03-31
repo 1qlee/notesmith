@@ -4,71 +4,95 @@ import { colors, regex } from "../../styles/variables"
 import { Minus, Plus } from "phosphor-react"
 
 import Icon from "../Icon"
-import Button from "../Button"
 
 function QuantityTracker() {
   const [quantity, setQuantity] = useState(1)
   const quantityRef = useRef()
 
+  const handleBlur = e => {
+    console.log(e.target.value)
+    if (!e.target.value || e.target.value == 0) {
+      setQuantity(1)
+    }
+  }
+
   return (
-    <div>
-      <Button
+    <QuantityWrapper>
+      <QuantityButton
         onClick={e => {
           e.preventDefault()
           quantityRef.current.stepDown(1)
         }}
-        border={`1px solid ${colors.gray.sixHundred}`}
-        padding="1rem"
-        borderRadius="0.25rem 0 0 0.25rem"
-        boxShadow="none"
+        borderradius="0.25rem 0 0 0.25rem"
       >
         <Icon>
           <Minus
-            size="1.1rem"
+            size="0.75rem"
+            color={quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
+            weight="bold"
           />
         </Icon>
-      </Button>
+      </QuantityButton>
       <Counter
+        border="none"
+        fontSize="1rem"
+        margin="0 0.25rem"
+        min="1"
+        onChange={e => setQuantity(e.target.value)}
+        onBlur={e => handleBlur(e)}
         ref={quantityRef}
         type="number"
-        min="1"
-        fontSize="1.1rem"
-        border={`1px solid ${colors.gray.sixHundred}`}
         value={quantity}
-        onChange={e => setQuantity(e.target.value)}
-        width="52px"
-        height="52px"
+        width="3rem"
       />
-      <Button
+      <QuantityButton
         onClick={e => {
           e.preventDefault()
           quantityRef.current.stepUp(1)
         }}
-        border={`1px solid ${colors.gray.sixHundred}`}
-        padding="1rem"
-        borderRadius="0 0.25rem 0.25rem 0"
-        boxShadow="none"
+        borderradius="0 0.25rem 0.25rem 0"
       >
         <Icon>
           <Plus
-            size="1.1rem"
+            size="0.75rem"
+            color={colors.gray.nineHundred}
+            weight="bold"
           />
         </Icon>
-      </Button>
-    </div>
+      </QuantityButton>
+    </QuantityWrapper>
   )
 }
 
+const QuantityWrapper = styled.div`
+  background-color: ${colors.paper.cream};
+  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+`
+
+const QuantityButton = styled.button`
+  background-color: ${colors.paper.cream};
+  border: none;
+  padding: 0.25rem 1rem;
+  border-radius: ${props => props.borderradius};
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 const Counter = styled.input`
+  background-color: ${colors.paper.cream};
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
   border: ${props => props.border};
   font-size: ${props => props.fontSize};
-  padding: ${props => props.padding || "1rem"};
+  padding: ${props => props.padding};
   margin: ${props => props.margin};
   width: ${props => props.width};
   text-align: center;
   vertical-align: top;
-  height: ${props => props.height};
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -183,7 +207,7 @@ const StyledRadio = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.primary.sixHundred};
+  color: ${colors.primary.sevenHundred};
   display: block;
   font-family: "Spectral";
   font-size: 0.7rem;
@@ -217,14 +241,13 @@ const StyledFloatingLabel = styled.label`
 
 const StyledInput = styled.input`
   background-color: ${colors.paper.cream};
-  box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
+  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
   border: none;
   display: block;
   font-size: 1rem;
   line-height: 1rem;
   padding: ${props => props.padding ? props.padding : "0.5rem 1rem"};
-  transition: background 0.2s, box-shadow 0.2s;
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
@@ -233,7 +256,7 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.gray.nineHundred}, inset 0 0 0 2px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.link.normal}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
   &::placeholder {
@@ -244,15 +267,21 @@ const StyledInput = styled.input`
 
 const StyledSelect = styled.select`
   background-color: ${colors.paper.cream};
-  box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
+  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
   border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
   border: none;
   font-size: ${props => props.fontSize};
   padding: ${props => props.padding || "1rem"};
   height: ${props => props.height || "49px"};
   width: ${props => props.width};
+  appearance: none;
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
+  }
+  &:active,
+  &:focus {
+    box-shadow: 0 0 0 2px ${colors.link.normal}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    outline: none;
   }
 `
 

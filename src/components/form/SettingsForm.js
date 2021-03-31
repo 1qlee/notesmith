@@ -206,7 +206,7 @@ function SettingsForm() {
       <Flexbox
         flex="flex"
         alignitems="center"
-        justifyContent="space-between"
+        justifycontent="space-between"
         margin="2rem 0"
       >
         <h2>Settings</h2>
@@ -251,7 +251,7 @@ function SettingsForm() {
         <Flexbox
           flex="flex"
           alignitems="flex-start"
-          justifyContent="space-between"
+          justifycontent="space-between"
           margin="2rem 0"
         >
           <div>
@@ -282,7 +282,7 @@ function SettingsForm() {
         <Flexbox
           flex="flex"
           alignitems="flex-start"
-          justifyContent="space-between"
+          justifycontent="space-between"
           margin="2rem 0"
         >
           <div>

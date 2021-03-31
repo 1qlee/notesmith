@@ -12,6 +12,8 @@ const colors = {
     nineHundred: "#212121"
   },
   primary: {
+    hover: "#e4f1e4",
+    active: "#bcdcbc",
     oneHundred: "#e9ecec",
     twoHundred: "#a7b4b3",
     threeHundred: "#7b8e8e",

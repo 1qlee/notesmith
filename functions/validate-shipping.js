@@ -17,7 +17,6 @@ exports.handler = async (event) => {
 
   const verifiedAddress = await addressToVerify.save()
   if (verifiedAddress.verifications.delivery.success) {
-    console.log(verifiedAddress)
     return {
       statusCode: 200,
       body: JSON.stringify({

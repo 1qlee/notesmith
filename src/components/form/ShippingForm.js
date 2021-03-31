@@ -24,7 +24,7 @@ function ShippingForm({
   setCustomer,
   processing,
   customer,
-  address 
+  address
 }) {
   const { user } = useFirebaseContext()
   const { cartDetails } = useShoppingCart()
@@ -61,18 +61,14 @@ function ShippingForm({
       response.then(obj => {
         // obj contains our error
         if (obj.errors) {
-          console.log("error found in response")
           throw obj.errors
         }
         else {
-          console.log("no errors")
           return obj
         }
       }).then(data => {
-        console.log(data)
         createPayment()
       }).catch(err => {
-        console.log(err)
         setProcessing(false)
         setFormError(err)
         setShowModal({
@@ -110,29 +106,6 @@ function ShippingForm({
       setFormError({
         msg: "Something went wrong processing your information."
       })
-    })
-  }
-
-  async function calculateTaxes() {
-    const totalTaxes = await fetch("https://sales-tax-calculator.p.rapidapi.com/rates", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-rapidapi-key": "1b2b6c9896msh5cc4c7593ead3a8p1d4e1ajsn0f5400f7cf24",
-        "x-rapidapi-host": "sales-tax-calculator.p.rapidapi.com"
-      },
-      body: JSON.stringify({
-        city: address.city,
-        state: address.state,
-        street: address.line1,
-        zip: address.postal_code
-      })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
-      console.log(data)
-    }).catch(err => {
-      console.log(err)
     })
   }
 
@@ -199,7 +172,6 @@ function ShippingForm({
     <form
       onSubmit={submitShippingForm}
       id="checkout-shipping-form"
-      style={{width:"500px"}}
     >
       <StyledFieldset
         className="is-flex"
@@ -439,7 +411,7 @@ function ShippingForm({
       </StyledFieldset>
       <Flexbox
         flex="flex"
-        justifyContent="space-between"
+        justifycontent="space-between"
         alignitems="center"
       >
         <TextLink
@@ -463,6 +435,8 @@ function ShippingForm({
           padding="1rem"
           className={processing || loading ? "is-loading" : null}
           form="checkout-shipping-form"
+          type="submit"
+          width="200px"
         >
           {processing || loading ? (
             <Loading height="1rem" width="1rem" />

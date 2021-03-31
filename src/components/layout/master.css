@@ -193,7 +193,7 @@ html {
   box-sizing: inherit;
 }
 body {
-  color: #2D3748;
+  color: #212121;
   font-family: "Crimson Pro", Palatino, Georgia, serif;
   font-weight: normal;
   word-wrap: break-word;
@@ -270,7 +270,7 @@ dd {
 }
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
-  color: #1A202C;
+  color: #1c3635;
   font-family: "Spectral", Georgia, serif;
 }
 p {
@@ -501,4 +501,17 @@ pre tt:after {
   html {
     font-size: 100%;
   }
+}
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #e4f1e4 inset;
+  transition: background-color 5000s;
 }
