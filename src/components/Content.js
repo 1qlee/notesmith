@@ -2,37 +2,40 @@ import styled from "styled-components"
 import { colors } from "../styles/variables"
 
 const Content = styled.div`
-  padding: ${props => props.colored ? "2rem" : "0"};
-  border-radius: ${props => props.colored ? "1rem" : "0"};
+  padding: ${props => props.padding ? props.padding : "0"};
   display: block;
   margin: ${props => props.margin};
   max-width: ${props => props.maxWidth};
   h1,h2,h3,h4,h5,h6 {
-    margin: 0 0 0.5rem;
+    margin: 0 0 1rem;
     font-weight: 700;
     text-rendering: optimizeLegibility;
     line-height: 1.2;
     text-align: ${props => props.headingTextAlign};
   }
   h1 {
-    font-size: 4rem;
+    font-size: ${props => props.h1FontSize || "4rem"};
     color: ${props => props.h1Color || colors.primary.sevenHundred};
     font-weight: ${props => props.h1FontWeight || "700"};
+    margin: ${props => props.h1margin};
   }
   h2 {
-    font-size: 2rem;
+    font-size: ${props => props.h2FontSize || "2rem"};
     color: ${props => props.h2Color || colors.primary.sevenHundred};
     font-weight: ${props => props.h2FontWeight || "700"};
+    margin: ${props => props.h2margin};
   }
   h3 {
-    font-size: 1.5rem;
+    font-size: ${props => props.h3FontSize || "1.5rem"};
     color: ${props => props.h3Color || colors.primary.sevenHundred};
     font-weight: ${props => props.h3FontWeight || "700"};
+    margin: ${props => props.h3margin};
   }
   h4 {
-    font-size: 1rem;
+    font-size: ${props => props.h4FontSize || "1rem"};
     color: ${props => props.h4Color || colors.primary.sevenHundred};
     font-weight: ${props => props.h4FontWeight || "700"};
+    margin: ${props => props.h4margin};
     &.is-column-heading {
       margin-bottom: 0.5rem;
       position: relative;
@@ -51,14 +54,14 @@ const Content = styled.div`
   }
   ul {
     padding-left: 1.5rem;
-    font-size: ${props => props.ulFontSize || "1rem"};
+    font-size: ${props => props.ulfontsize || "1rem"};
   }
   li {
     margin: 0.5rem 0;
   }
   p {
-    color: ${props => props.paragraphColor || colors.gray.sevenHundred};
-    font-size: ${props => props.paragraphFontSize || "1rem"};
+    color: ${props => props.paragraphColor || colors.primary.sixHundred};
+    font-size: ${props => props.paragraphfontsize || "1rem"};
     line-height: ${props => props.paragraphLineHeight || "1.5"};
     text-align: ${props => props.paragraphTextAlign};
     &:not(:last-child) {

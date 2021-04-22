@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   border-radius: 0.25rem;
   box-shadow: ${colors.shadow.modal};
   position: absolute;

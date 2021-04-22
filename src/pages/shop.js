@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { colors, spacing } from "../styles/variables"
+import { spacing } from "../styles/variables"
 import { SwitchTransition, CSSTransition } from "react-transition-group"
 import testImg from "../images/book-bundle.jpg"
 
@@ -9,8 +9,6 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import Page from "../components/shop/Page"
 import EditPageForm from "../components/form/EditPageForm"
 import ProductInfo from "../components/shop/ProductInfo"
-import Button from "../components/Button"
-import Content from "../components/Content"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import SEO from "../components/layout/Seo"
@@ -39,7 +37,7 @@ const ShopPage = ({ data }) => {
   return (
     <Layout>
       <SEO title="Truly Custom Notebooks For All People" />
-      <Nav></Nav>
+      <Nav chapterNumber="07" title="The signature Notesmith notebook"></Nav>
       <SectionMain>
         <Section>
           <Container>
@@ -49,14 +47,14 @@ const ShopPage = ({ data }) => {
                   columns="repeat(auto-fit,minmax(60px,1fr))"
                   columnGap={spacing.medium}
                 >
-                  <Cell width={8}>
+                  <Cell width={6}>
                     {editMode ? (
                       <Page
                         pageData={pageData}
                         bookData={bookData}
                       />
                     ) : (
-                      <img src={testImg} />
+                      <img style={{ border: `12px solid #e8e7e3`}}src={testImg} alt="testimg" />
                     )}
                   </Cell>
                   <Cell width={4}>

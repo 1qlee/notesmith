@@ -14,13 +14,13 @@ exports.handler = async (event) => {
     state: address.state,
     zip: address.postal_code
   });
-
   const verifiedAddress = await addressToVerify.save()
+
   if (verifiedAddress.verifications.delivery.success) {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        msg: "Good"
+        msg: "Address has been validated."
       })
     }
   }

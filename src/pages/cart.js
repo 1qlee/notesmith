@@ -8,7 +8,7 @@ import Button from "../components/Button"
 import Cart from "../components/shop/Cart"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import Orders from "../components/shop/Orders"
+import OrderSummary from "../components/shop/OrderSummary"
 import SEO from "../components/layout/Seo"
 
 const ShoppingCart = () => {
@@ -24,14 +24,15 @@ const ShoppingCart = () => {
                 <Grid
                   rowGap={spacing.normal}
                   columnGap={spacing.medium}
+                  columns="repeat(auto-fit,minmax(360px,1fr))"
                   rows="auto"
                   justifycontent="center"
                 >
-                  <Cell width={8}>
+                  <Cell width={2}>
                     <Cart />
                   </Cell>
-                  <Cell width={4}>
-                    <Orders />
+                  <Cell width={1}>
+                    <OrderSummary />
                   </Cell>
                 </Grid>
               </SectionContent>

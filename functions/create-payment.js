@@ -31,7 +31,7 @@ exports.handler = async (event) => {
       statusCode: 400,
       headers,
       body: JSON.stringify({
-        status: "Your cart is empty."
+        msg: "Your cart is empty."
       })
     }
   }
@@ -72,5 +72,11 @@ exports.handler = async (event) => {
     }
   } catch(error) {
     console.error(error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: "Something went wrong with creating the payment intent."
+      })
+    }
   }
 }

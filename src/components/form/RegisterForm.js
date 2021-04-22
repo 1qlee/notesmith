@@ -6,11 +6,11 @@ import { useFirebaseContext } from "../../utils/auth"
 
 import { StyledFieldset, StyledFloatingLabel, StyledInput } from "./FormComponents"
 
-const StyledSignupForm = styled.form`
+const StyledRegisterForm = styled.form`
   display: ${props => props.formHidden ? "none" : "block"};
 `
 
-function SignupForm(props) {
+function RegisterForm(props) {
   const [email, setEmail] = useState("")
   const [inputFocused, setInputFocused] = useState(false)
   const { signUpWithEmail } = useFirebaseContext()
@@ -45,9 +45,9 @@ function SignupForm(props) {
   }
 
   return (
-    <StyledSignupForm id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
+    <StyledRegisterForm id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
       <StyledFieldset
-        margin="1rem 0"
+        margin="2rem 0"
       >
         <input type="hidden" name="form-name" value="signup" />
         <StyledFloatingLabel
@@ -62,15 +62,13 @@ function SignupForm(props) {
           onBlur={e => handleBlur(e)}
           onChange={e => setEmail(e.currentTarget.value)}
           inputFocused={inputFocused}
-          borderRadius="0.25rem 0 0 0.25rem"
-          padding="1rem"
           id="email"
           type="email" name="email"
+          placeholder="signmeup@gmail.com"
         />
         <Button
           color={colors.white}
           backgroundcolor={colors.primary.sixHundred}
-          borderRadius="0 0.25rem 0.25rem 0"
           padding="1rem"
           type="submit" form="signup"
           className="is-medium"
@@ -78,8 +76,8 @@ function SignupForm(props) {
           Sign Up
         </Button>
       </StyledFieldset>
-    </StyledSignupForm>
+    </StyledRegisterForm>
   )
 }
 
-export default SignupForm
+export default RegisterForm

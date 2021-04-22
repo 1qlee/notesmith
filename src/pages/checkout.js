@@ -11,18 +11,18 @@ import { Grid, Cell } from "styled-css-grid"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../components/ui/Modal"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { StyledFieldset, StyledLabel, ErrorLine } from "../components/form/FormComponents"
-import Button from "../components/Button"
-import ShippingInfo from "../components/checkout/ShippingInfo"
 import Breadcrumb from "../components/Breadcrumb"
-import Content from "../components/Content"
+import Button from "../components/Button"
 import CheckoutForm from "../components/form/CheckoutForm"
-import Loader from "../components/Loader"
+import Content from "../components/Content"
+import InformationForm from "../components/form/InformationForm"
 import Layout from "../components/layout/Layout"
+import Loader from "../components/Loader"
 import Nav from "../components/layout/Nav"
-import Orders from "../components/shop/Orders"
+import OrderSummary from "../components/shop/OrderSummary"
 import SEO from "../components/layout/Seo"
+import ShippingInfo from "../components/checkout/ShippingInfo"
 import TextLink from "../components/TextLink"
-import ShippingForm from "../components/form/ShippingForm"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY_TEST)
 
@@ -35,6 +35,7 @@ const Checkout = ({ location }) => {
   const [formError, setFormError] = useState("")
   const [selectedRate, setSelectedRate] = useState()
   const [taxRate, setTaxRate] = useState()
+  const [shipment, setShipment] = useState()
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -50,6 +51,12 @@ const Checkout = ({ location }) => {
     postal_code: "",
     country: "US"
   })
+  const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
+
+  // if the cart is empty, redirect the user to cart
+  if (isCartEmpty) {
+    navigate("/cart")
+  }
 
   useEffect(() => {
     // let params = (new URL(document.location)).searchParams
@@ -87,21 +94,30 @@ const Checkout = ({ location }) => {
       }).then(res => {
         return res.json()
       }).then(data => {
-        // check if the paymentIntent has shipping information
+        const { isPaymentPaid } = data
         const { shipping, client_secret } = data.paymentIntent
 
-        setLoading(false)
-        setClientSecret(client_secret)
+        // if this pid is old (aka paid already), remove it from localStorage
+        if (isPaymentPaid) {
+          localStorage.removeItem("pid")
+          setLoading(false)
+          // create a fresh paymentIntent
+          createPaymentIntent()
+        }
+        else {
+          setLoading(false)
+          setClientSecret(client_secret)
 
-        // if shipping information exists, fill the form
-        if (shipping) {
-          const { receipt_email } = data.paymentIntent
+          // if shipping information exists, fill the form
+          if (shipping) {
+            const { receipt_email } = data.paymentIntent
 
-          setAddress(shipping.address)
-          setCustomer({...customer, name: shipping.name, email: receipt_email})
+            setAddress(shipping.address)
+            setCustomer({...customer, name: shipping.name, email: receipt_email})
+          }
         }
       }).catch(err => {
-        console.log(err)
+        setFormError(err.msg)
       })
     }
 
@@ -129,10 +145,8 @@ const Checkout = ({ location }) => {
         // set a pid value in localStorage based on newly created paymentIntent
         localStorage.setItem('pid', data.paymentId)
       }).catch(err => {
-        console.log(err)
-        // if there is an error, it means the cart is empty
-        // navigate the user back to their cart
-        navigate("/cart")
+        console.log(err.msg)
+        setFormError(err.msg)
       })
     }
 
@@ -146,7 +160,7 @@ const Checkout = ({ location }) => {
     }
   }, [])
 
-  // copy of the function in ShippingForm to create a paymentIntent w user's information
+  // copy of the function in InformationForm to create a paymentIntent w user's information
   async function forceShippingSubmit() {
     // hide the error modal
     setProcessing(true)
@@ -185,125 +199,135 @@ const Checkout = ({ location }) => {
   return (
     <Layout>
       <SEO title="Checkout" />
-      <Nav chapterNumber="01" title="Cart"></Nav>
+      <Nav chapterNumber={`0${activeTab}`} title="Cart"></Nav>
       <SectionMain className="has-max-height">
         <Section>
           <Container>
             <LayoutContainer>
               <SectionContent>
-                {loading ? (
-                  <Loader className="has-nav" />
-                ) : (
-                  <Grid
-                    rowGap={spacing.normal}
-                    columnGap={spacing.large}
-                    rows="auto"
-                    justifycontent="center"
-                  >
-                    <Cell width={6}>
-                      <Breadcrumb>
-                        <ul>
-                          <li>
-                            <Link to="/cart" className="first">Cart</Link>
-                          </li>
-                          <li onClick={() => setActiveTab(1)}>
-                            <a className={activeTab === 1 ? "is-active" : null}>Information</a>
-                          </li>
-                          {activeTab === 1 ? (
-                            <li
-                              className="is-disabled"
-                            >
-                              <a>Shipping</a>
-                            </li>
-                          ) : (
-                            <li onClick={() => setActiveTab(2)}>
-                              <a className={activeTab === 2 ? "is-active" : null}>Shipping</a>
-                            </li>
-                          )}
-                          {activeTab === 2 || activeTab === 1 ? (
-                            <li
-                              className="is-disabled"
-                            >
-                              <a>Payment</a>
-                            </li>
-                          ) : (
-                            <li
-                              onClick={() => setActiveTab(3)}
-                            >
-                              <a className={activeTab === 3 ? "is-active" : null}>Payment</a>
-                            </li>
-                          )}
-                        </ul>
-                      </Breadcrumb>
-                      <Content
-                        margin="0 0 2rem 0"
-                      >
-                        {activeTab === 1 && (
-                          <h3>1. Information</h3>
-                        )}
-                        {activeTab === 2 && (
-                          <h3>2. Shipping</h3>
-                        )}
-                        {activeTab === 3 && (
-                          <h3>3. Payment</h3>
-                        )}
-                        {formError.msg && (
-                          <ErrorLine
-                            color={colors.red.sixHundred}
+                <Grid
+                  rowGap={spacing.normal}
+                  columnGap={spacing.large}
+                  columns="repeat(auto-fit,minmax(240px,1fr))"
+                  rows="auto"
+                  justifycontent="center"
+                >
+                  <Cell width={2}>
+                    <Breadcrumb>
+                      <ul>
+                        <li>
+                          <Link to="/cart" className="first">Cart</Link>
+                        </li>
+                        <li onClick={() => setActiveTab(1)}>
+                          <a className={activeTab === 1 ? "is-active" : null}>Information</a>
+                        </li>
+                        {activeTab === 1 ? (
+                          <li
+                            className="is-disabled"
                           >
-                            {formError.msg}
-                          </ErrorLine>
+                            <a>Shipping</a>
+                          </li>
+                        ) : (
+                          <li onClick={() => setActiveTab(2)}>
+                            <a className={activeTab === 2 ? "is-active" : null}>Shipping</a>
+                          </li>
                         )}
-                      </Content>
-                      {activeTab === 1 ? (
-                        <ShippingForm
-                          customer={customer}
-                          setCustomer={setCustomer}
-                          address={address}
-                          setAddress={setAddress}
-                          activeTab={activeTab}
-                          setActiveTab={setActiveTab}
-                          setFormError={setFormError}
-                          setShowModal={setShowModal}
-                          processing={processing}
-                          setProcessing={setProcessing}
-                        />
-                      ) : (
-                        <ShippingInfo
-                          customer={customer}
-                          activeTab={activeTab}
-                          setActiveTab={setActiveTab}
-                          address={address}
-                          setFormError={setFormError}
-                          setTaxRate={setTaxRate}
-                          setSelectedRate={setSelectedRate}
-                        />
+                        {activeTab === 2 || activeTab === 1 ? (
+                          <li
+                            className="is-disabled"
+                          >
+                            <a>Payment</a>
+                          </li>
+                        ) : (
+                          <li
+                            onClick={() => setActiveTab(3)}
+                          >
+                            <a className={activeTab === 3 ? "is-active" : null}>Payment</a>
+                          </li>
+                        )}
+                      </ul>
+                    </Breadcrumb>
+                    <Content
+                      margin="0 0 2rem 0"
+                    >
+                      {activeTab === 1 && (
+                        <h3>1. Information</h3>
                       )}
-                      <Elements
-                        stripe={stripePromise}
-                      >
-                        {activeTab === 3 ? (
-                          <CheckoutForm
-                            setActiveTab={setActiveTab}
-                            activeTab={activeTab}
-                            clientSecret={clientSecret}
-                            customer={customer}
-                            setCustomer={setCustomer}
-                            address={address}
-                            setAddress={setAddress}
-                            selectedRate={selectedRate}
-                          />
-                        ) : ( null)}
-                      </Elements>
-                    </Cell>
-                    <Cell width={6}>
-                      <Orders
-                        hideButton={true}
-                        selectedRate={selectedRate}
-                        taxRate={taxRate}
+                      {activeTab === 2 && (
+                        <h3>2. Shipping</h3>
+                      )}
+                      {activeTab === 3 && (
+                        <h3>3. Payment</h3>
+                      )}
+                      {formError.msg && (
+                        <ErrorLine
+                          color={colors.red.sixHundred}
+                        >
+                          {formError.msg}
+                        </ErrorLine>
+                      )}
+                    </Content>
+                    {activeTab === 1 ? (
+                      <InformationForm
+                        activeTab={activeTab}
+                        address={address}
+                        customer={customer}
+                        loading={loading}
+                        processing={processing}
+                        setActiveTab={setActiveTab}
+                        setAddress={setAddress}
+                        setCustomer={setCustomer}
+                        setFormError={setFormError}
+                        setLoading={setLoading}
+                        setProcessing={setProcessing}
+                        setShowModal={setShowModal}
                       />
-                    </Cell>
-                  </Grid>
+                    ) : (
+                      <ShippingInfo
+                        customer={customer}
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+                        address={address}
+                        setFormError={setFormError}
+                        setTaxRate={setTaxRate}
+                        setSelectedRate={setSelectedRate}
+                        processing={processing}
+                        setProcessing={setProcessing}
+                        setShipment={setShipment}
+                      />
+                    )}
+                    <Elements
+                      stripe={stripePromise}
+                    >
+                      {activeTab === 3 ? (
+                        <CheckoutForm
+                          activeTab={activeTab}
+                          address={address}
+                          clientSecret={clientSecret}
+                          customer={customer}
+                          processing={processing}
+                          selectedRate={selectedRate}
+                          setActiveTab={setActiveTab}
+                          setAddress={setAddress}
+                          setCustomer={setCustomer}
+                          setLoading={setLoading}
+                          setProcessing={setProcessing}
+                          shipment={shipment}
+                          taxRate={taxRate}
+                        />
+                      ) : ( null)}
+                    </Elements>
+                  </Cell>
+                  <Cell width={2}>
+                    <OrderSummary
+                      hideButton={true}
+                      selectedRate={selectedRate}
+                      taxRate={taxRate}
+                    />
+                  </Cell>
+                </Grid>
+                {loading && (
+                  <Loader className="has-nav" />
                 )}
               </SectionContent>
             </LayoutContainer>

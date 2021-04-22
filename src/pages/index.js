@@ -1,57 +1,55 @@
 import React, { useState } from "react"
+import { BookOpen, Book, FileText, SquareHalf, Scissors, NoteBlank, HandWaving } from "phosphor-react"
 import { colors, spacing, widths } from "../styles/variables"
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
-import { graphql, Link } from "gatsby"
+import { Link } from "gatsby"
+import { StaticImage } from "gatsby-plugin-image"
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import Img from "gatsby-image"
+import Test from "../assets/index-test.svg"
+import Test2 from "../assets/index-test-2.svg"
+import Highlight from "../assets/highlight.svg"
 
+import { Card, CardWrapper } from "../components/ui/Card"
 import { Container, LayoutContainer } from "../components/layout/Container"
+import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import RegisterForm from "../components/form/RegisterForm"
 import Button from "../components/Button"
 import Content from "../components/Content"
 import Icon from "../components/Icon"
+import Img from "gatsby-image"
 import Layout from "../components/layout/Layout"
-import List from "../components/List"
 import Nav from "../components/layout/Nav"
-import PageCarousel from "../components/PageCarousel"
+import PageGallery from "../components/PageGallery"
 import SEO from "../components/layout/Seo"
-import Tag from "../components/Tag"
-import RegisterForm from "../components/form/RegisterForm"
-import { BookOpen, Book, FileText, SquareHalf, Scissors, Notebook, NoteBlank, ShieldCheck } from "phosphor-react"
+import Notification from "../components/ui/Notification"
 
 const chapterData = {
   chapterOne: {
-    title: "Custom notebooks made by you",
+    title: "Custom notebooks made-to-order",
     chapter: "01"
   },
   chapterTwo: {
-    title: "Fully custom pages for your unique needs",
+    title: "A truly unique notebook",
     chapter: "02",
-    heading: "Create your own pages"
+    heading: "Commitment to customization",
   },
   chapterThree: {
-    title: "Simple, clean design and functional materials",
+    title: "High quality, fountain pen friendly paper",
     chapter: "03",
-    heading: "Introduction to our notebooks"
+    heading: "Smooth writing experience"
   },
   chapterFour: {
-    title: "Beauty and the sheets",
+    title: "Simple, clean design and functional materials",
     chapter: "04",
+    heading: "Introduction to our notebooks"
+  },
+  chapterFive: {
+    title: "Beauty and the sheets",
+    chapter: "05",
     heading: "Photo gallery"
   }
 }
-
-const listData = [
-  {
-    icon: <BookOpen weight="duotone" size="1.75rem" color={colors.primary.sixHundred} />,
-    text: "Customize each page individually"
-  },
-  {
-    icon: <FileText weight="duotone" size="1.75rem" color={colors.primary.sixHundred} />,
-    text: "Lines, dots, squiggles - anything!"
-  }
-]
 
 const featureData = [
   {
@@ -142,38 +140,38 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr"
+                  columns="repeat(auto-fit,minmax(60px,1fr))"
                   columnGap={spacing.large}
                   justifycontent="center"
                 >
-                  <Content
-                    headingTextAlign="center"
-                    h1FontWeight="400"
-                  >
-                    <h1>Custom notebooks <b>made by you</b></h1>
-                  </Content>
                   <Grid
                     flow="row"
                     rowGap={spacing.normal}
-                    columns={0}
+                    columns="minmax(0, 1fr)"
                     rows="auto"
                     justifycontent="center"
                   >
                     <Content
-                      maxWidth={widths.content.index}
-                      paragraphFontSize="1.25rem"
+                      margin="0 auto"
+                      headingTextAlign="center"
+                      h1FontWeight="400"
                     >
-                      <p>Create a custom-made notebook that's perfect for you. Notesmith allows you to fully customize the layout of each page.</p>
-                      <Link to="/shop">
-                        <Button
-                          backgroundcolor={colors.yellow.threeHundred}
-                          padding="1rem"
-                          borderRadius="0.25rem"
-                        >
-                          Buy now
-                        </Button>
-                      </Link>
+                      <h1>Custom notebooks <b>made by you</b></h1>
                     </Content>
+                    <Content
+                      maxWidth={widths.content.index}
+                      paragraphfontsize="1.25rem"
+                      margin="0 auto"
+                    >
+                      <p>Fully customize the layout of every page in your notebook - from dot thickness to line spacing - and create your own custom-made notebook.</p>
+                      <RegisterForm />
+                    </Content>
+                    <Flexbox
+                      flex="flex"
+                      margin="2rem auto"
+                    >
+                      <PageGallery />
+                    </Flexbox>
                   </Grid>
                 </Grid>
               </SectionContent>
@@ -185,23 +183,77 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="2fr 1fr"
+                  columns="repeat(auto-fit,minmax(120px,1fr))"
                   columnGap={spacing.large}
+                  rowGap={spacing.large}
                   justifycontent="center"
                   alignContent="center"
                 >
-                  <Cell>
-                    <Container maxWidth="505px" className="is-aligned-left">
-                      <PageCarousel profileImages={data.chapterTwo.contentImages} />
-                    </Container>
-                  </Cell>
-                  <Cell middle>
-                    <Content h3Color={colors.link.normal} h3FontWeight="400">
-                      <h3 fontWeight="400">{chapterData.chapterTwo.heading}</h3>
+                  <Cell
+                    width={2}
+                  >
+                    <Content
+                      margin="0 0 3rem 0"
+                      h2margin="0 0 1.5rem 0"
+                      h4Color={colors.link.normal}
+                      h4FontWeight="400"
+                      h2FontWeight="400"
+                      h2FontSize="2.5rem"
+                      paragraphfontsize="1.2rem"
+                    >
+                      <h4>{chapterData.chapterTwo.heading}</h4>
                       <h2>{chapterData.chapterTwo.title}</h2>
-                      <p>Go beyond conventional grids and layouts to create a notebook that is unique to your needs. Every page is customizable. You imagine it, and we'll print it!</p>
+                      <p>Have you ever bought a notebook and wished that the dots were smaller or that the lines had more spacing between them? Or perhaps you feel like you are forever in search of the perfect layout.</p>
+                      <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. Tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                     </Content>
-                    <List list={listData} />
+                    <Flexbox
+                      flex="flex"
+                    >
+                      <CardWrapper dropshadow={`-2px 2px 6px ${colors.shadow.float}`}>
+                        <Card
+                          width="250px"
+                          height="200px"
+                          background={colors.paper.cream}
+                        >
+                          <Test width="50" height="50" />
+                          <Content
+                            margin="0.75rem 0 0"
+                            paragraphColor={colors.gray.nineHundred}
+                            h4Color={colors.gray.nineHundred}
+                          >
+                            <h4>Create layouts</h4>
+                            <p>Go beyond conventional grids and layouts to create something unique.</p>
+                          </Content>
+                        </Card>
+                      </CardWrapper>
+                      <CardWrapper dropshadow={`-2px 2px 6px ${colors.shadow.float}`}>
+                        <Card
+                          width="250px"
+                          height="200px"
+                          background={colors.paper.cream}
+                        >
+                          <Test2 width="50" height="50" />
+                          <Content
+                            margin="0.75rem 0 0"
+                            paragraphColor={colors.gray.nineHundred}
+                            h4Color={colors.gray.nineHundred}
+                          >
+                            <h4>Edit with ease</h4>
+                            <p>Easily tweak thickness, darkness, and spacing for your favorite grid styles.</p>
+                          </Content>
+                        </Card>
+                      </CardWrapper>
+                    </Flexbox>
+                  </Cell>
+                  <Cell
+                    width={3}
+                  >
+                    <StaticImage
+                      src="../images/index-image-1.jpg"
+                      alt="Notesmith logo image"
+                      placeholder="blurred"
+                    />
+                    <small>The back-side cover of a custom-made Notesmith notebook.</small>
                   </Cell>
                 </Grid>
               </SectionContent>
@@ -213,35 +265,55 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  flow="row"
-                  rowGap={spacing.normal}
-                  columns={0}
-                  rows="auto"
-                  alignContent="baseline"
+                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columnGap={spacing.large}
+                  rowGap={spacing.large}
+                  justifycontent="center"
+                  alignContent="center"
                 >
-                  <Cell>
-                    <Content h4Color={colors.link.normal} h4FontWeight="400">
+                  <Cell width={3}>
+                    <StaticImage
+                      src="../images/writing-closeup-3.jpg"
+                      alt="Notesmith notebook bundle"
+                      placeholder="blurred"
+                    />
+                    <small>A close-up of our paper. Ink is Pilot Iroshizuku take-sumi.</small>
+                  </Cell>
+                  <Cell width={2}>
+                    <Content
+                      margin="0 0 2rem 0"
+                      h2margin="0 0 1.5rem 0"
+                      h4Color={colors.link.normal}
+                      h4FontWeight="400"
+                      h2FontWeight="400"
+                      h2FontSize="2.5rem"
+                      paragraphfontsize="1.2rem"
+                    >
                       <h4>{chapterData.chapterThree.heading}</h4>
                       <h2>{chapterData.chapterThree.title}</h2>
-                      <p>We make every custom notebook with the same high quality materials from cover to cover.</p>
+                      <p>We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
+                      <p>Our white, super-smooth paper (70lb) scored high marks on bleeding, ghosting, and feathering among early test users.</p>
                     </Content>
-                  </Cell>
-                  <Grid
-                    columns="repeat(auto-fit, minmax(120px, 1fr))"
-                    columnGap={spacing.large}
-                  >
-                    {featureData.map(feature => (
-                      <Cell key={feature.title}>
-                        <Content headingColor={feature.color}>
-                          <Icon>
-                            {feature.icon}
-                          </Icon>
-                          <h4 className={`is-column-heading`}>{feature.title}</h4>
-                          <p>{feature.description}</p>
+                    <Notification
+                      backgroundcolor={colors.paper.cream}
+                      color={colors.primary.sevenHundred}
+                      bordercolor='transparent'
+                    >
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                      >
+                        <Icon>
+                          <HandWaving color={colors.primary.sevenHundred} size="1.5rem" />
+                        </Icon>
+                        <Content
+                          paragraphcolor={colors.primary.sevenHundred}
+                        >
+                          <p>We are working on discovering additional paper options.</p>
                         </Content>
-                      </Cell>
-                    ))}
-                  </Grid>
+                      </Flexbox>
+                    </Notification>
+                  </Cell>
                 </Grid>
               </SectionContent>
             </LayoutContainer>
@@ -251,29 +323,136 @@ const IndexPage = ({ data }) => {
           <Container ref={element => setPosition(element, 4)}>
             <LayoutContainer>
               <SectionContent>
+              <Content
+                margin="0 0 2rem 0"
+                h2margin="0 0 1.5rem 0"
+                h4Color={colors.link.normal}
+                h4FontWeight="400"
+                h2FontWeight="400"
+                h2FontSize="2.5rem"
+                paragraphfontsize="1.2rem"
+              >
+                <h4>{chapterData.chapterFour.heading}</h4>
+                <h2>{chapterData.chapterFour.title}</h2>
+              </Content>
                 <Grid
-                  flow="row"
-                  rowGap={spacing.normal}
-                  columns={0}
-                  rows="auto"
-                  alignContent="baseline"
+                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columnGap={spacing.large}
+                  rowGap={spacing.large}
+                  justifycontent="center"
+                  alignContent="center"
                 >
                   <Cell>
-                    <Content h4Color={colors.link.normal} h4FontWeight="400">
-                      <h4>{chapterData.chapterFour.heading}</h4>
-                      <h2>{chapterData.chapterFour.title}</h2>
+                    <StaticImage
+                      src="../images/index-column-1.jpg"
+                      alt="Notesmith logo image"
+                      placeholder="blurred"
+                      quality={100}
+                    />
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="1rem 0 0.5rem"
+                      h3FontWeight="400"
+                      paragraphfontsize="1.2rem"
+                    >
+                      <h3>Linen paper cover</h3>
+                      <p>80lb cover paper. Finely patterned with a slight texture. Branding only on the back cover.</p>
                     </Content>
                   </Cell>
-                  <Grid
-                    columns="2fr 1fr 1fr"
-                    rows="1fr 1fr"
-                    columnGap="0"
-                    rowGap="0"
-                  >
-                    {data.chapterFour.contentImages.map((image, index) => (
-                      <Img key={index} fluid={image.fluid} />
-                    ))}
-                  </Grid>
+                  <Cell>
+                    <StaticImage
+                      src="../images/index-column-2.jpg"
+                      alt="Notesmith logo image"
+                      placeholder="blurred"
+                      quality={100}
+                    />
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="1rem 0 0.5rem"
+                      h3FontWeight="400"
+                      paragraphfontsize="1.2rem"
+                    >
+                      <h3>Saddle stitched</h3>
+                      <p>Machine stitched with two staples. Clean, precise cuts create a high quality product.</p>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <StaticImage
+                      src="../images/index-column-3.jpg"
+                      alt="Notesmith logo image"
+                      placeholder="blurred"
+                      quality={100}
+                    />
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="1rem 0 0.5rem"
+                      h3FontWeight="400"
+                      paragraphfontsize="1.2rem"
+                    >
+                      <h3>Smooth white paper</h3>
+                      <p>70lb text paper. 48 total pages. Smooth, white paper with your custom layout.</p>
+                    </Content>
+                  </Cell>
+                </Grid>
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
+        <Section
+          backgroundcolor={colors.primary.sixHundred}
+        >
+          <Container ref={element => setPosition(element, 5)}>
+            <LayoutContainer>
+              <SectionContent>
+              <Content
+                margin="0 0 2rem 0"
+                h2margin="0 0 1.5rem 0"
+                h4Color={colors.link.normal}
+                h4FontWeight="400"
+                h2FontWeight="400"
+                h2FontSize="2.5rem"
+                paragraphfontsize="1.2rem"
+              >
+                <h4>{chapterData.chapterFour.heading}</h4>
+                <h2>{chapterData.chapterFour.title}</h2>
+              </Content>
+                <Grid
+                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columnGap={spacing.large}
+                  rowGap={spacing.large}
+                  justifycontent="center"
+                  alignContent="center"
+                >
+                  <Cell>
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="0.5rem 0 0"
+                      h3FontWeight="400"
+                    >
+                      <h3>Lorem Ipsum</h3>
+                      <p>New summer style with 6 colors available total.</p>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="0.5rem 0 0"
+                      h3FontWeight="400"
+                    >
+                      <h3>Lorem Ipsum</h3>
+                      <p>New summer style with 6 colors available total.</p>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <Content
+                      margin="1rem 0 0"
+                      h3margin="0.5rem 0 0"
+                      h3FontWeight="400"
+                    >
+                      <h3>Lorem Ipsum</h3>
+                      <p>New summer style with 6 colors available total.</p>
+                    </Content>
+                  </Cell>
                 </Grid>
               </SectionContent>
             </LayoutContainer>
@@ -283,44 +462,5 @@ const IndexPage = ({ data }) => {
     </Layout>
   )
 }
-
-export const query = graphql`
-  query indexQuery {
-    chapterOne: contentfulChapter(chapterNumber: { eq: "01" }) {
-      image {
-        id
-        description
-        title
-        fixed(width: 1200) {
-          ...GatsbyContentfulFixed
-        }
-        fluid {
-          ...GatsbyContentfulFluid
-        }
-      }
-    }
-    chapterTwo: contentfulChapter(chapterNumber: { eq: "02" }) {
-      contentImages {
-        fluid {
-          ...GatsbyContentfulFluid
-        }
-      }
-    }
-    chapterThree: contentfulChapter(chapterNumber: { eq: "03" }) {
-      contentImages {
-        fluid {
-          ...GatsbyContentfulFluid
-        }
-      }
-    }
-    chapterFour: contentfulChapter(chapterNumber: { eq: "04" }) {
-      contentImages {
-        fluid {
-          ...GatsbyContentfulFluid
-        }
-      }
-    }
-  }
-`
 
 export default IndexPage

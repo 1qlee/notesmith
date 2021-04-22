@@ -54,7 +54,7 @@ function Cart() {
         alignitems="center"
         justifycontent="space-between"
         padding="0 0 1rem 0"
-        bordercolor={colors.gray.threeHundred}
+        bordercolor={colors.gray.sixHundred}
         className="has-border-bottom"
       >
         <TextLink
@@ -95,7 +95,7 @@ function Cart() {
                   margin="0 1rem 0 0"
                 >
                   {item.image.map(image => (
-                    <img src={image} alt={image.description} width="150" style={{marginRight:"1rem"}} />
+                    <img key={image.description} src={image} alt={image.description} width="150" style={{marginRight:"1rem"}} />
                   ))}
                   <CartItem>
                     <ItemName>{item.name}</ItemName>

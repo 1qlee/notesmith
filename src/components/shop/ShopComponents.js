@@ -44,6 +44,7 @@ function CartQuantityTracker({ product, setItemQuantity, incrementItem, decremen
       <QuantityButton
         onClick={e => handleQuantityButton(e, "decrement")}
         margin="0 0.25rem 0 0"
+        disabled={product.quantity == 1}
       >
         <Icon
         >
@@ -74,7 +75,7 @@ function CartQuantityTracker({ product, setItemQuantity, incrementItem, decremen
 }
 
 const QuantityButton = styled.button`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +95,7 @@ const QuantityButton = styled.button`
 `
 
 const QuantityInput = styled.input`
-  background: ${colors.paper.cream};
+  background: ${colors.paper.offWhite};
   box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
   border-radius: 0.25rem;
   padding: 0.25rem;
@@ -109,9 +110,9 @@ const QuantityInput = styled.input`
 `
 
 const PriceTag = styled.div`
-  font-size: ${props => props.fontSize};
+  font-size: ${props => props.fontsize};
   text-align: center;
-  border-radius: ${props => props.borderRadius};
+  border-radius: ${props => props.borderradius};
   color: ${props => props.color};
   display: inline-block;
   padding: ${props => props.padding};

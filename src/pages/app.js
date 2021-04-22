@@ -9,7 +9,7 @@ import Books from "../components/auth/Books"
 const App = () => {
   return (
     <Router basepath="/app">
-      <PrivateRoute default path="/dashboard" component={Dashboard} />
+      <PrivateRoute path="/dashboard" component={Dashboard} />
       <PrivateRoute path="/settings" component={Settings} />
       <PrivateRoute path="/create/:bookId" component={Editor} />
       <PrivateRoute path="/books" component={Books} />

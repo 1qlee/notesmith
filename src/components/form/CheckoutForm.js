@@ -1,4 +1,7 @@
 import React, { useState } from "react"
+import styled from "styled-components"
+import Cookies from "js-cookie"
+import { navigate } from "gatsby"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
@@ -9,10 +12,11 @@ import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
 import Icon from "../Icon"
+import Loader from "../Loader"
 import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
-const cardStyle = {
+const cardOptions = {
   style: {
     base: {
       color: colors.gray.nineHundred,
@@ -22,7 +26,7 @@ const cardStyle = {
       "::placeholder": {
         color: colors.gray.fiveHundred,
         fontFamily: "Crimson Pro"
-      }
+      },
     },
     invalid: {
       color: colors.red.sixHundred,
@@ -33,23 +37,39 @@ const cardStyle = {
 
 const cardElementStyle = {
   padding: "1rem",
-  boxShadow: `inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset}`,
-  borderRadius: "0.25rem",
+  border: `1px solid ${colors.gray.sixHundred}`,
   marginBottom: "1rem"
 }
 
 const cardElementErrorStyle = {
   padding: "1rem",
-  boxShadow: `0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream}`,
-  borderRadius: "0.25rem",
+  boxShadow: `0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite}`,
   marginBottom: "1rem"
 }
 
-function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, address, setAddress, selectedRate }) {
+const CardDetailsWrapper = styled.div`
+  &.is-focused {
+    box-shadow: 0 0 0 1px ${colors.primary.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
+  }
+`
+
+function CheckoutForm({
+  address,
+  clientSecret,
+  customer,
+  processing,
+  selectedRate,
+  setActiveTab,
+  setAddress,
+  setCustomer,
+  setLoading,
+  setProcessing,
+  shipment,
+  taxRate,
+}) {
   const { clearCart } = useShoppingCart()
-  const [succeeded, setSucceeded] = useState(false)
   const [error, setError] = useState(null)
-  const [processing, setProcessing] = useState(false)
+  const [focused, setFocused] = useState(false)
   const stripe = useStripe()
   const elements = useElements()
 
@@ -64,6 +84,7 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
     e.preventDefault()
     // show processing UI state
     setProcessing(true)
+    setLoading(true)
 
     // send the payment details to Stripe
     const payload = await stripe.confirmCardPayment(clientSecret, {
@@ -79,16 +100,59 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
       if (res.error) {
         setError(res.error.message)
         setProcessing(false)
-        console.log(res.error.message)
+        setLoading(false)
       }
       else {
-        console.log(res)
-        setError(null)
-        setProcessing(false)
-        setSucceeded(true)
-        localStorage.removeItem("pid")
-        clearCart()
+        // purchase the shipping label
+        purchaseShippingLabel()
       }
+    })
+  }
+
+  const purchaseShippingLabel = async () => {
+    const pid = localStorage.getItem("pid")
+
+    const shippingLabel = await fetch("/.netlify/functions/create-shipping", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        rateId: selectedRate,
+        shipment: shipment,
+        paymentId: pid
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      console.log(data)
+      const tracking = data.shippingLabel.trackers
+      // set cookies
+      Cookies.set('orderId', pid, { expires: 365 })
+
+      // clear errors, cart, localStorage
+      setError(null)
+      clearCart()
+      localStorage.removeItem("pid")
+
+      // redirect the user to the orders summary page
+      navigate(`/orders/${pid}`, {
+        state: {
+          address: address,
+          customer: customer,
+          shippingRate: selectedRate,
+          taxRate: taxRate,
+          tracking:  {
+            code: tracking.tracking_code,
+            url: tracking.public_url
+          }
+        }
+      })
+
+      setProcessing(false)
+      setLoading(false)
+    }).catch(err => {
+      console.log(err)
     })
   }
 
@@ -100,13 +164,18 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
       <StyledFieldset>
         <StyledLabel htmlFor="card-element">Card Information</StyledLabel>
       </StyledFieldset>
-      <div style={error ? cardElementErrorStyle : cardElementStyle}>
+      <CardDetailsWrapper
+        className={focused && "is-focused"}
+        style={error ? cardElementErrorStyle : cardElementStyle}
+      >
         <CardElement
           id="card-element"
-          options={cardStyle}
+          options={cardOptions}
           onChange={handleChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
-      </div>
+      </CardDetailsWrapper>
       {error && (
         <ErrorLine
           role="alert"
@@ -126,7 +195,7 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
           hovercolor={colors.link.hover}
           className="has-icon"
           alignitems="flex-end"
-          onClick={() => setActiveTab(1)}
+          onClick={() => setActiveTab(2)}
         >
           <Icon>
             <ArrowLeft size="1rem" />
@@ -134,13 +203,13 @@ function CheckoutForm({ setActiveTab, clientSecret, customer, setCustomer, addre
           <span>Edit shipping</span>
         </TextLink>
         <Button
-          disabled={error || processing || succeeded}
-          id="submit"
           backgroundcolor={colors.primary.sixHundred}
-          color={colors.white}
-          padding="1rem"
           className={processing ? "is-loading" : null}
+          color={colors.white}
+          disabled={error || processing}
           form="checkout-payment-form"
+          id="submit"
+          padding="1rem"
           width="200px"
         >
           {processing ? (

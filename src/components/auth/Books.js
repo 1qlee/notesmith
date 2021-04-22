@@ -337,7 +337,7 @@ const Books = () => {
               <Button
                 color={colors.white}
                 backgroundcolor={colors.primary.sixHundred}
-                borderRadius="0.25rem"
+                borderradius="0.25rem"
                 onClick={() => handleShowModal(true, "createbook")}
               >
                 New book
@@ -367,7 +367,7 @@ const Books = () => {
                   >
                     <StyledLabel>Title</StyledLabel>
                     <StyledInput
-                      borderRadius="0.25rem"
+                      borderradius="0.25rem"
                       type="text"
                       id="new-book-title"
                       name="new-book-title"

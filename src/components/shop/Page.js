@@ -7,7 +7,7 @@ function PageSvg({ children, pageData, bookData }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        boxShadow: `0 2px 8px ${colors.shadow.float}`
+        boxshadow: `0 2px 8px ${colors.shadow.float}`
       }}
       viewBox={`0 0 ${bookData.width} ${bookData.height}`}
       width={bookData.width}

@@ -27,7 +27,6 @@ const ShippingInfoContainer = styled.div`
 const Infobox = styled.div`
   padding: ${props => props.padding ? props.padding : "0 1rem"};
   border: 1px solid ${colors.gray.sixHundred};
-  border-radius: 0.25rem;
   margin-bottom: 2rem;
 `
 
@@ -51,7 +50,6 @@ const ShippingItem = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  border-radius: 0.25rem;
   &:hover {
     background-color: ${colors.primary.hover};
     cursor: pointer;
@@ -69,14 +67,25 @@ const ShippingItem = styled.div`
   }
 `
 
-const ShippingInfo = ({ address, customer, setTaxRate, setSelectedRate, activeTab, setActiveTab, setFormError }) => {
+const ShippingInfo = ({
+  address,
+  customer,
+  setTaxRate,
+  setSelectedRate,
+  activeTab,
+  setActiveTab,
+  setFormError,
+  processing,
+  setProcessing,
+  setShipment,
+}) => {
   const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [cheapestRate, setCheapestRate] = useState()
   const [shippingMethod, setShippingMethod] = useState()
-  const [shipment, setShipment] = useState()
 
   useEffect(() => {
+    // fetch the cheapest shipping rate based on the user's address
     const createRates = async () => {
       setLoading(true)
 
@@ -101,14 +110,14 @@ const ShippingInfo = ({ address, customer, setTaxRate, setSelectedRate, activeTa
         setShipment(data.shipment)
         setLoading(false)
       }).catch(err => {
-        console.log(err)
+        setFormError(err.msg)
       })
     }
 
     createRates()
   }, [])
 
-  // calculate taxes
+  // calculate taxes using Taxjar's API
   const calculateTaxes = async () => {
     const totalTaxes = await fetch("/.netlify/functions/create-tax", {
       method: "post",
@@ -122,29 +131,29 @@ const ShippingInfo = ({ address, customer, setTaxRate, setSelectedRate, activeTa
         productData: cartDetails,
       })
     }).then(res => {
-      setLoading(false)
+      setProcessing(false)
+      setActiveTab(3)
       return res.json()
     }).then(data => {
       setTaxRate(data.tax.amount_to_collect)
     }).catch(err => {
-      setLoading(false)
-      console.log(err)
+      setProcessing(false)
+      setTaxRate(0)
     })
   }
 
-  //
+  // handles the submit of shipping rate
   const handleContinue = () => {
-    setLoading(true)
+    setProcessing(true)
 
     if (!shippingMethod) {
       setFormError({
         msg: "Please select a shipping method."
       })
-      setLoading(false)
+      setProcessing(false)
     }
     else {
       calculateTaxes()
-      setActiveTab(3)
     }
   }
 
@@ -238,16 +247,21 @@ const ShippingInfo = ({ address, customer, setTaxRate, setSelectedRate, activeTa
               <span>Back to info</span>
             </TextLink>
             <Button
-              disabled={!shippingMethod}
+              disabled={!shippingMethod || processing}
               id="submit"
               backgroundcolor={colors.primary.sixHundred}
               color={colors.white}
+              className={processing ? "is-loading" : null}
               padding="1rem"
               form="checkout-shipping-form"
               onClick={() => handleContinue()}
               width="200px"
             >
-              Continue
+            {processing ? (
+              <Loading height="1rem" width="1rem" />
+            ) : (
+              "Continue"
+            )}
             </Button>
           </Flexbox>
         </>

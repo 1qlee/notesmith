@@ -11,13 +11,13 @@ const StyledHandwriting = styled.div`
   justify-content: ${props => props.textAlign ? props.textAlign : "center"};
   font-family: 'Nanum Pen Script';
   margin-top: 1rem;
-  font-size: ${props => props.fontSize ? props.fontSize : "1.2rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "1.2rem"};
 `
 
 function Handwriting(props) {
 
   return (
-    <StyledHandwriting color={props.color} fontSize={props.fontSize} textAlign={props.textAlign}>
+    <StyledHandwriting color={props.color} fontsize={props.fontsize} textAlign={props.textAlign}>
       {props.up ? (
         <Icon height="1rem" width="1rem" icon="CornerLeftUpIcon" />
       ) : (

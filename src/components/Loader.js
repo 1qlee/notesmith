@@ -34,7 +34,7 @@ const moving = keyframes`
 `
 
 const LoaderWrapper = styled.div`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,6 +44,13 @@ const LoaderWrapper = styled.div`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  z-index: 999;
+  &.has-nav {
+    height: calc(100vh - 96px);
+    width: calc(100% - 4px);
+    top: 0;
+    left: 4px;
+  }
   .letter-logo {
     animation-name: ${loading};
     animation-duration: 1s;
@@ -54,34 +61,28 @@ const LoaderWrapper = styled.div`
     animation-delay: 0.1s;
   }
   #letter-o {
-    animation-delay: 0.3s;
+    animation-delay: 0.2s;
   }
   #letter-t {
-    animation-delay: 0.35s;
+    animation-delay: 0.25s;
   }
   #letter-e {
-    animation-delay: 0.4s;
+    animation-delay: 0.3s;
   }
   #letter-s {
-    animation-delay: 0.45s;
+    animation-delay: 0.35s;
   }
   #letter-m {
-    animation-delay: 0.5s;
+    animation-delay: 0.4s;
   }
   #letter-i {
-    animation-delay: 0.55s;
+    animation-delay: 0.45s;
   }
   #letter-t2 {
-    animation-delay: 0.6s;
+    animation-delay: 0.5s;
   }
   #letter-h {
-    animation-delay: 0.65s;
-  }
-  &.has-nav {
-    height: calc(100vh - 96px);
-    width: 100%;
-    top: -48px;
-    left: -48px;
+    animation-delay: 0.55s;
   }
 `
 
@@ -90,7 +91,7 @@ const StyledLoader = styled.div`
   animation-duration: 1s;
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   margin: 0 auto;
   text-align: center;
   height: 100%;
@@ -105,7 +106,7 @@ const StyledLoader = styled.div`
 function Loader({ className }) {
   return (
     <LoaderWrapper className={className}>
-      <div style={{position: 'relative'}}>
+      <div style={{position: 'relative', marginTop: '-48px', marginLeft: '-50px'}}>
         <div style={{position: 'relative'}}>
           <Logo color={colors.gray.nineHundred} height="152" width="352" />
         </div>

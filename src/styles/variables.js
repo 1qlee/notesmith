@@ -14,6 +14,8 @@ const colors = {
   primary: {
     hover: "#e4f1e4",
     active: "#bcdcbc",
+    white: "#eef6f6",
+    whiteLight: "#cde5e4",
     oneHundred: "#e9ecec",
     twoHundred: "#a7b4b3",
     threeHundred: "#7b8e8e",
@@ -80,14 +82,14 @@ const colors = {
     nineHundred: "#78350F"
   },
   paper: {
-    cream: "#F7F5ED"
+    offWhite: "#F7F5ED",
+    cream: "#fffee5"
   },
   link: {
     normal: "#00706c",
     hover: "#011f1e"
   },
   white: "#fff",
-  cream: "#fffdd0",
   kraft: "#8a5842",
   black: "#000",
   shadow: {

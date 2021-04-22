@@ -1,20 +1,20 @@
-import React from "react"
+import React, { useState } from "react"
 import { StaticQuery, graphql } from "gatsby"
 import { colors } from "../../styles/variables"
-import { useShoppingCart, formatCurrencyString } from 'use-shopping-cart'
+import { useShoppingCart } from 'use-shopping-cart'
 import { CaretDown } from "phosphor-react"
 
 import { ProductDetails } from "./ShopComponents"
-import { QuantityTracker, StyledFieldset, StyledSelect, StyledLabel } from "../form/FormComponents"
+import { QuantityTracker, SelectWrapper, StyledFieldset, StyledSelect, SelectIcon, StyledLabel } from "../form/FormComponents"
 import CheckoutForm from "../form/CheckoutForm"
 import Button from "../Button"
 import Content from "../Content"
-import Icon from "../Icon"
 
 const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
   const { addItem, redirectToCheckout } = useShoppingCart()
+  const [itemQuantity, setItemQuantity] = useState()
   // converts select value to an object detailing selected book size
-  function createBookDimensions(size) {
+  const createBookDimensions = (size) => {
     switch(size) {
       case "Medium":
         setBookData({...bookData, width: 528, height: 816})
@@ -24,11 +24,21 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
     }
   }
 
+  const calculateTotalPrice = (price) => {
+    const totalPrice = (itemQuantity * price) / 100
+
+    if (totalPrice) {
+      return (
+        <span>${totalPrice} -&nbsp;</span>
+      )
+    }
+  }
+
   return (
     <StaticQuery
       query={graphql`
         query productQuery {
-          stripePrice(id: { eq: "price_1IMORHIN24Fw2SWdGKObBWWY" }) {
+          stripePrice(id: { eq: "price_1IbAlnIN24Fw2SWdOVRXdimr" }) {
             id,
             unit_amount,
             currency,
@@ -44,13 +54,19 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
       render={data => (
         <ProductDetails>
           <Content
+            h1FontSize="2.5rem"
+            h2FontSize="2rem"
+            h1FontWeight="400"
+            h2FontWeight="400"
             h3FontWeight="400"
-            paragraphFontSize="1.25rem"
-            ulFontSize="1.25rem"
             margin="0 0 2rem"
+            paragraphfontsize="1.25rem"
+            ulfontsize="1.25rem"
+            paragraphColor={colors.primary.nineHundred}
+            headermargin="0 0 1rem"
           >
-            <h2>{data.stripePrice.product.name}</h2>
-            <p>{formatCurrencyString({value: data.stripePrice.unit_amount, currency: 'USD'})}</p>
+            <h1>{data.stripePrice.product.name}</h1>
+            <h2>${data.stripePrice.unit_amount / 100}</h2>
             <p>{data.stripePrice.product.description}</p>
           </Content>
           <form>
@@ -59,10 +75,9 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
               className="is-horizontal"
             >
               <div>
-                <StyledLabel>Size</StyledLabel>
-                <div style={{position: 'relative'}}>
+                <StyledLabel fontsize="0.8rem">Size</StyledLabel>
+                <SelectWrapper>
                   <StyledSelect
-                    borderRadius="0.25rem"
                     width="100%"
                     height="51px"
                     value={bookData.size}
@@ -71,30 +86,34 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
                   >
                     <option value="Medium">A5 (5.5" x 8.5")</option>
                   </StyledSelect>
-                  <Icon style={{position: 'absolute', top:"1rem", right:"1rem"}}>
+                  <SelectIcon>
                     <CaretDown size="1rem" />
-                  </Icon>
-                </div>
+                  </SelectIcon>
+                </SelectWrapper>
               </div>
               <div>
-                <StyledLabel>Color</StyledLabel>
-                <StyledSelect
-                  borderRadius="0.25rem"
-                  width="100%"
-                  height="51px"
-                  value={bookData.color}
-                  onChange={e => setBookData({...bookData, color: e.target.value})}
-                >
-                  <option value="Cadet Gray">Cadet Gray</option>
-                </StyledSelect>
+                <StyledLabel fontsize="0.8rem">Color</StyledLabel>
+                <SelectWrapper>
+                  <StyledSelect
+                    width="100%"
+                    height="51px"
+                    value={bookData.color}
+                    onChange={e => setBookData({...bookData, color: e.target.value})}
+                  >
+                    <option value="Cadet Gray">Cadet Gray</option>
+                  </StyledSelect>
+                  <SelectIcon>
+                    <CaretDown size="1rem" />
+                  </SelectIcon>
+                </SelectWrapper>
               </div>
             </StyledFieldset>
             <StyledFieldset
               margin="0 0 1rem"
               className="is-vertical"
             >
-              <StyledLabel>Quantity</StyledLabel>
-              <QuantityTracker />
+              <StyledLabel fontsize="0.8rem">Quantity</StyledLabel>
+              <QuantityTracker setItemQuantity={setItemQuantity} />
             </StyledFieldset>
             <StyledFieldset
               margin="0 0 1rem"
@@ -125,11 +144,11 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
                     id: data.stripePrice.id,
                     price: data.stripePrice.unit_amount,
                     currency: data.stripePrice.currency,
-                    image: data.stripePrice.product.images
-                  })
+                    image: data.stripePrice.product.images,
+                  }, itemQuantity)
                 }}
               >
-                Add to cart
+                {calculateTotalPrice(data.stripePrice.unit_amount)} Add to cart
               </Button>
             </StyledFieldset>
           </form>

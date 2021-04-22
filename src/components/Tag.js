@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { colors } from "../styles/variables"
 
 const Tag = styled.span`
-  font-size: ${props => props.fontSize ? props.fontSize : "0.7rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.7rem"};
   border-radius: 1rem;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.primary.sixHundred};
   color: ${props => props.color ? props.color : colors.white};

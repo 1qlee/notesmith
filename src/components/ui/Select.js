@@ -112,7 +112,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
     >
       <Button
         className="has-icon"
-        borderRadius="0.25rem"
+        borderradius="0.25rem"
         backgroundcolor={colors.white}
         onClick={() => setShowMenu(!showMenu)}
       >

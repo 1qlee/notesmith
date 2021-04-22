@@ -25,7 +25,7 @@ const Book = styled.div`
 `
 
 const BookInput = styled.input`
-  background: ${colors.paper.cream};
+  background: ${colors.paper.offWhite};
   border: none;
   box-shadow: inset 0 -1px 0 ${colors.gray.fourHundred};
   display: block;

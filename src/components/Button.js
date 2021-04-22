@@ -15,12 +15,12 @@ const rotate = keyframes`
 const Button = styled.button`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
-  border-radius: ${props => props.borderRadius ? props.borderRadius : "0.25rem"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
   border: ${props => props.border ? props.border : "none"};
-  box-shadow: ${props => props.boxShadow ? props.boxShadow : `0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float}`};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : `0 0 0 1px ${props.backgroundcolor}`};
   color: ${props => props.color || colors.gray.nineHundred};
   display: inline-flex;
-  font-size: ${props => props.fontSize || "1rem"};
+  font-size: ${props => props.fontsize || "1rem"};
   font-family: "Spectral", Georgia, serif;
   justify-content: center;
   padding: ${props => props.padding || "0.5rem 1rem"};

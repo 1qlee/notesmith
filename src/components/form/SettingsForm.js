@@ -262,7 +262,7 @@ function SettingsForm() {
             <StyledFieldset className="is-vertical">
               <StyledInput
                 className="has-width-auto"
-                borderRadius="0.25rem"
+                borderradius="0.25rem"
                 placeholder={user.email}
                 onChange={e => validateEmail(e.currentTarget.value)}
               />
@@ -325,7 +325,7 @@ function SettingsForm() {
                     >
                       <StyledLabel htmlFor="current-password">Password</StyledLabel>
                       <StyledInput
-                        borderRadius="0.25rem"
+                        borderradius="0.25rem"
                         id="current-password"
                         type="password"
                         name="current-password"
@@ -371,7 +371,7 @@ function SettingsForm() {
                     >
                       <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
                       <StyledInput
-                        borderRadius="0.25rem"
+                        borderradius="0.25rem"
                         id="new-password"
                         type="password"
                         name="new-password"

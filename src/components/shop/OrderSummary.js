@@ -9,20 +9,17 @@ import Content from "../Content"
 import Button from "../Button"
 import Loading from "../../assets/loading.svg"
 
-const OrderSummary = styled.div`
-  background-color: ${colors.paper.cream};
+const Orders = styled.div`
+  background-color: ${colors.paper.offWhite};
   border: 1px solid ${colors.gray.sixHundred};
-  border-radius: 0.25rem;
-  box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   margin-bottom: 1rem;
-  padding: 0 1rem;
 `
 
 const OrderLine = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 1rem;
   p + p {
     margin-left: 1rem;
   }
@@ -34,7 +31,7 @@ const OrderLine = styled.div`
   }
 `
 
-function Orders({ hideButton, selectedRate, taxRate }) {
+function OrderSummary({ hideButton, selectedRate, taxRate }) {
   const { cartDetails, totalPrice, formattedTotalPrice } = useShoppingCart()
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
 
@@ -65,7 +62,7 @@ function Orders({ hideButton, selectedRate, taxRate }) {
 
   return (
     <>
-      <OrderSummary>
+      <Orders>
         <OrderLine className="has-border-bottom">
           <h3>Order Summary</h3>
         </OrderLine>
@@ -74,7 +71,7 @@ function Orders({ hideButton, selectedRate, taxRate }) {
             flex="flex"
             flexdirection="row"
             justifycontent="space-between"
-            padding="1rem 0"
+            padding="1rem"
             width="100%"
             className="has-border-bottom"
             bordercolor={colors.gray.sixHundred}
@@ -111,14 +108,14 @@ function Orders({ hideButton, selectedRate, taxRate }) {
         {taxRate > 0 && (
           <OrderLine>
             <p>Tax</p>
-            <p>${taxRate}</p>
+            <p>${taxRate.toFixed(2)}</p>
           </OrderLine>
         )}
         <OrderLine className="has-border-top">
           <p><b>Total</b></p>
           <p><b>${calculateTotalPrice()}</b></p>
         </OrderLine>
-      </OrderSummary>
+      </Orders>
       {hideButton ? (
         null
       ) : (
@@ -140,4 +137,4 @@ function Orders({ hideButton, selectedRate, taxRate }) {
   )
 }
 
-export default Orders
+export default OrderSummary

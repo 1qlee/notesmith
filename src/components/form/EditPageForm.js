@@ -24,7 +24,7 @@ const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
           <StyledLabel>Templates</StyledLabel>
           <StyledSelect
             padding="0.5rem"
-            borderRadius="0.25rem"
+            borderradius="0.25rem"
             value={pageData.type}
             onChange={e => setPageData({...pageData, type: e.target.value})}
           >

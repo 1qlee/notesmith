@@ -32,7 +32,7 @@ exports.handler = async (event) => {
     length: 12,
     width: 8.5,
     height: 1,
-    weight: products[0].quantity * 2.8 * 3
+    weight: products[0].quantity * 2.8 * 2
   });
 
   const shipment = new easypost.Shipment({
@@ -45,23 +45,32 @@ exports.handler = async (event) => {
     ]
   });
 
-  await fromAddress.save();
-  await parcel.save();
-  const newShipment = await shipment.save();
-  const ratesArray = newShipment.rates.sort((a,b) => {
-    return a.rate - b.rate
-  });
-  const cheapestRate = ratesArray[0];
-  // const rates = newShipment.rates.filter(rate => rate.service === "First")
-  // rates.sort((a,b) => {
-  //   return a.rate - b.rate
-  // })
+  try {
+    await fromAddress.save();
+    await parcel.save();
+    const newShipment = await shipment.save();
+    const ratesArray = newShipment.rates.sort((a,b) => {
+      return a.rate - b.rate
+    });
+    const cheapestRate = ratesArray[0];
+    // const rates = newShipment.rates.filter(rate => rate.service === "First")
+    // rates.sort((a,b) => {
+    //   return a.rate - b.rate
+    // })
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      rate: cheapestRate,
-      shipment: newShipment,
-    })
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        rate: cheapestRate,
+        shipment: newShipment,
+      })
+    };
+  } catch(error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        msg: "Something went wrong. Please refresh and try again."
+      })
+    }
+  }
 }

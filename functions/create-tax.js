@@ -48,34 +48,74 @@ exports.handler = async (event) => {
   };
   const orderAmount = await calcOrderAmount(productData);
 
-  const taxObject = await taxjar.taxForOrder({
-    from_street: fromAddress.street,
-    from_city: fromAddress.city,
-    from_state: fromAddress.state,
-    from_zip: fromAddress.zip,
-    from_country: fromAddress.country,
-    to_street: address.line1,
-    to_city: address.city,
-    to_state: address.state,
-    to_zip: address.postal_code,
-    to_country: 'US',
-    amount: orderAmount,
-    shipping: shippingRate,
-    line_items: createLineItems(productData),
-  })
+  try {
+    const taxObject = await taxjar.taxForOrder({
+      from_street: fromAddress.street,
+      from_city: fromAddress.city,
+      from_state: fromAddress.state,
+      from_zip: fromAddress.zip,
+      from_country: fromAddress.country,
+      to_street: address.line1,
+      to_city: address.city,
+      to_state: address.state,
+      to_zip: address.postal_code,
+      to_country: 'US',
+      amount: orderAmount,
+      shipping: shippingRate,
+      line_items: createLineItems(productData),
+    })
 
-  // total amount the customer will pay
-  const totalAmount = parseFloat(taxObject.tax.order_total_amount) + parseFloat(taxObject.tax.amount_to_collect)
+    // total amount the customer will pay
+    const subtotalPlusShipping = taxObject.tax.order_total_amount
+    const totalTax = taxObject.tax.amount_to_collect
+    const totalAmountToPay = parseFloat(subtotalPlusShipping) + parseFloat(totalTax)
 
-  paymentIntent = await stripe.paymentIntents.update(
-    paymentId,
-    {
-      amount: totalAmount * 100
+    // update the payment intent with the new amount
+    const paymentIntent = await stripe.paymentIntents.update(
+      paymentId,
+      {
+        amount: totalAmountToPay * 100,
+        metadata: {
+          taxRate: totalTax * 100,
+          shippingRate: shippingRate * 100
+        }
+      }
+    )
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(taxObject)
     }
-  )
+  } catch(error) {
+    if (error.status === 400) {
+      console.log("ERROR: There was an error creating a Taxjar tax rate. Most likely, tax is not applicable to the receiver's address.")
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(taxObject)
+      // update the payment intent with ZERO tax
+      const paymentIntent = await stripe.paymentIntents.update(
+        paymentId,
+        {
+          amount: orderAmount * 100 + shippingRate * 100,
+          metadata: {
+            taxRate: 0,
+            shippingRate: shippingRate * 100
+          }
+        }
+      )
+
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: "Tax is not applicable."
+        })
+      }
+    }
+    else {
+      return {
+        statusCode: error.status,
+        body: JSON.stringify({
+          error: "Something went wrong."
+        })
+      }
+    }
   }
 }

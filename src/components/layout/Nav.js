@@ -17,7 +17,7 @@ const StyledNav = styled.nav`
 `
 
 const HorizontalNav = styled.div`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.primary.sixHundred};
   display: ${props => props.hideNavbar ? "none" : "block"};
   left: 0;
   position: fixed;
@@ -27,12 +27,11 @@ const HorizontalNav = styled.div`
 `
 
 const HorizontalNavInnerBox = styled.div`
-  background-color: ${colors.paper.cream};
-  border-color: ${colors.gray.threeHundred};
-  border-style: solid;
-  border-width: 1px 0;
+  background-color: ${colors.paper.offWhite};
+  border-bottom: 1px solid ${colors.gray.threeHundred};
+  box-shadow: 1px 0 2px ${colors.shadow.float};
   padding-left: 96px;
-  height: 78px;
+  height: 80px;
   position: relative;
   top: 1rem;
 `
@@ -45,6 +44,7 @@ const HorizontalNavContainer = styled.div`
 `
 
 const VerticalNav = styled.div`
+  background-color: ${colors.primary.sixHundred};
   height: 100%;
   position: fixed;
   width: 96px;
@@ -52,15 +52,14 @@ const VerticalNav = styled.div`
 `
 
 const VerticalNavInnerBox = styled.div`
-  border-color: ${colors.gray.threeHundred};
-  border-style: solid;
-  border-width: 0 1px;
+  background-color: ${colors.paper.cream};
+  box-shadow: 1px 0 4px ${colors.shadow.dark};
   height: 100%;
-  left: 1rem;
+  left: 0;
   text-align: center;
   padding-top: 1rem;
   position: relative;
-  width: 78px;
+  width: 80px;
 `
 
 const VerticalNavItem = styled.div`
@@ -72,34 +71,17 @@ const VerticalNavItem = styled.div`
 `
 
 const ChapterNumberHeader = styled.h2`
-  line-height: 2rem;
-  margin: 1rem 0.5rem 96px 0.5rem;
+  margin: 1rem 1rem 96px 1rem;
+  color: ${colors.primary.sixHundred};
 `
 
 const ChapterNameHeader = styled.div`
+  color: ${colors.primary.sixHundred};
   display: inline-block;
   letter-spacing: 1px;
   padding: 0.25rem;
   position: relative;
   text-transform: uppercase;
-  &::before {
-    background-color: ${props => props.color};
-    content: "";
-    height: 1px;
-    left: -0.6rem;
-    position: absolute;
-    top: 0.95rem;
-    width: 0.5rem;
-  }
-  &::after {
-    background-color: ${props => props.color};
-    content: "";
-    height: 1px;
-    right: -0.6rem;
-    position: absolute;
-    top: 0.95rem;
-    width: 0.5rem;
-  }
   p {
     color: ${props => props.color};
     margin-bottom: 0;
@@ -145,21 +127,16 @@ function Nav(props) {
             </NavSection>
             {!loading && (
               <NavSection justifycontent="flex-end">
+                <NavItem>
+                  <Link to="/shop">Shop</Link>
+                </NavItem>
                 {user ? (
                   <>
-                    <NavItem>
-                      <Link to="/shop">Shop</Link>
-                    </NavItem>
                     <NavItem>
                       <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>
                     <NavItem>
-                      <Button
-                        color={colors.white}
-                        backgroundcolor={colors.primary.sixHundred}
-                      >
-                        Log Out
-                      </Button>
+                      Log Out
                     </NavItem>
                   </>
                 ) : (
@@ -168,21 +145,18 @@ function Nav(props) {
                       <Link to="/login">Log In</Link>
                     </NavItem>
                     <NavItem className="last-item">
-                      <Button
-                        color={colors.white}
-                        backgroundcolor={colors.primary.sixHundred}
-                        as={Link}
-                        to="/signup"
-                      >
+                      <Link to="/signup">
                         Sign Up
-                      </Button>
+                      </Link>
                     </NavItem>
                   </>
                 )}
                 <NavItem className="last-item">
                   <Button
                     className="has-icon"
-                    backgroundcolor={colors.white}
+                    borderradius="25px"
+                    backgroundcolor={colors.paper.offWhite}
+                    border={`1px solid ${colors.gray.sixHundred}`}
                     as={Link}
                     to="/cart"
                   >

@@ -5,27 +5,46 @@ import { Minus, Plus } from "phosphor-react"
 
 import Icon from "../Icon"
 
-function QuantityTracker() {
+function QuantityTracker(props) {
   const [quantity, setQuantity] = useState(1)
-  const quantityRef = useRef()
+
+  const handleButtonChange = (e, up) => {
+    e.preventDefault()
+    const { value } = e.target
+
+    if (up) {
+      setQuantity(quantity => quantity + 1)
+      props.setItemQuantity(quantity + 1)
+    }
+    else {
+      setQuantity(quantity => quantity - 1)
+      props.setItemQuantity(quantity - 1)
+    }
+  }
 
   const handleBlur = e => {
-    console.log(e.target.value)
-    if (!e.target.value || e.target.value == 0) {
+    const { value } = e.target
+
+    if (!value || value == 0) {
       setQuantity(1)
+      props.setItemQuantity(1)
     }
+  }
+
+  const handleChange = e => {
+    const { value } = e.target
+
+    setQuantity(e.target.value)
+    props.setItemQuantity(e.target.value)
   }
 
   return (
     <QuantityWrapper>
       <QuantityButton
-        onClick={e => {
-          e.preventDefault()
-          quantityRef.current.stepDown(1)
-        }}
-        borderradius="0.25rem 0 0 0.25rem"
+        onClick={e => handleButtonChange(e)}
+        disabled={quantity == 1}
       >
-        <Icon>
+        <Icon style={{width:"100%", height: "100%"}}>
           <Minus
             size="0.75rem"
             color={quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
@@ -35,22 +54,17 @@ function QuantityTracker() {
       </QuantityButton>
       <Counter
         border="none"
-        fontSize="1rem"
+        fontsize="1rem"
         margin="0 0.25rem"
         min="1"
-        onChange={e => setQuantity(e.target.value)}
+        onChange={e => handleChange(e)}
         onBlur={e => handleBlur(e)}
-        ref={quantityRef}
         type="number"
         value={quantity}
         width="3rem"
       />
       <QuantityButton
-        onClick={e => {
-          e.preventDefault()
-          quantityRef.current.stepUp(1)
-        }}
-        borderradius="0 0.25rem 0.25rem 0"
+        onClick={e => handleButtonChange(e, true)}
       >
         <Icon>
           <Plus
@@ -65,29 +79,29 @@ function QuantityTracker() {
 }
 
 const QuantityWrapper = styled.div`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  border-radius: 0.25rem;
   padding: 0.75rem;
   display: flex;
   align-items: center;
 `
 
 const QuantityButton = styled.button`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   border: none;
-  padding: 0.25rem 1rem;
-  border-radius: ${props => props.borderradius};
+  padding: 0;
+  width: 3rem;
+  height: 1.5rem;
   &:hover {
     cursor: pointer;
   }
 `
 
 const Counter = styled.input`
-  background-color: ${colors.paper.cream};
-  border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
+  background-color: ${colors.paper.offWhite};
+  border-radius: ${props => props.borderradius ? props.borderradius : 0};
   border: ${props => props.border};
-  font-size: ${props => props.fontSize};
+  font-size: ${props => props.fontsize};
   padding: ${props => props.padding};
   margin: ${props => props.margin};
   width: ${props => props.width};
@@ -102,7 +116,6 @@ const Counter = styled.input`
 `
 
 const AuthFormWrapper = styled.div`
-  border-radius: 0.25rem;
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   padding: 2rem;
   width: 100%;
@@ -156,7 +169,6 @@ const StyledRadio = styled.div`
   label {
     box-shadow: inset 0 1px 1px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
     border: 1px solid ${colors.gray.threeHundred};
-    border-radius: 0.25rem;
     box-sizing: border-box;
     display: block;
     height: 100%;
@@ -173,7 +185,6 @@ const StyledRadio = styled.div`
     }
     .radio-header {
       border-bottom: 1px solid ${colors.gray.threeHundred};
-      border-radius: 0.25rem 0.25rem 0 0;
       padding: 0.5rem;
       display: flex;
       align-items: center;
@@ -210,53 +221,38 @@ const StyledLabel = styled.label`
   color: ${colors.primary.sevenHundred};
   display: block;
   font-family: "Spectral";
-  font-size: 0.7rem;
+  font-size: ${props => props.fontsize ? props.fontsize : "0.65rem"};
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   width: 100%;
 `
 
-const StyledFloatingLabel = styled.label`
-  color: ${colors.primary.sevenHundred};
-  font-size: 1rem;
-  left: 1rem;
-  font-weight: 400;
-  opacity: ${props => props.inputFocused ? "0" : "1"};
-  padding: 0 0.2rem;
+const StyledFloatingLabel = styled(StyledLabel)`
   position: absolute;
-  line-height: 1;
-  top: 1rem;
-  transform: translateX(${props => props.inputFocused ? "100px" : "0"});
-  transition: background 0.2s, transform 0.2s, opacity 0.2s;
-  z-index: 2;
-  &:hover {
-    cursor: text;
-  }
-  &:focus {
-    box-shadow: 0 0 0 2px ${colors.gray.nineHundred}, inset 0 0 0 2px ${colors.white};
-    outline: none;
-  }
+  left: 1rem;
+  top: 0.5rem;
 `
 
 const StyledInput = styled.input`
-  background-color: ${colors.paper.cream};
-  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
+  background-color: ${colors.paper.offWhite};
+  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  border-radius: ${props => props.borderradius ? props.borderradius : 0};
   border: none;
+  color: ${colors.gray.nineHundred};
   display: block;
   font-size: 1rem;
   line-height: 1rem;
-  padding: ${props => props.padding ? props.padding : "0.5rem 1rem"};
+  padding: ${props => props.padding ? props.padding : "2rem 1rem 1rem"};
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
-    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
+    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
   }
   &.has-width-auto {
     width: auto;
   }
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.link.normal}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
   &::placeholder {
@@ -265,22 +261,33 @@ const StyledInput = styled.input`
   }
 `
 
+const SelectWrapper = styled.div`
+  position: relative;
+  width: ${props => props.width ? props.width : "100%"};
+`
+
+const SelectIcon = styled.span`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+`
+
 const StyledSelect = styled.select`
-  background-color: ${colors.paper.cream};
-  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  border-radius: ${props => props.borderRadius ? props.borderRadius : 0};
+  background-color: ${colors.paper.offWhite};
+  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  border-radius: ${props => props.borderradius ? props.borderradius : 0};
   border: none;
-  font-size: ${props => props.fontSize};
+  font-size: ${props => props.fontsize};
   padding: ${props => props.padding || "1rem"};
-  height: ${props => props.height || "49px"};
+  height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;
   &.is-error {
-    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.cream};
+    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
   }
   &:active,
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.link.normal}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
 `
@@ -302,9 +309,11 @@ export {
   QuantityTracker,
   Counter,
   AuthFormWrapper,
+  SelectWrapper,
   StyledFieldset,
   StyledRadio,
   StyledSelect,
+  SelectIcon,
   StyledFloatingLabel,
   StyledLabel,
   StyledInput,

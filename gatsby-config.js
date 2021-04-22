@@ -19,10 +19,21 @@ module.exports = {
       }
     },
     {
+      resolve: `gatsby-plugin-create-client-paths`,
+      options: { prefixes: [`/app/*`, `/orders/*`] },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
         path: `${__dirname}/src/images`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `assets`,
+        path: `${__dirname}/src/assets`,
       },
     },
     {
@@ -81,6 +92,7 @@ module.exports = {
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
     `gatsby-transformer-sharp`,
+    `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-plugin-styled-components`,
   ],

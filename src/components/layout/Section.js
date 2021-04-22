@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { colors, spacing, widths } from "../../styles/variables"
 
 const SectionMain = styled.main`
-  background-color: ${colors.paper.cream};
+  background-color: ${colors.paper.offWhite};
   position: relative;
   padding: 96px 0 0 96px;
   height: 100%;
@@ -18,6 +18,7 @@ const SectionMain = styled.main`
 `
 
 const Section = styled.section`
+  background-color: ${props => props.backgroundcolor};
   width: 100%;
 `
 
