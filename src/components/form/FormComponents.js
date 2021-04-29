@@ -126,6 +126,7 @@ const StyledFieldset = styled.fieldset`
   display: flex;
   margin: ${props => props.margin};
   position: relative;
+  width: ${props => props.width};
   label {
     margin-right: 1rem;
   }
@@ -225,7 +226,7 @@ const StyledLabel = styled.label`
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
-  width: 100%;
+  width: calc(100% - 1rem);
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`

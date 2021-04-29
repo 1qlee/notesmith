@@ -44,6 +44,10 @@ function SEO({ description, lang, meta, title }) {
           content: title,
         },
         {
+          property: `og:url`,
+          content: "https://www.notesmithbooks.com",
+        },
+        {
           property: `og:description`,
           content: metaDescription,
         },
@@ -52,12 +56,20 @@ function SEO({ description, lang, meta, title }) {
           content: `website`,
         },
         {
+          property: `og:image`,
+          content: "../../images/meta-image.jpg",
+        },
+        {
           name: `twitter:card`,
           content: `summary`,
         },
         {
-          name: `twitter:creator`,
-          content: site.siteMetadata.author,
+          name: `twitter:url`,
+          content: `https://www.notesmithbooks.com`,
+        },
+        {
+          name: `twitter:image`,
+          content: "../../images/meta-image.jpg",
         },
         {
           name: `twitter:title`,

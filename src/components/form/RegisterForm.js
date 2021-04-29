@@ -49,23 +49,25 @@ function RegisterForm(props) {
       <StyledFieldset
         margin="2rem 0 0"
       >
-        <input type="hidden" name="form-name" value="signup" />
-        <StyledFloatingLabel
-          onClick={() => setInputFocused(true)}
-          inputFocused={inputFocused}
-          htmlFor="email"
-        >
-          Sign up for early access
-        </StyledFloatingLabel>
-        <StyledInput
-          onFocus={() => setInputFocused(true)}
-          onBlur={e => handleBlur(e)}
-          onChange={e => setEmail(e.currentTarget.value)}
-          inputFocused={inputFocused}
-          id="email"
-          type="email" name="email"
-          placeholder="signmeup@gmail.com"
-        />
+        <StyledFieldset width="100%">
+          <input type="hidden" name="form-name" value="signup" />
+          <StyledFloatingLabel
+            onClick={() => setInputFocused(true)}
+            inputFocused={inputFocused}
+            htmlFor="email"
+          >
+            Sign up for early access
+          </StyledFloatingLabel>
+          <StyledInput
+            onFocus={() => setInputFocused(true)}
+            onBlur={e => handleBlur(e)}
+            onChange={e => setEmail(e.currentTarget.value)}
+            inputFocused={inputFocused}
+            id="email"
+            type="email" name="email"
+            placeholder="signmeup@gmail.com"
+          />
+        </StyledFieldset>
         <Button
           color={colors.white}
           backgroundcolor={colors.primary.sixHundred}

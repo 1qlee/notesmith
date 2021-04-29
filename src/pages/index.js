@@ -45,7 +45,7 @@ const chapterData = {
     heading: "Strive for quality"
   },
   chapterFive: {
-    title: "Our current product specifications",
+    title: "Our current notebook specifications",
     chapter: "05",
     heading: "Good things come in bundles"
   }
@@ -112,7 +112,7 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title="Truly Custom Notebooks For All People" />
+      <SEO title="Create truly unique custom notebooks" />
       <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
       <SectionMain>
         <Section>
@@ -256,6 +256,8 @@ const IndexPage = ({ data }) => {
                                 margin="0"
                                 fontsize="1rem"
                                 padding="0.25rem 0.5rem"
+                                backgroundcolor={colors.paper.cream}
+                                color={colors.primary.sixHundred}
                               >
                                 01
                               </Tag>
@@ -291,6 +293,8 @@ const IndexPage = ({ data }) => {
                                 margin="0"
                                 fontsize="1rem"
                                 padding="0.25rem 0.5rem"
+                                backgroundcolor={colors.paper.cream}
+                                color={colors.primary.sixHundred}
                               >
                                 02
                               </Tag>
@@ -325,6 +329,8 @@ const IndexPage = ({ data }) => {
                               margin="0"
                               fontsize="1rem"
                               padding="0.25rem 0.5rem"
+                              backgroundcolor={colors.paper.cream}
+                              color={colors.primary.sixHundred}
                             >
                               03
                             </Tag>

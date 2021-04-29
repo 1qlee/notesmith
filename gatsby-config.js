@@ -4,8 +4,8 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Notesmith`,
-    description: `Custom printed notebooks made for you because they're made by you. Design and create your Notesmith notebook today!`,
+    title: `Notesmith - Unique, custom notebooks made to order`,
+    description: `Design and create your own unique notebook with fully customizable pages. Every notebook is made-to-order and custom printed specially for you.`,
     author: `@notesmith`,
   },
   plugins: [
