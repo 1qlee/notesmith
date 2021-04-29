@@ -19,6 +19,8 @@ function SEO({ description, lang, meta, title }) {
             title
             description
             author
+            url
+            image
           }
         }
       }
@@ -26,6 +28,7 @@ function SEO({ description, lang, meta, title }) {
   )
 
   const metaDescription = description || site.siteMetadata.description
+  const { url, image } = site.siteMetadata
 
   return (
     <Helmet
@@ -45,7 +48,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           property: `og:url`,
-          content: "https://www.notesmithbooks.com",
+          content: `${url}`,
         },
         {
           property: `og:description`,
@@ -57,7 +60,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           property: `og:image`,
-          content: "../../images/meta-image.jpg",
+          content: `${url}${image}`,
         },
         {
           name: `twitter:card`,
@@ -65,11 +68,11 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           name: `twitter:url`,
-          content: `https://www.notesmithbooks.com`,
+          content: `${url}`,
         },
         {
           name: `twitter:image`,
-          content: "../../images/meta-image.jpg",
+          content: `${url}${image}`,
         },
         {
           name: `twitter:title`,
