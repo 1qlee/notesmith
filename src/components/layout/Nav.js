@@ -156,53 +156,6 @@ function Nav(props) {
                 <Logo color={colors.gray.nineHundred} />
               </Link>
             </NavSection>
-            {!loading && (
-              <NavSection justifycontent="flex-end">
-                <NavItem>
-                  <Link to="/shop">Shop</Link>
-                </NavItem>
-                {user ? (
-                  <>
-                    <NavItem>
-                      <Link to="/app/dashboard">Dashboard</Link>
-                    </NavItem>
-                    <NavItem>
-                      Log Out
-                    </NavItem>
-                  </>
-                ) : (
-                  <>
-                    <NavItem>
-                      <Link to="/login">Log In</Link>
-                    </NavItem>
-                    <NavItem className="last-item">
-                      <Link to="/signup">
-                        Sign Up
-                      </Link>
-                    </NavItem>
-                  </>
-                )}
-                <NavItem className="last-item">
-                  <Button
-                    className="has-icon"
-                    borderradius="25px"
-                    backgroundcolor={colors.paper.offWhite}
-                    border={`1px solid ${colors.gray.sixHundred}`}
-                    as={Link}
-                    to="/cart"
-                  >
-                    <Icon>
-                      <Tote size="1.5rem" />
-                    </Icon>
-                    {cartCount === 1 ? (
-                      <span>{cartCount} item</span>
-                    ) : (
-                      <span>{cartCount} items</span>
-                    )}
-                  </Button>
-                </NavItem>
-              </NavSection>
-            )}
           </HorizontalNavContainer>
         </HorizontalNavInnerBox>
       </HorizontalNav>
