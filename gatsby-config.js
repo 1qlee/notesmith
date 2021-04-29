@@ -8,7 +8,7 @@ module.exports = {
     description: `Design and create your own unique notebook with fully customizable pages. Every notebook is made-to-order and custom printed specially for you.`,
     author: `@notesmith`,
     url: `https://www.notesmithbooks.com/`,
-    image: "/static/meta-image.jpg"
+    image: "/meta-image.jpg"
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
