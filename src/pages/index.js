@@ -45,9 +45,9 @@ const chapterData = {
     heading: "Strive for quality"
   },
   chapterFive: {
-    title: "Our notebooks are made-to-order",
+    title: "Our current product specifications",
     chapter: "05",
-    heading: "Hot off the press"
+    heading: "Good things come in bundles"
   }
 }
 
@@ -529,7 +529,7 @@ const IndexPage = ({ data }) => {
                     >
                       <h4>{chapterData.chapterFive.heading}</h4>
                       <h2>{chapterData.chapterFive.title}</h2>
-                      <p>That means we don't keep an inventory collecting dust in the warehouse. Instead, each notebook is made especially for you with the same high quality materials every time.</p>
+                      <p>You'll find the current specifications for our notebooks below. We hope to be able to provide more customization options in the future. Including but not limited to: rounded corners, various sizes, multiple colors, more pages, different binding methods, etc.</p>
                       <Content
                         paragraphfontsize="1.2rem"
                         paragraphmarginbottom="0"
