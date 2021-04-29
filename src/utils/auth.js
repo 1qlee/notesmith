@@ -1,79 +1,68 @@
-import auth0 from "auth0-js"
-import { navigate } from "gatsby"
+import React, { useState, useEffect, useContext } from "react"
+import firebase from "gatsby-plugin-firebase"
 
-const isBrowser = typeof window !== "undefined"
+export const isBrowser = () => typeof window !== "undefined"
 
-const auth = isBrowser
-  ? new auth0.WebAuth({
-      domain: process.env.AUTH0_DOMAIN,
-      clientID: process.env.AUTH0_CLIENTID,
-      redirectUri: process.env.AUTH0_CALLBACK,
-      responseType: "token id_token",
-      scope: "openid profile email",
+const defaultContext = {
+  loading: false,
+  login: () => {},
+  signUp: () => {},
+  signOut: () => {},
+  signUpWithEmail: () => {},
+  sendEmailVerification: () => {},
+  sendEmailVerificationOnSignUp: () => {},
+}
+
+export const FirebaseContext = React.createContext(defaultContext)
+export const useFirebaseContext = () => useContext(FirebaseContext)
+export const FirebaseProvider = ({
+  children
+}) => {
+  const [user, setUser] = useState()
+  const [firebaseAuth, setFirebaseAuth] = useState()
+  const [firebaseDb, setFirebaseDb] = useState()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const initFirebase = () => {
+      setFirebaseAuth(firebase.auth())
+      setFirebaseDb(firebase.database())
+      firebase.database.enableLogging(false, false)
+
+      firebase.auth().onAuthStateChanged(user => {
+        setUser(user)
+        setLoading(false)
+      })
+    }
+
+    initFirebase()
+  }, [user])
+
+  function sendEmailVerification(cb) {
+    user.sendEmailVerification().then(() => {
+      console.log("Sending verification email...")
+      cb(true)
+    }).catch(error => {
+      cb(error)
     })
-  : {}
-
-const tokens = {
-  accessToken: false,
-  idToken: false,
-  expiresAt: false,
-}
-
-let user = {}
-
-export const isAuthenticated = () => {
-  if (!isBrowser) {
-    return;
   }
 
-  return localStorage.getItem("isLoggedIn") === "true"
-}
-
-export const login = () => {
-  if (!isBrowser) {
-    return
-  }
-
-  auth.authorize()
-}
-
-export const logout = () => {
-  localStorage.setItem("isLoggedIn", false)
-  auth.logout()
-}
-
-const setSession = (cb = () => {}) => (err, authResult) => {
-  if (err) {
-    navigate("/")
-    cb()
-    return
-  }
-
-  if (authResult && authResult.accessToken && authResult.idToken) {
-    let expiresAt = authResult.expiresIn * 1000 + new Date().getTime()
-    tokens.accessToken = authResult.accessToken
-    tokens.idToken = authResult.idToken
-    tokens.expiresAt = expiresAt
-    user = authResult.idTokenPayload
-    localStorage.setItem("isLoggedIn", true)
-    navigate("/account")
-    cb()
-  }
-}
-
-export const handleAuthentication = () => {
-  if (!isBrowser) {
-    return;
-  }
-
-  auth.parseHash(setSession())
-}
-
-export const getProfile = () => {
-  return user
-}
-
-export const silentAuth = callback => {
-  if (!isAuthenticated()) return callback()
-  auth.checkSession({}, setSession(callback))
+  return (
+    <FirebaseContext.Provider
+      value={{
+        user,
+        loading,
+        sendEmailVerification,
+        firebaseDb,
+        login: (...p) => firebaseAuth.signInWithEmailAndPassword(...p),
+        signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
+        signOut: (...p) => firebaseAuth.signOut(...p),
+        signUpWithEmail: (...p) => firebaseAuth.sendSignInLinkToEmail(...p),
+        sendEmailVerificationOnSignUp: (...p) => firebaseAuth.sendEmailVerification(...p),
+        getAuthCredential: (...p) => firebase.auth.EmailAuthProvider.credential(...p)
+      }}
+    >
+      {children}
+    </FirebaseContext.Provider>
+  )
 }
