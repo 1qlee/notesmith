@@ -14,7 +14,7 @@ module.exports = {
       resolve: `gatsby-source-stripe`,
       options: {
         objects: ['Balance', 'BalanceTransaction', 'Product', 'Price', 'ApplicationFee', 'Sku', 'Subscription'],
-        secretKey: `${process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST}`,
+        secretKey: `${process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST || "sk_test_51IDyQgIN24Fw2SWdjfxPZJ02aac6rtFhUulDKlhXBbPwq3rYEZeywzB5gB3ZdW0RSRdzMJCGk05UFWNpgRJ3jq5w00FR59sIsF"}`,
         downloadFiles: true,
       }
     },
