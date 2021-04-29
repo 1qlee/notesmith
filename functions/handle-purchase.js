@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 
