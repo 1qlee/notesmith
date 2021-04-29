@@ -1,40 +1,52 @@
 import styled from "styled-components"
-import { colors } from "../styles/variables"
+import { colors, widths } from "../styles/variables"
 
 const Content = styled.div`
   padding: ${props => props.padding ? props.padding : "0"};
   display: block;
   margin: ${props => props.margin};
-  max-width: ${props => props.maxWidth};
+  max-width: ${props => props.maxwidth};
+  @media only screen and (max-width: ${widths.breakpoint.index}) {
+    max-width: none;
+  }
   h1,h2,h3,h4,h5,h6 {
     margin: 0 0 1rem;
     font-weight: 700;
     text-rendering: optimizeLegibility;
     line-height: 1.2;
-    text-align: ${props => props.headingTextAlign};
+    text-align: ${props => props.headingtextalign};
   }
   h1 {
-    font-size: ${props => props.h1FontSize || "4rem"};
-    color: ${props => props.h1Color || colors.primary.sevenHundred};
-    font-weight: ${props => props.h1FontWeight || "700"};
+    font-size: ${props => props.h1fontsize || "4rem"};
+    color: ${props => props.h1color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
+    @media only screen and (max-width: ${widths.tablet}) {
+      font-size: 2.5rem;
+    }
   }
   h2 {
-    font-size: ${props => props.h2FontSize || "2rem"};
-    color: ${props => props.h2Color || colors.primary.sevenHundred};
-    font-weight: ${props => props.h2FontWeight || "700"};
+    font-size: ${props => props.h2fontsize || "2rem"};
+    color: ${props => props.h2color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};
+    @media only screen and (max-width: ${widths.tablet}) {
+      font-size: 1.75rem;
+    }
   }
   h3 {
-    font-size: ${props => props.h3FontSize || "1.5rem"};
-    color: ${props => props.h3Color || colors.primary.sevenHundred};
-    font-weight: ${props => props.h3FontWeight || "700"};
+    font-size: ${props => props.h3fontsize || "1.5rem"};
+    color: ${props => props.h3color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h3fontweight || "700"};
     margin: ${props => props.h3margin};
+    @media only screen and (max-width: ${widths.tablet}) {
+      font-size: 1.1rem;
+    }
   }
   h4 {
-    font-size: ${props => props.h4FontSize || "1rem"};
-    color: ${props => props.h4Color || colors.primary.sevenHundred};
-    font-weight: ${props => props.h4FontWeight || "700"};
+    font-size: ${props => props.h4fontsize || "1rem"};
+    color: ${props => props.h4color || colors.primary.sevenHundred};
+    font-weight: ${props => props.h4fontweight || "700"};
     margin: ${props => props.h4margin};
     &.is-column-heading {
       margin-bottom: 0.5rem;
@@ -60,21 +72,25 @@ const Content = styled.div`
     margin: 0.5rem 0;
   }
   p {
-    color: ${props => props.paragraphColor || colors.primary.sixHundred};
+    color: ${props => props.paragraphcolor || colors.primary.sixHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
-    line-height: ${props => props.paragraphLineHeight || "1.5"};
-    text-align: ${props => props.paragraphTextAlign};
+    line-height: ${props => props.paragraphlineheight || "1.5"};
+    text-align: ${props => props.paragraphtextalign};
     &:not(:last-child) {
-      margin-bottom: ${props => props.paragraphMarginBottom || "1rem"};
+      margin-bottom: ${props => props.paragraphmarginbottom || "1rem"};
+    }
+    @media only screen and (max-width: ${widths.tablet}) {
+      font-size: 1rem;
     }
   }
   small {
-    color: ${props => props.smallColor || colors.gray.sevenHundred};
+    color: ${props => props.smallcolor || colors.gray.sevenHundred};
+    font-size: ${props => props.smallfontsize};
     display: block;
     margin: 0.5rem 0;
   }
   a {
-    color: ${props => props.linkColor || colors.link.normal};
+    color: ${props => props.linkcolor || colors.link.normal};
     &:hover {
       cursor: pointer;
       color: ${colors.black};

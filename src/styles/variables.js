@@ -108,6 +108,9 @@ const widths = {
   desktop: "1440px",
   content: {
     index: "600px"
+  },
+  breakpoint: {
+    index: "936px"
   }
 }
 

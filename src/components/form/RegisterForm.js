@@ -45,9 +45,9 @@ function RegisterForm(props) {
   }
 
   return (
-    <StyledRegisterForm id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
+    <StyledRegisterForm method="POST" id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
       <StyledFieldset
-        margin="2rem 0"
+        margin="2rem 0 0"
       >
         <input type="hidden" name="form-name" value="signup" />
         <StyledFloatingLabel
@@ -55,7 +55,7 @@ function RegisterForm(props) {
           inputFocused={inputFocused}
           htmlFor="email"
         >
-          Enter your email address
+          Sign up for early access
         </StyledFloatingLabel>
         <StyledInput
           onFocus={() => setInputFocused(true)}
@@ -76,6 +76,7 @@ function RegisterForm(props) {
           Sign Up
         </Button>
       </StyledFieldset>
+      <small>Notesmith is in early access. Enter your email to join!</small>
     </StyledRegisterForm>
   )
 }

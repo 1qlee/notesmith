@@ -4,7 +4,7 @@ import { colors, spacing, widths } from "../../styles/variables"
 const SectionMain = styled.main`
   background-color: ${colors.paper.offWhite};
   position: relative;
-  padding: 96px 0 0 96px;
+  padding: 6rem 0 0 6rem;
   height: 100%;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;
@@ -15,6 +15,9 @@ const SectionMain = styled.main`
   &.has-max-height {
     min-height: 100vh;
   }
+  @media only screen and (max-width: ${widths.tablet}) {
+    padding: 6rem 0 0;
+  }
 `
 
 const Section = styled.section`
@@ -23,7 +26,10 @@ const Section = styled.section`
 `
 
 const SectionContent = styled.div`
-  padding: ${spacing.section} 0;
+  padding: ${props => props.spacing ? props.spacing : spacing.section} 0;
+  @media only screen and (max-width: ${widths.tablet}) {
+    padding: 4rem 0;
+  }
 `
 
 const SectionApp = styled.div`

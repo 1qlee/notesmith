@@ -9,7 +9,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 article,
 aside,
 details,
@@ -515,4 +514,10 @@ select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #e4f1e4 inset;
   transition: background-color 5000s;
+}
+/* Make css-grid cells on the index page to stretch fullwidth in smaller viewport */
+@media only screen and (max-width: 936px) {
+  .is-fullwidth-mobile {
+    grid-column-end: span 3 !important;
+  }
 }

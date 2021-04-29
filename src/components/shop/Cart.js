@@ -133,7 +133,7 @@ function Cart() {
         ) : (
           <Content
             margin="1rem 0"
-            paragraphTextAlign="center"
+            paragraphtextalign="center"
           >
             <p>You have no items in your cart.</p>
           </Content>

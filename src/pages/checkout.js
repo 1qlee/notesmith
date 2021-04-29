@@ -351,7 +351,7 @@ const Checkout = ({ location }) => {
                 ))}
               </ul>
             </Content>
-            <Content paragraphLineHeight="1.5" paragraphMarginBottom="0">
+            <Content paragraphlineheight="1.5" paragraphmarginbottom="0">
               <h5>Your address:</h5>
               <p>{address.line1}, {address.line2}</p>
               <p>{address.city}, {address.state} {address.postal_code}</p>

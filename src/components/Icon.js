@@ -6,9 +6,10 @@ const StyledIcon = styled.span`
   display: inline-flex;
   justify-content: center;
   position: relative;
+  margin: ${props => props.margin};
 `
 
-function Icon({ icon, size, weight, color, children, ...p }) {
+function Icon({ children, ...p }) {
   return (
     <StyledIcon {...p}>
       {children}

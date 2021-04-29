@@ -29,7 +29,7 @@ const StyledNotification = styled.div`
   border: 2px solid ${props => props.bordercolor};
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   color: ${props => props.color};
-  display: flex;
+  display: inline-flex;
   justify-content: space-between;
   padding: 1rem;
   transition: background-color 0.2s, color 0.2s;

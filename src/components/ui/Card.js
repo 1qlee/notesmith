@@ -4,9 +4,8 @@ import { colors } from "../../styles/variables"
 const Card = styled.div`
   background-color: ${props => props.background};
   clip-path: polygon(0 0, calc(100% - 48px) 0, 100% 48px, 100% 100%, 0 100%);
-  display: flex;
-  flex-direction: column;
   height: ${props => props.height};
+  margin: ${props => props.margin};
   padding: 1rem;
   position: relative;
   width: ${props => props.width};
@@ -17,8 +16,8 @@ const Card = styled.div`
     display: block;
     height: 48px;
     position: absolute;
-    right: -1px;
-    top: -1px;
+    right: -2px;
+    top: -2px;
     width: 48px;
   }
 `

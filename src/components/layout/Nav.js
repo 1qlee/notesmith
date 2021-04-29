@@ -34,6 +34,9 @@ const HorizontalNavInnerBox = styled.div`
   height: 80px;
   position: relative;
   top: 1rem;
+  @media only screen and (max-width: ${widths.tablet}) {
+    padding-left: 0;
+  }
 `
 
 const HorizontalNavContainer = styled.div`
@@ -41,6 +44,9 @@ const HorizontalNavContainer = styled.div`
   max-width: ${widths.desktop};
   margin: 0 auto;
   width: 100%;
+  @media only screen and (max-width: 1585px) {
+    padding: 0 1rem;
+  }
 `
 
 const VerticalNav = styled.div`
@@ -49,6 +55,10 @@ const VerticalNav = styled.div`
   position: fixed;
   width: 96px;
   z-index: 10;
+  @media only screen and (max-width: ${widths.tablet}) {
+    width: 100%;
+    height: 1rem;
+  }
 `
 
 const VerticalNavInnerBox = styled.div`
@@ -60,6 +70,13 @@ const VerticalNavInnerBox = styled.div`
   padding-top: 1rem;
   position: relative;
   width: 80px;
+  @media only screen and (max-width: ${widths.tablet}) {
+    height: 1rem;
+    width: 100%;
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+  }
 `
 
 const VerticalNavItem = styled.div`
@@ -68,11 +85,19 @@ const VerticalNavItem = styled.div`
   &:first-child {
     margin-top: 96px;
   }
+  @media only screen and (max-width: ${widths.tablet}) {
+    transform: rotate(0deg);
+  }
 `
 
 const ChapterNumberHeader = styled.h2`
   margin: 1rem 1rem 96px 1rem;
   color: ${colors.primary.sixHundred};
+  @media only screen and (max-width: ${widths.tablet}) {
+    margin: 0 1rem 0;
+    font-size: 0.6rem;
+    padding: 0.25rem;
+  }
 `
 
 const ChapterNameHeader = styled.div`
@@ -88,6 +113,12 @@ const ChapterNameHeader = styled.div`
     font-weight: 700;
     font-size: 0.8rem;
     font-family: "Spectral";
+  }
+  @media only screen and (max-width: ${widths.tablet}) {
+
+    p {
+      font-size: 0.6rem;
+    }
   }
 `
 

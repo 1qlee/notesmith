@@ -76,7 +76,7 @@ const LoginForm = (props) => {
       <Content>
         <h4>Log into your account</h4>
       </Content>
-      <form id="login-form" onSubmit={handleSubmit} style={{maxWidth:"500px"}}>
+      <form id="login-form" onSubmit={handleSubmit} style={{maxwidth:"500px"}}>
         <StyledFieldset
           className="is-vertical"
           margin="1rem 0"

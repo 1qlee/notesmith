@@ -30,14 +30,14 @@ const floatUp = keyframes`
 const Page = styled.div`
   animation: ${props => props.animationName === "float-down" ? floatDown : floatUp} ${props => props.animationDuration}s ease-in-out infinite alternate;
   position: relative;
-  height: 300px;
   margin: ${props => props.margin};
+  height: 300px;
   width: 200px;
   will-change: transform;
   perspective: 1000px;
   .page-svg {
     background-color: ${colors.white};
-    box-shadow: 0 0 8px ${colors.shadow.float};
+    box-shadow: 0 2px 8px ${colors.shadow.float};
     transition: transform 0.3s;
     will-change: transform;
     transform-style: preserve-3d;
@@ -52,6 +52,22 @@ const Page = styled.div`
       transform: rotateY(0deg);
     }
   }
+  @media only screen and (max-width: 1545px) {
+    width: 150px;
+    height: 228px;
+    .back {
+      ul {
+        display: none;
+      }
+    }
+  }
+  @media only screen and (max-width: 1240px) {
+    width: 100px;
+    height: 153px;
+    .type {
+      margin: -1rem auto;
+    }
+  }
 `
 
 const PageFront = styled.div`
@@ -61,7 +77,7 @@ const PageFront = styled.div`
 const PageBack = styled.div`
   backface-visibility: hidden;
   background-color: ${colors.white};
-  box-shadow: 0 0 8px ${colors.shadow.float};
+  box-shadow: 0 2px 8px ${colors.shadow.float};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -144,7 +160,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page1 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.blue.sixHundred}>Diary</PageType>
+          <PageType className="type" backgroundcolor={colors.blue.sixHundred}>Diary</PageType>
           <PageList>
             <PageListItem>Box for sketching</PageListItem>
             <PageListItem>Margin below box</PageListItem>
@@ -176,7 +192,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page2 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.green.sixHundred}>School</PageType>
+          <PageType className="type" backgroundcolor={colors.green.sixHundred}>School</PageType>
           <PageList>
             <PageListItem>Lined for writing</PageListItem>
             <PageListItem>1mm thick lines</PageListItem>
@@ -209,7 +225,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page3 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.red.sixHundred}>Journal</PageType>
+          <PageType className="type" backgroundcolor={colors.red.sixHundred}>Journal</PageType>
           <PageList>
             <PageListItem>Lined top half</PageListItem>
             <PageListItem>7mm line spacing</PageListItem>
@@ -241,7 +257,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page4 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.purple.sixHundred}>Drafting</PageType>
+          <PageType className="type" backgroundcolor={colors.purple.sixHundred}>Drafting</PageType>
           <PageList>
             <PageListItem>Isometric grid</PageListItem>
             <PageListItem>1.5mm thick lines</PageListItem>
@@ -273,7 +289,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page5 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.kraft}>Workbook</PageType>
+          <PageType className="type" backgroundcolor={colors.kraft}>Workbook</PageType>
           <PageList>
             <PageListItem>Graph grid left side</PageListItem>
             <PageListItem>Lines right side</PageListItem>
@@ -282,7 +298,7 @@ const PageGallery = () => {
         </PageBack>
         <PageFront>
           <PageImage>
-            <p>Bobby</p>
+            <p>Alex</p>
             <StaticImage
               src="../images/portrait-5-sm-avatar.jpg"
               alt="Face"
@@ -304,7 +320,7 @@ const PageGallery = () => {
           <PageThumbnail>
             <Page6 />
           </PageThumbnail>
-          <PageType backgroundcolor={colors.yellow.threeHundred} color={colors.gray.nineHundred}>Checklist</PageType>
+          <PageType className="type" backgroundcolor={colors.yellow.threeHundred} color={colors.gray.nineHundred}>Checklist</PageType>
           <PageList>
             <PageListItem>Three even columns</PageListItem>
             <PageListItem>Boxes for checks</PageListItem>

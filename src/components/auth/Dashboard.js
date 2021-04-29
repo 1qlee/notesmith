@@ -29,7 +29,7 @@ const Dashboard = () => {
             <SectionAppContent>
               <a onClick={handleSignOut}>Sign Out</a>
               {!user.emailVerified && (
-                <Content linkColor={colors.link.normal}>
+                <Content linkcolor={colors.link.normal}>
                   <p>Verify your email.</p>
                   <p>We sent a verification link to {user.email}. If you didn't receive it, <a onClick={sendEmailVerification}>resend the email</a> or <Link to="/app/settings">update your email</Link> to verify with a different email.
                   </p>

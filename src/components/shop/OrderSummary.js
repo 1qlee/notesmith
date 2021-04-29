@@ -82,8 +82,8 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
             >
               <img src={item.image[0]} width="100px" />
               <Content
-                paragraphMarginBottom="0"
-                paragraphColor={colors.primary.sevenHundred}
+                paragraphmarginbottom="0"
+                paragraphcolor={colors.primary.sevenHundred}
                 margin="0 0 0 1rem"
               >
                 <p><b>{item.name}</b></p>

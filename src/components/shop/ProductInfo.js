@@ -54,15 +54,15 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
       render={data => (
         <ProductDetails>
           <Content
-            h1FontSize="2.5rem"
-            h2FontSize="2rem"
-            h1FontWeight="400"
-            h2FontWeight="400"
-            h3FontWeight="400"
+            h1fontsize="2.5rem"
+            h2fontsize="2rem"
+            h1fontweight="400"
+            h2fontweight="400"
+            h3fontweight="400"
             margin="0 0 2rem"
             paragraphfontsize="1.25rem"
             ulfontsize="1.25rem"
-            paragraphColor={colors.primary.nineHundred}
+            paragraphcolor={colors.primary.nineHundred}
             headermargin="0 0 1rem"
           >
             <h1>{data.stripePrice.product.name}</h1>
