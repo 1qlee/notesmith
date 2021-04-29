@@ -1,6 +1,6 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST);
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY ||process.env.GATSBY_STRIPE_SECRET_KEY_TEST);
 const easypostApi = require('@easypost/api');
-const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API_TEST);
+const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API ||process.env.GATSBY_EASYPOST_API_TEST);
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);

@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
 
 exports.handler = async (event) => {
   // product data we received from the client

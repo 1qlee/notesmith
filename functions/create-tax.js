@@ -1,5 +1,5 @@
 const TaxjarApi = require('taxjar')
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
 const taxjar = new TaxjarApi({
   apiKey: process.env.GATSBY_TAXJAR_API_LIVE
 });
