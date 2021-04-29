@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 import styled from "styled-components"
 
-import "./layout.css"
+import "./layout/master.css"
 import colors from "../styles/colors"
 
 const StyledLayout = styled.main`
