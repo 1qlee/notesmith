@@ -145,7 +145,7 @@ const IndexPage = ({ data }) => {
                       smallfontsize="0.8rem"
                     >
                       <p>Fully customize the layout of every page in your notebook - from dot thickness to line spacing - and create your own custom-made notebook.</p>
-                      <RegisterForm />
+                      <RegisterForm id="1" />
                     </Content>
                     <Flexbox
                       flex="flex"
@@ -389,8 +389,9 @@ const IndexPage = ({ data }) => {
                     >
                       <h4>{chapterData.chapterThree.heading}</h4>
                       <h2>{chapterData.chapterThree.title}</h2>
-                      <p>We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users.</p>
+                      <p></p>
+                      <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
+                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
                       <Notification
                         backgroundcolor={colors.paper.cream}
                         color={colors.primary.sevenHundred}
@@ -641,7 +642,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section
-          backgroundcolor={colors.yellow.oneHundred}
+          backgroundcolor={colors.paper.cream}
         >
           <Container>
             <LayoutContainer>
@@ -660,7 +661,7 @@ const IndexPage = ({ data }) => {
                       paragraphfontsize="1.2rem"
                     >
                       <h2>Sign up for early access</h2>
-                      <RegisterForm />
+                      <RegisterForm id="2" />
                     </Content>
                   </Cell>
                 </Grid>

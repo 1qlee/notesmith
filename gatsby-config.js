@@ -4,7 +4,7 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Notesmith - Unique, custom notebooks made to order`,
+    title: `Notesmith - Made-to-order notebooks crafted with your unique, custom printed pages.`,
     description: `Design and create your own unique notebook with fully customizable pages. Every notebook is made-to-order and custom printed specially for you.`,
     author: `@notesmith`,
     url: `https://www.notesmithbooks.com/`,
@@ -16,7 +16,7 @@ module.exports = {
       resolve: `gatsby-source-stripe`,
       options: {
         objects: ['Balance', 'BalanceTransaction', 'Product', 'Price', 'ApplicationFee', 'Sku', 'Subscription'],
-        secretKey: `${process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST || "sk_test_51IDyQgIN24Fw2SWdjfxPZJ02aac6rtFhUulDKlhXBbPwq3rYEZeywzB5gB3ZdW0RSRdzMJCGk05UFWNpgRJ3jq5w00FR59sIsF"}`,
+        secretKey: process.env.GATSBY_STRIPE_SECRET_KEY,
         downloadFiles: true,
       }
     },
@@ -42,15 +42,15 @@ module.exports = {
       resolve: "gatsby-plugin-react-svg",
       options: {
         rule: {
-          include: /assets/ // See below to configure properly
+          include: /assets/
         }
       }
     },
     {
       resolve: `gatsby-source-contentful`,
       options: {
-        spaceId: process.env.CONTENTFUL_SPACE_ID || "88un70hhvnz3",
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || "8ifX-8dB75Bs8kQtc8Scea1JHkbeLwXqxpG5xVyhEJE",
+        spaceId: process.env.CONTENTFUL_SPACE_ID,
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
         downloadLocal: true,
       },
     },
@@ -79,14 +79,14 @@ module.exports = {
       resolve: "gatsby-plugin-firebase",
       options: {
         credentials: {
-          apiKey: process.env.GATSBY_FIREBASE_API_KEY || "AIzaSyAZ1VZdx66fX5ok9uW8enCjM",
-          authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN || "notesmith-765c3.firebaseapp.com",
-          databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL || "https://notesmith-765c3.firebaseio.com",
-          projectId: process.env.GATSBY_FIREBASE_PROJECT_ID || "notesmith-765c3",
-          storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET || "notesmith-765c3.appspot.com",
-          messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID || "56797146951",
-          appId: process.env.GATSBY_FIREBASE_APP_ID || "1:56797146951:web:df2b3e29b067e438962662",
-          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID || "G-9S05PJ9HT1"
+          apiKey: process.env.GATSBY_FIREBASE_API_KEY,
+          authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN,
+          databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL,
+          projectId: process.env.GATSBY_FIREBASE_PROJECT_ID,
+          storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.GATSBY_FIREBASE_APP_ID,
+          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID
         }
       }
     },

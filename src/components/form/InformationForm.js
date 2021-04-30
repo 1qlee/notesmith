@@ -54,10 +54,10 @@ function InformationForm({
       })
     }).then(res => {
       // parse the response object
-      const response = res.json()
+      const promise = res.json()
 
       // the response object is a Promise for some reason
-      response.then(obj => {
+      promise.then(obj => {
         // if the response contains any errors, throw an Error
         if (obj.errors) {
           throw obj.errors

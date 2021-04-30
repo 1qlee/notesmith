@@ -1,6 +1,6 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY || process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
-const sendgridMail = require('@sendgrid/mail')
-sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
+const sendgrid = require('@sendgrid/mail')
+sendgrid.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 
 exports.handler = async ({ body, headers }) => {
   try {
@@ -8,7 +8,7 @@ exports.handler = async ({ body, headers }) => {
     const stripeEvent = stripe.webhooks.constructEvent(
       body,
       headers['stripe-signature'],
-      process.env.GATSBY_STRIPE_WEBHOOK_SECRET_TEST
+      process.env.GATSBY_STRIPE_WEBHOOK_SECRET
     );
 
     if (stripeEvent.type === 'payment_intent.succeeded') {
@@ -31,15 +31,15 @@ exports.handler = async ({ body, headers }) => {
         text: JSON.stringify(shipping, null, 2),
       };
 
-      await sendgridMail.send(msg);
+      await sendgrid.send(msg);
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({ received: true }),
     };
-  } catch (err) {
-    console.log(`Stripe webhook failed with ${err}`);
+  } catch (error) {
+    console.log(`Stripe webhook failed with ${error}`);
 
     return {
       statusCode: 400,

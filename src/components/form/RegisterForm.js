@@ -1,70 +1,105 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import Button from "../Button"
-import { colors } from "../../styles/variables"
+import { colors, regex } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
+import { Warning } from "phosphor-react"
 
-import { StyledFieldset, StyledFloatingLabel, StyledInput } from "./FormComponents"
+import { StyledFieldset, StyledFloatingLabel, StyledInput, ErrorLine } from "./FormComponents"
+import Icon from "../Icon"
+import Loading from "../../assets/loading.svg"
 
 const StyledRegisterForm = styled.form`
   display: ${props => props.formHidden ? "none" : "block"};
 `
 
 function RegisterForm(props) {
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [inputFocused, setInputFocused] = useState(false)
-  const { signUpWithEmail } = useFirebaseContext()
-  const isBrowser = typeof window !== "undefined"
-  // Settings for signing up a user with an email link
-  const actionCodeSettings = {
-    // URL you want to redirect back to. The domain (www.example.com) for this
-    // URL must be in the authorized domains list in the Firebase Console.
-    url: 'https://www.localhost:8000/signup',
-    // This must be true.
-    handleCodeInApp: true,
-    dynamicLinkDomain: 'example.page.link'
-  }
+  const [emailError, setEmailError] = useState({
+    msg: "",
+    color: colors.red.sixHundred
+  })
+  const [emailValidated, setEmailValidated] = useState(false)
 
-  function handleSignUp() {
-    signUpWithEmail(email, actionCodeSettings).then(() => {
-      isBrowser && window.location.setItem('emailForSignIn', email)
-    }).catch(error => {
-      console.log(error.code, error.msg)
-    })
-  }
+  const sendgridSignUp = async e => {
+    e.preventDefault()
+    setLoading(true)
 
-  function handleBlur(e) {
-    let inputValue = e.target.value
+    if (regex.email.test(email)) {
+      setEmailError({
+        msg: "",
+        color: colors.gray.sevenHundred
+      })
+      setEmailValidated(true)
+      setEmail(email)
 
-    if (inputValue.length > 0) {
-      setInputFocused(true)
+      const response = await fetch("/.netlify/functions/register-signup", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email
+        })
+      }).then(res => {
+        const promise = res.json()
+
+        promise.then(obj => {
+          // if the response contains any errors, throw an Error
+          if (obj.errors) {
+            throw obj.errors
+          }
+          else {
+            setLoading(false)
+            setEmailValidated(false)
+            setEmailError({
+              msg: obj.msg,
+              color: colors.green.sixHundred
+            })
+          }
+        })
+      }).catch(err => {
+        setLoading(false)
+        setEmailValidated(false)
+        setEmailError({
+          msg: "Something went wrong. Please try again.",
+          color: colors.red.sixHundred
+        })
+      })
     }
     else {
-      setInputFocused(false)
+      setLoading(false)
+      setEmailValidated(false)
+      setEmail("")
+      setEmailError({
+        msg: "Invalid format",
+        color: colors.red.sixHundred
+      })
     }
   }
 
   return (
-    <StyledRegisterForm method="POST" id="signup" name="signup" method="POST" data-netlify="true" autocomplete="off" action="/">
+    <StyledRegisterForm id={`register-form-${props.id}`} onSubmit={e => sendgridSignUp(e)}>
       <StyledFieldset
         margin="2rem 0 0"
       >
         <StyledFieldset width="100%">
-          <input type="hidden" name="form-name" value="signup" />
           <StyledFloatingLabel
-            onClick={() => setInputFocused(true)}
-            inputFocused={inputFocused}
-            htmlFor="email"
+            htmlFor={`email-${props.id}`}
           >
             Sign up for early access
           </StyledFloatingLabel>
           <StyledInput
-            onFocus={() => setInputFocused(true)}
-            onBlur={e => handleBlur(e)}
+            onFocus={() => setEmailError({
+                    msg: "",
+                    color: colors.red.sixHundred
+                  })}
             onChange={e => setEmail(e.currentTarget.value)}
-            inputFocused={inputFocused}
-            id="email"
-            type="email" name="email"
+            id={`email-${props.id}`}
+            type="email"
+            name="email"
             placeholder="signmeup@gmail.com"
           />
         </StyledFieldset>
@@ -72,12 +107,23 @@ function RegisterForm(props) {
           color={colors.white}
           backgroundcolor={colors.primary.sixHundred}
           padding="1rem"
-          type="submit" form="signup"
-          className="is-medium"
+          type="submit"
+          form={`register-form-${props.id}`}
+          className={loading ? "is-loading" : null}
+          disabled={emailValidated}
         >
-          Sign Up
+          {loading ? (
+            <Loading height="1rem" width="57px" />
+          ) : (
+            "Sign Up"
+          )}
         </Button>
       </StyledFieldset>
+      {emailError.msg && (
+        <ErrorLine color={emailError.color}>
+          <span>{emailError.msg}</span>
+        </ErrorLine>
+      )}
       <small>Notesmith is in early access. Enter your email to join!</small>
     </StyledRegisterForm>
   )

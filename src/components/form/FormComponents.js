@@ -226,7 +226,7 @@ const StyledLabel = styled.label`
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
-  width: calc(100% - 1rem);
+  width: calc(100% - 2rem);
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`
