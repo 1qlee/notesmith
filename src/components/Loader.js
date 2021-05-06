@@ -26,10 +26,13 @@ const loading = keyframes`
 
 const moving = keyframes`
   0% {
-    transform: translateX(0);
+    transform: translateX(0) skew(-25deg,0);
+  }
+  50% {
+    transform: translateX(100%) skew(-25deg,0);
   }
   100% {
-    transform: translateX(100%);
+    transform: translateX(0) skew(-25deg,0);
   }
 `
 
@@ -39,6 +42,7 @@ const LoaderWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
+  flex-direction: column;
   top: 0;
   left: 0;
   height: 100vh;
@@ -53,7 +57,7 @@ const LoaderWrapper = styled.div`
   }
   .letter-logo {
     animation-name: ${loading};
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-iteration-count: infinite;
     will-change: transform;
   }
@@ -88,22 +92,22 @@ const LoaderWrapper = styled.div`
 
 const StyledLoader = styled.div`
   animation-name: ${moving};
-  animation-duration: 1s;
+  animation-duration: 2s;
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
+  animation-direction: reverse;
   background-color: ${colors.paper.offWhite};
   margin: 0 auto;
   text-align: center;
   height: 100%;
   width: 100%;
-  border-radius: 100%;
   top: 0;
   left: 0;
   position: absolute;
   will-change: transform;
 `
 
-function Loader({ className }) {
+function Loader({ className, msg }) {
   return (
     <LoaderWrapper className={className}>
       <div style={{position: 'relative', marginTop: '-48px', marginLeft: '-50px'}}>
@@ -112,6 +116,7 @@ function Loader({ className }) {
         </div>
         <StyledLoader />
       </div>
+      <p>{msg}</p>
     </LoaderWrapper>
   )
 }

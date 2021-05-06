@@ -1,18 +1,15 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import Cookies from "js-cookie"
 import { navigate } from "gatsby"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { useFirebaseContext } from "../../utils/auth"
 import { ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
 import Icon from "../Icon"
-import Loader from "../Loader"
 import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
@@ -63,6 +60,7 @@ function CheckoutForm({
   setAddress,
   setCustomer,
   setLoading,
+  setLoadingMsg,
   setProcessing,
   shipment,
   taxRate,
@@ -85,6 +83,7 @@ function CheckoutForm({
     // show processing UI state
     setProcessing(true)
     setLoading(true)
+    setLoadingMsg("Processing your payment, do not refresh the page...")
 
     // send the payment details to Stripe
     const payload = await stripe.confirmCardPayment(clientSecret, {
@@ -123,17 +122,17 @@ function CheckoutForm({
         paymentId: pid
       })
     }).then(res => {
-      return res.json()
-    }).then(data => {
-      console.log(data)
-      const tracking = data.shippingLabel.trackers
-      // set cookies
-      Cookies.set('orderId', pid, { expires: 365 })
-
       // clear errors, cart, localStorage
       setError(null)
       clearCart()
+      setLoadingMsg("")
       localStorage.removeItem("pid")
+
+      return res.json()
+    }).then(data => {
+      const trackingCode = data.shippingLabel.tracking_code
+      const trackingUrl = data.url
+      const totalAmount = data.totalAmount
 
       // redirect the user to the orders summary page
       navigate(`/orders/${pid}`, {
@@ -142,15 +141,13 @@ function CheckoutForm({
           customer: customer,
           shippingRate: selectedRate,
           taxRate: taxRate,
+          totalAmount: totalAmount,
           tracking:  {
-            code: tracking.tracking_code,
-            url: tracking.public_url
+            code: trackingCode,
+            url: trackingUrl
           }
         }
       })
-
-      setProcessing(false)
-      setLoading(false)
     }).catch(err => {
       console.log(err)
     })

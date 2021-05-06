@@ -1,17 +1,14 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
-import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
+import { useShoppingCart } from "use-shopping-cart"
 import { useFirebaseContext } from "../../utils/auth"
 import { ArrowLeft, CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
-import { StyledFieldset, StyledInput, StyledFloatingLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"
+import { StyledFieldset, StyledInput, StyledLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
-import Content from "../Content"
 import Icon from "../Icon"
-import Loader from "../Loader"
 import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
@@ -28,7 +25,6 @@ function InformationForm({
   address,
   loading
 }) {
-  const { user } = useFirebaseContext()
   const { cartDetails } = useShoppingCart()
   const [nameError, setNameError] = useState("")
   const [emailError, setEmailError] = useState("")
@@ -181,7 +177,7 @@ function InformationForm({
         <StyledFieldset
           className="is-vertical"
         >
-          <StyledFloatingLabel htmlFor="checkout-name">Full Name</StyledFloatingLabel>
+          <StyledLabel htmlFor="checkout-name">Full Name</StyledLabel>
           <StyledInput
             id="checkout-name"
             className={nameError && "is-error"}
@@ -205,7 +201,7 @@ function InformationForm({
         <StyledFieldset
           className="is-vertical"
         >
-          <StyledFloatingLabel htmlFor="checkout-email">Email</StyledFloatingLabel>
+          <StyledLabel htmlFor="checkout-email">Email</StyledLabel>
           <StyledInput
             id="checkout-email"
             className={emailError && "is-error"}
@@ -231,7 +227,7 @@ function InformationForm({
         className="is-vertical"
         margin="0 0 1rem 0"
       >
-        <StyledFloatingLabel htmlFor="checkout-line1">Address Line 1</StyledFloatingLabel>
+        <StyledLabel htmlFor="checkout-line1">Address Line 1</StyledLabel>
         <StyledInput
           id="checkout-line1"
           name="line1"
@@ -256,7 +252,7 @@ function InformationForm({
         className="is-vertical"
         margin="0 0 1rem 0"
       >
-        <StyledFloatingLabel htmlFor="checkout-line2">Address Line 2</StyledFloatingLabel>
+        <StyledLabel htmlFor="checkout-line2">Address Line 2</StyledLabel>
         <StyledInput
           id="checkout-line2"
           name="line2"
@@ -273,7 +269,7 @@ function InformationForm({
         <StyledFieldset
           className="is-vertical"
         >
-          <StyledFloatingLabel htmlFor="checkout-city">City</StyledFloatingLabel>
+          <StyledLabel htmlFor="checkout-city">City</StyledLabel>
           <StyledInput
             id="checkout-city"
             onBlur={e => validateInput(e)}
@@ -298,7 +294,7 @@ function InformationForm({
           className="is-vertical"
         >
           <SelectWrapper>
-            <StyledFloatingLabel htmlFor="checkout-state">State</StyledFloatingLabel>
+            <StyledLabel htmlFor="checkout-state">State</StyledLabel>
             <StyledSelect
               id="checkout-state"
               className={stateError && "is-error"}
@@ -306,7 +302,6 @@ function InformationForm({
               onBlur={e => validateInput(e)}
               onChange={e => setAddress({...address, state: e.target.value})}
               onFocus={e => onInputFocus(e)}
-              padding="2rem 1rem 1rem"
               placeholder="NY"
               required
               type="email"
@@ -381,7 +376,7 @@ function InformationForm({
         <StyledFieldset
           className="is-vertical"
         >
-          <StyledFloatingLabel htmlFor="checkout-postal">Postal Code</StyledFloatingLabel>
+          <StyledLabel htmlFor="checkout-postal">Postal Code</StyledLabel>
           <StyledInput
             id="checkout-postal"
             className={postalError && "is-error"}

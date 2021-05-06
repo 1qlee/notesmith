@@ -6,12 +6,11 @@ import { CaretDown } from "phosphor-react"
 
 import { ProductDetails } from "./ShopComponents"
 import { QuantityTracker, SelectWrapper, StyledFieldset, StyledSelect, SelectIcon, StyledLabel } from "../form/FormComponents"
-import CheckoutForm from "../form/CheckoutForm"
 import Button from "../Button"
 import Content from "../Content"
 
 const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
-  const { addItem, redirectToCheckout } = useShoppingCart()
+  const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState()
   // converts select value to an object detailing selected book size
   const createBookDimensions = (size) => {
@@ -74,39 +73,32 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
               margin="0 0 1rem"
               className="is-horizontal"
             >
-              <div>
+              <SelectWrapper>
                 <StyledLabel fontsize="0.8rem">Size</StyledLabel>
-                <SelectWrapper>
-                  <StyledSelect
-                    width="100%"
-                    height="51px"
-                    value={bookData.size}
-                    onChange={e => createBookDimensions(e.target.value)}
-                    padding="1rem 3rem 1rem 1rem"
-                  >
-                    <option value="Medium">A5 (5.5" x 8.5")</option>
-                  </StyledSelect>
-                  <SelectIcon>
-                    <CaretDown size="1rem" />
-                  </SelectIcon>
-                </SelectWrapper>
-              </div>
-              <div>
+                <StyledSelect
+                  width="100%"
+                  value={bookData.size}
+                  onChange={e => createBookDimensions(e.target.value)}
+                >
+                  <option value="Medium">A5 (5.5" x 8.5")</option>
+                </StyledSelect>
+                <SelectIcon>
+                  <CaretDown size="1rem" />
+                </SelectIcon>
+              </SelectWrapper>
+              <SelectWrapper>
                 <StyledLabel fontsize="0.8rem">Color</StyledLabel>
-                <SelectWrapper>
-                  <StyledSelect
-                    width="100%"
-                    height="51px"
-                    value={bookData.color}
-                    onChange={e => setBookData({...bookData, color: e.target.value})}
-                  >
-                    <option value="Cadet Gray">Cadet Gray</option>
-                  </StyledSelect>
-                  <SelectIcon>
-                    <CaretDown size="1rem" />
-                  </SelectIcon>
-                </SelectWrapper>
-              </div>
+                <StyledSelect
+                  width="100%"
+                  value={bookData.color}
+                  onChange={e => setBookData({...bookData, color: e.target.value})}
+                >
+                  <option value="Cadet Gray">Cadet Gray</option>
+                </StyledSelect>
+                <SelectIcon>
+                  <CaretDown size="1rem" />
+                </SelectIcon>
+              </SelectWrapper>
             </StyledFieldset>
             <StyledFieldset
               margin="0 0 1rem"

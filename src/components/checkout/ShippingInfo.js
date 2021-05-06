@@ -135,10 +135,10 @@ const ShippingInfo = ({
       setActiveTab(3)
       return res.json()
     }).then(data => {
-      setTaxRate(data.tax.amount_to_collect)
+      setTaxRate(data.tax)
     }).catch(err => {
       setProcessing(false)
-      setTaxRate(0)
+      setFormError(err.msg)
     })
   }
 

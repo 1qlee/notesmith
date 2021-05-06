@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import Cookies from "js-cookie"
 import { Link, navigate } from "gatsby"
 import { colors, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
@@ -6,11 +7,10 @@ import { Elements } from "@stripe/react-stripe-js"
 import { useShoppingCart } from "use-shopping-cart"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
-import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../components/ui/Modal"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import { StyledFieldset, StyledLabel, ErrorLine } from "../components/form/FormComponents"
+import { ErrorLine } from "../components/form/FormComponents"
 import Breadcrumb from "../components/Breadcrumb"
 import Button from "../components/Button"
 import CheckoutForm from "../components/form/CheckoutForm"
@@ -24,13 +24,14 @@ import SEO from "../components/layout/Seo"
 import ShippingInfo from "../components/checkout/ShippingInfo"
 import TextLink from "../components/TextLink"
 
-const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY_TEST)
+const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
 const Checkout = ({ location }) => {
   const { cartDetails } = useShoppingCart()
   const [activeTab, setActiveTab] = useState(1)
   const [clientSecret, setClientSecret] = useState("")
   const [loading, setLoading] = useState(false)
+  const [loadingMsg, setLoadingMsg] = useState("")
   const [processing, setProcessing] = useState(false)
   const [formError, setFormError] = useState("")
   const [selectedRate, setSelectedRate] = useState()
@@ -116,8 +117,10 @@ const Checkout = ({ location }) => {
             setCustomer({...customer, name: shipping.name, email: receipt_email})
           }
         }
-      }).catch(err => {
-        setFormError(err.msg)
+      }).catch(error => {
+        setFormError({
+          msg: error.msg
+        })
       })
     }
 
@@ -139,14 +142,22 @@ const Checkout = ({ location }) => {
       }).then(res => {
         return res.json()
       }).then(data => {
+        const pid = data.paymentId
         setClientSecret(data.clientSecret)
         setLoading(false)
 
         // set a pid value in localStorage based on newly created paymentIntent
-        localStorage.setItem('pid', data.paymentId)
-      }).catch(err => {
-        console.log(err.msg)
-        setFormError(err.msg)
+        localStorage.setItem('pid', pid)
+        getSetCookie(pid)
+      }).catch(error => {
+        if (error.msg) {
+          setFormError({
+            msg: error.msg
+          })
+        }
+        else {
+          setFormError("Something went wrong")
+        }
       })
     }
 
@@ -159,6 +170,20 @@ const Checkout = ({ location }) => {
       createPaymentIntent()
     }
   }, [])
+
+  function getSetCookie(pid) {
+    const existingPids = Cookies.get('pid')
+    console.log(pid)
+
+    if (existingPids) {
+      Cookies.set("pid", [pid], { expires: 2147483647 })
+    }
+    else {
+      const pidArray = []
+      pidArray.push(pid)
+      Cookies.set("pid", pidArray, { expires: 2147483647 })
+    }
+  }
 
   // copy of the function in InformationForm to create a paymentIntent w user's information
   async function forceShippingSubmit() {
@@ -199,7 +224,7 @@ const Checkout = ({ location }) => {
   return (
     <Layout>
       <SEO title="Checkout" />
-      <Nav chapterNumber={`0${activeTab}`} title="Cart"></Nav>
+      <Nav chapterNumber={`0${activeTab}`} title="Checkout"></Nav>
       <SectionMain className="has-max-height">
         <Section>
           <Container>
@@ -312,6 +337,7 @@ const Checkout = ({ location }) => {
                           setCustomer={setCustomer}
                           setLoading={setLoading}
                           setProcessing={setProcessing}
+                          setLoadingMsg={setLoadingMsg}
                           shipment={shipment}
                           taxRate={taxRate}
                         />
@@ -327,7 +353,7 @@ const Checkout = ({ location }) => {
                   </Cell>
                 </Grid>
                 {loading && (
-                  <Loader className="has-nav" />
+                  <Loader className="has-nav" msg={loadingMsg} />
                 )}
               </SectionContent>
             </LayoutContainer>

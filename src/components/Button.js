@@ -22,8 +22,10 @@ const Button = styled.button`
   display: inline-flex;
   font-size: ${props => props.fontsize || "1rem"};
   font-family: "Spectral", Georgia, serif;
+  height: ${props => props.height};
   justify-content: center;
   padding: ${props => props.padding || "0.5rem 1rem"};
+  margin: ${props => props.margin || "0"};
   text-decoration: none;
   transition: background-color 0.2s, color 0.2s;
   white-space: nowrap;

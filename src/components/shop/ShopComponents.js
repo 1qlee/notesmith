@@ -4,7 +4,6 @@ import { colors } from "../../styles/variables"
 
 import { Plus, Minus } from "phosphor-react"
 import { Flexbox } from "../layout/Flexbox"
-import Button from "../Button"
 import Icon from "../Icon"
 
 function CartQuantityTracker({ product, setItemQuantity, incrementItem, decrementItem }) {
@@ -20,7 +19,6 @@ function CartQuantityTracker({ product, setItemQuantity, incrementItem, decremen
 
   function handleQuantityButton(e, type) {
     e.preventDefault()
-    const { value } = e.target
 
     if (type === "increment") {
       incrementItem(product.id, 1)

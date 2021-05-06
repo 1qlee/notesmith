@@ -126,6 +126,10 @@ const regex = {
   password: RegExp(/^.{8,256}$/)
 }
 
+const convertToDecimal = (num, places) => {
+  return ((num * 1.0) / 100).toFixed(places)
+}
+
 const convertToMM = pixels => {
   return pixels * .264583
 }
@@ -134,4 +138,4 @@ const convertToPx = mm => {
   return mm * 3.7795275591
 }
 
-export { colors, widths, spacing, regex, convertToMM, convertToPx }
+export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal }

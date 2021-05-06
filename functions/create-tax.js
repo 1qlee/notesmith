@@ -1,18 +1,22 @@
 const TaxjarApi = require('taxjar')
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 const taxjar = new TaxjarApi({
-  apiKey: process.env.GATSBY_TAXJAR_API_LIVE
+  apiKey: process.env.GATSBY_TAXJAR_API
 });
 
 // calculate total order amount using inventory data
+// takes a 'products' object as an argument
 const calcOrderAmount = async (products) => {
   let totalAmount = 0;
-  // iterate through all product items in cart
+  // iterate through all items in 'products' object
+  // we will be getting this object from use-shopping-cart
   for (const product in products) {
     const { quantity, id } = products[product];
     // retrieve product from stripe by using id
+    // this ensures that we always use the correct price
     const stripeProduct = await stripe.prices.retrieve(id);
 
+    // total amount is simply quantity multiplied by price
     totalAmount += stripeProduct.unit_amount * quantity;
   }
 
@@ -20,6 +24,7 @@ const calcOrderAmount = async (products) => {
 };
 
 // create an array with all products
+// we will send this in the Taxjar API request
 const createLineItems = (products) => {
   let lineItems = [];
 
@@ -49,6 +54,7 @@ exports.handler = async (event) => {
   const orderAmount = await calcOrderAmount(productData);
 
   try {
+    // taxObject will have a 'tax' key that contains all data
     const taxObject = await taxjar.taxForOrder({
       from_street: fromAddress.street,
       from_city: fromAddress.city,
@@ -84,7 +90,9 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(taxObject)
+      body: JSON.stringify({
+        tax: taxObject.tax.amount_to_collect
+      })
     }
   } catch(error) {
     if (error.status === 400) {
@@ -103,9 +111,9 @@ exports.handler = async (event) => {
       )
 
       return {
-        statusCode: 400,
+        statusCode: 200,
         body: JSON.stringify({
-          error: "Tax is not applicable."
+          tax: 0
         })
       }
     }

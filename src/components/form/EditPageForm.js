@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from "react"
-import { colors, convertToPx } from "../../styles/variables"
-import { Minus, Plus } from "phosphor-react"
+import React from "react"
 
-import { StyledFieldset, StyledSelect, StyledLabel, StyledInput } from "../form/FormComponents"
+import { StyledFieldset, StyledSelect, StyledLabel } from "../form/FormComponents"
 import { ProductDetails } from "../shop/ShopComponents"
 import Content from "../Content"
 import Button from "../Button"
-import Icon from "../Icon"
 
 const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
   return (

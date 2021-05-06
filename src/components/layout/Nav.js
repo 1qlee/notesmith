@@ -6,6 +6,7 @@ import { Link } from "gatsby"
 import { Tote } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
+import { InstagramLogo } from "phosphor-react"
 
 import Button from "../Button"
 import Icon from "../Icon"
@@ -90,6 +91,17 @@ const VerticalNavItem = styled.div`
   }
 `
 
+const VerticalNavFooter = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  @media only screen and (max-width: ${widths.tablet}) {
+    display: none;
+  }
+`
+
 const ChapterNumberHeader = styled.h2`
   margin: 1rem 1rem 96px 1rem;
   color: ${colors.primary.sixHundred};
@@ -115,7 +127,6 @@ const ChapterNameHeader = styled.div`
     font-family: "Spectral";
   }
   @media only screen and (max-width: ${widths.tablet}) {
-
     p {
       font-size: 0.6rem;
     }
@@ -214,6 +225,13 @@ function Nav(props) {
               <p>{props.title}</p>
             </ChapterNameHeader>
           </VerticalNavItem>
+          <VerticalNavFooter>
+            <Icon>
+              <a href="https://www.instagram.com/notesmithbooks/" target="_blank" rel="noopener noreferrer">
+                <InstagramLogo size="1.5rem" />
+              </a>
+            </Icon>
+          </VerticalNavFooter>
         </VerticalNavInnerBox>
       </VerticalNav>
     </StyledNav>

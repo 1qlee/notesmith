@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, convertToDecimal } from "../../styles/variables"
 import { Link } from "gatsby"
-import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
+import { useShoppingCart } from "use-shopping-cart"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 import Button from "../Button"
-import Loading from "../../assets/loading.svg"
 
 const Orders = styled.div`
   background-color: ${colors.paper.offWhite};
@@ -47,7 +46,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
       calculatedPrice += parseFloat(taxRate * 100)
     }
 
-    return (calculatedPrice * 1.0 / 100).toFixed(2) // converts to a float value
+    return convertToDecimal(calculatedPrice, 2) // converts to a float value
   }
 
   const createOrder = () => {
@@ -87,7 +86,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
                 margin="0 0 0 1rem"
               >
                 <p><b>{item.name}</b></p>
-                <p>${(item.price * 1.0 / 100).toFixed(2)} x {item.quantity}</p>
+                <p>${convertToDecimal(item.price, 2)} x {item.quantity}</p>
               </Content>
             </Flexbox>
             <p>{item.formattedValue}</p>

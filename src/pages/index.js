@@ -1,20 +1,16 @@
 import React, { useState } from "react"
 import { Book, HandWaving, Mouse, Package } from "phosphor-react"
 import { colors, spacing, widths } from "../styles/variables"
-import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
-import { Card, CardWrapper } from "../components/ui/Card"
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Button from "../components/Button"
 import Content from "../components/Content"
 import Footer from "../components/ui/Footer"
 import Icon from "../components/Icon"
-import Img from "gatsby-image"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import Notification from "../components/ui/Notification"
@@ -45,9 +41,9 @@ const chapterData = {
     heading: "Strive for quality"
   },
   chapterFive: {
-    title: "Our notebooks are made-to-order",
+    title: "Our current notebook specifications",
     chapter: "05",
-    heading: "Hot off the press"
+    heading: "Good things come in bundles"
   }
 }
 
@@ -112,7 +108,7 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title="Truly Custom Notebooks For All People" />
+      <SEO title="Create truly unique custom notebooks" />
       <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
       <SectionMain>
         <Section>
@@ -145,7 +141,7 @@ const IndexPage = ({ data }) => {
                       smallfontsize="0.8rem"
                     >
                       <p>Fully customize the layout of every page in your notebook - from dot thickness to line spacing - and create your own custom-made notebook.</p>
-                      <RegisterForm />
+                      <RegisterForm id="1" />
                     </Content>
                     <Flexbox
                       flex="flex"
@@ -256,6 +252,8 @@ const IndexPage = ({ data }) => {
                                 margin="0"
                                 fontsize="1rem"
                                 padding="0.25rem 0.5rem"
+                                backgroundcolor={colors.paper.cream}
+                                color={colors.primary.sixHundred}
                               >
                                 01
                               </Tag>
@@ -291,6 +289,8 @@ const IndexPage = ({ data }) => {
                                 margin="0"
                                 fontsize="1rem"
                                 padding="0.25rem 0.5rem"
+                                backgroundcolor={colors.paper.cream}
+                                color={colors.primary.sixHundred}
                               >
                                 02
                               </Tag>
@@ -325,6 +325,8 @@ const IndexPage = ({ data }) => {
                               margin="0"
                               fontsize="1rem"
                               padding="0.25rem 0.5rem"
+                              backgroundcolor={colors.paper.cream}
+                              color={colors.primary.sixHundred}
                             >
                               03
                             </Tag>
@@ -383,8 +385,9 @@ const IndexPage = ({ data }) => {
                     >
                       <h4>{chapterData.chapterThree.heading}</h4>
                       <h2>{chapterData.chapterThree.title}</h2>
-                      <p>We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users.</p>
+                      <p></p>
+                      <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
+                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
                       <Notification
                         backgroundcolor={colors.paper.cream}
                         color={colors.primary.sevenHundred}
@@ -529,7 +532,7 @@ const IndexPage = ({ data }) => {
                     >
                       <h4>{chapterData.chapterFive.heading}</h4>
                       <h2>{chapterData.chapterFive.title}</h2>
-                      <p>That means we don't keep an inventory collecting dust in the warehouse. Instead, each notebook is made especially for you with the same high quality materials every time.</p>
+                      <p>You'll find the current specifications for our notebooks below. We hope to be able to provide more customization options in the future. Including but not limited to: rounded corners, various sizes, multiple colors, more pages, different binding methods, etc.</p>
                       <Content
                         paragraphfontsize="1.2rem"
                         paragraphmarginbottom="0"
@@ -635,7 +638,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section
-          backgroundcolor={colors.yellow.oneHundred}
+          backgroundcolor={colors.paper.cream}
         >
           <Container>
             <LayoutContainer>
@@ -654,7 +657,7 @@ const IndexPage = ({ data }) => {
                       paragraphfontsize="1.2rem"
                     >
                       <h2>Sign up for early access</h2>
-                      <RegisterForm />
+                      <RegisterForm id="2" />
                     </Content>
                   </Cell>
                 </Grid>

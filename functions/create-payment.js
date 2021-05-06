@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 
 // calculate total order amount using inventory data
 const calcOrderAmount = async (products) => {
@@ -75,7 +75,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: "Something went wrong with creating the payment intent."
+        msg: "Something went wrong with creating the payment intent."
       })
     }
   }

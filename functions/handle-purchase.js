@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY_TEST)
+const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 
@@ -8,7 +8,7 @@ exports.handler = async ({ body, headers }) => {
     const stripeEvent = stripe.webhooks.constructEvent(
       body,
       headers['stripe-signature'],
-      process.env.GATSBY_STRIPE_WEBHOOK_SECRET_TEST
+      process.env.GATSBY_STRIPE_WEBHOOK_SECRET
     );
 
     if (stripeEvent.type === 'payment_intent.succeeded') {

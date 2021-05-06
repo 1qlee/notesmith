@@ -1,10 +1,9 @@
 import React from "react"
-import { colors, spacing } from "../styles/variables"
+import { spacing } from "../styles/variables"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Button from "../components/Button"
 import Cart from "../components/shop/Cart"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../styles/variables"
-import { Smiley, SmileyMeh, SmileySad, Square, CheckSquare, ArrowClockwise } from "phosphor-react"
+import { ArrowBendLeftUp, Smiley, SmileyMeh, SmileySad, Square, CheckSquare, ArrowClockwise } from "phosphor-react"
 
 import Content from "./Content"
 import { Flexbox } from "./layout/Flexbox"
@@ -243,6 +243,21 @@ const PageAnimation = () => {
           alignitems="center"
           justifycontent="flex-end"
         >
+          <Content
+            paragraphfontsize="1rem"
+            margin="0 1rem 0 0"
+            paragraphcolor={colors.primary.whiteLight}
+          >
+            <Flexbox
+              flex="flex"
+              alignitems="center"
+            >
+              <Icon>
+                <ArrowBendLeftUp size="1rem" color={colors.primary.whiteLight} />
+              </Icon>
+              <p>Please click us in order</p>
+            </Flexbox>
+          </Content>
           <Button
             padding="0.25rem 0.5rem"
             backgroundcolor={colors.white}

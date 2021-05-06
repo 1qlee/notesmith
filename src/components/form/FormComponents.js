@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, regex } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import { Minus, Plus } from "phosphor-react"
 
 import Icon from "../Icon"
@@ -10,7 +10,6 @@ function QuantityTracker(props) {
 
   const handleButtonChange = (e, up) => {
     e.preventDefault()
-    const { value } = e.target
 
     if (up) {
       setQuantity(quantity => quantity + 1)
@@ -126,6 +125,7 @@ const StyledFieldset = styled.fieldset`
   display: flex;
   margin: ${props => props.margin};
   position: relative;
+  width: ${props => props.width};
   label {
     margin-right: 1rem;
   }
@@ -220,12 +220,11 @@ const StyledRadio = styled.div`
 const StyledLabel = styled.label`
   color: ${colors.primary.sevenHundred};
   display: block;
-  font-family: "Spectral";
+  font-family: "Spectral", serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.65rem"};
   font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
-  width: 100%;
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`
@@ -243,7 +242,7 @@ const StyledInput = styled.input`
   display: block;
   font-size: 1rem;
   line-height: 1rem;
-  padding: ${props => props.padding ? props.padding : "2rem 1rem 1rem"};
+  padding: ${props => props.padding ? props.padding : "1rem"};
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
@@ -268,7 +267,7 @@ const SelectWrapper = styled.div`
 
 const SelectIcon = styled.span`
   position: absolute;
-  top: 1rem;
+  top: 2.5rem;
   right: 1rem;
 `
 

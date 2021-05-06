@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
 import Cookies from "js-cookie"
+import { convertToDecimal } from "../../styles/variables"
 
 import { Container, LayoutContainer } from "../layout/Container"
-import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
@@ -28,8 +27,7 @@ const Order = ({ location, orderId }) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          paymentId: pid,
-          authCookie: Cookies.get('orderId')
+          paymentId: pid
         })
       }).then(res => {
         return res.json()
@@ -82,6 +80,12 @@ const Order = ({ location, orderId }) => {
                           <li>{location.state.address.state}</li>
                           <li>{location.state.address.postal_code}</li>
                         </ul>
+                      </div>
+                      <div>
+                        <h3>Summary</h3>
+                        <p>${convertToDecimal(location.state.totalAmount, 2)}</p>
+                        <p>{location.state.shippingRate.rate}</p>
+                        <p>{location.state.taxRate}</p>
                       </div>
                       <div>
                         <h3>Tracking</h3>
