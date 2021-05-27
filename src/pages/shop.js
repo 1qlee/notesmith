@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { spacing } from "../styles/variables"
 import { SwitchTransition, CSSTransition } from "react-transition-group"
-import testImg from "../images/book-bundle.jpg"
+import { StaticImage } from "gatsby-plugin-image"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
@@ -13,7 +13,7 @@ import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import SEO from "../components/layout/Seo"
 
-const ShopPage = ({ data }) => {
+const ShopPage = () => {
   const [editMode, setEditMode] = useState(false)
   const [pageData, setPageData] = useState({
     type: "Blank",
@@ -44,20 +44,25 @@ const ShopPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="repeat(auto-fit,minmax(60px,1fr))"
-                  columnGap={spacing.medium}
+                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columnGap={spacing.xlarge}
                 >
-                  <Cell width={6}>
+                  <Cell width={3}>
                     {editMode ? (
                       <Page
                         pageData={pageData}
                         bookData={bookData}
                       />
                     ) : (
-                      <img style={{ border: `12px solid #e8e7e3`}}src={testImg} alt="testimg" />
+                      <StaticImage
+                        src="../images/index-image-2.jpg"
+                        alt="Notesmith notebooks"
+                        placeholder="blurred"
+                        quality={100}
+                      />
                     )}
                   </Cell>
-                  <Cell width={4}>
+                  <Cell width={2}>
                     <SwitchTransition mode="out-in">
                       <CSSTransition
                         key={editMode}

@@ -6,8 +6,12 @@ const Content = styled.div`
   display: block;
   margin: ${props => props.margin};
   max-width: ${props => props.maxwidth};
+  width: ${props => props.width};
   @media only screen and (max-width: ${widths.breakpoint.index}) {
     max-width: none;
+  }
+  &.has-border-bottom {
+    border-bottom: 1px solid ${props => props.bordercolor};
   }
   h1,h2,h3,h4,h5,h6 {
     margin: 0 0 1rem;
@@ -65,11 +69,11 @@ const Content = styled.div`
     }
   }
   ul {
-    padding-left: 1.5rem;
-    font-size: ${props => props.ulfontsize || "1rem"};
+    padding-left: 1.125rem;
   }
   li {
     margin: 0.5rem 0;
+    font-size: ${props => props.lifontsize || "1rem"};
   }
   p {
     color: ${props => props.paragraphcolor || colors.primary.sixHundred};
@@ -91,9 +95,11 @@ const Content = styled.div`
   }
   a {
     color: ${props => props.linkcolor || colors.link.normal};
+    font-size: ${props => props.linkfontsize};
+    text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;
-      color: ${colors.black};
+      opacity: 0.7;
     }
   }
 `

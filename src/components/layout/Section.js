@@ -26,7 +26,7 @@ const Section = styled.section`
 `
 
 const SectionContent = styled.div`
-  padding: ${props => props.spacing ? props.spacing : spacing.section} 0;
+  padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
   @media only screen and (max-width: ${widths.tablet}) {
     padding: 4rem 0;
   }

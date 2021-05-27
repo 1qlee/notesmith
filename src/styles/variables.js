@@ -118,6 +118,7 @@ const spacing = {
   normal: "1rem",
   medium: "2rem",
   large: "3rem",
+  xlarge: "6rem",
   section: "8rem"
 }
 

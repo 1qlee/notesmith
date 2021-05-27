@@ -79,7 +79,7 @@ function QuantityTracker(props) {
 
 const QuantityWrapper = styled.div`
   background-color: ${colors.paper.offWhite};
-  box-shadow: 0 0 0 1px ${colors.gray.nineHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
   padding: 0.75rem;
   display: flex;
   align-items: center;
@@ -267,8 +267,8 @@ const SelectWrapper = styled.div`
 
 const SelectIcon = styled.span`
   position: absolute;
-  top: 2.5rem;
-  right: 1rem;
+  top: ${props => props.top ? props.top : "2.5rem"};
+  right: ${props => props.right ? props.right : "1rem"};
 `
 
 const StyledSelect = styled.select`

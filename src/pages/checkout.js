@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import Cookies from "js-cookie"
 import { Link, navigate } from "gatsby"
 import { colors, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
@@ -36,7 +35,8 @@ const Checkout = ({ location }) => {
   const [formError, setFormError] = useState("")
   const [selectedRate, setSelectedRate] = useState()
   const [taxRate, setTaxRate] = useState()
-  const [shipment, setShipment] = useState()
+  const [shipmentId, setShipmentId] = useState()
+  const [authKey, setAuthKey] = useState()
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -53,6 +53,7 @@ const Checkout = ({ location }) => {
     country: "US"
   })
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
+  const localPid = localStorage.getItem("pid")
 
   // if the cart is empty, redirect the user to cart
   if (isCartEmpty) {
@@ -90,7 +91,7 @@ const Checkout = ({ location }) => {
         },
         body: JSON.stringify({
           // use the pid in localStorage
-          paymentId: localStorage.getItem("pid")
+          pid: localStorage.getItem("pid")
         })
       }).then(res => {
         return res.json()
@@ -128,6 +129,7 @@ const Checkout = ({ location }) => {
     async function createPaymentIntent() {
       // show loading screen
       setLoading(true)
+      localStorage.removeItem("pid")
 
       // call on the create-payment function defined in Netlify
       const response = await fetch("/.netlify/functions/create-payment", {
@@ -148,7 +150,6 @@ const Checkout = ({ location }) => {
 
         // set a pid value in localStorage based on newly created paymentIntent
         localStorage.setItem('pid', pid)
-        getSetCookie(pid)
       }).catch(error => {
         if (error.msg) {
           setFormError({
@@ -162,7 +163,7 @@ const Checkout = ({ location }) => {
     }
 
     // if pid exists in localStorage, retrieve it from Stripe
-    if (localStorage.getItem("pid")) {
+    if (localPid && localPid !== "undefined") {
       retrievePaymentIntent()
     }
     // otherwise, create a new one
@@ -170,20 +171,6 @@ const Checkout = ({ location }) => {
       createPaymentIntent()
     }
   }, [])
-
-  function getSetCookie(pid) {
-    const existingPids = Cookies.get('pid')
-    console.log(pid)
-
-    if (existingPids) {
-      Cookies.set("pid", [pid], { expires: 2147483647 })
-    }
-    else {
-      const pidArray = []
-      pidArray.push(pid)
-      Cookies.set("pid", pidArray, { expires: 2147483647 })
-    }
-  }
 
   // copy of the function in InformationForm to create a paymentIntent w user's information
   async function forceShippingSubmit() {
@@ -315,10 +302,13 @@ const Checkout = ({ location }) => {
                         address={address}
                         setFormError={setFormError}
                         setTaxRate={setTaxRate}
+                        selectedRate={selectedRate}
                         setSelectedRate={setSelectedRate}
                         processing={processing}
                         setProcessing={setProcessing}
-                        setShipment={setShipment}
+                        shipmentId={shipmentId}
+                        setShipmentId={setShipmentId}
+                        setAuthKey={setAuthKey}
                       />
                     )}
                     <Elements
@@ -335,11 +325,9 @@ const Checkout = ({ location }) => {
                           setActiveTab={setActiveTab}
                           setAddress={setAddress}
                           setCustomer={setCustomer}
-                          setLoading={setLoading}
                           setProcessing={setProcessing}
-                          setLoadingMsg={setLoadingMsg}
-                          shipment={shipment}
                           taxRate={taxRate}
+                          authKey={authKey}
                         />
                       ) : ( null)}
                     </Elements>

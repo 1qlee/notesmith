@@ -11,6 +11,7 @@ exports.handler = async (event) => {
     products.push(productData[product])
   };
 
+  // always sending from our business address
   const fromAddress = new easypost.Address({
     company: 'Notesmith',
     street1: '39 Knollwood Road',
@@ -28,14 +29,16 @@ exports.handler = async (event) => {
     zip: address.postal_code
   });
 
+  // physical package size
   const parcel = new easypost.Parcel({
     length: 12,
     width: 8.5,
     height: 1,
-    weight: products[0].quantity * 2.8 * 2
+    weight: products[0].quantity * 2.8 * 2 // assumption that there is only one product
   });
 
-  const shipment = new easypost.Shipment({
+  // create a new easypost Shipment object
+  const newShipment = new easypost.Shipment({
     to_address: toAddress,
     from_address: fromAddress,
     parcel: parcel,
@@ -46,23 +49,25 @@ exports.handler = async (event) => {
   });
 
   try {
+    // just have to wait to receive these values
     await fromAddress.save();
     await parcel.save();
-    const newShipment = await shipment.save();
-    const ratesArray = newShipment.rates.sort((a,b) => {
+    // shipment is the new easypost shipment object we created earlier
+    const shipment = await newShipment.save();
+    const shipmentId = shipment.id;
+    // all rates sorted by descending shipping rate price
+    const ratesSortedDescending = shipment.rates.sort((a,b) => {
       return a.rate - b.rate
     });
-    const cheapestRate = ratesArray[0];
-    // const rates = newShipment.rates.filter(rate => rate.service === "First")
-    // rates.sort((a,b) => {
-    //   return a.rate - b.rate
-    // })
+    // the cheapest rate will naturally be the first element of the array
+    // this variable is an object containing info relevant to the rate
+    const cheapestRate = ratesSortedDescending[0];
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        rate: cheapestRate,
-        shipment: newShipment,
+        cheapestRate: cheapestRate,
+        shipmentId: shipmentId,
       })
     };
   } catch(error) {
@@ -74,3 +79,9 @@ exports.handler = async (event) => {
     }
   }
 }
+
+// this function filters and sorts by specific carrier service
+// const rates = newShipment.rates.filter(rate => rate.service === "First")
+// rates.sort((a,b) => {
+//   return a.rate - b.rate
+// })

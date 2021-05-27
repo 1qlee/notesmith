@@ -24,7 +24,7 @@ const Footer = () => {
     <Section backgroundcolor={colors.primary.sixHundred}>
       <Container>
         <LayoutContainer>
-          <SectionContent spacing={spacing.large}>
+          <SectionContent padding={`${spacing.large} 0`}>
             <StyledFooter>
               <Grid
                 columns="repeat(auto-fit,minmax(120px,1fr))"

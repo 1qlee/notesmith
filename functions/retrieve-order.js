@@ -7,26 +7,23 @@ exports.handler = async (event) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    let isPaymentPaid;
-
-    // if a charge exists on this paymentIntent, return it to the client
-    // the client will then create a new paymentIntent instead
-    if (paymentIntent.charges.data[0]) {
-      isPaymentPaid = paymentIntent.charges.data[0].paid;
-    }
+    const { priceId } = paymentIntent.metadata;
+    const orderItem = await stripe.prices.retrieve(priceId);
+    const productItem = await stripe.products.retrieve(orderItem.product);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        isPaymentPaid: isPaymentPaid || null,
-        paymentIntent: paymentIntent
+        paymentIntent: paymentIntent,
+        orderItem: orderItem,
+        productItem: productItem
       })
     }
   } catch (error) {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        msg: "Could not retrieve your order information. Please clear your cart and try again."
+        msg: "Could not retrieve your order information. Please check the link again."
       })
     }
   }

@@ -427,7 +427,7 @@ function InformationForm({
           width="200px"
         >
           {processing ? (
-            <Loading height="1rem" width="1rem" />
+            <Loading height="1.5rem" width="1rem" />
           ) : (
             "Continue"
           )}

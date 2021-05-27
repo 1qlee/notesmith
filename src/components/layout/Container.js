@@ -5,6 +5,7 @@ const Container = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  height: 100%;
   &.is-aligned-left {
     justify-content: flex-start;
   }
@@ -16,6 +17,7 @@ const Container = styled.div`
 const LayoutContainer = styled.div`
   max-width: ${widths.desktop};
   margin: 0 ${spacing.normal};
+  height: 100%;
   width: 100%;
 `
 

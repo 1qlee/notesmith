@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       resolve: `gatsby-plugin-create-client-paths`,
-      options: { prefixes: [`/app/*`, `/orders/*`] },
+      options: { prefixes: [`/app/*`, `/orders/*`, `/customize/*`] },
     },
     {
       resolve: `gatsby-source-filesystem`,
@@ -59,7 +59,7 @@ module.exports = {
       options: {
         fonts: [
           `Crimson Pro\:400,400i,700`,
-          `Spectral\:400,700,700i`,
+          `Spectral\:400,500,600,700`,
         ]
       },
     },

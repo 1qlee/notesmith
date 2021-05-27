@@ -4,13 +4,13 @@ import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${colors.paper.offWhite};
-  border-radius: 0.25rem;
   box-shadow: ${colors.shadow.modal};
   position: absolute;
   transform: translate(-50%, -25%);
   left: 50%;
   top: 25%;
   min-width: ${widths.modal};
+  width: ${props => props.width};
   z-index: 9001;
 `
 
@@ -28,7 +28,6 @@ const ModalBackground = styled.div`
 const ModalHeader = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
   color: ${props => props.color};
-  border-radius: 0.25rem 0.25rem 0 0;
   padding: 1rem;
   h5 {
     color: ${props => props.color};
@@ -49,7 +48,7 @@ const ModalFooter = styled.div`
   border-top: 1px solid ${colors.gray.threeHundred};
 `
 
-function Modal({ children, setShowModal }) {
+function Modal({ children, setShowModal, width }) {
   const modalBackground = useRef()
 
   useEffect(() => {
@@ -83,7 +82,7 @@ function Modal({ children, setShowModal }) {
 
   return (
     <ModalBackground>
-      <StyledModal ref={modalBackground} onClick={e => handleClick(e)}>
+      <StyledModal width={width} ref={modalBackground} onClick={e => handleClick(e)}>
         {children}
       </StyledModal>
     </ModalBackground>

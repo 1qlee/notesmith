@@ -68,21 +68,25 @@ const ShippingItem = styled.div`
 `
 
 const ShippingInfo = ({
+  activeTab,
   address,
   customer,
-  setTaxRate,
-  setSelectedRate,
-  activeTab,
-  setActiveTab,
-  setFormError,
   processing,
+  selectedRate,
+  setActiveTab,
+  setAuthKey,
+  setFormError,
   setProcessing,
-  setShipment,
+  setSelectedRate,
+  setShipmentId,
+  setTaxRate,
+  shipmentId,
 }) => {
   const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [cheapestRate, setCheapestRate] = useState()
   const [shippingMethod, setShippingMethod] = useState()
+  const pid = localStorage.getItem("pid")
 
   useEffect(() => {
     // fetch the cheapest shipping rate based on the user's address
@@ -105,9 +109,9 @@ const ShippingInfo = ({
         return res.json()
       }).then(data => {
         // save the cheapest rate to state
-        setCheapestRate(data.rate)
-        // save the shipment object to state
-        setShipment(data.shipment)
+        setCheapestRate(data.cheapestRate)
+        // save the shipment id to state
+        setShipmentId(data.shipmentId)
         setLoading(false)
       }).catch(err => {
         setFormError(err.msg)
@@ -125,25 +129,47 @@ const ShippingInfo = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        paymentId: localStorage.getItem("pid"), // need pid from localStorage to update the corresponding paymentIntent
+        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
         address: address,
         shippingRate: cheapestRate.rate,
         productData: cartDetails,
       })
     }).then(res => {
-      setProcessing(false)
-      setActiveTab(3)
       return res.json()
     }).then(data => {
       setTaxRate(data.tax)
-    }).catch(err => {
       setProcessing(false)
-      setFormError(err.msg)
+      setActiveTab(3)
+    }).catch(error => {
+      setProcessing(false)
+      setFormError(error.msg)
+    })
+  }
+
+  const setShippingInfo = async () => {
+    await fetch("/.netlify/functions/set-shipping-info", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
+        shipmentId: shipmentId,
+        shippingRate: selectedRate
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      setAuthKey(data.authKey)
+      calculateTaxes()
+    }).catch(error => {
+      setProcessing(false)
+      setFormError(error.msg)
     })
   }
 
   // handles the submit of shipping rate
-  const handleContinue = () => {
+  const submitShippingInfo = () => {
     setProcessing(true)
 
     if (!shippingMethod) {
@@ -153,7 +179,7 @@ const ShippingInfo = ({
       setProcessing(false)
     }
     else {
-      calculateTaxes()
+      setShippingInfo()
     }
   }
 
@@ -254,11 +280,11 @@ const ShippingInfo = ({
               className={processing ? "is-loading" : null}
               padding="1rem"
               form="checkout-shipping-form"
-              onClick={() => handleContinue()}
+              onClick={() => submitShippingInfo()}
               width="200px"
             >
             {processing ? (
-              <Loading height="1rem" width="1rem" />
+              <Loading height="1.5rem" width="1rem" />
             ) : (
               "Continue"
             )}

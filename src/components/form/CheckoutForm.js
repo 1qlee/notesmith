@@ -52,6 +52,7 @@ const CardDetailsWrapper = styled.div`
 
 function CheckoutForm({
   address,
+  authKey,
   clientSecret,
   customer,
   processing,
@@ -59,10 +60,7 @@ function CheckoutForm({
   setActiveTab,
   setAddress,
   setCustomer,
-  setLoading,
-  setLoadingMsg,
   setProcessing,
-  shipment,
   taxRate,
 }) {
   const { clearCart } = useShoppingCart()
@@ -79,11 +77,10 @@ function CheckoutForm({
 
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
+    const pid = localStorage.getItem("pid")
     e.preventDefault()
     // show processing UI state
     setProcessing(true)
-    setLoading(true)
-    setLoadingMsg("Processing your payment, do not refresh the page...")
 
     // send the payment details to Stripe
     const payload = await stripe.confirmCardPayment(clientSecret, {
@@ -99,11 +96,18 @@ function CheckoutForm({
       if (res.error) {
         setError(res.error.message)
         setProcessing(false)
-        setLoading(false)
       }
       else {
-        // purchase the shipping label
-        purchaseShippingLabel()
+        // clear errors, cart, localStorage
+        setError(null)
+        clearCart()
+        localStorage.removeItem("pid")
+
+        navigate(`/orders/${pid}?key=${authKey}`, {
+          state: {
+            msg: "Congratulations, your order has been successfully completed! We will get started on preparing your order right away. Please note that it may take 5 to 10 business days for our custom products to ship."
+          }
+        })
       }
     })
   }
@@ -118,24 +122,21 @@ function CheckoutForm({
       },
       body: JSON.stringify({
         rateId: selectedRate,
-        shipment: shipment,
-        paymentId: pid
+        pid: pid
       })
     }).then(res => {
       // clear errors, cart, localStorage
       setError(null)
       clearCart()
-      setLoadingMsg("")
       localStorage.removeItem("pid")
 
       return res.json()
     }).then(data => {
       const trackingCode = data.shippingLabel.tracking_code
-      const trackingUrl = data.url
-      const totalAmount = data.totalAmount
+      const { trackingUrl, totalAmount, authKey } = data
 
       // redirect the user to the orders summary page
-      navigate(`/orders/${pid}`, {
+      navigate(`/orders/${pid}?key=${authKey}`, {
         state: {
           address: address,
           customer: customer,
@@ -210,7 +211,7 @@ function CheckoutForm({
           width="200px"
         >
           {processing ? (
-            <Loading height="1rem" width="1rem" />
+            <Loading height="1.5rem" width="1rem" />
           ) : (
             "Pay now"
           )}

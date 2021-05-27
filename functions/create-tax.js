@@ -43,7 +43,7 @@ const createLineItems = (products) => {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { address, shippingRate, productData, paymentId } = body;
+  const { address, shippingRate, productData, pid } = body;
   const fromAddress = {
     street: '39 Knollwood Road',
     city: 'Roslyn',
@@ -52,6 +52,13 @@ exports.handler = async (event) => {
     country: 'US',
   };
   const orderAmount = await calcOrderAmount(productData);
+  let quantity, price, priceId;
+
+  for (const product in productData) {
+    quantity = productData[product].quantity;
+    price = productData[product].price;
+    priceId = productData[product].id;
+  }
 
   try {
     // taxObject will have a 'tax' key that contains all data
@@ -78,12 +85,15 @@ exports.handler = async (event) => {
 
     // update the payment intent with the new amount
     const paymentIntent = await stripe.paymentIntents.update(
-      paymentId,
+      pid,
       {
         amount: totalAmountToPay * 100,
         metadata: {
           taxRate: totalTax * 100,
-          shippingRate: shippingRate * 100
+          shippingRate: shippingRate * 100,
+          quantity: quantity,
+          price: price,
+          priceId: priceId
         }
       }
     )
@@ -100,12 +110,15 @@ exports.handler = async (event) => {
 
       // update the payment intent with ZERO tax
       const paymentIntent = await stripe.paymentIntents.update(
-        paymentId,
+        pid,
         {
           amount: orderAmount * 100 + shippingRate * 100,
           metadata: {
             taxRate: 0,
-            shippingRate: shippingRate * 100
+            shippingRate: shippingRate * 100,
+            quantity: quantity,
+            price: price,
+            priceId: priceId
           }
         }
       )
@@ -121,7 +134,7 @@ exports.handler = async (event) => {
       return {
         statusCode: error.status,
         body: JSON.stringify({
-          error: "Something went wrong."
+          msg: "Something went wrong."
         })
       }
     }

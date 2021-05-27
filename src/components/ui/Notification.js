@@ -4,11 +4,13 @@ import { colors } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, 10%, 0);
+    opacity: 0;
     visibility: visible;
   }
   to {
     transform: translate3d(0, 0, 0);
+    opacity: 1;
   }
 `
 
@@ -25,8 +27,8 @@ const StyledNotification = styled.div`
   align-items: center;
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border-radius: 0.25rem;
   border: 2px solid ${props => props.bordercolor};
+  border-radius: 12px 6px 12px 6px / 6px 12px 6px 12px;
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   color: ${props => props.color};
   display: inline-flex;
@@ -37,9 +39,6 @@ const StyledNotification = styled.div`
   z-index: 8000;
   span {
     margin-right: 1rem;
-  }
-  button, a {
-    margin-left: 1rem;
   }
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);

@@ -15,6 +15,7 @@
     "@stripe/stripe-js": "^1.12.1",
     "babel-plugin-styled-components": "^1.10.6",
     "cross-env": "^7.0.3",
+    "crypto-js": "^4.0.0",
     "firebase": "^8.0.0",
     "gatsby": "^2.24.82",
     "gatsby-image": "^2.2.37",
