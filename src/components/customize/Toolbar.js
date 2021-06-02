@@ -12,7 +12,8 @@ const StyledToolbar = styled.div`
   align-items: center;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 1px 4px ${colors.shadow.float};
+  box-shadow: 0 2px 2px ${colors.shadow.float};
+  background-color: ${colors.white};
   height: 354px;
 `
 

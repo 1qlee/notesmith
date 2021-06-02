@@ -26,10 +26,10 @@ const Notebook = ({ location, notebookId }) => {
   const { user, loading } = useFirebaseContext()
   const [initializing, setInitializing] = useState(true)
   const [showModal, setShowModal] = useState(false)
-  const [activePage, setActivePage] = useState(1)
+  const [selectedPage, setSelectedPage] = useState(1)
   const [canvasSize, setCanvasSize] = useState({
     width: 1082,
-    height: 742
+    height: 716
   })
   const [pageSize, setPageSize] = useState({
     width: 528,
@@ -94,19 +94,19 @@ const Notebook = ({ location, notebookId }) => {
               >
                 <Toolbar />
                 <Canvas
-                  activePage={activePage}
+                  selectedPage={selectedPage}
                   canvasSize={canvasSize}
                   pageSize={pageSize}
                   setPageSize={setPageSize}
                 />
                 <Controlsbar
                   quantity={location.state ? location.state.quantity : 1}
-                  activePage={activePage}
+                  selectedPage={selectedPage}
                 />
               </Flexbox>
               <Pagebar
-                activePage={activePage}
-                setActivePage={setActivePage}
+                selectedPage={selectedPage}
+                setSelectedPage={setSelectedPage}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
               />

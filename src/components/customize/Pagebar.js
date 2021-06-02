@@ -8,38 +8,46 @@ import Button from "../Button"
 import { Flexbox } from "../layout/Flexbox"
 
 const StyledPagebar = styled.div`
-  height: 96px;
+  background-color: ${colors.white};
+  box-shadow: 0 1px 4px ${colors.shadow.float};
+  height: 112px;
+  padding: 0 0.5rem;
+  margin-top: 1rem;
   overflow-x: auto;
   overflow-y: hidden;
   width: 100%;
   &::-webkit-scrollbar {
-    height: 5px;
-    width: 1rem;
+    height: 0.5rem;
+    width: 0.5rem;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: ${colors.gray.sixHundred};
+    background-color: ${colors.gray.threeHundred};
   }
 `
 
 const StyledPage = styled.div`
   text-align: center;
-  margin: 0.25rem;
+  padding: 0.5rem;
   svg {
     height: 48px;
     width: 32px;
     pointer-events: none;
+    box-shadow: 0 2px 2px ${colors.shadow.float};
+    transition: box-shadow 0.2s, border-color 0.2s;
+    border: 1px solid ${colors.gray.sixHundred};
   }
   &.is-active {
     svg {
-      box-shadow: 2px 2px 0 ${colors.blue.sixHundred}, -2px -2px 0 ${colors.blue.sixHundred};
+      box-shadow: 2px 2px 0 ${colors.primary.sixHundred}, -2px -2px 0 ${colors.primary.sixHundred}, 2px -2px 0 ${colors.primary.sixHundred}, -2px 2px 0  ${colors.primary.sixHundred};
+      border-color: transparent;
     }
   }
 `
 
 function Page({
   page,
-  activePage,
-  setActivePage,
+  selectedPage,
+  setSelectedPage,
   pageNumber,
   pageSize
 }) {
@@ -51,13 +59,13 @@ function Page({
 
   const selectPage = e => {
     console.log(e.currentTarget)
-    setActivePage(e.currentTarget.dataset.pagenumber)
+    setSelectedPage(e.currentTarget.dataset.pagenumber)
   }
 
   return (
      <StyledPage
        onClick={e => selectPage(e)}
-       className={activePage == pageNumber ? "is-active" : null}
+       className={selectedPage == pageNumber ? "is-active" : null}
        data-pagenumber={pageNumber}
      >
        <svg
@@ -72,8 +80,8 @@ function Page({
 }
 
 function Pagebar({
-  activePage,
-  setActivePage,
+  selectedPage,
+  setSelectedPage,
   pageSize,
   setPageSize
 }) {
@@ -90,8 +98,8 @@ function Pagebar({
           <Page
             page={page}
             pageNumber={index + 1}
-            activePage={activePage}
-            setActivePage={setActivePage}
+            selectedPage={selectedPage}
+            setSelectedPage={setSelectedPage}
             pageSize={pageSize}
           />
         ))}

@@ -16,12 +16,12 @@ const StyledControlsbar = styled.div`
 
 function Controlsbar({
   quantity,
-  activePage
+  selectedPage
 }) {
   return (
     <StyledControlsbar>
       <h1>Quantity: {quantity}</h1>
-      <h3>Active Page: {activePage}</h3>
+      <h3>Active Page: {selectedPage}</h3>
     </StyledControlsbar>
   )
 }
