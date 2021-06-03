@@ -3,16 +3,13 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
 
-import PageBackground from "./PageBackground"
 import PageSpread from "./PageSpread"
 import Icon from "../Icon"
 import Button from "../Button"
 import { Flexbox } from "../layout/Flexbox"
 
 const Workspace = styled.div`
-  align-items: center;
   background-color: ${colors.paper.offWhite};
-  bottom: 6rem;
   display: flex;
   height: 100%;
   justify-content: center;
@@ -32,11 +29,11 @@ const Workspace = styled.div`
 `
 
 const StyledCanvas = styled.div`
+  display: block;
   background-color: ${colors.paper.offWhite};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
 `
 
 function Canvas({
@@ -58,10 +55,6 @@ function Canvas({
           width={canvasSize.width}
           height={canvasSize.height}
         >
-          <PageBackground
-            pageSize={pageSize}
-            canvasSize={canvasSize}
-          />
           <PageSpread
             selectedPage={selectedPage}
             pageSize={pageSize}

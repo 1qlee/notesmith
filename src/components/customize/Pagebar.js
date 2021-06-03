@@ -5,17 +5,19 @@ import Line from "../../assets/customize/line.svg"
 
 import Icon from "../Icon"
 import Button from "../Button"
-import { Flexbox } from "../layout/Flexbox"
 
 const StyledPagebar = styled.div`
   background-color: ${colors.white};
-  box-shadow: 0 1px 4px ${colors.shadow.float};
-  height: 112px;
-  padding: 0 0.5rem;
-  margin-top: 1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
+  box-shadow: 0 2px 2px ${colors.shadow.float};
+  display: flex;
+  flex-wrap: wrap;
+  height: 600px;
+  overflow-x: hidden;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 0 0 12px 12px / 0 0 6px 6px;
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -28,18 +30,29 @@ const StyledPagebar = styled.div`
 const StyledPage = styled.div`
   text-align: center;
   padding: 0.5rem;
+  p {
+    font-size: 0.8rem;
+    margin: 0.25rem 0 0 0;
+    user-select: none;
+  }
   svg {
     height: 48px;
     width: 32px;
     pointer-events: none;
-    box-shadow: 0 2px 2px ${colors.shadow.float};
+    box-shadow: 1px 1px 0 ${colors.gray.threeHundred}, -1px -1px 0 ${colors.gray.threeHundred}, 1px -1px 0 ${colors.gray.threeHundred}, -1px 1px 0  ${colors.gray.threeHundred};
     transition: box-shadow 0.2s, border-color 0.2s;
-    border: 1px solid ${colors.gray.sixHundred};
   }
   &.is-active {
     svg {
       box-shadow: 2px 2px 0 ${colors.primary.sixHundred}, -2px -2px 0 ${colors.primary.sixHundred}, 2px -2px 0 ${colors.primary.sixHundred}, -2px 2px 0  ${colors.primary.sixHundred};
-      border-color: transparent;
+    }
+  }
+  &:hover {
+    cursor: pointer;
+    &:not(.is-active) {
+      svg {
+        box-shadow: 1px 1px 0 ${colors.gray.sixHundred}, -1px -1px 0 ${colors.gray.sixHundred}, 1px -1px 0 ${colors.gray.sixHundred}, -1px 1px 0  ${colors.gray.sixHundred};
+      }
     }
   }
 `
@@ -58,7 +71,6 @@ function Page({
   })
 
   const selectPage = e => {
-    console.log(e.currentTarget)
     setSelectedPage(e.currentTarget.dataset.pagenumber)
   }
 
@@ -89,21 +101,15 @@ function Pagebar({
 
   return (
     <StyledPagebar>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        height="100%"
-      >
-        {canvasPages.map((page, index) => (
-          <Page
-            page={page}
-            pageNumber={index + 1}
-            selectedPage={selectedPage}
-            setSelectedPage={setSelectedPage}
-            pageSize={pageSize}
-          />
-        ))}
-      </Flexbox>
+      {canvasPages.map((page, index) => (
+        <Page
+          page={page}
+          pageNumber={index + 1}
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+          pageSize={pageSize}
+        />
+      ))}
     </StyledPagebar>
   )
 }

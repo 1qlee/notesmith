@@ -3,8 +3,8 @@ import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
-  background-color: ${colors.paper.offWhite};
-  box-shadow: ${colors.shadow.modal};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   position: absolute;
   transform: translate(-50%, -25%);
   left: 50%;
@@ -26,7 +26,8 @@ const ModalBackground = styled.div`
 `
 
 const ModalHeader = styled.div`
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  border-bottom: ${props => props.border};
   color: ${props => props.color};
   padding: 1rem;
   h5 {
@@ -38,17 +39,19 @@ const ModalHeader = styled.div`
 
 const ModalContent = styled.div`
   padding: 1rem;
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
 `
 
 const ModalFooter = styled.div`
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   display: flex;
   align-items: center;
   justify-content: ${props => props.justifycontent};
   padding: 1rem;
-  border-top: 1px solid ${colors.gray.threeHundred};
+  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.threeHundred}`};
 `
 
-function Modal({ children, setShowModal, width }) {
+function Modal({ children, setShowModal, width, boxshadow, backgroundcolor }) {
   const modalBackground = useRef()
 
   useEffect(() => {
@@ -82,7 +85,13 @@ function Modal({ children, setShowModal, width }) {
 
   return (
     <ModalBackground>
-      <StyledModal width={width} ref={modalBackground} onClick={e => handleClick(e)}>
+      <StyledModal
+        width={width}
+        boxshadow={boxshadow}
+        backgroundcolor={backgroundcolor}
+        ref={modalBackground}
+        onClick={e => handleClick(e)}
+      >
         {children}
       </StyledModal>
     </ModalBackground>

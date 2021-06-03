@@ -4,7 +4,7 @@ import { colors } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {
-    transform: translate3d(0, 10%, 0);
+    transform: translate3d(0, -10%, 0);
     opacity: 0;
     visibility: visible;
   }
@@ -27,7 +27,7 @@ const StyledNotification = styled.div`
   align-items: center;
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border: 2px solid ${props => props.bordercolor};
+  border-left: 2px solid ${props => props.bordercolor};
   border-radius: 12px 6px 12px 6px / 6px 12px 6px 12px;
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   color: ${props => props.color};

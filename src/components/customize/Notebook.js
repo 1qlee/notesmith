@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate, Link } from "gatsby"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, WarningCircle } from "phosphor-react"
 import { colors, convertToDecimal, spacing } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
@@ -18,8 +18,8 @@ import Nav from "../layout/Nav"
 import Canvas from "./Canvas"
 import Controlsbar from "./Controlsbar"
 import Functionsbar from "./Functionsbar"
+import Notification from "../ui/Notification"
 import Toolbar from "./Toolbar"
-import Pagebar from "./Pagebar"
 import SEO from "../layout/Seo"
 
 const Notebook = ({ location, notebookId }) => {
@@ -102,34 +102,48 @@ const Notebook = ({ location, notebookId }) => {
                 <Controlsbar
                   quantity={location.state ? location.state.quantity : 1}
                   selectedPage={selectedPage}
+                  setSelectedPage={setSelectedPage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
                 />
               </Flexbox>
-              <Pagebar
-                selectedPage={selectedPage}
-                setSelectedPage={setSelectedPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-              />
             </Flexbox>
           </LayoutContainer>
         </Container>
       </SectionMain>
       {showModal.show && (
-        <Modal setShowModal={setShowModal} width="300px">
-          <ModalContent>
-            <Content
-              h3fontsize="1.1rem"
-              h3margin="0 0 0.5rem"
-              paragraphcolor={colors.primary.sixHundred}
-              linktextdecoration="underline"
+        <Modal
+          setShowModal={setShowModal}
+          width="300px"
+          boxshadow="none"
+          backgroundcolor="transparent"
+        >
+          <Notification
+            backgroundcolor={colors.paper.cream}
+            color={colors.gray.nineHundred}
+            bordercolor={colors.red.sixHundred}
+          >
+            <Flexbox
+              flex="flex"
+              alignitems="flex-start"
             >
-              <h3>Log in or create an account to save layouts</h3>
-              <p>Unfortunately, we won't be able to save your layouts unless you're logged into a Notesmith account.</p>
-              <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account.</p>
-            </Content>
-          </ModalContent>
+              <Icon>
+                <WarningCircle color={colors.red.sixHundred} size="2rem" weight="duotone" />
+              </Icon>
+              <Content
+                paragraphcolor={colors.primary.sevenHundred}
+                paragraphfontsize="1rem"
+              >
+                <h4>Log in or create an account to save layouts</h4>
+                <p>Unfortunately, we won't be able to save your layouts unless you're logged into a Notesmith account.</p>
+                <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account.</p>
+              </Content>
+            </Flexbox>
+          </Notification>
           <ModalFooter
             justifycontent="flex-end"
+            backgroundcolor="transparent"
+            border="none"
           >
             <Content
               linkcolor={colors.red.sixHundred}
@@ -137,10 +151,8 @@ const Notebook = ({ location, notebookId }) => {
               paragraphmarginbottom="0"
             >
               <Button
-                backgroundcolor={colors.paper.offWhite}
-                color={colors.red.sixHundred}
-                fontsize="0.75rem"
-                padding="0"
+                backgroundcolor={colors.red.sixHundred}
+                color={colors.red.oneHundred}
                 onClick={() => setShowModal({
                   show: false
                 })}
@@ -149,7 +161,7 @@ const Notebook = ({ location, notebookId }) => {
                   No thanks, I'm okay with losing my work
                 </span>
                 <Icon margin="0 0 0 0.25rem">
-                  <ArrowRight color={colors.red.sixHundred} />
+                  <ArrowRight color={colors.red.oneHundred} weight="bold" />
                 </Icon>
               </Button>
             </Content>

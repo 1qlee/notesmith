@@ -18,17 +18,14 @@ function PageSpread({
 
   useEffect(() => {
     if (selectedPage == 1) {
-      console.log('selected page is 1')
       pageLeftRef.current.innerHTML = cover
       pageRightRef.current.innerHTML = canvasPages[0]
     }
     else if (selectedPage == 48) {
-      console.log('selected page is 48')
       pageLeftRef.current.innerHTML = canvasPages[selectedPage - 1]
       pageRightRef.current.innerHTML = cover
     }
     else {
-      console.log('selected page is 2-47')
       pageLeftRef.current.innerHTML = canvasPages[selectedPage - 1]
       pageRightRef.current.innerHTML = canvasPages[selectedPage]
     }
@@ -51,9 +48,6 @@ function PageSpread({
         height={canvasSize.height}
         xmlns='http://www.w3.org/2000/svg'
         viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
-        style={{
-          boxShadow: `0 8px 4px ${colors.shadow.float}`
-        }}
         x="0"
         y="0"
       ></svg>

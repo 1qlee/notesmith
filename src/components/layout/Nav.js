@@ -54,7 +54,7 @@ const VerticalNav = styled.div`
   background-color: ${colors.primary.sixHundred};
   height: 100%;
   position: fixed;
-  width: 96px;
+  width: 80px;
   z-index: 10;
   @media only screen and (max-width: ${widths.tablet}) {
     width: 100%;
@@ -64,7 +64,7 @@ const VerticalNav = styled.div`
 
 const VerticalNavInnerBox = styled.div`
   background-color: ${colors.paper.cream};
-  box-shadow: 1px 0 4px ${colors.shadow.dark};
+  box-shadow: 1px 0 4px ${colors.shadow.float};
   height: 100%;
   left: 0;
   text-align: center;

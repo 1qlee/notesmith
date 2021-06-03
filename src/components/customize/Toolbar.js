@@ -15,12 +15,22 @@ const StyledToolbar = styled.div`
   box-shadow: 0 2px 2px ${colors.shadow.float};
   background-color: ${colors.white};
   height: 354px;
+  border-radius: 12px 12px 12px 12px / 6px 6px 6px 6px;
 `
 
 const ToolItem = styled.div`
-  padding: 1rem;
+  padding: 14px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, background-color 0.2s;
+  &:first-child {
+    border-radius: 12px 12px 0 0 / 6px 6px 0 0;
+  }
+  &:last-child {
+    border-radius: 0 0 12px 12px / 0 0 6px 6px;
+  }
   &.is-active {
     background-color: ${colors.primary.active};
+    border-color: ${colors.primary.sixHundred};
   }
   &:hover {
     cursor: pointer;
