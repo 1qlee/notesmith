@@ -124,7 +124,7 @@ const ChapterNameHeader = styled.div`
     margin-bottom: 0;
     font-weight: 700;
     font-size: 0.8rem;
-    font-family: "Spectral";
+    font-family: "Crimson Pro";
   }
   @media only screen and (max-width: ${widths.tablet}) {
     p {
@@ -145,6 +145,8 @@ const NavItem = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
+  font-size: 0.825rem;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   &.first-item {
     padding: 1rem 1rem 1rem 0;
   }

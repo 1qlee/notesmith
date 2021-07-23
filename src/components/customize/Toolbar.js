@@ -14,28 +14,23 @@ const StyledToolbar = styled.div`
   position: relative;
   box-shadow: 0 2px 2px ${colors.shadow.float};
   background-color: ${colors.white};
-  height: 354px;
-  border-radius: 12px 12px 12px 12px / 6px 6px 6px 6px;
+  height: 334px;
 `
 
 const ToolItem = styled.div`
   padding: 14px;
-  border: 2px solid transparent;
-  transition: border-color 0.2s, background-color 0.2s;
-  &:first-child {
-    border-radius: 12px 12px 0 0 / 6px 6px 0 0;
-  }
-  &:last-child {
-    border-radius: 0 0 12px 12px / 0 0 6px 6px;
+  transition: box-shadow 0.2s, background-color 0.2s;
+  &:not(:last-child) {
+    margin-bottom: 1px;
   }
   &.is-active {
-    background-color: ${colors.primary.active};
-    border-color: ${colors.primary.sixHundred};
+    background-color: ${colors.blue.oneHundred};
+    box-shadow: 0 0 0 1px ${colors.blue.sixHundred};
   }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
   }
 `
@@ -55,7 +50,11 @@ function Toolbar({ children }) {
         className={selectedTool === "cursor" ? "is-active" : null}
       >
         <Icon>
-          <Cursor size="1.5rem" weight="duotone" color={selectedTool === "cursor" ? colors.gray.nineHundred : colors.gray.sixHundred} />
+          <Cursor
+            size="1.5rem"
+            weight={selectedTool === "cursor" ? "fill" : "duotone"}
+            color={selectedTool === "cursor" ? colors.gray.nineHundred : colors.gray.sixHundred}
+          />
         </Icon>
       </ToolItem>
       <ToolItem
@@ -64,7 +63,11 @@ function Toolbar({ children }) {
         className={selectedTool === "pencil" ? "is-active" : null}
       >
         <Icon>
-          <Pencil size="1.5rem" weight="duotone" color={selectedTool === "pencil" ? colors.gray.nineHundred : colors.gray.sixHundred} />
+          <Pencil
+            size="1.5rem"
+            weight={selectedTool === "pencil" ? "fill" : "duotone"}
+            color={selectedTool === "pencil" ? colors.gray.nineHundred : colors.gray.sixHundred}
+          />
         </Icon>
       </ToolItem>
       <ToolItem
@@ -73,7 +76,15 @@ function Toolbar({ children }) {
         className={selectedTool === "line" ? "is-active" : null}
       >
         <Icon>
-          <Line width="1.5rem" height="1.5rem" style={selectedTool === "line" ? {stroke: colors.gray.nineHundred} : {stroke: colors.gray.sixHundred}} />
+          <Line
+            width="1.5rem"
+            height="1.5rem"
+            style={selectedTool === "line" ? {
+              stroke: colors.gray.nineHundred
+            } : {
+              stroke: colors.gray.sixHundred
+            }}
+          />
         </Icon>
       </ToolItem>
       <ToolItem
@@ -82,7 +93,11 @@ function Toolbar({ children }) {
         className={selectedTool === "rectangle" ? "is-active" : null}
       >
         <Icon>
-          <Rectangle size="1.5rem" weight="duotone" color={selectedTool === "rectangle" ? colors.gray.nineHundred : colors.gray.sixHundred} />
+          <Rectangle
+            size="1.5rem"
+            weight={selectedTool === "rectangle" ? "fill" : "duotone"}
+            color={selectedTool === "rectangle" ? colors.gray.nineHundred : colors.gray.sixHundred}
+          />
         </Icon>
       </ToolItem>
       <ToolItem
@@ -91,7 +106,11 @@ function Toolbar({ children }) {
         className={selectedTool === "circle" ? "is-active" : null}
       >
         <Icon>
-          <Circle size="1.5rem" weight="duotone" color={selectedTool === "circle" ? colors.gray.nineHundred : colors.gray.sixHundred} />
+          <Circle
+            size="1.5rem"
+            weight={selectedTool === "circle" ? "fill" : "duotone"}
+            color={selectedTool === "circle" ? colors.gray.nineHundred : colors.gray.sixHundred}
+          />
         </Icon>
       </ToolItem>
       <ToolItem
@@ -100,7 +119,11 @@ function Toolbar({ children }) {
         className={selectedTool === "text" ? "is-active" : null}
       >
         <Icon>
-          <TextT size="1.5rem" weight="duotone" color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred} />
+          <TextT
+            size="1.5rem"
+            weight={selectedTool === "text" ? "fill" : "duotone"}
+            color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred}
+          />
         </Icon>
       </ToolItem>
     </StyledToolbar>

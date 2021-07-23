@@ -1,111 +1,78 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
+import { useShoppingCart } from 'use-shopping-cart'
 
 import { Plus, Minus } from "phosphor-react"
 import { Flexbox } from "../layout/Flexbox"
+import { QuantityWrapper, QuantityButton, Counter } from "../form/FormComponents"
 import Icon from "../Icon"
 
-function CartQuantityTracker({ product, setItemQuantity, incrementItem, decrementItem }) {
-  function handleChange(e) {
-    e.preventDefault()
-    if (!e.target.value || e.target.value === "0") {
-      setItemQuantity(product.id, 1)
-    }
-    else {
-      setItemQuantity(product.id, e.target.value)
-    }
+function CartQuantityTracker(props) {
+  const {
+    setItemQuantity,
+    incrementItem,
+    decrementItem
+  } = useShoppingCart()
+
+  // change the quantity based on input
+  function handleQuantityChange(quantity) {
+    setItemQuantity(props.product.id, parseInt(quantity))
   }
 
-  function handleQuantityButton(e, type) {
-    e.preventDefault()
-
-    if (type === "increment") {
-      incrementItem(product.id, 1)
-    }
-    if (type === "decrement") {
-      if (product.quantity === 1) {
-        return
-      }
-      else {
-        decrementItem(product.id, 1)
-      }
+  // check for a valid quantity input on blur
+  function handleBlur(quantity) {
+    if (!quantity || quantity === 0) {
+      setItemQuantity(1)
     }
   }
 
   return (
-    <Flexbox
-      flex="flex"
-      alignitems="center"
-      margin="1rem 0"
+    <QuantityWrapper
+      padding={props.wrapperpadding}
+      boxshadow={props.wrapperboxshadow}
     >
       <QuantityButton
-        onClick={e => handleQuantityButton(e, "decrement")}
-        margin="0 0.25rem 0 0"
-        disabled={product.quantity == 1}
+        width={props.buttonwidth}
+        height={props.buttonheight}
+        onClick={() => decrementItem(props.product.id, 1)}
+        disabled={props.product.quantity === 1}
       >
-        <Icon
-        >
+        <Icon style={{width:"100%", height: "100%"}}>
           <Minus
-            size="0.8rem" color={colors.gray.sixHundred}
+            size={props.iconsize}
+            color={props.product.quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
+            weight="bold"
           />
         </Icon>
       </QuantityButton>
-      <QuantityInput
-        type="number"
+      <Counter
+        border="none"
+        fontsize="1rem"
+        margin="0 0.25rem"
         min="1"
-        max="99"
-        value={product.quantity}
-        onChange={e => handleChange(e)}
+        onBlur={e => handleBlur(e.target.value)}
+        onChange={e => handleQuantityChange(e.target.value)}
+        type="number"
+        value={props.product.quantity}
+        width={props.counterwidth}
       />
       <QuantityButton
-        onClick={e => handleQuantityButton(e, "increment")}
-        margin="0 0 0 0.25rem"
+        width={props.buttonwidth}
+        height={props.buttonheight}
+        onClick={() => incrementItem(props.product.id, 1)}
       >
         <Icon>
           <Plus
-            size="0.8rem" color={colors.gray.sixHundred}
+            size={props.iconsize}
+            color={colors.gray.nineHundred}
+            weight="bold"
           />
         </Icon>
       </QuantityButton>
-    </Flexbox>
+    </QuantityWrapper>
   )
 }
-
-const QuantityButton = styled.button`
-  background-color: ${colors.paper.offWhite};
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  margin: ${props => props.margin};
-  border: 1px solid ${colors.gray.threeHundred};
-  border-radius: 100%;
-  height: 1.6rem;
-  width: 1.6rem;
-  &:hover {
-    cursor: pointer;
-  }
-  &:focus {
-    outline: none;
-    border-color: ${colors.gray.sixHundred};
-  }
-`
-
-const QuantityInput = styled.input`
-  background: ${colors.paper.offWhite};
-  box-shadow: inset 0 1px 3px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
-  border-radius: 0.25rem;
-  padding: 0.25rem;
-  text-align: center;
-  border: none;
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  -moz-appearance: textfield;
-`
 
 const PriceTag = styled.div`
   font-size: ${props => props.fontsize};

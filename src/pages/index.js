@@ -137,6 +137,7 @@ const IndexPage = ({ data }) => {
                     <Content
                       maxwidth={widths.content.index}
                       paragraphfontsize="1.25rem"
+                      paragraphmarginbottom="1rem"
                       margin="0 auto"
                       smallfontsize="0.8rem"
                     >
@@ -217,6 +218,7 @@ const IndexPage = ({ data }) => {
                       h2fontweight="400"
                       h2fontsize="2.5rem"
                       paragraphfontsize="1.2rem"
+                      paragraphmarginbottom="1rem"
                       maxwidth={widths.content.index}
                     >
                       <h4>{chapterData.chapterTwo.heading}</h4>

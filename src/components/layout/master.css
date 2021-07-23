@@ -4,11 +4,6 @@ html {
   -webkit-text-size-adjust: 100%;
   font-size: 16px;
 }
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 article,
 aside,
 details,
@@ -193,10 +188,14 @@ html {
 }
 body {
   color: #212121;
-  font-family: "Crimson Pro", Palatino, Georgia, serif;
+  font-family: "Crimson Pro", Georgia, serif;
   font-weight: normal;
   word-wrap: break-word;
   font-kerning: normal;
+  font-size: 16px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -moz-font-feature-settings: "kern", "liga", "clig", "calt";
   -ms-font-feature-settings: "kern", "liga", "clig", "calt";
   -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
@@ -270,7 +269,7 @@ dd {
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
   color: #1c3635;
-  font-family: "Spectral", Georgia, serif;
+  font-family: "Crimson Pro", Georgia, serif;
 }
 p {
   font-size: 1rem;

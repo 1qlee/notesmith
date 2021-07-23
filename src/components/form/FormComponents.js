@@ -13,11 +13,11 @@ function QuantityTracker(props) {
 
     if (up) {
       setQuantity(quantity => quantity + 1)
-      props.setItemQuantity(quantity + 1)
+      props.setItemQuantity(parseInt(quantity + 1))
     }
     else {
       setQuantity(quantity => quantity - 1)
-      props.setItemQuantity(quantity - 1)
+      props.setItemQuantity(parseInt(quantity - 1))
     }
   }
 
@@ -34,18 +34,23 @@ function QuantityTracker(props) {
     const { value } = e.target
 
     setQuantity(e.target.value)
-    props.setItemQuantity(e.target.value)
+    props.setItemQuantity(parseInt(e.target.value))
   }
 
   return (
-    <QuantityWrapper>
+    <QuantityWrapper
+      padding={props.wrapperpadding}
+      boxshadow={props.wrapperboxshadow}
+    >
       <QuantityButton
+        width={props.buttonwidth}
+        height={props.buttonheight}
         onClick={e => handleButtonChange(e)}
         disabled={quantity == 1}
       >
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
-            size="0.75rem"
+            size={props.iconsize}
             color={quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
             weight="bold"
           />
@@ -60,14 +65,16 @@ function QuantityTracker(props) {
         onBlur={e => handleBlur(e)}
         type="number"
         value={quantity}
-        width="3rem"
+        width={props.counterwidth}
       />
       <QuantityButton
+        width={props.buttonwidth}
+        height={props.buttonheight}
         onClick={e => handleButtonChange(e, true)}
       >
         <Icon>
           <Plus
-            size="0.75rem"
+            size={props.iconsize}
             color={colors.gray.nineHundred}
             weight="bold"
           />
@@ -78,26 +85,27 @@ function QuantityTracker(props) {
 }
 
 const QuantityWrapper = styled.div`
-  background-color: ${colors.paper.offWhite};
-  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  padding: 0.75rem;
+  background-color: ${colors.white};
+  box-shadow: ${props => props.boxshadow || "0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white}"};
+  border-radius: 0.25rem;
+  padding: ${props => props.padding || "0.75rem"};
   display: flex;
   align-items: center;
 `
 
 const QuantityButton = styled.button`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   border: none;
   padding: 0;
-  width: 3rem;
-  height: 1.5rem;
+  width: ${props => props.width};
+  height: ${props => props.height};
   &:hover {
     cursor: pointer;
   }
 `
 
 const Counter = styled.input`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   border-radius: ${props => props.borderradius ? props.borderradius : 0};
   border: ${props => props.border};
   font-size: ${props => props.fontsize};
@@ -123,12 +131,12 @@ const AuthFormWrapper = styled.div`
 const StyledFieldset = styled.fieldset`
   border: none;
   display: flex;
+  flex-direction: ${props => props.flexdirection};
+  justify-content: ${props => props.justifycontent};
+  align-items: ${props => props.alignitems};
   margin: ${props => props.margin};
   position: relative;
   width: ${props => props.width};
-  label {
-    margin-right: 1rem;
-  }
   &.is-flex {
     fieldset {
       flex: 1;
@@ -158,6 +166,48 @@ const StyledFieldset = styled.fieldset`
         margin-right: 1rem;
       }
     }
+  }
+`
+
+const StyledRange = styled.div`
+  width: ${props => props.width};
+  margin: ${props => props.margin};
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    &:active {
+      &::-webkit-slider-thumb {
+        box-shadow: 0 1px 0px ${colors.shadow.float};
+      }
+    }
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: ${colors.blue.oneHundred};
+    border-radius: 0.25rem;
+    border: 1px solid ${colors.blue.sixHundred};
+    box-shadow: 0 1px 2px ${colors.shadow.float};
+    cursor: pointer;
+    height: 1rem;
+    margin-top: -0.25rem;
+    transition: box-shadow 0.2s;
+    width: 1.25rem;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 0.5rem;
+    cursor: pointer;
+    background: ${colors.gray.threeHundred};
+  }
+  &::-moz-range-thumb {
+
+  }
+  &::-ms-thumb {
+
+  }
+  &:focus {
+    outline: none;
   }
 `
 
@@ -217,14 +267,49 @@ const StyledRadio = styled.div`
   }
 `
 
-const StyledLabel = styled.label`
-  color: ${colors.primary.sevenHundred};
+const RadioInput = styled.div`
   display: block;
-  font-family: "Spectral", serif;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.65rem"};
+  border: none;
+  margin: ${props => props.margin};
+  label {
+    box-sizing: border-box;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color .2s;
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: ${colors.gray.sixHundred};
+    }
+  }
+  input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  input[type="radio"]:active ~ label {
+    opacity: 1;
+  }
+
+  input[type="radio"]:checked ~ label {
+    border: none;
+  }
+`
+
+const StyledLabel = styled.label`
+  color: ${colors.gray.sixHundred};
+  display: block;
+  letter-spacing: 1px;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-size: ${props => props.fontsize ? props.fontsize : "0.625rem"};
   font-weight: 700;
-  margin-bottom: 0.5rem;
   text-transform: uppercase;
+  margin-bottom: 0.75rem;
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`
@@ -234,13 +319,14 @@ const StyledFloatingLabel = styled(StyledLabel)`
 `
 
 const StyledInput = styled.input`
-  background-color: ${colors.paper.offWhite};
-  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : 0};
+  background-color: ${colors.white};
+  box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: none;
   color: ${colors.gray.nineHundred};
   display: block;
-  font-size: 1rem;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-size: ${props => props.fontsize ? props.fontsize : "0.8rem"};
   line-height: 1rem;
   padding: ${props => props.padding ? props.padding : "1rem"};
   width: ${props => props.width ? props.width : "100%"};
@@ -251,7 +337,7 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
   &::placeholder {
@@ -272,11 +358,12 @@ const SelectIcon = styled.span`
 `
 
 const StyledSelect = styled.select`
-  background-color: ${colors.paper.offWhite};
-  box-shadow: 0 0 0 1px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : 0};
+  background-color: ${colors.white};
+  box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: none;
-  font-size: ${props => props.fontsize};
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-size: ${props => props.fontsize || "0.8rem"};
   padding: ${props => props.padding || "1rem"};
   height: ${props => props.height};
   width: ${props => props.width};
@@ -286,7 +373,7 @@ const StyledSelect = styled.select`
   }
   &:active,
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
 `
@@ -306,15 +393,19 @@ const ErrorLine = styled.div`
 
 export {
   QuantityTracker,
+  QuantityWrapper,
+  QuantityButton,
   Counter,
   AuthFormWrapper,
   SelectWrapper,
   StyledFieldset,
   StyledRadio,
+  StyledRange,
   StyledSelect,
   SelectIcon,
   StyledFloatingLabel,
   StyledLabel,
   StyledInput,
+  RadioInput,
   ErrorLine
 }

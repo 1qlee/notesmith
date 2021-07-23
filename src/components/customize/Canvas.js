@@ -37,18 +37,23 @@ const StyledCanvas = styled.div`
 `
 
 function Canvas({
-  selectedPage,
   canvasSize,
+  pageData,
   pageSize,
-  setPageSize
+  selectedPage,
+  setPageData,
+  setPageSize,
+  setSelectedPageSvg,
 }) {
 
   return (
     <Workspace>
-      <StyledCanvas style={{
-        width: canvasSize.width,
-        height: canvasSize.height
-      }}>
+      <StyledCanvas
+        style={{
+          width: canvasSize.width,
+          height: canvasSize.height
+        }}
+      >
         <svg
           id="page-root"
           xlinkns="http://www.w3.org/1999/xlink"
@@ -56,9 +61,12 @@ function Canvas({
           height={canvasSize.height}
         >
           <PageSpread
-            selectedPage={selectedPage}
-            pageSize={pageSize}
             canvasSize={canvasSize}
+            pageData={pageData}
+            pageSize={pageSize}
+            selectedPage={selectedPage}
+            setPageData={setPageData}
+            setSelectedPageSvg={setSelectedPageSvg}
           />
         </svg>
       </StyledCanvas>

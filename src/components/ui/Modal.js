@@ -3,52 +3,52 @@ import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  position: absolute;
-  transform: translate(-50%, -25%);
+  border-radius: 0.25rem;
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
   left: 50%;
-  top: 25%;
   min-width: ${widths.modal};
+  position: absolute;
+  top: 25%;
+  transform: translate(-50%, -25%);
   width: ${props => props.width};
   z-index: 9001;
 `
 
 const ModalBackground = styled.div`
   background-color: ${colors.gray.threeHundred};
-  height: 100vh;
   background: ${colors.shadow.float};
+  height: 100vh;
+  left: 0;
   position: absolute;
+  top: 0;
   width: 100vw;
   z-index: 9000;
-  top: 0;
-  left: 0;
 `
 
 const ModalHeader = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-bottom: ${props => props.border};
-  color: ${props => props.color};
+  border-bottom: ${props => props.border || `1px solid ${colors.gray.threeHundred}`};
+  border-radius: 0.25rem 0.25rem 0 0;
+  color: ${props => props.color || colors.gray.nineHundred};
+  font-size: 1.1rem;
+  font-weight: 500;
   padding: 1rem;
-  h5 {
-    color: ${props => props.color};
-    font-size: 1rem;
-    font-weight: 400;
-  }
 `
 
 const ModalContent = styled.div`
   padding: 1rem;
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.primary.oneHundred};
 `
 
 const ModalFooter = styled.div`
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  display: flex;
   align-items: center;
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  border-radius: 0 0 0.25rem 0.25rem;
+  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.threeHundred}`};
+  display: flex;
   justify-content: ${props => props.justifycontent};
   padding: 1rem;
-  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.threeHundred}`};
 `
 
 function Modal({ children, setShowModal, width, boxshadow, backgroundcolor }) {

@@ -107,9 +107,6 @@ function Cart() {
                     </p>
                     <CartQuantityTracker
                       product={item}
-                      setItemQuantity={setItemQuantity}
-                      incrementItem={incrementItem}
-                      decrementItem={decrementItem}
                     />
                     <TextLink
                       color={colors.link.normal}

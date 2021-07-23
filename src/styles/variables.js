@@ -16,7 +16,7 @@ const colors = {
     active: "#bcdcbc",
     white: "#eef6f6",
     whiteLight: "#cde5e4",
-    oneHundred: "#e9ecec",
+    oneHundred: "#f4f6f6",
     twoHundred: "#a7b4b3",
     threeHundred: "#7b8e8e",
     fourHundred: "#657b7b",
@@ -132,11 +132,11 @@ const convertToDecimal = (num, places) => {
 }
 
 const convertToMM = pixels => {
-  return pixels * .264583
+  return parseFloat((pixels * .264583).toFixed(3))
 }
 
 const convertToPx = mm => {
-  return mm * 3.7795275591
+  return parseFloat((mm * 3.7795275591).toFixed(3))
 }
 
 export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal }

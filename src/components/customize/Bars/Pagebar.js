@@ -1,0 +1,123 @@
+import React, { useState, useEffect, useRef } from "react"
+import styled from "styled-components"
+import { colors } from "../../../styles/variables"
+import Line from "../../../assets/customize/line.svg"
+import SVG from "react-inlinesvg"
+
+import { Flexbox } from "../../layout/Flexbox"
+import Button from "../../Button"
+import Icon from "../../Icon"
+
+const StyledPage = styled.div`
+  text-align: center;
+  padding: 0.5rem;
+  p {
+    font-size: 0.8rem;
+    margin: 0.25rem 0 0 0;
+    user-select: none;
+  }
+  svg {
+    height: 64px;
+    width: 48px;
+    pointer-events: none;
+    box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  &.is-active {
+    svg {
+      box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    }
+  }
+  &:hover {
+    cursor: pointer;
+    &:not(.is-active) {
+      svg {
+        box-shadow: 0 0 0 2px ${colors.blue.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+      }
+    }
+  }
+`
+
+function Page({
+  page,
+  pageData,
+  selectedPage,
+  setSelectedPage,
+  setPageData,
+  pageNumber,
+  pageSize
+}) {
+  const pageSvg = useRef()
+
+  useEffect(() => {
+    // const pageStuffing = pageSvg.current.innerHTML
+  })
+  // change the selected page number
+  const handleSelectPage = e => {
+    const pageNumber = parseInt(e.currentTarget.dataset.pagenumber)
+
+    setSelectedPage(pageNumber)
+    if (selectedPage !== pageNumber) {
+      setPageData({...pageData, template: e.target.value})
+    }
+  }
+
+  return (
+     <StyledPage
+       onClick={e => handleSelectPage(e)}
+       className={selectedPage == pageNumber ? "is-active" : null}
+       data-pagenumber={pageNumber}
+     >
+       <SVG
+         xmlns="http://www.w3.org/2000/svg"
+         height="64"
+         width="48"
+         viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+         src={page}
+         x="0"
+         y="0"
+       />
+      <p>{pageNumber}</p>
+     </StyledPage>
+  )
+}
+
+function Pagebar({
+  canvasPages,
+  pageData,
+  pageSize,
+  selectedPage,
+  setPageData,
+  setPageSize,
+  setSelectedPage,
+}) {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    console.log(`pagebar loaded: ${new Date() / 1000}`)
+  })
+
+  return (
+    <Flexbox
+      flex="flex"
+      flexwrap="wrap"
+      justifycontent="center"
+      padding="1rem"
+    >
+      {canvasPages.map((page, index) => (
+        <Page
+          key={index}
+          page={page}
+          pageNumber={index + 1}
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+          setPageData={setPageData}
+          pageData={pageData}
+          pageSize={pageSize}
+        />
+      ))}
+    </Flexbox>
+  )
+}
+
+export default Pagebar

@@ -5,7 +5,7 @@ import { useShoppingCart } from 'use-shopping-cart'
 import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } from "phosphor-react"
 
 import { ProductDetails } from "./ShopComponents"
-import { QuantityTracker, SelectWrapper, StyledFieldset, StyledSelect, SelectIcon, StyledLabel } from "../form/FormComponents"
+import { QuantityTracker, StyledFieldset, StyledLabel } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import Tag from "../ui/Tag"
@@ -124,14 +124,6 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
                     quantity: itemQuantity
                   }
                 })
-                // addItem({
-                //   name: data.stripePrice.product.name,
-                //   description: data.stripePrice.product.description,
-                //   id: data.stripePrice.id,
-                //   price: data.stripePrice.unit_amount,
-                //   currency: data.stripePrice.currency,
-                //   image: data.stripePrice.product.images,
-                // }, itemQuantity)
               }}
             >
               {calculateTotalPrice(data.stripePrice.unit_amount)} Customize layouts

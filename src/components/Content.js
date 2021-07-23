@@ -22,7 +22,7 @@ const Content = styled.div`
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4rem"};
-    color: ${props => props.h1color || colors.primary.sevenHundred};
+    color: ${props => props.h1color || colors.gray.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -31,7 +31,7 @@ const Content = styled.div`
   }
   h2 {
     font-size: ${props => props.h2fontsize || "2rem"};
-    color: ${props => props.h2color || colors.primary.sevenHundred};
+    color: ${props => props.h2color || colors.gray.nineHundred};
     font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -40,7 +40,7 @@ const Content = styled.div`
   }
   h3 {
     font-size: ${props => props.h3fontsize || "1.5rem"};
-    color: ${props => props.h3color || colors.primary.sevenHundred};
+    color: ${props => props.h3color || colors.gray.nineHundred};
     font-weight: ${props => props.h3fontweight || "700"};
     margin: ${props => props.h3margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -49,14 +49,14 @@ const Content = styled.div`
   }
   h4 {
     font-size: ${props => props.h4fontsize || "1rem"};
-    color: ${props => props.h4color || colors.primary.sevenHundred};
+    color: ${props => props.h4color || colors.gray.nineHundred};
     font-weight: ${props => props.h4fontweight || "700"};
     margin: ${props => props.h4margin};
     &.is-column-heading {
       margin-bottom: 0.5rem;
       position: relative;
       &::after {
-        background-color: ${props => props.headingColor || colors.primary.sixHundred};
+        background-color: ${props => props.headingColor || colors.gray.sixHundred};
         content: "";
         height: 1rem;
         left: -1rem;
@@ -76,13 +76,11 @@ const Content = styled.div`
     font-size: ${props => props.lifontsize || "1rem"};
   }
   p {
-    color: ${props => props.paragraphcolor || colors.primary.sixHundred};
+    color: ${props => props.paragraphcolor || colors.gray.sixHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};
-    &:not(:last-child) {
-      margin-bottom: ${props => props.paragraphmarginbottom || "1rem"};
-    }
+    margin-bottom: ${props => props.paragraphmarginbottom};
     @media only screen and (max-width: ${widths.tablet}) {
       font-size: 1rem;
     }

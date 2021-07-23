@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate, Link } from "gatsby"
-import { ArrowRight, WarningCircle } from "phosphor-react"
+import { ArrowRight, WarningCircle, CheckCircle, Circle } from "phosphor-react"
 import { colors, convertToDecimal, spacing } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
@@ -9,6 +9,9 @@ import { Container, LayoutContainer } from "../layout/Container"
 import { Flexbox } from "../layout/Flexbox"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
+import { StyledFieldset, StyledLabel, StyledInput, RadioInput } from "../form/FormComponents"
+import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
+import CheckLoginModal from "./Modals/CheckLoginModal"
 import Button from "../Button"
 import Content from "../Content"
 import Icon from "../Icon"
@@ -16,8 +19,8 @@ import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import Nav from "../layout/Nav"
 import Canvas from "./Canvas"
-import Controlsbar from "./Controlsbar"
-import Functionsbar from "./Functionsbar"
+import Controls from "./Controls"
+import Functionsbar from "./Bars/Functionsbar"
 import Notification from "../ui/Notification"
 import Toolbar from "./Toolbar"
 import SEO from "../layout/Seo"
@@ -25,8 +28,12 @@ import SEO from "../layout/Seo"
 const Notebook = ({ location, notebookId }) => {
   const { user, loading } = useFirebaseContext()
   const [initializing, setInitializing] = useState(true)
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState({
+    show: false,
+    type: "notification"
+  })
   const [selectedPage, setSelectedPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(48)
   const [canvasSize, setCanvasSize] = useState({
     width: 1082,
     height: 716
@@ -35,14 +42,34 @@ const Notebook = ({ location, notebookId }) => {
     width: 528,
     height: 816
   })
+  const [pageData, setPageData] = useState({
+    template: "",
+    alignmentHorizontal: "center",
+    alignmentVertical: "center",
+    spacing: 5,
+    opacity: 1,
+    thickness: 1,
+    rows: 43,
+    columns: 27,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 5,
+    marginRight: 5,
+    width: 1,
+    lineWidth: pageSize.width
+  })
+  const [selectedPageSvg, setSelectedPageSvg] = useState()
   const canvasPages = localStorage.getItem("canvas-pages")
+  const parseCanvasPages = JSON.parse(canvasPages)
 
   useEffect(() => {
+    console.log(selectedPageSvg)
     setShowModal({
-      show: user ? false : true
+      show: user ? false : true,
+      type: "notification",
     })
     console.log(notebookId)
-
+    console.log(selectedPage)
     if (user) {
       console.log("logged in")
       console.log(notebookId)
@@ -58,7 +85,7 @@ const Notebook = ({ location, notebookId }) => {
         const pagesArray = []
 
         for (let i = 0; i < 48; i++) {
-          const svg = `<rect width=${pageSize.width} height=${pageSize.height} fill='#fff'></rect>`
+          const svg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${pageSize.width}" height="${pageSize.height}" fill="#fff"></rect></svg>`
           pagesArray.push(svg)
         }
 
@@ -87,24 +114,35 @@ const Notebook = ({ location, notebookId }) => {
               justifycontent="space-between"
               padding="0"
             >
-              <Functionsbar />
+              <Functionsbar
+                selectedPage={selectedPage}
+                setSelectedPage={setSelectedPage}
+                totalPages={totalPages}
+              />
               <Flexbox
                 flex="flex"
                 height="100%"
               >
                 <Toolbar />
                 <Canvas
-                  selectedPage={selectedPage}
                   canvasSize={canvasSize}
+                  pageData={pageData}
                   pageSize={pageSize}
+                  selectedPage={selectedPage}
+                  setSelectedPageSvg={setSelectedPageSvg}
+                  setPageData={setPageData}
                   setPageSize={setPageSize}
                 />
-                <Controlsbar
-                  quantity={location.state ? location.state.quantity : 1}
-                  selectedPage={selectedPage}
-                  setSelectedPage={setSelectedPage}
+                <Controls
+                  pageData={pageData}
                   pageSize={pageSize}
+                  quantity={location.state ? location.state.quantity : 1}
+                  canvasPages={parseCanvasPages}
+                  selectedPage={selectedPage}
+                  setShowModal={setShowModal}
+                  setPageData={setPageData}
                   setPageSize={setPageSize}
+                  setSelectedPage={setSelectedPage}
                 />
               </Flexbox>
             </Flexbox>
@@ -112,61 +150,18 @@ const Notebook = ({ location, notebookId }) => {
         </Container>
       </SectionMain>
       {showModal.show && (
-        <Modal
-          setShowModal={setShowModal}
-          width="300px"
-          boxshadow="none"
-          backgroundcolor="transparent"
-        >
-          <Notification
-            backgroundcolor={colors.paper.cream}
-            color={colors.gray.nineHundred}
-            bordercolor={colors.red.sixHundred}
-          >
-            <Flexbox
-              flex="flex"
-              alignitems="flex-start"
-            >
-              <Icon>
-                <WarningCircle color={colors.red.sixHundred} size="2rem" weight="duotone" />
-              </Icon>
-              <Content
-                paragraphcolor={colors.primary.sevenHundred}
-                paragraphfontsize="1rem"
-              >
-                <h4>Log in or create an account to save layouts</h4>
-                <p>Unfortunately, we won't be able to save your layouts unless you're logged into a Notesmith account.</p>
-                <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account.</p>
-              </Content>
-            </Flexbox>
-          </Notification>
-          <ModalFooter
-            justifycontent="flex-end"
-            backgroundcolor="transparent"
-            border="none"
-          >
-            <Content
-              linkcolor={colors.red.sixHundred}
-              paragraphfontsize="0.85rem"
-              paragraphmarginbottom="0"
-            >
-              <Button
-                backgroundcolor={colors.red.sixHundred}
-                color={colors.red.oneHundred}
-                onClick={() => setShowModal({
-                  show: false
-                })}
-              >
-                <span>
-                  No thanks, I'm okay with losing my work
-                </span>
-                <Icon margin="0 0 0 0.25rem">
-                  <ArrowRight color={colors.red.oneHundred} weight="bold" />
-                </Icon>
-              </Button>
-            </Content>
-          </ModalFooter>
-        </Modal>
+        <>
+          {showModal.type === "notification" && (
+            <CheckLoginModal setShowModal={setShowModal} />
+          )}
+          {showModal.type === "template" && (
+            <ApplyTemplateModal
+              setShowModal={setShowModal}
+              selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
+            />
+          )}
+        </>
       )}
     </Layout>
   )

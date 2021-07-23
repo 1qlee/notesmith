@@ -27,19 +27,16 @@ const StyledNotification = styled.div`
   align-items: center;
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border-left: 2px solid ${props => props.bordercolor};
-  border-radius: 12px 6px 12px 6px / 6px 12px 6px 12px;
+  border-left: 5px solid ${props => props.bordercolor};
+  border-radius: 0.25rem;
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   color: ${props => props.color};
   display: inline-flex;
   justify-content: space-between;
   padding: 1rem;
   transition: background-color 0.2s, color 0.2s;
-  margin: 1rem 0;
+  margin: ${props => props.margin || "1rem 0"};
   z-index: 8000;
-  span {
-    margin-right: 1rem;
-  }
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);
     animation: ${loading} 1s infinite;
@@ -51,7 +48,13 @@ const StyledNotification = styled.div`
 
 function Notification(props) {
   return (
-    <StyledNotification color={props.color} backgroundcolor={props.backgroundcolor} className={props.className} bordercolor={props.bordercolor}>
+    <StyledNotification
+      margin={props.margin}
+      color={props.color}
+      backgroundcolor={props.backgroundcolor}
+      className={props.className}
+      bordercolor={props.bordercolor}
+    >
       {props.children}
     </StyledNotification>
   )
