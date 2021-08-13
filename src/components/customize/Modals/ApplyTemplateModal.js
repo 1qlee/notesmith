@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import { colors } from "../../../styles/variables"
+import Loading from "../../../assets/loading.svg"
 
 import { StyledFieldset, StyledLabel, RadioInput } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -46,6 +47,8 @@ const PageRangeInput = styled.input`
 `
 
 function ApplyTemplateModal({
+  canvasPages,
+  setCanvasPages,
   setShowModal,
   selectedPage,
   selectedPageSvg,
@@ -53,60 +56,87 @@ function ApplyTemplateModal({
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [lowerPageBound, setLowerPageBound] = useState(1)
   const [upperPageBound, setUpperPageBound] = useState(12)
+  const [loading, setLoading] = useState(false)
+  const totalPages = canvasPages.length
 
-  function handleTemplateApply() {
-    // get all pages from localStorage
-    const pages = JSON.parse(localStorage.getItem("canvas-pages"))
+  function handleTemplateApply(value) {
+    // selectedPage starts from 1, so have to subtract 1 accordingly so that it matches the array position
     const pageNumber = selectedPage - 1
+    setLoading(true)
 
-    switch(selectedApply) {
+    // have to purposely delay the application function because it freezes the UI
+    // preventing the loading state from occuring
+    setTimeout(() => {
+      applyTemplate(value, pageNumber)
+    }, 10)
+  }
+
+  function applyTemplate(value, pageNumber) {
+    // clone the canvasPages array
+    const canvasPagesClone = [...canvasPages]
+
+    switch(value) {
       case "apply-current":
-        // change the corresponding page's svg
-        pages[pageNumber] = selectedPageSvg.outerHTML
-        // reset pages in localStorage
-        localStorage.setItem("canvas-pages", JSON.stringify(pages))
+        // change the corresponding page's svg in our cloned array
+        canvasPagesClone[pageNumber] = selectedPageSvg.outerHTML
         break
       case "apply-range":
+        // change the corresponding page's svg in our cloned array
+        // simple loop from lower to upper page bound
         for (let i = lowerPageBound; i <= upperPageBound; i++) {
-          pages[i - 1] = selectedPageSvg.outerHTML
+          canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
         }
-        localStorage.setItem("canvas-pages", JSON.stringify(pages))
         break
       case "apply-all":
+        // change the corresponding page's svg in our cloned array
+        // loop across all pages
+        for (let i = 0; i < totalPages; i++) {
+          canvasPagesClone[i] = selectedPageSvg.outerHTML
+        }
         break
       default:
         break
     }
 
-    // close the modal
+    // update canvasPages with our updated array clone
+    setCanvasPages(canvasPagesClone)
+
+    setLoading(false)
     setShowModal({
       show: false
     })
   }
 
-  function validatePageRange(pageNumber, bound) {
-    console.log("page #:", pageNumber)
-    console.log("lower bound:", lowerPageBound)
-    console.log("upper bound:", upperPageBound)
+  function validateLowerPageBound(value) {
+    const pageNumber = parseInt(value)
     if (pageNumber < 1) {
-      if (bound === "lower") {
-        setLowerPageBound(1)
-      }
-      else {
-        setUpperPageBound(1)
-      }
+      setLowerPageBound(1)
     }
-    if (pageNumber > 48) {
-      if (bound === "lower") {
-        setLowerPageBound(48)
-      }
-      else {
-        setUpperPageBound(48)
-      }
+    else if (pageNumber > totalPages) {
+      setLowerPageBound(48)
     }
-
-    if (upperPageBound < lowerPageBound) {
+    else if (pageNumber > upperPageBound) {
       setLowerPageBound(pageNumber)
+      setUpperPageBound(pageNumber)
+    }
+    else {
+      setLowerPageBound(pageNumber)
+    }
+  }
+
+  function validateUpperPageBound(value) {
+    const pageNumber = parseInt(value)
+    if (pageNumber < 1) {
+      setUpperPageBound(1)
+    }
+    else if (pageNumber > totalPages) {
+      setUpperPageBound(48)
+    }
+    else if (pageNumber < lowerPageBound) {
+      setLowerPageBound(pageNumber)
+      setUpperPageBound(pageNumber)
+    }
+    else {
       setUpperPageBound(pageNumber)
     }
   }
@@ -204,7 +234,7 @@ function ApplyTemplateModal({
               <PageRangeInput
                 type="number"
                 onChange={e => setLowerPageBound(e.target.value)}
-                onBlur={e => validatePageRange(e.target.value, "lower")}
+                onBlur={e => validateLowerPageBound(e.target.value)}
                 value={lowerPageBound}
                 max="48"
                 min="1"
@@ -218,7 +248,7 @@ function ApplyTemplateModal({
               <PageRangeInput
                 type="number"
                 onChange={e => setUpperPageBound(e.target.value)}
-                onBlur={e => validatePageRange(e.target.value, "upper")}
+                onBlur={e => validateUpperPageBound(e.target.value)}
                 value={upperPageBound}
                 max="48"
                 min="1"
@@ -247,9 +277,15 @@ function ApplyTemplateModal({
           color={colors.primary.white}
           padding="0.5rem"
           borderradius="0.25rem"
-          onClick={() => handleTemplateApply()}
+          onClick={() => handleTemplateApply(selectedApply)}
+          className={loading ? "is-loading" : null}
+          disabled={loading}
         >
-          Confirm
+          {loading ? (
+            <Loading height="1rem" width="3rem" />
+          ) : (
+            "Confirm"
+          )}
         </Button>
       </ModalFooter>
     </Modal>

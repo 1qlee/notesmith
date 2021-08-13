@@ -6,18 +6,19 @@ import { Minus, Plus } from "phosphor-react"
 import Icon from "../Icon"
 
 function QuantityTracker(props) {
-  const [quantity, setQuantity] = useState(1)
+  const { setItemQuantity, initialQuantity } = props
+  const [quantity, setQuantity] = useState(initialQuantity || 1)
 
   const handleButtonChange = (e, up) => {
     e.preventDefault()
 
     if (up) {
-      setQuantity(quantity => quantity + 1)
-      props.setItemQuantity(parseInt(quantity + 1))
+      setQuantity(quantity => parseInt(quantity + 1))
+      setItemQuantity(parseInt(quantity + 1))
     }
     else {
-      setQuantity(quantity => quantity - 1)
-      props.setItemQuantity(parseInt(quantity - 1))
+      setQuantity(quantity => parseInt(quantity - 1))
+      setItemQuantity(parseInt(quantity - 1))
     }
   }
 
@@ -26,15 +27,20 @@ function QuantityTracker(props) {
 
     if (!value || value == 0) {
       setQuantity(1)
-      props.setItemQuantity(1)
+      setItemQuantity(1)
     }
   }
 
   const handleChange = e => {
     const { value } = e.target
 
-    setQuantity(e.target.value)
-    props.setItemQuantity(parseInt(e.target.value))
+    if (!value || value < 1) {
+      setQuantity('')
+    }
+    else {
+      setQuantity(parseInt(value))
+      setItemQuantity(parseInt(e.target.value))
+    }
   }
 
   return (
@@ -46,19 +52,20 @@ function QuantityTracker(props) {
         width={props.buttonwidth}
         height={props.buttonheight}
         onClick={e => handleButtonChange(e)}
-        disabled={quantity == 1}
+        disabled={quantity === 1}
       >
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
             size={props.iconsize}
-            color={quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
+            color={quantity === 1 ? colors.gray.fiveHundred : colors.black}
             weight="bold"
           />
         </Icon>
       </QuantityButton>
       <Counter
         border="none"
-        fontsize="1rem"
+        padding={props.counterpadding}
+        fontsize={props.counterfontsize}
         margin="0 0.25rem"
         min="1"
         onChange={e => handleChange(e)}
@@ -75,7 +82,7 @@ function QuantityTracker(props) {
         <Icon>
           <Plus
             size={props.iconsize}
-            color={colors.gray.nineHundred}
+            color={colors.black}
             weight="bold"
           />
         </Icon>
@@ -89,7 +96,7 @@ const QuantityWrapper = styled.div`
   box-shadow: ${props => props.boxshadow || "0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white}"};
   border-radius: 0.25rem;
   padding: ${props => props.padding || "0.75rem"};
-  display: flex;
+  display: inline-flex;
   align-items: center;
 `
 
@@ -108,6 +115,7 @@ const Counter = styled.input`
   background-color: ${colors.white};
   border-radius: ${props => props.borderradius ? props.borderradius : 0};
   border: ${props => props.border};
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize};
   padding: ${props => props.padding};
   margin: ${props => props.margin};
@@ -320,15 +328,16 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: none;
   color: ${colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.8rem"};
-  line-height: 1rem;
+  margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "1rem"};
+  text-align: ${props => props.textalign};
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
@@ -359,7 +368,7 @@ const SelectIcon = styled.span`
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: none;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
@@ -370,6 +379,9 @@ const StyledSelect = styled.select`
   appearance: none;
   &.is-error {
     box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
+  }
+  &:hover {
+    cursor: pointer;
   }
   &:active,
   &:focus {

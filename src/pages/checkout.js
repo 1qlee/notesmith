@@ -6,10 +6,11 @@ import { Elements } from "@stripe/react-stripe-js"
 import { useShoppingCart } from "use-shopping-cart"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
+import { ErrorLine } from "../components/form/FormComponents"
+import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../components/ui/Modal"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import { ErrorLine } from "../components/form/FormComponents"
 import Breadcrumb from "../components/Breadcrumb"
 import Button from "../components/Button"
 import CheckoutForm from "../components/form/CheckoutForm"
@@ -20,7 +21,7 @@ import Loader from "../components/Loader"
 import Nav from "../components/layout/Nav"
 import OrderSummary from "../components/shop/OrderSummary"
 import SEO from "../components/layout/Seo"
-import ShippingInfo from "../components/checkout/ShippingInfo"
+import ShippingForm from "../components/form/ShippingForm"
 import TextLink from "../components/TextLink"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
@@ -219,8 +220,8 @@ const Checkout = ({ location }) => {
               <SectionContent>
                 <Grid
                   rowGap={spacing.normal}
-                  columnGap={spacing.large}
-                  columns="repeat(auto-fit,minmax(240px,1fr))"
+                  columnGap={spacing.medium}
+                  columns="repeat(auto-fit,minmax(360px,1fr))"
                   rows="auto"
                   justifycontent="center"
                 >
@@ -261,6 +262,7 @@ const Checkout = ({ location }) => {
                     </Breadcrumb>
                     <Content
                       margin="0 0 2rem 0"
+                      h3fontweight="400"
                     >
                       {activeTab === 1 && (
                         <h3>1. Information</h3>
@@ -279,60 +281,64 @@ const Checkout = ({ location }) => {
                         </ErrorLine>
                       )}
                     </Content>
-                    {activeTab === 1 ? (
-                      <InformationForm
-                        activeTab={activeTab}
-                        address={address}
-                        customer={customer}
-                        loading={loading}
-                        processing={processing}
-                        setActiveTab={setActiveTab}
-                        setAddress={setAddress}
-                        setCustomer={setCustomer}
-                        setFormError={setFormError}
-                        setLoading={setLoading}
-                        setProcessing={setProcessing}
-                        setShowModal={setShowModal}
-                      />
-                    ) : (
-                      <ShippingInfo
-                        customer={customer}
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        address={address}
-                        setFormError={setFormError}
-                        setTaxRate={setTaxRate}
-                        selectedRate={selectedRate}
-                        setSelectedRate={setSelectedRate}
-                        processing={processing}
-                        setProcessing={setProcessing}
-                        shipmentId={shipmentId}
-                        setShipmentId={setShipmentId}
-                        setAuthKey={setAuthKey}
-                      />
-                    )}
-                    <Elements
-                      stripe={stripePromise}
+                    <Flexbox
+                      width="600px"
                     >
-                      {activeTab === 3 ? (
-                        <CheckoutForm
+                      {activeTab === 1 ? (
+                        <InformationForm
                           activeTab={activeTab}
                           address={address}
-                          clientSecret={clientSecret}
                           customer={customer}
+                          loading={loading}
                           processing={processing}
-                          selectedRate={selectedRate}
                           setActiveTab={setActiveTab}
                           setAddress={setAddress}
                           setCustomer={setCustomer}
+                          setFormError={setFormError}
+                          setLoading={setLoading}
                           setProcessing={setProcessing}
-                          taxRate={taxRate}
-                          authKey={authKey}
+                          setShowModal={setShowModal}
                         />
-                      ) : ( null)}
-                    </Elements>
+                      ) : (
+                        <ShippingForm
+                          customer={customer}
+                          activeTab={activeTab}
+                          setActiveTab={setActiveTab}
+                          address={address}
+                          setFormError={setFormError}
+                          setTaxRate={setTaxRate}
+                          selectedRate={selectedRate}
+                          setSelectedRate={setSelectedRate}
+                          processing={processing}
+                          setProcessing={setProcessing}
+                          shipmentId={shipmentId}
+                          setShipmentId={setShipmentId}
+                          setAuthKey={setAuthKey}
+                        />
+                      )}
+                      <Elements
+                        stripe={stripePromise}
+                      >
+                        {activeTab === 3 ? (
+                          <CheckoutForm
+                            activeTab={activeTab}
+                            address={address}
+                            clientSecret={clientSecret}
+                            customer={customer}
+                            processing={processing}
+                            selectedRate={selectedRate}
+                            setActiveTab={setActiveTab}
+                            setAddress={setAddress}
+                            setCustomer={setCustomer}
+                            setProcessing={setProcessing}
+                            taxRate={taxRate}
+                            authKey={authKey}
+                          />
+                        ) : ( null)}
+                      </Elements>
+                    </Flexbox>
                   </Cell>
-                  <Cell width={2}>
+                  <Cell width={1}>
                     <OrderSummary
                       hideButton={true}
                       selectedRate={selectedRate}

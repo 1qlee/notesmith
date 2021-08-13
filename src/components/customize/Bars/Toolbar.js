@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors } from "../../../styles/variables"
 import { Cursor, Pencil, Rectangle, Circle, TextT } from "phosphor-react"
-import Line from "../../assets/customize/line.svg"
+import Line from "../../../assets/customize/line.svg"
 
-import Icon from "../Icon"
-import Button from "../Button"
+import Icon from "../../Icon"
+import Button from "../../Button"
 
 const StyledToolbar = styled.div`
   display: flex;

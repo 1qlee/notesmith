@@ -1,7 +1,5 @@
-import React from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../styles/variables"
-import Loading from "../assets/loading.svg"
 
 const rotate = keyframes`
   from {
@@ -15,12 +13,12 @@ const rotate = keyframes`
 const Button = styled.button`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: ${props => props.border ? props.border : "none"};
   box-shadow: ${props => props.boxshadow ? props.boxshadow : `0 1px 2px 0 ${colors.shadow.float}`};
   color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
-  font-size: ${props => props.fontsize || "0.8rem"};
+  font-size: ${props => props.fontsize || "0.825rem"};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   height: ${props => props.height};
   justify-content: center;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { navigate } from "gatsby"
-import { colors, spacing } from "../../../styles/variables"
+import { spacing } from "../../../styles/variables"
 import { Grid, Cell } from "styled-css-grid"
 
 import { Book, BookInput } from "./BookComponents"
 import ContextMenu from "../../ui/ContextMenu"
-import Content from "../../Content"
 
 // should export this function to utils
 function convertTime(time) {

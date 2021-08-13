@@ -11,9 +11,9 @@ import Button from "../../Button"
 import Icon from "../../Icon"
 import Content from "../../Content"
 
-function Checkoutbar() {
+function Checkoutbar({ initialQuantity }) {
   const { addItem } = useShoppingCart()
-  const [itemQuantity, setItemQuantity] = useState(1)
+  const [itemQuantity, setItemQuantity] = useState(initialQuantity || 1)
 
   const calculateTotalPrice = (price, dash) => {
     const totalPrice = (itemQuantity * price) / 100
@@ -48,6 +48,8 @@ function Checkoutbar() {
 
     addItemsToCart.then(() => {
       return navigate("/cart")
+    }).catch(error => {
+      console.log(error)
     })
   }
 
@@ -175,10 +177,12 @@ function Checkoutbar() {
                 buttonwidth="1rem"
                 buttonheight="1rem"
                 counterwidth="2rem"
+                counterfontsize="0.825rem"
                 iconsize="0.625rem"
                 wrapperpadding="0.25rem"
                 wrapperboxshadow={`0 1px 2px ${colors.shadow.float}`}
                 setItemQuantity={setItemQuantity}
+                initialQuantity={initialQuantity}
               />
             </Flexbox>
             <Flexbox

@@ -16,44 +16,38 @@ function CheckLoginModal({ setShowModal }) {
     <Modal
       setShowModal={setShowModal}
       width="300px"
-      boxshadow="none"
-      backgroundcolor="transparent"
     >
-      <Flexbox
-        flex="flex"
-        alignitems="flex-start"
-      >
-        <Icon margin="0 1rem 0 0">
-          <WarningCircle color={colors.red.sixHundred} size="2rem" weight="duotone" />
-        </Icon>
+      <ModalHeader>Log in or create an account to save layouts</ModalHeader>
+      <ModalContent>
         <Content
-          paragraphcolor={colors.primary.sevenHundred}
-          paragraphfontsize="1rem"
+          paragraphmarginbottom="1rem"
         >
-          <h4>Log in or create an account to save layouts</h4>
-          <p>Unfortunately, we won't be able to save your layouts unless you're logged into a Notesmith account.</p>
-          <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account.</p>
-          <Button
-            backgroundcolor="transparent"
-            padding="0"
-            fontsize="0.8rem"
-            margin="0 0 0 auto"
-            flex="flex"
-            color={colors.primary.sixHundred}
-            onClick={() => setShowModal({
-              show: false,
-              type: "notification",
-            })}
-          >
-            <span>
-              No thanks, I'm okay with losing my work
-            </span>
-            <Icon margin="0 0 0 0.25rem">
-              <ArrowRight color={colors.primary.sixHundred} weight="bold" />
-            </Icon>
-          </Button>
+          <p>We won't be able to save your layouts unless you're logged into a Notesmith account. You might lose any progress you make.</p>
+          <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account to save your layouts.</p>
         </Content>
-      </Flexbox>
+      </ModalContent>
+      <ModalFooter
+        justifycontent="flex-end"
+      >
+        <Button
+          backgroundcolor={colors.primary.oneHundred}
+          fontsize="0.8rem"
+          margin="0 0 0 auto"
+          flex="flex"
+          color={colors.gray.nineHundred}
+          onClick={() => setShowModal({
+            show: false,
+            type: "notification",
+          })}
+        >
+          <span>
+            No, I'm okay with losing my work
+          </span>
+          <Icon margin="0 0 0 0.25rem">
+            <ArrowRight color={colors.gray.nineHundred} weight="bold" />
+          </Icon>
+        </Button>
+      </ModalFooter>
     </Modal>
   )
 }

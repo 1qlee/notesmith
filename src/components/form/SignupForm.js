@@ -200,7 +200,7 @@ const SignUpForm = () => {
               form="signup-form"
               width="100%"
               className="is-medium"
-              >
+            >
               Create account
             </Button>
           </StyledFieldset>

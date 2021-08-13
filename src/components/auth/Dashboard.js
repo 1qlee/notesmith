@@ -1,5 +1,5 @@
 import React from "react"
-import navigate, { Link } from "gatsby"
+import { Link } from "gatsby"
 import Layout from "../layout/Layout"
 import { useFirebaseContext } from "../../utils/auth"
 import { colors } from "../../styles/variables"

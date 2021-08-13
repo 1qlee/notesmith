@@ -4,13 +4,13 @@ import { spacing } from "../styles/variables"
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Cart from "../components/shop/Cart"
+import ShoppingCart from "../components/shop/ShoppingCart"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import OrderSummary from "../components/shop/OrderSummary"
 import SEO from "../components/layout/Seo"
 
-const ShoppingCart = () => {
+const Cart = () => {
   return (
     <Layout>
       <SEO title="Cart" />
@@ -28,7 +28,7 @@ const ShoppingCart = () => {
                   justifycontent="center"
                 >
                   <Cell width={2}>
-                    <Cart />
+                    <ShoppingCart />
                   </Cell>
                   <Cell width={1}>
                     <OrderSummary />
@@ -43,4 +43,4 @@ const ShoppingCart = () => {
   )
 }
 
-export default ShoppingCart
+export default Cart

@@ -9,25 +9,11 @@ import Content from "../Content"
 import Button from "../Button"
 
 const Orders = styled.div`
-  background-color: ${colors.paper.offWhite};
-  border: 1px solid ${colors.gray.sixHundred};
+  background-color: ${colors.white};
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px ${colors.shadow.float};
   margin-bottom: 1rem;
-`
-
-const OrderLine = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 1rem;
-  p + p {
-    margin-left: 1rem;
-  }
-  &.has-border-bottom {
-    border-bottom: 1px solid ${colors.gray.sixHundred};
-  }
-  &.has-border-top {
-    border-top: 1px solid ${colors.gray.sixHundred};
-  }
 `
 
 function OrderSummary({ hideButton, selectedRate, taxRate }) {
@@ -62,58 +48,70 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
   return (
     <>
       <Orders>
-        <OrderLine className="has-border-bottom">
-          <h3>Order Summary</h3>
-        </OrderLine>
-        {createOrder().map(item => (
-          <Flexbox
-            flex="flex"
-            flexdirection="row"
-            justifycontent="space-between"
-            padding="1rem"
-            width="100%"
-            className="has-border-bottom"
-            bordercolor={colors.gray.sixHundred}
+        <Flexbox
+          className="has-border-bottom"
+          padding="0 0 1rem 0"
+          bordercolor={colors.gray.threeHundred}
+        >
+          <Content
+            h3margin="0"
+            h3fontweight="400"
           >
-            <Flexbox
-              flex="flex"
-              flexdirection="row"
-            >
-              <img src={item.image[0]} width="100px" />
-              <Content
-                paragraphmarginbottom="0"
-                paragraphcolor={colors.primary.sevenHundred}
-                margin="0 0 0 1rem"
-              >
-                <p><b>{item.name}</b></p>
-                <p>${convertToDecimal(item.price, 2)} x {item.quantity}</p>
-              </Content>
-            </Flexbox>
-            <p>{item.formattedValue}</p>
-          </Flexbox>
-        ))}
-        <OrderLine>
+            <h3>Order summary</h3>
+          </Content>
+        </Flexbox>
+        <Flexbox
+          padding="1rem 0"
+          flex="flex"
+          justifycontent="space-between"
+        >
           <p>Subtotal</p>
-          <p>{formattedTotalPrice}</p>
-        </OrderLine>
-        <OrderLine>
+          <p>${convertToDecimal(totalPrice, 2)}</p>
+        </Flexbox>
+        <Flexbox
+          padding="1rem 0"
+          flex="flex"
+          justifycontent="space-between"
+        >
           <p>Shipping</p>
           {selectedRate ? (
             <p>${selectedRate.rate}</p>
           ) : (
             <p>---</p>
           )}
-        </OrderLine>
+        </Flexbox>
         {taxRate > 0 && (
-          <OrderLine>
+          <Flexbox
+            className="has-border-bottom"
+            padding="0 0 1rem 0"
+            bordercolor={colors.gray.threeHundred}
+          >
             <p>Tax</p>
             <p>${taxRate.toFixed(2)}</p>
-          </OrderLine>
+          </Flexbox>
         )}
-        <OrderLine className="has-border-top">
-          <p><b>Total</b></p>
-          <p><b>${calculateTotalPrice()}</b></p>
-        </OrderLine>
+        <Flexbox
+          padding="1rem 0 0"
+          flex="flex"
+          justifycontent="space-between"
+          alignitems="flex-end"
+          className="has-border-top"
+          bordercolor={colors.gray.threeHundred}
+        >
+          <Content
+            paragraphmarginbottom="0"
+            paragraphcolor={colors.gray.nineHundred}
+          >
+            <p>Total</p>
+          </Content>
+          <Content
+            h3margin="0"
+            h3fontweight="400"
+            h3color={colors.primary.nineHundred}
+          >
+            <h3>${calculateTotalPrice()}</h3>
+          </Content>
+        </Flexbox>
       </Orders>
       {hideButton ? (
         null

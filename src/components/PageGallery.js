@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { colors } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import styled, { keyframes } from "styled-components"

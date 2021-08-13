@@ -5,7 +5,13 @@ const sendgridMail = require('@sendgrid/mail');
 sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY);
 
 const convertToDecimal = (num, places) => {
-  return ((num * 1.0) / 100).toFixed(places);
+  const lastTwoDigits = num.toString().substr(-2)
+
+  if (lastTwoDigits === "00") {
+    return num / 100
+  }
+
+  return ((num * 1.0) / 100).toFixed(places)
 }
 
 // update the paymentIntent metadata object with tracking information
@@ -57,6 +63,9 @@ exports.handler = async ({ body, headers }) => {
           metadata: {
             tracking: tracking_code,
             trackingUrl: public_url
+          },
+          shipping: {
+            carrier: carrier
           }
         }
       )

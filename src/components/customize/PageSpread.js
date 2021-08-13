@@ -49,7 +49,6 @@ function Template({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      id={`page-${currentPageSide}`}
       ref={currentPageSide === "left" ? pageLeftRef : pageRightRef}
       height={trimmedPageHeight}
       width={convertedPageWidth}
@@ -73,6 +72,7 @@ function Template({
 }
 
 function PageSpread({
+  canvasPages,
   canvasSize,
   pageData,
   pageSize,
@@ -89,7 +89,6 @@ function PageSpread({
   const [currentPageSide, setCurrentPageSide] = useState()
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
-  const canvasPages = JSON.parse(localStorage.getItem("canvas-pages"))
   const trimmedPageHeight = canvasSize.height - 2 // reduced to allow outline to show
   const conversionRatio = trimmedPageHeight / pageSize.height // width conversion ratio
   const convertedPageWidth = pageSize.width * conversionRatio // converted page width
@@ -142,7 +141,6 @@ function PageSpread({
       {showCover.side === "left" && showCover.show ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          id="page-left"
           ref={pageLeftRef}
           height={canvasSize.height}
           width={convertedPageWidth}
@@ -177,7 +175,6 @@ function PageSpread({
                 />
               ) : (
                 <SVG
-                  id="page-left"
                   ref={pageLeftRef}
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
@@ -200,7 +197,6 @@ function PageSpread({
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
               </svg>
               <SVG
-                id="page-left"
                 ref={pageLeftRef}
                 height={trimmedPageHeight}
                 width={convertedPageWidth}
@@ -215,7 +211,6 @@ function PageSpread({
       )}
       {showCover.side === "right" && showCover.show ? (
         <svg
-          id="page-right"
           ref={pageRightRef}
           height={canvasSize.height}
           width={convertedPageWidth + 2}
@@ -250,7 +245,6 @@ function PageSpread({
                 />
               ) : (
                 <SVG
-                  id="page-right"
                   ref={pageRightRef}
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
@@ -273,7 +267,6 @@ function PageSpread({
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
               </svg>
               <SVG
-                id="page-right"
                 ref={pageRightRef}
                 height={trimmedPageHeight}
                 width={convertedPageWidth}

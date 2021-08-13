@@ -14,11 +14,11 @@ const StyledCanvas = styled.div`
   height: calc(100% - 35px);
 `
 
-const Portal = ({ children }) => {
-   const container = document.getElementById("svg-content")
-
-   return createPortal(children, container)
-};
+// const Portal = ({ children }) => {
+//    const container = document.getElementById("svg-content")
+//
+//    return createPortal(children, container)
+// };
 
 function SvgRoot({ children }) {
   return (

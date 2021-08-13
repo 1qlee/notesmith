@@ -1,4 +1,3 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 const sendgridClient = require('@sendgrid/client')
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
@@ -70,7 +69,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        msg: "Error"
+        error: "Error"
       })
     }
   }

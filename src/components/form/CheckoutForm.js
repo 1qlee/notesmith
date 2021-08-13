@@ -33,8 +33,10 @@ const cardOptions = {
 }
 
 const cardElementStyle = {
+  backgroundColor: `${colors.white}`,
   padding: "1rem",
-  border: `1px solid ${colors.gray.sixHundred}`,
+  borderRadius: "0.25rem",
+  boxShadow: `0 1px 2px ${colors.shadow.float}`,
   marginBottom: "1rem"
 }
 
@@ -189,8 +191,8 @@ function CheckoutForm({
         alignitems="center"
       >
         <TextLink
-          color={colors.link.normal}
-          hovercolor={colors.link.hover}
+          color={colors.gray.sixHundred}
+          hovercolor={colors.gray.nineHundred}
           className="has-icon"
           alignitems="flex-end"
           onClick={() => setActiveTab(2)}
@@ -211,7 +213,7 @@ function CheckoutForm({
           width="200px"
         >
           {processing ? (
-            <Loading height="1.5rem" width="1rem" />
+            <Loading height="1rem" width="1rem" />
           ) : (
             "Pay now"
           )}

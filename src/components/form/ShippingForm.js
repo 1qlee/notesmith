@@ -25,15 +25,17 @@ const ShippingInfoContainer = styled.div`
 `
 
 const Infobox = styled.div`
+  background-color: ${colors.white};
   padding: ${props => props.padding ? props.padding : "0 1rem"};
-  border: 1px solid ${colors.gray.sixHundred};
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px ${colors.shadow.float};
   margin-bottom: 2rem;
 `
 
 const InfoItem = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${colors.gray.sixHundred};
+  border-bottom: 1px solid ${colors.gray.threeHundred};
   padding: 1rem 0;
   &:last-child {
     border-bottom: none;
@@ -49,6 +51,7 @@ const InfoItemText = styled.p`
 const ShippingItem = styled.div`
   display: flex;
   justify-content: space-between;
+  border-radius: 0.25rem;
   padding: 1rem;
   &:hover {
     background-color: ${colors.primary.hover};
@@ -67,7 +70,7 @@ const ShippingItem = styled.div`
   }
 `
 
-const ShippingInfo = ({
+const ShippingForm = ({
   activeTab,
   address,
   customer,
@@ -284,7 +287,7 @@ const ShippingInfo = ({
               width="200px"
             >
             {processing ? (
-              <Loading height="1.5rem" width="1rem" />
+              <Loading height="1rem" width="1rem" />
             ) : (
               "Continue"
             )}
@@ -296,4 +299,4 @@ const ShippingInfo = ({
   )
 }
 
-export default ShippingInfo
+export default ShippingForm

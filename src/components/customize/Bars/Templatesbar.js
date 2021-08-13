@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { CaretDown, CheckCircle, Circle } from "phosphor-react"
+import { CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
 import Button from "../../Button"
-import Content from "../../Content"
 import DotControls from "../Template-controls/DotControls"
-import Icon from "../../Icon"
 import RuledControls from "../Template-controls/RuledControls"
 
 const TemplatesContent = styled.div`

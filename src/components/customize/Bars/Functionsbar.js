@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
+import { StyledInput } from "../../form/FormComponents"
 
 const PageInput = styled.input`
   width: 50px;
@@ -50,10 +51,14 @@ function Functionsbar({
         alignitems="center"
         justifycontent="center"
       >
-        <p style={{marginRight: "0.25rem"}}>Page</p>
-        <PageInput
+        <p>Page</p>
+        <StyledInput
           type="number"
           min="1"
+          width="3rem"
+          padding="0.25rem"
+          textalign="center"
+          margin="0 0.25rem"
           max={totalPages}
           value={selectedPage}
           onChange={e => handlePageChange(e.target.value)}

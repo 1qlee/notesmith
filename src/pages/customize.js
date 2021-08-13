@@ -5,7 +5,7 @@ import Notebook from "../components/customize/Notebook"
 const Customize = () => {
   return (
     <Router basepath="/customize">
-      <Notebook default path="/notebook/:notebookId" />
+      <Notebook path="/notebook/:bookId" />
     </Router>
   )
 }

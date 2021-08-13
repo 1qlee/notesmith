@@ -37,6 +37,7 @@ const StyledCanvas = styled.div`
 `
 
 function Canvas({
+  canvasPages,
   canvasSize,
   pageData,
   pageSize,
@@ -61,6 +62,7 @@ function Canvas({
           height={canvasSize.height}
         >
           <PageSpread
+            canvasPages={canvasPages}
             canvasSize={canvasSize}
             pageData={pageData}
             pageSize={pageSize}

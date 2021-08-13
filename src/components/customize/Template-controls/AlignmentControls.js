@@ -11,7 +11,7 @@ import Icon from "../../Icon"
 
 const AlignmentButtonWrapper = styled.div`
   display: flex;
-  box-shadow: 0 0 0 1px ${colors.gray.threeHundred};
+  box-shadow: 0 1px 2px ${colors.shadow.float};
   background-color: ${colors.white};
   padding: 0.25rem;
   border-radius: 0.25rem;

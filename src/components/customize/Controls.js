@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
@@ -16,7 +16,6 @@ const StyledControls = styled.div`
   right: 0;
   height: calc(100% - 6rem);
   width: 300px;
-  padding: 0 1rem;
 `
 
 const ControlsContent = styled.div`
@@ -27,6 +26,14 @@ const ControlsContent = styled.div`
   height: calc(100% - 3rem);
   overflow-x: hidden;
   overflow-y: auto;
+  &.is-absolute {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    width: 300px;
+    z-index: 100;
+    box-shadow: none;
+  }
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -39,7 +46,7 @@ const ControlsContent = styled.div`
 const ControlTabs = styled.ul`
   display: inline-flex;
   list-style-type: none;
-  box-shadow: 0 0 1px ${colors.shadow.float};
+  box-shadow: 0 1px 2px ${colors.shadow.float};
   padding: 0;
   margin: 0;
   border-radius: 0.25rem 0.25rem 0 0;
@@ -58,6 +65,7 @@ const ControlTab = styled.li`
   transition: border-color 0.2s;
   &.is-active {
     color: ${colors.gray.nineHundred};
+    background-color: ${colors.primary.oneHundred};
   }
   &.is-checkout {
     color: ${colors.blue.sixHundred};
@@ -77,23 +85,21 @@ const ControlTab = styled.li`
 `
 
 function Controls({
+  canvasPages,
   pageData,
   pageSize,
   quantity,
-  canvasPages,
   selectedPage,
-  setShowModal,
   setPageData,
   setPageSize,
   setSelectedPage,
+  setShowModal,
+  setInitializing,
+  initializing
 }) {
   const [activeTab, setActiveTab] = useState(1)
   const [loading, setLoading] = useState(true)
   const [pages, setPages] = useState()
-
-  useEffect(() => {
-    console.log(`controls loaded: ${new Date() / 1000}`)
-  })
 
   return (
     <StyledControls>
@@ -117,34 +123,36 @@ function Controls({
           Checkout
         </ControlTab>
       </ControlTabs>
-      {activeTab === 1 && (
-        <ControlsContent>
-          <Pagebar
-            pageSize={pageSize}
-            pageData={pageData}
-            canvasPages={canvasPages}
-            selectedPage={selectedPage}
-            setPageData={setPageData}
-            setPageSize={setPageSize}
-            setSelectedPage={setSelectedPage}
-          />
-        </ControlsContent>
-      )}
+      <ControlsContent>
+        <Pagebar
+          canvasPages={canvasPages}
+          pageData={pageData}
+          pageSize={pageSize}
+          selectedPage={selectedPage}
+          setPageData={setPageData}
+          setPageSize={setPageSize}
+          setSelectedPage={setSelectedPage}
+          setInitializing={setInitializing}
+          initializing={initializing}
+        />
+      </ControlsContent>
       {activeTab === 2 && (
-        <ControlsContent>
+        <ControlsContent className="is-absolute">
           <Templatesbar
             pageData={pageData}
             pageSize={pageSize}
             setShowModal={setShowModal}
             setPageData={setPageData}
-            >
+          >
             Templates
           </Templatesbar>
         </ControlsContent>
       )}
       {activeTab === 3 && (
-        <ControlsContent>
-          <Checkoutbar />
+        <ControlsContent className="is-absolute">
+          <Checkoutbar
+            initialQuantity={quantity}
+          />
         </ControlsContent>
       )}
     </StyledControls>

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import Line from "../../../assets/customize/line.svg"
 import SVG from "react-inlinesvg"
+import Loading from "../../../assets/loading.svg"
 
 import { Flexbox } from "../../layout/Flexbox"
-import Button from "../../Button"
 import Icon from "../../Icon"
 
 const StyledPage = styled.div`
@@ -47,11 +46,6 @@ function Page({
   pageNumber,
   pageSize
 }) {
-  const pageSvg = useRef()
-
-  useEffect(() => {
-    // const pageStuffing = pageSvg.current.innerHTML
-  })
   // change the selected page number
   const handleSelectPage = e => {
     const pageNumber = parseInt(e.currentTarget.dataset.pagenumber)
@@ -65,7 +59,7 @@ function Page({
   return (
      <StyledPage
        onClick={e => handleSelectPage(e)}
-       className={selectedPage == pageNumber ? "is-active" : null}
+       className={selectedPage === pageNumber ? "is-active" : null}
        data-pagenumber={pageNumber}
      >
        <SVG
@@ -90,33 +84,51 @@ function Pagebar({
   setPageData,
   setPageSize,
   setSelectedPage,
+  setInitializing,
+  initializing,
 }) {
-  const [loading, setLoading] = useState(true)
 
+  // after pagebar loads, set initializing to false
   useEffect(() => {
-    console.log(`pagebar loaded: ${new Date() / 1000}`)
+    setInitializing(false)
   })
 
   return (
-    <Flexbox
-      flex="flex"
-      flexwrap="wrap"
-      justifycontent="center"
-      padding="1rem"
-    >
-      {canvasPages.map((page, index) => (
-        <Page
-          key={index}
-          page={page}
-          pageNumber={index + 1}
-          selectedPage={selectedPage}
-          setSelectedPage={setSelectedPage}
-          setPageData={setPageData}
-          pageData={pageData}
-          pageSize={pageSize}
-        />
-      ))}
-    </Flexbox>
+    <>
+      {initializing ? (
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          justifycontent="center"
+          height="100%"
+        >
+          <Icon className="is-loading" color={colors.blue.threeHundred}>
+            <Loading />
+          </Icon>
+        </Flexbox>
+      ) : (
+        <Flexbox
+          flex="flex"
+          flexwrap="wrap"
+          justifycontent="center"
+          padding="1rem"
+          height="100%"
+        >
+          {canvasPages.map((page, index) => (
+            <Page
+              key={index}
+              page={page}
+              pageNumber={index + 1}
+              selectedPage={selectedPage}
+              setSelectedPage={setSelectedPage}
+              setPageData={setPageData}
+              pageData={pageData}
+              pageSize={pageSize}
+            />
+          ))}
+        </Flexbox>
+      )}
+    </>
   )
 }
 

@@ -2,10 +2,11 @@ import styled from "styled-components"
 import { colors, widths } from "../styles/variables"
 
 const Content = styled.div`
-  padding: ${props => props.padding ? props.padding : "0"};
+  box-shadow: ${props => props.boxshadow};
   display: block;
   margin: ${props => props.margin};
   max-width: ${props => props.maxwidth};
+  padding: ${props => props.padding ? props.padding : "0"};
   width: ${props => props.width};
   @media only screen and (max-width: ${widths.breakpoint.index}) {
     max-width: none;
@@ -68,6 +69,16 @@ const Content = styled.div`
       }
     }
   }
+  h5 {
+    color: ${props => props.h5color || colors.gray.nineHundred};
+    display: block;
+    font-family: "Inter", Helvetica, Tahoma, sans-serif;
+    font-size: ${props => props.h5fontsize || "1rem"};
+    font-weight: ${props => props.h5fontweight || "700"};
+    letter-spacing: 1px;
+    margin: ${props => props.h5margin};
+    text-transform: uppercase;
+  }
   ul {
     padding-left: 1.125rem;
   }
@@ -76,7 +87,7 @@ const Content = styled.div`
     font-size: ${props => props.lifontsize || "1rem"};
   }
   p {
-    color: ${props => props.paragraphcolor || colors.gray.sixHundred};
+    color: ${props => props.paragraphcolor || colors.gray.eightHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};

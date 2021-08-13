@@ -14,16 +14,31 @@ function CartQuantityTracker(props) {
     incrementItem,
     decrementItem
   } = useShoppingCart()
+  const [trackQuantity, setTrackQuantity] = useState(1)
 
   // change the quantity based on input
   function handleQuantityChange(quantity) {
-    setItemQuantity(props.product.id, parseInt(quantity))
+    const intQuantity = parseInt(quantity)
+
+    if (intQuantity === 0 || !intQuantity) {
+      setTrackQuantity(1)
+    }
+    else {
+      setTrackQuantity(quantity)
+    }
   }
 
   // check for a valid quantity input on blur
   function handleBlur(quantity) {
-    if (!quantity || quantity === 0) {
-      setItemQuantity(1)
+    const intQuantity = parseInt(quantity)
+
+    if (!intQuantity) {
+      setItemQuantity(props.product.id, 1)
+      setTrackQuantity(1)
+    }
+    else {
+      setItemQuantity(props.product.id, intQuantity)
+      setTrackQuantity(intQuantity)
     }
   }
 
@@ -48,11 +63,11 @@ function CartQuantityTracker(props) {
       </QuantityButton>
       <Counter
         border="none"
-        fontsize="1rem"
+        fontsize={props.counterfontsize}
         margin="0 0.25rem"
         min="1"
         onBlur={e => handleBlur(e.target.value)}
-        onChange={e => handleQuantityChange(e.target.value)}
+        onChange={e => setTrackQuantity(e.target.value)}
         type="number"
         value={props.product.quantity}
         width={props.counterwidth}

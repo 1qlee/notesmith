@@ -3,6 +3,7 @@ import { StaticQuery, graphql, navigate } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } from "phosphor-react"
+import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"
 import { QuantityTracker, StyledFieldset, StyledLabel } from "../form/FormComponents"
@@ -16,6 +17,7 @@ import Content from "../Content"
 const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [loading, setLoading] = useState(false)
   // converts select value to an object detailing selected book size
   const createBookDimensions = (size) => {
     switch(size) {
@@ -35,6 +37,17 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
         <span>${totalPrice} -&nbsp;</span>
       )
     }
+  }
+
+  const handleButtonSubmit = e => {
+    e.preventDefault()
+    setLoading(true)
+
+    navigate("/customize/", {
+      state: {
+        quantity: itemQuantity
+      }
+    })
   }
 
   return (
@@ -77,31 +90,35 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
               justifycontent="space-between"
             >
               <Content
-                h3fontsize="0.75rem"
-                h3margin="0 0 0.5rem 0"
+                h5fontsize="0.625rem"
+                h5color={colors.gray.nineHundred}
+                h5margin="0 0 0.5rem 0"
               >
-                <h3>SIZE</h3>
+                <h5>Size</h5>
                 <p>5.5" x 8.5" (A5)</p>
               </Content>
               <Content
-                h3fontsize="0.75rem"
-                h3margin="0 0 0.5rem 0"
+                h5fontsize="0.625rem"
+                h5color={colors.gray.nineHundred}
+                h5margin="0 0 0.5rem 0"
               >
-                <h3>PAGES</h3>
+                <h5>Pages</h5>
                 <p>48 total</p>
               </Content>
               <Content
-                h3fontsize="0.75rem"
-                h3margin="0 0 0.5rem 0"
+                h5fontsize="0.625rem"
+                h5color={colors.gray.nineHundred}
+                h5margin="0 0 0.5rem 0"
               >
-                <h3>COVER</h3>
+                <h5>Cover</h5>
                 <p>Forest green</p>
               </Content>
               <Content
-                h3fontsize="0.75rem"
-                h3margin="0 0 0.5rem 0"
+                h5fontsize="0.625rem"
+                h5color={colors.gray.nineHundred}
+                h5margin="0 0 0.5rem 0"
               >
-                <h3>BINDING</h3>
+                <h5>Binding</h5>
                 <p>Saddle stitched</p>
               </Content>
             </Flexbox>
@@ -110,23 +127,34 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
             flex="flex"
             margin="0 0 1rem"
           >
-            <QuantityTracker setItemQuantity={setItemQuantity} />
+            <QuantityTracker
+              buttonwidth="1rem"
+              buttonheight="1rem"
+              counterwidth="2rem"
+              counterpadding="0.25rem"
+              counterfontsize="0.825rem"
+              iconsize="0.625rem"
+              wrapperpadding="0.5rem 1rem"
+              wrapperboxshadow={`0 1px 2px ${colors.shadow.float}`}
+              setItemQuantity={setItemQuantity}
+            />
             <Button
               backgroundcolor={colors.primary.sixHundred}
               color={colors.primary.white}
+              className={loading ? "is-loading" : null}
+              disabled={loading}
               margin="0 0 0 1rem"
               padding="1rem"
               width="100%"
-              onClick={e => {
-                e.preventDefault()
-                navigate("/customize/notebooks", {
-                  state: {
-                    quantity: itemQuantity
-                  }
-                })
-              }}
+              onClick={e => handleButtonSubmit(e)}
             >
-              {calculateTotalPrice(data.stripePrice.unit_amount)} Customize layouts
+              {loading ? (
+                <Loading height="1rem" width="1rem" />
+              ) : (
+                <span>
+                  {calculateTotalPrice(data.stripePrice.unit_amount)} Customize layouts
+                </span>
+              )}
             </Button>
           </Flexbox>
           <Flexbox

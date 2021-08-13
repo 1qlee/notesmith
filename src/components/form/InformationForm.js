@@ -403,8 +403,8 @@ function InformationForm({
         alignitems="center"
       >
         <TextLink
-          color={colors.link.normal}
-          hovercolor={colors.link.hover}
+          color={colors.gray.sixHundred}
+          hovercolor={colors.gray.nineHundred}
           className="has-icon"
           alignitems="flex-end"
           as={Link}
@@ -427,7 +427,7 @@ function InformationForm({
           width="200px"
         >
           {processing ? (
-            <Loading height="1.5rem" width="1rem" />
+            <Loading height="1rem" width="1rem" />
           ) : (
             "Continue"
           )}
