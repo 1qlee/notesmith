@@ -13,7 +13,7 @@ import Content from "../Content"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import Nav from "../layout/Nav"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 
 const PlaceholderLine = styled.div`
   background-color: ${colors.gray.threeHundred};
@@ -145,7 +145,7 @@ const Order = ({ location, orderId }) => {
 
   return (
     <Layout>
-      <SEO title="Order Summary" />
+      <Seo title="Order Summary" />
       <Nav chapterNumber="33" title="Order Summary"></Nav>
       <SectionMain className="has-max-height">
         <Section>

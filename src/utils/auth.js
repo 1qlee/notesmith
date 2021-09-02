@@ -52,8 +52,8 @@ export const FirebaseProvider = ({
       value={{
         user,
         loading,
-        sendEmailVerification,
         firebaseDb,
+        sendEmailVerification,
         login: (...p) => firebaseAuth.signInWithEmailAndPassword(...p),
         signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
         signOut: (...p) => firebaseAuth.signOut(...p),

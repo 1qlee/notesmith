@@ -6,7 +6,7 @@ import { colors } from "../../styles/variables"
 
 import { SectionMain, SectionApp, SectionAppContent } from "../layout/Section"
 import Content from "../Content"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
 const Dashboard = () => {
@@ -22,7 +22,7 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <SEO title="Dashboard" />
+      <Seo title="Dashboard" />
         <SectionMain className="has-no-padding has-max-height">
           <SectionApp>
             <Sidebar />

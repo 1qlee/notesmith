@@ -11,7 +11,7 @@ import SettingsForm from "../form/SettingsForm"
 import Icon from "../Icon"
 import Button from "../Button"
 import Content from "../Content"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 import Notification from "../ui/Notification"
 
@@ -26,7 +26,7 @@ const Settings = () => {
 
   return (
     <Layout>
-      <SEO title="Settings" />
+      <Seo title="Settings" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
           <Sidebar />

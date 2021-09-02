@@ -4,7 +4,7 @@ import { navigate, Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Circle, CheckCircle, Warning } from "phosphor-react"
 
-import { Book } from "./Books/BookComponents"
+import { Book, BookRadio } from "./Books/BookComponents"
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, SectionApp, SectionAppContent } from "../layout/Section"
@@ -17,7 +17,7 @@ import ContextMenu from "../ui/ContextMenu"
 import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
 const Books = () => {
@@ -105,8 +105,7 @@ const Books = () => {
   }
 
   // creating a new book in the db
-  function handleNewBookFormSubmit(e) {
-    e.preventDefault()
+  function handleNewBookFormSubmit() {
     // create a new book key (id)
     const newBookRef = booksRef.push()
     const newBookKey = newBookRef.key
@@ -124,7 +123,7 @@ const Books = () => {
         case "Small":
           newPageSvg = "<rect x='-1' y='-1' width='336' height='528' fill='#fff'></rect>"
           break
-        case "Medium":
+        case "A5":
           newPageSvg = "<g style='pointer-events:none'><rect x='-1' y='-1' width='528' height='816' fill='#fff'></rect></g>"
           break
         case "Large":
@@ -317,7 +316,7 @@ const Books = () => {
 
   return (
     <Layout>
-      <SEO title="Dashboard" />
+      <Seo title="Dashboard" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
           <Sidebar />
@@ -356,146 +355,54 @@ const Books = () => {
         <Modal setShowModal={setShowModal}>
           {showModal.type === "createbook" ? (
             <>
-              <ModalHeader>
-                <h5>Enter book information</h5>
-              </ModalHeader>
+              <ModalHeader>Enter book information</ModalHeader>
               <ModalContent>
-                <form id="new-book-form" name="new-book-form" onSubmit={e => handleNewBookFormSubmit(e)}>
-                  <StyledFieldset
-                    className="is-vertical"
-                    margin="0 0 1rem"
-                  >
-                    <StyledLabel>Title</StyledLabel>
-                    <StyledInput
-                      borderradius="0.25rem"
-                      type="text"
-                      id="new-book-title"
-                      name="new-book-title"
-                      autocomplete="false"
-                      onChange={e => {
-                        setBookTitle(e.currentTarget.value)
-                        setDbError({
-                          msg: "",
-                        })
-                      }}
-                    />
-                    {dbError.msg && (
-                      <ErrorLine color={dbError.color}>
-                        <Icon>
-                          <Warning weight="fill" color={dbError.color} size={18} />
-                        </Icon>
-                        <span>{dbError.msg}</span>
-                      </ErrorLine>
-                    )}
-                  </StyledFieldset>
-                  <StyledFieldset
-                    className="is-vertical"
-                    margin="0 0 1rem"
-                  >
-                    <StyledLabel>Sizes</StyledLabel>
-                    <Flexbox
-                      flex="flex"
-                      alignitems="center"
-                      justifycontent="space-between"
-                      width="100%"
-                    >
-                      <StyledRadio
-                        onChange={e => setBookSize(e.target.value)}
-                      >
-                        <input
-                          id="size-small"
-                          name="size"
-                          type="radio"
-                          value="Small"
-                        />
-                        <label htmlFor="size-small" tabIndex={-1}>
-                          <div className="radio-header">
-                            <span>Small</span>
-                            {bookSize === "Small" ? (
-                              <Icon>
-                                <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                              </Icon>
-                            ) : (
-                              <Icon>
-                                <Circle weight="regular" color={colors.link.normal} size={18} />
-                              </Icon>
-                            )}
-                          </div>
-                          <div className="radio-content">
-                            <p>48 pages</p>
-                            <p>3 x 5 inches</p>
-                          </div>
-                        </label>
-                      </StyledRadio>
-                      <StyledRadio
-                        onChange={e => setBookSize(e.target.value)}
-                      >
-                        <input
-                          id="size-medium"
-                          name="size"
-                          type="radio"
-                          value="Medium"
-                        />
-                        <label htmlFor="size-medium" tabIndex={-1}>
-                          <div className="radio-header">
-                            <span>Medium</span>
-                            {bookSize === "Medium" ? (
-                              <Icon>
-                                <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                              </Icon>
-                            ) : (
-                              <Icon>
-                                <Circle weight="regular" color={colors.link.normal} size={18} />
-                              </Icon>
-                            )}
-                          </div>
-                          <div className="radio-content">
-                            <p>48 pages</p>
-                            <p>5 x 7 inches</p>
-                          </div>
-                        </label>
-                      </StyledRadio>
-                      <StyledRadio
-                        onChange={e => setBookSize(e.target.value)}
-                      >
-                        <input
-                          id="size-large"
-                          name="size"
-                          type="radio"
-                          value="Large"
-                        />
-                        <label htmlFor="size-large" tabIndex={-1}>
-                          <div className="radio-header">
-                            <span>Large</span>
-                            {bookSize === "Large" ? (
-                              <Icon>
-                                <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                              </Icon>
-                            ) : (
-                              <Icon>
-                                <Circle weight="regular" color={colors.link.normal} size={18} />
-                              </Icon>
-                            )}
-                          </div>
-                          <div className="radio-content">
-                            <p>48 pages</p>
-                            <p>7 x 10 inches</p>
-                          </div>
-                        </label>
-                      </StyledRadio>
-                    </Flexbox>
-                  </StyledFieldset>
-                </form>
+                <Flexbox
+                  margin="0 0 1rem"
+                >
+                  <StyledLabel>Title</StyledLabel>
+                  <StyledInput
+                    borderradius="0.25rem"
+                    type="text"
+                    id="new-book-title"
+                    name="new-book-title"
+                    autocomplete="false"
+                    onChange={e => {
+                      setBookTitle(e.currentTarget.value)
+                      setDbError({
+                        msg: "",
+                      })
+                    }}
+                  />
+                  {dbError.msg && (
+                    <ErrorLine color={dbError.color}>
+                      <Icon>
+                        <Warning weight="fill" color={dbError.color} size={18} />
+                      </Icon>
+                      <span>{dbError.msg}</span>
+                    </ErrorLine>
+                  )}
+                </Flexbox>
+                <StyledLabel>Book</StyledLabel>
+                <BookRadio
+                  img="https://cdn.shopify.com/s/files/1/0831/9463/products/Notebooks_Notebook_Charcoal_1024x1024@2x.png?v=1571438791"
+                  title="A5 Notebook"
+                  description="160 pages total"
+                  price="$24"
+                  size="A5"
+                  setBookSize={setBookSize}
+                  isActive={bookSize === "A5"}
+                />
               </ModalContent>
               <ModalFooter>
                 <Button
                   backgroundcolor={colors.primary.sixHundred}
-                  className="is-medium"
                   color={colors.white}
-                  width="100%"
                   disabled={bookTitle.length === 0 || !bookSize}
                   form="new-book-form"
-                  type="submit"
+                  onClick={e => handleNewBookFormSubmit()}
+                  padding="1rem"
+                  width="100%"
                 >
                   Create
                 </Button>

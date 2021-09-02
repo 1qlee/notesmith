@@ -4,9 +4,9 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const StyledContextMenu = styled.article`
-  background-color: ${colors.gray.nineHundred};
+  background-color: ${colors.white};
   box-shadow: ${colors.shadow.modal};
-  color: ${colors.white};
+  border-radius: 0 0.25rem 0.25rem;
   font-size: 0.8rem;
   position: absolute;
   padding: 0.5rem 0;
@@ -15,11 +15,13 @@ const StyledContextMenu = styled.article`
 const ContextMenuItem = styled.div`
   display: flex;
   align-items: center;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0.25rem 2rem;
   position: relative;
   &:hover {
     cursor: pointer;
     background-color: ${colors.blue.sixHundred};
+    color: ${colors.blue.oneHundred};
   }
   a {
     width: 100%;
@@ -27,7 +29,7 @@ const ContextMenuItem = styled.div`
 `
 
 const ContextMenuDivider = styled.hr`
-  background-color: ${colors.gray.sevenHundred};
+  background-color: ${colors.gray.threeHundred};
   margin: 0.5rem 0;
 `
 

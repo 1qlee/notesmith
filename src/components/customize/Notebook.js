@@ -23,11 +23,11 @@ import Controls from "./Controls"
 import Functionsbar from "./Bars/Functionsbar"
 import Notification from "../ui/Notification"
 import Toolbar from "./Bars/Toolbar"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 
 const Notebook = ({ location, bookId }) => {
-  const { user, firebaseDb, loading } = useFirebaseContext()
-  const booksRef = firebaseDb.ref("books/")
+  const isBrowser = typeof window !== "undefined"
+  const { loading, user, firebaseDb } = useFirebaseContext()
   const [initializing, setInitializing] = useState(true)
   const [showModal, setShowModal] = useState({
     show: false,
@@ -77,148 +77,145 @@ const Notebook = ({ location, bookId }) => {
 
     // set canvasPages in state
     setCanvasPages(svgArray)
-  }
-
-  function getBook() {
-    // ref for the book using bookId in the URL
-    firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
-      // if the book exists in the database
-      if (snapshot.exists()) {
-        // set book in state
-        setBook(snapshot.val())
-        // set pages in state
-        awaitPagesQuery()
-      }
-      // if the book doesn't exist
-      else {
-        return navigate(`/customize/notebooks`, { replace: true })
-      }
-    })
-  }
-
-  // query the db for pages using bookId
-  async function getPages() {
-    firebaseDb.ref(`pages/`).orderByChild('bookId').equalTo(bookId).once("value").then(snapshot => {
-      // this array will hold the pages
-      const pagesArray = []
-
-      // push each page into pagesArray
-      snapshot.forEach(child => {
-        pagesArray.push(child.val())
-      })
-
-      return pagesArray
-    })
-  }
-
-  // async function to save getPages result to state
-  async function awaitPagesQuery() {
-    // await return value from getPages
-    const result = await getPages()
-    // set state
-    setCanvasPages(result)
-    // set the first page of the book as the current page
-    setSelectedPage(result[0])
     setInitializing(false)
   }
 
   useEffect(() => {
+    function getBook() {
+      console.log("getting book")
+      // ref for the book using bookId in the URL
+      firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
+        // if the book exists in the database
+        if (snapshot.exists()) {
+          const bookVals = snapshot.val()
+
+          // validate that this book belongs to the current user
+          if (user.uid === snapshot.val().uid) {
+            // if the user uid and book uid match
+            // set book in state
+            setBook(bookVals)
+            // set pages in state
+            getPages(bookVals.id)
+            // remove loading state
+            setInitializing(false)
+          }
+          else {
+            console.log("this user doesnt own this book id")
+          }
+        }
+        // if the book doesn't exist
+        else {
+          console.log("book doesnt exist")
+          createBlankSvgs()
+        }
+      })
+    }
+
+    // query the db for pages using bookId
+    function getPages(id) {
+      firebaseDb.ref(`pages/`).orderByChild('bookId').equalTo(id).once("value").then(snapshot => {
+        // this array will hold the pages
+        const pagesArray = []
+
+        // push each page into pagesArray
+        snapshot.forEach(child => {
+          pagesArray.push(child.val().svg)
+        })
+
+        setCanvasPages(pagesArray)
+      })
+    }
+
     setShowModal({
       show: user ? false : true,
       type: "notification",
     })
 
     // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
-    if (bookId) {
-      console.log(bookId)
+    if (bookId && !loading) {
       // validate the bookId
       getBook()
-      // make sure the bookId matches the user
-
     }
     // if there is no notebook ID, we can assume the user is not logged in and show them the generic layout page
     else {
-      console.log("no notebook ID found")
       createBlankSvgs()
-      setInitializing(false)
     }
-  }, [user, bookId])
 
+    console.log("notebook page has rendered")
+  }, [loading, user])
+
+  if (loading || initializing) {
+    return <Loader />
+  }
   return (
-    <>
-      {initializing || loading ? (
-        <Loader />
-      ) : (
-        <Layout className="is-full-height">
-          <SEO title="Truly Custom Notebooks For All People" />
-          <Nav chapterNumber="93" title="Create your own layout" />
-          <SectionMain>
-            <Container>
-              <LayoutContainer>
-                <Flexbox
-                  flex="flex"
-                  height="100%"
-                  flexdirection="column"
-                  justifycontent="space-between"
-                  padding="0"
-                >
-                  <Functionsbar
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                    totalPages={totalPages}
-                  />
-                  <Flexbox
-                    flex="flex"
-                    height="100%"
-                  >
-                    <Toolbar />
-                    <Canvas
-                      canvasPages={canvasPages}
-                      canvasSize={canvasSize}
-                      pageData={pageData}
-                      pageSize={pageSize}
-                      selectedPage={selectedPage}
-                      setSelectedPageSvg={setSelectedPageSvg}
-                      setPageData={setPageData}
-                      setPageSize={setPageSize}
-                    />
-                    <Controls
-                      canvasPages={canvasPages}
-                      pageData={pageData}
-                      pageSize={pageSize}
-                      quantity={location.state ? location.state.quantity : 1}
-                      selectedPage={selectedPage}
-                      setPageData={setPageData}
-                      setPageSize={setPageSize}
-                      setSelectedPage={setSelectedPage}
-                      setShowModal={setShowModal}
-                      setInitializing={setInitializing}
-                      initializing={initializing}
-                    />
-                  </Flexbox>
-                </Flexbox>
-              </LayoutContainer>
-            </Container>
-          </SectionMain>
-          {showModal.show && (
-            <>
-              {showModal.type === "notification" && (
-                <CheckLoginModal setShowModal={setShowModal} />
-              )}
-              {showModal.type === "template" && (
-                <ApplyTemplateModal
-                  setCanvasPages={setCanvasPages}
+    <Layout className="is-full-height">
+      <Seo title="Truly Custom Notebooks For All People" />
+      <Nav chapterNumber="93" title="Create your own layout" />
+      <SectionMain>
+        <Container>
+          <LayoutContainer>
+            <Flexbox
+              flex="flex"
+              height="100%"
+              flexdirection="column"
+              justifycontent="space-between"
+              padding="0"
+            >
+              <Functionsbar
+                selectedPage={selectedPage}
+                setSelectedPage={setSelectedPage}
+                totalPages={totalPages}
+              />
+              <Flexbox
+                flex="flex"
+                height="100%"
+              >
+                <Toolbar />
+                <Canvas
                   canvasPages={canvasPages}
-                  setShowModal={setShowModal}
+                  canvasSize={canvasSize}
+                  pageData={pageData}
+                  pageSize={pageSize}
                   selectedPage={selectedPage}
-                  selectedPageSvg={selectedPageSvg}
+                  setSelectedPageSvg={setSelectedPageSvg}
+                  setPageData={setPageData}
+                  setPageSize={setPageSize}
                 />
-              )}
-            </>
+                <Controls
+                  canvasPages={canvasPages}
+                  pageData={pageData}
+                  pageSize={pageSize}
+                  quantity={location.state ? location.state.quantity : 1}
+                  selectedPage={selectedPage}
+                  setPageData={setPageData}
+                  setPageSize={setPageSize}
+                  setSelectedPage={setSelectedPage}
+                  setShowModal={setShowModal}
+                  setInitializing={setInitializing}
+                  initializing={initializing}
+                />
+              </Flexbox>
+            </Flexbox>
+          </LayoutContainer>
+        </Container>
+      </SectionMain>
+      {showModal.show && (
+        <>
+          {showModal.type === "notification" && (
+            <CheckLoginModal setShowModal={setShowModal} />
           )}
-        </Layout>
+          {showModal.type === "template" && (
+            <ApplyTemplateModal
+              setCanvasPages={setCanvasPages}
+              canvasPages={canvasPages}
+              setShowModal={setShowModal}
+              selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
+            />
+          )}
+        </>
       )}
-    </>
+    </Layout>
   )
 }
 

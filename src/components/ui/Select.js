@@ -14,9 +14,9 @@ const StyledSelect = styled.div`
 `
 
 const SelectMenu = styled.div`
-  background-color: ${colors.gray.nineHundred};
+  background-color: ${colors.white};
   box-shadow: ${colors.shadow.modal};
-  color: ${colors.white};
+  border-radius: 0.25rem;
   padding: 0.5rem 0;
   position: absolute;
   font-size: 0.8rem;
@@ -28,21 +28,28 @@ const SelectMenu = styled.div`
     position: absolute;
     width: 0.5rem;
     height: 0.5rem;
-    background-color: ${colors.gray.nineHundred};
+    background-color: ${colors.white};
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
     top: -0.25rem;
   }
 `
 
+const SelectMenuDivider = styled.hr`
+  background-color: ${colors.gray.threeHundred};
+  margin: 0.5rem 0;
+`
+
 const SelectOption = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0.25rem 2rem;
   position: relative;
   &:hover {
     cursor: pointer;
     background-color: ${colors.blue.sixHundred};
+    color: ${colors.blue.oneHundred};
   }
 `
 
@@ -53,10 +60,12 @@ const SelectIcon = styled.div`
 `
 
 const SelectHeading = styled.h4`
-  color: ${colors.gray.fiveHundred};
+  color: ${colors.gray.fourHundred};
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0.25rem 2rem;
+  font-weight: 400;
   &:hover {
-    color: ${colors.white};
+    color: ${colors.gray.sixHundred};
   }
 `
 
@@ -133,7 +142,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentDbValue === "title" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
@@ -148,12 +157,13 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentDbValue === "date_created" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
             Date created
           </SelectOption>
+          <SelectMenuDivider />
           <SelectHeading>Order</SelectHeading>
           <SelectOption
             onClick={e => {handleMenuClick(null, "ascending")}}
@@ -161,7 +171,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "ascending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
@@ -173,7 +183,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "descending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}

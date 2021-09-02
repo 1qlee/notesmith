@@ -9,7 +9,7 @@ import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 import Button from "../Button"
 import Icon from "../Icon"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 
 const LoginForm = (props) => {
   const { login, user } = useFirebaseContext()
@@ -72,7 +72,7 @@ const LoginForm = (props) => {
 
   return (
     <AuthFormWrapper>
-      <SEO title="Log In" />
+      <Seo title="Log In" />
       <Content>
         <h4>Log into your account</h4>
       </Content>

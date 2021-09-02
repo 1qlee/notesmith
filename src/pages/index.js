@@ -17,7 +17,7 @@ import Notification from "../components/ui/Notification"
 import PageAnimation from "../components/PageAnimation"
 import PageGallery from "../components/PageGallery"
 import RegisterForm from "../components/form/RegisterForm"
-import SEO from "../components/layout/Seo"
+import Seo from "../components/layout/Seo"
 import Tag from "../components/ui/Tag"
 
 const chapterData = {
@@ -108,7 +108,7 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title="Create truly unique custom notebooks" />
+      <Seo title="Create truly unique custom notebooks" />
       <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
       <SectionMain>
         <Section>

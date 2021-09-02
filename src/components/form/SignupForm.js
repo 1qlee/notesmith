@@ -8,7 +8,7 @@ import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } 
 import Button from "../Button"
 import Content from "../Content"
 import Icon from "../Icon"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 
 const SignUpForm = () => {
   const { signUp, sendEmailVerificationOnSignUp, firebaseDb } = useFirebaseContext()
@@ -130,7 +130,7 @@ const SignUpForm = () => {
   return (
     <>
       <AuthFormWrapper>
-        <SEO title="Sign Up" />
+        <Seo title="Sign Up" />
         <Content>
           <h4>Create your Notesmith account</h4>
         </Content>

@@ -10,7 +10,7 @@ import Button from "../Button"
 import Loader from "../Loader"
 import Menubar from "./Editor/Menubar"
 import PagesContainer from "./Editor/PagesContainer"
-import SEO from "../layout/Seo"
+import Seo from "../layout/Seo"
 import Templates from "./Editor/Windows/Templates"
 import Toolbar from "./Editor/Toolbar"
 import Workspace from "./Editor/Workspace"
@@ -23,7 +23,6 @@ const StyledEditor = styled.div`
 `
 
 const Editor = ({ bookId }) => {
-  const isBrowser = typeof window !== "undefined"
   const { firebaseDb } = useFirebaseContext()
   const [book, setBook] = useState()
   const [pages, setPages] = useState()
@@ -81,7 +80,7 @@ const Editor = ({ bookId }) => {
   else {
     return (
       <StyledEditor>
-        <SEO title={book.title} />
+        <Seo title={book.title} />
         <Menubar />
         <Workspace>
           <Toolbar
