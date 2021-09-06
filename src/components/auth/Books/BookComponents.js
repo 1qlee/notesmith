@@ -11,13 +11,15 @@ function BookRadio({
   price,
   img,
   size,
+  width,
+  height,
   isActive,
-  setBookSize
+  setBookData
 }) {
   return (
     <BookRadioWrapper
       className={isActive ? "is-active" : null}
-      onClick={() => setBookSize(size)}
+      onClick={() => setBookData({ size: size, height: height, width: width })}
     >
       <Flexbox
         flex="flex"
@@ -51,27 +53,29 @@ function BookRadio({
 
 const BookRadioWrapper = styled.a`
   display: block;
-  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
   border-radius: 0.25rem;
-  transition: border-color 0.2s;
+  transition: box-shadow 0.2s;
   &.is-active {
-    border-color: ${colors.blue.sixHundred};
+    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
   }
   &:hover,
   &:focus {
     &:not(.is-active) {
-      border-color: ${colors.gray.sixHundred};
+      box-shadow: 0 0 0 2px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     }
   }
 `
 
 const Book = styled.div`
+  background-color: ${colors.white};
   border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+  box-shadow: 0 1px 2px ${colors.shadow.float};
   display: block;
   height: 100%;
   padding: 1rem;
   user-select: none;
+  max-width: 250px;
   width: 100%;
   &.is-selected {
     box-shadow: 0 0 0 1px ${colors.blue.sixHundred}, inset 0 0 0 1px ${colors.white};
@@ -87,19 +91,7 @@ const Book = styled.div`
   }
 `
 
-const BookInput = styled.input`
-  background: ${colors.paper.offWhite};
-  border: none;
-  box-shadow: inset 0 -1px 0 ${colors.gray.fourHundred};
-  display: block;
-  padding: 0;
-  &:focus {
-    outline: none;
-  }
-`
-
 export {
   Book,
-  BookInput,
   BookRadio,
 }

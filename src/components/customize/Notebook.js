@@ -132,7 +132,8 @@ const Notebook = ({ location, bookId }) => {
     })
 
     // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
-    if (bookId && !loading) {
+    // wait for all loading states to clear before calling getBook
+    if (bookId && !loading && !initializing) {
       // validate the bookId
       getBook()
     }

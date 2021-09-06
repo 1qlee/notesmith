@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { colors, spacing } from "../../styles/variables"
-import { navigate, Link } from "gatsby"
+import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Circle, CheckCircle, Warning } from "phosphor-react"
 
 import { Book, BookRadio } from "./Books/BookComponents"
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
-import { SectionMain, SectionApp, SectionAppContent } from "../layout/Section"
+import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Select } from "../ui/Select"
 import { StyledInput, StyledRadio, StyledLabel, StyledFieldset, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
@@ -29,7 +29,12 @@ const Books = () => {
   const pagesRef = firebaseDb.ref("pages/")
   const [loading, setLoading] = useState(true)
   const [bookTitle, setBookTitle] = useState("")
-  const [bookSize, setBookSize] = useState(null)
+  const [bookData, setBookData] = useState({
+    title: "",
+    size: "",
+    width: 0,
+    height: 0,
+  })
   const [userBooks, setUserBooks] = useState()
   const [userBooksSnapshot, setUserBooksSnapshot] = useState()
   const [bookToBeDeleted, setBookToBeDeleted] = useState()
@@ -64,7 +69,7 @@ const Books = () => {
           booksArray.push(child.val())
         })
 
-        // make sure the books get rendered in the correct sorting prefence (set by user)
+        // make sure the books get rendered in the correct sorting preference (set by user)
         setUserBooks(
           sortBooks(
             getLocalStorage("sortMethod"),
@@ -119,25 +124,12 @@ const Books = () => {
       // keep track of each page in this object - it will be used later to set pages in 'books'
       pagesObject[`${newPageKey}`] = true
       // svg for a blank page
-      switch(bookSize) {
-        case "Small":
-          newPageSvg = "<rect x='-1' y='-1' width='336' height='528' fill='#fff'></rect>"
-          break
-        case "A5":
-          newPageSvg = "<g style='pointer-events:none'><rect x='-1' y='-1' width='528' height='816' fill='#fff'></rect></g>"
-          break
-        case "Large":
-          newPageSvg = "<rect x='-1' y='-1' width='672' height='960' fill='#fff'></rect>"
-          break
-        default:
-          newPageSvg = "<rect x='-1' y='-1' width='528' height='816' fill='#fff'></rect>"
-      }
-
+      newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.width}" height="${bookData.height}" fill="#fff"></rect></svg>`
       // write the new page into the db
       newPageRef.set({
         "date_created": new Date().valueOf(),
         "id": newPageKey,
-        "size": bookSize,
+        "size": bookData.size,
         "bookId": newBookKey,
         "uid": uid,
         "pageNumber": i,
@@ -148,7 +140,7 @@ const Books = () => {
     newBookRef.set({
       "date_created": new Date().valueOf(),
       "id": newBookKey,
-      "size": bookSize,
+      "size": bookData.size,
       "title": bookTitle,
       "uid": uid,
       "pages": pagesObject
@@ -156,7 +148,7 @@ const Books = () => {
       // afterwards, log that book id into 'users/userId/books/bookId'
       userBooksRef.child(newBookKey).set(true)
       // redirect the user to the book creation page
-      navigate(`/app/create/${newBookKey}`)
+      navigate(`/customize/notebook/${newBookKey}`)
     })
   }
 
@@ -310,22 +302,18 @@ const Books = () => {
     })
   }
 
-  if (loading) {
-    return <Loader />
-  }
-
   return (
     <Layout>
       <Seo title="Dashboard" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
-          <Sidebar />
+          <Sidebar page="Books" />
           <SectionAppContent>
             <Flexbox
               flex="flex"
               alignitems="center"
               justifycontent="flex-start"
-              padding="1rem 0"
+              padding="1rem 2rem"
             >
               <Select
                 initialDbValue={getLocalStorage("sortMethod")}
@@ -342,12 +330,18 @@ const Books = () => {
                 New book
               </Button>
             </Flexbox>
-            <BooksContainer
-              userBooks={userBooks}
-              renameBook={renameBook}
-              duplicateBook={duplicateBook}
-              handleBookDelete={handleBookDelete}
-            />
+            <SectionAppWorkspace heightmargin="4rem">
+              {loading ? (
+                <Loader className="is-app" />
+              ) : (
+                <BooksContainer
+                  userBooks={userBooks}
+                  renameBook={renameBook}
+                  duplicateBook={duplicateBook}
+                  handleBookDelete={handleBookDelete}
+                />
+              )}
+            </SectionAppWorkspace>
           </SectionAppContent>
         </SectionApp>
       </SectionMain>
@@ -390,15 +384,17 @@ const Books = () => {
                   description="160 pages total"
                   price="$24"
                   size="A5"
-                  setBookSize={setBookSize}
-                  isActive={bookSize === "A5"}
+                  width={528}
+                  height={816}
+                  setBookData={setBookData}
+                  isActive={bookData.size === "A5"}
                 />
               </ModalContent>
               <ModalFooter>
                 <Button
                   backgroundcolor={colors.primary.sixHundred}
                   color={colors.white}
-                  disabled={bookTitle.length === 0 || !bookSize}
+                  disabled={bookTitle.length === 0 || !bookData.size}
                   form="new-book-form"
                   onClick={e => handleNewBookFormSubmit()}
                   padding="1rem"
@@ -411,34 +407,29 @@ const Books = () => {
           ) : (
             <>
               <ModalHeader>
-                <h5>Delete book</h5>
+                Delete book
               </ModalHeader>
               <ModalContent>
                 <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
               </ModalContent>
-              <ModalFooter>
-                <Flexbox
-                  flex="flex"
-                  justifycontent="flex-end"
-                  alignitems="center"
+              <ModalFooter
+                justifycontent="flex-end"
+              >
+                <Button
+                  backgroundcolor={colors.white}
+                  color={colors.gray.nineHundred}
+                  onClick={() => handleShowModal(false, "deletebook")}
+                  margin="0 0.5rem 0 0"
                 >
-                  <FlexboxButtons>
-                    <Button
-                      backgroundcolor={colors.white}
-                      color={colors.gray.nineHundred}
-                      onClick={() => handleShowModal(false, "deletebook")}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      backgroundcolor={colors.red.sixHundred}
-                      color={colors.white}
-                      onClick={() => deleteBook(bookToBeDeleted)}
-                    >
-                      Delete
-                    </Button>
-                  </FlexboxButtons>
-                </Flexbox>
+                  Cancel
+                </Button>
+                <Button
+                  backgroundcolor={colors.red.sixHundred}
+                  color={colors.white}
+                  onClick={() => deleteBook(bookToBeDeleted)}
+                >
+                  Delete
+                </Button>
               </ModalFooter>
             </>
           )}

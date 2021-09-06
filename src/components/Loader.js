@@ -1,6 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import { colors } from "../styles/variables"
+import { colors, widths } from "../styles/variables"
 
 import Logo from "./Logo"
 
@@ -54,6 +54,12 @@ const LoaderWrapper = styled.div`
     width: calc(100% - 4px);
     top: 0;
     left: 4px;
+  }
+  &.is-app {
+    width: calc(100% - ${widths.sidebar});
+    height: calc(100vh - 6rem);
+    top: 6rem;
+    left: ${widths.sidebar};
   }
   .letter-logo {
     animation-name: ${loading};

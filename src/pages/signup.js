@@ -86,7 +86,7 @@ const SignUp = () => {
             </Cell>
             <Cell>
               <Content textAlign="center">
-                <p>Already have an account? <Link to="/login">Log in</Link></p>
+                <p>Already have an account? <Link to="/signin">Log in</Link></p>
               </Content>
             </Cell>
           </Grid>

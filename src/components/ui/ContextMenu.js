@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
@@ -8,23 +7,30 @@ const StyledContextMenu = styled.article`
   box-shadow: ${colors.shadow.modal};
   border-radius: 0 0.25rem 0.25rem;
   font-size: 0.8rem;
-  position: absolute;
   padding: 0.5rem 0;
+  position: absolute;
 `
 
 const ContextMenuItem = styled.div`
   display: flex;
   align-items: center;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  padding: 0.25rem 2rem;
   position: relative;
+  display: block;
+  padding: 0.25rem 2rem;
+  width: 100%;
   &:hover {
     cursor: pointer;
     background-color: ${colors.blue.sixHundred};
     color: ${colors.blue.oneHundred};
   }
-  a {
-    width: 100%;
+`
+
+const ContextMenuLink = styled.a`
+  display: block;
+  width: 100%;
+  &:focus {
+    outline: none;
   }
 `
 
@@ -34,53 +40,64 @@ const ContextMenuDivider = styled.hr`
 `
 
 const ContextMenu = (
-    {
-      selectedBookId,
-      selectedBook,
-      duplicateBook,
-      handleBookDelete,
-      coordinates,
-      showContextMenu,
-      setShowBookTitleInput
-    }
-  ) => {
+  {
+    selectedBookId,
+    selectedBook,
+    duplicateBook,
+    handleBookDelete,
+    coordinates,
+    showContextMenu,
+    setShowBookTitleInput
+  }
+) => {
 
   return showContextMenu && (
     <StyledContextMenu style={{
       top: coordinates.y,
       left: coordinates.x
     }}>
-      <ContextMenuItem>
-        <Link to={`/app/create/${selectedBookId}`}>
+      <ContextMenuLink
+        href={`/customize/notebook/${selectedBookId}`}
+      >
+        <ContextMenuItem>
           Open
-        </Link>
-      </ContextMenuItem>
-      <ContextMenuItem>
-        <a
-          href={`/app/create/${selectedBookId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        </ContextMenuItem>
+      </ContextMenuLink>
+      <ContextMenuLink
+        href={`/customize/notebook/${selectedBookId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ContextMenuItem>
           Open in new tab
-        </a>
-      </ContextMenuItem>
+        </ContextMenuItem>
+      </ContextMenuLink>
       <ContextMenuDivider />
-      <ContextMenuItem
+      <ContextMenuLink
         onClick={() => duplicateBook(selectedBook)}
+        tabindex="0"
       >
-        Duplicate
-      </ContextMenuItem>
-      <ContextMenuItem
+        <ContextMenuItem>
+          Duplicate
+        </ContextMenuItem>
+      </ContextMenuLink>
+      <ContextMenuLink
         onClick={() => setShowBookTitleInput(true)}
+        tabindex="0"
       >
-        Rename
-      </ContextMenuItem>
+        <ContextMenuItem>
+          Rename
+        </ContextMenuItem>
+      </ContextMenuLink>
       <ContextMenuDivider />
-      <ContextMenuItem
+      <ContextMenuLink
         onClick={() => handleBookDelete(selectedBook)}
+        tabindex="0"
       >
-        Delete
-      </ContextMenuItem>
+        <ContextMenuItem>
+          Delete
+        </ContextMenuItem>
+      </ContextMenuLink>
     </StyledContextMenu>
   )
 }

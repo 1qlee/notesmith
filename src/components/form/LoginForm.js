@@ -23,7 +23,7 @@ const LoginForm = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // Log in using Firebase auth function
+    // Sign in using Firebase auth function
     login(email, password)
     .then(() => {
       // Redirect user to the dashboard app page
@@ -72,9 +72,9 @@ const LoginForm = (props) => {
 
   return (
     <AuthFormWrapper>
-      <Seo title="Log In" />
+      <Seo title="Sign In" />
       <Content>
-        <h4>Log into your account</h4>
+        <h4>Sign into your account</h4>
       </Content>
       <form id="login-form" onSubmit={handleSubmit} style={{maxwidth:"500px"}}>
         <StyledFieldset
@@ -144,7 +144,7 @@ const LoginForm = (props) => {
             width="100%"
             padding="1rem"
           >
-            Log In
+            Sign In
           </Button>
         </StyledFieldset>
       </form>

@@ -11,7 +11,7 @@ import EditPageForm from "../components/form/EditPageForm"
 import ProductInfo from "../components/shop/ProductInfo"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import SEO from "../components/layout/Seo"
+import Seo from "../components/layout/Seo"
 
 const ShopPage = () => {
   const [editMode, setEditMode] = useState(false)
@@ -36,7 +36,7 @@ const ShopPage = () => {
 
   return (
     <Layout>
-      <SEO title="Truly Custom Notebooks For All People" />
+      <Seo title="Truly Custom Notebooks For All People" />
       <Nav chapterNumber="07" title="The signature Notesmith notebook"></Nav>
       <SectionMain>
         <Section>

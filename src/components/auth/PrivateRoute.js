@@ -10,9 +10,9 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
   if (loading) {
     return null
   }
-  if (isBrowser && !user && location.pathname !== `/login`) {
+  if (isBrowser && !user && location.pathname !== `/signin`) {
     // If we’re not logged in, redirect to the login page.
-    navigate(`/login`, { replace: true })
+    navigate(`/signin`, { replace: true })
     return null
   }
 

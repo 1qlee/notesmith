@@ -17,13 +17,13 @@ function CheckLoginModal({ setShowModal }) {
       setShowModal={setShowModal}
       width="300px"
     >
-      <ModalHeader>Log in or create an account to save layouts</ModalHeader>
+      <ModalHeader>Sign in or create an account to save layouts</ModalHeader>
       <ModalContent>
         <Content
           paragraphmarginbottom="1rem"
         >
           <p>We won't be able to save your layouts unless you're logged into a Notesmith account. You might lose any progress you make.</p>
-          <p><Link to="/signup">Sign up</Link> for free or <Link to="/login">log in</Link> to an existing account to save your layouts.</p>
+          <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to save your layouts.</p>
         </Content>
       </ModalContent>
       <ModalFooter

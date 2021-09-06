@@ -39,8 +39,20 @@ const SectionApp = styled.div`
 `
 
 const SectionAppContent = styled.section`
-  padding: ${spacing.normal} ${spacing.medium};
-  width: calc(100% - ${widths.sidebar});
+  height: 100%;
+  width: 100%;
 `
 
-export { SectionMain, Section, SectionContent, SectionApp, SectionAppContent }
+const SectionAppWorkspace = styled.div`
+  height: ${props => props.heightmargin ? `calc(100vh - ${props.heightmargin})` : "100vh"};
+  width: 100%;
+`
+
+export {
+  SectionMain,
+  Section,
+  SectionContent,
+  SectionApp,
+  SectionAppContent,
+  SectionAppWorkspace,
+}

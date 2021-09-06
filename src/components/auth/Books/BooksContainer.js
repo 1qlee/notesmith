@@ -3,7 +3,8 @@ import { navigate } from "gatsby"
 import { spacing } from "../../../styles/variables"
 import { Grid, Cell } from "styled-css-grid"
 
-import { Book, BookInput } from "./BookComponents"
+import { Book } from "./BookComponents"
+import { StyledInput } from "../../form/FormComponents"
 import ContextMenu from "../../ui/ContextMenu"
 
 // should export this function to utils
@@ -103,13 +104,12 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
   return (
     <>
       <Grid
-        columnGap={spacing.normal}
-        columns="repeat(auto-fit, minmax(250px, 1fr))"
+        columns="repeat(auto-fill, minmax(250px, 1fr))"
         data-clickoutside={true}
         height="100%"
         onClick={e => handleClickOutside(e)}
         rowGap={spacing.normal}
-        style={{gridAutoRows: "min-content"}}
+        style={{gridAutoRows: "min-content", padding: "2rem"}}
       >
         {userBooks.map(book => (
           <Cell
@@ -118,7 +118,8 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
             <Book
               data-title={book.title}
               onClick={e => handleBookSelect(e, book)}
-              onDoubleClick={() => navigate(`/app/create/${book.id}`)}
+              onDoubleClick={() => navigate(`/customize/notebook/${book.id}`)}
+              tabIndex="0"
               onContextMenu={e => {
                 handleBookSelect(e, book)
                 handleShowContextMenu(e, book)
@@ -126,13 +127,15 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
             >
               {selectedBookId === book.id && showBookTitleInput ? (
                 <form onSubmit={e => handleRenameBook(e)}>
-                  <BookInput
+                  <StyledInput
                     type="text"
                     id="new-book-title"
                     name="new-book-title"
                     autocomplete="chrome-off"
                     defaultValue={selectedBookTitle}
                     onChange={e => setNewBookTitle(e.target.value)}
+                    padding="0"
+                    borderradius="0"
                     ref={renameBookTitleRef}
                   />
                 </form>

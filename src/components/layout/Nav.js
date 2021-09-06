@@ -179,14 +179,16 @@ function Nav(props) {
                     <NavItem>
                       <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>
-                    <NavItem>
-                      Log Out
+                    <NavItem
+                      onClick={signOut}
+                    >
+                      Sign out
                     </NavItem>
                   </>
                 ) : (
                   <>
                     <NavItem>
-                      <Link to="/login">Log In</Link>
+                      <Link to="/signin">Sign In</Link>
                     </NavItem>
                     <NavItem className="last-item">
                       <Link to="/signup">
