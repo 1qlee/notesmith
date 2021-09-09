@@ -11,7 +11,8 @@ const StyledPage = styled.div`
   text-align: center;
   padding: 0.5rem;
   p {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    font-family: "Inter", Helvetica, Tahoma, sans-serif;
     margin: 0.25rem 0 0 0;
     user-select: none;
   }
@@ -84,18 +85,18 @@ function Pagebar({
   setPageData,
   setPageSize,
   setSelectedPage,
-  setInitializing,
-  initializing,
+  setPagebarLoading,
+  pagebarLoading,
 }) {
 
-  // after pagebar loads, set initializing to false
+  // after pagebar loads, set pageLoading to false
   useEffect(() => {
-    setInitializing(false)
+    setPagebarLoading(false)
   })
 
   return (
     <>
-      {initializing ? (
+      {pagebarLoading ? (
         <Flexbox
           flex="flex"
           alignitems="center"

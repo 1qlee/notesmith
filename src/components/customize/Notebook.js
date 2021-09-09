@@ -28,7 +28,7 @@ import Seo from "../layout/Seo"
 const Notebook = ({ location, bookId }) => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
-  const [initializing, setInitializing] = useState(true)
+  const [initializing, setInitializing] = useState()
   const [showModal, setShowModal] = useState({
     show: false,
     type: "notification"
@@ -63,6 +63,8 @@ const Notebook = ({ location, bookId }) => {
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState()
   const [canvasPages, setCanvasPages] = useState()
+  const [noExistingBook, setNoExistingBook] = useState()
+  const [pagebarLoading, setPagebarLoading] = useState(true)
 
   // creates blank svgs for when the user is not logged in
   function createBlankSvgs() {
@@ -70,7 +72,7 @@ const Notebook = ({ location, bookId }) => {
     const svgArray = []
 
     // we are using strings so we can use the react-inlinesvg library to render them
-    for (let i = 0; i < [pageData.pages]; i++) {
+    for (let i = 0; i < pageData.pages; i++) {
       // blank white rectangle inside the svg is set to pageSizes' width and height
       svgArray.push(`<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${pageSize.width}" height="${pageSize.height}" fill="#fff"></rect></svg>`)
     }
@@ -82,33 +84,41 @@ const Notebook = ({ location, bookId }) => {
 
   useEffect(() => {
     function getBook() {
-      console.log("getting book")
-      // ref for the book using bookId in the URL
-      firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
-        // if the book exists in the database
-        if (snapshot.exists()) {
-          const bookVals = snapshot.val()
+      if (user) {
+        // ref for the book using bookId in the URL
+        firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
+          // if the book exists in the database
+          if (snapshot.exists()) {
+            console.log("book exists")
+            const bookVals = snapshot.val()
 
-          // validate that this book belongs to the current user
-          if (user.uid === snapshot.val().uid) {
-            // if the user uid and book uid match
-            // set book in state
-            setBook(bookVals)
-            // set pages in state
-            getPages(bookVals.id)
-            // remove loading state
+            // validate that this book belongs to the current user
+            if (user.uid === snapshot.val().uid) {
+              console.log("correct user")
+              // if the user uid and book uid match
+              // set book in state
+              setBook(bookVals)
+              // set pages in state
+              getPages(bookVals.id)
+              // remove loading state
+              setInitializing(false)
+            }
+            else {
+              navigate("/customize/notebook")
+            }
+          }
+          // if the book doesn't exist
+          else {
+            console.log("book doesnt exist")
+            setNoExistingBook(true)
             setInitializing(false)
           }
-          else {
-            console.log("this user doesnt own this book id")
-          }
-        }
-        // if the book doesn't exist
-        else {
-          console.log("book doesnt exist")
-          createBlankSvgs()
-        }
-      })
+        })
+      }
+      else {
+        // if the user is not logged in, redirect them to the generic customize page
+        navigate("/customize/notebook")
+      }
     }
 
     // query the db for pages using bookId
@@ -133,8 +143,10 @@ const Notebook = ({ location, bookId }) => {
 
     // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
     // wait for all loading states to clear before calling getBook
-    if (bookId && !loading && !initializing) {
+    if (bookId && !loading) {
       // validate the bookId
+      console.log("getting book")
+      setInitializing(true)
       getBook()
     }
     // if there is no notebook ID, we can assume the user is not logged in and show them the generic layout page
@@ -143,7 +155,7 @@ const Notebook = ({ location, bookId }) => {
     }
 
     console.log("notebook page has rendered")
-  }, [loading, user])
+  }, [loading, user, bookId])
 
   if (loading || initializing) {
     return <Loader />
@@ -155,48 +167,61 @@ const Notebook = ({ location, bookId }) => {
       <SectionMain>
         <Container>
           <LayoutContainer>
-            <Flexbox
-              flex="flex"
-              height="100%"
-              flexdirection="column"
-              justifycontent="space-between"
-              padding="0"
-            >
-              <Functionsbar
-                selectedPage={selectedPage}
-                setSelectedPage={setSelectedPage}
-                totalPages={totalPages}
-              />
+            {noExistingBook ? (
+              <Flexbox
+                flex="flex"
+              >
+                <Content
+                  padding={`${spacing.large} 0`}
+                >
+                  <h2>Sorry, we couldn't find this book.</h2>
+                  <p>Create a new book?</p>
+                </Content>
+              </Flexbox>
+            ) : (
               <Flexbox
                 flex="flex"
                 height="100%"
+                flexdirection="column"
+                justifycontent="space-between"
+                padding="0"
               >
-                <Toolbar />
-                <Canvas
-                  canvasPages={canvasPages}
-                  canvasSize={canvasSize}
-                  pageData={pageData}
-                  pageSize={pageSize}
+                <Functionsbar
                   selectedPage={selectedPage}
-                  setSelectedPageSvg={setSelectedPageSvg}
-                  setPageData={setPageData}
-                  setPageSize={setPageSize}
-                />
-                <Controls
-                  canvasPages={canvasPages}
-                  pageData={pageData}
-                  pageSize={pageSize}
-                  quantity={location.state ? location.state.quantity : 1}
-                  selectedPage={selectedPage}
-                  setPageData={setPageData}
-                  setPageSize={setPageSize}
                   setSelectedPage={setSelectedPage}
-                  setShowModal={setShowModal}
-                  setInitializing={setInitializing}
-                  initializing={initializing}
+                  totalPages={totalPages}
                 />
+                <Flexbox
+                  flex="flex"
+                  height="100%"
+                >
+                  <Toolbar />
+                  <Canvas
+                    canvasPages={canvasPages}
+                    canvasSize={canvasSize}
+                    pageData={pageData}
+                    pageSize={pageSize}
+                    selectedPage={selectedPage}
+                    setSelectedPageSvg={setSelectedPageSvg}
+                    setPageData={setPageData}
+                    setPageSize={setPageSize}
+                  />
+                  <Controls
+                    canvasPages={canvasPages}
+                    pageData={pageData}
+                    pageSize={pageSize}
+                    quantity={location.state ? location.state.quantity : 1}
+                    selectedPage={selectedPage}
+                    setPageData={setPageData}
+                    setPageSize={setPageSize}
+                    setSelectedPage={setSelectedPage}
+                    setShowModal={setShowModal}
+                    setPagebarLoading={setPagebarLoading}
+                    pagebarLoading={pagebarLoading}
+                  />
+                </Flexbox>
               </Flexbox>
-            </Flexbox>
+            )}
           </LayoutContainer>
         </Container>
       </SectionMain>

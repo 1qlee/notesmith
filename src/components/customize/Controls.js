@@ -94,8 +94,8 @@ function Controls({
   setPageSize,
   setSelectedPage,
   setShowModal,
-  setInitializing,
-  initializing
+  setPagebarLoading,
+  pagebarLoading
 }) {
   const [activeTab, setActiveTab] = useState(1)
   const [loading, setLoading] = useState(true)
@@ -132,8 +132,8 @@ function Controls({
           setPageData={setPageData}
           setPageSize={setPageSize}
           setSelectedPage={setSelectedPage}
-          setInitializing={setInitializing}
-          initializing={initializing}
+          setPagebarLoading={setPagebarLoading}
+          pagebarLoading={pagebarLoading}
         />
       </ControlsContent>
       {activeTab === 2 && (

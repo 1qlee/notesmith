@@ -43,7 +43,7 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
     e.preventDefault()
     setLoading(true)
 
-    navigate("/customize/", {
+    navigate("/customize/notebook", {
       state: {
         quantity: itemQuantity
       }

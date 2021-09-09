@@ -22,7 +22,7 @@ function CheckLoginModal({ setShowModal }) {
         <Content
           paragraphmarginbottom="1rem"
         >
-          <p>We won't be able to save your layouts unless you're logged into a Notesmith account. You might lose any progress you make.</p>
+          <p>We won't be able to save your layouts unless you're signed into a Notesmith account. You might lose any progress you make.</p>
           <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to save your layouts.</p>
         </Content>
       </ModalContent>
@@ -30,11 +30,11 @@ function CheckLoginModal({ setShowModal }) {
         justifycontent="flex-end"
       >
         <Button
-          backgroundcolor={colors.primary.oneHundred}
+          backgroundcolor={colors.red.sixHundred}
           fontsize="0.8rem"
           margin="0 0 0 auto"
           flex="flex"
-          color={colors.gray.nineHundred}
+          color={colors.red.oneHundred}
           onClick={() => setShowModal({
             show: false,
             type: "notification",
@@ -44,7 +44,7 @@ function CheckLoginModal({ setShowModal }) {
             No, I'm okay with losing my work
           </span>
           <Icon margin="0 0 0 0.25rem">
-            <ArrowRight color={colors.gray.nineHundred} weight="bold" />
+            <ArrowRight color={colors.red.oneHundred} weight="bold" />
           </Icon>
         </Button>
       </ModalFooter>

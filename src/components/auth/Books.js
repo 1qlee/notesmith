@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react"
-import { colors, spacing } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { Circle, CheckCircle, Warning } from "phosphor-react"
+import { Warning } from "phosphor-react"
 
-import { Book, BookRadio } from "./Books/BookComponents"
-import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
+import { BookRadio } from "./Books/BookComponents"
+import { Flexbox } from "../layout/Flexbox"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Select } from "../ui/Select"
-import { StyledInput, StyledRadio, StyledLabel, StyledFieldset, ErrorLine } from "../form/FormComponents"
+import { StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
 import BooksContainer from "./Books/BooksContainer"
-import Content from "../Content"
-import ContextMenu from "../ui/ContextMenu"
 import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
@@ -36,7 +34,6 @@ const Books = () => {
     height: 0,
   })
   const [userBooks, setUserBooks] = useState()
-  const [userBooksSnapshot, setUserBooksSnapshot] = useState()
   const [bookToBeDeleted, setBookToBeDeleted] = useState()
   const [dbError, setDbError] = useState({
     msg: "",
@@ -46,15 +43,10 @@ const Books = () => {
     show: false,
     type: "createbook",
   })
-  const [sortMethod, setSortMethod] = useState({
-    value: getLocalStorage("sortValue"),
-    method: getLocalStorage("sortMethod"),
-    order: getLocalStorage("sortOrder"),
-  })
 
   useEffect(() => {
     function getUserBooks() {
-      // if there is no preference, set A to Z as default
+      // if there is are no sort variables in localStorage, set some defaults
       if (!getLocalStorage("sortMethod") || !getLocalStorage("sortOrder") || !getLocalStorage("sortValue")) {
         setLocalStorage("sortValue", "Alphabetical")
         setLocalStorage("sortMethod", "title")
@@ -120,7 +112,7 @@ const Books = () => {
       // create a new page key (id)
       const newPageRef = pagesRef.push()
       const newPageKey = newPageRef.key
-      const newPageSvg = null
+      let newPageSvg = null
       // keep track of each page in this object - it will be used later to set pages in 'books'
       pagesObject[`${newPageKey}`] = true
       // svg for a blank page
@@ -134,6 +126,8 @@ const Books = () => {
         "uid": uid,
         "pageNumber": i,
         "svg": newPageSvg
+      }).catch(error => {
+        console.log("error writing page to the database")
       })
     }
     // write the new book into the db
@@ -149,6 +143,8 @@ const Books = () => {
       userBooksRef.child(newBookKey).set(true)
       // redirect the user to the book creation page
       navigate(`/customize/notebook/${newBookKey}`)
+    }).catch(error => {
+      console.log("error writing book to the database")
     })
   }
 
@@ -230,9 +226,6 @@ const Books = () => {
   }
 
   function renameBook(oldBookTitle, newBookTitle, bookId, cb) {
-    const bookData = {
-      title: newBookTitle
-    }
     const updates = {}
     updates[`/books/${bookId}/title`] = newBookTitle
 

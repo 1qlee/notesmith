@@ -180,7 +180,7 @@ function Nav(props) {
                       <Link to="/app/dashboard">Dashboard</Link>
                     </NavItem>
                     <NavItem
-                      onClick={signOut}
+                      onClick={() => signOut()}
                     >
                       Sign out
                     </NavItem>
