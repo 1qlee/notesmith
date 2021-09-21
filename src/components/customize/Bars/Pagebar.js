@@ -91,8 +91,9 @@ function Pagebar({
 
   // after pagebar loads, set pageLoading to false
   useEffect(() => {
+    console.log("page bar has loaded")
     setPagebarLoading(false)
-  })
+  }, [])
 
   return (
     <>

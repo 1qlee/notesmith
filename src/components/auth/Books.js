@@ -3,6 +3,7 @@ import { colors } from "../../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
+import Loading from "../../assets/loading.svg"
 
 import { BookRadio } from "./Books/BookComponents"
 import { Flexbox } from "../layout/Flexbox"
@@ -43,6 +44,7 @@ const Books = () => {
     show: false,
     type: "createbook",
   })
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     function getUserBooks() {
@@ -103,6 +105,7 @@ const Books = () => {
 
   // creating a new book in the db
   function handleNewBookFormSubmit() {
+    setProcessing(true)
     // create a new book key (id)
     const newBookRef = booksRef.push()
     const newBookKey = newBookRef.key
@@ -139,6 +142,7 @@ const Books = () => {
       "uid": uid,
       "pages": pagesObject
     }).then(() => {
+      setProcessing(false)
       // afterwards, log that book id into 'users/userId/books/bookId'
       userBooksRef.child(newBookKey).set(true)
       // redirect the user to the book creation page
@@ -370,7 +374,7 @@ const Books = () => {
                     </ErrorLine>
                   )}
                 </Flexbox>
-                <StyledLabel>Book</StyledLabel>
+                <StyledLabel>Book (Select One)</StyledLabel>
                 <BookRadio
                   img="https://cdn.shopify.com/s/files/1/0831/9463/products/Notebooks_Notebook_Charcoal_1024x1024@2x.png?v=1571438791"
                   title="A5 Notebook"
@@ -386,14 +390,19 @@ const Books = () => {
               <ModalFooter>
                 <Button
                   backgroundcolor={colors.primary.sixHundred}
+                  className={processing ? "is-loading" : null}
                   color={colors.white}
-                  disabled={bookTitle.length === 0 || !bookData.size}
+                  disabled={bookTitle.length === 0 || !bookData.size || processing}
                   form="new-book-form"
                   onClick={e => handleNewBookFormSubmit()}
                   padding="1rem"
                   width="100%"
                 >
-                  Create
+                  {processing ? (
+                    <Loading height="1rem" width="100%" />
+                  ) : (
+                    "Create book"
+                  )}
                 </Button>
               </ModalFooter>
             </>

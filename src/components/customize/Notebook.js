@@ -28,7 +28,6 @@ import Seo from "../layout/Seo"
 const Notebook = ({ location, bookId }) => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
-  const [initializing, setInitializing] = useState()
   const [showModal, setShowModal] = useState({
     show: false,
     type: "notification"
@@ -47,7 +46,7 @@ const Notebook = ({ location, bookId }) => {
   const [pageData, setPageData] = useState({
     template: "",
     alignmentHorizontal: "center",
-    alignmentVertical: "center",
+    alignmentVertical: "middle",
     spacing: 5,
     opacity: 1,
     thickness: 1,
@@ -59,12 +58,13 @@ const Notebook = ({ location, bookId }) => {
     marginRight: 5,
     width: 1,
     lineWidth: pageSize.width,
-    pages: 48,
+    pages: 80,
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState()
-  const [canvasPages, setCanvasPages] = useState()
+  const [canvasPages, setCanvasPages] = useState([])
   const [noExistingBook, setNoExistingBook] = useState()
-  const [pagebarLoading, setPagebarLoading] = useState(true)
+  const [pagebarLoading, setPagebarLoading] = useState()
+  const [initializing, setInitializing] = useState(true)
 
   // creates blank svgs for when the user is not logged in
   function createBlankSvgs() {
@@ -136,6 +136,7 @@ const Notebook = ({ location, bookId }) => {
       })
     }
 
+    // show modal based on sign-in status
     setShowModal({
       show: user ? false : true,
       type: "notification",
@@ -146,7 +147,6 @@ const Notebook = ({ location, bookId }) => {
     if (bookId && !loading) {
       // validate the bookId
       console.log("getting book")
-      setInitializing(true)
       getBook()
     }
     // if there is no notebook ID, we can assume the user is not logged in and show them the generic layout page
@@ -155,9 +155,9 @@ const Notebook = ({ location, bookId }) => {
     }
 
     console.log("notebook page has rendered")
-  }, [loading, user, bookId])
+  }, [loading, user, initializing, pagebarLoading])
 
-  if (loading || initializing) {
+  if (loading || initializing || pagebarLoading) {
     return <Loader />
   }
   return (

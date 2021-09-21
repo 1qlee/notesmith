@@ -312,12 +312,10 @@ const RadioInput = styled.div`
 const StyledLabel = styled.label`
   color: ${colors.gray.sixHundred};
   display: block;
-  letter-spacing: 1px;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.625rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
+  margin: ${props => props.margin || "0 0 0.75rem 0"};
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`

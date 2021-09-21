@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import { colors } from "../../../styles/variables"
+import { useFirebaseContext } from "../../../utils/auth"
+import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import Loading from "../../../assets/loading.svg"
 
 import { StyledFieldset, StyledLabel, RadioInput } from "../../form/FormComponents"
@@ -53,6 +54,7 @@ function ApplyTemplateModal({
   selectedPage,
   selectedPageSvg,
 }) {
+  const { firebaseDb } = useFirebaseContext()
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [lowerPageBound, setLowerPageBound] = useState(1)
   const [upperPageBound, setUpperPageBound] = useState(12)
@@ -64,7 +66,7 @@ function ApplyTemplateModal({
     const pageNumber = selectedPage - 1
     setLoading(true)
 
-    // have to purposely delay the application function because it freezes the UI
+    // have to purposely delay applyTemplate() because it freezes the UI
     // preventing the loading state from occuring
     setTimeout(() => {
       applyTemplate(value, pageNumber)

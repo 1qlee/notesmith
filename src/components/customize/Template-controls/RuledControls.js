@@ -67,7 +67,11 @@ function RuledControls({ pageData, setPageData, pageSize }) {
 
   return (
     <>
-      <AlignmentControls pageData={pageData} setPageData={setPageData} changeAlignment={changeAlignment} />
+      <AlignmentControls
+        pageData={pageData}
+        setPageData={setPageData}
+        changeAlignment={changeAlignment} 
+      />
       <Flexbox
         flex="flex"
         alignitems="center"

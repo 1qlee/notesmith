@@ -25,11 +25,10 @@ function BookRadio({
         flex="flex"
         alignitems="center"
         padding="1rem"
-        backgroundcolor={colors.white}
         boxshadow={`0 1px 2px ${colors.shadow.float}`}
         borderradius="0.25rem"
       >
-        <img width="60" src={img} />
+        <img width="60" src={img} alt="misc" />
         <Flexbox
           flex="flex"
           justifycontent="space-between"
@@ -54,15 +53,18 @@ function BookRadio({
 const BookRadioWrapper = styled.a`
   display: block;
   box-shadow: 0 1px 2px 0 ${colors.shadow.float};
+  background-color: ${colors.white};
   border-radius: 0.25rem;
-  transition: box-shadow 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
+  border: 1px solid transparent;
   &.is-active {
-    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    border-color: ${colors.blue.sixHundred};
+    box-shadow: 0 1px 2px 0 ${colors.blue.threeHundred};
   }
   &:hover,
   &:focus {
     &:not(.is-active) {
-      box-shadow: 0 0 0 2px ${colors.gray.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+      background-color: ${colors.gray.twoHundred};
     }
   }
 `

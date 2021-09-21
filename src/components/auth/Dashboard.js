@@ -28,7 +28,7 @@ const Dashboard = () => {
             <Sidebar page="Dashboard" />
             <SectionAppContent>
               <SectionAppWorkspace>
-                <a onClick={handleSignOut}>Sign out</a>
+                <h3 onClick={handleSignOut}>Sign out</h3>
                 {!user.emailVerified && (
                   <Content linkcolor={colors.link.normal}>
                     <p>Verify your email.</p>

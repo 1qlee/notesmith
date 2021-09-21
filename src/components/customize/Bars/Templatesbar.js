@@ -5,6 +5,7 @@ import { CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
+import { BlankPageIcon, RuledPageIcon, GraphPageIcon, DotPageIcon } from "../PageIcons"
 import Button from "../../Button"
 import DotControls from "../Template-controls/DotControls"
 import RuledControls from "../Template-controls/RuledControls"
@@ -57,26 +58,18 @@ function Templatesbar({
     >
       <TemplatesContent>
         <StyledLabel>Templates</StyledLabel>
-        <StyledFieldset
+        <Flexbox
+          flex="flex"
+          flexwrap="wrap"
+          alignitems="center"
+          justifycontent="space-between"
           margin="0 0 2rem 0"
         >
-          <SelectWrapper>
-            <StyledSelect
-              width="100%"
-              onChange={e => handleTemplateSelect(e.target.value)}
-              value={pageData.template}
-            >
-              <option value="none">- None -</option>
-              <option value="blank">Blank</option>
-              <option value="ruled">Ruled</option>
-              <option value="dot">Dot grid</option>
-              <option value="graph">Graph</option>
-            </StyledSelect>
-            <SelectIcon top="1rem">
-              <CaretDown size="1rem" />
-            </SelectIcon>
-          </SelectWrapper>
-        </StyledFieldset>
+          <BlankPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "blank"} />
+          <RuledPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "ruled"} />
+          <DotPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "dot"} />
+          <GraphPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "graph"} />
+        </Flexbox>
         {pageData.template !== "blank" && pageData.template !== "none" && (
           <>
             {pageData.template === "ruled" && (
