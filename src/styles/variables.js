@@ -12,16 +12,16 @@ const colors = {
     nineHundred: "#212121"
   },
   primary: {
-    hover: "#e4f1e4",
+    hover: "#EBEEEE",
     active: "#bcdcbc",
     white: "#eef6f6",
     whiteLight: "#cde5e4",
-    oneHundred: "#f4f6f6",
-    twoHundred: "#a7b4b3",
-    threeHundred: "#7b8e8e",
-    fourHundred: "#657b7b",
-    fiveHundred: "#4f6968",
-    sixHundred: "#234342",
+    oneHundred: "#98A7A6",
+    twoHundred: "#7C8F8E",
+    threeHundred: "#607675",
+    fourHundred: "#4A6462",
+    fiveHundred: "#33504F",
+    sixHundred: "#22403F",
     sevenHundred: "#1c3635",
     eightHundred: "#152828",
     nineHundred: "#093737"
@@ -93,7 +93,9 @@ const colors = {
   kraft: "#8a5842",
   black: "#000",
   shadow: {
-    float: "rgba(0,0,0,0.2)",
+    float: "rgba(0,0,0,0.07)",
+    layeredSmall: "0 1px 1px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.03), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.07)",
+    layered: "0 2px 2px rgba(0,0,0,0.02), 0 4px 4px rgba(0,0,0,0.03), 0 8px 8px rgba(0,0,0,0.06), 0 16px 16px rgba(0,0,0,0.07)",
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
     modal: "0 7px 14px 0 rgba(60,66,87,.08), 0 3px 6px 0 rgba(0,0,0,.12)"
@@ -106,6 +108,7 @@ const widths = {
   modal: "480px",
   tablet: "800px",
   desktop: "1440px",
+  widescreen: "2560px",
   content: {
     index: "600px"
   },
@@ -129,7 +132,7 @@ const regex = {
 
 const convertToDecimal = (num, places) => {
   const lastTwoDigits = num.toString().substr(-2)
-  
+
   if (lastTwoDigits === "00") {
     return num / 100
   }

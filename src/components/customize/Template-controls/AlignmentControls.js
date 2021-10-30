@@ -11,7 +11,8 @@ import Icon from "../../Icon"
 
 const AlignmentButtonWrapper = styled.div`
   display: flex;
-  box-shadow: 0 1px 2px ${colors.shadow.float};
+  box-shadow: ${colors.shadow.layeredSmall};
+  border: 1px solid ${colors.primary.sixHundred};
   background-color: ${colors.white};
   padding: 0.25rem;
   border-radius: 0.25rem;
@@ -23,9 +24,13 @@ const AlignmentButton = styled(Button)`
   &:not(:last-child) {
     margin-right: 2px;
   }
+  &:hover,
+  &:focus {
+    background-color: ${colors.primary.hover};
+  }
   &.is-active {
-    background-color: ${colors.blue.oneHundred};
-    color: ${colors.blue.eightHundred};
+    background-color: ${colors.primary.sixHundred};
+    color: ${colors.primary.white};
   }
 `
 

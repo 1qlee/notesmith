@@ -4,7 +4,7 @@ import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-radius: 0.25rem;
+  border: 2px solid ${props => props.bordercolor || colors.primary.sixHundred};
   box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
   left: 50%;
   min-width: ${widths.modal};
@@ -38,7 +38,7 @@ const ModalHeader = styled.div`
 
 const ModalContent = styled.div`
   padding: 1rem;
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.primary.oneHundred};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.oneHundred};
 `
 
 const ModalFooter = styled.div`
@@ -51,16 +51,18 @@ const ModalFooter = styled.div`
   padding: 1rem;
 `
 
-function Modal({ children, setShowModal, width, boxshadow, backgroundcolor }) {
+function Modal({ children, setShowModal, width, boxshadow, backgroundcolor, unclickable }) {
   const modalBackground = useRef()
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClick)
-    document.addEventListener("keydown", handleEscKey)
+    if (!unclickable) {
+      document.addEventListener("mousedown", handleClick)
+      document.addEventListener("keydown", handleEscKey)
 
-    return () => {
-      document.removeEventListener("mousedown", handleClick)
-      document.removeEventListener("keydown", handleEscKey)
+      return () => {
+        document.removeEventListener("mousedown", handleClick)
+        document.removeEventListener("keydown", handleEscKey)
+      }
     }
   })
 

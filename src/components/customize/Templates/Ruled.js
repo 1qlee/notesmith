@@ -1,7 +1,7 @@
 import React from "react"
 import { convertToPx } from "../../../styles/variables"
 
-function Ruled({ pageData, pageSize }) {
+function Ruled({ pageData }) {
   const lines = []
 
   if (pageData.marginTop < 3.175) {
@@ -17,7 +17,7 @@ function Ruled({ pageData, pageSize }) {
   for (let i = 0; i < pageData.rows; i++) {
     // calculations and conversions to px
     const lineX1 = convertToPx(pageData.marginLeft)
-    const lineX2 = pageSize.width - convertToPx(pageData.marginRight)
+    const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
     const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop)
     // line object
     const line = {
@@ -32,7 +32,7 @@ function Ruled({ pageData, pageSize }) {
     }
 
     // loop will exit if the last line has passed the height of the page
-    if (lineY > pageSize.height - convertToPx(3.175)) {
+    if (lineY > pageData.pageHeight - convertToPx(3.175)) {
       // change the number of rows displayed
       pageData.rows = i
       break

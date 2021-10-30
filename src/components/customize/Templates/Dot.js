@@ -1,7 +1,7 @@
 import React from "react"
 import { colors, convertToPx } from "../../../styles/variables"
 
-function Dot({ pageData, pageSize }) {
+function Dot({ pageData }) {
   const dots = []
 
   if (pageData.marginTop < 3.175) {
@@ -31,13 +31,13 @@ function Dot({ pageData, pageSize }) {
       }
 
       // loop will exit if the dots have passed the height of the page
-      if (dotPos.y > pageSize.height - convertToPx(3.175)) {
+      if (dotPos.y > pageData.pageHeight - convertToPx(3.175)) {
         // this essentially caps the number of total rows at the "exceeding" value
         pageData.rows = i
         break
       }
       // loop will exit if the dots have passed the width of the page
-      else if (dotPos.x > pageSize.width - convertToPx(3.175)) {
+      else if (dotPos.x > pageData.pageWidth - convertToPx(3.175)) {
         // this essentially caps the number of dots in a row at the "exceeding" value
         pageData.columns = ii
         break

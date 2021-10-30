@@ -11,17 +11,44 @@ const rotate = keyframes`
   }
 `
 
+const pulsate = keyframes`
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+`
+
 const StyledIcon = styled.span`
   align-items: center;
+  background-color: ${props => props.backgroundcolor};
+  border-radius: ${props => props.borderradius || "0.25rem 0 0 0.25rem"};
+  padding: ${props => props.padding};
   display: inline-flex;
   justify-content: center;
   position: relative;
   margin: ${props => props.margin};
+  height: ${props => props.height};
   &.is-loading {
     svg {
       animation: ${rotate} 0.5s linear infinite;
       fill: ${props => props.color || colors.gray.nineHundred};
       stroke: ${props => props.color || colors.gray.nineHundred};
+    }
+  }
+  &.is-pulsating {
+    svg {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+      transform: scale(1);
+      animation: ${pulsate} 2s linear infinite;
+      border-radius: 100%;
     }
   }
 `

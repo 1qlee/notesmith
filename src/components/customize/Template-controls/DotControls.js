@@ -5,13 +5,13 @@ import { StyledFieldset, StyledLabel, StyledInput, StyledRange } from "../../for
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 
-function DotControls({ pageData, setPageData, pageSize }) {
+function DotControls({ pageData, setPageData }) {
   const rowWidth = convertToPx((pageData.columns - 1) * pageData.spacing) // the width of one row of dots
   const rowHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // the entire height of all rows of dots
-  const topMargin = (pageSize.height - rowHeight) / 2 // the margin at the top when dots are vertically centered
-  const sideMargin = (pageSize.width - rowWidth) / 2 // the margin at the top when dots are horizontally centered
-  const bottomMargin = pageSize.height - rowHeight - convertToPx(3.34) //
-  const rightMargin = pageSize.width - rowWidth - convertToPx(3.34) //
+  const topMargin = (pageData.pageHeight - rowHeight) / 2 // the margin at the top when dots are vertically centered
+  const sideMargin = (pageData.pageWidth - rowWidth) / 2 // the margin at the top when dots are horizontally centered
+  const bottomMargin = pageData.pageHeight - rowHeight - convertToPx(3.34) //
+  const rightMargin = pageData.pageWidth - rowWidth - convertToPx(3.34) //
 
   function changeAlignment(value) {
     switch(value) {

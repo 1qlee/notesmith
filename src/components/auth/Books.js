@@ -33,6 +33,7 @@ const Books = () => {
     size: "",
     width: 0,
     height: 0,
+    numOfPages: 160,
   })
   const [userBooks, setUserBooks] = useState()
   const [bookToBeDeleted, setBookToBeDeleted] = useState()
@@ -110,8 +111,8 @@ const Books = () => {
     const newBookRef = booksRef.push()
     const newBookKey = newBookRef.key
     const pagesObject = {}
-    // create pages for the new book - loop 48 times for 48 pages
-    for (let i = 1; i < 49; i++) {
+    // create pages for the new book
+    for (let i = 1; i <= bookData.numOfPages; i++) {
       // create a new page key (id)
       const newPageRef = pagesRef.push()
       const newPageKey = newPageRef.key
@@ -128,7 +129,9 @@ const Books = () => {
         "bookId": newBookKey,
         "uid": uid,
         "pageNumber": i,
-        "svg": newPageSvg
+        "svg": newPageSvg,
+        "width": bookData.width,
+        "height": bookData.height,
       }).catch(error => {
         console.log("error writing page to the database")
       })
@@ -137,10 +140,13 @@ const Books = () => {
     newBookRef.set({
       "date_created": new Date().valueOf(),
       "id": newBookKey,
+      "numOfPages": bookData.numOfPages,
+      "width": bookData.width,
+      "height": bookData.height,
+      "pages": pagesObject,
       "size": bookData.size,
       "title": bookTitle,
       "uid": uid,
-      "pages": pagesObject
     }).then(() => {
       setProcessing(false)
       // afterwards, log that book id into 'users/userId/books/bookId'
@@ -322,6 +328,7 @@ const Books = () => {
                 color={colors.white}
                 backgroundcolor={colors.primary.sixHundred}
                 borderradius="0.25rem"
+                shadowcolor={colors.primary.oneHundred}
                 onClick={() => handleShowModal(true, "createbook")}
               >
                 New book
@@ -374,7 +381,7 @@ const Books = () => {
                     </ErrorLine>
                   )}
                 </Flexbox>
-                <StyledLabel>Book (Select One)</StyledLabel>
+                <StyledLabel>Book (select one)</StyledLabel>
                 <BookRadio
                   img="https://cdn.shopify.com/s/files/1/0831/9463/products/Notebooks_Notebook_Charcoal_1024x1024@2x.png?v=1571438791"
                   title="A5 Notebook"
@@ -383,6 +390,7 @@ const Books = () => {
                   size="A5"
                   width={528}
                   height={816}
+                  numOfPages={160}
                   setBookData={setBookData}
                   isActive={bookData.size === "A5"}
                 />
@@ -390,6 +398,7 @@ const Books = () => {
               <ModalFooter>
                 <Button
                   backgroundcolor={colors.primary.sixHundred}
+                  shadowcolor={colors.primary.oneHundred}
                   className={processing ? "is-loading" : null}
                   color={colors.white}
                   disabled={bookTitle.length === 0 || !bookData.size || processing}
@@ -427,6 +436,7 @@ const Books = () => {
                 </Button>
                 <Button
                   backgroundcolor={colors.red.sixHundred}
+                  shadowcolor={colors.red.twoHundred}
                   color={colors.white}
                   onClick={() => deleteBook(bookToBeDeleted)}
                 >

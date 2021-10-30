@@ -6,11 +6,11 @@ import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 
 function RuledControls({ pageData, setPageData, pageSize }) {
-  const lineWidth = pageSize.width - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
-  const horizontalMargin = (pageSize.width - lineWidth) / 2
+  const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
+  const horizontalMargin = (pageData.pageWidth - lineWidth) / 2
   const lineHeight = convertToPx((pageData.rows - 1) * pageData.spacing)
-  const verticalMargin = (pageSize.height - lineHeight) / 2
-  const bottomMargin = pageSize.height - lineHeight - convertToPx(3.175) - 1
+  const verticalMargin = (pageData.pageHeight - lineHeight) / 2
+  const bottomMargin = pageData.pageHeight - lineHeight - convertToPx(3.175) - 1
 
   function changeAlignment(value) {
     switch(value) {
@@ -19,7 +19,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           ...pageData,
           alignmentHorizontal: value,
           marginLeft: 3.175,
-          marginRight: convertToMM(pageSize.width - lineWidth - convertToPx(3.175)),
+          marginRight: convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175)),
         })
         break
       case "right":
@@ -27,7 +27,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           ...pageData,
           alignmentHorizontal: value,
           marginRight: 3.175,
-          marginLeft: convertToMM(pageSize.width - lineWidth - convertToPx(3.175)),
+          marginLeft: convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175)),
         })
         break
       case "center":
@@ -70,7 +70,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
       <AlignmentControls
         pageData={pageData}
         setPageData={setPageData}
-        changeAlignment={changeAlignment} 
+        changeAlignment={changeAlignment}
       />
       <Flexbox
         flex="flex"

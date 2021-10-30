@@ -15,7 +15,8 @@ const Button = styled.button`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: ${props => props.border ? props.border : "none"};
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : `0 1px 2px 0 ${colors.shadow.float}`};
+  box-shadow: ${props => props.shadowcolor ? `3px 3px 1px 0 ${props.shadowcolor}` : `${colors.shadow.layered}`};
+  box-shadow: ${props => props.boxshadow};
   color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
   font-size: ${props => props.fontsize || "0.825rem"};
@@ -25,7 +26,7 @@ const Button = styled.button`
   padding: ${props => props.padding || "0.5rem 1rem"};
   margin: ${props => props.margin || "0"};
   text-decoration: none;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, background-color 0.2s, color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
   width: ${props => props.width || "auto"};
   &.has-icon {
@@ -45,6 +46,7 @@ const Button = styled.button`
   }
   &:focus {
     box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    transform: translate(1px, 1px);
     outline: none;
   }
   &[disabled] {

@@ -6,18 +6,18 @@ import SVG from "react-inlinesvg"
 import Ruled from "./Templates/Ruled"
 import Dot from "./Templates/Dot"
 
-function CoverPage({ pageSize }) {
+function CoverPage({ pageData }) {
   return (
     <>
       <rect
-        width={pageSize.width}
-        height={pageSize.height}
+        width={pageData.pageWidth}
+        height={pageData.pageHeight}
         fill={colors.primary.sixHundred}>
       </rect>
       <text
-        x={(pageSize.width / 2) - 21}
-        y={pageSize.height / 2}
-        width={pageSize.width}
+        x={(pageData.pageWidth / 2) - 21}
+        y={pageData.pageHeight / 2}
+        width={pageData.pageWidth}
         fill={colors.primary.white}
       >
         COVER
@@ -32,7 +32,6 @@ function Template({
   trimmedPageHeight,
   convertedPageWidth,
   pageData,
-  pageSize
 }) {
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
@@ -52,20 +51,20 @@ function Template({
       ref={currentPageSide === "left" ? pageLeftRef : pageRightRef}
       height={trimmedPageHeight}
       width={convertedPageWidth}
-      viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+      viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
       x={currentPageSide === "left" ? 1 : convertedPageWidth + 2}
       y="1"
     >
       {pageData.template === "blank" && (
         <g>
-          <rect width={pageSize.width} height={pageSize.height} fill={colors.white}></rect>
+          <rect width={pageData.pageWidth} height={pageData.pageHeight} fill={colors.white}></rect>
         </g>
       )}
       {pageData.template === "ruled" && (
-        <Ruled pageData={pageData} pageSize={pageSize} />
+        <Ruled pageData={pageData} />
       )}
       {pageData.template === "dot" && (
-        <Dot pageData={pageData} pageSize={pageSize} />
+        <Dot pageData={pageData} />
       )}
     </svg>
   )
@@ -75,7 +74,7 @@ function PageSpread({
   canvasPages,
   canvasSize,
   pageData,
-  pageSize,
+  bookData,
   selectedPage,
   setPageData,
   setSelectedPageSvg,
@@ -90,8 +89,8 @@ function PageSpread({
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
   const trimmedPageHeight = canvasSize.height - 2 // reduced to allow outline to show
-  const conversionRatio = trimmedPageHeight / pageSize.height // width conversion ratio
-  const convertedPageWidth = pageSize.width * conversionRatio // converted page width
+  const conversionRatio = trimmedPageHeight / pageData.pageHeight // width conversion ratio
+  const convertedPageWidth = pageData.pageWidth * conversionRatio // converted page width
   const pageSpreadWidth = convertedPageWidth * 2 // converted page spread width
 
   useEffect(() => {
@@ -103,7 +102,7 @@ function PageSpread({
           show: true
         })
       }
-      else if (selectedPage == 48) {
+      else if (selectedPage === bookData.numOfPages) {
         setShowCover({
           side: "right",
           show: true
@@ -144,11 +143,11 @@ function PageSpread({
           ref={pageLeftRef}
           height={canvasSize.height}
           width={convertedPageWidth}
-          viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+          viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
           x="0"
           y="0"
         >
-          <CoverPage pageSize={pageSize} />
+          <CoverPage pageData={pageData} />
         </svg>
       ) : (
         <>
@@ -160,7 +159,7 @@ function PageSpread({
                 height={trimmedPageHeight}
                 x="1"
                 y="1"
-                style={{outline: `1px solid ${colors.blue.sixHundred}`}}
+                style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
               </svg>
@@ -171,14 +170,14 @@ function PageSpread({
                   trimmedPageHeight={trimmedPageHeight}
                   convertedPageWidth={convertedPageWidth}
                   pageData={pageData}
-                  pageSize={pageSize}
+                  pageData={pageData}
                 />
               ) : (
                 <SVG
                   ref={pageLeftRef}
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
-                  viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+                  viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                   src={canvasPages[selectedPage - 1]}
                   x="1"
                   y="1"
@@ -200,7 +199,7 @@ function PageSpread({
                 ref={pageLeftRef}
                 height={trimmedPageHeight}
                 width={convertedPageWidth}
-                viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+                viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                 src={canvasPages[selectedPage - 2]}
                 x="1"
                 y="1"
@@ -214,11 +213,11 @@ function PageSpread({
           ref={pageRightRef}
           height={canvasSize.height}
           width={convertedPageWidth + 2}
-          viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+          viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
           x={convertedPageWidth + 2}
           y="0"
         >
-          <CoverPage pageSize={pageSize} />
+          <CoverPage pageData={pageData} />
         </svg>
       ) : (
         <>
@@ -230,7 +229,7 @@ function PageSpread({
                 height={trimmedPageHeight}
                 x={convertedPageWidth + 2}
                 y="1"
-                style={{outline: `1px solid ${colors.blue.sixHundred}`}}
+                style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
               </svg>
@@ -241,14 +240,14 @@ function PageSpread({
                   trimmedPageHeight={trimmedPageHeight}
                   convertedPageWidth={convertedPageWidth}
                   pageData={pageData}
-                  pageSize={pageSize}
+                  pageData={pageData}
                 />
               ) : (
                 <SVG
                   ref={pageRightRef}
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
-                  viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+                  viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                   src={canvasPages[selectedPage - 1]}
                   x={convertedPageWidth + 2}
                   y="1"
@@ -270,7 +269,7 @@ function PageSpread({
                 ref={pageRightRef}
                 height={trimmedPageHeight}
                 width={convertedPageWidth}
-                viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+                viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                 src={canvasPages[selectedPage]}
                 x={convertedPageWidth + 2}
                 y="1"

@@ -17,36 +17,48 @@ const StyledNav = styled.nav`
   width: 100%;
 `
 
-const HorizontalNav = styled.div`
-  background-color: ${colors.primary.sixHundred};
-  display: ${props => props.hideNavbar ? "none" : "block"};
-  left: 0;
-  position: fixed;
-  height: 96px;
-  width: 100%;
-  z-index: 9;
-`
-
-const HorizontalNavInnerBox = styled.div`
-  background-color: ${colors.paper.offWhite};
-  border-bottom: 1px solid ${colors.gray.threeHundred};
-  box-shadow: 1px 0 2px ${colors.shadow.float};
-  padding-left: 96px;
-  height: 80px;
-  position: relative;
-  top: 1rem;
-  @media only screen and (max-width: ${widths.tablet}) {
-    padding-left: 0;
+const NavSection = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1 1 0;
+  justify-content: ${props => props.justifycontent};
+  height: 100%;
+  &.has-border-left {
+    border-left: 2px solid ${colors.primary.sixHundred};
   }
 `
 
-const HorizontalNavContainer = styled.div`
+const NavItem = styled.div`
+  color: ${colors.primary.fourHundred};
+  font-weight: 700;
   display: flex;
-  max-width: ${widths.desktop};
-  margin: 0 auto;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.825rem;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  transition: color 0.1s, background-color 0.1s;
+  &:hover {
+    background-color: ${colors.primary.sixHundred};
+    color: ${colors.gray.oneHundred};
+  }
+`
+
+const HorizontalNav = styled.div`
+  background-color: ${colors.paper.offWhite};
+  border-bottom: 2px solid ${colors.primary.sixHundred};
+  box-shadow: 0 2px 4px ${colors.shadow.float};
+  display: ${props => props.hideNavbar ? "none" : "flex"};
+  align-items: center;
+  position: fixed;
+  justify-content: space-between;
+  left: 50%;
+  height: 82px;
+  transform: translateX(-50%);
   width: 100%;
-  @media only screen and (max-width: 1585px) {
-    padding: 0 1rem;
+  padding: 0 2rem;
+  z-index: 9;
+  @media only screen and (max-width: ${widths.tablet}) {
+    padding-left: 0;
   }
 `
 
@@ -133,25 +145,14 @@ const ChapterNameHeader = styled.div`
   }
 `
 
-const NavSection = styled.div`
-  align-items: center;
-  display: flex;
-  flex: 1 1 0;
-  justify-content: ${props => props.justifycontent};
-`
-
-const NavItem = styled.div`
-  color: ${colors.gray.eightHundred};
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  font-size: 0.825rem;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  &.first-item {
-    padding: 1rem 1rem 1rem 0;
-  }
-  &.last-item {
-    padding: 1rem 0 1rem 1rem;
+const NavLogo = styled.div`
+  width: 200px;
+  height: 80px;
+  transition: background-color 0.1s;
+  &:hover {
+    svg {
+      stroke: ${colors.primary.sixHundred};
+    }
   }
 `
 
@@ -162,82 +163,64 @@ function Nav(props) {
   return (
     <StyledNav>
       <HorizontalNav hideNavbar={props.hideNavbar}>
-        <HorizontalNavInnerBox>
-          <HorizontalNavContainer>
-            <NavSection justifycontent="flex-start">
-              <Link to="/">
-                <Logo color={colors.gray.nineHundred} />
+        <Link to="/">
+          <NavLogo>
+            <Logo width="100%" height="100%" color={colors.gray.nineHundred} />
+          </NavLogo>
+        </Link>
+        {!loading && (
+          <>
+            <NavSection justifycontent="center">
+              <Link to="/products/notebook">
+                <NavItem>Shop</NavItem>
               </Link>
-            </NavSection>
-            {!loading && (
-              <NavSection justifycontent="flex-end">
-                <NavItem>
-                  <Link to="/shop">Shop</Link>
-                </NavItem>
-                {user ? (
-                  <>
+              {user ? (
+                <>
+                  <Link to="/app/dashboard">
                     <NavItem>
-                      <Link to="/app/dashboard">Dashboard</Link>
+                      Dashboard
                     </NavItem>
-                    <NavItem
-                      onClick={() => signOut()}
-                    >
-                      Sign out
-                    </NavItem>
-                  </>
-                ) : (
-                  <>
-                    <NavItem>
-                      <Link to="/signin">Sign In</Link>
-                    </NavItem>
-                    <NavItem className="last-item">
-                      <Link to="/signup">
-                        Sign Up
-                      </Link>
-                    </NavItem>
-                  </>
-                )}
-                <NavItem className="last-item">
-                  <Button
-                    className="has-icon"
-                    borderradius="25px"
-                    backgroundcolor={colors.paper.offWhite}
-                    border={`1px solid ${colors.gray.sixHundred}`}
-                    as={Link}
-                    to="/cart"
+                  </Link>
+                  <NavItem
+                    onClick={() => signOut()}
                   >
-                    <Icon>
-                      <Tote size="1.5rem" />
-                    </Icon>
-                    {cartCount === 1 ? (
-                      <span>{cartCount} item</span>
-                    ) : (
-                      <span>{cartCount} items</span>
-                    )}
-                  </Button>
-                </NavItem>
-              </NavSection>
-            )}
-          </HorizontalNavContainer>
-        </HorizontalNavInnerBox>
+                    Sign out
+                  </NavItem>
+                </>
+              ) : (
+                <>
+                  <Link to="/signin">
+                    <NavItem>
+                      Sign in
+                    </NavItem>
+                  </Link>
+                  <Link to="/signup">
+                    <NavItem className="last-item">
+                      Sign Up
+                    </NavItem>
+                  </Link>
+                </>
+              )}
+            </NavSection>
+            <Button
+              className="has-icon"
+              backgroundcolor={colors.primary.sixHundred}
+              color={colors.gray.oneHundred}
+              as={Link}
+              to="/cart"
+            >
+              <Icon>
+                <Tote size="1.5rem" />
+              </Icon>
+              {cartCount === 1 ? (
+                <span>{cartCount} item</span>
+              ) : (
+                <span>{cartCount} items</span>
+              )}
+            </Button>
+          </>
+        )}
       </HorizontalNav>
-      <VerticalNav>
-        <VerticalNavInnerBox>
-          <ChapterNumberHeader>{props.chapterNumber}</ChapterNumberHeader>
-          <VerticalNavItem>
-            <ChapterNameHeader color={colors.primary.sixHundred}>
-              <p>{props.title}</p>
-            </ChapterNameHeader>
-          </VerticalNavItem>
-          <VerticalNavFooter>
-            <Icon>
-              <a href="https://www.instagram.com/notesmithbooks/" target="_blank" rel="noopener noreferrer">
-                <InstagramLogo size="1.5rem" />
-              </a>
-            </Icon>
-          </VerticalNavFooter>
-        </VerticalNavInnerBox>
-      </VerticalNav>
     </StyledNav>
   )
 }

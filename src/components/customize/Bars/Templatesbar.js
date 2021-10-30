@@ -24,14 +24,15 @@ const TemplatesContent = styled.div`
 
 function Templatesbar({
   pageData,
-  pageSize,
   setPageData,
   setShowModal,
 }) {
   const [loading, setLoading] = useState(false)
 
   function handleTemplateSelect(template) {
+    // set initial values for page data
     setPageData({
+      ...pageData,
       template: template,
       alignmentHorizontal: "center",
       alignmentVertical: "middle",
@@ -73,10 +74,10 @@ function Templatesbar({
         {pageData.template !== "blank" && pageData.template !== "none" && (
           <>
             {pageData.template === "ruled" && (
-              <RuledControls pageData={pageData} setPageData={setPageData} pageSize={pageSize} />
+              <RuledControls pageData={pageData} setPageData={setPageData} />
             )}
             {pageData.template === "dot" && (
-              <DotControls pageData={pageData} setPageData={setPageData} pageSize={pageSize} />
+              <DotControls pageData={pageData} setPageData={setPageData} />
             )}
           </>
         )}

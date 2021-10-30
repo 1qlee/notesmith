@@ -8,30 +8,34 @@ import Icon from "../../Icon"
 import Button from "../../Button"
 
 const StyledToolbar = styled.div`
-  display: flex;
   align-items: center;
-  flex-direction: column;
-  position: relative;
-  box-shadow: 0 2px 2px ${colors.shadow.float};
   background-color: ${colors.white};
-  height: 334px;
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.primary.sixHundred};
+  box-shadow: ${colors.shadow.layered};
+  display: flex;
+  flex-direction: column;
+  height: 332px;
+  position: relative;
 `
 
 const ToolItem = styled.div`
   padding: 14px;
   transition: box-shadow 0.2s, background-color 0.2s;
-  &:not(:last-child) {
-    margin-bottom: 1px;
+  &:first-child {
+    border-radius: 0.25rem 0.25rem 0 0;
   }
-  &.is-active {
-    background-color: ${colors.blue.oneHundred};
-    box-shadow: 0 0 0 1px ${colors.blue.sixHundred};
+  &:last-child {
+    border-radius: 0 0 0.25rem 0.25rem;
   }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
       background-color: ${colors.gray.oneHundred};
     }
+  }
+  &.is-active {
+    background-color: ${colors.primary.active};
   }
 `
 

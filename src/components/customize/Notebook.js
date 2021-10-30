@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate, Link } from "gatsby"
 import { ArrowRight, WarningCircle, CheckCircle, Circle } from "phosphor-react"
-import { colors, convertToDecimal, spacing } from "../../styles/variables"
+import { colors, convertToDecimal, spacing, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
 import { Container, LayoutContainer } from "../layout/Container"
@@ -11,6 +11,7 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 import { StyledFieldset, StyledLabel, StyledInput, RadioInput } from "../form/FormComponents"
 import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
+import CreateBookModal from "./Modals/CreateBookModal"
 import CheckLoginModal from "./Modals/CheckLoginModal"
 import Button from "../Button"
 import Content from "../Content"
@@ -30,18 +31,20 @@ const Notebook = ({ location, bookId }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
-    type: "notification"
+    type: "",
   })
   const [selectedPage, setSelectedPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(48)
-  const [book, setBook] = useState()
+  const [bookData, setBookData] = useState({
+    size: "A5",
+    numOfPages: 160,
+    width: 528,
+    height: 816,
+    quantity: 1,
+    title: "",
+  })
   const [canvasSize, setCanvasSize] = useState({
     width: 1082,
     height: 716
-  })
-  const [pageSize, setPageSize] = useState({
-    width: 528,
-    height: 816
   })
   const [pageData, setPageData] = useState({
     template: "",
@@ -57,8 +60,9 @@ const Notebook = ({ location, bookId }) => {
     marginLeft: 5,
     marginRight: 5,
     width: 1,
-    lineWidth: pageSize.width,
-    pages: 80,
+    lineWidth: 528,
+    pageWidth: 528,
+    pageHeight: 816,
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState()
   const [canvasPages, setCanvasPages] = useState([])
@@ -72,9 +76,9 @@ const Notebook = ({ location, bookId }) => {
     const svgArray = []
 
     // we are using strings so we can use the react-inlinesvg library to render them
-    for (let i = 0; i < pageData.pages; i++) {
+    for (let i = 0; i < bookData.numOfPages; i++) {
       // blank white rectangle inside the svg is set to pageSizes' width and height
-      svgArray.push(`<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${pageSize.width}" height="${pageSize.height}" fill="#fff"></rect></svg>`)
+      svgArray.push(`<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${pageData.pageWidth}" height="${pageData.pageHeight}" fill="#fff"></rect></svg>`)
     }
 
     // set canvasPages in state
@@ -84,41 +88,36 @@ const Notebook = ({ location, bookId }) => {
 
   useEffect(() => {
     function getBook() {
-      if (user) {
-        // ref for the book using bookId in the URL
-        firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
-          // if the book exists in the database
-          if (snapshot.exists()) {
-            console.log("book exists")
-            const bookVals = snapshot.val()
+      // ref for the book using bookId in the URL
+      firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
+        // if the book exists in the database
+        if (snapshot.exists()) {
+          console.log("book exists")
+          const bookVals = snapshot.val()
+          console.log(bookVals)
 
-            // validate that this book belongs to the current user
-            if (user.uid === snapshot.val().uid) {
-              console.log("correct user")
-              // if the user uid and book uid match
-              // set book in state
-              setBook(bookVals)
-              // set pages in state
-              getPages(bookVals.id)
-              // remove loading state
-              setInitializing(false)
-            }
-            else {
-              navigate("/customize/notebook")
-            }
-          }
-          // if the book doesn't exist
-          else {
-            console.log("book doesnt exist")
-            setNoExistingBook(true)
+          // validate that this book belongs to the current user
+          if (user.uid === snapshot.val().uid) {
+            console.log("correct user")
+            // if the user uid and book uid match
+            // set book in state
+            setBookData(bookVals)
+            // set pages in state
+            getPages(bookVals.id)
+            // remove loading state
             setInitializing(false)
           }
-        })
-      }
-      else {
-        // if the user is not logged in, redirect them to the generic customize page
-        navigate("/customize/notebook")
-      }
+          else {
+            navigate("/customize/notebook")
+          }
+        }
+        // if the book doesn't exist
+        else {
+          console.log("book doesnt exist")
+          setNoExistingBook(true)
+          setInitializing(false)
+        }
+      })
     }
 
     // query the db for pages using bookId
@@ -136,37 +135,78 @@ const Notebook = ({ location, bookId }) => {
       })
     }
 
-    // show modal based on sign-in status
-    setShowModal({
-      show: user ? false : true,
-      type: "notification",
-    })
+    // janky solution: checks for location state first
+    if (location.state) {
+      console.log("location found")
+      // then check if we have book data from the product page redirect
+      // we can do this by checking for a single object property
+      if (location.state.size) {
+        setBookData({
+          ...bookData,
+          size: location.state.size,
+          quantity: location.state.quantity,
+          size: location.state.size,
+          width: location.state.width,
+          height: location.state.height,
+          numOfPages: location.state.numOfPages,
+        })
 
-    // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
-    // wait for all loading states to clear before calling getBook
-    if (bookId && !loading) {
-      // validate the bookId
-      console.log("getting book")
-      getBook()
+        setPageData({
+          ...pageData,
+          lineWidth: location.state.width,
+          pageWidth: location.state.width,
+          pageHeight: location.state.height,
+        })
+      }
     }
-    // if there is no notebook ID, we can assume the user is not logged in and show them the generic layout page
+
+    // first check if there is a user logged in because
+    // users that are not logged in should not be able to access bookId's
+    if (user) {
+      // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
+      // wait for all loading states to clear before calling getBook
+      if (bookId && !loading) {
+        setShowModal({
+          show: false,
+          type: "",
+        })
+        // fetch book based on bookId in URL
+        getBook()
+      }
+      // if there is no bookId, prompt the user to create a new book in the db
+      else {
+        // show modal based on sign-in status
+        setShowModal({
+          show: true,
+          type: "signedIn",
+        })
+
+        createBlankSvgs()
+      }
+    }
+    // else we can create blank svgs for users that are not logged in
     else {
       createBlankSvgs()
+      // show modal based on sign-in status
+      setShowModal({
+        show: user ? false : true,
+        type: "notSignedIn",
+      })
     }
 
     console.log("notebook page has rendered")
-  }, [loading, user, initializing, pagebarLoading])
+  }, [loading, user, initializing])
 
   if (loading || initializing || pagebarLoading) {
     return <Loader />
   }
   return (
     <Layout className="is-full-height">
-      <Seo title="Truly Custom Notebooks For All People" />
-      <Nav chapterNumber="93" title="Create your own layout" />
+      <Seo title={`${bookData.title}`} />
+      <Nav />
       <SectionMain>
         <Container>
-          <LayoutContainer>
+          <LayoutContainer maxwidth={widths.widescreen}>
             {noExistingBook ? (
               <Flexbox
                 flex="flex"
@@ -189,7 +229,9 @@ const Notebook = ({ location, bookId }) => {
                 <Functionsbar
                   selectedPage={selectedPage}
                   setSelectedPage={setSelectedPage}
-                  totalPages={totalPages}
+                  bookData={bookData}
+                  setBookData={setBookData}
+                  bookId={bookId}
                 />
                 <Flexbox
                   flex="flex"
@@ -199,21 +241,18 @@ const Notebook = ({ location, bookId }) => {
                   <Canvas
                     canvasPages={canvasPages}
                     canvasSize={canvasSize}
+                    bookData={bookData}
                     pageData={pageData}
-                    pageSize={pageSize}
                     selectedPage={selectedPage}
                     setSelectedPageSvg={setSelectedPageSvg}
                     setPageData={setPageData}
-                    setPageSize={setPageSize}
                   />
                   <Controls
                     canvasPages={canvasPages}
                     pageData={pageData}
-                    pageSize={pageSize}
                     quantity={location.state ? location.state.quantity : 1}
                     selectedPage={selectedPage}
                     setPageData={setPageData}
-                    setPageSize={setPageSize}
                     setSelectedPage={setSelectedPage}
                     setShowModal={setShowModal}
                     setPagebarLoading={setPagebarLoading}
@@ -227,11 +266,21 @@ const Notebook = ({ location, bookId }) => {
       </SectionMain>
       {showModal.show && (
         <>
-          {showModal.type === "notification" && (
+          {showModal.type === "notSignedIn" && (
             <CheckLoginModal setShowModal={setShowModal} />
+          )}
+          {showModal.type === "signedIn" && (
+            <CreateBookModal
+              setShowModal={setShowModal}
+              bookData={bookData}
+              pageData={pageData}
+              setBookData={setBookData}
+            />
           )}
           {showModal.type === "template" && (
             <ApplyTemplateModal
+              bookData={bookData}
+              pageData={pageData}
               setCanvasPages={setCanvasPages}
               canvasPages={canvasPages}
               setShowModal={setShowModal}

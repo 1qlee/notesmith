@@ -15,7 +15,7 @@ const Container = styled.div`
 `
 
 const LayoutContainer = styled.div`
-  max-width: ${widths.desktop};
+  max-width: ${props => props.maxwidth || widths.desktop};
   margin: 0 ${spacing.normal};
   height: 100%;
   width: 100%;

@@ -9,6 +9,7 @@ function BookRadio({
   title,
   description,
   price,
+  numOfPages,
   img,
   size,
   width,
@@ -19,7 +20,7 @@ function BookRadio({
   return (
     <BookRadioWrapper
       className={isActive ? "is-active" : null}
-      onClick={() => setBookData({ size: size, height: height, width: width })}
+      onClick={() => setBookData({ size: size, height: height, width: width, numOfPages: numOfPages })}
     >
       <Flexbox
         flex="flex"
@@ -52,19 +53,20 @@ function BookRadio({
 
 const BookRadioWrapper = styled.a`
   display: block;
-  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
+  box-shadow: 2px 2px 1px ${colors.primary.twoHundred};
   background-color: ${colors.white};
   border-radius: 0.25rem;
-  transition: border-color 0.2s, background-color 0.2s;
-  border: 1px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  border: 1px solid ${colors.primary.sixHundred};
   &.is-active {
-    border-color: ${colors.blue.sixHundred};
-    box-shadow: 0 1px 2px 0 ${colors.blue.threeHundred};
+    box-shadow: 0 0 0 ${colors.primary.sixHundred};
+    background-color: ${colors.primary.active};
+    transform: translate(1px, 1px);
   }
   &:hover,
   &:focus {
     &:not(.is-active) {
-      background-color: ${colors.gray.twoHundred};
+      background-color: ${colors.primary.hover};
     }
   }
 `

@@ -20,15 +20,16 @@ const StyledControls = styled.div`
 
 const ControlsContent = styled.div`
   background-color: ${colors.white};
-  box-shadow: 0 1px 2px ${colors.shadow.float};
-  border-top: 1px solid ${colors.gray.threeHundred};
-  border-radius: 0 0 0.25rem 0.25rem;
-  height: calc(100% - 3rem);
+  box-shadow: ${colors.shadow.layered};
+  border: 1px solid ${colors.primary.sixHundred};
+  border-radius: 0.25rem;
+  height: calc(100% - 2.5rem);
+  max-height: 716px;
   overflow-x: hidden;
   overflow-y: auto;
   &.is-absolute {
     position: absolute;
-    top: 3rem;
+    top: 3.125rem;
     left: 0;
     width: 300px;
     z-index: 100;
@@ -46,40 +47,38 @@ const ControlsContent = styled.div`
 const ControlTabs = styled.ul`
   display: inline-flex;
   list-style-type: none;
-  box-shadow: 0 1px 2px ${colors.shadow.float};
-  padding: 0;
-  margin: 0;
-  border-radius: 0.25rem 0.25rem 0 0;
+  margin-bottom: 1rem;
+  box-shadow: ${colors.shadow.layered};
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.primary.sixHundred};
   width: 100%;
 `
 
 const ControlTab = styled.li`
-  background-color: ${colors.white};
-  color: ${colors.gray.sixHundred};
-  flex: 1;
+  color: ${colors.primary.threeHundred};
   font-family: "Inter", Helvetica, sans-serif;
   font-size: 0.825rem;
-  margin: 0;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s, background-color 0.2s;
+  height: 100%;
+  flex: 1;
+  font-weight: 700;
   text-align: center;
-  transition: border-color 0.2s;
   &.is-active {
-    color: ${colors.gray.nineHundred};
-    background-color: ${colors.primary.oneHundred};
-  }
-  &.is-checkout {
-    color: ${colors.blue.sixHundred};
+    background-color: ${colors.primary.sixHundred};
+    color: ${colors.primary.white};
   }
   &:first-child {
-    border-radius: 0.25rem 0 0;
+    border-radius: 0.25rem 0 0 0.25rem;
   }
   &:last-child {
-    border-radius: 0 0.25rem 0 0;
+    border-radius: 0 0.25rem 0.25rem 0;
   }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      border-color: ${colors.primary.hover};
+      color: ${colors.primary.fourHundred};
+      background-color: ${colors.primary.hover};
     }
   }
 `
@@ -87,11 +86,9 @@ const ControlTab = styled.li`
 function Controls({
   canvasPages,
   pageData,
-  pageSize,
   quantity,
   selectedPage,
   setPageData,
-  setPageSize,
   setSelectedPage,
   setShowModal,
   setPagebarLoading,
@@ -106,7 +103,13 @@ function Controls({
       <ControlTabs>
         <ControlTab
           className={activeTab === 1 ? "is-active" : null}
-          onClick={() => setActiveTab(1)}
+          onClick={() => {
+            setPageData({
+              ...pageData,
+              template: "",
+            })
+            setActiveTab(1)
+          }}
         >
           Pages
         </ControlTab>
@@ -127,10 +130,8 @@ function Controls({
         <Pagebar
           canvasPages={canvasPages}
           pageData={pageData}
-          pageSize={pageSize}
           selectedPage={selectedPage}
           setPageData={setPageData}
-          setPageSize={setPageSize}
           setSelectedPage={setSelectedPage}
           setPagebarLoading={setPagebarLoading}
           pagebarLoading={pagebarLoading}
@@ -140,7 +141,6 @@ function Controls({
         <ControlsContent className="is-absolute">
           <Templatesbar
             pageData={pageData}
-            pageSize={pageSize}
             setShowModal={setShowModal}
             setPageData={setPageData}
           >

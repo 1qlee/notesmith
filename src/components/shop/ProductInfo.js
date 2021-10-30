@@ -14,20 +14,10 @@ import Icon from "../Icon"
 import Button from "../Button"
 import Content from "../Content"
 
-const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
+const ProductInfo = ({ bookData, setBookData }) => {
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
-  // converts select value to an object detailing selected book size
-  const createBookDimensions = (size) => {
-    switch(size) {
-      case "Medium":
-        setBookData({...bookData, width: 528, height: 816})
-        break
-      default:
-        setBookData({...bookData, width: 528, height: 816})
-    }
-  }
 
   const calculateTotalPrice = (price) => {
     const totalPrice = (itemQuantity * price) / 100
@@ -45,7 +35,12 @@ const ProductInfo = ({ bookData, setBookData, setEditMode }) => {
 
     navigate("/customize/notebook", {
       state: {
-        quantity: itemQuantity
+        quantity: itemQuantity,
+        size: bookData.size,
+        dimensions: bookData.dimensions,
+        width: bookData.width,
+        height: bookData.height,
+        numOfPages: bookData.numOfPages,
       }
     })
   }

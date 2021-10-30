@@ -13,7 +13,7 @@ const Workspace = styled.div`
   display: flex;
   height: 100%;
   justify-content: center;
-  left: 58px;
+  left: 62px;
   overflow: auto;
   position: absolute;
   right: 300px;
@@ -31,19 +31,15 @@ const Workspace = styled.div`
 const StyledCanvas = styled.div`
   display: block;
   background-color: ${colors.paper.offWhite};
-  position: absolute;
-  left: 0;
-  top: 0;
 `
 
 function Canvas({
   canvasPages,
   canvasSize,
+  bookData,
   pageData,
-  pageSize,
   selectedPage,
   setPageData,
-  setPageSize,
   setSelectedPageSvg,
 }) {
 
@@ -65,7 +61,7 @@ function Canvas({
             canvasPages={canvasPages}
             canvasSize={canvasSize}
             pageData={pageData}
-            pageSize={pageSize}
+            bookData={bookData}
             selectedPage={selectedPage}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}

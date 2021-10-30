@@ -4,7 +4,7 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Notesmith - Made-to-order notebooks crafted with your unique, custom printed pages.`,
+    title: `Notesmith`,
     description: `Design and create your own unique notebook with fully customizable pages. Every notebook is made-to-order and custom printed specially for you.`,
     author: `@notesmith`,
     url: `https://www.notesmithbooks.com/`,
@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       resolve: `gatsby-plugin-create-client-paths`,
-      options: { prefixes: [`/app/*`, `/orders/*`, `/customize/*`] },
+      options: { prefixes: [`/app/*`, `/orders/*`, `/customize/*`, `/products/*`] },
     },
     {
       resolve: `gatsby-source-filesystem`,

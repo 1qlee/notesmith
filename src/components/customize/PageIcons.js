@@ -5,31 +5,39 @@ import { colors } from "../../styles/variables"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 
-const PageWrapper = styled.div`
+const PageWrapper = styled.a`
   display: flex;
   flex-direction: column;
   align-items: center;
+  p {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: 0.2s background-color, 0.2s color;
+  }
   &.is-active {
     span {
-      background-color: ${colors.gray.nineHundred};
+      background-color: ${colors.primary.sixHundred};
     }
     p {
-      color: ${colors.gray.nineHundred};
+      background-color: ${colors.primary.sixHundred};
+      color: ${colors.primary.white};
     }
     div {
-      border-color: ${colors.gray.nineHundred};
+      border-color: ${colors.primary.sixHundred};
     }
   }
   &:hover {
     cursor: pointer;
-    span {
-      background-color: ${colors.gray.nineHundred};
-    }
-    p {
-      color: ${colors.gray.nineHundred};
-    }
-    div {
-      border-color: ${colors.gray.nineHundred};
+    &:not(.is-active) {
+      span {
+        background-color: ${colors.gray.nineHundred};
+      }
+      p {
+        color: ${colors.gray.nineHundred};
+      }
+      div {
+        border-color: ${colors.gray.nineHundred};
+      }
     }
   }
 `

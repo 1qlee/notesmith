@@ -108,7 +108,7 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <Seo title="Create truly unique custom notebooks" />
+      <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
       <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
       <SectionMain>
         <Section>

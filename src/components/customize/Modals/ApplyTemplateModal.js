@@ -5,8 +5,9 @@ import { useFirebaseContext } from "../../../utils/auth"
 import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import Loading from "../../../assets/loading.svg"
 
-import { StyledFieldset, StyledLabel, RadioInput } from "../../form/FormComponents"
+import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
+import { Grid, Cell } from "styled-css-grid"
 import Notification from "../../ui/Notification"
 import Icon from "../../Icon"
 import Button from "../../Button"
@@ -14,13 +15,19 @@ import Content from "../../Content"
 
 const PageRangeWrapper = styled.div`
   display: flex;
-  box-shadow: 0 1px 2px ${colors.shadow.float};
+  box-shadow: 3px 3px 1px ${colors.primary.twoHundred};
+  border: 1px solid ${colors.primary.sixHundred};
+  padding: 0.25rem;
   align-items: center;
   border-radius: 0.25rem;
   background-color: ${colors.white};
-  border: 0.25rem solid ${colors.white};
+  transition: transform 0.2s, box-shadow 0.2s;
   width: 6.875rem;
-  margin-left: 1.5rem;
+  margin: 0 0 1rem 1.5rem;
+  &.is-focused {
+    box-shadow: 0 0 0 ${colors.primary.sixHundred};
+    transform: translateY(1px);
+  }
 `
 
 const PageRangeInput = styled.input`
@@ -30,8 +37,7 @@ const PageRangeInput = styled.input`
   text-align: center;
   width: 2.5rem;
   &:focus {
-    background-color: ${colors.primary.hover};
-    box-shadow: none;
+    background-color: ${colors.primary.active};
     outline: none;
   }
   /* Chrome, Safari, Edge, Opera */
@@ -40,7 +46,6 @@ const PageRangeInput = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
-
   /* Firefox */
   &[type=number] {
     -moz-appearance: textfield;
@@ -48,6 +53,8 @@ const PageRangeInput = styled.input`
 `
 
 function ApplyTemplateModal({
+  bookData,
+  pageData,
   canvasPages,
   setCanvasPages,
   setShowModal,
@@ -55,11 +62,14 @@ function ApplyTemplateModal({
   selectedPageSvg,
 }) {
   const { firebaseDb } = useFirebaseContext()
+  const totalPages = parseInt(bookData.numOfPages)
   const [selectedApply, setSelectedApply] = useState("apply-current")
+  const [frequency, setFrequency] = useState("")
+  const [frequencyNum, setFrequencyNum] = useState(3)
   const [lowerPageBound, setLowerPageBound] = useState(1)
-  const [upperPageBound, setUpperPageBound] = useState(12)
+  const [upperPageBound, setUpperPageBound] = useState(totalPages / 2)
+  const [rangeIsFocused, setRangeIsFocused] = useState(false)
   const [loading, setLoading] = useState(false)
-  const totalPages = canvasPages.length
 
   function handleTemplateApply(value) {
     // selectedPage starts from 1, so have to subtract 1 accordingly so that it matches the array position
@@ -86,14 +96,52 @@ function ApplyTemplateModal({
         // change the corresponding page's svg in our cloned array
         // simple loop from lower to upper page bound
         for (let i = lowerPageBound; i <= upperPageBound; i++) {
-          canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+          // for if a frequency is checked
+          switch(frequency) {
+            case "even":
+              if (i % 2 === 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            case "odd":
+              if (i % 2 !== 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            case "other":
+              if (i % frequencyNum === 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            default:
+              canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+          }
         }
         break
       case "apply-all":
         // change the corresponding page's svg in our cloned array
         // loop across all pages
-        for (let i = 0; i < totalPages; i++) {
-          canvasPagesClone[i] = selectedPageSvg.outerHTML
+        for (let i = 1; i <= totalPages; i++) {
+          // for if a frequency is checked
+          switch(frequency) {
+            case "even":
+              if (i % 2 === 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            case "odd":
+              if (i % 2 !== 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            case "other":
+              if (i % frequencyNum === 0) {
+                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              }
+              break
+            default:
+              canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+          }
         }
         break
       default:
@@ -109,13 +157,31 @@ function ApplyTemplateModal({
     })
   }
 
+  function handleTemplateSelect(value) {
+    if (selectedApply === value) {
+      setSelectedApply("")
+    }
+    else {
+      setSelectedApply(value)
+    }
+  }
+
+  function handleFrequencySelect(value) {
+    if (frequency === value) {
+      setFrequency("")
+    }
+    else {
+      setFrequency(value)
+    }
+  }
+
   function validateLowerPageBound(value) {
     const pageNumber = parseInt(value)
     if (pageNumber < 1) {
       setLowerPageBound(1)
     }
     else if (pageNumber > totalPages) {
-      setLowerPageBound(48)
+      setLowerPageBound(totalPages)
     }
     else if (pageNumber > upperPageBound) {
       setLowerPageBound(pageNumber)
@@ -132,7 +198,7 @@ function ApplyTemplateModal({
       setUpperPageBound(1)
     }
     else if (pageNumber > totalPages) {
-      setUpperPageBound(48)
+      setUpperPageBound(totalPages)
     }
     else if (pageNumber < lowerPageBound) {
       setLowerPageBound(pageNumber)
@@ -146,125 +212,233 @@ function ApplyTemplateModal({
   return (
     <Modal
       setShowModal={setShowModal}
+      width="300px"
     >
       <ModalHeader>Apply template to pages</ModalHeader>
       <ModalContent>
         <Notification
-          backgroundcolor={colors.paper.cream}
-          bordercolor={colors.primary.sixHundred}
-          margin="0 0 1rem"
+          backgroundcolor={colors.paper.offWhite}
+          bordercolor={colors.red.twoHundred}
+          margin="0 0 2rem"
+          padding="1rem"
         >
           <Icon
-            margin="0 0.5rem 0 0"
+            backgroundcolor={colors.red.twoHundred}
+            padding="0.5rem"
+            borderradius="100%"
+            margin="0 1rem 0 0"
+            className="is-pulsating"
           >
-            <WarningCircle size="1rem" weight="duotone" color={colors.primary.sixHundred} />
+            <WarningCircle size="1.5rem" weight="fill" color={colors.red.sixHundred} />
           </Icon>
           <Content>
             <p>Applying a template will remove all existing layouts and styles from these pages.</p>
           </Content>
         </Notification>
-        <StyledFieldset
-          flexdirection="column"
-          margin="0 0 2rem 0"
+        <Grid
+          columns={2}
         >
-          <StyledLabel>Apply to</StyledLabel>
-          <RadioInput
-            margin="0 0 0.5rem 0"
+          <Cell
+            width={1}
           >
-            <input
-              id="apply-current"
-              name="apply"
-              type="radio"
-              value="apply-current"
-              onChange={e => setSelectedApply(e.target.value)}
-            />
-            <label htmlFor="apply-current">
-              <Icon margin="0 0.5rem 0 0">
-                {selectedApply === "apply-current" ? (
-                  <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                ) : (
-                  <Circle weight="regular" color={colors.link.normal} size={18} />
-                )}
-              </Icon>
-              <span>Current page only</span>
-            </label>
-          </RadioInput>
-          <RadioInput
-            margin="0 0 0.5rem 0"
-          >
-            <input
-              id="apply-all"
-              name="apply"
-              type="radio"
-              value="apply-all"
-              onChange={e => setSelectedApply(e.target.value)}
-            />
-            <label htmlFor="apply-all">
-              <Icon margin="0 0.5rem 0 0">
-                {selectedApply === "apply-all" ? (
-                  <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                ) : (
-                  <Circle weight="regular" color={colors.link.normal} size={18} />
-                )}
-              </Icon>
-              <span>All pages</span>
-            </label>
-          </RadioInput>
-          <RadioInput
-            margin="0 0 0.5rem 0"
-          >
-            <input
-              id="apply-range"
-              name="apply"
-              type="radio"
-              value="apply-range"
-              onChange={e => setSelectedApply(e.target.value)}
-            />
-            <label htmlFor="apply-range">
-              <Icon margin="0 0.5rem 0 0">
-                {selectedApply === "apply-range" ? (
-                  <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
-                ) : (
-                  <Circle weight="regular" color={colors.link.normal} size={18} />
-                )}
-              </Icon>
-              <span>Page range</span>
-            </label>
-          </RadioInput>
-          {selectedApply === "apply-range" && (
-            <PageRangeWrapper>
-              <PageRangeInput
-                type="number"
-                onChange={e => setLowerPageBound(e.target.value)}
-                onBlur={e => validateLowerPageBound(e.target.value)}
-                value={lowerPageBound}
-                max="48"
-                min="1"
-                placeholder="1"
-              />
-              <Icon
-                margin="0.125rem 0.25rem 0"
+            <StyledFieldset
+              flexdirection="column"
+              margin="0 0 2rem 0"
+            >
+              <StyledLabel>Apply to</StyledLabel>
+              <RadioInput
+                margin="0 0 0.5rem 0"
               >
-                <ArrowRight weight="regular" color={colors.gray.nineHundred} size={14} />
-              </Icon>
-              <PageRangeInput
-                type="number"
-                onChange={e => setUpperPageBound(e.target.value)}
-                onBlur={e => validateUpperPageBound(e.target.value)}
-                value={upperPageBound}
-                max="48"
-                min="1"
-                placeholder="12"
-              />
-            </PageRangeWrapper>
-          )}
-        </StyledFieldset>
+                <input
+                  id="apply-current"
+                  name="apply-current"
+                  type="radio"
+                  value="apply-current"
+                  onClick={e => handleTemplateSelect(e.target.value)}
+                />
+                <label htmlFor="apply-current">
+                  <Icon margin="0 0.5rem 0 0">
+                    {selectedApply === "apply-current" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>Current page only</span>
+                </label>
+              </RadioInput>
+              <RadioInput
+                margin="0 0 0.5rem 0"
+              >
+                <input
+                  id="apply-all"
+                  name="apply-all"
+                  type="radio"
+                  value="apply-all"
+                  onClick={e => handleTemplateSelect(e.target.value)}
+                />
+                <label htmlFor="apply-all">
+                  <Icon margin="0 0.5rem 0 0">
+                    {selectedApply === "apply-all" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>All pages</span>
+                </label>
+              </RadioInput>
+              <RadioInput
+                margin="0 0 0.5rem 0"
+              >
+                <input
+                  id="apply-range"
+                  name="apply-range"
+                  type="radio"
+                  value="apply-range"
+                  onClick={e => handleTemplateSelect(e.target.value)}
+                />
+                <label htmlFor="apply-range">
+                  <Icon margin="0 0.5rem 0 0">
+                    {selectedApply === "apply-range" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>Page range</span>
+                </label>
+              </RadioInput>
+              {selectedApply === "apply-range" && (
+                <PageRangeWrapper className={rangeIsFocused ? "is-focused" : null}>
+                  <PageRangeInput
+                    type="number"
+                    onChange={e => setLowerPageBound(e.target.value)}
+                    onBlur={e => {
+                      setRangeIsFocused(false)
+                      validateLowerPageBound(e.target.value)
+                    }}
+                    onFocus={() => setRangeIsFocused(true)}
+                    value={lowerPageBound}
+                    max={totalPages}
+                    min="1"
+                    placeholder="1"
+                  />
+                  <Icon
+                    margin="0.125rem 0.25rem 0"
+                  >
+                    <ArrowRight weight="regular" color={colors.gray.nineHundred} size={14} />
+                  </Icon>
+                  <PageRangeInput
+                    type="number"
+                    onChange={e => setUpperPageBound(e.target.value)}
+                    onBlur={e => {
+                      setRangeIsFocused(false)
+                      validateUpperPageBound(e.target.value)
+                    }}
+                    onFocus={() => setRangeIsFocused(true)}
+                    value={upperPageBound}
+                    max={totalPages}
+                    min="1"
+                    placeholder={totalPages / 2}
+                  />
+                </PageRangeWrapper>
+              )}
+            </StyledFieldset>
+          </Cell>
+          <Cell
+            width={1}
+          >
+            <StyledFieldset
+              flexdirection="column"
+              margin="0 0 2rem 0"
+            >
+              <StyledLabel>Frequency</StyledLabel>
+              <RadioInput
+                margin="0 0 0.5rem 0"
+              >
+                <input
+                  id="apply-even"
+                  name="apply-even"
+                  type="radio"
+                  value="apply-even"
+                  onClick={e => handleFrequencySelect("even")}
+                />
+                <label htmlFor="apply-even">
+                  <Icon margin="0 0.5rem 0 0">
+                    {frequency === "even" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>Even pages</span>
+                </label>
+              </RadioInput>
+              <RadioInput
+                margin="0 0 0.5rem 0"
+              >
+                <input
+                  id="apply-odd"
+                  name="apply-odd"
+                  type="radio"
+                  value="apply-odd"
+                  onClick={e => handleFrequencySelect("odd")}
+                />
+                <label htmlFor="apply-odd">
+                  <Icon margin="0 0.5rem 0 0">
+                    {frequency === "odd" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>Odd pages</span>
+                </label>
+              </RadioInput>
+              <RadioInput
+                margin="0 0 0.5rem 0"
+              >
+                <input
+                  id="apply-other"
+                  name="apply-other"
+                  type="radio"
+                  value="apply-other"
+                  onClick={e => handleFrequencySelect("other")}
+                />
+                <label htmlFor="apply-other">
+                  <Icon margin="0 0.5rem 0 0">
+                    {frequency === "other" ? (
+                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                    ) : (
+                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                    )}
+                  </Icon>
+                  <span>Every</span>
+                  <StyledInput
+                    type="number"
+                    padding="0.25rem 0.5rem"
+                    width="3.5rem"
+                    margin="0 0.25rem"
+                    textalign="center"
+                    value={frequencyNum}
+                    onChange={e => setFrequencyNum(parseInt(e.target.value))}
+                    onFocus={e => setFrequency("other")}
+                    min="1"
+                    max={totalPages}
+                  />
+                  <span>pages</span>
+                </label>
+              </RadioInput>
+            </StyledFieldset>
+          </Cell>
+        </Grid>
       </ModalContent>
       <ModalFooter
         justifycontent="flex-end"
       >
         <Button
-          backgroundcolor={colors.primary.oneHundred}
+          backgroundcolor={colors.gray.oneHundred}
           padding="0.5rem"
           borderradius="0.25rem"
           margin="0 0.5rem 0"

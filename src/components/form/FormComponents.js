@@ -192,13 +192,13 @@ const StyledRange = styled.div`
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: ${colors.blue.oneHundred};
-    border-radius: 0.25rem;
-    border: 1px solid ${colors.blue.sixHundred};
+    background-color: ${colors.white};
+    border-radius: 100%;
+    border: 2px solid ${colors.primary.sixHundred};
     box-shadow: 0 1px 2px ${colors.shadow.float};
     cursor: pointer;
-    height: 1rem;
-    margin-top: -0.25rem;
+    height: 1.25rem;
+    margin-top: -0.375rem;
     transition: box-shadow 0.2s;
     width: 1.25rem;
   }
@@ -206,16 +206,7 @@ const StyledRange = styled.div`
     width: 100%;
     height: 0.5rem;
     cursor: pointer;
-    background: ${colors.gray.threeHundred};
-  }
-  &::-moz-range-thumb {
-
-  }
-  &::-ms-thumb {
-
-  }
-  &:focus {
-    outline: none;
+    background: ${colors.primary.oneHundred};
   }
 `
 
@@ -294,6 +285,9 @@ const RadioInput = styled.div`
       border-color: ${colors.gray.sixHundred};
     }
   }
+  svg {
+    filter: drop-shadow(0px 0px 1px ${colors.primary.twoHundred});
+  }
   input[type="radio"] {
     opacity: 0;
     width: 0;
@@ -310,12 +304,12 @@ const RadioInput = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.gray.sixHundred};
+  color: ${colors.primary.fourHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.7rem"};
   font-weight: 700;
-  margin: ${props => props.margin || "0 0 0.75rem 0"};
+  margin: ${props => props.margin || "0 0 0.5rem 0"};
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`
@@ -326,9 +320,9 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
+  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: none;
+  border: 1px solid ${colors.primary.sixHundred};
   color: ${colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
@@ -336,16 +330,24 @@ const StyledInput = styled.input`
   margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "1rem"};
   text-align: ${props => props.textalign};
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
-    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
+    border-color: ${colors.red.sixHundred};
   }
   &.has-width-auto {
     width: auto;
   }
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    border-color: ${colors.primary.nineHundred};
+    box-shadow: 0 0 0 ${colors.primary.oneHundred};
+    transform: translate(1px, 1px);
     outline: none;
+  }
+  &:hover {
+    &:not(:focus) {
+      background-color: ${colors.primary.hover};
+    }
   }
   &::placeholder {
     color: ${colors.gray.fiveHundred};
@@ -366,7 +368,7 @@ const SelectIcon = styled.span`
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  box-shadow: 0 1px 2px 0 ${colors.shadow.float};
+  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: none;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;

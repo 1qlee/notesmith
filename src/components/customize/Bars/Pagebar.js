@@ -11,28 +11,39 @@ const StyledPage = styled.div`
   text-align: center;
   padding: 0.5rem;
   p {
-    font-size: 0.7rem;
+    color: ${colors.gray.sixHundred};
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
-    margin: 0.25rem 0 0 0;
+    font-size: 0.675rem;
+    margin: 0.5rem 0 0 0;
+    transition: color 0.2s;
     user-select: none;
   }
   svg {
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.07);
+    border: 1px solid ${colors.gray.threeHundred};
+    border-radius: 0.25rem;
     height: 64px;
-    width: 48px;
     pointer-events: none;
-    box-shadow: 0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    width: 48px;
   }
   &.is-active {
+    p {
+      color: ${colors.primary.sixHundred};
+      font-weight: 700;
+    }
     svg {
-      box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+      box-shadow: 0 0 0 ${colors.gray.oneHundred};
+      border-color: ${colors.gray.nineHundred};
+      transform: translate(1px, 1px);
     }
   }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
       svg {
-        box-shadow: 0 0 0 2px ${colors.blue.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+        box-shadow: 1px 1px 1px ${colors.gray.oneHundred};
+        border-color: ${colors.gray.sixHundred};
       }
     }
   }
@@ -45,7 +56,6 @@ function Page({
   setSelectedPage,
   setPageData,
   pageNumber,
-  pageSize
 }) {
   // change the selected page number
   const handleSelectPage = e => {
@@ -67,7 +77,7 @@ function Page({
          xmlns="http://www.w3.org/2000/svg"
          height="64"
          width="48"
-         viewBox={`0 0 ${pageSize.width} ${pageSize.height}`}
+         viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
          src={page}
          x="0"
          y="0"
@@ -80,10 +90,8 @@ function Page({
 function Pagebar({
   canvasPages,
   pageData,
-  pageSize,
   selectedPage,
   setPageData,
-  setPageSize,
   setSelectedPage,
   setPagebarLoading,
   pagebarLoading,
@@ -104,7 +112,7 @@ function Pagebar({
           justifycontent="center"
           height="100%"
         >
-          <Icon className="is-loading" color={colors.blue.threeHundred}>
+          <Icon className="is-loading" color={colors.primary.threeHundred}>
             <Loading />
           </Icon>
         </Flexbox>
@@ -125,7 +133,6 @@ function Pagebar({
               setSelectedPage={setSelectedPage}
               setPageData={setPageData}
               pageData={pageData}
-              pageSize={pageSize}
             />
           ))}
         </Flexbox>

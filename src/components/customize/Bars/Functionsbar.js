@@ -4,6 +4,14 @@ import { colors } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput } from "../../form/FormComponents"
+import TitleBox from "../BarComponents/TitleBox"
+
+const StyledFunctionsBar = styled.div`
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 1rem 0;
+  width: 100%;
+`
 
 const PageInput = styled.input`
   width: 50px;
@@ -17,12 +25,16 @@ const PageInput = styled.input`
 function Functionsbar({
   selectedPage,
   setSelectedPage,
-  totalPages
+  bookData,
+  setBookData,
+  bookId,
 }) {
+  const [showTitleInput, setShowTitleInput] = useState(false)
+  const [newBookTitle, setNewBookTitle] = useState("")
 
   function handlePageChange(value) {
-    if (value > totalPages) {
-      setSelectedPage(totalPages)
+    if (value > bookData.numOfPages) {
+      setSelectedPage(bookData.numOfPages)
     }
     else if (value < 1) {
       setSelectedPage(1)
@@ -33,45 +45,19 @@ function Functionsbar({
   }
 
   return (
-    <Flexbox
-      flex="flex"
-      padding="1rem 0"
-      justifycontent="space-between"
-      alignitems="center"
-      height="4rem"
-    >
+    <StyledFunctionsBar>
+      <TitleBox
+        bookData={bookData}
+        setBookData={setBookData}
+        bookId={bookId}
+      />
       <Flexbox
         flex="flex"
         alignitems="center"
       >
 
       </Flexbox>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        justifycontent="center"
-      >
-        <p>Page</p>
-        <StyledInput
-          type="number"
-          min="1"
-          width="3rem"
-          padding="0.25rem"
-          textalign="center"
-          margin="0 0.25rem"
-          max={totalPages}
-          value={selectedPage}
-          onChange={e => handlePageChange(e.target.value)}
-        />
-        <p>of {totalPages}</p>
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-      >
-
-      </Flexbox>
-    </Flexbox>
+    </StyledFunctionsBar>
   )
 }
 

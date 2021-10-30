@@ -1,36 +1,28 @@
 import React, { useState } from "react"
-import { spacing } from "../styles/variables"
-import { SwitchTransition, CSSTransition } from "react-transition-group"
+import { spacing } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
-import { Container, LayoutContainer } from "../components/layout/Container"
+import { Container, LayoutContainer } from "../layout/Container"
 import { Grid, Cell } from "styled-css-grid"
-import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Page from "../components/shop/Page"
-import EditPageForm from "../components/form/EditPageForm"
-import ProductInfo from "../components/shop/ProductInfo"
-import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
-import Seo from "../components/layout/Seo"
+import { SectionMain, Section, SectionContent } from "../layout/Section"
+import ProductInfo from "../shop/ProductInfo"
+import Layout from "../layout/Layout"
+import Nav from "../layout/Nav"
+import Seo from "../layout/Seo"
 
-const ShopPage = () => {
-  const [pageData, setPageData] = useState({
-    type: "Blank",
-    spacing: 5,
-    opacity: 1,
-    thickness: 1,
-    rows: 43,
-    columns: 27,
-    marginTop: 5,
-    marginLeft: 5,
-    width: 1
-  })
+const NotebookProduct = () => {
   const [bookData, setBookData] = useState({
-    size: "Medium",
+    size: "A5",
+    dimensions: "5.5in x 8.5in",
     width: 528,
     height: 816,
     color: "Cadet Gray",
-    quantity: 1
+    quantity: 1,
+    title: "Signature Notebook",
+    price: 20,
+    numOfPages: 160,
+    cover: "Sand matte lamination",
+    binding: "Wired",
   })
 
   return (
@@ -70,4 +62,4 @@ const ShopPage = () => {
   )
 }
 
-export default ShopPage
+export default NotebookProduct
