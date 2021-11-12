@@ -4,8 +4,8 @@ import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border: 2px solid ${props => props.bordercolor || colors.primary.sixHundred};
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layeredLarge};
+  border-radius: 0.25rem;
   left: 50%;
   min-width: ${widths.modal};
   position: absolute;
@@ -39,6 +39,9 @@ const ModalHeader = styled.div`
 const ModalContent = styled.div`
   padding: 1rem;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.oneHundred};
+  &:first-child {
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
 `
 
 const ModalFooter = styled.div`

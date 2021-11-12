@@ -64,10 +64,9 @@ const Notebook = ({ location, bookId }) => {
     pageWidth: 528,
     pageHeight: 816,
   })
-  const [selectedPageSvg, setSelectedPageSvg] = useState()
+  const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
-  const [noExistingBook, setNoExistingBook] = useState()
-  const [pagebarLoading, setPagebarLoading] = useState()
+  const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
 
   // creates blank svgs for when the user is not logged in
@@ -78,7 +77,12 @@ const Notebook = ({ location, bookId }) => {
     // we are using strings so we can use the react-inlinesvg library to render them
     for (let i = 0; i < bookData.numOfPages; i++) {
       // blank white rectangle inside the svg is set to pageSizes' width and height
-      svgArray.push(`<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${pageData.pageWidth}" height="${pageData.pageHeight}" fill="#fff"></rect></svg>`)
+      svgArray.push({
+        svg: `<svg id='page-${i}' xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
+        id: i,
+        pageNumber: i + 1, // index starts at 0
+        bookId: "invalid",
+      })
     }
 
     // set canvasPages in state
@@ -92,20 +96,15 @@ const Notebook = ({ location, bookId }) => {
       firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
         // if the book exists in the database
         if (snapshot.exists()) {
-          console.log("book exists")
           const bookVals = snapshot.val()
-          console.log(bookVals)
 
           // validate that this book belongs to the current user
           if (user.uid === snapshot.val().uid) {
-            console.log("correct user")
             // if the user uid and book uid match
             // set book in state
             setBookData(bookVals)
             // set pages in state
             getPages(bookVals.id)
-            // remove loading state
-            setInitializing(false)
           }
           else {
             navigate("/customize/notebook")
@@ -113,7 +112,6 @@ const Notebook = ({ location, bookId }) => {
         }
         // if the book doesn't exist
         else {
-          console.log("book doesnt exist")
           setNoExistingBook(true)
           setInitializing(false)
         }
@@ -128,16 +126,27 @@ const Notebook = ({ location, bookId }) => {
 
         // push each page into pagesArray
         snapshot.forEach(child => {
-          pagesArray.push(child.val().svg)
+          const page = child.val()
+
+          pagesArray.push({
+            svg: page.svg,
+            id: page.id,
+            pageNumber: page.pageNumber,
+            bookId: page.bookId,
+          })
         })
 
         setCanvasPages(pagesArray)
+      }).then(() => {
+        setInitializing(false)
+      }).catch(error => {
+        console.log(error)
+        setInitializing(false)
       })
     }
 
     // janky solution: checks for location state first
     if (location.state) {
-      console.log("location found")
       // then check if we have book data from the product page redirect
       // we can do this by checking for a single object property
       if (location.state.size) {
@@ -170,6 +179,7 @@ const Notebook = ({ location, bookId }) => {
           show: false,
           type: "",
         })
+
         // fetch book based on bookId in URL
         getBook()
       }
@@ -194,10 +204,9 @@ const Notebook = ({ location, bookId }) => {
       })
     }
 
-    console.log("notebook page has rendered")
-  }, [loading, user, initializing])
+  }, [loading, user, initializing, bookId])
 
-  if (loading || initializing || pagebarLoading) {
+  if (loading || initializing) {
     return <Loader />
   }
   return (
@@ -255,8 +264,6 @@ const Notebook = ({ location, bookId }) => {
                     setPageData={setPageData}
                     setSelectedPage={setSelectedPage}
                     setShowModal={setShowModal}
-                    setPagebarLoading={setPagebarLoading}
-                    pagebarLoading={pagebarLoading}
                   />
                 </Flexbox>
               </Flexbox>
@@ -279,6 +286,7 @@ const Notebook = ({ location, bookId }) => {
           )}
           {showModal.type === "template" && (
             <ApplyTemplateModal
+              bookId={bookId}
               bookData={bookData}
               pageData={pageData}
               setCanvasPages={setCanvasPages}

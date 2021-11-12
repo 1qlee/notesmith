@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
@@ -9,7 +9,6 @@ import Templatesbar from "./Bars/Templatesbar"
 import Checkoutbar from "./Bars/Checkoutbar"
 import Icon from "../Icon"
 import Button from "../Button"
-import { Flexbox } from "../layout/Flexbox"
 
 const StyledControls = styled.div`
   position: absolute;
@@ -23,10 +22,9 @@ const ControlsContent = styled.div`
   box-shadow: ${colors.shadow.layered};
   border: 1px solid ${colors.primary.sixHundred};
   border-radius: 0.25rem;
-  height: calc(100% - 2.5rem);
-  max-height: 716px;
+  height: 668px;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   &.is-absolute {
     position: absolute;
     top: 3.125rem;
@@ -45,6 +43,7 @@ const ControlsContent = styled.div`
 `
 
 const ControlTabs = styled.ul`
+  background-color: ${colors.white};
   display: inline-flex;
   list-style-type: none;
   margin-bottom: 1rem;
@@ -55,6 +54,7 @@ const ControlTabs = styled.ul`
 `
 
 const ControlTab = styled.li`
+  background-color: ${colors.white};
   color: ${colors.primary.threeHundred};
   font-family: "Inter", Helvetica, sans-serif;
   font-size: 0.825rem;
@@ -91,12 +91,9 @@ function Controls({
   setPageData,
   setSelectedPage,
   setShowModal,
-  setPagebarLoading,
-  pagebarLoading
 }) {
   const [activeTab, setActiveTab] = useState(1)
-  const [loading, setLoading] = useState(true)
-  const [pages, setPages] = useState()
+  const pagebarContent = useRef(null)
 
   return (
     <StyledControls>
@@ -126,15 +123,15 @@ function Controls({
           Checkout
         </ControlTab>
       </ControlTabs>
-      <ControlsContent>
+      <ControlsContent
+        ref={pagebarContent}
+      >
         <Pagebar
           canvasPages={canvasPages}
           pageData={pageData}
           selectedPage={selectedPage}
           setPageData={setPageData}
           setSelectedPage={setSelectedPage}
-          setPagebarLoading={setPagebarLoading}
-          pagebarLoading={pagebarLoading}
         />
       </ControlsContent>
       {activeTab === 2 && (

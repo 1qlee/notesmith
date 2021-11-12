@@ -9,6 +9,7 @@ import { BlankPageIcon, RuledPageIcon, GraphPageIcon, DotPageIcon } from "../Pag
 import Button from "../../Button"
 import DotControls from "../Template-controls/DotControls"
 import RuledControls from "../Template-controls/RuledControls"
+import GraphControls from "../Template-controls/GraphControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -78,6 +79,9 @@ function Templatesbar({
             )}
             {pageData.template === "dot" && (
               <DotControls pageData={pageData} setPageData={setPageData} />
+            )}
+            {pageData.template === "graph" && (
+              <GraphControls pageData={pageData} setPageData={setPageData} />
             )}
           </>
         )}

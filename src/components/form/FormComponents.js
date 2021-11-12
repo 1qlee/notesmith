@@ -93,7 +93,7 @@ function QuantityTracker(props) {
 
 const QuantityWrapper = styled.div`
   background-color: ${colors.white};
-  box-shadow: ${props => props.boxshadow || "0 0 0 1px ${colors.gray.threeHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white}"};
+  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: 0.25rem;
   padding: ${props => props.padding || "0.75rem"};
   display: inline-flex;
@@ -339,8 +339,8 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    border-color: ${colors.primary.nineHundred};
-    box-shadow: 0 0 0 ${colors.primary.oneHundred};
+    border-color: ${colors.blue.sixHundred};
+    box-shadow: 0 0 1px 1px ${colors.blue.twoHundred};
     transform: translate(1px, 1px);
     outline: none;
   }

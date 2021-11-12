@@ -106,7 +106,7 @@ const StyledLoader = styled.div`
   margin: 0 auto;
   text-align: center;
   height: 100%;
-  width: 100%;
+  width: calc(100% + 100px);
   top: 0;
   left: 0;
   position: absolute;

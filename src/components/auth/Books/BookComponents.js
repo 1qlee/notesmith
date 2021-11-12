@@ -53,7 +53,7 @@ function BookRadio({
 
 const BookRadioWrapper = styled.a`
   display: block;
-  box-shadow: 2px 2px 1px ${colors.primary.twoHundred};
+  box-shadow: ${colors.shadow.layeredSmall};
   background-color: ${colors.white};
   border-radius: 0.25rem;
   transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;

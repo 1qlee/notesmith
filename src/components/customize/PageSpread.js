@@ -5,6 +5,7 @@ import SVG from "react-inlinesvg"
 
 import Ruled from "./Templates/Ruled"
 import Dot from "./Templates/Dot"
+import Graph from "./Templates/Graph"
 
 function CoverPage({ pageData }) {
   return (
@@ -32,6 +33,7 @@ function Template({
   trimmedPageHeight,
   convertedPageWidth,
   pageData,
+  setPageData,
 }) {
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
@@ -61,10 +63,22 @@ function Template({
         </g>
       )}
       {pageData.template === "ruled" && (
-        <Ruled pageData={pageData} />
+        <Ruled
+          pageData={pageData}
+          setPageData={setPageData}
+        />
       )}
       {pageData.template === "dot" && (
-        <Dot pageData={pageData} />
+        <Dot
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "graph" && (
+        <Graph
+          pageData={pageData}
+          setPageData={setPageData}
+        />
       )}
     </svg>
   )
@@ -79,13 +93,8 @@ function PageSpread({
   setPageData,
   setSelectedPageSvg,
 }) {
-  const [activePage, setActivePage] = useState()
-  const [showCover, setShowCover] = useState({
-    side: "left",
-    show: true
-  })
   const [pageSvg, setPageSvg] = useState()
-  const [currentPageSide, setCurrentPageSide] = useState()
+  const [currentPageSide, setCurrentPageSide] = useState("right")
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
   const trimmedPageHeight = canvasSize.height - 2 // reduced to allow outline to show
@@ -94,28 +103,6 @@ function PageSpread({
   const pageSpreadWidth = convertedPageWidth * 2 // converted page spread width
 
   useEffect(() => {
-    // show proper cover if necessary
-    function showCover() {
-      if (selectedPage == 1) {
-        setShowCover({
-          side: "left",
-          show: true
-        })
-      }
-      else if (selectedPage === bookData.numOfPages) {
-        setShowCover({
-          side: "right",
-          show: true
-        })
-      }
-      else {
-        setShowCover({
-          side: "left",
-          show: false
-        })
-      }
-    }
-
     // if the selected page is even, then it must be the left page
     if (selectedPage % 2 === 0) {
       setCurrentPageSide("left")
@@ -123,9 +110,7 @@ function PageSpread({
     else {
       setCurrentPageSide("right")
     }
-
-    showCover()
-  }, [selectedPage, pageData])
+  }, [selectedPage, pageData, currentPageSide])
 
   return (
     <svg
@@ -137,7 +122,7 @@ function PageSpread({
       x={(canvasSize.width - pageSpreadWidth) / 2}
       y="0"
     >
-      {showCover.side === "left" && showCover.show ? (
+      {selectedPage === 1 ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           ref={pageLeftRef}
@@ -151,7 +136,7 @@ function PageSpread({
         </svg>
       ) : (
         <>
-          {selectedPage % 2 === 0 ? (
+          {currentPageSide === "left"? (
             <>
               <svg
                 id="page-background-left"
@@ -170,7 +155,7 @@ function PageSpread({
                   trimmedPageHeight={trimmedPageHeight}
                   convertedPageWidth={convertedPageWidth}
                   pageData={pageData}
-                  pageData={pageData}
+                  setPageData={setPageData}
                 />
               ) : (
                 <SVG
@@ -178,7 +163,7 @@ function PageSpread({
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
                   viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                  src={canvasPages[selectedPage - 1]}
+                  src={canvasPages[selectedPage - 1].svg}
                   x="1"
                   y="1"
                 />
@@ -200,7 +185,7 @@ function PageSpread({
                 height={trimmedPageHeight}
                 width={convertedPageWidth}
                 viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                src={canvasPages[selectedPage - 2]}
+                src={canvasPages[selectedPage - 2].svg}
                 x="1"
                 y="1"
               />
@@ -208,7 +193,7 @@ function PageSpread({
           )}
         </>
       )}
-      {showCover.side === "right" && showCover.show ? (
+      {selectedPage === bookData.numOfPages ? (
         <svg
           ref={pageRightRef}
           height={canvasSize.height}
@@ -221,7 +206,7 @@ function PageSpread({
         </svg>
       ) : (
         <>
-          {selectedPage % 2 !== 0 ? (
+          {currentPageSide === "right" ? (
             <>
               <svg
                 id="page-background-right"
@@ -240,7 +225,7 @@ function PageSpread({
                   trimmedPageHeight={trimmedPageHeight}
                   convertedPageWidth={convertedPageWidth}
                   pageData={pageData}
-                  pageData={pageData}
+                  setPageData={setPageData}
                 />
               ) : (
                 <SVG
@@ -248,7 +233,7 @@ function PageSpread({
                   height={trimmedPageHeight}
                   width={convertedPageWidth}
                   viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                  src={canvasPages[selectedPage - 1]}
+                  src={canvasPages[selectedPage - 1].svg}
                   x={convertedPageWidth + 2}
                   y="1"
                 />
@@ -270,7 +255,7 @@ function PageSpread({
                 height={trimmedPageHeight}
                 width={convertedPageWidth}
                 viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                src={canvasPages[selectedPage]}
+                src={canvasPages[selectedPage].svg}
                 x={convertedPageWidth + 2}
                 y="1"
               />

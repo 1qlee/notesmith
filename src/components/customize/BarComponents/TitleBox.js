@@ -83,6 +83,7 @@ function TitleBox({
     shadowcolor: colors.red.fourHundred,
   })
   const titleInput = useRef(null)
+  const [loading, setLoading] = useState(false)
 
   function hideErrorMsg() {
     // make the error msg disappear after 3secs
@@ -131,6 +132,7 @@ function TitleBox({
 
   function setNewBookTitle(title) {
     if (validateBookTitle(title)) {
+      setLoading(true)
       setBookData({
         ...bookData,
         title: title,
@@ -152,6 +154,7 @@ function TitleBox({
           shadowcolor: colors.green.fourHundred,
         })
 
+        setLoading(false)
         hideErrorMsg()
       })
     }
@@ -188,6 +191,7 @@ function TitleBox({
           }}
           onFocus={e => e.target.select()}
           onKeyDown={e => submitNewBookTitle(e)}
+          disabled={loading}
         />
       ) : (
         <p>{bookData.title}</p>

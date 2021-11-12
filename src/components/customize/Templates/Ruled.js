@@ -1,18 +1,11 @@
 import React from "react"
 import { convertToPx } from "../../../styles/variables"
 
-function Ruled({ pageData }) {
+function Ruled({
+  pageData,
+  setPageData,
+ }) {
   const lines = []
-
-  if (pageData.marginTop < 3.175) {
-    pageData.marginTop = 3.175
-  }
-  if (pageData.marginLeft < 3.175) {
-    pageData.marginLeft = 3.175
-  }
-  if (pageData.marginRight < 3.175) {
-    pageData.marginRight = 3.175
-  }
 
   for (let i = 0; i < pageData.rows; i++) {
     // calculations and conversions to px

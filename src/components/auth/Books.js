@@ -13,6 +13,7 @@ import { Select } from "../ui/Select"
 import { StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
 import BooksContainer from "./Books/BooksContainer"
+import Content from "../Content"
 import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
@@ -328,7 +329,6 @@ const Books = () => {
                 color={colors.white}
                 backgroundcolor={colors.primary.sixHundred}
                 borderradius="0.25rem"
-                shadowcolor={colors.primary.oneHundred}
                 onClick={() => handleShowModal(true, "createbook")}
               >
                 New book
@@ -350,11 +350,22 @@ const Books = () => {
         </SectionApp>
       </SectionMain>
       {showModal.show && (
-        <Modal setShowModal={setShowModal}>
+        <Modal
+          width="300px"
+          setShowModal={setShowModal}
+        >
           {showModal.type === "createbook" ? (
             <>
-              <ModalHeader>Enter book information</ModalHeader>
-              <ModalContent>
+              <ModalContent
+                backgroundcolor={colors.white}
+              >
+                <Content
+                  h3fontsize="1.25rem"
+                  margin="0 0 2rem 0"
+                >
+                  <h3>Create a new book</h3>
+                  <p>Enter a title for your new notebook and then select a type of notebook by clicking one of the boxes below.</p>
+                </Content>
                 <Flexbox
                   margin="0 0 1rem"
                 >
@@ -398,7 +409,6 @@ const Books = () => {
               <ModalFooter>
                 <Button
                   backgroundcolor={colors.primary.sixHundred}
-                  shadowcolor={colors.primary.oneHundred}
                   className={processing ? "is-loading" : null}
                   color={colors.white}
                   disabled={bookTitle.length === 0 || !bookData.size || processing}
@@ -417,18 +427,23 @@ const Books = () => {
             </>
           ) : (
             <>
-              <ModalHeader>
-                Delete book
-              </ModalHeader>
-              <ModalContent>
-                <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
+              <ModalContent
+                backgroundcolor={colors.white}
+              >
+                <Content
+                  h3fontsize="1.25rem"
+                  margin="0 0 0 0"
+                >
+                  <h3>Delete this book</h3>
+                  <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
+                </Content>
               </ModalContent>
               <ModalFooter
                 justifycontent="flex-end"
               >
                 <Button
-                  backgroundcolor={colors.white}
-                  color={colors.gray.nineHundred}
+                  backgroundcolor={colors.gray.oneHundred}
+                  boxshadow={colors.shadow.layeredSmall}
                   onClick={() => handleShowModal(false, "deletebook")}
                   margin="0 0.5rem 0 0"
                 >
@@ -436,7 +451,6 @@ const Books = () => {
                 </Button>
                 <Button
                   backgroundcolor={colors.red.sixHundred}
-                  shadowcolor={colors.red.twoHundred}
                   color={colors.white}
                   onClick={() => deleteBook(bookToBeDeleted)}
                 >

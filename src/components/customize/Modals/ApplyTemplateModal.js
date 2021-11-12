@@ -15,7 +15,7 @@ import Content from "../../Content"
 
 const PageRangeWrapper = styled.div`
   display: flex;
-  box-shadow: 3px 3px 1px ${colors.primary.twoHundred};
+  box-shadow: ${colors.shadow.layeredSmall};
   border: 1px solid ${colors.primary.sixHundred};
   padding: 0.25rem;
   align-items: center;
@@ -53,6 +53,7 @@ const PageRangeInput = styled.input`
 `
 
 function ApplyTemplateModal({
+  bookId,
   bookData,
   pageData,
   canvasPages,
@@ -61,18 +62,18 @@ function ApplyTemplateModal({
   selectedPage,
   selectedPageSvg,
 }) {
-  const { firebaseDb } = useFirebaseContext()
+  const { firebaseDb, user } = useFirebaseContext()
   const totalPages = parseInt(bookData.numOfPages)
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [frequency, setFrequency] = useState("")
-  const [frequencyNum, setFrequencyNum] = useState(3)
+  const [frequencyNum, setFrequencyNum] = useState(2)
   const [lowerPageBound, setLowerPageBound] = useState(1)
   const [upperPageBound, setUpperPageBound] = useState(totalPages / 2)
   const [rangeIsFocused, setRangeIsFocused] = useState(false)
   const [loading, setLoading] = useState(false)
 
   function handleTemplateApply(value) {
-    // selectedPage starts from 1, so have to subtract 1 accordingly so that it matches the array position
+    // selectedPage starts from 1 - have to subtract 1 accordingly so that it matches the array position
     const pageNumber = selectedPage - 1
     setLoading(true)
 
@@ -83,14 +84,38 @@ function ApplyTemplateModal({
     }, 10)
   }
 
+  // simple function to update a specific page's svg field in the database
+  // requires a pageId and a SVG string
+  function updatePageSvg(pageId, newPageSvg) {
+    if (user) {
+      const updates = {}
+      updates[`/pages/${pageId}/svg`] = newPageSvg
+
+      firebaseDb.ref().update(updates, error => {
+        if (error) {
+          console.log(error)
+        }
+        else {
+          console.log(`Successfully updated ${pageId}`)
+        }
+      })
+    }
+    else {
+      return
+    }
+  }
+
   function applyTemplate(value, pageNumber) {
     // clone the canvasPages array
     const canvasPagesClone = [...canvasPages]
+    const newPageSvg = selectedPageSvg.outerHTML
 
     switch(value) {
       case "apply-current":
         // change the corresponding page's svg in our cloned array
-        canvasPagesClone[pageNumber] = selectedPageSvg.outerHTML
+        canvasPagesClone[pageNumber].svg = newPageSvg
+        // update the svg field for this entry in the firebase db
+        updatePageSvg(canvasPagesClone[pageNumber].id, newPageSvg)
         break
       case "apply-range":
         // change the corresponding page's svg in our cloned array
@@ -100,21 +125,33 @@ function ApplyTemplateModal({
           switch(frequency) {
             case "even":
               if (i % 2 === 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = newPageSvg
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "odd":
               if (i % 2 !== 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = newPageSvg
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "other":
               if (i % frequencyNum === 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = newPageSvg
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             default:
-              canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              // change the corresponding page's svg in our cloned array
+              canvasPagesClone[i - 1].svg = newPageSvg
+              // update the svg field for each appropriate page in the firebase db
+              updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
           }
         }
         break
@@ -126,21 +163,33 @@ function ApplyTemplateModal({
           switch(frequency) {
             case "even":
               if (i % 2 === 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "odd":
               if (i % 2 !== 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "other":
               if (i % frequencyNum === 0) {
-                canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+                // change the corresponding page's svg in our cloned array
+                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                // update the svg field for each appropriate page in the firebase db
+                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             default:
-              canvasPagesClone[i - 1] = selectedPageSvg.outerHTML
+              // change the corresponding page's svg in our cloned array
+              canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+              // update the svg field for each appropriate page in the firebase db
+              updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
           }
         }
         break
@@ -148,7 +197,7 @@ function ApplyTemplateModal({
         break
     }
 
-    // update canvasPages with our updated array clone
+    // update canvasPages with the updated array clone
     setCanvasPages(canvasPagesClone)
 
     setLoading(false)

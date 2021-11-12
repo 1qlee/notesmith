@@ -1,10 +1,9 @@
-import React, { useRef } from "react"
+import React from "react"
 import { convertToPx, convertToMM } from "../../../styles/variables"
 
 import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
-import RestrictedInput from "./RestrictedInput"
 
 function RuledControls({ pageData, setPageData, pageSize }) {
   const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
@@ -12,10 +11,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
   const lineHeight = convertToPx((pageData.rows - 1) * pageData.spacing)
   const verticalMargin = (pageData.pageHeight - lineHeight) / 2
   const bottomMargin = pageData.pageHeight - lineHeight - convertToPx(3.175) - 1
-
-  const marginTopInput = useRef(null)
-  const marginRightInput = useRef(null)
-  const marginLeftInput = useRef(null)
 
   function changeAlignment(value) {
     switch(value) {
@@ -26,8 +21,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           marginLeft: 3.175,
           marginRight: convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175)),
         })
-        marginLeftInput.current.value = 3.175
-        marginRightInput.current.value = convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175))
         break
       case "right":
         setPageData({
@@ -36,8 +29,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           marginRight: 3.175,
           marginLeft: convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175)),
         })
-        marginLeftInput.current.value = convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175))
-        marginRightInput.current.value = 3.175
         break
       case "center":
         setPageData({
@@ -46,8 +37,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           marginLeft: convertToMM(horizontalMargin),
           marginRight: convertToMM(horizontalMargin),
         })
-        marginLeftInput.current.value = convertToMM(horizontalMargin)
-        marginRightInput.current.value = convertToMM(horizontalMargin)
         break
       case "top":
         setPageData({
@@ -55,7 +44,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           alignmentVertical: value,
           marginTop: 3.175,
         })
-        marginTopInput.current.value = 3.175
         break
       case "middle":
         setPageData({
@@ -63,7 +51,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           alignmentVertical: value,
           marginTop: convertToMM(verticalMargin),
         })
-        marginTopInput.current.value = convertToMM(verticalMargin)
         break
       case "bottom":
         setPageData({
@@ -71,59 +58,9 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           alignmentVertical: value,
           marginTop: convertToMM(bottomMargin),
         })
-        marginTopInput.current.value = convertToMM(bottomMargin)
         break
       default:
         break
-    }
-  }
-
-  function validateInput(value, limit) {
-    if (value < limit) {
-      return false
-    }
-    else {
-      return true
-    }
-  }
-
-  function validateOnBlur(e, limit, cb) {
-    const { value } = e.target
-
-    if (validateInput(value, limit)) {
-      return cb(value)
-    }
-    else {
-      e.target.value = limit
-      return cb(limit)
-    }
-  }
-
-  function validateOnKeydown(e, limit, cb) {
-    const { value } = e.target
-    // if Enter or ESC
-    if (e.keyCode === 13 || e.keyCode === 27) {
-      e.target.blur()
-
-      if (validateInput(value, limit)) {
-        return cb(value)
-      }
-      else {
-        e.target.value = limit
-        return cb(limit)
-      }
-    }
-  }
-
-  function validateMinValue(value, minValue, cb, maxValue) {
-    if (value <= minValue) {
-      return cb(minValue)
-    }
-    else if (value > maxValue) {
-      return cb(maxValue)
-    }
-    else {
-      return cb(value)
     }
   }
 
@@ -145,7 +82,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           margin="0 0.5rem 0 0"
           width="50%"
         >
-          <StyledLabel>Lines</StyledLabel>
+          <StyledLabel>Rows</StyledLabel>
           <StyledInput
             type="number"
             min="1"
@@ -153,11 +90,32 @@ function RuledControls({ pageData, setPageData, pageSize }) {
             value={pageData.rows}
             padding="0.5rem"
             width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            onChange={e => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: value,
-            }))}
+              rows: e.target.value,
+            })}
+          />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          margin="0 0.5rem 0 0"
+          width="33%"
+        >
+          <StyledLabel>Columns</StyledLabel>
+          <StyledInput
+            type="number"
+            min="1"
+            step="1"
+            value={pageData.columns}
+            padding="0.5rem"
+            width="100%"
+            onChange={e => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              columns: e.target.value,
+            })}
           />
         </Flexbox>
         <Flexbox
@@ -174,11 +132,11 @@ function RuledControls({ pageData, setPageData, pageSize }) {
             value={pageData.spacing}
             padding="0.5rem"
             width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            onChange={e => setPageData({
               ...pageData,
               alignmentVertical: "",
-              spacing: value
-            }))}
+              spacing: e.target.value
+            })}
           />
         </Flexbox>
       </Flexbox>
@@ -194,14 +152,13 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledLabel>Top margin</StyledLabel>
           <StyledInput
-            ref={marginTopInput}
             type="number"
+            min="0"
             step="1"
             padding="0.5rem"
             width="100%"
-            defaultValue={pageData.marginTop}
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
+            value={pageData.marginTop}
+            onChange={e => setPageData({...pageData, alignmentVertical: "", marginTop: e.target.value})}
           />
         </Flexbox>
         <Flexbox
@@ -211,14 +168,12 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
-            ref={marginLeftInput}
             type="number"
             step="1"
             padding="0.5rem"
             width="100%"
-            defaultValue={pageData.marginLeft}
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginLeft: value }))}
+            value={pageData.marginLeft}
+            onChange={e => setPageData({...pageData, alignmentHorizontal: "", marginLeft: e.target.value})}
           />
         </Flexbox>
         <Flexbox
@@ -228,14 +183,12 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledLabel>Right margin</StyledLabel>
           <StyledInput
-            ref={marginRightInput}
             type="number"
             step="1"
             padding="0.5rem"
             width="100%"
-            defaultValue={pageData.marginRight}
-            onBlur={e => validateOnBlur(e, 3.175, value =>setPageData({...pageData, alignmentHorizontal: "", marginRight: value}))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginRight: value }))}
+            value={pageData.marginRight}
+            onChange={e => setPageData({...pageData, alignmentHorizontal: "", marginRight: e.target.value})}
           />
         </Flexbox>
       </Flexbox>
@@ -252,7 +205,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.2, value => setPageData({...pageData, opacity: value}), 1)}
+            onChange={e => setPageData({...pageData, opacity: e.target.value})}
             type="number"
             min="0.2"
             step="0.1"
@@ -288,7 +241,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.3, value => setPageData({...pageData, thickness: value}), 5)}
+            onChange={e => setPageData({...pageData, thickness: e.target.value})}
             type="number"
             min="0.3"
             step="0.1"
