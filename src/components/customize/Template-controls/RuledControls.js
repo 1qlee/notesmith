@@ -4,7 +4,7 @@ import { convertToPx, convertToMM } from "../../../styles/variables"
 import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
-import RestrictedInput from "./RestrictedInput"
+import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function RuledControls({ pageData, setPageData, pageSize }) {
   const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
@@ -75,55 +75,6 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         break
       default:
         break
-    }
-  }
-
-  function validateInput(value, limit) {
-    if (value < limit) {
-      return false
-    }
-    else {
-      return true
-    }
-  }
-
-  function validateOnBlur(e, limit, cb) {
-    const { value } = e.target
-
-    if (validateInput(value, limit)) {
-      return cb(value)
-    }
-    else {
-      e.target.value = limit
-      return cb(limit)
-    }
-  }
-
-  function validateOnKeydown(e, limit, cb) {
-    const { value } = e.target
-    // if Enter or ESC
-    if (e.keyCode === 13 || e.keyCode === 27) {
-      e.target.blur()
-
-      if (validateInput(value, limit)) {
-        return cb(value)
-      }
-      else {
-        e.target.value = limit
-        return cb(limit)
-      }
-    }
-  }
-
-  function validateMinValue(value, minValue, cb, maxValue) {
-    if (value <= minValue) {
-      return cb(minValue)
-    }
-    else if (value > maxValue) {
-      return cb(maxValue)
-    }
-    else {
-      return cb(value)
     }
   }
 
@@ -211,12 +162,12 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
-            ref={marginLeftInput}
-            type="number"
-            step="1"
-            padding="0.5rem"
-            width="100%"
             defaultValue={pageData.marginLeft}
+            padding="0.5rem"
+            ref={marginLeftInput}
+            step="1"
+            type="number"
+            width="100%"
             onBlur={e => validateOnBlur(e, 3.175, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
             onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginLeft: value }))}
           />
@@ -252,9 +203,9 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.2, value => setPageData({...pageData, opacity: value}), 1)}
+            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({...pageData, opacity: value}), 1)}
             type="number"
-            min="0.2"
+            min="0.5"
             step="0.1"
             max="1"
             padding="0.5rem"
@@ -266,7 +217,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           >
             <input
               type="range"
-              min="0.2"
+              min="0.5"
               step="0.1"
               max="1"
               value={pageData.opacity}
@@ -288,11 +239,11 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.3, value => setPageData({...pageData, thickness: value}), 5)}
+            onChange={e => validateMinValue(e.target.value, 0.175, value => setPageData({...pageData, thickness: value}), 3)}
             type="number"
-            min="0.3"
+            min="0.175"
             step="0.1"
-            max="5"
+            max="3"
             padding="0.5rem"
             width="4rem"
           />
@@ -302,9 +253,9 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           >
             <input
               type="range"
-              min="0.3"
+              min="0.175"
               step="0.1"
-              max="5"
+              max="3"
               value={pageData.thickness}
               onChange={e => setPageData({...pageData, thickness: e.target.value})}
             />
