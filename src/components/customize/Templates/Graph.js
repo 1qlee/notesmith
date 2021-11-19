@@ -12,8 +12,20 @@ function Ruled({ pageData, setPageData }) {
     // grid column lines
     for (let i = 0; i < pageData.columns; i++) {
       const lineY1 = convertToPx(pageData.marginTop - (pageData.thickness / 2))
-      const lineY2 = convertToPx((pageData.rows - 1) * pageData.spacing) + convertToPx(pageData.marginTop + (pageData.thickness / 2))
-      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft)
+      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop + (pageData.thickness / 2))
+      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing)
+      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft)
+      // first  column
+      const firstColumnLine = {
+        fill: "none",
+        stroke: "#000",
+        strokeWidth: lineThickness,
+        opacity: pageData.opacity,
+        x1: lineXFirst,
+        x2: lineXFirst,
+        y1: lineY1,
+        y2: lineY2,
+      }
       // line object that holds line properties
       const line = {
         fill: "none",
@@ -24,6 +36,11 @@ function Ruled({ pageData, setPageData }) {
         x2: lineX,
         y1: lineY1,
         y2: lineY2,
+      }
+
+      if (i === 0) {
+        console.log("pushing first column")
+        lineColumnsArray.push(firstColumnLine)
       }
 
       // break the loop if columns break past the right side margin
@@ -40,6 +57,7 @@ function Ruled({ pageData, setPageData }) {
     }
 
     setLineColumns(lineColumnsArray)
+    console.log("linecolumns: ", lineColumns)
   }
 
   function createRows() {
@@ -49,8 +67,20 @@ function Ruled({ pageData, setPageData }) {
     for (let i = 0; i < pageData.rows; i++) {
       // calculations and conversions to px
       const lineX1 = convertToPx(pageData.marginLeft)
-      const lineX2 = convertToPx((pageData.columns - 1) * pageData.spacing + pageData.marginLeft)
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop)
+      const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft)
+      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing)
+      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop)
+      // first row line
+      const firstRowLine = {
+        fill: "none",
+        stroke: "#000",
+        strokeWidth: lineThickness,
+        opacity: pageData.opacity,
+        x1: lineX1,
+        x2: lineX2,
+        y1: lineYFirst,
+        y2: lineYFirst,
+      }
       // line object
       const line = {
         fill: "none",
@@ -63,12 +93,17 @@ function Ruled({ pageData, setPageData }) {
         y2: lineY,
       }
 
+      if (i === 0) {
+        console.log("pushing first row")
+        lineRowsArray.push(firstRowLine)
+      }
+
       // loop will exit if the last line has passed the height of the page
       if (lineY > pageData.pageHeight - convertToPx(3.175)) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
-          rows: i
+          rows: i,
         })
         break
       }
@@ -78,6 +113,7 @@ function Ruled({ pageData, setPageData }) {
     }
 
     setLineRows(lineRowsArray)
+    console.log("linerows: ", lineRows)
   }
 
   useEffect(() => {

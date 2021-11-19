@@ -142,6 +142,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
+              alignmentHorizontal: "",
               spacing: value
             }))}
           />
