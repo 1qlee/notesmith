@@ -1,20 +1,26 @@
-import React, { useState } from "react"
+import React, { useState, memo } from "react"
+import memoize from "memoize-one"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import SVG from "react-inlinesvg"
 import Loading from "../../../assets/loading.svg"
+import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
 
 const StyledPage = styled.div`
   text-align: center;
-  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0.75rem;
   p {
     color: ${colors.gray.sixHundred};
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 0.675rem;
-    margin: 0.5rem 0 0 0;
+    margin: 0.75rem 0 0 0;
     transition: color 0.2s;
     user-select: none;
   }
@@ -22,10 +28,10 @@ const StyledPage = styled.div`
     box-shadow: 2px 2px 6px rgba(0,0,0,0.07);
     border: 1px solid ${colors.gray.threeHundred};
     border-radius: 0.25rem;
-    height: 80px;
+    height: 64px;
     pointer-events: none;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    width: 60px;
+    width: 48px;
   }
   &.is-active {
     p {
@@ -49,13 +55,25 @@ const StyledPage = styled.div`
   }
 `
 
-function Page({
-  page,
-  pageData,
-  selectedPage,
-  setSelectedPage,
-  pageNumber,
-}) {
+const Page = memo((props) => {
+  const {
+    data,
+    columnIndex,
+    rowIndex,
+    style,
+    isScrolling,
+    index,
+  } = props
+  const {
+    canvasPages,
+    pageData,
+    selectedPage,
+    setSelectedPage,
+    pageNumber,
+  } = data
+  console.log(index, rowIndex, columnIndex)
+  // current page based on index of canvasPages
+  const currentPage = canvasPages[rowIndex]
   // change the selected page number
   const handleSelectPage = value => {
     const pageNumber = parseInt(value)
@@ -63,22 +81,38 @@ function Page({
   }
 
   return (
-     <StyledPage
-       onClick={e => handleSelectPage(pageNumber)}
-       className={selectedPage === pageNumber ? "is-active" : null}
-     >
-       <SVG
-         xmlns="http://www.w3.org/2000/svg"
-         viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-         src={page}
-         loader={<span>Loading</span>}
-         x="0"
-         y="0"
-       />
-      <p>{pageNumber}</p>
-     </StyledPage>
+    <StyledPage
+      onClick={e => handleSelectPage(currentPage.pageNumber)}
+      className={selectedPage === currentPage.pageNumber ? "is-active" : null}
+      style={style}
+    >
+      {isScrolling ? (
+        <>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+            x="0"
+            y="0"
+          >
+            <rect width={pageData.pageWidth} height={pageData.pageHeight} fill='#fff'></rect>
+          </svg>
+          <p>{currentPage.pageNumber}</p>
+        </>
+      ) : (
+        <>
+          <SVG
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+            src={currentPage.svg}
+            x="0"
+            y="0"
+          />
+          <p>{currentPage.pageNumber}</p>
+        </>
+      )}
+    </StyledPage>
   )
-}
+}, areEqual)
 
 function Pagebar({
   canvasPages,
@@ -87,26 +121,37 @@ function Pagebar({
   setPageData,
   setSelectedPage,
 }) {
+  const createItemData = memoize((canvasPages, pageData, selectedPage) => ({
+    canvasPages,
+    pageData,
+    selectedPage,
+    setSelectedPage,
+  }))
+  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage)
 
   return (
-    <Flexbox
-      flex="flex"
-      flexwrap="wrap"
-      justifycontent="center"
-      height="100%"
-      padding="1rem"
+    <WindowGrid
+      useIsScrolling
+      columnCount={4}
+      columnWidth={64}
+      height={496}
+      rowCount={40}
+      rowHeight={112}
+      width={300}
+      overscanColumnCount={0}
+      overscanRowCount={0}
+      style={{
+        backgroundColor: 'white',
+        borderRadius: "0.25rem",
+        paddingTop: "1rem",
+        boxShadow: colors.shadow.layered,
+        border: `1px solid ${colors.primary.sixHundred}`,
+        overflowX: "hidden",
+      }}
+      itemData={itemData}
     >
-      {canvasPages.map(page => (
-        <Page
-          key={page.id}
-          page={page.svg}
-          pageNumber={page.pageNumber}
-          selectedPage={selectedPage}
-          setSelectedPage={setSelectedPage}
-          pageData={pageData}
-        />
-      ))}
-    </Flexbox>
+      {Page}
+    </WindowGrid>
   )
 }
 

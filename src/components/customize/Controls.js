@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
@@ -22,7 +22,7 @@ const ControlsContent = styled.div`
   box-shadow: ${colors.shadow.layered};
   border: 1px solid ${colors.primary.sixHundred};
   border-radius: 0.25rem;
-  height: 668px;
+  height: 496px;
   overflow-x: hidden;
   overflow-y: scroll;
   &.is-absolute {
@@ -93,7 +93,6 @@ function Controls({
   setShowModal,
 }) {
   const [activeTab, setActiveTab] = useState(1)
-  const pagebarContent = useRef(null)
 
   return (
     <StyledControls>
@@ -123,17 +122,13 @@ function Controls({
           Checkout
         </ControlTab>
       </ControlTabs>
-      <ControlsContent
-        ref={pagebarContent}
-      >
-        <Pagebar
-          canvasPages={canvasPages}
-          pageData={pageData}
-          selectedPage={selectedPage}
-          setPageData={setPageData}
-          setSelectedPage={setSelectedPage}
-        />
-      </ControlsContent>
+      <Pagebar
+        canvasPages={canvasPages}
+        pageData={pageData}
+        selectedPage={selectedPage}
+        setPageData={setPageData}
+        setSelectedPage={setSelectedPage}
+      />
       {activeTab === 2 && (
         <ControlsContent className="is-absolute">
           <Templatesbar

@@ -13,15 +13,15 @@ function CoverPage({ pageData }) {
       <rect
         width={pageData.pageWidth}
         height={pageData.pageHeight}
-        fill={colors.primary.sixHundred}>
+        fill={colors.white}>
       </rect>
       <text
-        x={(pageData.pageWidth / 2) - 21}
+        x={(pageData.pageWidth / 2) - 80}
         y={pageData.pageHeight / 2}
         width={pageData.pageWidth}
-        fill={colors.primary.white}
+        fill={colors.gray.nineHundred}
       >
-        COVER
+        THIS IS THE COVER PAGE
       </text>
     </>
   )

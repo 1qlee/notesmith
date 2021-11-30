@@ -31,7 +31,10 @@ function Ruled({
       // loop will exit if the last line has passed the height of the page
       if (lineY > pageData.pageHeight - convertToPx(3.175)) {
         // change the number of rows displayed
-        pageData.rows = i
+        setPageData({
+          ...pageData,
+          rows: i,
+        })
         break
       }
       else {

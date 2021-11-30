@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Book, HandWaving, Mouse, Package } from "phosphor-react"
 import { colors, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
@@ -49,70 +48,14 @@ const chapterData = {
 
 const IndexPage = ({ data }) => {
   const [ hideNavbar, setHideNavbar ] = useState(false)
-  const [ chapterOnePosition, setchapterOnePosition ] = useState()
-  const [ chapterTwoPosition, setchapterTwoPosition ] = useState()
-  const [ chapterThreePosition, setchapterThreePosition ] = useState()
-  const [ chapterFourPosition, setchapterFourPosition ] = useState()
-  const [ chapterFivePosition, setchapterFivePosition ] = useState()
-  const [ currentChapterTitle, setCurrentChapterTitle ] = useState(chapterData.chapterOne.title)
-  const [ currentChapterNumber, setCurrentChapterNumber ] = useState(chapterData.chapterOne.chapter)
-
-  const setPosition = (element, section) => {
-    // element is passed from each section's ref and section is just a corresponding number value
-    if (element) {
-      switch(section) {
-        case 1:
-          return setchapterOnePosition(element.offsetHeight)
-        case 2:
-          return setchapterTwoPosition(element.offsetTop)
-        case 3:
-          return setchapterThreePosition(element.offsetTop)
-        case 4:
-          return setchapterFourPosition(element.offsetTop)
-        case 5:
-          return setchapterFivePosition(element.offsetTop)
-        default:
-          return 0
-      }
-    }
-  }
-
-  useScrollPosition(({ prevPos, currPos }) => {
-    const isHidden = currPos.y < prevPos.y
-
-    if (isHidden !== hideNavbar) {
-      setHideNavbar(isHidden)
-    }
-    if (chapterOnePosition / 1.2 > -currPos.y) {
-      setCurrentChapterTitle(chapterData.chapterOne.title)
-      setCurrentChapterNumber(chapterData.chapterOne.chapter)
-    }
-    if (chapterOnePosition / 1.2 < -currPos.y && -currPos.y > chapterTwoPosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterTwo.title)
-      setCurrentChapterNumber(chapterData.chapterTwo.chapter)
-    }
-    if (chapterTwoPosition / 1.2 < -currPos.y && -currPos.y > chapterThreePosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterThree.title)
-      setCurrentChapterNumber(chapterData.chapterThree.chapter)
-    }
-    if (chapterFourPosition / 1.2 < -currPos.y && -currPos.y > chapterFourPosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterFour.title)
-      setCurrentChapterNumber(chapterData.chapterFour.chapter)
-    }
-    if (chapterFivePosition / 1.2 < -currPos.y && -currPos.y > chapterFivePosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterFive.title)
-      setCurrentChapterNumber(chapterData.chapterFive.chapter)
-    }
-
-  }, [chapterOnePosition, chapterTwoPosition, chapterThreePosition, hideNavbar])
 
   return (
     <Layout>
       <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
-      <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
+      <Nav hideNavbar={hideNavbar}></Nav>
       <SectionMain>
         <Section>
-          <Container ref={element => setPosition(element, 1)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
                 <Grid
@@ -157,7 +100,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section backgroundcolor={colors.primary.sixHundred}>
-          <Container ref={element => setPosition(element, 1)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
                 <Grid
@@ -185,7 +128,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section>
-          <Container ref={element => setPosition(element, 2)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
                 <Grid
@@ -353,7 +296,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section>
-          <Container ref={element => setPosition(element, 3)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
                 <Grid
@@ -418,7 +361,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section>
-          <Container ref={element => setPosition(element, 4)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
               <Content
@@ -499,7 +442,7 @@ const IndexPage = ({ data }) => {
         <Section
           backgroundcolor={colors.paper.offWhite}
         >
-          <Container ref={element => setPosition(element, 5)}>
+          <Container>
             <LayoutContainer>
               <SectionContent>
                 <Grid

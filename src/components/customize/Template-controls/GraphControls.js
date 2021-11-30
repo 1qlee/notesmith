@@ -7,11 +7,12 @@ import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function RuledControls({ pageData, setPageData, pageSize }) {
-  const lineWidth = convertToPx((pageData.columns - 1) * pageData.spacing)
-  const horizontalMargin = (pageData.pageWidth - lineWidth) / 2
-  const lineHeight = convertToPx((pageData.rows - 1) * pageData.spacing)
-  const verticalMargin = (pageData.pageHeight - lineHeight) / 2
-  const bottomMargin = pageData.pageHeight - lineHeight - convertToPx(3.175) - 1
+  const lineWidth = convertToPx(pageData.columns * pageData.spacing)
+  const horizontalCenter = convertToMM((pageData.pageWidth - lineWidth) / 2)
+  const lineHeight = convertToPx(pageData.rows * pageData.spacing)
+  const verticalMargin = convertToMM((pageData.pageHeight - lineHeight) / 2)
+  const bottomMargin = convertToMM(pageData.pageHeight - lineHeight - convertToPx(3.175) - 1)
+  const rightMargin = convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175) - 1)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -26,21 +27,21 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         })
         marginLeftInput.current.value = 3.175
         break
-      case "right":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175)),
-        })
-        marginLeftInput.current.value = convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175))
-        break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: convertToMM(horizontalMargin),
+          marginLeft: horizontalCenter,
         })
-        marginLeftInput.current.value = convertToMM(horizontalMargin)
+        marginLeftInput.current.value = horizontalCenter
+        break
+      case "right":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: rightMargin,
+        })
+        marginLeftInput.current.value = rightMargin
         break
       case "top":
         setPageData({
@@ -54,17 +55,17 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: convertToMM(verticalMargin),
+          marginTop: verticalMargin,
         })
-        marginTopInput.current.value = convertToMM(verticalMargin)
+        marginTopInput.current.value = verticalMargin
         break
       case "bottom":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: convertToMM(bottomMargin),
+          marginTop: bottomMargin,
         })
-        marginTopInput.current.value = convertToMM(bottomMargin)
+        marginTopInput.current.value = bottomMargin
         break
       default:
         break

@@ -39,7 +39,6 @@ function Ruled({ pageData, setPageData }) {
       }
 
       if (i === 0) {
-        console.log("pushing first column")
         lineColumnsArray.push(firstColumnLine)
       }
 
@@ -57,7 +56,6 @@ function Ruled({ pageData, setPageData }) {
     }
 
     setLineColumns(lineColumnsArray)
-    console.log("linecolumns: ", lineColumns)
   }
 
   function createRows() {
@@ -94,7 +92,6 @@ function Ruled({ pageData, setPageData }) {
       }
 
       if (i === 0) {
-        console.log("pushing first row")
         lineRowsArray.push(firstRowLine)
       }
 
@@ -113,7 +110,6 @@ function Ruled({ pageData, setPageData }) {
     }
 
     setLineRows(lineRowsArray)
-    console.log("linerows: ", lineRows)
   }
 
   useEffect(() => {
