@@ -135,6 +135,7 @@ function Controls({
             pageData={pageData}
             setShowModal={setShowModal}
             setPageData={setPageData}
+            selectedPage={selectedPage}
           >
             Templates
           </Templatesbar>

@@ -27,29 +27,74 @@ function Templatesbar({
   pageData,
   setPageData,
   setShowModal,
+  selectedPage,
 }) {
   const [loading, setLoading] = useState(false)
 
   function handleTemplateSelect(template) {
     // set initial values for page data
-    setPageData({
-      ...pageData,
-      template: template,
-      alignmentHorizontal: "center",
-      alignmentVertical: "middle",
-      spacing: 5,
-      opacity: 1,
-      thickness: 0.175,
-      dotRadius: 0.6,
-      rows: 43,
-      columns: 27,
-      marginTop: 5,
-      marginBottom: 5,
-      marginLeft: 5,
-      marginRight: 5,
-      width: 1,
-      lineWidth: pageData.width
-    })
+    switch(template) {
+      case "ruled":
+        setPageData({
+          ...pageData,
+          template: template,
+          alignmentHorizontal: "center",
+          alignmentVertical: "middle",
+          spacing: 5,
+          opacity: 1,
+          thickness: 0.175,
+          dotRadius: 0.6,
+          rows: 43,
+          columns: 27,
+          marginTop: 5,
+          marginBottom: 5,
+          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
+          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          width: 100,
+          lineWidth: pageData.width
+        })
+        break
+      case "dot":
+        setPageData({
+          ...pageData,
+          template: template,
+          alignmentHorizontal: "center",
+          alignmentVertical: "middle",
+          spacing: 5,
+          opacity: 1,
+          thickness: 0.175,
+          dotRadius: 0.6,
+          rows: 43,
+          columns: 27,
+          marginTop: 5,
+          marginBottom: 5,
+          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
+          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          width: 1,
+          lineWidth: pageData.width
+        })
+        break
+      default:
+        setPageData({
+          ...pageData,
+          template: template,
+          alignmentHorizontal: "center",
+          alignmentVertical: "middle",
+          spacing: 5,
+          opacity: 1,
+          thickness: 0.175,
+          dotRadius: 0.6,
+          rows: 43,
+          columns: 27,
+          marginTop: 5,
+          marginBottom: 5,
+          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
+          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          width: 1,
+          lineWidth: pageData.width
+        })
+        break
+    }
   }
 
   return (
@@ -76,13 +121,25 @@ function Templatesbar({
         {pageData.template !== "blank" && pageData.template !== "none" && (
           <>
             {pageData.template === "ruled" && (
-              <RuledControls pageData={pageData} setPageData={setPageData} />
+              <RuledControls
+                selectedPage={selectedPage}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
             )}
             {pageData.template === "dot" && (
-              <DotControls pageData={pageData} setPageData={setPageData} />
+              <DotControls
+                selectedPage={selectedPage}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
             )}
             {pageData.template === "graph" && (
-              <GraphControls pageData={pageData} setPageData={setPageData} />
+              <GraphControls
+                selectedPage={selectedPage}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
             )}
           </>
         )}
