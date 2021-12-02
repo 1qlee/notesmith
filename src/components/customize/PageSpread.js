@@ -66,18 +66,21 @@ function Template({
         <Ruled
           pageData={pageData}
           setPageData={setPageData}
+          currentPageSide={currentPageSide}
         />
       )}
       {pageData.template === "dot" && (
         <Dot
           pageData={pageData}
           setPageData={setPageData}
+          currentPageSide={currentPageSide}
         />
       )}
       {pageData.template === "graph" && (
         <Graph
           pageData={pageData}
           setPageData={setPageData}
+          currentPageSide={currentPageSide}
         />
       )}
     </svg>

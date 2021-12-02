@@ -50,7 +50,7 @@ function Templatesbar({
           marginBottom: 5,
           marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
           marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
-          width: 100,
+          width: 127,
           lineWidth: pageData.width
         })
         break

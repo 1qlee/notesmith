@@ -4,6 +4,7 @@ import { convertToPx } from "../../../styles/variables"
 function Ruled({
   pageData,
   setPageData,
+  currentPageSide,
 }) {
   const [rules, setRules] = useState([])
 
