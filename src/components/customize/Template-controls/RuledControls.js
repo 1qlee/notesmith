@@ -15,8 +15,9 @@ function RuledControls({
   const pageIsEven = selectedPage % 2 === 0
   const flushMarginLeft = pageIsEven ? 3.175 : 9.525 // even pages have holes on the right side
   const flushMarginRight = pageIsEven ? 9.525 : 3.175 // odd pages have holes on the left side
-  const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
-  const horizontalCenter = convertToMM((pageData.pageWidth - lineWidth ) / 2)
+  const totalMargin = convertToPx(pageData.marginLeft) + convertToPx(pageData.marginRight)
+  const lineWidth = pageData.pageWidth - totalMargin
+  const horizontalCenter = convertToMM((pageData.pageWidth - lineWidth - convertToPx(9.525)) / 2)
   const lineHeight = convertToPx((pageData.rows - 1) * pageData.spacing)
   const verticalCenter = convertToMM((pageData.pageHeight - lineHeight) / 2)
   const bottomMargin = convertToMM(pageData.pageHeight - lineHeight - convertToPx(3.175) - 1)
@@ -26,6 +27,15 @@ function RuledControls({
   const marginTopInput = useRef(null)
   const marginRightInput = useRef(null)
   const marginLeftInput = useRef(null)
+
+  function calculateCenter(center) {
+    if (totalMargin >= 12.7) {
+      return flushMarginLeft
+    }
+    else {
+      return center
+    }
+  }
 
   function changeAlignment(value) {
     switch(value) {
@@ -43,11 +53,11 @@ function RuledControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: horizontalCenter,
-          marginRight: horizontalCenter,
+          marginLeft: pageIsEven ? horizontalCenter : 9.525 + horizontalCenter,
+          marginRight: !pageIsEven ? horizontalCenter : 9.525 + horizontalCenter,
         })
-        marginLeftInput.current.value = horizontalCenter
-        marginRightInput.current.value = horizontalCenter
+        marginLeftInput.current.value = pageIsEven ? horizontalCenter : 9.525 + horizontalCenter
+        marginRightInput.current.value = !pageIsEven ? horizontalCenter : 9.525 + horizontalCenter
         break
       case "right":
         setPageData({

@@ -27,6 +27,21 @@ function CoverPage({ pageData }) {
   )
 }
 
+function WireHoles(numOfHoles) {
+  return (
+    <>
+      <rect
+        width="15"
+        height="15"
+        fill={colors.gray.sixHundred}
+        x="9.45"
+        y="13.23"
+      >
+      </rect>
+    </>
+  )
+}
+
 function Template({
   currentPageSide,
   setSelectedPageSvg,
@@ -46,6 +61,10 @@ function Template({
       setSelectedPageSvg(pageRightRef.current)
     }
   })
+
+  function generateHoles() {
+    // for loop to generate appropriate number of holes for the page height
+  }
 
   return (
     <svg
@@ -220,6 +239,7 @@ function PageSpread({
                 style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <WireHoles />
               </svg>
               {pageData.template ? (
                 <Template
