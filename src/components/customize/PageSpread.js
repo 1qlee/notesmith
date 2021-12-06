@@ -45,12 +45,14 @@ function WireHoles(numOfHoles) {
 }
 
 function Template({
+  convertedPageWidth,
   currentPageSide,
+  pageData,
+  setEvenPageSvg,
+  setOddPageSvg,
+  setPageData,
   setSelectedPageSvg,
   trimmedPageHeight,
-  convertedPageWidth,
-  pageData,
-  setPageData,
 }) {
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
@@ -112,6 +114,8 @@ function PageSpread({
   selectedPage,
   setPageData,
   setSelectedPageSvg,
+  setEvenPageSvg,
+  setOddPageSvg,
 }) {
   const [pageSvg, setPageSvg] = useState()
   const [currentPageSide, setCurrentPageSide] = useState("right")
@@ -207,12 +211,14 @@ function PageSpread({
               </svg>
               {pageData.template ? (
                 <Template
+                  convertedPageWidth={convertedPageWidth}
                   currentPageSide={currentPageSide}
+                  pageData={pageData}
+                  setEvenPageSvg={setEvenPageSvg}
+                  setOddPageSvg={setOddPageSvg}
+                  setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   trimmedPageHeight={trimmedPageHeight}
-                  convertedPageWidth={convertedPageWidth}
-                  pageData={pageData}
-                  setPageData={setPageData}
                 />
               ) : (
                 <SVG
@@ -289,12 +295,14 @@ function PageSpread({
               </svg>
               {pageData.template ? (
                 <Template
+                  convertedPageWidth={convertedPageWidth}
                   currentPageSide={currentPageSide}
+                  pageData={pageData}
+                  setEvenPageSvg={setEvenPageSvg}
+                  setOddPageSvg={setOddPageSvg}
+                  setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   trimmedPageHeight={trimmedPageHeight}
-                  convertedPageWidth={convertedPageWidth}
-                  pageData={pageData}
-                  setPageData={setPageData}
                 />
               ) : (
                 <SVG

@@ -65,6 +65,8 @@ const Notebook = ({ location, bookId }) => {
     pageHeight: 816,
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
+  const [evenPageSvg, setEvenPageSvg] = useState("")
+  const [oddPageSvg, setOddPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
@@ -254,6 +256,8 @@ const Notebook = ({ location, bookId }) => {
                     pageData={pageData}
                     selectedPage={selectedPage}
                     setSelectedPageSvg={setSelectedPageSvg}
+                    setEvenPageSvg={setEvenPageSvg}
+                    setOddPageSvg={setOddPageSvg}
                     setPageData={setPageData}
                   />
                   <Controls
@@ -294,6 +298,8 @@ const Notebook = ({ location, bookId }) => {
               setShowModal={setShowModal}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
+              setEvenPageSvg={setEvenPageSvg}
+              setOddPageSvg={setOddPageSvg}
             />
           )}
         </>
