@@ -119,13 +119,59 @@ function PageSpread({
 }) {
   const [pageSvg, setPageSvg] = useState()
   const [currentPageSide, setCurrentPageSide] = useState("right")
-  const [holes, setHoles] = useState([])
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
   const trimmedPageHeight = canvasSize.height - 2 // reduced to allow outline to show
   const conversionRatio = trimmedPageHeight / pageData.pageHeight // width conversion ratio
   const convertedPageWidth = pageData.pageWidth * conversionRatio // converted page width
   const pageSpreadWidth = convertedPageWidth * 2 // converted page spread width
+
+  function Holes({ pageSide }) {
+    const [holes, setHoles] = useState([])
+
+    function generateHoles() {
+      const numOfHoles = pageData.pageHeight / 34.845 + 1
+      const holesArray = []
+      // for loop to generate appropriate number of holes for the page height
+      for (let i = 0; i < numOfHoles; i++) {
+        // hole property object
+        const hole = {
+          width: 15,
+          height: 15,
+          fill: colors.gray.oneHundred,
+          strokeWidth: 1,
+          stroke: colors.gray.threeHundred,
+          x: pageSide === "right" ? 9.45 : 492 * conversionRatio,
+          y: 28.23 * i + 13.23
+        }
+
+        holesArray.push(hole)
+      }
+
+      setHoles(holesArray)
+    }
+
+    useEffect(() => {
+      generateHoles()
+    })
+
+    return (
+      <>
+        {holes.map(hole => (
+          <rect
+            width={hole.width}
+            height={hole.height}
+            fill={hole.fill}
+            stroke-width={hole.strokeWidth}
+            stroke={hole.stroke}
+            x={hole.x}
+            y={hole.y}
+          >
+          </rect>
+        ))}
+      </>
+    )
+  }
 
   useEffect(() => {
     // if the selected page is even, then it must be the left page
@@ -135,31 +181,7 @@ function PageSpread({
     else {
       setCurrentPageSide("right")
     }
-
-    generateHoles()
   }, [selectedPage, pageData, currentPageSide])
-
-  function generateHoles() {
-    const numOfHoles = pageData.pageHeight / 34.845 + 1
-    const holesArray = []
-    // for loop to generate appropriate number of holes for the page height
-    for (let i = 0; i < numOfHoles; i++) {
-      // hole property object
-      const hole = {
-        width: 15,
-        height: 15,
-        fill: colors.gray.oneHundred,
-        strokeWidth: 1,
-        stroke: colors.gray.threeHundred,
-        x: currentPageSide === "right" ? 9.45 : 492 * conversionRatio,
-        y: 28.23 * i + 13.23
-      }
-
-      holesArray.push(hole)
-    }
-
-    setHoles(holesArray)
-  }
 
   return (
     <svg
@@ -196,18 +218,7 @@ function PageSpread({
                 style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
-                {holes.map(hole => (
-                  <rect
-                    width={hole.width}
-                    height={hole.height}
-                    fill={hole.fill}
-                    stroke-width={hole.strokeWidth}
-                    stroke={hole.stroke}
-                    x={hole.x}
-                    y={hole.y}
-                  >
-                  </rect>
-                ))}
+                <Holes pageSide="left" />
               </svg>
               {pageData.template ? (
                 <Template
@@ -242,6 +253,7 @@ function PageSpread({
                 y="1"
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <Holes pageSide="left" />
               </svg>
               <SVG
                 ref={pageLeftRef}
@@ -280,18 +292,7 @@ function PageSpread({
                 style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
-                {holes.map(hole => (
-                  <rect
-                    width={hole.width}
-                    height={hole.height}
-                    fill={hole.fill}
-                    stroke-width={hole.strokeWidth}
-                    stroke={hole.stroke}
-                    x={hole.x}
-                    y={hole.y}
-                  >
-                  </rect>
-                ))}
+                <Holes pageSide="right" />
               </svg>
               {pageData.template ? (
                 <Template
