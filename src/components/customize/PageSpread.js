@@ -327,6 +327,7 @@ function PageSpread({
                 y="1"
               >
                 <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <Holes pageSide="right" />
               </svg>
               <SVG
                 ref={pageRightRef}
