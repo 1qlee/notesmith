@@ -169,9 +169,13 @@ function RuledControls({
             step="1"
             padding="0.5rem"
             width="100%"
-            defaultValue={pageData.marginTop}
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
+            value={pageData.marginTop}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginTop: value
+            }))}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginTop: value}))}
           />
         </Flexbox>
         <Flexbox
@@ -181,14 +185,18 @@ function RuledControls({
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
-            defaultValue={pageData.marginLeft}
+            value={pageData.marginLeft}
             padding="0.5rem"
             ref={marginLeftInput}
             step="1"
             type="number"
             width="100%"
-            onBlur={e => validateOnBlur(e, flushMarginLeft, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
-            onKeyDown={e => validateOnKeydown(e, flushMarginLeft, value => setPageData({ ...pageData, alignmentHorizontal: "", marginLeft: value }))}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginLeft: value
+            }))}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
           />
         </Flexbox>
         <Flexbox
@@ -198,14 +206,18 @@ function RuledControls({
         >
           <StyledLabel>Right margin</StyledLabel>
           <StyledInput
-            defaultValue={pageData.marginRight}
+            value={pageData.marginRight}
             padding="0.5rem"
             ref={marginRightInput}
             step="1"
             type="number"
             width="100%"
-            onBlur={e => validateOnBlur(e, flushMarginRight, value => setPageData({...pageData, alignmentHorizontal: "", marginRight: value}))}
-            onKeyDown={e => validateOnKeydown(e, flushMarginRight, value => setPageData({ ...pageData, alignmentHorizontal: "", marginRight: value }))}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginRight: value
+            }))}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginRight: value}))}
           />
         </Flexbox>
       </Flexbox>

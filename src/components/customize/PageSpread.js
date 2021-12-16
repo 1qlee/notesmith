@@ -1,24 +1,25 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, convertToPx } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 
 import Ruled from "./Templates/Ruled"
 import Dot from "./Templates/Dot"
 import Graph from "./Templates/Graph"
+import Blank from "./Templates/Blank"
 
-function CoverPage({ pageData }) {
+function CoverPage({ bookData, convertedPageWidth, convertedPageHeight }) {
   return (
     <>
       <rect
-        width={pageData.pageWidth}
-        height={pageData.pageHeight}
+        width={convertedPageWidth}
+        height={convertedPageHeight}
         fill={colors.white}>
       </rect>
       <text
-        x={(pageData.pageWidth / 2) - 80}
-        y={pageData.pageHeight / 2}
-        width={pageData.pageWidth}
+        x={(bookData.width / 2) - 80}
+        y={bookData.height / 2}
+        width={bookData.width}
         fill={colors.gray.nineHundred}
       >
         THIS IS THE COVER PAGE
@@ -27,25 +28,8 @@ function CoverPage({ pageData }) {
   )
 }
 
-function WireHoles(numOfHoles) {
-  return (
-    <>
-      <rect
-        width="15"
-        height="15"
-        fill={colors.gray.threeHundred}
-        stroke-width="1"
-        stroke={colors.gray.sixHundred}
-        x="9.45"
-        y="13.23"
-      >
-      </rect>
-    </>
-  )
-}
-
 function Template({
-  convertedPageWidth,
+  bookData,
   currentPageSide,
   pageData,
   setEvenPageSvg,
@@ -53,6 +37,8 @@ function Template({
   setPageData,
   setSelectedPageSvg,
   trimmedPageHeight,
+  trimmedPageWidth,
+  rightPageXPosition,
 }) {
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
@@ -71,15 +57,16 @@ function Template({
       xmlns="http://www.w3.org/2000/svg"
       ref={currentPageSide === "left" ? pageLeftRef : pageRightRef}
       height={trimmedPageHeight}
-      width={convertedPageWidth}
+      width={trimmedPageWidth}
       viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-      x={currentPageSide === "left" ? 1 : convertedPageWidth + 2}
+      x={currentPageSide === "left" ? 1 : rightPageXPosition}
       y="1"
     >
       {pageData.template === "blank" && (
-        <g>
-          <rect width={pageData.pageWidth} height={pageData.pageHeight} fill={colors.white}></rect>
-        </g>
+        <Blank
+          pageData={pageData}
+          currentPageSide={currentPageSide}
+        />
       )}
       {pageData.template === "ruled" && (
         <Ruled
@@ -121,9 +108,12 @@ function PageSpread({
   const [currentPageSide, setCurrentPageSide] = useState("right")
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
-  const trimmedPageHeight = canvasSize.height - 2 // reduced to allow outline to show
-  const conversionRatio = trimmedPageHeight / pageData.pageHeight // width conversion ratio
-  const convertedPageWidth = pageData.pageWidth * conversionRatio // converted page width
+  const trimmedPageHeight = canvasSize.height - convertToPx(6.35) // minus top and bottom margins
+  const conversionRatio = trimmedPageHeight / bookData.height // width conversion ratio
+  const convertedPageWidth = bookData.width * conversionRatio // converted page width
+  const convertedPageHeight = canvasSize.height - 2 // 2 for outline
+  const rightPageXPosition = convertedPageWidth + convertToPx(9.525)
+  const trimmedPageWidth = convertedPageWidth - convertToPx(12.7) // minus left and right margins
   const pageSpreadWidth = convertedPageWidth * 2 // converted page spread width
 
   function Holes({ pageSide }) {
@@ -153,7 +143,7 @@ function PageSpread({
 
     useEffect(() => {
       generateHoles()
-    })
+    }, [pageData])
 
     return (
       <>
@@ -197,45 +187,51 @@ function PageSpread({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           ref={pageLeftRef}
-          height={canvasSize.height}
+          height={convertedPageHeight}
           width={convertedPageWidth}
-          viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+          viewBox={`0 0 ${convertedPageWidth} ${convertedPageHeight}`}
           x="0"
           y="0"
         >
-          <CoverPage pageData={pageData} />
+          <CoverPage
+            bookData={bookData}
+            convertedPageWidth={convertedPageWidth}
+            convertedPageHeight={convertedPageHeight}
+          />
         </svg>
       ) : (
         <>
-          {currentPageSide === "left"? (
+          {currentPageSide === "left" ? (
             <>
               <svg
                 id="page-background-left"
                 width={convertedPageWidth}
-                height={trimmedPageHeight}
+                height={convertedPageHeight}
                 x="1"
                 y="1"
                 style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
-                <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <rect width={convertedPageWidth} height={convertedPageHeight} fill={colors.white}></rect>
                 <Holes pageSide="left" />
               </svg>
               {pageData.template ? (
                 <Template
-                  convertedPageWidth={convertedPageWidth}
+                  bookData={bookData}
                   currentPageSide={currentPageSide}
                   pageData={pageData}
+                  rightPageXPosition={rightPageXPosition}
                   setEvenPageSvg={setEvenPageSvg}
                   setOddPageSvg={setOddPageSvg}
                   setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   trimmedPageHeight={trimmedPageHeight}
+                  trimmedPageWidth={trimmedPageWidth}
                 />
               ) : (
                 <SVG
                   ref={pageLeftRef}
                   height={trimmedPageHeight}
-                  width={convertedPageWidth}
+                  width={trimmedPageWidth}
                   viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                   src={canvasPages[selectedPage - 1].svg}
                   x="1"
@@ -248,17 +244,17 @@ function PageSpread({
               <svg
                 id="page-background-left"
                 width={convertedPageWidth}
-                height={trimmedPageHeight}
+                height={convertedPageHeight}
                 x="1"
                 y="1"
               >
-                <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <rect width={convertedPageWidth} height={convertedPageHeight} fill={colors.white}></rect>
                 <Holes pageSide="left" />
               </svg>
               <SVG
                 ref={pageLeftRef}
                 height={trimmedPageHeight}
-                width={convertedPageWidth}
+                width={trimmedPageWidth}
                 viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                 src={canvasPages[selectedPage - 2].svg}
                 x="1"
@@ -277,7 +273,7 @@ function PageSpread({
           x={convertedPageWidth + 2}
           y="0"
         >
-          <CoverPage pageData={pageData} />
+          <CoverPage bookData={bookData} />
         </svg>
       ) : (
         <>
@@ -286,33 +282,35 @@ function PageSpread({
               <svg
                 id="page-background-right"
                 width={convertedPageWidth}
-                height={trimmedPageHeight}
+                height={convertedPageHeight}
                 x={convertedPageWidth + 2}
                 y="1"
                 style={{outline: `1px solid ${colors.primary.sixHundred}`}}
               >
-                <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <rect width={convertedPageWidth} height={convertedPageHeight} fill={colors.white}></rect>
                 <Holes pageSide="right" />
               </svg>
               {pageData.template ? (
                 <Template
-                  convertedPageWidth={convertedPageWidth}
+                  bookData={bookData}
                   currentPageSide={currentPageSide}
                   pageData={pageData}
+                  rightPageXPosition={rightPageXPosition}
                   setEvenPageSvg={setEvenPageSvg}
                   setOddPageSvg={setOddPageSvg}
                   setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   trimmedPageHeight={trimmedPageHeight}
+                  trimmedPageWidth={trimmedPageWidth}
                 />
               ) : (
                 <SVG
                   ref={pageRightRef}
                   height={trimmedPageHeight}
-                  width={convertedPageWidth}
+                  width={trimmedPageWidth}
                   viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                   src={canvasPages[selectedPage - 1].svg}
-                  x={convertedPageWidth + 2}
+                  x={rightPageXPosition}
                   y="1"
                 />
               )}
@@ -322,20 +320,20 @@ function PageSpread({
               <svg
                 id="page-background-right"
                 width={convertedPageWidth}
-                height={trimmedPageHeight}
+                height={convertedPageHeight}
                 x={convertedPageWidth + 2}
                 y="1"
               >
-                <rect width={convertedPageWidth} height={trimmedPageHeight} fill={colors.white}></rect>
+                <rect width={convertedPageWidth} height={convertedPageHeight} fill={colors.white}></rect>
                 <Holes pageSide="right" />
               </svg>
               <SVG
                 ref={pageRightRef}
                 height={trimmedPageHeight}
-                width={convertedPageWidth}
+                width={trimmedPageWidth}
                 viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
                 src={canvasPages[selectedPage].svg}
-                x={convertedPageWidth + 2}
+                x={rightPageXPosition}
                 y="1"
               />
             </>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate, Link } from "gatsby"
 import { ArrowRight, WarningCircle, CheckCircle, Circle } from "phosphor-react"
-import { colors, convertToDecimal, spacing, widths } from "../../styles/variables"
+import { colors, convertToDecimal, spacing, widths, convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
 import { Container, LayoutContainer } from "../layout/Container"
@@ -55,14 +55,14 @@ const Notebook = ({ location, bookId }) => {
     thickness: 0.175,
     rows: 43,
     columns: 27,
-    marginTop: 5,
-    marginBottom: 5,
-    marginLeft: 5,
-    marginRight: 5,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
     width: 1,
-    lineWidth: 528,
-    pageWidth: 528,
-    pageHeight: 816,
+    lineWidth: bookData.width - convertToPx(12.7),
+    pageWidth: bookData.width - convertToPx(12.7),
+    pageHeight: bookData.height - convertToPx(6.35),
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [evenPageSvg, setEvenPageSvg] = useState("")

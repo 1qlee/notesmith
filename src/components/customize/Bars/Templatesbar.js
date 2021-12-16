@@ -46,10 +46,10 @@ function Templatesbar({
           dotRadius: 0.6,
           rows: 43,
           columns: 27,
-          marginTop: 5,
-          marginBottom: 5,
-          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
-          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0,
           width: 127,
           lineWidth: pageData.width
         })
@@ -66,10 +66,10 @@ function Templatesbar({
           dotRadius: 0.6,
           rows: 43,
           columns: 27,
-          marginTop: 5,
-          marginBottom: 5,
-          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
-          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0,
           width: 1,
           lineWidth: pageData.width
         })
@@ -86,10 +86,10 @@ function Templatesbar({
           dotRadius: 0.6,
           rows: 43,
           columns: 27,
-          marginTop: 5,
-          marginBottom: 5,
-          marginLeft: selectedPage % 2 === 0 ? 3.175 : 9.525,
-          marginRight: selectedPage % 2 === 0 ? 9.525 : 3.175,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0,
           width: 1,
           lineWidth: pageData.width
         })
