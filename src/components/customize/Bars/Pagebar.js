@@ -87,7 +87,6 @@ const Page = memo(props => {
     setSelectedPage,
     pageNumber,
   } = data
-  console.log(index, rowIndex, columnIndex)
   const columnCount = 4
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
