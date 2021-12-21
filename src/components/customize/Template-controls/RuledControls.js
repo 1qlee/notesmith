@@ -12,23 +12,19 @@ function RuledControls({
   pageSize,
   selectedPage,
 }) {
-  const pageIsEven = selectedPage % 2 === 0
-  const flushMarginLeft = pageIsEven ? 3.175 : 9.525 // even pages have holes on the right side
-  const flushMarginRight = pageIsEven ? 9.525 : 3.175 // odd pages have holes on the left side
-  const totalMargin = convertToPx(pageData.marginLeft) + convertToPx(pageData.marginRight)
-  const centeredMargin = convertToMM(totalMargin / 2)
-  const lineWidth = pageData.pageWidth - totalMargin
-  const horizontalCenter = convertToMM((pageData.pageWidth - lineWidth - convertToPx(9.525)) / 2)
-  const lineHeight = convertToPx((pageData.rows - 1) * pageData.spacing)
-  const verticalCenter = convertToMM((pageData.pageHeight - lineHeight) / 2)
-  const bottomMargin = convertToMM(pageData.pageHeight - lineHeight - convertToPx(3.175) - 1)
-  const remainderMarginRight = convertToMM(pageData.pageWidth - lineWidth - convertToPx(flushMarginLeft))
-  const remainderMarginLeft = convertToMM(pageData.pageWidth - lineWidth - convertToPx(flushMarginRight))
-  const maximumMargin = convertToMM(pageData.pageHeight)
+  const totalMargin = pageData.marginLeft + pageData.marginRight
+  const centeredMarginHorizontal = totalMargin / 2
+  const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
+  const rowsHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // basically how much space the lines are taking up
+  const verticalDeadspace = pageData.pageHeight - rowsHeight
+  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
+  const bottomMargin = convertToMM(verticalDeadspace) - convertToMM(pageData.thickness)
+  const maximumMarginHeight = convertToMM(pageData.pageHeight)
+  const maximumMarginWidth = convertToMM(pageData.pageWidth)
 
   const marginTopInput = useRef(null)
-  const marginRightInput = useRef(null)
   const marginLeftInput = useRef(null)
+  const marginRightInput = useRef(null)
 
   function changeAlignment(value) {
     switch(value) {
@@ -36,45 +32,47 @@ function RuledControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
+          marginRight: totalMargin,
           marginLeft: 0,
         })
         marginLeftInput.current.value = 0
+        marginRightInput.current.value = totalMargin
         break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: centeredMargin,
-          marginRight: centeredMargin,
+          marginLeft: centeredMarginHorizontal,
+          marginRight: centeredMarginHorizontal,
         })
-        marginLeftInput.current.value = centeredMargin
-        marginRightInput.current.value = centeredMargin
+        marginLeftInput.current.value = centeredMarginHorizontal
+        marginRightInput.current.value = centeredMarginHorizontal
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: remainderMarginLeft,
-          marginRight: flushMarginRight,
+          marginLeft: totalMargin,
+          marginRight: 0,
         })
-        marginLeftInput.current.value = remainderMarginLeft
-        marginRightInput.current.value = flushMarginRight
+        marginLeftInput.current.value = totalMargin
+        marginRightInput.current.value = 0
         break
       case "top":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: 3.175,
+          marginTop: 0,
         })
-        marginTopInput.current.value = 3.175
+        marginTopInput.current.value = 0
         break
       case "middle":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: verticalCenter,
+          marginTop: centeredMarginVertical,
         })
-        marginTopInput.current.value = verticalCenter
+        marginTopInput.current.value = centeredMarginVertical
         break
       case "bottom":
         setPageData({
@@ -107,6 +105,7 @@ function RuledControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Lines</StyledLabel>
+          <p>{rowsHeight}</p>
           <StyledInput
             type="number"
             min="1"
@@ -164,7 +163,7 @@ function RuledControls({
               ...pageData,
               alignmentVertical: "",
               marginTop: value
-            }), maximumMargin)}
+            }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
@@ -188,8 +187,8 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginLeft: value
-            }))}
+              marginLeft: value,
+            }), maximumMarginWidth - pageData.marginRight - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
           />
         </Flexbox>
@@ -209,9 +208,13 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
+              marginRight: value,
+            }), maximumMarginWidth - pageData.marginLeft - 1)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
               marginRight: value
             }))}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginRight: value}))}
           />
         </Flexbox>
       </Flexbox>

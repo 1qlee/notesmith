@@ -142,7 +142,7 @@ const convertToDecimal = (num, places) => {
 }
 
 const convertToMM = pixels => {
-  return parseFloat((pixels * .264583).toFixed(3))
+  return parseFloat((pixels * .2645833333).toFixed(3))
 }
 
 const convertToPx = mm => {

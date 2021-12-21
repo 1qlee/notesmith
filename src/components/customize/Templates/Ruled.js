@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx } from "../../../styles/variables"
+import { convertToPx, convertToMM } from "../../../styles/variables"
 
 function Ruled({
   pageData,
@@ -30,7 +30,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > 816) {
+      if (lineY > pageData.pageHeight) {
         console.log("lines have passed the height of the page")
         console.log(lineY, pageData.pageHeight)
         // change the number of rows displayed

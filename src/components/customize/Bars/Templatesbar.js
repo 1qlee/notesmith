@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
+import { colors, convertToPx, convertToMM } from "../../../styles/variables"
 import { CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
@@ -30,6 +30,7 @@ function Templatesbar({
   selectedPage,
 }) {
   const [loading, setLoading] = useState(false)
+  const lineWidthMM = convertToMM(pageData.pageWidth)
 
   function handleTemplateSelect(template) {
     // set initial values for page data
@@ -46,12 +47,12 @@ function Templatesbar({
           dotRadius: 0.6,
           rows: 43,
           columns: 27,
-          marginTop: 0,
+          marginTop: 2.275,
           marginBottom: 0,
           marginLeft: 0,
           marginRight: 0,
           width: 127,
-          lineWidth: pageData.width
+          lineWidth: lineWidthMM,
         })
         break
       case "dot":
@@ -71,7 +72,7 @@ function Templatesbar({
           marginLeft: 0,
           marginRight: 0,
           width: 1,
-          lineWidth: pageData.width
+          lineWidth: lineWidthMM,
         })
         break
       default:
@@ -91,7 +92,7 @@ function Templatesbar({
           marginLeft: 0,
           marginRight: 0,
           width: 1,
-          lineWidth: pageData.width
+          lineWidth: lineWidthMM,
         })
         break
     }
