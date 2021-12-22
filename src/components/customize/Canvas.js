@@ -41,8 +41,6 @@ function Canvas({
   selectedPage,
   setPageData,
   setSelectedPageSvg,
-  setEvenPageSvg,
-  setOddPageSvg,
 }) {
 
   return (
@@ -67,8 +65,6 @@ function Canvas({
             selectedPage={selectedPage}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
-            setEvenPageSvg={setEvenPageSvg}
-            setOddPageSvg={setOddPageSvg}
           />
         </svg>
       </StyledCanvas>

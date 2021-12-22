@@ -105,7 +105,6 @@ function RuledControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Lines</StyledLabel>
-          <p>{rowsHeight}</p>
           <StyledInput
             type="number"
             min="1"

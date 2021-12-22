@@ -32,8 +32,6 @@ function Template({
   bookData,
   currentPageSide,
   pageData,
-  setEvenPageSvg,
-  setOddPageSvg,
   setPageData,
   setSelectedPageSvg,
   workingPageHeight,
@@ -102,8 +100,6 @@ function PageSpread({
   selectedPage,
   setPageData,
   setSelectedPageSvg,
-  setEvenPageSvg,
-  setOddPageSvg,
 }) {
   const [pageSvg, setPageSvg] = useState()
   const [currentPageSide, setCurrentPageSide] = useState("right")
@@ -224,8 +220,6 @@ function PageSpread({
                   currentPageSide={currentPageSide}
                   pageData={pageData}
                   rightPageXPosition={rightPageXPosition}
-                  setEvenPageSvg={setEvenPageSvg}
-                  setOddPageSvg={setOddPageSvg}
                   setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   workingPageHeight={workingPageHeight}
@@ -307,8 +301,6 @@ function PageSpread({
                   currentPageSide={currentPageSide}
                   pageData={pageData}
                   rightPageXPosition={rightPageXPosition}
-                  setEvenPageSvg={setEvenPageSvg}
-                  setOddPageSvg={setOddPageSvg}
                   setPageData={setPageData}
                   setSelectedPageSvg={setSelectedPageSvg}
                   workingPageHeight={workingPageHeight}
