@@ -3,6 +3,8 @@ import { colors } from "../../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
+import { jsPDF as createPdf } from 'jspdf'
+import 'svg2pdf.js'
 import Loading from "../../assets/loading.svg"
 
 import { BookRadio } from "./Books/BookComponents"
@@ -238,6 +240,8 @@ const Books = () => {
 
   function renameBook(oldBookTitle, newBookTitle, bookId, cb) {
     const updates = {}
+    // update the specified book by its bookId
+    // only updates the title field
     updates[`/books/${bookId}/title`] = newBookTitle
 
     firebaseDb.ref().update(updates, error => {
@@ -306,6 +310,46 @@ const Books = () => {
     })
   }
 
+  function downloadBookPdf() {
+    const bookPdf = new createPdf()
+
+    const downloadBookRef = firebaseDb.ref('books/-Mo-pISGlvG2AxeVFsXz')
+
+    downloadBookRef.on("value", snapshot => {
+      console.log(snapshot.val().pages)
+      const pages = snapshot.val().pages
+
+      for (const page in pages) {
+        console.log(`${page} / ${pages[page]}`)
+        firebaseDb.ref(`pages/${page}`).orderByChild('pageNumber').once("value").then(snapshot => {
+          const pageSvg = snapshot.val().svg
+          const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
+
+          console.log(node)
+
+          bookPdf.svg(node, {
+            x: 0,
+            y: 0,
+            width: 528,
+            height: 816,
+          }).then(pdf => {
+            console.log(pdf)
+          })
+        })
+      }
+    })
+
+    // booksRef.orderByChild('id').equalTo('-MlrqyuJdsF_i-eIpk5R').on("value", snapshot => {
+    //   console.log(snapshot.val())
+    //   const pagesArray = []
+    //   push them into an array const
+    //   snapshot.pages.forEach(child => {
+    //     pagesArray.push(child.val())
+    //     console.log(child.val())
+    //   })
+    // })
+  }
+
   return (
     <Layout>
       <Seo title="Dashboard" />
@@ -332,6 +376,11 @@ const Books = () => {
                 onClick={() => handleShowModal(true, "createbook")}
               >
                 New book
+              </Button>
+              <Button
+                onClick={() => downloadBookPdf()}
+              >
+                Download book
               </Button>
             </Flexbox>
             <SectionAppWorkspace heightmargin="4rem">

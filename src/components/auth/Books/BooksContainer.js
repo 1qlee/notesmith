@@ -15,7 +15,12 @@ function convertTime(time) {
   return humanDateFormat
 }
 
-function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook }) {
+function BooksContainer({
+  userBooks,
+  renameBook,
+  handleBookDelete,
+  duplicateBook,
+}) {
   const [selectedBook, setSelectedBook] = useState()
   const [selectedBookDOM, setSelectedBookDOM] = useState(null)
   const [selectedBookTitle, setSelectedBookTitle] = useState()

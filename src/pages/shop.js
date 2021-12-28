@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { spacing } from "../styles/variables"
-import { SwitchTransition, CSSTransition } from "react-transition-group"
 import { StaticImage } from "gatsby-plugin-image"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
