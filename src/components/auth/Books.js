@@ -311,43 +311,48 @@ const Books = () => {
   }
 
   function downloadBookPdf() {
-    const bookPdf = new createPdf()
-
+    const bookPdf = new createPdf({
+      format: [139.7, 215.9],
+    })
     const downloadBookRef = firebaseDb.ref('books/-Mo-pISGlvG2AxeVFsXz')
 
-    downloadBookRef.on("value", snapshot => {
-      console.log(snapshot.val().pages)
+    downloadBookRef.once("value").then(snapshot => {
       const pages = snapshot.val().pages
+      let index = 1
+
+      // console.log("initializing pdf...")
+      // bookPdf.deletePage(1)
+      // bookPdf.addPage([139.7, 215.9], "portrait") // addPage expects values in millimeters
+      // bookPdf.setPage(1)
+      // console.log("done initializing")
 
       for (const page in pages) {
-        console.log(`${page} / ${pages[page]}`)
+        const numOfPages = Object.keys(pages).length
+
         firebaseDb.ref(`pages/${page}`).orderByChild('pageNumber').once("value").then(snapshot => {
           const pageSvg = snapshot.val().svg
           const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
 
-          console.log(node)
-
           bookPdf.svg(node, {
             x: 0,
             y: 0,
-            width: 528,
-            height: 816,
-          }).then(pdf => {
-            console.log(pdf)
+            width: 139.7,
+            height: 215.9,
+          }).then(() => {
+            console.log("adding page: ", index)
+            bookPdf.addPage([139.7, 215.9], "portrait")
+            bookPdf.setPage(index)
+
+            if (index === numOfPages) {
+              console.log("saving pdf")
+              bookPdf.save()
+            }
+
+            index++
           })
         })
       }
     })
-
-    // booksRef.orderByChild('id').equalTo('-MlrqyuJdsF_i-eIpk5R').on("value", snapshot => {
-    //   console.log(snapshot.val())
-    //   const pagesArray = []
-    //   push them into an array const
-    //   snapshot.pages.forEach(child => {
-    //     pagesArray.push(child.val())
-    //     console.log(child.val())
-    //   })
-    // })
   }
 
   return (
