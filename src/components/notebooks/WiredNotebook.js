@@ -10,13 +10,12 @@ import Layout from "../layout/Layout"
 import Nav from "../layout/Nav"
 import Seo from "../layout/Seo"
 
-const NotebookProduct = () => {
+const WiredNotebook = () => {
   const [bookData, setBookData] = useState({
     size: "A5",
     dimensions: "5.5in x 8.5in",
     width: 528,
     height: 816,
-    color: "Cadet Gray",
     quantity: 1,
     title: "Signature Notebook",
     price: 20,
@@ -62,4 +61,4 @@ const NotebookProduct = () => {
   )
 }
 
-export default NotebookProduct
+export default WiredNotebook

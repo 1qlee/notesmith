@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { StaticQuery, graphql, navigate } from "gatsby"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
-import { useShoppingCart } from 'use-shopping-cart'
 import { ArrowCircleRight } from "phosphor-react"
+import { colors } from "../../../styles/variables"
+import { StaticQuery, graphql, navigate } from "gatsby"
+import { useShoppingCart } from 'use-shopping-cart'
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker, StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
