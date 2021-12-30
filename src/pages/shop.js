@@ -35,7 +35,7 @@ const ShopPage = () => {
   return (
     <Layout>
       <Seo title="Truly Custom Notebooks For All People" />
-      <Nav chapterNumber="07" title="The signature Notesmith notebook"></Nav>
+      <Nav />
       <SectionMain>
         <Section>
           <Container>

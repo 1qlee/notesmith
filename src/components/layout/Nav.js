@@ -146,7 +146,7 @@ const ChapterNameHeader = styled.div`
 `
 
 const NavLogo = styled.div`
-  width: 200px;
+  width: 160px;
   height: 80px;
   transition: background-color 0.1s;
   &:hover {

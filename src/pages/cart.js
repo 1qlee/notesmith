@@ -14,7 +14,7 @@ const Cart = () => {
   return (
     <Layout>
       <SEO title="Cart" />
-      <Nav chapterNumber="01" title="Cart"></Nav>
+      <Nav />
       <SectionMain className="has-max-height">
         <Section>
           <Container>

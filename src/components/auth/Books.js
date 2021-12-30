@@ -313,6 +313,7 @@ const Books = () => {
   function downloadBookPdf() {
     const bookPdf = new createPdf({
       format: [139.7, 215.9],
+      compress: true,
     })
     const downloadBookRef = firebaseDb.ref('books/-Mo-pISGlvG2AxeVFsXz')
 
@@ -320,11 +321,8 @@ const Books = () => {
       const pages = snapshot.val().pages
       let index = 1
 
-      // console.log("initializing pdf...")
-      // bookPdf.deletePage(1)
-      // bookPdf.addPage([139.7, 215.9], "portrait") // addPage expects values in millimeters
-      // bookPdf.setPage(1)
-      // console.log("done initializing")
+      console.log("initializing pdf...")
+      bookPdf.deletePage(1)
 
       for (const page in pages) {
         const numOfPages = Object.keys(pages).length
@@ -333,15 +331,16 @@ const Books = () => {
           const pageSvg = snapshot.val().svg
           const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
 
+          console.log("adding page: ", index)
+          bookPdf.addPage([139.7, 215.9], "portrait")
+          bookPdf.setPage(index)
+
           bookPdf.svg(node, {
             x: 0,
             y: 0,
             width: 139.7,
             height: 215.9,
           }).then(() => {
-            console.log("adding page: ", index)
-            bookPdf.addPage([139.7, 215.9], "portrait")
-            bookPdf.setPage(index)
 
             if (index === numOfPages) {
               console.log("saving pdf")

@@ -212,7 +212,7 @@ const Checkout = ({ location }) => {
   return (
     <Layout>
       <SEO title="Checkout" />
-      <Nav chapterNumber={`0${activeTab}`} title="Checkout"></Nav>
+      <Nav />
       <SectionMain className="has-max-height">
         <Section>
           <Container>
