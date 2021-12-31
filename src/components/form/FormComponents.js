@@ -53,6 +53,7 @@ function QuantityTracker(props) {
         height={props.buttonheight}
         onClick={e => handleButtonChange(e)}
         disabled={quantity === 1}
+        left={true}
       >
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
@@ -77,6 +78,7 @@ function QuantityTracker(props) {
       <QuantityButton
         width={props.buttonwidth}
         height={props.buttonheight}
+        right={true}
         onClick={e => handleButtonChange(e, true)}
       >
         <Icon>
@@ -92,12 +94,8 @@ function QuantityTracker(props) {
 }
 
 const QuantityWrapper = styled.div`
-  background-color: ${colors.white};
-  box-shadow: ${colors.shadow.layeredSmall};
-  border-radius: 0.25rem;
-  padding: ${props => props.padding || "0.75rem"};
-  display: inline-flex;
-  align-items: center;
+  position: relative;
+  width: 8rem;
 `
 
 const QuantityButton = styled.button`
@@ -106,6 +104,10 @@ const QuantityButton = styled.button`
   padding: 0;
   width: ${props => props.width};
   height: ${props => props.height};
+  position: absolute;
+  top: 1rem;
+  left: ${props => props.left ? "0.75rem" : null};
+  right: ${props => props.right ? "0.75rem" : null};
   &:hover {
     cursor: pointer;
   }
@@ -113,15 +115,14 @@ const QuantityButton = styled.button`
 
 const Counter = styled.input`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : 0};
-  border: ${props => props.border};
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.gray.threeHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize};
-  padding: ${props => props.padding};
-  margin: ${props => props.margin};
-  width: ${props => props.width};
+  padding: ${props => props.padding || "1rem"};
   text-align: center;
   vertical-align: top;
+  width: ${props => props.width};
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -304,10 +305,10 @@ const RadioInput = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.primary.fourHundred};
+  color: ${colors.primary.eightHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.7rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: 700;
   margin: ${props => props.margin || "0 0 0.5rem 0"};
 `
@@ -320,9 +321,8 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: 1px solid ${colors.primary.sixHundred};
+  border: 1px solid ${colors.gray.threeHundred};
   color: ${colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
@@ -368,9 +368,8 @@ const SelectIcon = styled.span`
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: none;
+  border: 1px solid ${colors.gray.threeHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize || "0.8rem"};
   padding: ${props => props.padding || "1rem"};

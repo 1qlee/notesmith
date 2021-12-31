@@ -12,6 +12,7 @@ const colors = {
     nineHundred: "#212121"
   },
   primary: {
+    shadow: "rgba(74,100,98,0.35)",
     hover: "#EBEEEE",
     active: "#bcdcbc",
     white: "#eef6f6",
@@ -99,7 +100,7 @@ const colors = {
     layeredLarge: "0 12px 12px rgba(0,0,0,0.02), 0 24px 24px rgba(0,0,0,0.03), 0 48px 48px rgba(0,0,0,0.06), 0 96px 96px rgba(0,0,0,0.07)",
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
-    modal: "0 7px 14px 0 rgba(60,66,87,.08), 0 3px 6px 0 rgba(0,0,0,.12)"
+    modal: "0 2px 12px rgba(0,0,0,0.25)"
   },
   highlighter: "#ffff00"
 }

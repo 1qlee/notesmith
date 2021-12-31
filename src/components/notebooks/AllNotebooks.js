@@ -1,13 +1,16 @@
 import React from "react"
 import { Link } from "gatsby"
+import notebooks from "../../data/notebooks.json"
 
 function AllNotebooks() {
   return (
     <div>
       <div>Notebooks</div>
-      <Link to="/notebooks/wired-notebook">
-        <p>Wired notebook</p>
-      </Link>
+      {Object.keys(notebooks).map((key, index) => (
+        <Link to={`/notebooks/${notebooks[key].slug}`}>
+          <p>{notebooks[key].name}</p>
+        </Link>
+      ))}
     </div>
   )
 }

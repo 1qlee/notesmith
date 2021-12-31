@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useStaticQuery, graphql } from "gatsby"
 import { spacing } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
@@ -9,25 +10,30 @@ import ProductInfo from "../shop/ProductInfo"
 import Layout from "../layout/Layout"
 import Nav from "../layout/Nav"
 import Seo from "../layout/Seo"
+import notebooks from "../../data/notebooks.json"
 
 const WiredNotebook = () => {
-  const [bookData, setBookData] = useState({
-    size: "A5",
-    dimensions: "5.5in x 8.5in",
-    width: 528,
-    height: 816,
-    quantity: 1,
-    title: "Signature Notebook",
-    price: 20,
-    numOfPages: 160,
-    cover: "Sand matte lamination",
-    binding: "Wired",
-  })
+  const bookData = notebooks.wired
+  const data = useStaticQuery(graphql`
+    query productQuery {
+      stripePrice(id: { eq: "price_1IbAlnIN24Fw2SWdOVRXdimr" }) {
+        id,
+        unit_amount,
+        currency,
+        product {
+          id
+          name
+          description
+          images
+        }
+      }
+    }
+  `)
 
   return (
     <Layout>
-      <Seo title="Truly Custom Notebooks For All People" />
-      <Nav chapterNumber="07" title="The signature Notesmith notebook"></Nav>
+      <Seo title="shit" />
+      <Nav />
       <SectionMain>
         <Section>
           <Container>
@@ -48,7 +54,7 @@ const WiredNotebook = () => {
                   <Cell width={2}>
                     <ProductInfo
                       bookData={bookData}
-                      setBookData={setBookData}
+                      stripeData={data.stripePrice}
                     />
                   </Cell>
                 </Grid>

@@ -23,7 +23,7 @@ const Content = styled.div`
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4rem"};
-    color: ${props => props.h1color || colors.gray.nineHundred};
+    color: ${props => props.h1color || colors.primary.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -32,7 +32,7 @@ const Content = styled.div`
   }
   h2 {
     font-size: ${props => props.h2fontsize || "2rem"};
-    color: ${props => props.h2color || colors.gray.nineHundred};
+    color: ${props => props.h2color || colors.primary.nineHundred};
     font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -41,7 +41,7 @@ const Content = styled.div`
   }
   h3 {
     font-size: ${props => props.h3fontsize || "1.5rem"};
-    color: ${props => props.h3color || colors.gray.nineHundred};
+    color: ${props => props.h3color || colors.primary.nineHundred};
     font-weight: ${props => props.h3fontweight || "700"};
     margin: ${props => props.h3margin};
     @media only screen and (max-width: ${widths.tablet}) {
@@ -50,7 +50,7 @@ const Content = styled.div`
   }
   h4 {
     font-size: ${props => props.h4fontsize || "1rem"};
-    color: ${props => props.h4color || colors.gray.nineHundred};
+    color: ${props => props.h4color || colors.primary.nineHundred};
     font-weight: ${props => props.h4fontweight || "700"};
     margin: ${props => props.h4margin};
     &.is-column-heading {
@@ -70,7 +70,7 @@ const Content = styled.div`
     }
   }
   h5 {
-    color: ${props => props.h5color || colors.gray.nineHundred};
+    color: ${props => props.h5color || colors.primary.nineHundred};
     display: block;
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: ${props => props.h5fontsize || "1rem"};
@@ -87,7 +87,7 @@ const Content = styled.div`
     font-size: ${props => props.lifontsize || "1rem"};
   }
   p {
-    color: ${props => props.paragraphcolor || colors.gray.eightHundred};
+    color: ${props => props.paragraphcolor || colors.primary.eightHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};
@@ -97,7 +97,7 @@ const Content = styled.div`
     }
   }
   small {
-    color: ${props => props.smallcolor || colors.gray.sevenHundred};
+    color: ${props => props.smallcolor || colors.primary.eightHundred};
     font-size: ${props => props.smallfontsize};
     display: block;
     margin: 0.5rem 0;

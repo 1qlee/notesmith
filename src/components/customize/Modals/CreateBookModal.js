@@ -137,10 +137,10 @@ function CreateBookModal({
         justifycontent="flex-end"
       >
         <Link
-          to="/products/notebook"
+          to="/notebooks/wired-notebook"
         >
           <Button
-            backgroundcolor={colors.gray.oneHundred}
+            backgroundcolor={colors.gray.threeHundred}
             fontsize="0.8rem"
             margin="0 0.5rem 0 0"
           >
@@ -152,7 +152,6 @@ function CreateBookModal({
           color={colors.primary.white}
           flex="flex"
           fontsize="0.8rem"
-          shadowcolor={colors.primary.oneHundred}
           onClick={e => createNewBook()}
         >
           <span>
