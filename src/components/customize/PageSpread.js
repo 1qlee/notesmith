@@ -149,8 +149,9 @@ function PageSpread({
 
     return (
       <g>
-        {holes.map(hole => (
+        {holes.map((hole, index) => (
           <rect
+            key={`hole-${index}`}
             width={hole.width}
             height={hole.height}
             fill={hole.fill}

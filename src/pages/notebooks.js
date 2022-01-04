@@ -8,6 +8,7 @@ const Notebooks = () => {
     <Router basepath="/notebooks">
       <AllNotebooks path="/" />
       <WiredNotebook path="/wired-notebook" />
+      <WiredNotebook path="/wired-notebook/:coverColor" />
     </Router>
   )
 }

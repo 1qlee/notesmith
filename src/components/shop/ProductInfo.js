@@ -6,42 +6,36 @@ import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } f
 import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"
-import { QuantityTracker, StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
+import { StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
+import ColorPicker from "./ColorPicker"
 import Tag from "../ui/Tag"
 import Icon from "../Icon"
 import Button from "../Button"
 import Content from "../Content"
 
-const ProductInfo = ({ bookData, stripeData }) => {
+const ProductInfo = ({
+  bookData,
+  setBookData,
+  stripeData,
+}) => {
   const { addItem } = useShoppingCart()
-  const [itemQuantity, setItemQuantity] = useState(1)
   const [selectedTemplate, setSelectedTemplate] = ""
   const [loading, setLoading] = useState(false)
-
-  const calculateTotalPrice = (price) => {
-    const totalPrice = (itemQuantity * price) / 100
-
-    if (totalPrice) {
-      return (
-        <span>${totalPrice} -&nbsp;</span>
-      )
-    }
-  }
 
   const handleButtonSubmit = e => {
     e.preventDefault()
     setLoading(true)
 
-    navigate("/customize/notebook", {
+    navigate(`/customize/notebook`, {
       state: {
-        quantity: itemQuantity,
         size: bookData.size,
         dimensions: bookData.dimensions,
         width: bookData.width,
         height: bookData.height,
         numOfPages: bookData.numOfPages,
+        color: bookData.coverColor,
       }
     })
   }
@@ -74,66 +68,19 @@ const ProductInfo = ({ bookData, stripeData }) => {
         </Flexbox>
         <p>{stripeData.product.description}</p>
       </Content>
-      <Flexbox
-        margin="2rem 0"
-      >
-        <Flexbox
-          flex="flex"
-          justifycontent="space-between"
-        >
-          <Content
-            h5fontsize="0.625rem"
-            h5color={colors.primary.eightHundred}
-            h5margin="0 0 0.25rem 0"
-          >
-            <h5>Size</h5>
-            <p>{`${bookData.width}" x ${bookData.height}" (${bookData.size})`}</p>
-          </Content>
-          <Content
-            h5fontsize="0.625rem"
-            h5color={colors.primary.eightHundred}
-            h5margin="0 0 0.25rem 0"
-          >
-            <h5>Pages</h5>
-            <p>{bookData.numOfPages} pages</p>
-          </Content>
-          <Content
-            h5fontsize="0.625rem"
-            h5color={colors.primary.eightHundred}
-            h5margin="0 0 0.25rem 0"
-          >
-            <h5>Paper</h5>
-            <p>{`${bookData.paperColor}, ${bookData.paperWeight} `}</p>
-          </Content>
-          <Content
-            h5fontsize="0.625rem"
-            h5color={colors.primary.eightHundred}
-            h5margin="0 0 0.25rem 0"
-          >
-            <h5>Paper Tooth</h5>
-            <p>{bookData.paperTooth}</p>
-          </Content>
-        </Flexbox>
-      </Flexbox>
+      <ColorPicker
+        bookData={bookData}
+        setBookData={setBookData}
+      />
       <Flexbox
         flex="flex"
         margin="0 0 1rem"
       >
-        <QuantityTracker
-          buttonwidth="1rem"
-          buttonheight="1rem"
-          counterwidth="100%"
-          counterpadding="1rem"
-          counterfontsize="0.825rem"
-          iconsize="0.625rem"
-          setItemQuantity={setItemQuantity}
-        />
         <Button
           backgroundcolor={colors.primary.sixHundred}
           color={colors.primary.white}
           className={loading ? "is-loading" : null}
           disabled={loading}
-          margin="0 0 0 1rem"
           padding="1rem"
           width="100%"
           onClick={e => handleButtonSubmit(e)}
@@ -142,7 +89,7 @@ const ProductInfo = ({ bookData, stripeData }) => {
             <Loading height="1rem" width="1rem" />
           ) : (
             <span>
-              {calculateTotalPrice(stripeData.unit_amount)} Customize layouts
+              Customize page layouts and purchase
             </span>
           )}
         </Button>

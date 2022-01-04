@@ -70,6 +70,7 @@ function CreateBookModal({
         "pages": pagesObject,
         "size": bookData.size,
         "title": bookData.title,
+        "coverColor": bookData.coverColor,
         "uid": user.uid,
       }).then(() => {
         // afterwards, log that book id into 'users/userId/books/bookId'
@@ -137,10 +138,10 @@ function CreateBookModal({
         justifycontent="flex-end"
       >
         <Link
-          to="/notebooks/wired-notebook"
+          to="/notebooks/wired-notebook/"
         >
           <Button
-            backgroundcolor={colors.gray.threeHundred}
+            backgroundcolor={colors.gray.twoHundred}
             fontsize="0.8rem"
             margin="0 0.5rem 0 0"
           >

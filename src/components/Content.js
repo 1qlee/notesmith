@@ -20,6 +20,7 @@ const Content = styled.div`
     text-rendering: optimizeLegibility;
     line-height: 1.2;
     text-align: ${props => props.headingtextalign};
+    font-family: ${props => props.fontfamily};
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4rem"};

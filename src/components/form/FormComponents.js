@@ -49,16 +49,17 @@ function QuantityTracker(props) {
       boxshadow={props.wrapperboxshadow}
     >
       <QuantityButton
-        width={props.buttonwidth}
-        height={props.buttonheight}
-        onClick={e => handleButtonChange(e)}
         disabled={quantity === 1}
+        height={props.buttonheight}
         left={true}
+        onClick={e => handleButtonChange(e)}
+        padding={props.counterpadding}
+        width={props.buttonwidth}
       >
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
             size={props.iconsize}
-            color={quantity === 1 ? colors.gray.fiveHundred : colors.black}
+            color={quantity === 1 ? colors.gray.threeHundred : colors.gray.nineHundred}
             weight="bold"
           />
         </Icon>
@@ -76,15 +77,16 @@ function QuantityTracker(props) {
         width={props.counterwidth}
       />
       <QuantityButton
-        width={props.buttonwidth}
         height={props.buttonheight}
-        right={true}
         onClick={e => handleButtonChange(e, true)}
+        padding={props.counterpadding}
+        right={true}
+        width={props.buttonwidth}
       >
         <Icon>
           <Plus
             size={props.iconsize}
-            color={colors.black}
+            color={colors.gray.nineHundred}
             weight="bold"
           />
         </Icon>
@@ -95,19 +97,19 @@ function QuantityTracker(props) {
 
 const QuantityWrapper = styled.div`
   position: relative;
-  width: 8rem;
 `
 
 const QuantityButton = styled.button`
-  background-color: ${colors.white};
+  background-color: transparent;
   border: none;
   padding: 0;
   width: ${props => props.width};
   height: ${props => props.height};
   position: absolute;
-  top: 1rem;
+  top: ${props => props.padding};
   left: ${props => props.left ? "0.75rem" : null};
   right: ${props => props.right ? "0.75rem" : null};
+  z-index: 99;
   &:hover {
     cursor: pointer;
   }
@@ -123,12 +125,23 @@ const Counter = styled.input`
   text-align: center;
   vertical-align: top;
   width: ${props => props.width};
+  -moz-appearance: textfield;
+  transition: border-color 0.2s, box-shadow 0.2s;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  -moz-appearance: textfield;
+  &:focus {
+    border-color: ${colors.blue.sixHundred};
+    box-shadow: 0 0 1px 1px ${colors.blue.twoHundred};
+    outline: none;
+  }
+  &:hover {
+    &:not(:focus) {
+      background-color: ${colors.gray.oneHundred};
+    }
+  }
 `
 
 const AuthFormWrapper = styled.div`
@@ -346,7 +359,7 @@ const StyledInput = styled.input`
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
   }
   &::placeholder {

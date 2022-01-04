@@ -11,9 +11,11 @@ import Button from "../../Button"
 import Icon from "../../Icon"
 import Content from "../../Content"
 
-function Checkoutbar({ initialQuantity }) {
+function Checkoutbar({
+  bookData,
+}) {
   const { addItem } = useShoppingCart()
-  const [itemQuantity, setItemQuantity] = useState(initialQuantity || 1)
+  const [itemQuantity, setItemQuantity] = useState(1)
 
   const calculateTotalPrice = (price, dash) => {
     const totalPrice = (itemQuantity * price) / 100
@@ -87,7 +89,7 @@ function Checkoutbar({ initialQuantity }) {
               h4fontweight="400"
               h4color={colors.primary.eightHundred}
             >
-              <h4>{data.stripePrice.product.name}</h4>
+              <h3>{data.stripePrice.product.name}</h3>
               <p>{data.stripePrice.product.description.substring(0, 100)}...</p>
             </Content>
             <Flexbox
@@ -109,7 +111,7 @@ function Checkoutbar({ initialQuantity }) {
                 margin="0"
                 paragraphmarginbottom="0"
               >
-                <p>5.5" x 8.5"</p>
+                <p>{`${bookData.dimensions} (${bookData.size})`}</p>
               </Content>
             </Flexbox>
             <Flexbox
@@ -176,13 +178,11 @@ function Checkoutbar({ initialQuantity }) {
               <QuantityTracker
                 buttonwidth="1rem"
                 buttonheight="1rem"
-                counterwidth="2rem"
+                counterwidth="6rem"
                 counterfontsize="0.825rem"
                 iconsize="0.625rem"
-                wrapperpadding="0.25rem"
-                wrapperboxshadow={`0 1px 2px ${colors.shadow.float}`}
                 setItemQuantity={setItemQuantity}
-                initialQuantity={initialQuantity}
+                counterpadding="0.5rem"
               />
             </Flexbox>
             <Flexbox

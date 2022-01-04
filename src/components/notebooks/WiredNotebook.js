@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import React, { useState, useEffect } from "react"
+import { useStaticQuery, graphql, navigate } from "gatsby"
 import { spacing } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
@@ -12,8 +12,11 @@ import Nav from "../layout/Nav"
 import Seo from "../layout/Seo"
 import notebooks from "../../data/notebooks.json"
 
-const WiredNotebook = () => {
-  const bookData = notebooks.wired
+const WiredNotebook = ({ coverColor }) => {
+  const [bookData, setBookData] = useState({
+    ...notebooks.wired,
+    coverColor: coverColor
+  })
   const data = useStaticQuery(graphql`
     query productQuery {
       stripePrice(id: { eq: "price_1IbAlnIN24Fw2SWdOVRXdimr" }) {
@@ -29,6 +32,20 @@ const WiredNotebook = () => {
       }
     }
   `)
+
+  useEffect(() => {
+    // if there is no coverColor, redirect the user to bright-white by default
+    if (!coverColor || !notebooks.wired.colors.find(color => color.name === coverColor)) {
+      navigate("/notebooks/wired-notebook/bright-white", { replace: true })
+      setBookData({
+        ...notebooks.wired,
+        coverColor: "bright-white"
+      })
+    }
+    else {
+      navigate(`/notebooks/wired-notebook/${bookData.coverColor}`)
+    }
+  }, [bookData.coverColor])
 
   return (
     <Layout>
@@ -54,6 +71,7 @@ const WiredNotebook = () => {
                   <Cell width={2}>
                     <ProductInfo
                       bookData={bookData}
+                      setBookData={setBookData}
                       stripeData={data.stripePrice}
                     />
                   </Cell>

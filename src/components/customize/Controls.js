@@ -85,8 +85,8 @@ const ControlTab = styled.li`
 
 function Controls({
   canvasPages,
+  bookData,
   pageData,
-  quantity,
   selectedPage,
   setPageData,
   setSelectedPage,
@@ -144,7 +144,7 @@ function Controls({
       {activeTab === 3 && (
         <ControlsContent className="is-absolute">
           <Checkoutbar
-            initialQuantity={quantity}
+            bookData={bookData}
           />
         </ControlsContent>
       )}

@@ -37,7 +37,7 @@ const ModalHeader = styled.div`
 
 const ModalContent = styled.div`
   padding: 1rem;
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.oneHundred};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.paper.offWhite};
   &:first-child {
     border-radius: 0.25rem 0.25rem 0 0;
   }

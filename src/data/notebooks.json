@@ -14,11 +14,11 @@
     "price": 20,
     "colors": [
       {
-        "name": "Bright White",
+        "name": "bright-white",
         "hex": "#fff"
       },
       {
-        "name": "Deep Black",
+        "name": "deep-black",
         "hex": "#000"
       }
     ]

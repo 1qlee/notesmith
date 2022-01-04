@@ -1,33 +1,25 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { navigate, Link } from "gatsby"
-import { ArrowRight, WarningCircle, CheckCircle, Circle } from "phosphor-react"
-import { colors, convertToDecimal, spacing, widths, convertToPx } from "../../styles/variables"
+import { navigate } from "gatsby"
+import { spacing, widths, convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
 import { Container, LayoutContainer } from "../layout/Container"
 import { Flexbox } from "../layout/Flexbox"
-import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
-import { SectionMain, Section, SectionContent } from "../layout/Section"
-import { StyledFieldset, StyledLabel, StyledInput, RadioInput } from "../form/FormComponents"
+import { SectionMain } from "../layout/Section"
 import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
 import CreateBookModal from "./Modals/CreateBookModal"
 import CheckLoginModal from "./Modals/CheckLoginModal"
-import Button from "../Button"
 import Content from "../Content"
-import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import Nav from "../layout/Nav"
 import Canvas from "./Canvas"
 import Controls from "./Controls"
 import Functionsbar from "./Bars/Functionsbar"
-import Notification from "../ui/Notification"
 import Toolbar from "./Bars/Toolbar"
 import Seo from "../layout/Seo"
 
 const Notebook = ({ location, bookId }) => {
-  const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -158,6 +150,7 @@ const Notebook = ({ location, bookId }) => {
           width: location.state.width,
           height: location.state.height,
           numOfPages: location.state.numOfPages,
+          coverColor: location.state.coverColor,
         })
 
         setPageData({
@@ -203,6 +196,7 @@ const Notebook = ({ location, bookId }) => {
         type: "notSignedIn",
       })
     }
+    console.log(bookData)
 
   }, [loading, user, initializing, bookId])
 
@@ -259,7 +253,7 @@ const Notebook = ({ location, bookId }) => {
                   <Controls
                     canvasPages={canvasPages}
                     pageData={pageData}
-                    quantity={location.state ? location.state.quantity : 1}
+                    bookData={bookData}
                     selectedPage={selectedPage}
                     setPageData={setPageData}
                     setSelectedPage={setSelectedPage}
