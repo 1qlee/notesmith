@@ -138,7 +138,7 @@ function BooksContainer({
                     name="new-book-title"
                     autocomplete="chrome-off"
                     defaultValue={selectedBookTitle}
-                    onChange={e => setNewBookTitle(e.target.value)}
+                    onChange={e => setNewBookTitle(e.target.value.trim())}
                     padding="0"
                     borderradius="0"
                     ref={renameBookTitleRef}

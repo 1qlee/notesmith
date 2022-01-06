@@ -106,24 +106,25 @@ function CreateBookModal({
         <Flexbox
           margin="0 0 1rem"
         >
-          <StyledLabel>Title</StyledLabel>
-          <StyledInput
-            borderradius="0.25rem"
-            type="text"
-            id="new-book-title"
-            name="new-book-title"
-            autocomplete="false"
-            placeholder="Enter a title for your new book"
-            className={bookTitleError.show ? "is-error" : null}
-            onFocus={() => setBookTitleError({
-              show: false,
-              msg: "",
-            })}
-            onChange={e => setBookData({
-              ...bookData,
-              title: e.target.value
-            })}
-          />
+          <form autocomplete="off">
+            <StyledLabel>Title</StyledLabel>
+            <StyledInput
+              borderradius="0.25rem"
+              type="text"
+              id="new-book-title"
+              name="new-book-title"
+              placeholder="Enter a title for your new book"
+              className={bookTitleError.show ? "is-error" : null}
+              onFocus={() => setBookTitleError({
+                show: false,
+                msg: "",
+              })}
+              onChange={e => setBookData({
+                ...bookData,
+                title: e.target.value
+              })}
+            />
+          </form>
           {bookTitleError.show && (
             <ErrorLine color={colors.red.sixHundred}>
               <Icon>

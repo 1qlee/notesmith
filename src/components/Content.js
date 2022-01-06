@@ -20,34 +20,25 @@ const Content = styled.div`
     text-rendering: optimizeLegibility;
     line-height: 1.2;
     text-align: ${props => props.headingtextalign};
-    font-family: ${props => props.fontfamily};
+    font-family: ${props => props.headingfontfamily};
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4rem"};
     color: ${props => props.h1color || colors.primary.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
-    @media only screen and (max-width: ${widths.tablet}) {
-      font-size: 2.5rem;
-    }
   }
   h2 {
     font-size: ${props => props.h2fontsize || "2rem"};
     color: ${props => props.h2color || colors.primary.nineHundred};
     font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};
-    @media only screen and (max-width: ${widths.tablet}) {
-      font-size: 1.75rem;
-    }
   }
   h3 {
     font-size: ${props => props.h3fontsize || "1.5rem"};
     color: ${props => props.h3color || colors.primary.nineHundred};
     font-weight: ${props => props.h3fontweight || "700"};
     margin: ${props => props.h3margin};
-    @media only screen and (max-width: ${widths.tablet}) {
-      font-size: 1.1rem;
-    }
   }
   h4 {
     font-size: ${props => props.h4fontsize || "1rem"};
@@ -90,12 +81,10 @@ const Content = styled.div`
   p {
     color: ${props => props.paragraphcolor || colors.primary.eightHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
+    font-family: ${props => props.paragraphfontfamily};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};
     margin-bottom: ${props => props.paragraphmarginbottom};
-    @media only screen and (max-width: ${widths.tablet}) {
-      font-size: 1rem;
-    }
   }
   small {
     color: ${props => props.smallcolor || colors.primary.eightHundred};

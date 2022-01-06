@@ -24,7 +24,7 @@ const ProductInfo = ({
   const [selectedTemplate, setSelectedTemplate] = ""
   const [loading, setLoading] = useState(false)
 
-  const handleButtonSubmit = e => {
+  const handleNavigate = e => {
     e.preventDefault()
     setLoading(true)
 
@@ -35,7 +35,7 @@ const ProductInfo = ({
         width: bookData.width,
         height: bookData.height,
         numOfPages: bookData.numOfPages,
-        color: bookData.coverColor,
+        coverColor: bookData.coverColor,
       }
     })
   }
@@ -78,12 +78,12 @@ const ProductInfo = ({
       >
         <Button
           backgroundcolor={colors.primary.sixHundred}
-          color={colors.primary.white}
           className={loading ? "is-loading" : null}
+          color={colors.primary.white}
           disabled={loading}
+          onClick={e => handleNavigate(e)}
           padding="1rem"
           width="100%"
-          onClick={e => handleButtonSubmit(e)}
         >
           {loading ? (
             <Loading height="1rem" width="1rem" />

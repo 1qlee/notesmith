@@ -55,7 +55,7 @@ function ColorPicker({
 }) {
   return (
     <Content
-      fontfamily="Inter, Helvetica, Tahoma, sans-serif"
+      headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
       h3fontsize="0.75rem"
       margin="2rem 0"
     >

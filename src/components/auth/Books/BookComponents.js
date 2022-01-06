@@ -4,69 +4,25 @@ import { colors } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Content from "../../Content"
+import Tag from "../../ui/Tag"
 
-function BookRadio({
-  title,
-  description,
-  price,
-  numOfPages,
-  img,
-  size,
-  width,
-  height,
-  isActive,
-  setBookData
-}) {
-  return (
-    <BookRadioWrapper
-      className={isActive ? "is-active" : null}
-      onClick={() => setBookData({ size: size, height: height, width: width, numOfPages: numOfPages })}
-    >
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        padding="1rem"
-        boxshadow={`0 1px 2px ${colors.shadow.float}`}
-        borderradius="0.25rem"
-      >
-        <img width="60" src={img} alt="misc" />
-        <Flexbox
-          flex="flex"
-          justifycontent="space-between"
-          width="100%"
-        >
-          <Content
-            h3margin="0"
-            h3fontsize="1rem"
-          >
-            <h3>{title}</h3>
-            <p>{description}</p>
-          </Content>
-          <Content>
-            <h4>{price}</h4>
-          </Content>
-        </Flexbox>
-      </Flexbox>
-    </BookRadioWrapper>
-  )
-}
-
-const BookRadioWrapper = styled.a`
+const BookRadio = styled.div`
   display: block;
-  box-shadow: ${colors.shadow.layeredSmall};
   background-color: ${colors.white};
   border-radius: 0.25rem;
-  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-  border: 1px solid ${colors.primary.sixHundred};
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
+  border: 1px solid ${colors.gray.threeHundred};
+  padding: 1rem;
   &.is-active {
-    box-shadow: 0 0 0 ${colors.primary.sixHundred};
-    background-color: ${colors.primary.active};
+    border-color: ${colors.blue.sixHundred};
+    box-shadow: 0 0 1px 1px ${colors.blue.twoHundred};
     transform: translate(1px, 1px);
   }
   &:hover,
   &:focus {
+    cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
   }
 `

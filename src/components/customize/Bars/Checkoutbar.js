@@ -44,6 +44,7 @@ function Checkoutbar({
           price: price.unit_amount,
           currency: price.currency,
           image: price.product.images,
+          coverColor: bookData.coverColor,
         }, itemQuantity)
       )
     })

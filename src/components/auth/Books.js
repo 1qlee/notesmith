@@ -13,12 +13,14 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Select } from "../ui/Select"
 import { StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
-import Button from "../Button"
 import BooksContainer from "./Books/BooksContainer"
+import Button from "../Button"
 import Content from "../Content"
+import DeleteBookModal from "./Modals/DeleteBookModal"
 import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
+import NewBookModal from "./Modals/NewBookModal"
 import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
@@ -30,20 +32,17 @@ const Books = () => {
   const userBooksRef = firebaseDb.ref(`users/${uid}/books`)
   const pagesRef = firebaseDb.ref("pages/")
   const [loading, setLoading] = useState(true)
-  const [bookTitle, setBookTitle] = useState("")
   const [bookData, setBookData] = useState({
-    title: "",
     size: "",
-    width: 0,
-    height: 0,
     numOfPages: 160,
+    width: 528,
+    height: 816,
+    quantity: 1,
+    title: "",
+    coverColor: "",
   })
   const [userBooks, setUserBooks] = useState()
   const [bookToBeDeleted, setBookToBeDeleted] = useState()
-  const [dbError, setDbError] = useState({
-    msg: "",
-    color: colors.red.sixHundred,
-  })
   const [showModal, setShowModal] = useState({
     show: false,
     type: "createbook",
@@ -83,6 +82,10 @@ const Books = () => {
     }
 
     getUserBooks()
+
+    return () => {
+      setLoading(false)
+    }
   }, [])
 
   // check if we're in the browser and set local storage
@@ -95,70 +98,12 @@ const Books = () => {
     return isBrowser && window.localStorage.getItem(key, data)
   }
 
-  function handleShowModal(show, type) {
-    setShowModal({
-      show: show,
-      type: type,
-    })
-  }
-
   function handleBookDelete(book) {
-    handleShowModal(true, "deletebook")
-    setBookToBeDeleted(book)
-  }
-
-  // creating a new book in the db
-  function handleNewBookFormSubmit() {
-    setProcessing(true)
-    // create a new book key (id)
-    const newBookRef = booksRef.push()
-    const newBookKey = newBookRef.key
-    const pagesObject = {}
-    // create pages for the new book
-    for (let i = 1; i <= bookData.numOfPages; i++) {
-      // create a new page key (id)
-      const newPageRef = pagesRef.push()
-      const newPageKey = newPageRef.key
-      let newPageSvg = null
-      // keep track of each page in this object - it will be used later to set pages in 'books'
-      pagesObject[`${newPageKey}`] = true
-      // svg for a blank page
-      newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.width}" height="${bookData.height}" fill="#fff"></rect></svg>`
-      // write the new page into the db
-      newPageRef.set({
-        "date_created": new Date().valueOf(),
-        "id": newPageKey,
-        "size": bookData.size,
-        "bookId": newBookKey,
-        "uid": uid,
-        "pageNumber": i,
-        "svg": newPageSvg,
-        "width": bookData.width,
-        "height": bookData.height,
-      }).catch(error => {
-        console.log("error writing page to the database")
-      })
-    }
-    // write the new book into the db
-    newBookRef.set({
-      "date_created": new Date().valueOf(),
-      "id": newBookKey,
-      "numOfPages": bookData.numOfPages,
-      "width": bookData.width,
-      "height": bookData.height,
-      "pages": pagesObject,
-      "size": bookData.size,
-      "title": bookTitle,
-      "uid": uid,
-    }).then(() => {
-      setProcessing(false)
-      // afterwards, log that book id into 'users/userId/books/bookId'
-      userBooksRef.child(newBookKey).set(true)
-      // redirect the user to the book creation page
-      navigate(`/customize/notebook/${newBookKey}`)
-    }).catch(error => {
-      console.log("error writing book to the database")
+    setShowModal({
+      show: true,
+      type: "deletebook",
     })
+    setBookToBeDeleted(book)
   }
 
   // sort books client-side
@@ -266,7 +211,10 @@ const Books = () => {
       console.log(error)
     })
     // hide modal
-    handleShowModal(false, "deletebook")
+    setShowModal({
+      show: false,
+      type: "deletebook",
+    })
   }
 
   function duplicateBook(book) {
@@ -377,7 +325,10 @@ const Books = () => {
                 color={colors.white}
                 backgroundcolor={colors.primary.sixHundred}
                 borderradius="0.25rem"
-                onClick={() => handleShowModal(true, "createbook")}
+                onClick={() => setShowModal({
+                  show: true,
+                  type: "createbook",
+                })}
               >
                 New book
               </Button>
@@ -403,116 +354,22 @@ const Books = () => {
         </SectionApp>
       </SectionMain>
       {showModal.show && (
-        <Modal
-          width="300px"
-          setShowModal={setShowModal}
-        >
-          {showModal.type === "createbook" ? (
-            <>
-              <ModalContent
-                backgroundcolor={colors.white}
-              >
-                <Content
-                  h3fontsize="1.25rem"
-                  margin="0 0 2rem 0"
-                >
-                  <h3>Create a new book</h3>
-                  <p>Enter a title for your new notebook and then select a type of notebook by clicking one of the boxes below.</p>
-                </Content>
-                <Flexbox
-                  margin="0 0 1rem"
-                >
-                  <StyledLabel>Title</StyledLabel>
-                  <StyledInput
-                    borderradius="0.25rem"
-                    type="text"
-                    id="new-book-title"
-                    name="new-book-title"
-                    autocomplete="false"
-                    onChange={e => {
-                      setBookTitle(e.currentTarget.value)
-                      setDbError({
-                        msg: "",
-                      })
-                    }}
-                  />
-                  {dbError.msg && (
-                    <ErrorLine color={dbError.color}>
-                      <Icon>
-                        <Warning weight="fill" color={dbError.color} size={18} />
-                      </Icon>
-                      <span>{dbError.msg}</span>
-                    </ErrorLine>
-                  )}
-                </Flexbox>
-                <StyledLabel>Book (select one)</StyledLabel>
-                <BookRadio
-                  img="https://cdn.shopify.com/s/files/1/0831/9463/products/Notebooks_Notebook_Charcoal_1024x1024@2x.png?v=1571438791"
-                  title="A5 Notebook"
-                  description="160 pages total"
-                  price="$24"
-                  size="A5"
-                  width={528}
-                  height={816}
-                  numOfPages={160}
-                  setBookData={setBookData}
-                  isActive={bookData.size === "A5"}
-                />
-              </ModalContent>
-              <ModalFooter>
-                <Button
-                  backgroundcolor={colors.primary.sixHundred}
-                  className={processing ? "is-loading" : null}
-                  color={colors.white}
-                  disabled={bookTitle.length === 0 || !bookData.size || processing}
-                  form="new-book-form"
-                  onClick={e => handleNewBookFormSubmit()}
-                  padding="1rem"
-                  width="100%"
-                >
-                  {processing ? (
-                    <Loading height="1rem" width="100%" />
-                  ) : (
-                    "Create book"
-                  )}
-                </Button>
-              </ModalFooter>
-            </>
-          ) : (
-            <>
-              <ModalContent
-                backgroundcolor={colors.white}
-              >
-                <Content
-                  h3fontsize="1.25rem"
-                  margin="0 0 0 0"
-                >
-                  <h3>Delete this book</h3>
-                  <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
-                </Content>
-              </ModalContent>
-              <ModalFooter
-                justifycontent="flex-end"
-              >
-                <Button
-                  backgroundcolor={colors.gray.oneHundred}
-                  boxshadow={colors.shadow.layeredSmall}
-                  onClick={() => handleShowModal(false, "deletebook")}
-                  margin="0 0.5rem 0 0"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  backgroundcolor={colors.red.sixHundred}
-                  color={colors.white}
-                  onClick={() => deleteBook(bookToBeDeleted)}
-                >
-                  Delete
-                </Button>
-              </ModalFooter>
-            </>
+        <>
+          {showModal.type === "createbook" && (
+            <NewBookModal
+              setShowModal={setShowModal}
+              setBookData={setBookData}
+              bookData={bookData}
+            />
           )}
-        </Modal>
+          {showModal.type === "deletebook" && (
+            <DeleteBookModal
+              bookToBeDeleted={bookToBeDeleted}
+              deleteBook={deleteBook}
+              setShowModal={setShowModal}
+            />
+          )}
+        </>
       )}
     </Layout>
   )

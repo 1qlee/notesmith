@@ -318,7 +318,7 @@ const RadioInput = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.primary.eightHundred};
+  color: ${colors.primary.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};

@@ -1,5 +1,5 @@
 {
-  "wired": {
+  "wired-notebook": {
     "name": "Wired Notebook",
     "size": "A5",
     "height": "8.5",
@@ -12,6 +12,15 @@
     "description": "One signature, custom-printed Notesmith wired notebook with your fully custom layouts on every page. Our notebooks are made-to-order especially for you and are made with fountain-pen friendly paper.",
     "stripePriceId": "price_1IbAlnIN24Fw2SWdOVRXdimr",
     "price": 20,
+    "sizes": [
+      {
+        "name": "A5",
+        "width": "5.5",
+        "height": "8.5",
+        "widthPixel": 528,
+        "heightPixel": 816
+      }
+    ],
     "colors": [
       {
         "name": "bright-white",
