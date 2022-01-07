@@ -133,8 +133,7 @@ const Counter = styled.input`
     margin: 0;
   }
   &:focus {
-    border-color: ${colors.blue.sixHundred};
-    box-shadow: 0 0 1px 1px ${colors.blue.twoHundred};
+    border-color: ${colors.primary.sixHundred};
     outline: none;
   }
   &:hover {
@@ -220,7 +219,7 @@ const StyledRange = styled.div`
     width: 100%;
     height: 0.5rem;
     cursor: pointer;
-    background: ${colors.primary.oneHundred};
+    background: ${colors.gray.threeHundred};
   }
 `
 
@@ -336,7 +335,7 @@ const StyledInput = styled.input`
   background-color: ${colors.white};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: 1px solid ${colors.gray.threeHundred};
-  color: ${colors.gray.nineHundred};
+  color: ${colors.primary.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.8rem"};
@@ -352,18 +351,17 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    border-color: ${colors.blue.sixHundred};
-    box-shadow: 0 0 1px 1px ${colors.blue.twoHundred};
+    border-color: ${colors.primary.sixHundred};
     transform: translate(1px, 1px);
     outline: none;
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.gray.oneHundred};
+      background-color: ${colors.primary.hover};
     }
   }
   &::placeholder {
-    color: ${colors.gray.fiveHundred};
+    color: ${colors.primary.threeHundred};
     opacity: 1;
   }
 `
@@ -397,7 +395,7 @@ const StyledSelect = styled.select`
   }
   &:active,
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.blue.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
     outline: none;
   }
 `

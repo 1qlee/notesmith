@@ -11,16 +11,16 @@ import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import { BookRadio } from "../Books/BookComponents"
 import { Flexbox } from "../../layout/Flexbox"
+import ColorPicker from "../../shop/ColorPicker"
 import Tag from "../../ui/Tag"
 import Progress from "../../ui/Progress"
 import Icon from "../../Icon"
 import Button from "../../Button"
 import Content from "../../Content"
 
-const StepBackButton = styled.button`
-  border: none;
-  background-color: transparent;
-  color: ${colors.link.normal};
+const StepContent = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
 `
 
 function NewBookModal({
@@ -87,6 +87,8 @@ function NewBookModal({
         "numOfPages": bookData.numOfPages,
         "width": bookData.width,
         "height": bookData.height,
+        "widthInch": bookData.widthInch,
+        "heightInch": bookData.heightInch,
         "pages": pagesObject,
         "size": bookData.size,
         "title": bookData.title,
@@ -120,6 +122,7 @@ function NewBookModal({
             name: notebooks[book].name,
             slug: notebooks[book].slug,
             numOfPages: notebooks[book].numOfPages,
+            type: notebooks[book].type,
           }, 1)}
           isActive={bookData.name === notebooks[book].name}
           key={notebooks[book].name}
@@ -134,8 +137,8 @@ function NewBookModal({
               fontsize="0.75rem"
               fontfamily="Inter, Helvetica, Tahoma, sans-serif"
               fontweight="700"
-              backgroundcolor={colors.gray.threeHundred}
-              color={colors.gray.eightHundred}
+              backgroundcolor={colors.yellow.oneHundred}
+              color={colors.primary.nineHundred}
               padding="0.25rem 0.5rem"
               margin="0 0 0.25rem"
             >
@@ -217,72 +220,99 @@ function NewBookModal({
           </form>
         </Content>
         {step === 0 && (
-          <Content
-            margin="0 0 1rem"
-            headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-            h3fontsize="0.75rem"
-            h3margin="0 0 0.5rem 0"
-          >
-            <h3>Type of book</h3>
-            {generateBookTypes()}
-          </Content>
+          <StepContent>
+            <Content
+              margin="0 0 1rem"
+              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+              h3fontsize="0.75rem"
+              h3margin="0 0 0.5rem 0"
+            >
+              <h3>Type of book</h3>
+              {generateBookTypes()}
+            </Content>
+          </StepContent>
         )}
         {step === 1 && (
-          <Content
-            margin="0 0 1rem"
-            headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-            h3fontsize="0.75rem"
-            h3margin="0 0 0.5rem 0"
-          >
-            <h3>Size</h3>
-            {notebooks[bookData.slug].sizes.map(size => (
-              <BookRadio
-                onClick={() => handleClick({
-                  ...bookData,
-                  size: size.name
-                }, 2)}
-                isActive={bookData.size === size.name}
-                key={size.name}
-              >
-                <Flexbox
-                  flex="flex"
-                  alignitems="center"
-                  borderradius="0.25rem"
-                  justifycontent="space-between"
-                  width="100%"
+          <StepContent>
+            <Content
+              margin="0 0 1rem"
+              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+              h3fontsize="0.75rem"
+              h3margin="0 0 0.5rem 0"
+            >
+              <h3>Size</h3>
+              {notebooks[bookData.type].sizes.map(size => (
+                <BookRadio
+                  onClick={() => handleClick({
+                    ...bookData,
+                    size: size.name,
+                    width: size.widthPixel,
+                    height: size.heightPixel,
+                    widthInch: size.widthInch,
+                    heightInch: size.heightInch,
+                  }, 2)}
+                  isActive={bookData.size === size.name}
+                  key={size.name}
                 >
-                  <Tag
-                    fontsize="0.75rem"
-                    fontfamily="Inter, Helvetica, Tahoma, sans-serif"
-                    fontweight="700"
-                    backgroundcolor={colors.gray.threeHundred}
-                    color={colors.gray.eightHundred}
-                    padding="0.25rem 0.5rem"
-                    margin="0 0.5rem 0 0"
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    borderradius="0.25rem"
+                    justifycontent="space-between"
+                    width="100%"
                   >
-                    {size.name}
-                  </Tag>
-                  <Content
-                    h3margin="0"
-                    h3fontsize="1rem"
-                    paragraphmarginbottom="0"
-                  >
-                    <p>{`${size.width}" x ${size.height}"`}</p>
-                  </Content>
-                </Flexbox>
-              </BookRadio>
-            ))}
-          </Content>
+                    <Tag
+                      fontsize="0.75rem"
+                      fontfamily="Inter, Helvetica, Tahoma, sans-serif"
+                      fontweight="700"
+                      backgroundcolor={colors.yellow.oneHundred}
+                      color={colors.primary.nineHundred}
+                      padding="0.25rem 0.5rem"
+                      margin="0 0.5rem 0 0"
+                    >
+                      {size.name}
+                    </Tag>
+                    <Content
+                      h3margin="0"
+                      h3fontsize="1rem"
+                      paragraphmarginbottom="0"
+                    >
+                      <p>{`${size.widthInch}" x ${size.heightInch}"`}</p>
+                    </Content>
+                  </Flexbox>
+                </BookRadio>
+              ))}
+            </Content>
+          </StepContent>
         )}
         {step === 2 && (
-          <Content
-            margin="0 0 1rem"
-            headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-            h3fontsize="0.75rem"
-            h3margin="0 0 0.5rem 0"
-          >
-            <h3>Cover color</h3>
-          </Content>
+          <StepContent>
+            <Content
+              margin="0 0 1rem"
+              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+              h3fontsize="0.75rem"
+              h3margin="0 0 0.5rem 0"
+            >
+              <h3>Cover color</h3>
+              <Flexbox
+                flex="flex"
+                alignitems="center"
+                borderradius="0.25rem"
+                justifycontent="space-between"
+                width="100%"
+              >
+                <ColorPicker
+                  data={notebooks[bookData.type].colors}
+                  selectedColor={bookData.coverColor}
+                  cbFunction={color => setBookData({
+                    ...bookData,
+                    coverColor: color,
+                  })}
+                />
+                <p style={{textTransform: "capitalize"}}>{bookData.coverColor.replace('-', ' ')}</p>
+              </Flexbox>
+            </Content>
+          </StepContent>
         )}
         <Flexbox
           flex="flex"
@@ -301,7 +331,7 @@ function NewBookModal({
             </Button>
           )}
           <Progress
-            barcolor={colors.gray.sixHundred}
+            barcolor={colors.primary.threeHundred}
             completion={parseFloat(step / 3 * 100)}
             margin="0"
             wrappercolor={colors.gray.threeHundred}
@@ -313,7 +343,7 @@ function NewBookModal({
           backgroundcolor={colors.primary.sixHundred}
           className={processing ? "is-loading" : null}
           color={colors.white}
-          disabled={processing || !bookData.title || bookData.title.trim().length === 0}
+          disabled={processing || !bookData.title || bookData.title.trim().length === 0 || step < 2}
           form="new-book-form"
           onClick={e => createNewBook()}
           padding="1rem"

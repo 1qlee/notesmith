@@ -1,10 +1,11 @@
 {
-  "wired-notebook": {
+  "wiredNotebook": {
     "name": "Wired Notebook",
     "size": "A5",
     "height": "8.5",
     "width": "5.5",
     "slug": "wired-notebook",
+    "type": "wiredNotebook",
     "numOfPages": 160,
     "paperWeight": "70lb",
     "paperColor": "Bright white",
@@ -15,8 +16,8 @@
     "sizes": [
       {
         "name": "A5",
-        "width": "5.5",
-        "height": "8.5",
+        "widthInch": "5.5",
+        "heightInch": "8.5",
         "widthPixel": 528,
         "heightPixel": 816
       }

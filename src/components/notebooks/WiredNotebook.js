@@ -14,7 +14,7 @@ import notebooks from "../../data/notebooks.json"
 
 const WiredNotebook = ({ coverColor }) => {
   const [bookData, setBookData] = useState({
-    ...notebooks.wired,
+    ...notebooks.wiredNotebook,
     coverColor: coverColor
   })
   const data = useStaticQuery(graphql`
@@ -35,10 +35,10 @@ const WiredNotebook = ({ coverColor }) => {
 
   useEffect(() => {
     // if there is no coverColor, redirect the user to bright-white by default
-    if (!coverColor || !notebooks.wired.colors.find(color => color.name === coverColor)) {
+    if (!coverColor || !notebooks.wiredNotebook.colors.find(color => color.name === coverColor)) {
       navigate("/notebooks/wired-notebook/bright-white", { replace: true })
       setBookData({
-        ...notebooks.wired,
+        ...notebooks.wiredNotebook,
         coverColor: "bright-white"
       })
     }

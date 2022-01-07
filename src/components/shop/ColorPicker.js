@@ -26,7 +26,7 @@ const ColorOption = styled.button`
   }
   &.is-active {
     &::before {
-      border-color: ${colors.blue.sixHundred}
+      border-color: ${colors.primary.sixHundred}
     }
   }
   &:not(:last-child) {
@@ -34,7 +34,7 @@ const ColorOption = styled.button`
   }
   &:focus {
     &::before {
-      border-color: ${colors.blue.sixHundred};
+      border-color: ${colors.primary.sixHundred};
     }
   }
   &:hover,
@@ -49,35 +49,29 @@ const ColorOption = styled.button`
   }
 `
 
+// expecting data to be an array of color objects
 function ColorPicker({
-  bookData,
-  setBookData
+  data,
+  selectedColor,
+  cbFunction
 }) {
   return (
-    <Content
-      headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-      h3fontsize="0.75rem"
-      margin="2rem 0"
+    <Flexbox
+      flex="flex"
+      alignitems="center"
+      padding="0 0 0 0.25rem"
+      flexwrap="wrap"
     >
-      <h3>Cover color</h3>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-      >
-        {bookData.colors.map(color => (
-          <ColorOption
-            key={color.name}
-            color={color.hex}
-            name={color.name}
-            className={color.name === bookData.coverColor && "is-active"}
-            onClick={() => setBookData({
-              ...bookData,
-              coverColor: color.name,
-            })}
-          />
-        ))}
-      </Flexbox>
-    </Content>
+      {data.map(color => (
+        <ColorOption
+          key={color.name}
+          color={color.hex}
+          name={color.name}
+          className={color.name === selectedColor && "is-active"}
+          onClick={() => cbFunction(color.name)}
+        />
+      ))}
+    </Flexbox>
   )
 }
 

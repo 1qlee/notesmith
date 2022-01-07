@@ -68,10 +68,21 @@ const ProductInfo = ({
         </Flexbox>
         <p>{stripeData.product.description}</p>
       </Content>
-      <ColorPicker
-        bookData={bookData}
-        setBookData={setBookData}
-      />
+      <Content
+        headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+        h3fontsize="0.75rem"
+        margin="2rem 0"
+      >
+        <h3>Cover color</h3>
+        <ColorPicker
+          data={bookData.colors}
+          selectedColor={bookData.coverColor}
+          cbFunction={color => setBookData({
+            ...bookData,
+            coverColor: color,
+          })}
+        />
+      </Content>
       <Flexbox
         flex="flex"
         margin="0 0 1rem"

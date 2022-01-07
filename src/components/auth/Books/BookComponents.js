@@ -22,7 +22,7 @@ const BookRadio = styled.div`
   &:focus {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.gray.oneHundred};
+      background-color: ${colors.primary.hover};
     }
   }
 `

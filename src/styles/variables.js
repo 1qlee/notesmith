@@ -24,8 +24,8 @@ const colors = {
     fiveHundred: "#33504F",
     sixHundred: "#22403F",
     sevenHundred: "#1c3635",
-    eightHundred: "#152828",
-    nineHundred: "#093737"
+    eightHundred: "#192f2f",
+    nineHundred: "#152828"
   },
   blue: {
     oneHundred: "#d1e3fa",

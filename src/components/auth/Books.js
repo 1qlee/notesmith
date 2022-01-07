@@ -4,8 +4,8 @@ import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
 import { jsPDF as createPdf } from 'jspdf'
-import 'svg2pdf.js'
 import Loading from "../../assets/loading.svg"
+import 'svg2pdf.js'
 
 import { BookRadio } from "./Books/BookComponents"
 import { Flexbox } from "../layout/Flexbox"
@@ -20,7 +20,7 @@ import DeleteBookModal from "./Modals/DeleteBookModal"
 import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
-import NewBookModal from "./Modals/NewBookModal"
+import NewBookModal from "./Modals/AppNewBookModal"
 import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
