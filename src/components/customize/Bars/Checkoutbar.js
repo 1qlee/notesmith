@@ -2,18 +2,23 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { ArrowCircleRight } from "phosphor-react"
 import { colors } from "../../../styles/variables"
-import { StaticQuery, graphql, navigate } from "gatsby"
+import { navigate } from "gatsby"
 import { useShoppingCart } from 'use-shopping-cart'
+import { useFirebaseContext } from "../../../utils/auth"
+import notebooks from "../../../data/notebooks.json"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker, StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
 import Button from "../../Button"
 import Icon from "../../Icon"
 import Content from "../../Content"
+import ColorPicker from "../../shop/ColorPicker"
 
 function Checkoutbar({
   bookData,
+  setBookData,
 }) {
+  const { user, firebaseDb } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
 
@@ -56,186 +61,177 @@ function Checkoutbar({
     })
   }
 
+  function updateBookCoverColor(color) {
+    const updates = {}
+    // update the specified book by its bookId
+    // only updates the title field
+    updates[`/books/${bookData.id}/coverColor`] = color
+
+    firebaseDb.ref().update(updates, error => {
+      if (error) {
+        console.log("Error occurred when updating book title.")
+      }
+    })
+  }
+
   return (
-    <StaticQuery
-      query={graphql`
-        query notebookQuery {
-          stripePrice(id: { eq: "price_1IbAlnIN24Fw2SWdOVRXdimr" }) {
-            id,
-            unit_amount,
-            currency,
-            product {
-              id
-              name
-              description
-              images
-            }
-          }
-        }
-      `}
-      render={data => (
+    <Flexbox
+      flex="flex"
+      flexdirection="column"
+      justifycontent="space-between"
+      height="100%"
+    >
+      <Flexbox
+        flex="flex"
+        flexdirection="column"
+        padding="1rem"
+      >
+        <Content
+          margin="0 0 1rem 0"
+          h4fontweight="400"
+          h4color={colors.primary.eightHundred}
+        >
+          <h3>Summary</h3>
+          <p>Below is a summary of your notebook's configurations.</p>
+        </Content>
         <Flexbox
           flex="flex"
-          flexdirection="column"
+          flexwrap="wrap"
           justifycontent="space-between"
-          height="100%"
+          alignitems="center"
+          margin="1rem 0"
         >
-          <Flexbox
-            flex="flex"
-            flexdirection="column"
-            padding="1rem"
+          <Content
+            padding="0"
+            margin="0"
+            h5fontsize="0.625rem"
+            h5margin="0 0 0.5rem"
           >
-            <Content
-              margin="0 0 1rem 0"
-              h4fontweight="400"
-              h4color={colors.primary.eightHundred}
-            >
-              <h3>{data.stripePrice.product.name}</h3>
-              <p>{data.stripePrice.product.description.substring(0, 100)}...</p>
-            </Content>
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="space-between"
-              margin="0.5rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h4margin="0"
-                h4fontweight="400"
-              >
-                <h4>Size</h4>
-              </Content>
-              <Content
-                padding="0"
-                margin="0"
-                paragraphmarginbottom="0"
-              >
-                <p>{`${bookData.dimensions} (${bookData.size})`}</p>
-              </Content>
-            </Flexbox>
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="space-between"
-              margin="0.5rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h4margin="0"
-                h4fontweight="400"
-              >
-                <h4>Cover</h4>
-              </Content>
-              <Content
-                padding="0"
-                margin="0"
-                paragraphmarginbottom="0"
-              >
-                <p>Forest green</p>
-              </Content>
-            </Flexbox>
-            <Flexbox
-              alignitems="center"
-              bordercolor={colors.gray.threeHundred}
-              className="has-border-bottom"
-              flex="flex"
-              justifycontent="space-between"
-              margin="0.5rem 0"
-              padding="0 0 1rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h4margin="0"
-                h4fontweight="400"
-              >
-                <h4>Pages</h4>
-              </Content>
-              <Content
-                padding="0"
-                margin="0"
-                paragraphmarginbottom="0"
-              >
-                <p>48</p>
-              </Content>
-            </Flexbox>
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="space-between"
-              margin="0.5rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h4margin="0"
-                h4fontweight="400"
-              >
-                <h4>Quantity</h4>
-              </Content>
-              <QuantityTracker
-                buttonwidth="1rem"
-                buttonheight="1rem"
-                counterwidth="6rem"
-                counterfontsize="0.825rem"
-                iconsize="0.625rem"
-                setItemQuantity={setItemQuantity}
-                counterpadding="0.5rem"
-              />
-            </Flexbox>
-            <Flexbox
-              flex="flex"
-              alignitems="flex-end"
-              justifycontent="space-between"
-              margin="0.5rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h4margin="0"
-                h4fontweight="400"
-              >
-                <h4>Subtotal</h4>
-              </Content>
-              <Content
-                padding="0"
-                margin="0"
-                h3margin="0"
-                h3fontweight="400"
-                h3color={colors.primary.sixHundred}
-              >
-                <h3>{calculateTotalPrice(data.stripePrice.unit_amount)}</h3>
-              </Content>
-            </Flexbox>
-          </Flexbox>
-          <Flexbox
-            padding="1rem"
-            backgroundcolor={colors.white}
-            className="has-border-top"
-            bordercolor={colors.gray.threeHundred}
+            <h5>Type</h5>
+            <p>{bookData.name}</p>
+          </Content>
+          <Content
+            padding="0"
+            margin="0"
+            h5fontsize="0.625rem"
+            h5margin="0 0 0.25rem"
           >
-            <Button
-              backgroundcolor={colors.primary.sixHundred}
-              borderradius="0.25rem"
-              color={colors.primary.white}
-              padding="1rem"
-              width="100%"
-              onClick={() => handleCheckoutButton(data.stripePrice)}
-            >
-              {calculateTotalPrice(data.stripePrice.unit_amount, true)} Checkout
-              <Icon
-                margin="0 0 0 0.5rem"
-              >
-                <ArrowCircleRight size="1rem" weight="bold" />
-              </Icon>
-            </Button>
-          </Flexbox>
+            <h5>Size</h5>
+            <p>{`${bookData.widthInch}" x ${bookData.heightInch}" (${bookData.size})`}</p>
+          </Content>
         </Flexbox>
-      )}
-    />
+        <Flexbox
+          flex="flex"
+          flexwrap="wrap"
+          justifycontent="space-between"
+          alignitems="center"
+        >
+          <Content
+            padding="0"
+            margin="0"
+            h5fontsize="0.625rem"
+            h5margin="0 0 0.5rem"
+          >
+            <h5>Cover</h5>
+            <ColorPicker
+              data={notebooks[bookData.type].colors}
+              selectedColor={bookData.coverColor}
+              cbFunction={color => setBookData({
+                ...bookData,
+                coverColor: color,
+              })}
+            />
+          </Content>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexwrap="wrap"
+          justifycontent="space-between"
+          alignitems="center"
+          margin="1rem 0"
+        >
+          <Content
+            padding="0"
+            margin="0"
+            h5fontsize="0.625rem"
+            h5margin="0 0 0.5rem"
+          >
+            <h5>Pages</h5>
+            <p>{bookData.numOfPages}</p>
+          </Content>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          justifycontent="space-between"
+          margin="0.5rem 0"
+        >
+          <Content
+            padding="0"
+            margin="0"
+            h4margin="0"
+            h4fontweight="400"
+          >
+            <h4>Quantity</h4>
+          </Content>
+          <QuantityTracker
+            buttonwidth="1rem"
+            buttonheight="1rem"
+            counterwidth="6rem"
+            counterfontsize="0.825rem"
+            iconsize="0.625rem"
+            setItemQuantity={setItemQuantity}
+            counterpadding="0.5rem"
+          />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          alignitems="flex-end"
+          justifycontent="space-between"
+          margin="0.5rem 0"
+        >
+          <Content
+            padding="0"
+            margin="0"
+            h4margin="0"
+            h4fontweight="400"
+          >
+            <h4>Subtotal</h4>
+          </Content>
+          <Content
+            padding="0"
+            margin="0"
+            h3margin="0"
+            h3fontweight="400"
+            h3color={colors.primary.sixHundred}
+          >
+            <h3>{calculateTotalPrice(2000)}</h3>
+          </Content>
+        </Flexbox>
+      </Flexbox>
+      <Flexbox
+        padding="1rem"
+        backgroundcolor={colors.white}
+        className="has-border-top"
+        bordercolor={colors.gray.threeHundred}
+      >
+        <Button
+          backgroundcolor={colors.primary.sixHundred}
+          borderradius="0.25rem"
+          color={colors.primary.white}
+          padding="1rem"
+          width="100%"
+          onClick={() => handleCheckoutButton(2000)}
+        >
+          {calculateTotalPrice(2000, true)} Checkout
+          <Icon
+            margin="0 0 0 0.5rem"
+          >
+            <ArrowCircleRight size="1rem" weight="bold" />
+          </Icon>
+        </Button>
+      </Flexbox>
+    </Flexbox>
   )
 }
 

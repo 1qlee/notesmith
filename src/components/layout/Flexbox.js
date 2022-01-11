@@ -11,6 +11,7 @@ const Flexbox = styled.div`
   justify-content: ${props => props.justifycontent};
   flex-direction: ${props => props.flexdirection};
   flex-wrap: ${props => props.flexwrap};
+  flex: ${props => props.flexprop};
   height: ${props => props.height};
   margin: ${props => props.margin};
   padding: ${props => props.padding};

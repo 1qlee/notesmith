@@ -1,37 +1,19 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { Cursor, Pencil, Rectangle, Circle, TextT } from "phosphor-react"
-import Line from "../../../assets/customize/line.svg"
+import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "phosphor-react"
 
+import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
 import Button from "../../Button"
 
-const StyledToolbar = styled.div`
-  align-items: center;
-  background-color: ${colors.white};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.primary.sixHundred};
-  box-shadow: ${colors.shadow.layered};
-  display: flex;
-  flex-direction: column;
-  height: 332px;
-  position: relative;
-`
-
 const ToolItem = styled.div`
-  padding: 14px;
+  padding: 1rem;
   transition: box-shadow 0.2s, background-color 0.2s;
-  &:first-child {
-    border-radius: 0.25rem 0.25rem 0 0;
-  }
-  &:last-child {
-    border-radius: 0 0 0.25rem 0.25rem;
-  }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.gray.oneHundred};
+      background-color: ${colors.primary.hover};
     }
   }
   &.is-active {
@@ -47,7 +29,11 @@ function Toolbar({ children }) {
   }
 
   return (
-    <StyledToolbar>
+    <Flexbox
+      flex="flex"
+      alignitems="center"
+      flexprop="1 1 33%"
+    >
       <ToolItem
         data-tool="cursor"
         onClick={e => selectTool(e)}
@@ -55,7 +41,7 @@ function Toolbar({ children }) {
       >
         <Icon>
           <Cursor
-            size="1.5rem"
+            size="1.25rem"
             weight={selectedTool === "cursor" ? "fill" : "duotone"}
             color={selectedTool === "cursor" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
@@ -68,7 +54,7 @@ function Toolbar({ children }) {
       >
         <Icon>
           <Pencil
-            size="1.5rem"
+            size="1.25rem"
             weight={selectedTool === "pencil" ? "fill" : "duotone"}
             color={selectedTool === "pencil" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
@@ -80,14 +66,10 @@ function Toolbar({ children }) {
         className={selectedTool === "line" ? "is-active" : null}
       >
         <Icon>
-          <Line
-            width="1.5rem"
-            height="1.5rem"
-            style={selectedTool === "line" ? {
-              stroke: colors.gray.nineHundred
-            } : {
-              stroke: colors.gray.sixHundred
-            }}
+          <LineSegment
+            size="1.25rem"
+            weight={selectedTool === "line" ? "fill" : "duotone"}
+            color={selectedTool === "line" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
       </ToolItem>
@@ -98,7 +80,7 @@ function Toolbar({ children }) {
       >
         <Icon>
           <Rectangle
-            size="1.5rem"
+            size="1.25rem"
             weight={selectedTool === "rectangle" ? "fill" : "duotone"}
             color={selectedTool === "rectangle" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
@@ -111,7 +93,7 @@ function Toolbar({ children }) {
       >
         <Icon>
           <Circle
-            size="1.5rem"
+            size="1.25rem"
             weight={selectedTool === "circle" ? "fill" : "duotone"}
             color={selectedTool === "circle" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
@@ -124,13 +106,13 @@ function Toolbar({ children }) {
       >
         <Icon>
           <TextT
-            size="1.5rem"
+            size="1.25rem"
             weight={selectedTool === "text" ? "fill" : "duotone"}
             color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
       </ToolItem>
-    </StyledToolbar>
+    </Flexbox>
   )
 }
 

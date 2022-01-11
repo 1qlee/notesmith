@@ -7,42 +7,29 @@ import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput } from "../../form/FormComponents"
 
 const StyledTitleBox = styled.div`
-  align-items: center;
-  background-color: ${colors.paper.offWhite};
-  border-radius: 0.25rem;
-  border: 1px solid transparent;
-  box-shadow: 0 0 0 ${colors.primary.oneHundred};
-  display: flex;
-  height: 2rem;
-  padding: 0;
+  background-color: ${colors.white};
+  flex: 1 1 33%;
+  padding: 1rem;
   position: relative;
-  transition: padding 0.2s, transform 0.2s, border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-  width: 300px;
+  transition: background-color 0.2s;
   p {
-    align-items: center;
-    display: flex;
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 1rem;
     font-weight: 700;
     height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
+    width: 100%;
     white-space: nowrap;
     word-break: break-all;
   }
   &:hover {
-    background-color: ${colors.white};
-    box-shadow: ${colors.shadow.layered};
-    transform: translateY(-1px);
+    background-color: ${colors.primary.hover};
     cursor: pointer;
-    padding: 0 0.5rem;
   }
   &.is-active {
     background-color: ${colors.white};
-    border-color: ${colors.primary.sixHundred};
-    box-shadow: 0 0 0 ${colors.primary.oneHundred};
-    padding: 0 0.5rem;
-    transform: translate(1px,1px);
   }
 `
 
@@ -51,76 +38,38 @@ const TitleInput = styled.input`
   background-color: transparent;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0;
+  text-align: center;
   width: 100%;
   &:focus {
     outline: none;
   }
 `
 
-const ErrorMsg = styled.span`
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.25rem);
-  font-size: 0.75rem;
-  padding: 0.25rem;
-  background-color: ${props => props.color};
-  box-shadow: 2px 2px 6px ${props => props.shadowcolor};
-  border-radius: 0 0.25rem 0.25rem;
-  color: ${colors.white};
-`
-
 function TitleBox({
   bookData,
   setBookData,
   bookId,
+  toast,
 }) {
   const { firebaseDb } = useFirebaseContext()
-  const [showTitleInput, setShowTitleInput] = useState(false)
-  const [error, setError] = useState({
-    show: false,
-    msg: "",
-    color: colors.red.sixHundred,
-    shadowcolor: colors.red.fourHundred,
-  })
-  const titleInput = useRef(null)
   const [loading, setLoading] = useState(false)
-
-  function hideErrorMsg() {
-    // make the error msg disappear after 3secs
-    setTimeout(() => {
-      setError({
-        show: false,
-        msg: "",
-        color: colors.red.sixHundred,
-        shadowcolor: colors.red.fourHundred,
-      })
-    }, 3000)
-  }
+  const [showTitleInput, setShowTitleInput] = useState(false)
+  const titleInput = useRef(null)
 
   function validateBookTitle(title) {
     const trimmedTitle = title.trim()
 
     if (!trimmedTitle) {
-      setError({
-        show: true,
-        msg: "Title field was empty.",
-        color: colors.red.sixHundred,
-        shadowcolor: colors.red.fourHundred,
-      })
+      toast.error("Please enter a title.")
     }
     else if (trimmedTitle.length > 255) {
-      setError({
-        show: true,
-        msg: "Title was too long.",
-        color: colors.red.sixHundred,
-        shadowcolor: colors.red.fourHundred,
-      })
+      toast.error("Title is too long (255+ characters).")
     }
     else {
       return trimmedTitle
     }
 
-    hideErrorMsg()
+    toast.dismiss()
   }
 
   function submitNewBookTitle(e) {
@@ -138,36 +87,30 @@ function TitleBox({
         title: title,
       })
 
-      const updates = {}
-      updates[`/books/${bookId}/title`] = title
-
-      firebaseDb.ref().update(updates, error => {
-        if (error) {
-          console.log("Error occurred when updating book title.")
+      firebaseDb.ref(`/books/${bookId}/title`).once("value").then(snapshot => {
+        if (snapshot.val() === title) {
+          setLoading(false)
         }
-      }).then(() => {
-        console.log("updated db title")
-        setError({
-          show: true,
-          msg: "Title updated.",
-          color: colors.green.sixHundred,
-          shadowcolor: colors.green.fourHundred,
-        })
+        else {
+          const updates = {}
+          updates[`/books/${bookId}/title`] = title
 
-        setLoading(false)
-        hideErrorMsg()
+          firebaseDb.ref().update(updates, error => {
+            if (error) {
+              console.log("Error occurred when updating book title.")
+            }
+          }).then(() => {
+            toast.success("Title successfully updated.")
+            setLoading(false)
+          })
+        }
       })
     }
   }
 
   function handleTitleBoxClick() {
+    toast.dismiss()
     setShowTitleInput(true)
-    setError({
-      show: false,
-      msg: "",
-      color: colors.red.sixHundred,
-      shadowcolor: colors.red.fourHundred,
-    })
 
     // have to wait for input to mount
     setTimeout(() => {
@@ -195,14 +138,6 @@ function TitleBox({
         />
       ) : (
         <p>{bookData.title}</p>
-      )}
-      {error.show && (
-        <ErrorMsg
-          color={error.color}
-          shadowcolor={error.shadowcolor}
-        >
-          {error.msg}
-        </ErrorMsg>
       )}
     </StyledTitleBox>
   )

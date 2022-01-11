@@ -4,15 +4,9 @@ import { colors } from "../../../styles/variables"
 import { Cursor, Pencil } from "phosphor-react"
 import { useFirebaseContext } from "../../../utils/auth"
 
+import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
 import Button from "../../Button"
-
-const StyledToolbar = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-`
 
 const ToolItem = styled.div`
   color: ${colors.white};
@@ -43,7 +37,10 @@ function Toolbar({ children, page, setShowTemplates }) {
 
   return (
     <>
-      <StyledToolbar>
+      <Flexbox
+        flex="flex"
+        alignitems="center"
+      >
         <ToolItem>
           <p onClick={() => setShowTemplates(state => !state)}>Templates</p>
         </ToolItem>
@@ -55,7 +52,7 @@ function Toolbar({ children, page, setShowTemplates }) {
         <ToolItem>Object</ToolItem>
         <ToolItem>View</ToolItem>
         {children}
-      </StyledToolbar>
+      </Flexbox>
     </>
   )
 }

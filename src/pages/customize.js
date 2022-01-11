@@ -1,12 +1,12 @@
 import React from "react"
 import { Router } from "@reach/router"
-import Notebook from "../components/customize/Notebook"
+import Editor from "../components/customize/Editor"
 
 const Customize = () => {
   return (
-    <Router basepath="/customize">
-      <Notebook path="/notebook/" />
-      <Notebook path="/notebook/:bookId" />
+    <Router basepath="/customize" style={{height: "100%"}}>
+      <Editor path="/notebook/" />
+      <Editor path="/notebook/:bookId" />
     </Router>
   )
 }

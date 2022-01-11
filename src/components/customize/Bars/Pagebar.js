@@ -9,6 +9,11 @@ import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
 
+const PagebarWrapper = styled.div`
+  background-color: ${colors.white};
+  height: 100%;
+`
+
 const StyledPage = styled.div`
   text-align: center;
   display: flex;
@@ -26,12 +31,11 @@ const StyledPage = styled.div`
     user-select: none;
   }
   svg {
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.07);
     border: 1px solid ${colors.gray.threeHundred};
     border-radius: 0.25rem;
     height: 64px;
     pointer-events: none;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
     width: 48px;
   }
   &.is-active {
@@ -40,7 +44,6 @@ const StyledPage = styled.div`
       font-weight: 700;
     }
     svg {
-      box-shadow: 0 0 0 ${colors.gray.oneHundred};
       border-color: ${colors.gray.nineHundred};
       transform: translate(1px, 1px);
     }
@@ -49,7 +52,6 @@ const StyledPage = styled.div`
     cursor: pointer;
     &:not(.is-active) {
       svg {
-        box-shadow: 1px 1px 1px ${colors.gray.oneHundred};
         border-color: ${colors.gray.sixHundred};
       }
     }
@@ -60,13 +62,12 @@ const PagePlaceholder = styled.div`
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.07);
   border: 1px solid ${colors.gray.threeHundred};
   border-radius: 0.25rem;
   background-color: ${colors.white};
   height: 64px;
   pointer-events: none;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: transform 0.2s, border-color 0.2s;
   width: 48px;
   z-index: 9;
 `
@@ -87,7 +88,7 @@ const Page = memo(props => {
     setSelectedPage,
     pageNumber,
   } = data
-  const columnCount = 4
+  const columnCount = 2
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
   // change the selected page number
@@ -131,28 +132,29 @@ function Pagebar({
   const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage)
 
   return (
-    <WindowGrid
-      useIsScrolling
-      columnCount={4}
-      columnWidth={64}
-      height={496}
-      rowCount={40}
-      rowHeight={112}
-      width={300}
-      overscanColumnCount={0}
-      overscanRowCount={0}
-      style={{
-        backgroundColor: 'white',
-        borderRadius: "0.25rem",
-        paddingTop: "1rem",
-        boxShadow: colors.shadow.layered,
-        border: `1px solid ${colors.primary.sixHundred}`,
-        overflowX: "hidden",
-      }}
-      itemData={itemData}
-    >
-      {Page}
-    </WindowGrid>
+    <PagebarWrapper>
+      <WindowGrid
+        className="window-grid"
+        useIsScrolling
+        columnCount={2}
+        columnWidth={64}
+        height={920}
+        rowCount={80}
+        rowHeight={112}
+        width={164}
+        overscanColumnCount={0}
+        overscanRowCount={0}
+        style={{
+          backgroundColor: 'white',
+          borderRadius: "0 0 0.25rem 0.25rem",
+          top: "0",
+          overflowX: "hidden",
+        }}
+        itemData={itemData}
+      >
+        {Page}
+      </WindowGrid>
+    </PagebarWrapper>
   )
 }
 

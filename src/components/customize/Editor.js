@@ -12,14 +12,13 @@ import CheckLoginModal from "./Modals/CheckLoginModal"
 import Content from "../Content"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
-import Nav from "../layout/Nav"
 import Canvas from "./Canvas"
 import Controls from "./Controls"
 import Functionsbar from "./Bars/Functionsbar"
-import Toolbar from "./Bars/Toolbar"
+import Pagebar from "./Bars/Pagebar"
 import Seo from "../layout/Seo"
 
-const Notebook = ({ location, bookId }) => {
+const Editor = ({ location, bookId }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -196,7 +195,6 @@ const Notebook = ({ location, bookId }) => {
         type: "notSignedIn",
       })
     }
-    console.log(bookData)
 
   }, [loading, user, initializing, bookId])
 
@@ -204,67 +202,67 @@ const Notebook = ({ location, bookId }) => {
     return <Loader />
   }
   return (
-    <Layout className="is-full-height">
+    <>
       <Seo title={`${bookData.title}`} />
-      <Nav />
-      <SectionMain>
-        <Container>
-          <LayoutContainer maxwidth={widths.widescreen}>
-            {noExistingBook ? (
-              <Flexbox
-                flex="flex"
-              >
-                <Content
-                  padding={`${spacing.large} 0`}
-                >
-                  <h2>Sorry, we couldn't find this book.</h2>
-                  <p>Create a new book?</p>
-                </Content>
-              </Flexbox>
-            ) : (
-              <Flexbox
-                flex="flex"
-                height="100%"
-                flexdirection="column"
-                justifycontent="space-between"
-                padding="0"
-              >
-                <Functionsbar
-                  selectedPage={selectedPage}
-                  setSelectedPage={setSelectedPage}
-                  bookData={bookData}
-                  setBookData={setBookData}
-                  bookId={bookId}
-                />
-                <Flexbox
-                  flex="flex"
-                  height="100%"
-                >
-                  <Toolbar />
-                  <Canvas
-                    canvasPages={canvasPages}
-                    canvasSize={canvasSize}
-                    bookData={bookData}
-                    pageData={pageData}
-                    selectedPage={selectedPage}
-                    setSelectedPageSvg={setSelectedPageSvg}
-                    setPageData={setPageData}
-                  />
-                  <Controls
-                    canvasPages={canvasPages}
-                    pageData={pageData}
-                    bookData={bookData}
-                    selectedPage={selectedPage}
-                    setPageData={setPageData}
-                    setSelectedPage={setSelectedPage}
-                    setShowModal={setShowModal}
-                  />
-                </Flexbox>
-              </Flexbox>
-            )}
-          </LayoutContainer>
-        </Container>
-      </SectionMain>
+      {noExistingBook ? (
+        <Flexbox
+          flex="flex"
+        >
+          <Content
+            padding={`${spacing.large} 0`}
+          >
+            <h2>Sorry, we couldn't find this book.</h2>
+            <p>Create a new book?</p>
+          </Content>
+        </Flexbox>
+      ) : (
+        <Flexbox
+          flex="flex"
+          height="100%"
+          flexdirection="column"
+          justifycontent="space-between"
+          padding="0"
+        >
+          <Functionsbar
+            selectedPage={selectedPage}
+            setSelectedPage={setSelectedPage}
+            bookData={bookData}
+            setBookData={setBookData}
+            bookId={bookId}
+          />
+          <Flexbox
+            flex="flex"
+            height="100%"
+          >
+            <Pagebar
+              canvasPages={canvasPages}
+              pageData={pageData}
+              selectedPage={selectedPage}
+              setPageData={setPageData}
+              setSelectedPage={setSelectedPage}
+            />
+            <Canvas
+              canvasPages={canvasPages}
+              canvasSize={canvasSize}
+              bookData={bookData}
+              pageData={pageData}
+              selectedPage={selectedPage}
+              setSelectedPageSvg={setSelectedPageSvg}
+              setPageData={setPageData}
+            />
+            <Controls
+              canvasPages={canvasPages}
+              pageData={pageData}
+              bookData={bookData}
+              setBookData={setBookData}
+              selectedPage={selectedPage}
+              setPageData={setPageData}
+              setSelectedPage={setSelectedPage}
+              setShowModal={setShowModal}
+            />
+          </Flexbox>
+        </Flexbox>
+      )}
       {showModal.show && (
         <>
           {showModal.type === "notSignedIn" && (
@@ -292,8 +290,8 @@ const Notebook = ({ location, bookId }) => {
           )}
         </>
       )}
-    </Layout>
+    </>
   )
 }
 
-export default Notebook
+export default Editor

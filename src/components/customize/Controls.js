@@ -19,20 +19,11 @@ const StyledControls = styled.div`
 
 const ControlsContent = styled.div`
   background-color: ${colors.white};
-  box-shadow: ${colors.shadow.layered};
   border: 1px solid ${colors.primary.sixHundred};
-  border-radius: 0.25rem;
-  height: 496px;
+  border-radius: 0 0 0.25rem 0.25rem;
+  height: 684px;
   overflow-x: hidden;
   overflow-y: scroll;
-  &.is-absolute {
-    position: absolute;
-    top: 3.125rem;
-    left: 0;
-    width: 300px;
-    z-index: 100;
-    box-shadow: none;
-  }
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -44,12 +35,10 @@ const ControlsContent = styled.div`
 
 const ControlTabs = styled.ul`
   background-color: ${colors.white};
+  border-radius: 0.25rem 0.25rem 0 0;
+  border: 1px solid ${colors.primary.sixHundred};
   display: inline-flex;
   list-style-type: none;
-  margin-bottom: 1rem;
-  box-shadow: ${colors.shadow.layered};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.primary.sixHundred};
   width: 100%;
 `
 
@@ -69,10 +58,10 @@ const ControlTab = styled.li`
     color: ${colors.primary.white};
   }
   &:first-child {
-    border-radius: 0.25rem 0 0 0.25rem;
+    border-radius: 0.25rem 0 0 0;
   }
   &:last-child {
-    border-radius: 0 0.25rem 0.25rem 0;
+    border-radius: 0 0.25rem 0 0;
   }
   &:hover {
     cursor: pointer;
@@ -88,6 +77,7 @@ function Controls({
   bookData,
   pageData,
   selectedPage,
+  setBookData,
   setPageData,
   setSelectedPage,
   setShowModal,
@@ -99,38 +89,19 @@ function Controls({
       <ControlTabs>
         <ControlTab
           className={activeTab === 1 ? "is-active" : null}
-          onClick={() => {
-            setPageData({
-              ...pageData,
-              template: "",
-            })
-            setActiveTab(1)
-          }}
-        >
-          Pages
-        </ControlTab>
-        <ControlTab
-          className={activeTab === 2 ? "is-active" : null}
-          onClick={() => setActiveTab(2)}
+          onClick={() => setActiveTab(1)}
         >
           Templates
         </ControlTab>
         <ControlTab
-          className={activeTab === 3 ? "is-active is-checkout" : "is-checkout"}
-          onClick={() => setActiveTab(3)}
+          className={activeTab === 2 ? "is-active is-checkout" : "is-checkout"}
+          onClick={() => setActiveTab(2)}
         >
           Checkout
         </ControlTab>
       </ControlTabs>
-      <Pagebar
-        canvasPages={canvasPages}
-        pageData={pageData}
-        selectedPage={selectedPage}
-        setPageData={setPageData}
-        setSelectedPage={setSelectedPage}
-      />
-      {activeTab === 2 && (
-        <ControlsContent className="is-absolute">
+      {activeTab === 1 && (
+        <ControlsContent>
           <Templatesbar
             pageData={pageData}
             setShowModal={setShowModal}
@@ -141,10 +112,11 @@ function Controls({
           </Templatesbar>
         </ControlsContent>
       )}
-      {activeTab === 3 && (
-        <ControlsContent className="is-absolute">
+      {activeTab === 2 && (
+        <ControlsContent>
           <Checkoutbar
             bookData={bookData}
+            setBookData={setBookData}
           />
         </ControlsContent>
       )}

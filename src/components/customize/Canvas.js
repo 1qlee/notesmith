@@ -13,7 +13,7 @@ const Workspace = styled.div`
   display: flex;
   height: 100%;
   justify-content: center;
-  left: 62px;
+  left: 164px;
   overflow: auto;
   position: absolute;
   right: 300px;

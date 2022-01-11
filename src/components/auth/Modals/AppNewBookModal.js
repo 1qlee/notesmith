@@ -67,33 +67,35 @@ function NewBookModal({
         newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.width}" height="${bookData.height}" fill="#fff"></rect></svg>`
         // write the new page into the db
         newPageRef.set({
-          "date_created": new Date().valueOf(),
-          "id": newPageKey,
-          "size": bookData.size,
           "bookId": newBookKey,
-          "uid": user.uid,
-          "pageNumber": i,
-          "svg": newPageSvg,
-          "width": bookData.width,
+          "date_created": new Date().valueOf(),
           "height": bookData.height,
+          "id": newPageKey,
+          "pageNumber": i,
+          "size": bookData.size,
+          "svg": newPageSvg,
+          "uid": user.uid,
+          "width": bookData.width,
         }).catch(error => {
           console.log("error writing page to the database")
         })
       }
       // write the new book into the db
       newBookRef.set({
+        "coverColor": bookData.coverColor,
         "date_created": new Date().valueOf(),
-        "id": newBookKey,
-        "numOfPages": bookData.numOfPages,
-        "width": bookData.width,
         "height": bookData.height,
-        "widthInch": bookData.widthInch,
         "heightInch": bookData.heightInch,
+        "id": newBookKey,
+        "name": bookData.name,
+        "numOfPages": bookData.numOfPages,
         "pages": pagesObject,
         "size": bookData.size,
         "title": bookData.title,
-        "coverColor": bookData.coverColor,
+        "type": bookData.type,
         "uid": user.uid,
+        "width": bookData.width,
+        "widthInch": bookData.widthInch,
       }).then(() => {
         setProcessing(false)
         // afterwards, log that book id into 'users/userId/books/bookId'
