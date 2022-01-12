@@ -11,7 +11,9 @@ import Icon from "../../Icon"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
+  border-right: 1px solid ${colors.gray.threeHundred};
   height: 100%;
+  z-index: 8;
 `
 
 const StyledPage = styled.div`
@@ -138,7 +140,7 @@ function Pagebar({
         useIsScrolling
         columnCount={2}
         columnWidth={64}
-        height={920}
+        height={919}
         rowCount={80}
         rowHeight={112}
         width={164}

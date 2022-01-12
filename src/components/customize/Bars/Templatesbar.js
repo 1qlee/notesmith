@@ -106,7 +106,8 @@ function Templatesbar({
       height="100%"
     >
       <TemplatesContent>
-        <StyledLabel>Templates</StyledLabel>
+        <StyledLabel
+        margin="0 0 1rem 0">Styles</StyledLabel>
         <Flexbox
           flex="flex"
           flexwrap="wrap"

@@ -105,36 +105,35 @@ function PageSpread({
   const [currentPageSide, setCurrentPageSide] = useState("right")
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
-  const conversionRatio = bookData.width / bookData.height // width conversion ratio
-  const canvasPageWidth = conversionRatio * canvasSize.height // converted page width
-  const canvasPageHeight = canvasSize.height // height is the main constraint
+  const canvasPageWidth = bookData.width
+  const canvasPageHeight = bookData.height
   const minimumMargin = convertToPx(3.175)
   const leftPageXPosition = minimumMargin
   const rightPageXPosition = canvasPageWidth + convertToPx(9.525)
   const pageSpreadWidth = canvasPageWidth * 2 // converted page spread width
   // the parts of the page that can be manipulated
-  const workingPageHeight = canvasSize.height - convertToPx(6.35) // minus top and bottom margins
+  const workingPageHeight = canvasPageHeight - convertToPx(6.35) // minus top and bottom margins
   const workingPageWidth = canvasPageWidth - convertToPx(12.7) // minus left and right margins
 
   function Holes({ pageSide }) {
     const [holes, setHoles] = useState([])
 
     function generateHoles() {
-      const numOfHoles = bookData.height / 34.845 + 1
       const holesArray = []
-      const leftHolesXPosition = canvasPageWidth - convertToPx(1.5875) - 15
-      const rightHolesXPosition = convertToPx(1.5875)
+      const numOfHoles = (canvasPageHeight - 26) / 26 // page height minus the size of one hole incl margin divided by that same value
+      const leftHolesXPosition = canvasPageWidth - 26
+      const rightHolesXPosition = 10
       // for loop to generate appropriate number of holes for the page height
       for (let i = 0; i < numOfHoles; i++) {
         // hole property object
         const hole = {
-          width: 15,
-          height: 15,
+          width: 16,
+          height: 16,
           fill: colors.gray.oneHundred,
           strokeWidth: 1,
           stroke: colors.gray.threeHundred,
           x: pageSide === "left" ? leftHolesXPosition : rightHolesXPosition,
-          y: 28.23 * i + 13.23
+          y: 26 * i + 10
         }
 
         holesArray.push(hole)
@@ -178,11 +177,10 @@ function PageSpread({
     <svg
       id="page-spread"
       xmlns="http://www.w3.org/2000/svg"
-      style={{pointerEvents: "none"}}
-      width={pageSpreadWidth}
+      width={canvasSize.width}
       height={canvasSize.height}
       x={(canvasSize.width - pageSpreadWidth) / 2}
-      y="0"
+      y={(canvasSize.height - canvasPageHeight) / 2}
     >
       {selectedPage === 1 ? (
         <svg

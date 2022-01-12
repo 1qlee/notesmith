@@ -11,19 +11,17 @@ import Icon from "../Icon"
 import Button from "../Button"
 
 const StyledControls = styled.div`
-  position: absolute;
-  right: 0;
-  height: calc(100% - 6rem);
   width: 300px;
+  height: 100%;
+  border-left: 1px solid ${colors.gray.threeHundred};
+  z-index: 8;
 `
 
 const ControlsContent = styled.div`
   background-color: ${colors.white};
-  border: 1px solid ${colors.primary.sixHundred};
-  border-radius: 0 0 0.25rem 0.25rem;
-  height: 684px;
+  height: calc(100% - 56px);
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -35,9 +33,9 @@ const ControlsContent = styled.div`
 
 const ControlTabs = styled.ul`
   background-color: ${colors.white};
-  border-radius: 0.25rem 0.25rem 0 0;
-  border: 1px solid ${colors.primary.sixHundred};
+  border-bottom: 1px solid ${colors.gray.threeHundred};
   display: inline-flex;
+  justify-content: flex-start;
   list-style-type: none;
   width: 100%;
 `
@@ -47,21 +45,13 @@ const ControlTab = styled.li`
   color: ${colors.primary.threeHundred};
   font-family: "Inter", Helvetica, sans-serif;
   font-size: 0.825rem;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
-  flex: 1;
   font-weight: 700;
   text-align: center;
   &.is-active {
-    background-color: ${colors.primary.sixHundred};
-    color: ${colors.primary.white};
-  }
-  &:first-child {
-    border-radius: 0.25rem 0 0 0;
-  }
-  &:last-child {
-    border-radius: 0 0.25rem 0 0;
+    color: ${colors.primary.eightHundred};
   }
   &:hover {
     cursor: pointer;

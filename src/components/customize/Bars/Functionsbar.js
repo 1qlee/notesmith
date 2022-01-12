@@ -10,12 +10,13 @@ import TitleBox from "../BarComponents/TitleBox"
 import Toolbox from "../BarComponents/Toolbox"
 
 const PageInput = styled.input`
-  width: 50px;
-  border: 1px solid ${colors.gray.sixHundred};
   border-radius: 0.25rem;
-  text-align: center;
-  padding: 0.25rem;
+  border: 1px solid ${colors.gray.sixHundred};
   margin-right: 0.25rem;
+  padding: 0.25rem;
+  text-align: center;
+  width: 50px;
+  z-index: 9;
 `
 
 function Functionsbar({
@@ -45,6 +46,8 @@ function Functionsbar({
     <Flexbox
       flex="flex"
       width="100%"
+      className="has-border-bottom"
+      bordercolor={colors.gray.threeHundred}
     >
       <Toolbox
         toast={toast}

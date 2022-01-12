@@ -34,8 +34,8 @@ const Editor = ({ location, bookId }) => {
     title: "",
   })
   const [canvasSize, setCanvasSize] = useState({
-    width: 1082,
-    height: 716
+    width: 1456,
+    height: 919,
   })
   const [pageData, setPageData] = useState({
     template: "",
@@ -216,13 +216,7 @@ const Editor = ({ location, bookId }) => {
           </Content>
         </Flexbox>
       ) : (
-        <Flexbox
-          flex="flex"
-          height="100%"
-          flexdirection="column"
-          justifycontent="space-between"
-          padding="0"
-        >
+        <>
           <Functionsbar
             selectedPage={selectedPage}
             setSelectedPage={setSelectedPage}
@@ -232,7 +226,8 @@ const Editor = ({ location, bookId }) => {
           />
           <Flexbox
             flex="flex"
-            height="100%"
+            height="calc(100% - 56px)"
+            justifycontent="space-between"
           >
             <Pagebar
               canvasPages={canvasPages}
@@ -261,7 +256,7 @@ const Editor = ({ location, bookId }) => {
               setShowModal={setShowModal}
             />
           </Flexbox>
-        </Flexbox>
+        </>
       )}
       {showModal.show && (
         <>
