@@ -7,10 +7,11 @@ import { colors } from "../../styles/variables"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.paper.offWhite};
-  position: relative;
+  height: 100%;
   overflow-x: hidden;
-  width: 100%;
   padding: 0 1rem 1rem;
+  position: relative;
+  width: 100%;
   &.is-full-height {
     height: 100vh;
   }

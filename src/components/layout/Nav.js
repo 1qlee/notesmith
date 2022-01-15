@@ -171,7 +171,7 @@ function Nav(props) {
         {!loading && (
           <>
             <NavSection justifycontent="center">
-              <Link to="/notebooks/">
+              <Link to="/products/">
                 <NavItem>Shop</NavItem>
               </Link>
               {user ? (

@@ -18,7 +18,7 @@ function RuledControls({
   const rowsHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // basically how much space the lines are taking up
   const verticalDeadspace = pageData.pageHeight - rowsHeight
   const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
-  const bottomMargin = convertToMM(verticalDeadspace) - convertToMM(pageData.thickness)
+  const bottomMargin = convertToMM(verticalDeadspace)
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
 

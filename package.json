@@ -31,6 +31,7 @@
     "gatsby-source-contentful": "^5.11.1",
     "gatsby-source-filesystem": "^3.11.0",
     "gatsby-source-stripe": "^3.2.2",
+    "gatsby-transformer-json": "^4.5.0",
     "gatsby-transformer-sharp": "^3.11.0",
     "ink": "^3.0.9",
     "jspdf": "^2.5.0",

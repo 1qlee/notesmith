@@ -5,7 +5,7 @@ import { colors, convertToPx } from "../../../styles/variables"
 import { Link, navigate } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import Loading from "../../../assets/loading.svg"
-import notebooks from "../../../data/notebooks.json"
+import * as products from "../../../data/products.json"
 
 import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -116,18 +116,18 @@ function NewBookModal({
   function generateBookTypes() {
     let booksArray = []
 
-    for (const book in notebooks) {
+    for (const book in products) {
       booksArray.push(
         <BookRadio
           onClick={() => handleClick({
             ...bookData,
-            name: notebooks[book].name,
-            slug: notebooks[book].slug,
-            numOfPages: notebooks[book].numOfPages,
-            type: notebooks[book].type,
+            name: products[book].name,
+            slug: products[book].slug,
+            numOfPages: products[book].numOfPages,
+            type: products[book].type,
           }, 1)}
-          isActive={bookData.name === notebooks[book].name}
-          key={notebooks[book].name}
+          isActive={bookData.name === products[book].name}
+          key={products[book].name}
         >
           <Flexbox
             flex="flex"
@@ -144,7 +144,7 @@ function NewBookModal({
               padding="0.25rem 0.5rem"
               margin="0 0 0.25rem"
             >
-              {notebooks[book].name}
+              {products[book].name}
             </Tag>
             <Content
               paragraphfontsize="1.25rem"
@@ -152,14 +152,14 @@ function NewBookModal({
               paragraphtextalign="right"
               paragraphlineheight="1"
             >
-              <p>${notebooks[book].price}</p>
+              <p>${products[book].price}</p>
             </Content>
           </Flexbox>
           <Content
             paragraphfontsize="0.875rem"
             padding="0 0 0 0.5rem"
           >
-            <p>This notebook has {notebooks[book].numOfPages} total pages.</p>
+            <p>This notebook has {products[book].numOfPages} total pages.</p>
           </Content>
         </BookRadio>
       )
@@ -243,7 +243,7 @@ function NewBookModal({
               h3margin="0 0 0.5rem 0"
             >
               <h3>Size</h3>
-              {notebooks[bookData.type].sizes.map(size => (
+              {products[bookData.type].sizes.map(size => (
                 <BookRadio
                   onClick={() => handleClick({
                     ...bookData,
@@ -304,7 +304,7 @@ function NewBookModal({
                 width="100%"
               >
                 <ColorPicker
-                  data={notebooks[bookData.type].colors}
+                  data={products[bookData.type].colors}
                   selectedColor={bookData.coverColor}
                   cbFunction={color => setBookData({
                     ...bookData,

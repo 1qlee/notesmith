@@ -110,11 +110,6 @@ samp {
 figure {
   margin: 1em 40px;
 }
-hr {
-  box-sizing: content-box;
-  height: 0;
-  overflow: visible;
-}
 button,
 input,
 optgroup,
@@ -388,9 +383,12 @@ hr {
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 0;
-  background: hsla(0, 0%, 0%, 0.2);
+  background: #E0E0E0;
   border: none;
   height: 1px;
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
 }
 address {
   margin-left: 0;

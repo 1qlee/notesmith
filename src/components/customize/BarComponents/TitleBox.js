@@ -68,8 +68,6 @@ function TitleBox({
     else {
       return trimmedTitle
     }
-
-    toast.dismiss()
   }
 
   function submitNewBookTitle(e) {

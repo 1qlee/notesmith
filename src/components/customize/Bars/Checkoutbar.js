@@ -1,16 +1,14 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { ArrowCircleRight } from "phosphor-react"
 import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
-import notebooks from "../../../data/notebooks.json"
+import products from "../../../data/products.json"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker, StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
 import Button from "../../Button"
-import Icon from "../../Icon"
 import Content from "../../Content"
 import ColorPicker from "../../shop/ColorPicker"
 
@@ -55,6 +53,8 @@ function Checkoutbar({
     })
 
     addItemsToCart.then(() => {
+      updateBookCoverColor()
+    }).then(res => {
       return navigate("/cart")
     }).catch(error => {
       console.log(error)
@@ -87,9 +87,9 @@ function Checkoutbar({
         padding="1rem"
       >
         <Content
-          margin="0 0 1rem 0"
-          h4fontweight="400"
-          h4color={colors.primary.eightHundred}
+          margin="0 0 2rem 0"
+          paragraphcolor={colors.primary.threeHundred}
+          paragraphfontweight="500"
         >
           <h3>Summary</h3>
           <p>Below is a summary of your notebook's configurations.</p>
@@ -99,13 +99,15 @@ function Checkoutbar({
           flexwrap="wrap"
           justifycontent="space-between"
           alignitems="center"
-          margin="1rem 0"
+          margin="0 0 1rem"
         >
           <Content
             padding="0"
             margin="0"
             h5fontsize="0.625rem"
-            h5margin="0 0 0.5rem"
+            h5margin="0 0 0.25rem"
+            paragraphcolor={colors.primary.threeHundred}
+            paragraphfontweight="500"
           >
             <h5>Type</h5>
             <p>{bookData.name}</p>
@@ -115,6 +117,8 @@ function Checkoutbar({
             margin="0"
             h5fontsize="0.625rem"
             h5margin="0 0 0.25rem"
+            paragraphcolor={colors.primary.threeHundred}
+            paragraphfontweight="500"
           >
             <h5>Size</h5>
             <p>{`${bookData.widthInch}" x ${bookData.heightInch}" (${bookData.size})`}</p>
@@ -125,6 +129,7 @@ function Checkoutbar({
           flexwrap="wrap"
           justifycontent="space-between"
           alignitems="center"
+          margin="0 0 1rem"
         >
           <Content
             padding="0"
@@ -134,7 +139,7 @@ function Checkoutbar({
           >
             <h5>Cover</h5>
             <ColorPicker
-              data={notebooks[bookData.type].colors}
+              data={products[bookData.type].colors}
               selectedColor={bookData.coverColor}
               cbFunction={color => setBookData({
                 ...bookData,
@@ -148,16 +153,18 @@ function Checkoutbar({
           flexwrap="wrap"
           justifycontent="space-between"
           alignitems="center"
-          margin="1rem 0"
+          margin="0 0 1rem"
         >
           <Content
             padding="0"
             margin="0"
             h5fontsize="0.625rem"
-            h5margin="0 0 0.5rem"
+            h5margin="0 0 0.25rem"
+            paragraphcolor={colors.primary.threeHundred}
+            paragraphfontweight="500"
           >
             <h5>Pages</h5>
-            <p>{bookData.numOfPages}</p>
+            <p>{bookData.numOfPages} total</p>
           </Content>
         </Flexbox>
         <Flexbox
@@ -165,24 +172,29 @@ function Checkoutbar({
           alignitems="center"
           justifycontent="space-between"
           margin="0.5rem 0"
+          padding="0 0 2rem 0"
+          className="has-border-bottom"
+          bordercolor={colors.gray.threeHundred}
         >
           <Content
             padding="0"
             margin="0"
-            h4margin="0"
-            h4fontweight="400"
+            h5fontsize="0.625rem"
+            h5margin="0 0 0.5rem"
+            paragraphcolor={colors.primary.threeHundred}
+            paragraphfontweight="500"
           >
-            <h4>Quantity</h4>
+            <h5>Quantity</h5>
+            <QuantityTracker
+              buttonwidth="1rem"
+              buttonheight="1rem"
+              counterwidth="6rem"
+              counterfontsize="0.825rem"
+              iconsize="0.625rem"
+              setItemQuantity={setItemQuantity}
+              counterpadding="0.5rem"
+            />
           </Content>
-          <QuantityTracker
-            buttonwidth="1rem"
-            buttonheight="1rem"
-            counterwidth="6rem"
-            counterfontsize="0.825rem"
-            iconsize="0.625rem"
-            setItemQuantity={setItemQuantity}
-            counterpadding="0.5rem"
-          />
         </Flexbox>
         <Flexbox
           flex="flex"
@@ -223,12 +235,7 @@ function Checkoutbar({
           width="100%"
           onClick={() => handleCheckoutButton(2000)}
         >
-          {calculateTotalPrice(2000, true)} Checkout
-          <Icon
-            margin="0 0 0 0.5rem"
-          >
-            <ArrowCircleRight size="1rem" weight="bold" />
-          </Icon>
+          <span>Checkout</span>
         </Button>
       </Flexbox>
     </Flexbox>

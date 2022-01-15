@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { StaticQuery, graphql, navigate } from "gatsby"
+import { StaticQuery, graphql, Link } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } from "phosphor-react"
@@ -24,22 +24,6 @@ const ProductInfo = ({
   const [selectedTemplate, setSelectedTemplate] = ""
   const [loading, setLoading] = useState(false)
 
-  const handleNavigate = e => {
-    e.preventDefault()
-    setLoading(true)
-
-    navigate(`/customize/notebook`, {
-      state: {
-        size: bookData.size,
-        dimensions: bookData.dimensions,
-        width: bookData.width,
-        height: bookData.height,
-        numOfPages: bookData.numOfPages,
-        coverColor: bookData.coverColor,
-      }
-    })
-  }
-
   return (
     <ProductDetails>
       <Content
@@ -60,7 +44,7 @@ const ProductInfo = ({
           <Flexbox
             margin="0 1rem 0 0"
           >
-            <h1>{stripeData.product.name}</h1>
+            <h1>{bookData.name}</h1>
           </Flexbox>
           <Flexbox>
             <h2>${stripeData.unit_amount / 100}</h2>
@@ -92,7 +76,8 @@ const ProductInfo = ({
           className={loading ? "is-loading" : null}
           color={colors.primary.white}
           disabled={loading}
-          onClick={e => handleNavigate(e)}
+          as={Link}
+          to={`/customize/${bookData.slug}/`}
           padding="1rem"
           width="100%"
         >

@@ -82,6 +82,7 @@ const Content = styled.div`
     color: ${props => props.paragraphcolor || colors.primary.eightHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
     font-family: ${props => props.paragraphfontfamily};
+    font-weight: ${props => props.paragraphfontweight};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};
     margin-bottom: ${props => props.paragraphmarginbottom};

@@ -7,18 +7,19 @@ import { Container, LayoutContainer } from "../layout/Container"
 import { Flexbox } from "../layout/Flexbox"
 import { SectionMain } from "../layout/Section"
 import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
-import CreateBookModal from "./Modals/CreateBookModal"
+import Canvas from "./Canvas"
 import CheckLoginModal from "./Modals/CheckLoginModal"
 import Content from "../Content"
+import Controls from "./Controls"
+import CreateBookModal from "./Modals/CreateBookModal"
+import Functionsbar from "./Bars/Functionsbar"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
-import Canvas from "./Canvas"
-import Controls from "./Controls"
-import Functionsbar from "./Bars/Functionsbar"
 import Pagebar from "./Bars/Pagebar"
 import Seo from "../layout/Seo"
+import Book404 from "./Book404"
 
-const Editor = ({ location, bookId }) => {
+const Editor = ({ bookId, productData }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -136,31 +137,6 @@ const Editor = ({ location, bookId }) => {
       })
     }
 
-    // janky solution: checks for location state first
-    if (location.state) {
-      // then check if we have book data from the product page redirect
-      // we can do this by checking for a single object property
-      if (location.state.size) {
-        setBookData({
-          ...bookData,
-          size: location.state.size,
-          quantity: location.state.quantity,
-          size: location.state.size,
-          width: location.state.width,
-          height: location.state.height,
-          numOfPages: location.state.numOfPages,
-          coverColor: location.state.coverColor,
-        })
-
-        setPageData({
-          ...pageData,
-          lineWidth: location.state.width,
-          pageWidth: location.state.width,
-          pageHeight: location.state.height,
-        })
-      }
-    }
-
     // first check if there is a user logged in because
     // users that are not logged in should not be able to access bookId's
     if (user) {
@@ -188,6 +164,8 @@ const Editor = ({ location, bookId }) => {
     }
     // else we can create blank svgs for users that are not logged in
     else {
+      console.log("no user")
+      navigate(`/customize/${productData.slug}`, { replace: true })
       createBlankSvgs()
       // show modal based on sign-in status
       setShowModal({
@@ -205,16 +183,7 @@ const Editor = ({ location, bookId }) => {
     <>
       <Seo title={`${bookData.title}`} />
       {noExistingBook ? (
-        <Flexbox
-          flex="flex"
-        >
-          <Content
-            padding={`${spacing.large} 0`}
-          >
-            <h2>Sorry, we couldn't find this book.</h2>
-            <p>Create a new book?</p>
-          </Content>
-        </Flexbox>
+        <Book404 />
       ) : (
         <>
           <Functionsbar
