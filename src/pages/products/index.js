@@ -6,7 +6,7 @@ function Products({ data }) {
     <div>
       <div>Notebooks</div>
       {data.allStripeProduct.nodes.map(product => (
-        <Link to={`/products/${product.metadata.category}/${product.metadata.slug}`}>
+        <Link key={product.name} to={`/products/${product.metadata.category}/${product.metadata.slug}`}>
           {product.name}
         </Link>
       ))}

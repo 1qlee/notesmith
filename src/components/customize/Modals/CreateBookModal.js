@@ -17,6 +17,7 @@ function CreateBookModal({
   setBookData,
   bookData,
   pageData,
+  productData,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
   const [bookTitleError, setBookTitleError] = useState({
@@ -62,16 +63,20 @@ function CreateBookModal({
 
       // write the new book into the db
       newBookRef.set({
+        "coverColor": bookData.coverColor,
         "date_created": new Date().valueOf(),
+        "heightPixel": bookData.heightPixel,
+        "heightInch": bookData.heightInch,
         "id": newBookKey,
+        "name": bookData.name,
         "numOfPages": bookData.numOfPages,
-        "width": bookData.width,
-        "height": bookData.height,
         "pages": pagesObject,
         "size": bookData.size,
         "title": bookData.title,
-        "coverColor": bookData.coverColor,
         "uid": user.uid,
+        "slug": bookData.slug,
+        "widthPixel": bookData.widthPixel,
+        "widthInch": bookData.widthInch,
       }).then(() => {
         // afterwards, log that book id into 'users/userId/books/bookId'
         firebaseDb.ref(`users/${user.uid}/books`).child(newBookKey).set(true)
@@ -83,7 +88,7 @@ function CreateBookModal({
         })
 
         // finally, redirect the user to the newly created book page
-        navigate(`/customize/notebook/${newBookKey}`)
+        navigate(`/customize/${productData.slug}/${newBookKey}`, { replace: true })
       }).catch(error => {
         console.log("error writing book to the database")
       })
@@ -139,7 +144,7 @@ function CreateBookModal({
         justifycontent="flex-end"
       >
         <Link
-          to="/notebooks/wired-notebook/"
+          to={`/products/${productData.category}/${productData.slug}`}
         >
           <Button
             backgroundcolor={colors.gray.twoHundred}

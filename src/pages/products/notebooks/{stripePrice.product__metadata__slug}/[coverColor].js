@@ -22,8 +22,8 @@ const ProductPage = ({ data, params }) => {
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
-    if (!coverColor || !bookData.colors.find(color => color.name === coverColor)) {
-      const defaultCoverColor = bookData.colors[0].name
+    if (!coverColor || !bookData.colors.find(color => color.slug === coverColor)) {
+      const defaultCoverColor = bookData.colors[0].slug
       // redirect the user to the first color by default
       navigate(`/products/${bookData.category}/${bookData.slug}/${defaultCoverColor}`, { replace: true })
       setBookData({
@@ -92,7 +92,7 @@ export const pageQuery = graphql`
       name
       size
       slug
-      type
+      camelName
       numOfPages
       paperWeight
       paperColor
@@ -104,6 +104,7 @@ export const pageQuery = graphql`
       colors {
         name
         hex
+        slug
       }
     }
   }

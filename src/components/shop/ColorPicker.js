@@ -1,6 +1,7 @@
-import React, { useEffect } from "react"
-import styled from "styled-components"
 import { colors } from "../../styles/variables"
+import React, { useEffect } from "react"
+import ReactTooltip from "react-tooltip"
+import styled from "styled-components"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
@@ -64,13 +65,16 @@ function ColorPicker({
     >
       {data.map(color => (
         <ColorOption
+          data-tip={color.name}
           key={color.name}
           color={color.hex}
-          name={color.name}
-          className={color.name === selectedColor && "is-active"}
-          onClick={() => cbFunction(color.name)}
+          className={color.slug === selectedColor && "is-active"}
+          onClick={() => cbFunction(color.slug)}
         />
       ))}
+      <ReactTooltip
+        effect="solid"
+      />
     </Flexbox>
   )
 }

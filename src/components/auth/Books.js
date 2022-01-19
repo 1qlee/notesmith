@@ -35,9 +35,10 @@ const Books = () => {
   const [bookData, setBookData] = useState({
     size: "",
     numOfPages: 160,
-    width: 528,
-    height: 816,
-    quantity: 1,
+    widthPixel: 528,
+    heightPixel: 816,
+    widthInch: "5.5",
+    heightInch: "8.5",
     title: "",
     coverColor: "",
   })

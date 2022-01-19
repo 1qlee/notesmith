@@ -4,7 +4,6 @@ import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
-import products from "../../../data/products.json"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker, StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
@@ -14,6 +13,8 @@ import ColorPicker from "../../shop/ColorPicker"
 
 function Checkoutbar({
   bookData,
+  productData,
+  productImageData,
   setBookData,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
@@ -35,25 +36,25 @@ function Checkoutbar({
     }
   }
 
-  function handleCheckoutButton(price) {
+  function handleCheckoutButton(book, coverColor) {
     // create a promise to add items to cart then redirect user to cart
     const addItemsToCart = new Promise((resolve, reject) => {
       // use-shopping-cart function to add items to cart
       resolve(
         addItem({
-          name: price.product.name,
-          description: price.product.description,
-          id: price.id,
-          price: price.unit_amount,
-          currency: price.currency,
-          image: price.product.images,
-          coverColor: bookData.coverColor,
-        }, itemQuantity)
+          name: book.name,
+          description: book.description,
+          id: book.stripePriceId,
+          price: book.price,
+          currency: "USD",
+          coverColor: coverColor,
+          images: productImageData
+        }, {count: itemQuantity})
       )
     })
 
     addItemsToCart.then(() => {
-      updateBookCoverColor()
+      updateBookCoverColor(coverColor)
     }).then(res => {
       return navigate("/cart")
     }).catch(error => {
@@ -139,7 +140,7 @@ function Checkoutbar({
           >
             <h5>Cover</h5>
             <ColorPicker
-              data={products[bookData.type].colors}
+              data={productData.colors}
               selectedColor={bookData.coverColor}
               cbFunction={color => setBookData({
                 ...bookData,
@@ -217,7 +218,7 @@ function Checkoutbar({
             h3fontweight="400"
             h3color={colors.primary.sixHundred}
           >
-            <h3>{calculateTotalPrice(2000)}</h3>
+            <h3>{calculateTotalPrice(productData.price)}</h3>
           </Content>
         </Flexbox>
       </Flexbox>
@@ -233,9 +234,9 @@ function Checkoutbar({
           color={colors.primary.white}
           padding="1rem"
           width="100%"
-          onClick={() => handleCheckoutButton(2000)}
+          onClick={() => handleCheckoutButton(productData, bookData.coverColor)}
         >
-          <span>Checkout</span>
+          <span>Add to cart</span>
         </Button>
       </Flexbox>
     </Flexbox>

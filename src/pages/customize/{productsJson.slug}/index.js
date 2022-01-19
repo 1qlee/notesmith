@@ -13,21 +13,35 @@ const DefaultEditorPage = ({ data }) => {
 export const pageQuery = graphql`
   query DefaultEditorPageQuery($slug: String!) {
     productData: productsJson(slug: { eq: $slug }) {
-      name
-      size
-      slug
-      type
-      numOfPages
-      paperWeight
-      paperColor
-      paperTooth
+      camelName
       category
       description
-      stripePriceId
+      heightInch
+      heightPixel
+      name
+      numOfPages
+      paperColor
+      paperTooth
+      paperWeight
       price
+      size
+      slug
+      stripePriceId
+      widthInch
+      widthPixel
       colors {
         name
         hex
+        slug
+      }
+    }
+    images: allFile(filter: { relativeDirectory: { eq: $slug}}) {
+      nodes {
+        childImageSharp {
+          fluid {
+            src
+          }
+        }
       }
     }
   }

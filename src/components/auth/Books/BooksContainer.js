@@ -123,7 +123,7 @@ function BooksContainer({
             <Book
               data-title={book.title}
               onClick={e => handleBookSelect(e, book)}
-              onDoubleClick={() => navigate(`/customize/notebook/${book.id}`)}
+              onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
               tabIndex="0"
               onContextMenu={e => {
                 handleBookSelect(e, book)

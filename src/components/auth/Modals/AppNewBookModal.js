@@ -1,11 +1,10 @@
-import React, { useState } from "react"
-import styled from "styled-components"
 import { ArrowLeft, Warning } from "phosphor-react"
 import { colors, convertToPx } from "../../../styles/variables"
-import { Link, navigate } from "gatsby"
+import { Link, navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import Loading from "../../../assets/loading.svg"
-import * as products from "../../../data/products.json"
+import React, { useState } from "react"
+import styled from "styled-components"
 
 import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -36,9 +35,39 @@ function NewBookModal({
   })
   const [processing, setProcessing] = useState(false)
   const [pageData, setPageData] = useState({
-    pageWidth: bookData.width - convertToPx(12.7),
-    pageHeight: bookData.height - convertToPx(6.35),
+    pageWidth: bookData.widthPixel - convertToPx(12.7),
+    pageHeight: bookData.heightPixel - convertToPx(6.35),
   })
+  const [selectedBook, setSelectedBook] = useState(0)
+  const productsData = useStaticQuery(graphql`
+    query NewBookProductQuery {
+      allProductsJson {
+        nodes {
+          camelName
+          category
+          description
+          heightInch
+          heightPixel
+          name
+          numOfPages
+          paperColor
+          paperTooth
+          paperWeight
+          price
+          size
+          slug
+          stripePriceId
+          widthInch
+          widthPixel
+          colors {
+            name
+            hex
+            slug
+          }
+        }
+      }
+    }
+  `)
 
   // creating a new book in the db
   function createNewBook() {
@@ -64,18 +93,18 @@ function NewBookModal({
         // keep track of each page in this object - it will be used later to set pages in 'books'
         pagesObject[`${newPageKey}`] = true
         // svg for a blank page
-        newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.width}" height="${bookData.height}" fill="#fff"></rect></svg>`
+        newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel}" height="${bookData.heightPixel}" fill="#fff"></rect></svg>`
         // write the new page into the db
         newPageRef.set({
           "bookId": newBookKey,
           "date_created": new Date().valueOf(),
-          "height": bookData.height,
+          "height": bookData.heightPixel,
           "id": newPageKey,
           "pageNumber": i,
           "size": bookData.size,
           "svg": newPageSvg,
           "uid": user.uid,
-          "width": bookData.width,
+          "width": bookData.widthPixel,
         }).catch(error => {
           console.log("error writing page to the database")
         })
@@ -84,7 +113,7 @@ function NewBookModal({
       newBookRef.set({
         "coverColor": bookData.coverColor,
         "date_created": new Date().valueOf(),
-        "height": bookData.height,
+        "heightPixel": bookData.heightPixel,
         "heightInch": bookData.heightInch,
         "id": newBookKey,
         "name": bookData.name,
@@ -92,80 +121,30 @@ function NewBookModal({
         "pages": pagesObject,
         "size": bookData.size,
         "title": bookData.title,
-        "type": bookData.type,
         "uid": user.uid,
-        "width": bookData.width,
+        "slug": bookData.slug,
+        "widthPixel": bookData.widthPixel,
         "widthInch": bookData.widthInch,
       }).then(() => {
         setProcessing(false)
         // afterwards, log that book id into 'users/userId/books/bookId'
         firebaseDb.ref(`users/${user.uid}/books`).child(newBookKey).set(true)
         // redirect the user to the book creation page
-        navigate(`/customize/notebook/${newBookKey}`)
+        navigate(`/customize/${bookData.slug}/${newBookKey}`)
       }).catch(error => {
         console.log("error writing book to the database")
+        console.error(error)
       })
     }
   }
 
-  function handleClick(data, step) {
+  function handleClick(data, step, productNumber) {
     setBookData(data)
     setStep(step)
-  }
 
-  function generateBookTypes() {
-    let booksArray = []
-
-    for (const book in products) {
-      booksArray.push(
-        <BookRadio
-          onClick={() => handleClick({
-            ...bookData,
-            name: products[book].name,
-            slug: products[book].slug,
-            numOfPages: products[book].numOfPages,
-            type: products[book].type,
-          }, 1)}
-          isActive={bookData.name === products[book].name}
-          key={products[book].name}
-        >
-          <Flexbox
-            flex="flex"
-            borderradius="0.25rem"
-            justifycontent="space-between"
-            width="100%"
-          >
-            <Tag
-              fontsize="0.75rem"
-              fontfamily="Inter, Helvetica, Tahoma, sans-serif"
-              fontweight="700"
-              backgroundcolor={colors.yellow.oneHundred}
-              color={colors.primary.nineHundred}
-              padding="0.25rem 0.5rem"
-              margin="0 0 0.25rem"
-            >
-              {products[book].name}
-            </Tag>
-            <Content
-              paragraphfontsize="1.25rem"
-              paragraphmarginbottom="0"
-              paragraphtextalign="right"
-              paragraphlineheight="1"
-            >
-              <p>${products[book].price}</p>
-            </Content>
-          </Flexbox>
-          <Content
-            paragraphfontsize="0.875rem"
-            padding="0 0 0 0.5rem"
-          >
-            <p>This notebook has {products[book].numOfPages} total pages.</p>
-          </Content>
-        </BookRadio>
-      )
+    if (productNumber) {
+      setSelectedBook(productNumber)
     }
-
-    return booksArray
   }
 
   return (
@@ -181,45 +160,7 @@ function NewBookModal({
           h3fontsize="1.25rem"
           margin="0 0 1rem 0"
         >
-          <p>Enter a title for your new notebook and then select additional configurations below.</p>
-        </Content>
-        <Content
-          margin="0 0 1rem"
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-          h3fontsize="0.75rem"
-          h3margin="0 0 0.5rem 0"
-        >
-          <form
-            id="new-book-form"
-            autoComplete="off"
-            onSubmit={e => e.preventDefault()}
-          >
-            <h3>Title</h3>
-            <StyledInput
-              borderradius="0.25rem"
-              type="text"
-              id="new-book-title"
-              name="new-book-title"
-              autocomplete="false"
-              placeholder="Enter a title"
-              onChange={e => setBookData({
-                ...bookData,
-                title: e.target.value.trim(),
-              })}
-              onFocus={() => setBookTitleError({
-                show: false,
-                msg: "",
-              })}
-            />
-            {bookTitleError.show && (
-              <ErrorLine color={colors.red.sixHundred}>
-                <Icon>
-                  <Warning weight="fill" color={colors.red.sixHundred} size={18} />
-                </Icon>
-                <span>{bookTitleError.msg}</span>
-              </ErrorLine>
-            )}
-          </form>
+          <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
         </Content>
         {step === 0 && (
           <StepContent>
@@ -229,36 +170,18 @@ function NewBookModal({
               h3fontsize="0.75rem"
               h3margin="0 0 0.5rem 0"
             >
-              <h3>Type of book</h3>
-              {generateBookTypes()}
-            </Content>
-          </StepContent>
-        )}
-        {step === 1 && (
-          <StepContent>
-            <Content
-              margin="0 0 1rem"
-              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-              h3fontsize="0.75rem"
-              h3margin="0 0 0.5rem 0"
-            >
-              <h3>Size</h3>
-              {products[bookData.type].sizes.map(size => (
+              <h3>1. Type of book</h3>
+              {productsData.allProductsJson.nodes.map((product, index) => (
                 <BookRadio
                   onClick={() => handleClick({
-                    ...bookData,
-                    size: size.name,
-                    width: size.widthPixel,
-                    height: size.heightPixel,
-                    widthInch: size.widthInch,
-                    heightInch: size.heightInch,
-                  }, 2)}
-                  isActive={bookData.size === size.name}
-                  key={size.name}
+                    ...product,
+                    coverColor: "",
+                  }, 1, index)}
+                  isActive={bookData.name === product.name}
+                  key={product.name}
                 >
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
                     borderradius="0.25rem"
                     justifycontent="space-between"
                     width="100%"
@@ -270,20 +193,56 @@ function NewBookModal({
                       backgroundcolor={colors.yellow.oneHundred}
                       color={colors.primary.nineHundred}
                       padding="0.25rem 0.5rem"
-                      margin="0 0.5rem 0 0"
+                      margin="0 0 0.25rem"
                     >
-                      {size.name}
+                      {product.name}
                     </Tag>
                     <Content
-                      h3margin="0"
-                      h3fontsize="1rem"
+                      paragraphfontsize="1.25rem"
                       paragraphmarginbottom="0"
+                      paragraphtextalign="right"
+                      paragraphlineheight="1"
                     >
-                      <p>{`${size.widthInch}" x ${size.heightInch}"`}</p>
+                      <p>${product.price / 100}</p>
                     </Content>
                   </Flexbox>
+                  <Content
+                    paragraphfontsize="0.875rem"
+                    padding="0 0 0 0.5rem"
+                  >
+                    <p>This notebook has {product.numOfPages} total pages.</p>
+                  </Content>
                 </BookRadio>
               ))}
+            </Content>
+          </StepContent>
+        )}
+        {step === 1 && (
+          <StepContent>
+            <Content
+              margin="0 0 1rem"
+              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+              h3fontsize="0.75rem"
+              h3margin="0 0 0.5rem 0"
+            >
+              <h3>2. Cover color</h3>
+              <Flexbox
+                flex="flex"
+                alignitems="center"
+                borderradius="0.25rem"
+                justifycontent="space-between"
+                width="100%"
+              >
+                <ColorPicker
+                  data={productsData.allProductsJson.nodes[selectedBook].colors}
+                  selectedColor={bookData.coverColor}
+                  cbFunction={color => handleClick({
+                    ...bookData,
+                    coverColor: color,
+                  }, 2, )}
+                />
+                <p style={{textTransform: "capitalize"}}>{bookData.coverColor.replace('-', ' ')}</p>
+              </Flexbox>
             </Content>
           </StepContent>
         )}
@@ -295,24 +254,37 @@ function NewBookModal({
               h3fontsize="0.75rem"
               h3margin="0 0 0.5rem 0"
             >
-              <h3>Cover color</h3>
-              <Flexbox
-                flex="flex"
-                alignitems="center"
-                borderradius="0.25rem"
-                justifycontent="space-between"
-                width="100%"
+              <form
+                id="new-book-form"
+                autoComplete="off"
+                onSubmit={e => e.preventDefault()}
               >
-                <ColorPicker
-                  data={products[bookData.type].colors}
-                  selectedColor={bookData.coverColor}
-                  cbFunction={color => setBookData({
+                <h3>3. Title</h3>
+                <StyledInput
+                  borderradius="0.25rem"
+                  type="text"
+                  id="new-book-title"
+                  name="new-book-title"
+                  autocomplete="false"
+                  placeholder="Enter a title"
+                  onChange={e => setBookData({
                     ...bookData,
-                    coverColor: color,
+                    title: e.target.value.trim(),
+                  })}
+                  onFocus={() => setBookTitleError({
+                    show: false,
+                    msg: "",
                   })}
                 />
-                <p style={{textTransform: "capitalize"}}>{bookData.coverColor.replace('-', ' ')}</p>
-              </Flexbox>
+                {bookTitleError.show && (
+                  <ErrorLine color={colors.red.sixHundred}>
+                    <Icon>
+                      <Warning weight="fill" color={colors.red.sixHundred} size={18} />
+                    </Icon>
+                    <span>{bookTitleError.msg}</span>
+                  </ErrorLine>
+                )}
+              </form>
             </Content>
           </StepContent>
         )}

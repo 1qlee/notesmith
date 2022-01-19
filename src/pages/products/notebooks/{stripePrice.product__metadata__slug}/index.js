@@ -6,7 +6,7 @@ const DefaultProductPage = ({ data }) => {
   const { products, stripePrice } = data
   const { id, unit_amount, product } = stripePrice
 
-  navigate(`/products/${products.category}/${products.slug}/${products.colors[0].name}`, { replace: true })
+  navigate(`/products/${products.category}/${products.slug}/${products.colors[0].slug}`, { replace: true })
 
   return (
     <div>
@@ -32,7 +32,7 @@ export const pageQuery = graphql`
       name
       size
       slug
-      type
+      camelName
       numOfPages
       paperWeight
       paperColor
@@ -44,6 +44,7 @@ export const pageQuery = graphql`
       colors {
         name
         hex
+        slug
       }
     }
   }

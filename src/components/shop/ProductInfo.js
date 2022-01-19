@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { StaticQuery, graphql, Link } from "gatsby"
+import { graphql, Link } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } from "phosphor-react"

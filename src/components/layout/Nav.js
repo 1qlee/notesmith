@@ -45,8 +45,6 @@ const NavItem = styled.div`
 
 const HorizontalNav = styled.div`
   background-color: ${colors.paper.offWhite};
-  border-bottom: 2px solid ${colors.primary.sixHundred};
-  box-shadow: 0 2px 4px ${colors.shadow.float};
   display: ${props => props.hideNavbar ? "none" : "flex"};
   align-items: center;
   position: fixed;

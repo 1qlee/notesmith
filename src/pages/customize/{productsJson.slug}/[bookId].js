@@ -7,6 +7,7 @@ const EditorPage = ({ data, params }) => {
     <Editor
       bookId={params.bookId}
       productData={data.productData}
+      productImageData={data.images}
     />
   )
 }
@@ -14,21 +15,37 @@ const EditorPage = ({ data, params }) => {
 export const pageQuery = graphql`
   query EditorPageQuery($slug: String!) {
     productData: productsJson(slug: { eq: $slug }) {
-      name
-      size
-      slug
-      type
-      numOfPages
-      paperWeight
-      paperColor
-      paperTooth
+      camelName
       category
       description
-      stripePriceId
+      heightInch
+      heightPixel
+      name
+      numOfPages
+      paperColor
+      paperTooth
+      paperWeight
       price
+      size
+      slug
+      stripePriceId
+      widthInch
+      widthPixel
       colors {
         name
         hex
+        slug
+      }
+    }
+    images: allFile(filter: { relativeDirectory: { eq: $slug}}) {
+      nodes {
+        childImageSharp {
+          gatsbyImageData(
+            width: 200
+            placeholder: BLURRED
+            formats: [AUTO, WEBP, AVIF]
+          )
+        }
       }
     }
   }

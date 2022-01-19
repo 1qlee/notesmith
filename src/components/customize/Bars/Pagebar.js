@@ -88,6 +88,7 @@ const Page = memo(props => {
     pageData,
     selectedPage,
     setSelectedPage,
+    setPageData,
     pageNumber,
   } = data
   const columnCount = 2
@@ -96,6 +97,10 @@ const Page = memo(props => {
   // change the selected page number
   const handleSelectPage = value => {
     const pageNumber = parseInt(value)
+    setPageData({
+      ...pageData,
+      template: "",
+    })
     setSelectedPage(pageNumber)
   }
 
@@ -117,11 +122,12 @@ const Page = memo(props => {
   )
 }, areEqual)
 
-const createItemData = memoizeOne((canvasPages, pageData, selectedPage, setSelectedPage) => ({
+const createItemData = memoizeOne((canvasPages, pageData, selectedPage, setSelectedPage, setPageData) => ({
   canvasPages,
   pageData,
   selectedPage,
   setSelectedPage,
+  setPageData,
 }))
 
 function Pagebar({
@@ -131,7 +137,7 @@ function Pagebar({
   setPageData,
   setSelectedPage,
 }) {
-  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage)
+  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
 
   return (
     <PagebarWrapper>

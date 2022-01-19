@@ -19,7 +19,7 @@ import Pagebar from "./Bars/Pagebar"
 import Seo from "../layout/Seo"
 import Book404 from "./Book404"
 
-const Editor = ({ bookId, productData }) => {
+const Editor = ({ bookId, productData, productImageData }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -27,11 +27,8 @@ const Editor = ({ bookId, productData }) => {
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [bookData, setBookData] = useState({
-    size: "A5",
-    numOfPages: 160,
-    width: 528,
-    height: 816,
-    quantity: 1,
+    ...productData,
+    coverColor: "",
     title: "",
   })
   const [canvasSize, setCanvasSize] = useState({
@@ -52,9 +49,9 @@ const Editor = ({ bookId, productData }) => {
     marginLeft: 0,
     marginRight: 0,
     width: 1,
-    lineWidth: bookData.width - convertToPx(12.7),
-    pageWidth: bookData.width - convertToPx(12.7),
-    pageHeight: bookData.height - convertToPx(6.35),
+    lineWidth: bookData.widthPixel - convertToPx(12.7),
+    pageWidth: bookData.widthPixel - convertToPx(12.7),
+    pageHeight: bookData.heightPixel - convertToPx(6.35),
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
@@ -99,7 +96,7 @@ const Editor = ({ bookId, productData }) => {
             getPages(bookVals.id)
           }
           else {
-            navigate("/customize/notebook")
+            navigate(`/customize/${productData.slug}`)
           }
         }
         // if the book doesn't exist
@@ -139,7 +136,8 @@ const Editor = ({ bookId, productData }) => {
 
     // first check if there is a user logged in because
     // users that are not logged in should not be able to access bookId's
-    if (user) {
+    if (user && !loading) {
+      console.log("yes user", bookId)
       // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
       // wait for all loading states to clear before calling getBook
       if (bookId && !loading) {
@@ -164,8 +162,7 @@ const Editor = ({ bookId, productData }) => {
     }
     // else we can create blank svgs for users that are not logged in
     else {
-      console.log("no user")
-      navigate(`/customize/${productData.slug}`, { replace: true })
+      console.log("no user", bookId)
       createBlankSvgs()
       // show modal based on sign-in status
       setShowModal({
@@ -215,11 +212,13 @@ const Editor = ({ bookId, productData }) => {
               setPageData={setPageData}
             />
             <Controls
+              bookData={bookData}
               canvasPages={canvasPages}
               pageData={pageData}
-              bookData={bookData}
-              setBookData={setBookData}
+              productData={productData}
+              productImageData={productImageData}
               selectedPage={selectedPage}
+              setBookData={setBookData}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}
               setShowModal={setShowModal}
@@ -238,6 +237,7 @@ const Editor = ({ bookId, productData }) => {
               bookData={bookData}
               pageData={pageData}
               setBookData={setBookData}
+              productData={productData}
             />
           )}
           {showModal.type === "template" && (

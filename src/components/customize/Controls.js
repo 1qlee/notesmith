@@ -63,9 +63,11 @@ const ControlTab = styled.li`
 `
 
 function Controls({
-  canvasPages,
   bookData,
+  canvasPages,
   pageData,
+  productData,
+  productImageData,
   selectedPage,
   setBookData,
   setPageData,
@@ -106,6 +108,8 @@ function Controls({
         <ControlsContent>
           <Checkoutbar
             bookData={bookData}
+            productData={productData}
+            productImageData={productImageData}
             setBookData={setBookData}
           />
         </ControlsContent>

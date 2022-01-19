@@ -342,7 +342,7 @@ const StyledInput = styled.input`
   margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "1rem"};
   text-align: ${props => props.textalign};
-  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
   width: ${props => props.width ? props.width : "100%"};
   &.is-error {
     border-color: ${colors.red.sixHundred};
@@ -352,7 +352,6 @@ const StyledInput = styled.input`
   }
   &:focus {
     border-color: ${colors.primary.sixHundred};
-    transform: translate(1px, 1px);
     outline: none;
   }
   &:hover {

@@ -17,9 +17,9 @@ function CoverPage({ bookData, canvasPageWidth, canvasPageHeight }) {
         fill={colors.white}>
       </rect>
       <text
-        x={(bookData.width / 2) - 80}
-        y={bookData.height / 2}
-        width={bookData.width}
+        x={(bookData.widthPixel / 2) - 80}
+        y={bookData.heightPixel / 2}
+        width={bookData.widthPixel}
         fill={colors.gray.nineHundred}
       >
         THIS IS THE COVER PAGE
@@ -105,8 +105,8 @@ function PageSpread({
   const [currentPageSide, setCurrentPageSide] = useState("right")
   const pageLeftRef = useRef()
   const pageRightRef = useRef()
-  const canvasPageWidth = bookData.width
-  const canvasPageHeight = bookData.height
+  const canvasPageWidth = bookData.widthPixel
+  const canvasPageHeight = bookData.heightPixel
   const minimumMargin = convertToPx(3.175)
   const leftPageXPosition = minimumMargin
   const rightPageXPosition = canvasPageWidth + convertToPx(9.525)
