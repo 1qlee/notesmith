@@ -14,7 +14,7 @@ function CartQuantityTracker(props) {
     incrementItem,
     decrementItem
   } = useShoppingCart()
-  const [trackQuantity, setTrackQuantity] = useState(1)
+  const [trackQuantity, setTrackQuantity] = useState(props.product.quantity)
 
   // change the quantity based on input
   function handleQuantityChange(quantity) {
@@ -42,40 +42,56 @@ function CartQuantityTracker(props) {
     }
   }
 
+  function handleButtonChange(up) {
+    if (up) {
+      setTrackQuantity(trackQuantity + 1)
+      incrementItem(props.product.id)
+    }
+    else {
+      setTrackQuantity(trackQuantity - 1)
+      decrementItem(props.product.id)
+    }
+  }
+
   return (
     <QuantityWrapper
       padding={props.wrapperpadding}
       boxshadow={props.wrapperboxshadow}
     >
       <QuantityButton
-        width={props.buttonwidth}
-        height={props.buttonheight}
-        onClick={() => decrementItem(props.product.id, 1)}
         disabled={props.product.quantity === 1}
+        height={props.buttonheight}
+        left={true}
+        onClick={() => handleButtonChange(false)}
+        padding={props.counterpadding}
+        width={props.buttonwidth}
       >
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
             size={props.iconsize}
-            color={props.product.quantity === 1 ? colors.gray.fiveHundred : colors.gray.nineHundred}
+            color={props.product.quantity === 1 ? colors.gray.threeHundred : colors.gray.nineHundred}
             weight="bold"
           />
         </Icon>
       </QuantityButton>
       <Counter
         border="none"
+        padding={props.counterpadding}
         fontsize={props.counterfontsize}
         margin="0 0.25rem"
         min="1"
-        onBlur={e => handleBlur(e.target.value)}
-        onChange={e => setTrackQuantity(e.target.value)}
+        onBlur={e => handleBlur(parseInt(e.target.value))}
+        onChange={e => handleQuantityChange(parseInt(e.target.value))}
         type="number"
-        value={props.product.quantity}
+        value={trackQuantity}
         width={props.counterwidth}
       />
       <QuantityButton
-        width={props.buttonwidth}
+        onClick={() => handleButtonChange(true)}
         height={props.buttonheight}
-        onClick={() => incrementItem(props.product.id, 1)}
+        padding={props.counterpadding}
+        right={true}
+        width={props.buttonwidth}
       >
         <Icon>
           <Plus

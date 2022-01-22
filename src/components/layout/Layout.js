@@ -9,7 +9,6 @@ const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.paper.offWhite};
   height: 100%;
   overflow-x: hidden;
-  padding: 0 1rem 1rem;
   position: relative;
   width: 100%;
   &.is-full-height {

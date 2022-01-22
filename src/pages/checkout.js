@@ -23,6 +23,7 @@ import OrderSummary from "../components/shop/OrderSummary"
 import SEO from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import TextLink from "../components/TextLink"
+import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
@@ -264,15 +265,6 @@ const Checkout = ({ location }) => {
                       margin="0 0 2rem 0"
                       h3fontweight="400"
                     >
-                      {activeTab === 1 && (
-                        <h3>1. Information</h3>
-                      )}
-                      {activeTab === 2 && (
-                        <h3>2. Shipping</h3>
-                      )}
-                      {activeTab === 3 && (
-                        <h3>3. Payment</h3>
-                      )}
                       {formError.msg && (
                         <ErrorLine
                           color={colors.red.sixHundred}
@@ -355,49 +347,12 @@ const Checkout = ({ location }) => {
         </Section>
       </SectionMain>
       {showModal.show && (
-        <Modal setShowModal={setShowModal}>
-          <ModalHeader
-            backgroundcolor={colors.red.sixHundred}
-            color={colors.white}
-          >
-            <h5>Something went wrong when processing your address.</h5>
-          </ModalHeader>
-          <ModalContent>
-            <Content margin="0 0 2rem 0">
-              <h5>Errors:</h5>
-              <ul>
-                {formError.map(error => (
-                  <li key={error.message}>{error.message}</li>
-                ))}
-              </ul>
-            </Content>
-            <Content paragraphlineheight="1.5" paragraphmarginbottom="0">
-              <h5>Your address:</h5>
-              <p>{address.line1}, {address.line2}</p>
-              <p>{address.city}, {address.state} {address.postal_code}</p>
-            </Content>
-          </ModalContent>
-          <ModalFooter
-            justifycontent="space-between"
-          >
-            <TextLink
-              color={colors.link.normal}
-              hovercolor={colors.link.hover}
-              as="button"
-              onClick={() => setShowModal({ show: false })}
-            >
-              a.) Edit address
-            </TextLink>
-            <TextLink
-              color={colors.link.normal}
-              hovercolor={colors.link.hover}
-              as="button"
-              onClick={forceShippingSubmit}
-            >
-              b.) Proceed with address as is
-            </TextLink>
-          </ModalFooter>
-        </Modal>
+        <ValidateAddressModal
+          setShowModal={setShowModal}
+          formError={formError}
+          address={address}
+          forceShippingSubmit={forceShippingSubmit}
+        />
       )}
     </Layout>
   )

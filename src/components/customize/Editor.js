@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { spacing, widths, convertToPx } from "../../styles/variables"
+import { convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
-import { Container, LayoutContainer } from "../layout/Container"
 import { Flexbox } from "../layout/Flexbox"
-import { SectionMain } from "../layout/Section"
 import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./Modals/CheckLoginModal"
-import Content from "../Content"
 import Controls from "./Controls"
 import CreateBookModal from "./Modals/CreateBookModal"
 import Functionsbar from "./Bars/Functionsbar"
-import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import Pagebar from "./Bars/Pagebar"
 import Seo from "../layout/Seo"
@@ -36,22 +32,23 @@ const Editor = ({ bookId, productData, productImageData }) => {
     height: 919,
   })
   const [pageData, setPageData] = useState({
-    template: "",
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
-    spacing: 5,
-    opacity: 0.5,
-    thickness: 0.175,
-    rows: 43,
     columns: 27,
-    marginTop: 0,
+    lineWidth: bookData.widthPixel - convertToPx(12.7),
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
-    width: 1,
-    lineWidth: bookData.widthPixel - convertToPx(12.7),
-    pageWidth: bookData.widthPixel - convertToPx(12.7),
+    marginTop: 0,
+    opacity: 0.5,
     pageHeight: bookData.heightPixel - convertToPx(6.35),
+    pageWidth: bookData.widthPixel - convertToPx(12.7),
+    rows: 43,
+    spacing: 5,
+    template: "",
+    templateSize: {},
+    thickness: 0.175,
+    width: 1,
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
@@ -171,7 +168,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
       })
     }
 
-  }, [loading, user, initializing, bookId])
+  }, [loading, user, initializing, bookId, selectedPageSvg])
 
   if (loading || initializing) {
     return <Loader />
@@ -218,6 +215,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
               productData={productData}
               productImageData={productImageData}
               selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
               setBookData={setBookData}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}

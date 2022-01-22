@@ -35,15 +35,6 @@ export const pageQuery = graphql`
         slug
       }
     }
-    images: allFile(filter: { relativeDirectory: { eq: $slug}}) {
-      nodes {
-        childImageSharp {
-          fluid {
-            src
-          }
-        }
-      }
-    }
   }
 `
 

@@ -2,8 +2,8 @@ import React, { useRef } from "react"
 import { convertToPx, convertToMM } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
+import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
+import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
 
 function RuledControls({
@@ -11,14 +11,14 @@ function RuledControls({
   setPageData,
   pageSize,
   selectedPage,
+  selectedPageSvg,
 }) {
   const totalMargin = pageData.marginLeft + pageData.marginRight
   const centeredMarginHorizontal = totalMargin / 2
-  const lineWidth = pageData.pageWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight)
-  const rowsHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // basically how much space the lines are taking up
-  const verticalDeadspace = pageData.pageHeight - rowsHeight
+  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
+  const verticalDeadspace = pageData.pageHeight - templateHeight
   const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
-  const bottomMargin = convertToMM(verticalDeadspace)
+  const bottomMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
 

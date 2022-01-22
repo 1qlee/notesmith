@@ -13,12 +13,24 @@ function QuantityTracker(props) {
     e.preventDefault()
 
     if (up) {
-      setQuantity(quantity => parseInt(quantity + 1))
-      setItemQuantity(parseInt(quantity + 1))
+      if (props.item) {
+        setQuantity(quantity => parseInt(quantity + 1))
+        setItemQuantity(props.item.id, parseInt(quantity + 1))
+      }
+      else {
+        setQuantity(quantity => parseInt(quantity + 1))
+        setItemQuantity(parseInt(quantity + 1))
+      }
     }
     else {
-      setQuantity(quantity => parseInt(quantity - 1))
-      setItemQuantity(parseInt(quantity - 1))
+      if (props.item) {
+        setQuantity(quantity => parseInt(quantity - 1))
+        setItemQuantity(props.item.id, parseInt(quantity - 1))
+      }
+      else {
+        setQuantity(quantity => parseInt(quantity - 1))
+        setItemQuantity(parseInt(quantity - 1))
+      }
     }
   }
 
@@ -26,8 +38,14 @@ function QuantityTracker(props) {
     const { value } = e.target
 
     if (!value || value == 0) {
-      setQuantity(1)
-      setItemQuantity(1)
+      if (props.item) {
+        setQuantity(1)
+        setItemQuantity(props.item.id, 1)
+      }
+      else {
+        setQuantity(1)
+        setItemQuantity(1)
+      }
     }
   }
 
@@ -38,8 +56,14 @@ function QuantityTracker(props) {
       setQuantity('')
     }
     else {
-      setQuantity(parseInt(value))
-      setItemQuantity(parseInt(e.target.value))
+      if (props.item) {
+        setQuantity(parseInt(value))
+        setItemQuantity(props.item.id, parseInt(e.target.value))
+      }
+      else {
+        setQuantity(parseInt(value))
+        setItemQuantity(parseInt(e.target.value))
+      }
     }
   }
 

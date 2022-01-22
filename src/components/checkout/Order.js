@@ -146,7 +146,7 @@ const Order = ({ location, orderId }) => {
   return (
     <Layout>
       <Seo title="Order Summary" />
-      <Nav chapterNumber="33" title="Order Summary"></Nav>
+      <Nav />
       <SectionMain className="has-max-height">
         <Section>
           <Container>

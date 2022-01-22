@@ -11,9 +11,8 @@ import Button from "../Button"
 const Orders = styled.div`
   background-color: ${colors.white};
   border-radius: 0.25rem;
-  box-shadow: 0 1px 2px ${colors.shadow.float};
+  border: 1px solid ${colors.gray.threeHundred};
   margin-bottom: 1rem;
-  padding: 1rem;
 `
 
 function OrderSummary({ hideButton, selectedRate, taxRate }) {
@@ -50,7 +49,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
       <Orders>
         <Flexbox
           className="has-border-bottom"
-          padding="0 0 1rem 0"
+          padding="1rem"
           bordercolor={colors.gray.threeHundred}
         >
           <Content
@@ -61,7 +60,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
           </Content>
         </Flexbox>
         <Flexbox
-          padding="1rem 0"
+          padding="1rem"
           flex="flex"
           justifycontent="space-between"
         >
@@ -69,7 +68,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
           <p>${convertToDecimal(totalPrice, 2)}</p>
         </Flexbox>
         <Flexbox
-          padding="1rem 0"
+          padding="1rem"
           flex="flex"
           justifycontent="space-between"
         >
@@ -77,7 +76,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
           {selectedRate ? (
             <p>${selectedRate.rate}</p>
           ) : (
-            <p>---</p>
+            <p>TBD</p>
           )}
         </Flexbox>
         {taxRate > 0 && (
@@ -91,7 +90,7 @@ function OrderSummary({ hideButton, selectedRate, taxRate }) {
           </Flexbox>
         )}
         <Flexbox
-          padding="1rem 0 0"
+          padding="1rem"
           flex="flex"
           justifycontent="space-between"
           alignitems="flex-end"

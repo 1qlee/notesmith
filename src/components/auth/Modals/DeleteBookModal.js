@@ -24,7 +24,7 @@ function DeleteBookModal({
       >
         <Content
           h3fontsize="1.25rem"
-          margin="0 0 0 0"
+          h3margin="0 0 0 0"
         >
           <h3>Delete this book</h3>
           <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
@@ -35,7 +35,6 @@ function DeleteBookModal({
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}
-          boxshadow={colors.shadow.layeredSmall}
           onClick={() => setShowModal({
             show: false,
             type: "deletebook"

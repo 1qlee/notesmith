@@ -8,6 +8,7 @@ const calcOrderAmount = async (products) => {
     const { quantity, id } = products[product]
     // retrieve product from stripe by using id
     const stripeProduct = await stripe.prices.retrieve(id)
+    console.log(stripeProduct)
 
     totalAmount += stripeProduct.unit_amount * quantity
   }

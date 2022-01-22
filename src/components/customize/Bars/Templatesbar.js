@@ -28,6 +28,7 @@ function Templatesbar({
   setPageData,
   setShowModal,
   selectedPage,
+  selectedPageSvg,
 }) {
   const [loading, setLoading] = useState(false)
   const lineWidthMM = convertToMM(pageData.pageWidth)
@@ -127,6 +128,7 @@ function Templatesbar({
                 selectedPage={selectedPage}
                 pageData={pageData}
                 setPageData={setPageData}
+                selectedPageSvg={selectedPageSvg}
               />
             )}
             {pageData.template === "dot" && (
@@ -134,6 +136,7 @@ function Templatesbar({
                 selectedPage={selectedPage}
                 pageData={pageData}
                 setPageData={setPageData}
+                selectedPageSvg={selectedPageSvg}
               />
             )}
             {pageData.template === "graph" && (
@@ -141,6 +144,7 @@ function Templatesbar({
                 selectedPage={selectedPage}
                 pageData={pageData}
                 setPageData={setPageData}
+                selectedPageSvg={selectedPageSvg}
               />
             )}
           </>

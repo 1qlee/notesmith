@@ -68,6 +68,7 @@ function Controls({
   pageData,
   productData,
   productImageData,
+  selectedPageSvg,
   selectedPage,
   setBookData,
   setPageData,
@@ -99,6 +100,7 @@ function Controls({
             setShowModal={setShowModal}
             setPageData={setPageData}
             selectedPage={selectedPage}
+            selectedPageSvg={selectedPageSvg}
           >
             Templates
           </Templatesbar>

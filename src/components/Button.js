@@ -24,7 +24,7 @@ const Button = styled.button`
   padding: ${props => props.padding || "0.5rem 1rem"};
   margin: ${props => props.margin || "0"};
   text-decoration: none;
-  transition: transform 0.2s, background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
   width: ${props => props.width || "auto"};
   &.has-icon {
@@ -44,7 +44,6 @@ const Button = styled.button`
   }
   &:focus {
     box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
-    transform: translate(1px, 1px);
     outline: none;
   }
   &[disabled] {
