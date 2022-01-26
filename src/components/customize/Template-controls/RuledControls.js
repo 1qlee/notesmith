@@ -12,6 +12,8 @@ function RuledControls({
   pageSize,
   selectedPage,
   selectedPageSvg,
+  maximumMarginHeight,
+  maximumMarginWidth,
 }) {
   const totalMargin = pageData.marginLeft + pageData.marginRight
   const centeredMarginHorizontal = totalMargin / 2
@@ -19,8 +21,6 @@ function RuledControls({
   const verticalDeadspace = pageData.pageHeight - templateHeight
   const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
   const bottomMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
-  const maximumMarginHeight = convertToMM(pageData.pageHeight)
-  const maximumMarginWidth = convertToMM(pageData.pageWidth)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -165,7 +165,6 @@ function RuledControls({
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              alignmentHorizontal: "",
               marginTop: value
             }))}
           />
@@ -188,7 +187,10 @@ function RuledControls({
               alignmentVertical: "",
               marginLeft: value,
             }), maximumMarginWidth - pageData.marginRight - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: value}))}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginLeft: value,
+            }))}
           />
         </Flexbox>
         <Flexbox
@@ -211,8 +213,7 @@ function RuledControls({
             }), maximumMarginWidth - pageData.marginLeft - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              alignmentHorizontal: "",
-              marginRight: value
+              marginRight: value,
             }))}
           />
         </Flexbox>

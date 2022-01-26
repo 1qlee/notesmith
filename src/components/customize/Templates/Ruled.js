@@ -10,10 +10,10 @@ function Ruled({
 
   function createRules() {
     const rulesArray = []
+    const lineThickness = convertToPx(pageData.thickness)
 
     for (let i = 0; i < pageData.rows; i++) {
       // calculations and conversions to px
-      const lineThickness = convertToPx(pageData.thickness)
       const lineX1 = convertToPx(pageData.marginLeft)
       const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
       const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness
@@ -30,9 +30,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > (pageData.pageHeight - lineThickness)) {
-        console.log("lines have passed the height of the page")
-        console.log(i, lineY, (pageData.pageHeight - lineThickness))
+      if (lineY > pageData.pageHeight) {
         // change the number of rows displayed
         setPageData({
           ...pageData,

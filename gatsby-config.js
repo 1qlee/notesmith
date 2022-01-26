@@ -76,8 +76,8 @@ module.exports = {
         name: `Notesmith`,
         short_name: `Notesmith`,
         start_url: `/`,
-        background_color: `#234342`,
-        theme_color: `#234342`,
+        background_color: `#22403F`,
+        theme_color: `#22403F`,
         display: `minimal-ui`,
         icon: `src/images/fav.png`, // This path is relative to the root of the site.
       },

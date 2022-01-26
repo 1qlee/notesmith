@@ -32,6 +32,8 @@ function Templatesbar({
 }) {
   const [loading, setLoading] = useState(false)
   const lineWidthMM = convertToMM(pageData.pageWidth)
+  const maximumMarginHeight = convertToMM(pageData.pageHeight)
+  const maximumMarginWidth = convertToMM(pageData.pageWidth)
 
   function handleTemplateSelect(template) {
     // set initial values for page data
@@ -129,6 +131,8 @@ function Templatesbar({
                 pageData={pageData}
                 setPageData={setPageData}
                 selectedPageSvg={selectedPageSvg}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
               />
             )}
             {pageData.template === "dot" && (
@@ -137,6 +141,8 @@ function Templatesbar({
                 pageData={pageData}
                 setPageData={setPageData}
                 selectedPageSvg={selectedPageSvg}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
               />
             )}
             {pageData.template === "graph" && (
@@ -145,6 +151,8 @@ function Templatesbar({
                 pageData={pageData}
                 setPageData={setPageData}
                 selectedPageSvg={selectedPageSvg}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
               />
             )}
           </>

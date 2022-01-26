@@ -6,7 +6,15 @@ import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
-function DotControls({ pageData, setPageData }) {
+function DotControls({
+  pageData,
+  setPageData,
+  selectedPageSvg,
+  maximumMarginHeight,
+  maximumMarginWidth,
+}) {
+  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
+  const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
   const rowWidth = convertToPx((pageData.columns - 1) * pageData.spacing) // the width of one row of dots
   const rowHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // the entire height of all rows of dots
   const topMargin = (pageData.pageHeight - rowHeight) / 2 // the margin at the top when dots are vertically centered
@@ -23,9 +31,9 @@ function DotControls({ pageData, setPageData }) {
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: 3.175,
+          marginLeft: 0,
         })
-        marginLeftInput.current.value = 3.175
+        marginLeftInput.current.value = 0
         break
       case "center":
         setPageData({
@@ -47,9 +55,9 @@ function DotControls({ pageData, setPageData }) {
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: 3.175,
+          marginTop: 0,
         })
-        marginTopInput.current.value = 3.175
+        marginTopInput.current.value = 0
         break
       case "middle":
         setPageData({
@@ -162,14 +170,21 @@ function DotControls({ pageData, setPageData }) {
         >
           <StyledLabel>Top margin</StyledLabel>
           <StyledInput
-            defaultValue={pageData.marginTop}
-            padding="0.5rem"
             ref={marginTopInput}
-            step="1"
             type="number"
+            step="1"
+            padding="0.5rem"
             width="100%"
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginTop: value }))}
+            value={pageData.marginTop.toString()}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginTop: value
+            }), maximumMarginHeight)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginTop: value
+            }))}
           />
         </Flexbox>
         <Flexbox
@@ -180,14 +195,21 @@ function DotControls({ pageData, setPageData }) {
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
-            defaultValue={pageData.marginLeft}
-            padding="0.5rem"
             ref={marginLeftInput}
-            step="1"
             type="number"
+            step="1"
+            padding="0.5rem"
             width="100%"
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginLeft: value }))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({ ...pageData, alignmentVertical: "", marginLeft: value }))}
+            value={pageData.marginLeft.toString()}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              marginLeft: value
+            }), maximumMarginHeight)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginLeft: value
+            }))}
           />
         </Flexbox>
       </Flexbox>
