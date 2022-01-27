@@ -184,7 +184,7 @@ function RuledControls({
             width="100%"
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
-              alignmentVertical: "",
+              alignmentHorizontal: "",
               marginLeft: value,
             }), maximumMarginWidth - pageData.marginRight - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
@@ -208,7 +208,7 @@ function RuledControls({
             width="100%"
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
-              alignmentVertical: "",
+              alignmentHorizontal: "",
               marginRight: value,
             }), maximumMarginWidth - pageData.marginLeft - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
@@ -231,7 +231,10 @@ function RuledControls({
         >
           <StyledInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({...pageData, opacity: value}), 1)}
+            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+              ...pageData,
+              opacity: value,
+            }), 1)}
             type="number"
             min="0.5"
             step="0.1"

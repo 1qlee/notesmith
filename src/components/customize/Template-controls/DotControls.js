@@ -15,12 +15,12 @@ function DotControls({
 }) {
   const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
   const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
-  const rowWidth = convertToPx((pageData.columns - 1) * pageData.spacing) // the width of one row of dots
-  const rowHeight = convertToPx((pageData.rows - 1) * pageData.spacing) // the entire height of all rows of dots
-  const topMargin = (pageData.pageHeight - rowHeight) / 2 // the margin at the top when dots are vertically centered
-  const sideMargin = (pageData.pageWidth - rowWidth) / 2 // the margin at the top when dots are horizontally centered
-  const bottomMargin = pageData.pageHeight - rowHeight - convertToPx(3.34) //
-  const rightMargin = pageData.pageWidth - rowWidth - convertToPx(3.34) //
+  const horizontalDeadspace = pageData.pageWidth - templateWidth
+  const verticalDeadspace = pageData.pageHeight - templateHeight
+  const rightAlignedMargin = convertToMM(horizontalDeadspace)
+  const bottomAlignedMargin = convertToMM(verticalDeadspace)
+  const centeredMarginHorizontal = convertToMM(horizontalDeadspace / 2)
+  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -39,17 +39,17 @@ function DotControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: convertToMM(sideMargin),
+          marginLeft: centeredMarginHorizontal,
         })
-        marginLeftInput.current.value = convertToMM(sideMargin)
+        marginLeftInput.current.value = centeredMarginHorizontal
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: convertToMM(rightMargin),
+          marginLeft: rightAlignedMargin,
         })
-        marginLeftInput.current.value = convertToMM(rightMargin)
+        marginLeftInput.current.value = rightAlignedMargin
         break
       case "top":
         setPageData({
@@ -63,17 +63,17 @@ function DotControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: convertToMM(topMargin),
+          marginTop: centeredMarginVertical,
         })
-        marginTopInput.current.value = convertToMM(topMargin)
+        marginTopInput.current.value = centeredMarginVertical
         break
       case "bottom":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: convertToMM(bottomMargin),
+          marginTop: bottomAlignedMargin,
         })
-        marginTopInput.current.value = convertToMM(bottomMargin)
+        marginTopInput.current.value = bottomAlignedMargin
         break
       default:
         break
@@ -226,9 +226,12 @@ function DotControls({
         >
           <StyledInput
             value={pageData.opacity}
-            onChange={e => setPageData({...pageData, opacity: e.target.value})}
+            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+              ...pageData,
+              opacity: value,
+            }), 1)}
             type="number"
-            min="0.2"
+            min="0.5"
             step="0.1"
             max="1"
             padding="0.5rem"
@@ -262,11 +265,16 @@ function DotControls({
         >
           <StyledInput
             value={pageData.dotRadius}
-            onChange={e => setPageData({...pageData, dotRadius: e.target.value})}
+            onChange={e => validateMinValue(e.target.value, 0.02, value => setPageData({
+              ...pageData,
+              dotRadius: value,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            }), 1)}
             type="number"
-            min="0.3"
-            step="0.1"
-            max="5"
+            min="0.02"
+            step="0.01"
+            max="1"
             padding="0.5rem"
             width="4rem"
           />
@@ -276,11 +284,16 @@ function DotControls({
           >
             <input
               type="range"
-              min="0.3"
-              step="0.1"
-              max="5"
+              min="0.02"
+              step="0.01"
+              max="1"
               value={pageData.dotRadius}
-              onChange={e => setPageData({...pageData, dotRadius: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                dotRadius: e.target.value,
+                alignmentVertical: "",
+                alignmentHorizontal: "",
+              })}
             />
           </StyledRange>
         </Flexbox>
