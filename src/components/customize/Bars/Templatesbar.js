@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, convertToPx, convertToMM } from "../../../styles/variables"
+import { colors, convertToMM } from "../../../styles/variables"
 import { CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
@@ -34,6 +34,8 @@ function Templatesbar({
   const lineWidthMM = convertToMM(pageData.pageWidth)
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
+  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
+  const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
 
   function handleTemplateSelect(template) {
     // set initial values for page data
@@ -90,7 +92,7 @@ function Templatesbar({
           dotRadius: 0.6,
           rows: 43,
           columns: 27,
-          marginTop: 0,
+          marginTop: 4.687,
           marginBottom: 0,
           marginLeft: 0,
           marginRight: 0,
@@ -133,6 +135,8 @@ function Templatesbar({
                 selectedPageSvg={selectedPageSvg}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                templateHeight={templateHeight}
+                templateWidth={templateWidth}
               />
             )}
             {pageData.template === "dot" && (
@@ -143,6 +147,8 @@ function Templatesbar({
                 selectedPageSvg={selectedPageSvg}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                templateHeight={templateHeight}
+                templateWidth={templateWidth}
               />
             )}
             {pageData.template === "graph" && (
@@ -153,6 +159,8 @@ function Templatesbar({
                 selectedPageSvg={selectedPageSvg}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                templateHeight={templateHeight}
+                templateWidth={templateWidth}
               />
             )}
           </>

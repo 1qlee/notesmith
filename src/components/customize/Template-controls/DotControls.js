@@ -12,9 +12,9 @@ function DotControls({
   selectedPageSvg,
   maximumMarginHeight,
   maximumMarginWidth,
+  templateHeight,
+  templateWidth,
 }) {
-  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
-  const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
   const horizontalDeadspace = pageData.pageWidth - templateWidth
   const verticalDeadspace = pageData.pageHeight - templateHeight
   const rightAlignedMargin = convertToMM(horizontalDeadspace)

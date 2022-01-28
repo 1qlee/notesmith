@@ -6,13 +6,21 @@ import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
-function RuledControls({ pageData, setPageData, pageSize }) {
-  const lineWidth = convertToPx(pageData.columns * pageData.spacing)
-  const horizontalCenter = convertToMM((pageData.pageWidth - lineWidth) / 2)
-  const lineHeight = convertToPx(pageData.rows * pageData.spacing)
-  const verticalMargin = convertToMM((pageData.pageHeight - lineHeight) / 2)
-  const bottomMargin = convertToMM(pageData.pageHeight - lineHeight - convertToPx(3.175) - 1)
-  const rightMargin = convertToMM(pageData.pageWidth - lineWidth - convertToPx(3.175) - 1)
+function GraphControls({
+  pageData,
+  setPageData,
+  selectedPageSvg,
+  maximumMarginHeight,
+  maximumMarginWidth,
+  templateHeight,
+  templateWidth,
+}) {
+  const horizontalDeadspace = pageData.pageWidth - templateWidth
+  const verticalDeadspace = pageData.pageHeight - templateHeight
+  const rightAlignedMargin = convertToMM(horizontalDeadspace)
+  const bottomAlignedMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
+  const centeredMarginHorizontal = convertToMM(horizontalDeadspace / 2)
+  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -23,49 +31,49 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: 3.175,
+          marginLeft: 0,
         })
-        marginLeftInput.current.value = 3.175
+        marginLeftInput.current.value = 0
         break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: horizontalCenter,
+          marginLeft: centeredMarginHorizontal,
         })
-        marginLeftInput.current.value = horizontalCenter
+        marginLeftInput.current.value = centeredMarginHorizontal
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: rightMargin,
+          marginLeft: rightAlignedMargin,
         })
-        marginLeftInput.current.value = rightMargin
+        marginLeftInput.current.value = rightAlignedMargin
         break
       case "top":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: 3.175,
+          marginTop: 0,
         })
-        marginTopInput.current.value = 3.175
+        marginTopInput.current.value = 0
         break
       case "middle":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: verticalMargin,
+          marginTop: centeredMarginVertical,
         })
-        marginTopInput.current.value = verticalMargin
+        marginTopInput.current.value = centeredMarginVertical
         break
       case "bottom":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: bottomMargin,
+          marginTop: bottomAlignedMargin,
         })
-        marginTopInput.current.value = bottomMargin
+        marginTopInput.current.value = bottomAlignedMargin
         break
       default:
         break
@@ -101,7 +109,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: parseInt(value),
+              rows: value,
             }))}
           />
         </Flexbox>
@@ -122,7 +130,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              columns: parseInt(value),
+              columns: value,
             }))}
           />
         </Flexbox>
@@ -163,13 +171,19 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           <StyledInput
             ref={marginTopInput}
             type="number"
-            min="0"
             step="1"
             padding="0.5rem"
             width="100%"
-            defaultValue={pageData.marginTop}
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({...pageData, alignmentVertical: "", marginTop: parseInt(value)}))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({...pageData, alignmentVertical: "", marginTop: parseInt(value)}))}
+            value={pageData.marginTop.toString()}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginTop: value
+            }), maximumMarginHeight)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginTop: value
+            }))}
           />
         </Flexbox>
         <Flexbox
@@ -179,14 +193,21 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
-            ref={marginLeftInput}
-            type="number"
-            step="1"
             padding="0.5rem"
+            ref={marginLeftInput}
+            step="1"
+            type="number"
+            value={pageData.marginLeft.toString()}
             width="100%"
-            defaultValue={pageData.marginLeft}
-            onBlur={e => validateOnBlur(e, 3.175, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: parseInt(value)}))}
-            onKeyDown={e => validateOnKeydown(e, 3.175, value => setPageData({...pageData, alignmentHorizontal: "", marginLeft: parseInt(value)}))}
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              marginLeft: value,
+            }), maximumMarginWidth - pageData.marginRight - 1)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginLeft: value,
+            }))}
           />
         </Flexbox>
       </Flexbox>
@@ -203,9 +224,12 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.opacity}
-            onChange={e => setPageData({...pageData, opacity: e.target.value})}
+            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+              ...pageData,
+              opacity: value,
+            }), 1)}
             type="number"
-            min="0.2"
+            min="0.5"
             step="0.1"
             max="1"
             padding="0.5rem"
@@ -217,7 +241,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
           >
             <input
               type="range"
-              min="0.2"
+              min="0.5"
               step="0.1"
               max="1"
               value={pageData.opacity}
@@ -239,7 +263,7 @@ function RuledControls({ pageData, setPageData, pageSize }) {
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.175, value => setPageData({...pageData, thickness: parseFloat(value)}), 3)}
+            onChange={e => validateMinValue(e.target.value, 0.175, value => setPageData({...pageData, thickness: value}), 3)}
             type="number"
             min="0.175"
             step="0.1"
@@ -266,4 +290,4 @@ function RuledControls({ pageData, setPageData, pageSize }) {
   )
 }
 
-export default RuledControls
+export default GraphControls

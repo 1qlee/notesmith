@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { convertToPx, convertToMM } from "../../../styles/variables"
+import { convertToMM } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
@@ -9,15 +9,14 @@ import AlignmentControls from "./AlignmentControls"
 function RuledControls({
   pageData,
   setPageData,
-  pageSize,
-  selectedPage,
   selectedPageSvg,
   maximumMarginHeight,
   maximumMarginWidth,
+  templateHeight,
+  templateWidth,
 }) {
   const totalMargin = pageData.marginLeft + pageData.marginRight
   const centeredMarginHorizontal = totalMargin / 2
-  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
   const verticalDeadspace = pageData.pageHeight - templateHeight
   const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
   const bottomMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2

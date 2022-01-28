@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { convertToPx } from "../../../styles/variables"
 
-function Ruled({ pageData, setPageData }) {
+function Graph({ pageData, setPageData }) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
   const lineThickness = convertToPx(pageData.thickness)
@@ -11,10 +11,10 @@ function Ruled({ pageData, setPageData }) {
     const lineColumnsArray = []
     // grid column lines
     for (let i = 0; i < pageData.columns; i++) {
-      const lineY1 = convertToPx(pageData.marginTop - (pageData.thickness / 2))
-      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop + (pageData.thickness / 2))
-      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing)
-      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft)
+      const lineY1 = convertToPx(pageData.marginTop)
+      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop) + convertToPx(pageData.thickness / 2)
+      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing) + convertToPx(pageData.thickness / 2)
+      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.thickness / 2)
       // first  column
       const firstColumnLine = {
         fill: "none",
@@ -43,7 +43,7 @@ function Ruled({ pageData, setPageData }) {
       }
 
       // break the loop if columns break past the right side margin
-      if (lineX > pageData.pageWidth - convertToPx(3.175)) {
+      if (lineX > pageData.pageWidth) {
         setPageData({
           ...pageData,
           columns: i,
@@ -65,9 +65,9 @@ function Ruled({ pageData, setPageData }) {
     for (let i = 0; i < pageData.rows; i++) {
       // calculations and conversions to px
       const lineX1 = convertToPx(pageData.marginLeft)
-      const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft)
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing)
-      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop)
+      const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft) + convertToPx(pageData.thickness)
+      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing) + convertToPx(pageData.thickness / 2)
+      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.thickness / 2)
       // first row line
       const firstRowLine = {
         fill: "none",
@@ -96,7 +96,7 @@ function Ruled({ pageData, setPageData }) {
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > pageData.pageHeight - convertToPx(3.175)) {
+      if (lineY > pageData.pageHeight) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
@@ -151,4 +151,4 @@ function Ruled({ pageData, setPageData }) {
   )
 }
 
-export default Ruled
+export default Graph
