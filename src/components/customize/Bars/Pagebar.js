@@ -1,4 +1,4 @@
-import React, { useState, memo, PureComponent } from "react"
+import React, { useState, memo, useRef } from "react"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
@@ -7,12 +7,14 @@ import Loading from "../../../assets/loading.svg"
 import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 
 import { Flexbox } from "../../layout/Flexbox"
+import PageBox from "../BarComponents/PageBox"
 import Icon from "../../Icon"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
   border-right: 1px solid ${colors.gray.threeHundred};
   height: 100%;
+  width: 164px;
   z-index: 8;
 `
 
@@ -58,20 +60,6 @@ const StyledPage = styled.div`
       }
     }
   }
-`
-
-const PagePlaceholder = styled.div`
-  position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  border: 1px solid ${colors.gray.threeHundred};
-  border-radius: 0.25rem;
-  background-color: ${colors.white};
-  height: 64px;
-  pointer-events: none;
-  transition: transform 0.2s, border-color 0.2s;
-  width: 48px;
-  z-index: 9;
 `
 
 const Page = memo(props => {
@@ -132,24 +120,33 @@ const createItemData = memoizeOne((canvasPages, pageData, selectedPage, setSelec
 
 function Pagebar({
   canvasPages,
+  bookData,
   pageData,
   selectedPage,
   setPageData,
   setSelectedPage,
 }) {
   const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
+  const windowRef = useRef(null)
 
   return (
     <PagebarWrapper>
+    <PageBox
+      bookData={bookData}
+      selectedPage={selectedPage}
+      setSelectedPage={setSelectedPage}
+      windowRef={windowRef}
+    />
       <WindowGrid
         className="window-grid"
+        ref={windowRef}
         useIsScrolling
         columnCount={2}
         columnWidth={64}
-        height={919}
+        height={871}
         rowCount={80}
         rowHeight={112}
-        width={164}
+        width={163}
         overscanColumnCount={0}
         overscanRowCount={0}
         style={{

@@ -193,6 +193,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
             <Pagebar
               canvasPages={canvasPages}
               pageData={pageData}
+              bookData={bookData}
               selectedPage={selectedPage}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}
