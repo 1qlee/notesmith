@@ -36,6 +36,7 @@ const StyledIcon = styled.span`
   position: relative;
   margin: ${props => props.margin};
   height: ${props => props.height};
+  width: ${props => props.width};
   &.is-loading {
     svg {
       animation: ${rotate} 0.5s linear infinite;

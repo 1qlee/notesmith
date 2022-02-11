@@ -58,7 +58,7 @@ export const FirebaseProvider = ({
         signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
         signOut: (...p) => firebaseAuth.signOut(...p),
         signUpWithEmail: (...p) => firebaseAuth.sendSignInLinkToEmail(...p),
-        sendEmailVerificationOnSignUp: (...p) => firebaseAuth.sendEmailVerification(...p),
+        sendEmailVerification: (...p) => firebaseAuth.sendEmailVerification(...p),
         getAuthCredential: (...p) => firebase.auth.EmailAuthProvider.credential(...p)
       }}
     >

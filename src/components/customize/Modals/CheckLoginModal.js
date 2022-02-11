@@ -1,12 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 import { Link } from "gatsby"
-import styled from "styled-components"
-import { ArrowRight, WarningCircle } from "phosphor-react"
 import { colors } from "../../../styles/variables"
 
-import { StyledFieldset, StyledLabel, StyledInput, RadioInput } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
-import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
 import Button from "../../Button"
 import Content from "../../Content"
@@ -17,35 +13,31 @@ function CheckLoginModal({ setShowModal }) {
       setShowModal={setShowModal}
       width="300px"
     >
-      <ModalHeader>Sign in or create an account to save layouts</ModalHeader>
+      <ModalHeader>Sign in or create an account to create layouts</ModalHeader>
       <ModalContent>
         <Content
           paragraphmarginbottom="1rem"
         >
-          <p>We won't be able to save your layouts unless you're signed into a Notesmith account. You might lose any progress you make.</p>
-          <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to save your layouts.</p>
+          <p>You won't be able to purchase notebooks with custom layouts without first making a Notesmith account.</p>
+          <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to create notebooks with custom layouts.</p>
         </Content>
       </ModalContent>
       <ModalFooter
         justifycontent="flex-end"
       >
         <Button
-          backgroundcolor={colors.red.sixHundred}
+          backgroundcolor={colors.gray.twoHundred}
           fontsize="0.8rem"
           margin="0 0 0 auto"
           flex="flex"
-          color={colors.red.oneHundred}
           onClick={() => setShowModal({
             show: false,
             type: "notification",
           })}
         >
           <span>
-            No, I'm okay with losing my work
+            I just want to browse
           </span>
-          <Icon margin="0 0 0 0.25rem">
-            <ArrowRight color={colors.red.oneHundred} weight="bold" />
-          </Icon>
         </Button>
       </ModalFooter>
     </Modal>

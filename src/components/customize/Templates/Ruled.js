@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM } from "../../../styles/variables"
+import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Ruled({
   pageData,
   setPageData,
   currentPageSide,
 }) {
-  const [rules, setRules] = useState([])
+  const [lines, setLines] = useState([])
+  const [lineStyle, setLineStyle] = useState({})
 
-  function createRules() {
-    const rulesArray = []
+  function createLines() {
+    const linesArray = []
     const lineThickness = convertToPx(pageData.thickness)
 
     for (let i = 0; i < pageData.rows; i++) {
@@ -17,16 +18,22 @@ function Ruled({
       const lineX1 = convertToPx(pageData.marginLeft)
       const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
       const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness
+      setLineStyle({
+        fill: "none",
+        stroke: "#000",
+        strokeWidth: lineThickness,
+        opacity: pageData.opacity,
+      })
       // line object
       const line = {
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: pageData.opacity,
-        x1: lineX1,
-        x2: lineX2,
-        y1: lineY,
-        y2: lineY,
+        x1: convertFloatFixed(lineX1, 3),
+        x2: convertFloatFixed(lineX2, 3),
+        y1: convertFloatFixed(lineY, 3),
+        y2: convertFloatFixed(lineY, 3),
       }
 
       // loop will exit if the last line has passed the height of the page
@@ -39,26 +46,26 @@ function Ruled({
         break
       }
       else {
-        rulesArray.push(line)
+        linesArray.push(line)
       }
     }
 
-    setRules(rulesArray)
+    setLines(linesArray)
   }
 
   useEffect(() => {
-    createRules()
+    createLines()
   }, [pageData])
 
   return (
-    <g>
-      {rules.map((line, index) => (
+    <>
+      {lines.map((line, index) => (
         <line
           key={index}
           fill={line.fill}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          style={{opacity: `${line.opacity}`}}
+          opacity={line.opacity}
           x1={line.x1}
           x2={line.x2}
           y1={line.y1}
@@ -66,7 +73,7 @@ function Ruled({
         >
         </line>
       ))}
-    </g>
+    </>
   )
 }
 

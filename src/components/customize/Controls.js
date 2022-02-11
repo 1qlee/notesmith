@@ -71,8 +71,8 @@ function Controls({
   selectedPage,
   setBookData,
   setPageData,
-  setSelectedPage,
   setShowModal,
+  user,
 }) {
   const [activeTab, setActiveTab] = useState(1)
 
@@ -85,12 +85,14 @@ function Controls({
         >
           Templates
         </ControlTab>
-        <ControlTab
-          className={activeTab === 2 ? "is-active is-checkout" : "is-checkout"}
-          onClick={() => setActiveTab(2)}
-        >
-          Checkout
-        </ControlTab>
+        {user && (
+          <ControlTab
+            className={activeTab === 2 ? "is-active is-checkout" : "is-checkout"}
+            onClick={() => setActiveTab(2)}
+          >
+            Checkout
+          </ControlTab>
+        )}
       </ControlTabs>
       {activeTab === 1 && (
         <ControlsContent>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { convertToPx } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Graph({ pageData, setPageData }) {
   const [lineRows, setLineRows] = useState([])
@@ -21,10 +21,10 @@ function Graph({ pageData, setPageData }) {
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: pageData.opacity,
-        x1: lineXFirst,
-        x2: lineXFirst,
-        y1: lineY1,
-        y2: lineY2,
+        x1: convertFloatFixed(lineXFirst, 3),
+        x2: convertFloatFixed(lineXFirst, 3),
+        y1: convertFloatFixed(lineY1, 3),
+        y2: convertFloatFixed(lineY2, 3),
       }
       // line object that holds line properties
       const line = {
@@ -32,10 +32,10 @@ function Graph({ pageData, setPageData }) {
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: pageData.opacity,
-        x1: lineX,
-        x2: lineX,
-        y1: lineY1,
-        y2: lineY2,
+        x1: convertFloatFixed(lineX, 3),
+        x2: convertFloatFixed(lineX, 3),
+        y1: convertFloatFixed(lineY1, 3),
+        y2: convertFloatFixed(lineY2, 3),
       }
 
       if (i === 0) {
@@ -118,14 +118,14 @@ function Graph({ pageData, setPageData }) {
   }, [pageData])
 
   return (
-    <g>
+    <>
       {lineRows && lineRows.map((line, index) => (
         <line
           key={index}
           fill={line.fill}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          style={{opacity: `${line.opacity}`}}
+          opacity={line.opacity}
           x1={line.x1}
           x2={line.x2}
           y1={line.y1}
@@ -139,7 +139,7 @@ function Graph({ pageData, setPageData }) {
           fill={line.fill}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          style={{opacity: `${line.opacity}`}}
+          opacity={line.opacity}
           x1={line.x1}
           x2={line.x2}
           y1={line.y1}
@@ -147,7 +147,7 @@ function Graph({ pageData, setPageData }) {
         >
         </line>
       ))}
-    </g>
+    </>
   )
 }
 

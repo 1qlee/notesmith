@@ -68,7 +68,6 @@ const Page = memo(props => {
     columnIndex,
     rowIndex,
     style,
-    isScrolling,
     index,
   } = props
   const {
@@ -77,11 +76,12 @@ const Page = memo(props => {
     selectedPage,
     setSelectedPage,
     setPageData,
-    pageNumber,
   } = data
   const columnCount = 2
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
+  console.log(currentPage)
+
   // change the selected page number
   const handleSelectPage = value => {
     const pageNumber = parseInt(value)
@@ -98,13 +98,14 @@ const Page = memo(props => {
       className={selectedPage === currentPage.pageNumber ? "is-active" : null}
       style={style}
     >
-      <SVG
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-        src={currentPage.svg}
         x="0"
         y="0"
-      />
+      >
+
+      </svg>
       <p>{currentPage.pageNumber}</p>
     </StyledPage>
   )
@@ -126,17 +127,17 @@ function Pagebar({
   setPageData,
   setSelectedPage,
 }) {
-  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
   const windowRef = useRef(null)
+  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
 
   return (
     <PagebarWrapper>
-    <PageBox
-      bookData={bookData}
-      selectedPage={selectedPage}
-      setSelectedPage={setSelectedPage}
-      windowRef={windowRef}
-    />
+      <PageBox
+        bookData={bookData}
+        selectedPage={selectedPage}
+        setSelectedPage={setSelectedPage}
+        windowRef={windowRef}
+      />
       <WindowGrid
         className="window-grid"
         ref={windowRef}
@@ -144,7 +145,7 @@ function Pagebar({
         columnCount={2}
         columnWidth={64}
         height={871}
-        rowCount={80}
+        rowCount={70}
         rowHeight={112}
         width={163}
         overscanColumnCount={0}

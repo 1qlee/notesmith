@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { colors } from "../../styles/variables"
-import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
 import { jsPDF as createPdf } from 'jspdf'
@@ -34,7 +33,7 @@ const Books = () => {
   const [loading, setLoading] = useState(true)
   const [bookData, setBookData] = useState({
     size: "",
-    numOfPages: 160,
+    numOfPages: 140,
     widthPixel: 528,
     heightPixel: 816,
     widthInch: "5.5",

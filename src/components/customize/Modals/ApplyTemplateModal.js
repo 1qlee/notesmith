@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
+import { svgToObjects } from "../../../utils/helper-functions"
 import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import Loading from "../../../assets/loading.svg"
 
@@ -15,8 +16,7 @@ import Content from "../../Content"
 
 const PageRangeWrapper = styled.div`
   display: flex;
-  box-shadow: ${colors.shadow.layeredSmall};
-  border: 1px solid ${colors.primary.sixHundred};
+  border: 1px solid ${colors.gray.threeHundred};
   padding: 0.25rem;
   align-items: center;
   border-radius: 0.25rem;
@@ -25,8 +25,7 @@ const PageRangeWrapper = styled.div`
   width: 6.875rem;
   margin: 0 0 1rem 1.5rem;
   &.is-focused {
-    box-shadow: 0 0 0 ${colors.primary.sixHundred};
-    transform: translateY(1px);
+    border-color: ${colors.primary.sixHundred};
   }
 `
 
@@ -36,10 +35,6 @@ const PageRangeInput = styled.input`
   border-radius: 0.25rem;
   text-align: center;
   width: 2.5rem;
-  &:focus {
-    background-color: ${colors.primary.active};
-    outline: none;
-  }
   /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -61,8 +56,9 @@ function ApplyTemplateModal({
   setShowModal,
   selectedPage,
   selectedPageSvg,
+  user,
 }) {
-  const { firebaseDb, user } = useFirebaseContext()
+  const { firebaseDb } = useFirebaseContext()
   const totalPages = parseInt(bookData.numOfPages)
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [frequency, setFrequency] = useState("")
@@ -73,62 +69,58 @@ function ApplyTemplateModal({
   const [loading, setLoading] = useState(false)
 
   function handleTemplateApply(value) {
-    // selectedPage starts from 1 - have to subtract 1 accordingly so that it matches the array position
-    const pageNumber = selectedPage - 1
     setLoading(true)
 
     // have to purposely delay applyTemplate() because it freezes the UI
     // preventing the loading state from occuring
     setTimeout(() => {
-      applyTemplate(value, pageNumber)
+      applyTemplate(value)
     }, 10)
   }
 
   // simple function to update a specific page's svg field in the database
   // requires a pageId and a SVG string
   function updatePageSvg(pageId, newPageSvg) {
-    if (user) {
-      const updates = {}
-      updates[`/pages/${pageId}/svg`] = newPageSvg
+    const updates = {}
+    updates[`/pages/${pageId}/svg`] = newPageSvg
 
-      firebaseDb.ref().update(updates, error => {
-        if (error) {
-          console.log(error)
-        }
-        else {
-          console.log(`Successfully updated ${pageId}`)
-        }
-      })
-    }
-    else {
-      return
-    }
+    return firebaseDb.ref().update(updates, error => {
+      if (error) {
+        console.log(error)
+      }
+      else {
+        console.log(`Successfully updated ${pageId}`)
+      }
+    })
   }
 
-  function applyTemplate(value, pageNumber) {
+  async function applyTemplate(value) {
     // clone the canvasPages array
+    const pageNumber = parseInt(selectedPage) - 1
     const canvasPagesClone = [...canvasPages]
-    const newPageSvg = selectedPageSvg.outerHTML
+    console.log(canvasPagesClone[pageNumber])
+    const newPageSvg = svgToObjects(selectedPageSvg, 0)
+    console.log(newPageSvg)
 
     switch(value) {
       case "apply-current":
         // change the corresponding page's svg in our cloned array
         canvasPagesClone[pageNumber].svg = newPageSvg
         // update the svg field for this entry in the firebase db
-        updatePageSvg(canvasPagesClone[pageNumber].id, newPageSvg)
+        await updatePageSvg(canvasPagesClone[pageNumber].id, newPageSvg)
         break
       case "apply-range":
         // change the corresponding page's svg in our cloned array
         // simple loop from lower to upper page bound
         for (let i = lowerPageBound; i <= upperPageBound; i++) {
-          // for if a frequency is checked
+          // check if a frequency is checked
           switch(frequency) {
             case "even":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "odd":
@@ -136,7 +128,7 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "other":
@@ -144,14 +136,14 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
               canvasPagesClone[i - 1].svg = newPageSvg
               // update the svg field for each appropriate page in the firebase db
-              updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+              await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
           }
         }
         break
@@ -164,32 +156,32 @@ function ApplyTemplateModal({
             case "even":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "odd":
               if (i % 2 !== 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             case "other":
               if (i % frequencyNum === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+                canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
-              canvasPagesClone[i - 1].svg = selectedPageSvg.outerHTML
+              canvasPagesClone[i - 1].svg = newPageSvg
               // update the svg field for each appropriate page in the firebase db
-              updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+              await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
           }
         }
         break
@@ -282,6 +274,13 @@ function ApplyTemplateModal({
           </Icon>
           <Content>
             <p>Applying a template will remove all existing layouts and styles from these pages.</p>
+            {user ? (
+              null
+            ) : (
+              <p>
+                Note: This feature is not available in demo mode.
+              </p>
+            )}
           </Content>
         </Notification>
         <Grid
@@ -368,6 +367,7 @@ function ApplyTemplateModal({
                       validateLowerPageBound(e.target.value)
                     }}
                     onFocus={() => setRangeIsFocused(true)}
+                    onClick={e => e.target.select()}
                     value={lowerPageBound}
                     max={totalPages}
                     min="1"
@@ -386,6 +386,7 @@ function ApplyTemplateModal({
                       validateUpperPageBound(e.target.value)
                     }}
                     onFocus={() => setRangeIsFocused(true)}
+                    onClick={e => e.target.select()}
                     value={upperPageBound}
                     max={totalPages}
                     min="1"
@@ -473,6 +474,7 @@ function ApplyTemplateModal({
                     value={frequencyNum}
                     onChange={e => setFrequencyNum(parseInt(e.target.value))}
                     onFocus={e => setFrequency("other")}
+                    onClick={e => e.target.select()}
                     min="1"
                     max={totalPages}
                   />
@@ -497,21 +499,25 @@ function ApplyTemplateModal({
         >
           Cancel
         </Button>
-        <Button
-          backgroundcolor={colors.primary.sixHundred}
-          color={colors.primary.white}
-          padding="0.5rem"
-          borderradius="0.25rem"
-          onClick={() => handleTemplateApply(selectedApply)}
-          className={loading ? "is-loading" : null}
-          disabled={loading}
-        >
-          {loading ? (
-            <Loading height="1rem" width="3rem" />
-          ) : (
-            "Confirm"
-          )}
-        </Button>
+        {user ? (
+          <Button
+            backgroundcolor={colors.primary.sixHundred}
+            color={colors.primary.white}
+            padding="0.5rem"
+            borderradius="0.25rem"
+            onClick={() => handleTemplateApply(selectedApply)}
+            className={loading ? "is-loading" : null}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loading height="1rem" width="3rem" />
+            ) : (
+              "Confirm"
+            )}
+          </Button>
+        ) : (
+          null
+        )}
       </ModalFooter>
     </Modal>
   )

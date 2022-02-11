@@ -1,12 +1,11 @@
-import { ArrowLeft, Warning } from "phosphor-react"
+import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
 import { colors, convertToPx } from "../../../styles/variables"
-import { Link, navigate, graphql, useStaticQuery } from "gatsby"
+import { navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
-import Loading from "../../../assets/loading.svg"
 import React, { useState } from "react"
 import styled from "styled-components"
 
-import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
+import { StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import { BookRadio } from "../Books/BookComponents"
 import { Flexbox } from "../../layout/Flexbox"
@@ -34,10 +33,6 @@ function NewBookModal({
     msg: "",
   })
   const [processing, setProcessing] = useState(false)
-  const [pageData, setPageData] = useState({
-    pageWidth: bookData.widthPixel - convertToPx(12.7),
-    pageHeight: bookData.heightPixel - convertToPx(6.35),
-  })
   const [selectedBook, setSelectedBook] = useState(0)
   const productsData = useStaticQuery(graphql`
     query NewBookProductQuery {
@@ -93,18 +88,21 @@ function NewBookModal({
         // keep track of each page in this object - it will be used later to set pages in 'books'
         pagesObject[`${newPageKey}`] = true
         // svg for a blank page
-        newPageSvg = `<svg id="page-${i}" xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel}" height="${bookData.heightPixel}" fill="#fff"></rect></svg>`
+        newPageSvg = {
+          name: "rect",
+          width: bookData.widthPixel - convertToPx(12.7),
+          height: bookData.heightPixel - convertToPx(6.35),
+          fill: "#fff",
+        }
         // write the new page into the db
         newPageRef.set({
           "bookId": newBookKey,
-          "date_created": new Date().valueOf(),
-          "height": bookData.heightPixel,
           "id": newPageKey,
           "pageNumber": i,
-          "size": bookData.size,
-          "svg": newPageSvg,
+          "svg": {
+            "rect-01": newPageSvg,
+          },
           "uid": user.uid,
-          "width": bookData.widthPixel,
         }).catch(error => {
           console.log("error writing page to the database")
         })
@@ -126,9 +124,9 @@ function NewBookModal({
         "widthPixel": bookData.widthPixel,
         "widthInch": bookData.widthInch,
       }).then(() => {
-        setProcessing(false)
         // afterwards, log that book id into 'users/userId/books/bookId'
         firebaseDb.ref(`users/${user.uid}/books`).child(newBookKey).set(true)
+        setProcessing(false)
         // redirect the user to the book creation page
         navigate(`/customize/${bookData.slug}/${newBookKey}`)
       }).catch(error => {
@@ -137,6 +135,7 @@ function NewBookModal({
       })
     }
   }
+
 
   function handleClick(data, step, productNumber) {
     setBookData(data)
@@ -316,7 +315,7 @@ function NewBookModal({
         <Button
           backgroundcolor={colors.primary.sixHundred}
           className={processing ? "is-loading" : null}
-          color={colors.white}
+          color={colors.primary.white}
           disabled={processing || !bookData.title || bookData.title.trim().length === 0 || step < 2}
           form="new-book-form"
           onClick={e => createNewBook()}
@@ -324,7 +323,9 @@ function NewBookModal({
           width="100%"
         >
           {processing ? (
-            <Loading height="1rem" width="100%" />
+            <Icon>
+              <CircleNotch />
+            </Icon>
           ) : (
             "Create book"
           )}

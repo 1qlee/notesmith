@@ -11,7 +11,7 @@ import Icon from "../Icon"
 import Seo from "../layout/Seo"
 
 const SignUpForm = () => {
-  const { signUp, sendEmailVerificationOnSignUp, firebaseDb } = useFirebaseContext()
+  const { signUp, sendEmailVerification, firebaseDb } = useFirebaseContext()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState({
@@ -32,12 +32,13 @@ const SignUpForm = () => {
       // Record new user in the db
       firebaseDb.ref('users/' + user.uid).set({
         email: user.email
-      })
-      // Send the user a verification email
-      user.sendEmailVerificationOnSignUp().then(() => {
-        navigate("/app/dashboard")
-      }).catch(error => {
-        console.log(error.code, error.msg)
+      }).then(() => {
+        // Send the user a verification email
+        user.sendEmailVerification().then(() => {
+          navigate("/app/dashboard")
+        }).catch(error => {
+          console.log(error.code, error.msg)
+        })
       })
     })
     .catch(error => {

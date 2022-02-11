@@ -7,14 +7,12 @@ function Blank({
 }) {
 
   return (
-    <g>
-      <rect
-        width={pageData.pageWidth}
-        height={pageData.pageHeight}
-        fill="#FFF"
-      >
-      </rect>
-    </g>
+    <rect
+      width={pageData.pageWidth}
+      height={pageData.pageHeight}
+      fill="#FFF"
+    >
+    </rect>
   )
 }
 

@@ -35,14 +35,14 @@ const Editor = ({ bookId, productData, productImageData }) => {
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
     columns: 27,
-    lineWidth: bookData.widthPixel - convertToPx(12.7),
+    lineWidth: bookData.widthPixel - convertToPx(13.335),
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
     opacity: 0.5,
     pageHeight: bookData.heightPixel - convertToPx(6.35),
-    pageWidth: bookData.widthPixel - convertToPx(12.7),
+    pageWidth: bookData.widthPixel - convertToPx(13.335),
     rows: 43,
     spacing: 5,
     template: "",
@@ -58,21 +58,24 @@ const Editor = ({ bookId, productData, productImageData }) => {
   // creates blank svgs for when the user is not logged in
   function createBlankSvgs() {
     // blank array holds the svgs
-    const svgArray = []
+    const pagesArray = []
 
     // we are using strings so we can use the react-inlinesvg library to render them
     for (let i = 0; i < bookData.numOfPages; i++) {
       // blank white rectangle inside the svg is set to pageSizes' width and height
-      svgArray.push({
-        svg: `<svg id='page-${i}' xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
-        id: i,
-        pageNumber: i + 1, // index starts at 0
-        bookId: "invalid",
+      pagesArray.push({
+        svg: {
+          name: "rect",
+          height: pageData.pageHeight,
+          width: pageData.pageWidth,
+          fill: "#fff",
+        },
+        pageNumber: i + 1,
       })
     }
 
     // set canvasPages in state
-    setCanvasPages(svgArray)
+    setCanvasPages(pagesArray)
     setInitializing(false)
   }
 
@@ -90,7 +93,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
             // set book in state
             setBookData(bookVals)
             // set pages in state
-            getPages(bookVals.id)
+            getPages(bookVals.pages)
           }
           else {
             navigate(`/customize/${productData.slug}`)
@@ -105,38 +108,49 @@ const Editor = ({ bookId, productData, productImageData }) => {
     }
 
     // query the db for pages using bookId
-    function getPages(id) {
-      firebaseDb.ref(`pages/`).orderByChild('bookId').equalTo(id).once("value").then(snapshot => {
-        // this array will hold the pages
-        const pagesArray = []
+    async function getPages(bookPages) {
+      // this array will hold the pages
+      const pagesArray = []
+      // keep track of index
+      let pageIndex = 1
 
-        // push each page into pagesArray
-        snapshot.forEach(child => {
-          const page = child.val()
+      // loop through each page in bookPages object using the pageId key
+      for (const pageId in bookPages) {
+        let pageObject = {
+          id: pageId,
+          pageNumber: pageIndex,
+          svg: {},
+        }
 
-          pagesArray.push({
-            svg: page.svg,
-            id: page.id,
-            pageNumber: page.pageNumber,
-            bookId: page.bookId,
+        // db call to get the page with pageId
+        await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(10).once("value").then(snapshot => {
+          // keep track of svg index
+          let svgIndex = 1
+          // loop through each svg element (up to 10)
+          snapshot.forEach(child => {
+            const pageSvg = child.val()
+            // push svg object into our makeshift array incl. pageNumber prop
+            pageObject.svg[svgIndex] = pageSvg
+            svgIndex++
           })
+        }).then(() => {
+          // increment index
+          pageIndex++
+          pagesArray.push(pageObject)
+        }).catch(err => {
+          console.log(err)
         })
-
-        setCanvasPages(pagesArray)
-      }).then(() => {
-        setInitializing(false)
-      }).catch(error => {
-        console.log(error)
-        setInitializing(false)
-      })
+      }
+      // set pages in state
+      setCanvasPages(pagesArray)
+      setInitializing(false)
     }
-
     // first check if there is a user logged in because
     // users that are not logged in should not be able to access bookId's
-    if (user && !loading) {
+    if (user) {
       // if there is a notebook ID in the URL we know the user is trying to access a specific book in the database
       // wait for all loading states to clear before calling getBook
-      if (bookId && !loading) {
+      if (bookId) {
         setShowModal({
           show: false,
           type: "",
@@ -152,23 +166,27 @@ const Editor = ({ bookId, productData, productImageData }) => {
           show: true,
           type: "signedIn",
         })
-
         createBlankSvgs()
       }
     }
     // else we can create blank svgs for users that are not logged in
     else {
-      createBlankSvgs()
-      // show modal based on sign-in status
-      setShowModal({
-        show: user ? false : true,
-        type: "notSignedIn",
-      })
+      if (!loading || !initializing) {
+        createBlankSvgs()
+        // show modal based on sign-in status
+        setShowModal({
+          show: user ? false : true,
+          type: "notSignedIn",
+        })
+      }
     }
 
-  }, [loading, user, initializing, bookId, selectedPageSvg, pageData])
+  }, [bookId, loading])
 
-  if (loading || initializing) {
+  if (loading) {
+    return <Loader />
+  }
+  if (initializing) {
     return <Loader />
   }
   return (
@@ -191,9 +209,9 @@ const Editor = ({ bookId, productData, productImageData }) => {
             justifycontent="space-between"
           >
             <Pagebar
+              bookData={bookData}
               canvasPages={canvasPages}
               pageData={pageData}
-              bookData={bookData}
               selectedPage={selectedPage}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}
@@ -217,8 +235,8 @@ const Editor = ({ bookId, productData, productImageData }) => {
               selectedPageSvg={selectedPageSvg}
               setBookData={setBookData}
               setPageData={setPageData}
-              setSelectedPage={setSelectedPage}
               setShowModal={setShowModal}
+              user={user}
             />
           </Flexbox>
         </>
@@ -247,6 +265,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
               setShowModal={setShowModal}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
+              user={user}
             />
           )}
         </>

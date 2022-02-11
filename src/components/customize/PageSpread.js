@@ -93,6 +93,74 @@ function Template({
   )
 }
 
+function PageSvg({
+  minimumMargin,
+  pageData,
+  pageRef,
+  pageSvg,
+  workingPageHeight,
+  workingPageWidth,
+}) {
+  const pageSvgArray = Array.from(pageSvg.svg)
+
+  function generateSvg(elem) {
+    switch (elem.name) {
+      case "circle":
+        return (
+          <circle
+            cx={elem.cx}
+            cy={elem.cy}
+            opacity={elem.opacity}
+            fill={elem.fill}
+            r={elem.radius}
+          >
+          </circle>
+        )
+      case "line":
+        return (
+          <line
+            fill={elem.fill}
+            stroke={elem.stroke}
+            strokeWidth={elem.strokeWidth}
+            opacity={elem.opacity}
+            x1={elem.x1}
+            x2={elem.x2}
+            y1={elem.y1}
+            y2={elem.y2}
+          >
+          </line>
+        )
+      case "rect":
+        return (
+          <rect
+            fill={elem.fill}
+            width={elem.width}
+            height={elem.height}
+          >
+          </rect>
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      ref={pageRef}
+      height={workingPageHeight}
+      width={workingPageWidth}
+      viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+      x={minimumMargin}
+      y={minimumMargin}
+    >
+    {pageSvg.svg.map(elem => {
+      generateSvg(elem)
+    })}
+    </svg>
+  )
+}
+
 function PageSpread({
   canvasPages,
   canvasSize,
@@ -112,7 +180,7 @@ function PageSpread({
   const leftPageXPosition = minimumMargin
   const rightPageXPosition = canvasPageWidth + convertToPx(9.525)
   const pageSpreadWidth = canvasPageWidth * 2 // converted page spread width
-  // the parts of the page that can be manipulated
+  // the working area of the page (the part that accepts user input)
   const workingPageHeight = canvasPageHeight - convertToPx(6.35) // minus top and bottom margins
   const workingPageWidth = canvasPageWidth - convertToPx(12.7) // minus left and right margins
 
@@ -128,8 +196,8 @@ function PageSpread({
       for (let i = 0; i < numOfHoles; i++) {
         // hole property object
         const hole = {
-          width: 16,
-          height: 16,
+          width: 15.12,
+          height: 15.12,
           fill: colors.gray.oneHundred,
           strokeWidth: 1,
           stroke: colors.gray.threeHundred,
@@ -204,6 +272,7 @@ function PageSpread({
           {currentPageSide === "left" ? (
             <>
               <svg
+                xmlns="http://www.w3.org/2000/svg"
                 id="page-background-left"
                 width={canvasPageWidth}
                 height={canvasPageHeight}
@@ -227,14 +296,13 @@ function PageSpread({
                   minimumMargin={minimumMargin}
                 />
               ) : (
-                <SVG
-                  ref={pageLeftRef}
-                  height={workingPageHeight}
-                  width={workingPageWidth}
-                  viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                  src={canvasPages[selectedPage - 1].svg}
-                  x={minimumMargin}
-                  y={minimumMargin}
+                <PageSvg
+                  minimumMargin={minimumMargin}
+                  pageData={pageData}
+                  pageRef={pageLeftRef}
+                  pageSvg={canvasPages[selectedPage - 1]}
+                  workingPageHeight={workingPageHeight}
+                  workingPageWidth={workingPageWidth}
                 />
               )}
             </>
@@ -250,14 +318,13 @@ function PageSpread({
                 <rect width={canvasPageWidth} height={canvasPageHeight} fill={colors.white}></rect>
                 <Holes pageSide="left" />
               </svg>
-              <SVG
-                ref={pageLeftRef}
-                height={workingPageHeight}
-                width={workingPageWidth}
-                viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                src={canvasPages[selectedPage - 2].svg}
-                x={minimumMargin}
-                y={minimumMargin}
+              <PageSvg
+                minimumMargin={minimumMargin}
+                pageData={pageData}
+                pageRef={pageLeftRef}
+                pageSvg={canvasPages[selectedPage - 2]}
+                workingPageHeight={workingPageHeight}
+                workingPageWidth={workingPageWidth}
               />
             </>
           )}
@@ -308,14 +375,13 @@ function PageSpread({
                   minimumMargin={minimumMargin}
                 />
               ) : (
-                <SVG
-                  ref={pageRightRef}
-                  height={workingPageHeight}
-                  width={workingPageWidth}
-                  viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                  src={canvasPages[selectedPage - 1].svg}
-                  x={rightPageXPosition}
-                  y={minimumMargin}
+                <PageSvg
+                  minimumMargin={minimumMargin}
+                  pageData={pageData}
+                  pageRef={pageRightRef}
+                  pageSvg={canvasPages[selectedPage - 1]}
+                  workingPageHeight={workingPageHeight}
+                  workingPageWidth={workingPageWidth}
                 />
               )}
             </>
@@ -332,14 +398,13 @@ function PageSpread({
                 <rect width={canvasPageWidth - 3} height={canvasPageHeight - 2} fill={colors.white}></rect>
                 <Holes pageSide="right" />
               </svg>
-              <SVG
-                ref={pageRightRef}
-                height={workingPageHeight}
-                width={workingPageWidth}
-                viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-                src={canvasPages[selectedPage].svg}
-                x={rightPageXPosition}
-                y={minimumMargin}
+              <PageSvg
+                minimumMargin={minimumMargin}
+                pageData={pageData}
+                pageRef={pageRightRef}
+                pageSvg={canvasPages[selectedPage]}
+                workingPageHeight={workingPageHeight}
+                workingPageWidth={workingPageWidth}
               />
             </>
           )}

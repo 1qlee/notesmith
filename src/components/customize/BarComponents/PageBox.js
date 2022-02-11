@@ -1,9 +1,8 @@
-import React, { useState, useRef } from "react"
+import React, { useRef, useEffect } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { CaretDown, CaretUp } from "phosphor-react"
 
-import Content from "../../Content"
 import Icon from "../../Icon"
 
 const StyledPageBox = styled.div`
@@ -49,49 +48,70 @@ function PageBox({
   selectedPage,
   windowRef,
 }) {
+  const pageSelectorInput = useRef(null)
 
-  function handlePageChange(value) {
-    const pageNumber = parseInt(value)
+  function validatePageChange(value) {
+    // if the input is somehow not a number
+    const pageNumber = isNaN(value) ? 1 : parseInt(value)
     console.log(windowRef.current)
-    windowRef.current.scrollToItem(120)
 
-    if (pageNumber <= 0 || !pageNumber) {
-      return
+    // validation logic
+    if (pageNumber <= 0) {
+      return changePage(1)
     }
     else if (pageNumber > bookData.numOfPages) {
-      return
+      return changePage(160)
     }
     else {
-      return setSelectedPage(pageNumber)
+      return changePage(pageNumber)
     }
-
   }
+
+  function validatePageChangeKeydown(e) {
+    if (e.keyCode === 13 || e.keyCode === 27) {
+      e.target.blur()
+    }
+  }
+
+  function changePage(pageNumber) {
+    pageSelectorInput.current.value = pageNumber
+    setSelectedPage(pageNumber)
+  }
+
+  useEffect(() => {
+    pageSelectorInput.current.value = selectedPage
+  }, [selectedPage])
 
   return (
     <StyledPageBox>
-      <Content>
-        <label htmlFor="page-number-input">Go to page</label>
-        <IconWrapper
-          left="1rem"
+      <label htmlFor="page-number-input">Go to page</label>
+      <IconWrapper
+        left="1rem"
+      >
+        <Icon>
+          <CaretDown />
+        </Icon>
+      </IconWrapper>
+      <input
+        ref={pageSelectorInput}
+        type="number"
+        id="page-number-input"
+        onKeyDown={e => validatePageChangeKeydown(e)}
+        onBlur={e => validatePageChange(e.target.value)}
+        defaultValue={selectedPage}
+        min="1"
+        max={bookData.numOfPages}
+        step="1"
+      />
+      <IconWrapper
+        right="1rem"
+      >
+        <Icon
+          onClick={() => setSelectedPage(selectedPage + 1)}
         >
-          <Icon>
-            <CaretDown />
-          </Icon>
-        </IconWrapper>
-        <input
-          type="number"
-          id="page-number-input"
-          onChange={e => handlePageChange(e.target.value)}
-          value={selectedPage}
-        />
-        <IconWrapper
-          right="1rem"
-        >
-          <Icon>
-            <CaretUp />
-          </Icon>
-        </IconWrapper>
-      </Content>
+          <CaretUp />
+        </Icon>
+      </IconWrapper>
     </StyledPageBox>
   )
 }

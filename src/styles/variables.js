@@ -150,4 +150,8 @@ const convertToPx = mm => {
   return parseFloat((mm * 3.7795275591).toFixed(3))
 }
 
-export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal }
+const convertFloatFixed = (number, places) => {
+  return parseFloat(number).toFixed(places)
+}
+
+export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal, convertFloatFixed }

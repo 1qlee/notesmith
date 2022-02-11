@@ -80,6 +80,26 @@ function Templatesbar({
           lineWidth: lineWidthMM,
         })
         break
+      case "graph":
+        setPageData({
+          ...pageData,
+          template: template,
+          alignmentHorizontal: "center",
+          alignmentVertical: "middle",
+          spacing: 5,
+          opacity: 1,
+          thickness: 0.175,
+          dotRadius: 0.6,
+          rows: 43,
+          columns: 27,
+          marginTop: 2.229,
+          marginBottom: 0,
+          marginLeft: 0.913,
+          marginRight: 0,
+          width: 127,
+          lineWidth: lineWidthMM,
+        })
+        break
       default:
         setPageData({
           ...pageData,
@@ -111,8 +131,6 @@ function Templatesbar({
       height="100%"
     >
       <TemplatesContent>
-        <StyledLabel
-        margin="0 0 1rem 0">Styles</StyledLabel>
         <Flexbox
           flex="flex"
           flexwrap="wrap"
