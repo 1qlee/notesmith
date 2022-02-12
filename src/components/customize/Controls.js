@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
@@ -75,6 +75,10 @@ function Controls({
   user,
 }) {
   const [activeTab, setActiveTab] = useState(1)
+
+  useEffect(() => {
+    console.log("controls rendered")
+  })
 
   return (
     <StyledControls>

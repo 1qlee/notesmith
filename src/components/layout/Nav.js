@@ -223,9 +223,6 @@ function Nav(props) {
   )
 }
 
-function NavProfile() {
-
-}
 
 Nav.propTypes = {
   chapterNumber: PropTypes.string,

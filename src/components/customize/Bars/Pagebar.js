@@ -1,4 +1,4 @@
-import React, { useState, memo, useRef } from "react"
+import React, { useState, useEffect, memo, useRef } from "react"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
@@ -80,7 +80,6 @@ const Page = memo(props => {
   const columnCount = 2
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
-  console.log(currentPage)
 
   // change the selected page number
   const handleSelectPage = value => {
@@ -129,6 +128,10 @@ function Pagebar({
 }) {
   const windowRef = useRef(null)
   const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
+
+  useEffect(() => {
+    console.log('pagebar rendered')
+  })
 
   return (
     <PagebarWrapper>

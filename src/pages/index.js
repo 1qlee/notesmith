@@ -47,12 +47,11 @@ const chapterData = {
 }
 
 const IndexPage = ({ data }) => {
-  const [ hideNavbar, setHideNavbar ] = useState(false)
 
   return (
     <Layout>
       <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
-      <Nav hideNavbar={hideNavbar}></Nav>
+      <Nav hideNavbar={false}></Nav>
       <SectionMain>
         <Section>
           <Container>

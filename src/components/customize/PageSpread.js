@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import { colors, convertToPx } from "../../styles/variables"
 import SVG from "react-inlinesvg"
+import { useFirebaseContext } from "../../utils/auth"
 
 import Ruled from "./Templates/Ruled"
 import Dot from "./Templates/Dot"
@@ -94,19 +95,50 @@ function Template({
 }
 
 function PageSvg({
+  currentPageSide,
   minimumMargin,
   pageData,
   pageRef,
   pageSvg,
+  rightPageXPosition,
   workingPageHeight,
   workingPageWidth,
 }) {
-  const pageSvgArray = Array.from(pageSvg.svg)
+  const { firebaseDb } = useFirebaseContext()
+  const [svgArray, setSvgArray] = useState([])
+  const pageId = pageSvg.id
 
-  function generateSvg(elem) {
-    switch (elem.name) {
-      case "circle":
-        return (
+  async function generateSvg() {
+    const dummy = []
+    await firebaseDb.ref(`pages/${pageId}/svg`).once("value").then(snapshot => {
+      snapshot.forEach(svgElem => {
+        const elem = svgElem.val()
+
+        dummy.push(elem)
+      })
+    })
+
+    setSvgArray(dummy)
+  }
+
+  useEffect(() => {
+    generateSvg()
+  }, [pageId])
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      ref={pageRef}
+      height={workingPageHeight}
+      width={workingPageWidth}
+      viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+      id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
+      x={currentPageSide === "left" ? minimumMargin : rightPageXPosition}
+      y={minimumMargin}
+    >
+    {svgArray.map(elem => (
+      <>
+        {elem.name === "circle" && (
           <circle
             cx={elem.cx}
             cy={elem.cy}
@@ -115,9 +147,16 @@ function PageSvg({
             r={elem.radius}
           >
           </circle>
-        )
-      case "line":
-        return (
+        )}
+        {elem.name === "rect" && (
+          <rect
+            fill={elem.fill}
+            width={elem.width}
+            height={elem.height}
+          >
+          </rect>
+        )}
+        {elem.name === "line" && (
           <line
             fill={elem.fill}
             stroke={elem.stroke}
@@ -129,34 +168,9 @@ function PageSvg({
             y2={elem.y2}
           >
           </line>
-        )
-      case "rect":
-        return (
-          <rect
-            fill={elem.fill}
-            width={elem.width}
-            height={elem.height}
-          >
-          </rect>
-        )
-      default:
-        return null
-    }
-  }
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      ref={pageRef}
-      height={workingPageHeight}
-      width={workingPageWidth}
-      viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-      x={minimumMargin}
-      y={minimumMargin}
-    >
-    {pageSvg.svg.map(elem => {
-      generateSvg(elem)
-    })}
+        )}
+      </>
+    ))}
     </svg>
   )
 }
@@ -233,6 +247,7 @@ function PageSpread({
   }
 
   useEffect(() => {
+    console.log('page spread rendered')
     // if the selected page is even, then it must be the left page
     if (selectedPage % 2 === 0) {
       setCurrentPageSide("left")
@@ -240,7 +255,7 @@ function PageSpread({
     else {
       setCurrentPageSide("right")
     }
-  }, [selectedPage, pageData, currentPageSide])
+  }, [selectedPage])
 
   return (
     <svg
@@ -297,12 +312,14 @@ function PageSpread({
                 />
               ) : (
                 <PageSvg
+                  currentPageSide={currentPageSide}
                   minimumMargin={minimumMargin}
                   pageData={pageData}
                   pageRef={pageLeftRef}
                   pageSvg={canvasPages[selectedPage - 1]}
                   workingPageHeight={workingPageHeight}
                   workingPageWidth={workingPageWidth}
+                  rightPageXPosition={rightPageXPosition}
                 />
               )}
             </>
@@ -319,12 +336,14 @@ function PageSpread({
                 <Holes pageSide="left" />
               </svg>
               <PageSvg
+                currentPageSide={currentPageSide}
                 minimumMargin={minimumMargin}
                 pageData={pageData}
                 pageRef={pageLeftRef}
                 pageSvg={canvasPages[selectedPage - 2]}
                 workingPageHeight={workingPageHeight}
                 workingPageWidth={workingPageWidth}
+                rightPageXPosition={rightPageXPosition}
               />
             </>
           )}
@@ -376,12 +395,14 @@ function PageSpread({
                 />
               ) : (
                 <PageSvg
+                  currentPageSide={currentPageSide}
                   minimumMargin={minimumMargin}
                   pageData={pageData}
                   pageRef={pageRightRef}
                   pageSvg={canvasPages[selectedPage - 1]}
                   workingPageHeight={workingPageHeight}
                   workingPageWidth={workingPageWidth}
+                  rightPageXPosition={rightPageXPosition}
                 />
               )}
             </>
@@ -399,12 +420,14 @@ function PageSpread({
                 <Holes pageSide="right" />
               </svg>
               <PageSvg
+                currentPageSide={currentPageSide}
                 minimumMargin={minimumMargin}
                 pageData={pageData}
                 pageRef={pageRightRef}
                 pageSvg={canvasPages[selectedPage]}
                 workingPageHeight={workingPageHeight}
                 workingPageWidth={workingPageWidth}
+                rightPageXPosition={rightPageXPosition}
               />
             </>
           )}

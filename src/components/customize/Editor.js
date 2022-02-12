@@ -80,6 +80,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
   }
 
   useEffect(() => {
+    console.log("editor rendered")
     function getBook() {
       // ref for the book using bookId in the URL
       firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
@@ -127,10 +128,10 @@ const Editor = ({ bookId, productData, productImageData }) => {
           // keep track of svg index
           let svgIndex = 1
           // loop through each svg element (up to 10)
-          snapshot.forEach(child => {
-            const pageSvg = child.val()
+          snapshot.forEach(svgElem => {
+            const elem = svgElem.val()
             // push svg object into our makeshift array incl. pageNumber prop
-            pageObject.svg[svgIndex] = pageSvg
+            pageObject.svg[svgIndex] = elem
             svgIndex++
           })
         }).then(() => {
