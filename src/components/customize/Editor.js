@@ -21,7 +21,6 @@ const Editor = ({ bookId, productData, productImageData }) => {
     show: false,
     type: "",
   })
-  const [selectedPage, setSelectedPage] = useState(1)
   const [bookData, setBookData] = useState({
     ...productData,
     coverColor: "",
@@ -50,6 +49,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
     thickness: 0.175,
     width: 1,
   })
+  const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
   const [noExistingBook, setNoExistingBook] = useState(null)
@@ -124,7 +124,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
         }
 
         // db call to get the page with pageId
-        await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(10).once("value").then(snapshot => {
+        await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(4).once("value").then(snapshot => {
           // keep track of svg index
           let svgIndex = 1
           // loop through each svg element (up to 10)

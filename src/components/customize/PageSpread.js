@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import { colors, convertToPx } from "../../styles/variables"
-import SVG from "react-inlinesvg"
 import { useFirebaseContext } from "../../utils/auth"
 
 import Ruled from "./Templates/Ruled"
@@ -9,23 +8,151 @@ import Dot from "./Templates/Dot"
 import Graph from "./Templates/Graph"
 import Blank from "./Templates/Blank"
 
-function CoverPage({ bookData, canvasPageWidth, canvasPageHeight }) {
-  return (
-    <>
-      <rect
-        width={canvasPageWidth}
+function CoverPage({
+  bookData,
+  canvasPageHeight,
+  canvasPageWidth,
+  pageSide,
+  selectedPage,
+}) {
+
+  if (selectedPage === 1) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
         height={canvasPageHeight}
-        fill={colors.white}>
-      </rect>
-      <text
-        x={(bookData.widthPixel / 2) - 80}
-        y={bookData.heightPixel / 2}
-        width={bookData.widthPixel}
-        fill={colors.gray.nineHundred}
+        width={canvasPageWidth}
+        viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
+        x="0"
+        y="0"
       >
-        THIS IS THE COVER PAGE
-      </text>
-    </>
+        <rect
+          width={canvasPageWidth}
+          height={canvasPageHeight}
+          fill={colors.white}>
+        </rect>
+        <text
+          x={(bookData.widthPixel / 2) - 80}
+          y={bookData.heightPixel / 2}
+          width={bookData.widthPixel}
+          fill={colors.gray.nineHundred}
+        >
+          THIS IS THE COVER PAGE
+        </text>
+        <Holes
+          currentPageSide="left"
+          canvasPageWidth={canvasPageWidth}
+          canvasPageHeight={canvasPageHeight}
+        />
+      </svg>
+    )
+  }
+  else if (selectedPage === bookData.numOfPages) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height={canvasPageHeight}
+        width={canvasPageWidth}
+        viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
+        x="0"
+        y="0"
+      >
+        <rect
+          width={canvasPageWidth}
+          height={canvasPageHeight}
+          fill={colors.white}>
+        </rect>
+        <text
+          x={(bookData.widthPixel / 2) - 80}
+          y={bookData.heightPixel / 2}
+          width={bookData.widthPixel}
+          fill={colors.gray.nineHundred}
+        >
+          THIS IS THE COVER PAGE
+        </text>
+        <Holes
+          currentPageSide="right"
+          canvasPageWidth={canvasPageWidth}
+          canvasPageHeight={canvasPageHeight}
+        />
+      </svg>
+    )
+  }
+  else return null
+}
+
+function PageBackground({
+  currentPageSide,
+  canvasPageWidth,
+  canvasPageHeight,
+  isSelected,
+  pageSide,
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      id={pageSide === "left" ? "page-background-left" : "page-background-right"}
+      width={canvasPageWidth}
+      height={canvasPageHeight}
+      x={pageSide === "left" ? "1" : canvasPageWidth + 2}
+      y="1"
+      style={isSelected ? { outline: `1px solid ${colors.primary.sixHundred}` } : null}
+    >
+      <rect width={canvasPageWidth} height={canvasPageHeight - 2} fill={colors.white}></rect>
+      <Holes currentPageSide={pageSide} canvasPageWidth={canvasPageWidth} canvasPageHeight={canvasPageHeight} />
+    </svg>
+  )
+}
+
+function Holes({
+  currentPageSide,
+  canvasPageHeight,
+  canvasPageWidth
+}) {
+  const [holes, setHoles] = useState([])
+
+  function generateHoles() {
+    const holesArray = []
+    const numOfHoles = (canvasPageHeight - 26) / 26 // page height minus the size of one hole incl margin divided by that same value
+    const leftHolesXPosition = canvasPageWidth - 26
+    const rightHolesXPosition = 10
+    // for loop to generate appropriate number of holes for the page height
+    for (let i = 0; i < numOfHoles; i++) {
+      // hole property object
+      const hole = {
+        width: 15.12,
+        height: 15.12,
+        fill: colors.gray.oneHundred,
+        strokeWidth: 1,
+        stroke: colors.gray.threeHundred,
+        x: currentPageSide === "left" ? leftHolesXPosition : rightHolesXPosition,
+        y: 26 * i + 10
+      }
+
+      holesArray.push(hole)
+    }
+
+    setHoles(holesArray)
+  }
+
+  useEffect(() => {
+    generateHoles()
+  }, [])
+
+  return (
+    <g>
+      {holes.map((hole, index) => (
+        <rect
+          key={`hole-${index}`}
+          width={hole.width}
+          height={hole.height}
+          fill={hole.fill}
+          x={hole.x}
+          y={hole.y}
+        >
+        </rect>
+      ))}
+    </g>
   )
 }
 
@@ -40,22 +167,22 @@ function Template({
   rightPageXPosition,
   minimumMargin,
 }) {
-  const pageLeftRef = useRef()
-  const pageRightRef = useRef()
+  const leftPageRef = useRef()
+  const rightPageRef = useRef()
 
   useEffect(() => {
     if (currentPageSide === "left") {
-      setSelectedPageSvg(pageLeftRef.current)
+      setSelectedPageSvg(leftPageRef.current)
     }
     else {
-      setSelectedPageSvg(pageRightRef.current)
+      setSelectedPageSvg(rightPageRef.current)
     }
   }, [])
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      ref={currentPageSide === "left" ? pageLeftRef : pageRightRef}
+      ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
       id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
       height={workingPageHeight}
       width={workingPageWidth}
@@ -99,31 +226,15 @@ function PageSvg({
   minimumMargin,
   pageData,
   pageRef,
+  pageSide,
   pageSvg,
   rightPageXPosition,
   workingPageHeight,
   workingPageWidth,
 }) {
-  const { firebaseDb } = useFirebaseContext()
-  const [svgArray, setSvgArray] = useState([])
-  const pageId = pageSvg.id
-
-  async function generateSvg() {
-    const dummy = []
-    await firebaseDb.ref(`pages/${pageId}/svg`).once("value").then(snapshot => {
-      snapshot.forEach(svgElem => {
-        const elem = svgElem.val()
-
-        dummy.push(elem)
-      })
-    })
-
-    setSvgArray(dummy)
-  }
 
   useEffect(() => {
-    generateSvg()
-  }, [pageId])
+  }, [])
 
   return (
     <svg
@@ -132,19 +243,19 @@ function PageSvg({
       height={workingPageHeight}
       width={workingPageWidth}
       viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-      id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
-      x={currentPageSide === "left" ? minimumMargin : rightPageXPosition}
+      id={pageSide === "left" ? "left-side-page" : "right-side-page"}
+      x={pageSide === "left" ? minimumMargin : rightPageXPosition}
       y={minimumMargin}
     >
-    {svgArray.map(elem => (
-      <>
+    {pageSvg.map((elem, index) => (
+      <React.Fragment key={`${elem.name}-${index}`}>
         {elem.name === "circle" && (
           <circle
             cx={elem.cx}
             cy={elem.cy}
             opacity={elem.opacity}
             fill={elem.fill}
-            r={elem.radius}
+            r={elem.r}
           >
           </circle>
         )}
@@ -169,10 +280,75 @@ function PageSvg({
           >
           </line>
         )}
-      </>
+      </React.Fragment>
     ))}
     </svg>
   )
+}
+
+function Page({
+  bookData,
+  canvasPageHeight,
+  canvasPageWidth,
+  currentPageSide,
+  isSelected,
+  minimumMargin,
+  pageData,
+  pageRef,
+  pageSide,
+  pageSvg,
+  rightPageXPosition,
+  selectedPage,
+  setPageData,
+  setSelectedPageSvg,
+  workingPageHeight,
+  workingPageWidth,
+}) {
+
+  if (selectedPage === 1 && pageSide === "left") {
+    return null
+  }
+  else if (selectedPage === bookData.numOfPages && pageSide === "right") {
+    return null
+  }
+  else {
+    return (
+      <>
+        <PageBackground
+          canvasPageHeight={canvasPageHeight}
+          canvasPageWidth={canvasPageWidth}
+          currentPageSide={currentPageSide}
+          isSelected={isSelected}
+          pageSide={pageSide}
+        />
+        {pageData.template ? (
+          <Template
+            bookData={bookData}
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            rightPageXPosition={rightPageXPosition}
+            setPageData={setPageData}
+            setSelectedPageSvg={setSelectedPageSvg}
+            workingPageHeight={workingPageHeight}
+            workingPageWidth={workingPageWidth}
+            minimumMargin={minimumMargin}
+          />
+        ) : (
+          <PageSvg
+            currentPageSide={currentPageSide}
+            minimumMargin={minimumMargin}
+            pageData={pageData}
+            pageRef={pageRef}
+            pageSide={pageSide}
+            pageSvg={pageSvg}
+            rightPageXPosition={rightPageXPosition}
+            workingPageHeight={workingPageHeight}
+            workingPageWidth={workingPageWidth}
+          />
+        )}
+      </>
+    )
+  }
 }
 
 function PageSpread({
@@ -184,10 +360,16 @@ function PageSpread({
   setPageData,
   setSelectedPageSvg,
 }) {
-  const [pageSvg, setPageSvg] = useState()
-  const [currentPageSide, setCurrentPageSide] = useState("right")
-  const pageLeftRef = useRef()
-  const pageRightRef = useRef()
+  const { firebaseDb } = useFirebaseContext()
+  const [currentPageSide, setCurrentPageSide] = useState("")
+  const [leftPage, setLeftPage] = useState([])
+  const [rightPage, setRightPage] = useState([])
+  const [coverPage, setCoverPage] = useState({
+    show: true,
+    side: "left",
+  })
+  const leftPageRef = useRef()
+  const rightPageRef = useRef()
   const canvasPageWidth = bookData.widthPixel
   const canvasPageHeight = bookData.heightPixel
   const minimumMargin = convertToPx(3.175)
@@ -198,62 +380,60 @@ function PageSpread({
   const workingPageHeight = canvasPageHeight - convertToPx(6.35) // minus top and bottom margins
   const workingPageWidth = canvasPageWidth - convertToPx(12.7) // minus left and right margins
 
-  function Holes({ pageSide }) {
-    const [holes, setHoles] = useState([])
+  // get the page from the db and push its svg elements into an array
+  async function generateSvgs(pageId, pageSide) {
+    // hold svg elements in an array
+    const svgArray = []
+    // wait for db to return values
+    await firebaseDb.ref(`pages/${pageId}/svg`).once("value").then(snapshot => {
+      snapshot.forEach(svgElem => {
+        const elem = svgElem.val()
+        // push each element into dummy array
+        svgArray.push(elem)
+      })
+    })
 
-    function generateHoles() {
-      const holesArray = []
-      const numOfHoles = (canvasPageHeight - 26) / 26 // page height minus the size of one hole incl margin divided by that same value
-      const leftHolesXPosition = canvasPageWidth - 26
-      const rightHolesXPosition = 10
-      // for loop to generate appropriate number of holes for the page height
-      for (let i = 0; i < numOfHoles; i++) {
-        // hole property object
-        const hole = {
-          width: 15.12,
-          height: 15.12,
-          fill: colors.gray.oneHundred,
-          strokeWidth: 1,
-          stroke: colors.gray.threeHundred,
-          x: pageSide === "left" ? leftHolesXPosition : rightHolesXPosition,
-          y: 26 * i + 10
-        }
-
-        holesArray.push(hole)
-      }
-
-      setHoles(holesArray)
+    // based on pageSide arg, set corresponding page side's state as svgArray
+    if (pageSide === "left") {
+      setLeftPage(svgArray)
     }
-
-    useEffect(() => {
-      generateHoles()
-    }, [pageData])
-
-    return (
-      <g>
-        {holes.map((hole, index) => (
-          <rect
-            key={`hole-${index}`}
-            width={hole.width}
-            height={hole.height}
-            fill={hole.fill}
-            x={hole.x}
-            y={hole.y}
-          >
-          </rect>
-        ))}
-      </g>
-    )
+    else {
+      setRightPage(svgArray)
+    }
   }
 
   useEffect(() => {
-    console.log('page spread rendered')
-    // if the selected page is even, then it must be the left page
+    // even pages
     if (selectedPage % 2 === 0) {
+      // set page side in state
       setCurrentPageSide("left")
+
+      // if it's the last page, show only the left page
+      if (selectedPage === bookData.numOfPages) {
+        generateSvgs(canvasPages[selectedPage - 1].id, "left")
+        setRightPage([])
+      }
+      // otherwise show the 2-page spread
+      else {
+        generateSvgs(canvasPages[selectedPage - 1].id, "left")
+        generateSvgs(canvasPages[selectedPage].id, "right")
+      }
     }
+    // odd pages
     else {
+      // set page side in state
       setCurrentPageSide("right")
+
+      // if it's the first page, show only the right page
+      if (selectedPage === 1) {
+        generateSvgs(canvasPages[selectedPage - 1].id, "right")
+        setLeftPage([])
+      }
+      // otherwise show the 2-page spread
+      else {
+        generateSvgs(canvasPages[selectedPage - 2].id, "left")
+        generateSvgs(canvasPages[selectedPage - 1].id, "right")
+      }
     }
   }, [selectedPage])
 
@@ -266,173 +446,48 @@ function PageSpread({
       x={(canvasSize.width - pageSpreadWidth) / 2}
       y={(canvasSize.height - canvasPageHeight) / 2}
     >
-      {selectedPage === 1 ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          ref={pageLeftRef}
-          height={canvasPageHeight}
-          width={canvasPageWidth}
-          viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
-          x="0"
-          y="0"
-        >
-          <CoverPage
-            bookData={bookData}
-            canvasPageWidth={canvasPageWidth}
-            canvasPageHeight={canvasPageHeight}
-          />
-        </svg>
-      ) : (
-        <>
-          {currentPageSide === "left" ? (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                id="page-background-left"
-                width={canvasPageWidth}
-                height={canvasPageHeight}
-                x="1"
-                y="1"
-                style={{outline: `1px solid ${colors.primary.sixHundred}`}}
-              >
-                <rect width={canvasPageWidth} height={canvasPageHeight - 2} fill={colors.white}></rect>
-                <Holes pageSide="left" />
-              </svg>
-              {pageData.template ? (
-                <Template
-                  bookData={bookData}
-                  currentPageSide={currentPageSide}
-                  pageData={pageData}
-                  rightPageXPosition={rightPageXPosition}
-                  setPageData={setPageData}
-                  setSelectedPageSvg={setSelectedPageSvg}
-                  workingPageHeight={workingPageHeight}
-                  workingPageWidth={workingPageWidth}
-                  minimumMargin={minimumMargin}
-                />
-              ) : (
-                <PageSvg
-                  currentPageSide={currentPageSide}
-                  minimumMargin={minimumMargin}
-                  pageData={pageData}
-                  pageRef={pageLeftRef}
-                  pageSvg={canvasPages[selectedPage - 1]}
-                  workingPageHeight={workingPageHeight}
-                  workingPageWidth={workingPageWidth}
-                  rightPageXPosition={rightPageXPosition}
-                />
-              )}
-            </>
-          ) : (
-            <>
-              <svg
-                id="page-background-left"
-                width={canvasPageWidth}
-                height={canvasPageHeight}
-                x="1"
-                y="1"
-              >
-                <rect width={canvasPageWidth} height={canvasPageHeight} fill={colors.white}></rect>
-                <Holes pageSide="left" />
-              </svg>
-              <PageSvg
-                currentPageSide={currentPageSide}
-                minimumMargin={minimumMargin}
-                pageData={pageData}
-                pageRef={pageLeftRef}
-                pageSvg={canvasPages[selectedPage - 2]}
-                workingPageHeight={workingPageHeight}
-                workingPageWidth={workingPageWidth}
-                rightPageXPosition={rightPageXPosition}
-              />
-            </>
-          )}
-        </>
-      )}
-      {selectedPage === bookData.numOfPages ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          ref={pageLeftRef}
-          height={canvasPageHeight}
-          width={canvasPageWidth}
-          viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
-          x={canvasPageWidth + 2}
-          y="0"
-        >
-          <CoverPage
-            bookData={bookData}
-            canvasPageWidth={canvasPageWidth}
-            canvasPageHeight={canvasPageHeight}
-          />
-        </svg>
-      ) : (
-        <>
-          {currentPageSide === "right" ? (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                id="page-background-right"
-                width={canvasPageWidth}
-                height={canvasPageHeight}
-                x={canvasPageWidth + 2}
-                y="1"
-                style={{outline: `1px solid ${colors.primary.sixHundred}`}}
-              >
-                <rect width={canvasPageWidth - 3} height={canvasPageHeight - 2} fill={colors.white}></rect>
-                <Holes pageSide="right" />
-              </svg>
-              {pageData.template ? (
-                <Template
-                  bookData={bookData}
-                  currentPageSide={currentPageSide}
-                  pageData={pageData}
-                  rightPageXPosition={rightPageXPosition}
-                  setPageData={setPageData}
-                  setSelectedPageSvg={setSelectedPageSvg}
-                  workingPageHeight={workingPageHeight}
-                  workingPageWidth={workingPageWidth}
-                  minimumMargin={minimumMargin}
-                />
-              ) : (
-                <PageSvg
-                  currentPageSide={currentPageSide}
-                  minimumMargin={minimumMargin}
-                  pageData={pageData}
-                  pageRef={pageRightRef}
-                  pageSvg={canvasPages[selectedPage - 1]}
-                  workingPageHeight={workingPageHeight}
-                  workingPageWidth={workingPageWidth}
-                  rightPageXPosition={rightPageXPosition}
-                />
-              )}
-            </>
-          ) : (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                id="page-background-right"
-                width={canvasPageWidth}
-                height={canvasPageHeight}
-                x={canvasPageWidth + 2}
-                y="1"
-              >
-                <rect width={canvasPageWidth - 3} height={canvasPageHeight - 2} fill={colors.white}></rect>
-                <Holes pageSide="right" />
-              </svg>
-              <PageSvg
-                currentPageSide={currentPageSide}
-                minimumMargin={minimumMargin}
-                pageData={pageData}
-                pageRef={pageRightRef}
-                pageSvg={canvasPages[selectedPage]}
-                workingPageHeight={workingPageHeight}
-                workingPageWidth={workingPageWidth}
-                rightPageXPosition={rightPageXPosition}
-              />
-            </>
-          )}
-        </>
-      )}
+      <CoverPage
+        bookData={bookData}
+        canvasPageWidth={canvasPageWidth}
+        canvasPageHeight={canvasPageHeight}
+        selectedPage={selectedPage}
+      />
+      <Page
+        bookData={bookData}
+        canvasPageHeight={canvasPageHeight}
+        canvasPageWidth={canvasPageWidth}
+        currentPageSide={currentPageSide}
+        isSelected={currentPageSide === "left" ? true : false}
+        minimumMargin={minimumMargin}
+        pageData={pageData}
+        pageRef={leftPageRef}
+        pageSide="left"
+        pageSvg={leftPage}
+        rightPageXPosition={rightPageXPosition}
+        selectedPage={selectedPage}
+        setPageData={setPageData}
+        setSelectedPageSvg={setSelectedPageSvg}
+        workingPageHeight={workingPageHeight}
+        workingPageWidth={workingPageWidth}
+      />
+      <Page
+        bookData={bookData}
+        canvasPageHeight={canvasPageHeight}
+        canvasPageWidth={canvasPageWidth}
+        currentPageSide={currentPageSide}
+        isSelected={currentPageSide === "right" ? true : false}
+        minimumMargin={minimumMargin}
+        pageData={pageData}
+        pageRef={rightPageRef}
+        pageSide="right"
+        pageSvg={rightPage}
+        rightPageXPosition={rightPageXPosition}
+        selectedPage={selectedPage}
+        setPageData={setPageData}
+        setSelectedPageSvg={setSelectedPageSvg}
+        workingPageHeight={workingPageHeight}
+        workingPageWidth={workingPageWidth}
+      />
     </svg>
   )
 }

@@ -80,9 +80,21 @@ const Page = memo(props => {
   const columnCount = 2
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
+  const [svgArray, setSvgArray] = useState([])
+
+  function generateSvgPreview() {
+    const dummy = []
+    const currentPageSvg = currentPage.svg
+
+    for (const svg in currentPageSvg) {
+      dummy.push(currentPageSvg[svg])
+    }
+
+    setSvgArray(dummy)
+  }
 
   // change the selected page number
-  const handleSelectPage = value => {
+  function handleSelectPage(value) {
     const pageNumber = parseInt(value)
     setPageData({
       ...pageData,
@@ -90,6 +102,10 @@ const Page = memo(props => {
     })
     setSelectedPage(pageNumber)
   }
+
+  useEffect(() => {
+    generateSvgPreview()
+  }, [])
 
   return (
     <StyledPage
@@ -99,11 +115,45 @@ const Page = memo(props => {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+        viewBox={`0 0 48 64`}
         x="0"
         y="0"
       >
-
+        {svgArray.map((elem, index) => (
+          <React.Fragment key={`${elem.name}-${index}`}>
+            {elem.name === "circle" && (
+              <circle
+                cx={elem.cx}
+                cy={elem.cy}
+                opacity={elem.opacity}
+                fill={elem.fill}
+                r={elem.r}
+              >
+              </circle>
+            )}
+            {elem.name === "rect" && (
+              <rect
+                fill={elem.fill}
+                width={elem.width}
+                height={elem.height}
+              >
+              </rect>
+            )}
+            {elem.name === "line" && (
+              <line
+                fill={elem.fill}
+                stroke={elem.stroke}
+                strokeWidth={elem.strokeWidth}
+                opacity={elem.opacity}
+                x1={elem.x1}
+                x2={elem.x2}
+                y1={elem.y1}
+                y2={elem.y2}
+              >
+              </line>
+            )}
+          </React.Fragment>
+        ))}
       </svg>
       <p>{currentPage.pageNumber}</p>
     </StyledPage>
@@ -128,10 +178,6 @@ function Pagebar({
 }) {
   const windowRef = useRef(null)
   const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
-
-  useEffect(() => {
-    console.log('pagebar rendered')
-  })
 
   return (
     <PagebarWrapper>
