@@ -98,16 +98,14 @@ function ApplyTemplateModal({
     // clone the canvasPages array
     const pageNumber = parseInt(selectedPage) - 1
     const canvasPagesClone = [...canvasPages]
-    console.log(canvasPagesClone[pageNumber])
     const newPageSvg = svgToObjects(selectedPageSvg, 0)
-    console.log(newPageSvg)
 
     switch(value) {
       case "apply-current":
         // change the corresponding page's svg in our cloned array
         canvasPagesClone[pageNumber].svg = newPageSvg
         // update the svg field for this entry in the firebase db
-        await updatePageSvg(canvasPagesClone[pageNumber].id, newPageSvg)
+        await updatePageSvg(canvasPagesClone[pageNumber].pageId, newPageSvg)
         break
       case "apply-range":
         // change the corresponding page's svg in our cloned array
@@ -120,7 +118,7 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             case "odd":
@@ -128,7 +126,7 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             case "other":
@@ -136,14 +134,14 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
               canvasPagesClone[i - 1].svg = newPageSvg
               // update the svg field for each appropriate page in the firebase db
-              await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+              await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
           }
         }
         break
@@ -158,7 +156,7 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             case "odd":
@@ -166,7 +164,7 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             case "other":
@@ -174,14 +172,14 @@ function ApplyTemplateModal({
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].svg = newPageSvg
                 // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
               canvasPagesClone[i - 1].svg = newPageSvg
               // update the svg field for each appropriate page in the firebase db
-              await updatePageSvg(canvasPagesClone[i - 1].id, newPageSvg)
+              await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
           }
         }
         break

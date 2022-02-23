@@ -1,10 +1,10 @@
 import React, { useState, useEffect, memo, useRef } from "react"
+import { colors } from "../../../styles/variables"
+import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
+import Loading from "../../../assets/loading.svg"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
-import SVG from "react-inlinesvg"
-import Loading from "../../../assets/loading.svg"
-import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
+import { useFirebaseContext } from "../../../utils/auth"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageBox from "../BarComponents/PageBox"
@@ -80,17 +80,27 @@ const Page = memo(props => {
   const columnCount = 2
   // current page based on index of canvasPages
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
+  const { firebaseDb } = useFirebaseContext()
   const [svgArray, setSvgArray] = useState([])
 
-  function generateSvgPreview() {
-    const dummy = []
-    const currentPageSvg = currentPage.svg
+  // gets the first few elements from the array of svgs
+  async function generateSvgPreview(currentPage) {
+    const dummyArray = []
+    const { pageId, pageNumber } = currentPage
 
-    for (const svg in currentPageSvg) {
-      dummy.push(currentPageSvg[svg])
-    }
+    // db call to get the page with pageId
+    await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(4).once("value").then(snapshot => {
+      // loop through each svg element (up to 10)
+      snapshot.forEach(svgElem => {
+        const elem = svgElem.val()
+        // push svg object into our makeshift array incl. pageNumber prop
+        dummyArray.push(elem)
+      })
+    }).catch(err => {
+      console.log(err)
+    })
 
-    setSvgArray(dummy)
+    setSvgArray(dummyArray)
   }
 
   // change the selected page number
@@ -104,8 +114,8 @@ const Page = memo(props => {
   }
 
   useEffect(() => {
-    generateSvgPreview()
-  }, [])
+    generateSvgPreview(currentPage)
+  }, [canvasPages])
 
   return (
     <StyledPage

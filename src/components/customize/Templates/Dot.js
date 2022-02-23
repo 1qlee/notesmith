@@ -67,7 +67,7 @@ function Dot({ pageData, setPageData }) {
   return (
     <>
       {dots.map((row, index) => (
-        <>
+        <React.Fragment key={index}>
           {row.map((dot, index) => (
             <circle
               key={`dot-${index}`}
@@ -79,7 +79,7 @@ function Dot({ pageData, setPageData }) {
             >
             </circle>
           ))}
-        </>
+        </React.Fragment>
       ))}
     </>
   )

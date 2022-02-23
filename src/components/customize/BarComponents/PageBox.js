@@ -24,7 +24,7 @@ const StyledPageBox = styled.div`
   }
   input {
     border: none;
-    padding: 1.5rem 1rem .5rem;
+    padding: 0.5rem 1rem 0.5rem;
     text-align: center;
     -moz-appearance: textfield;
     &::-webkit-outer-spin-button,
@@ -37,9 +37,12 @@ const StyledPageBox = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  top: 1.5rem;
+  top: 0.5rem;
   left: ${props => props.left || null};
   right: ${props => props.right || null};
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 function PageBox({
@@ -84,8 +87,8 @@ function PageBox({
 
   return (
     <StyledPageBox>
-      <label htmlFor="page-number-input">Go to page</label>
       <IconWrapper
+        onClick={() => validatePageChange(selectedPage - 1)}
         left="1rem"
       >
         <Icon>
@@ -105,10 +108,9 @@ function PageBox({
       />
       <IconWrapper
         right="1rem"
+        onClick={() => validatePageChange(selectedPage + 1)}
       >
-        <Icon
-          onClick={() => setSelectedPage(selectedPage + 1)}
-        >
+        <Icon>
           <CaretUp />
         </Icon>
       </IconWrapper>

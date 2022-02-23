@@ -24,7 +24,6 @@ function svgToObjects(svgNode, indexTracker) {
     // if the child node has a child - should always be <g></g>
     if (svgChild.firstElementChild) {
       const { nodeName } = svgChild
-      console.log(indexTracker, nodeName)
 
       // recursion to save the group and its children to an object
       indexTracker < 10 ?
@@ -32,7 +31,6 @@ function svgToObjects(svgNode, indexTracker) {
           svgObject[`${indexTracker}-${nodeName}`] = svgToObjects(svgChild, indexTracker)
     }
     else {
-      console.log(indexTracker, svgChild.nodeName)
       // check if the node has attributes
       if (svgChild.hasAttributes()) {
         const { nodeName } = svgChild

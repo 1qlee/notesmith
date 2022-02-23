@@ -117,30 +117,13 @@ const Editor = ({ bookId, productData, productImageData }) => {
 
       // loop through each page in bookPages object using the pageId key
       for (const pageId in bookPages) {
-        let pageObject = {
-          id: pageId,
+        const pageObject = {
+          pageId: pageId,
           pageNumber: pageIndex,
-          svg: {},
         }
 
-        // db call to get the page with pageId
-        await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(4).once("value").then(snapshot => {
-          // keep track of svg index
-          let svgIndex = 1
-          // loop through each svg element (up to 10)
-          snapshot.forEach(svgElem => {
-            const elem = svgElem.val()
-            // push svg object into our makeshift array incl. pageNumber prop
-            pageObject.svg[svgIndex] = elem
-            svgIndex++
-          })
-        }).then(() => {
-          // increment index
-          pageIndex++
-          pagesArray.push(pageObject)
-        }).catch(err => {
-          console.log(err)
-        })
+        pagesArray.push(pageObject)
+        pageIndex++
       }
       // set pages in state
       setCanvasPages(pagesArray)
