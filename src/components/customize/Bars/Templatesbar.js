@@ -5,11 +5,11 @@ import { CaretDown } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
-import { BlankPageIcon, RuledPageIcon, GraphPageIcon, DotPageIcon } from "../PageIcons"
+import PageIcons from "../PageIcons"
 import Button from "../../Button"
-import DotControls from "../Template-controls/DotControls"
-import RuledControls from "../Template-controls/RuledControls"
-import GraphControls from "../Template-controls/GraphControls"
+import DotControls from "../templateControls/DotControls"
+import RuledControls from "../templateControls/RuledControls"
+import GraphControls from "../templateControls/GraphControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -37,92 +37,6 @@ function Templatesbar({
   const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
   const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
 
-  function handleTemplateSelect(template) {
-    // set initial values for page data
-    switch(template) {
-      case "ruled":
-        setPageData({
-          ...pageData,
-          template: template,
-          alignmentHorizontal: "center",
-          alignmentVertical: "middle",
-          spacing: 5,
-          opacity: 1,
-          thickness: 0.175,
-          dotRadius: 0.6,
-          rows: 43,
-          columns: 27,
-          marginTop: 2.275,
-          marginBottom: 0,
-          marginLeft: 0,
-          marginRight: 0,
-          width: 127,
-          lineWidth: lineWidthMM,
-        })
-        break
-      case "dot":
-        setPageData({
-          ...pageData,
-          template: template,
-          alignmentHorizontal: "center",
-          alignmentVertical: "middle",
-          spacing: 5,
-          opacity: 1,
-          thickness: 0.175,
-          dotRadius: 0.1,
-          rows: 43,
-          columns: 27,
-          marginTop: 2.173,
-          marginBottom: 0,
-          marginLeft: 0.899,
-          marginRight: 0,
-          width: 1,
-          lineWidth: lineWidthMM,
-        })
-        break
-      case "graph":
-        setPageData({
-          ...pageData,
-          template: template,
-          alignmentHorizontal: "center",
-          alignmentVertical: "middle",
-          spacing: 5,
-          opacity: 1,
-          thickness: 0.175,
-          dotRadius: 0.6,
-          rows: 43,
-          columns: 27,
-          marginTop: 2.229,
-          marginBottom: 0,
-          marginLeft: 0.913,
-          marginRight: 0,
-          width: 127,
-          lineWidth: lineWidthMM,
-        })
-        break
-      default:
-        setPageData({
-          ...pageData,
-          template: template,
-          alignmentHorizontal: "center",
-          alignmentVertical: "middle",
-          spacing: 5,
-          opacity: 1,
-          thickness: 0.175,
-          dotRadius: 0.6,
-          rows: 43,
-          columns: 27,
-          marginTop: 4.687,
-          marginBottom: 0,
-          marginLeft: 0,
-          marginRight: 0,
-          width: 1,
-          lineWidth: lineWidthMM,
-        })
-        break
-    }
-  }
-
   return (
     <Flexbox
       flex="flex"
@@ -138,10 +52,12 @@ function Templatesbar({
           justifycontent="space-between"
           margin="0 0 2rem 0"
         >
-          <BlankPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "blank"} />
-          <RuledPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "ruled"} />
-          <DotPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "dot"} />
-          <GraphPageIcon handleTemplateSelect={handleTemplateSelect} isActive={pageData.template === "graph"} />
+          <PageIcons
+            checkActiveVar={pageData.template}
+            setData={setPageData}
+            data={pageData}
+            showLabels={true}
+          />
         </Flexbox>
         {pageData.template !== "blank" && pageData.template !== "none" && (
           <>

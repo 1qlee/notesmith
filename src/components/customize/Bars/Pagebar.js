@@ -7,7 +7,7 @@ import styled from "styled-components"
 import { useFirebaseContext } from "../../../utils/auth"
 
 import { Flexbox } from "../../layout/Flexbox"
-import PageBox from "../BarComponents/PageBox"
+import PageBox from "../barComponents/PageBox"
 import Icon from "../../Icon"
 
 const PagebarWrapper = styled.div`
@@ -89,7 +89,7 @@ const Page = memo(props => {
     const { pageId, pageNumber } = currentPage
 
     // db call to get the page with pageId
-    await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(4).once("value").then(snapshot => {
+    await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(3).once("value").then(snapshot => {
       // loop through each svg element (up to 10)
       snapshot.forEach(svgElem => {
         const elem = svgElem.val()

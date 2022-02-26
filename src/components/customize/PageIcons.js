@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
+import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
@@ -9,10 +10,14 @@ const PageWrapper = styled.a`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: ${props => props.margin};
   p {
     padding: 0.25rem;
     border-radius: 0.25rem;
     transition: 0.2s background-color, 0.2s color;
+  }
+  .page-outline {
+    transition: transform 0.2s;
   }
   &.is-active {
     span {
@@ -22,8 +27,10 @@ const PageWrapper = styled.a`
       background-color: ${colors.primary.sixHundred};
       color: ${colors.primary.white};
     }
-    div {
+    .page-outline {
       border-color: ${colors.primary.sixHundred};
+      box-shadow: 0 0 2px ${colors.primary.active};
+      transform: scale(1.05);
     }
   }
   &:hover {
@@ -46,6 +53,7 @@ const PageOutline = styled.div`
   border-radius: 0.25rem;
   border: 1px solid ${props => props.bordercolor || colors.gray.sixHundred};
   height: ${props => props.height || "30px"};
+  background-color: ${colors.white};
   position: relative;
   width: ${props => props.width || "22px"};
 `
@@ -78,6 +86,7 @@ const GraphOutline = styled.div`
   display: flex;
   height: 100%;
   justify-content: space-around;
+  align-items: center;
   left: 0;
   position: absolute;
   top: 0;
@@ -94,39 +103,97 @@ const PageLabel = styled.p`
   color: ${colors.gray.sevenHundred};
 `
 
-function RuledPageIcon({ handleTemplateSelect, isActive }) {
+function RuledPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  iconMargin,
+  showLabels,
+}) {
   return (
     <PageWrapper
-      onClick={() => handleTemplateSelect("ruled")}
+      onClick={() => setData({
+        ...data,
+        alignmentHorizontal: "center",
+        alignmentVertical: "middle",
+        show: true,
+        template: "ruled",
+        spacing: 5,
+        opacity: 1,
+        thickness: 0.088,
+        dotRadius: 0.6,
+        rows: 43,
+        columns: 27,
+        marginTop: 2.273,
+        marginBottom: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        width: 127,
+      })}
       className={isActive ? "is-active" : null}
+      margin={iconMargin}
+      data-tip={dataTip}
     >
-      <PageOutline>
+      <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
           justifycontent="space-around"
           flexdirection="column"
+          alignitems="center"
           width="100%"
           height="100%"
         >
-          <HorizontalLine />
-          <HorizontalLine />
-          <HorizontalLine />
-          <HorizontalLine />
-          <HorizontalLine />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
         </Flexbox>
       </PageOutline>
-      <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
+      {showLabels && (
+        <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
+      )}
+      <ReactTooltip
+        effect="solid"
+      />
     </PageWrapper>
   )
 }
 
-function DotPageIcon({ handleTemplateSelect, isActive }) {
+function DotPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  iconMargin,
+  showLabels,
+}) {
   return (
     <PageWrapper
-      onClick={() => handleTemplateSelect("dot")}
+      onClick={() => setData({
+        ...data,
+        alignmentHorizontal: "center",
+        alignmentVertical: "middle",
+        show: true,
+        template: "dot",
+        spacing: 5,
+        opacity: 1,
+        thickness: 0.175,
+        dotRadius: 0.1,
+        rows: 43,
+        columns: 27,
+        marginTop: 2.173,
+        marginBottom: 0,
+        marginLeft: 0.899,
+        marginRight: 0,
+        width: 1,
+      })}
       className={isActive ? "is-active" : null}
+      margin={iconMargin}
+      data-tip={dataTip}
     >
-      <PageOutline>
+      <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
           flexwrap="wrap"
@@ -164,49 +231,158 @@ function DotPageIcon({ handleTemplateSelect, isActive }) {
           </Flexbox>
         </Flexbox>
       </PageOutline>
-      <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+      {showLabels && (
+        <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+      )}
+      <ReactTooltip
+        effect="solid"
+      />
     </PageWrapper>
   )
 }
 
-function GraphPageIcon({ handleTemplateSelect, isActive }) {
+function GraphPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  iconMargin,
+  showLabels,
+}) {
   return (
     <PageWrapper
-      onClick={() => handleTemplateSelect("graph")}
+      onClick={() => setData({
+        ...data,
+        alignmentHorizontal: "center",
+        alignmentVertical: "middle",
+        show: true,
+        template: "graph",
+        spacing: 5,
+        opacity: 1,
+        thickness: 0.088,
+        dotRadius: 0.6,
+        rows: 43,
+        columns: 25,
+        marginTop: 2.251,
+        marginBottom: 0,
+        marginLeft: 0.638,
+        marginRight: 0,
+        width: 127,
+      })}
       className={isActive ? "is-active" : null}
+      margin={iconMargin}
+      data-tip={dataTip}
     >
-      <PageOutline>
+      <PageOutline className="page-outline">
         <GraphOutline>
-          <VerticalLine />
-          <VerticalLine />
-          <VerticalLine />
+          <VerticalLine height="80%" />
+          <VerticalLine height="80%" />
+          <VerticalLine height="80%" />
+          <VerticalLine height="80%" />
         </GraphOutline>
         <GraphOutline className="is-horizontal">
-          <HorizontalLine />
-          <HorizontalLine />
-          <HorizontalLine />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
+          <HorizontalLine width="80%" />
         </GraphOutline>
       </PageOutline>
-      <PageLabel margin="0.5rem 0 0 0">Graph</PageLabel>
+      {showLabels && (
+        <PageLabel margin="0.5rem 0 0 0">Graph</PageLabel>
+      )}
+      <ReactTooltip
+        effect="solid"
+      />
     </PageWrapper>
   )
 }
 
-function BlankPageIcon({ handleTemplateSelect, isActive }) {
+function BlankPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  iconMargin,
+  showLabels,
+}) {
   return (
     <PageWrapper
-      onClick={() => handleTemplateSelect("blank")}
+      onClick={() => setData({
+        ...data,
+        alignmentHorizontal: "center",
+        alignmentVertical: "middle",
+        show: true,
+        template: "blank",
+        spacing: 5,
+        opacity: 1,
+        thickness: 0.175,
+        dotRadius: 0.6,
+        rows: 43,
+        columns: 27,
+        marginTop: 4.687,
+        marginBottom: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        width: 1,
+      })}
       className={isActive ? "is-active" : null}
+      margin={iconMargin}
+      data-tip={dataTip}
     >
-      <PageOutline />
-      <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
+      <PageOutline className="page-outline" />
+      {showLabels && (
+        <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
+      )}
+      <ReactTooltip
+        effect="solid"
+      />
     </PageWrapper>
   )
 }
 
-export {
-  RuledPageIcon,
-  BlankPageIcon,
-  DotPageIcon,
-  GraphPageIcon,
+function PageIcons({
+  checkActiveVar,
+  data,
+  iconMargin,
+  setData,
+  showLabels,
+}) {
+  return (
+    <>
+      <BlankPageIcon
+        data={data}
+        dataTip="Blank"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "blank"}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <RuledPageIcon
+        data={data}
+        dataTip="Ruled"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "ruled"}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <DotPageIcon
+        data={data}
+        dataTip="Dot grid"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "dot"}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <GraphPageIcon
+        data={data}
+        dataTip="Graph"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "graph"}
+        setData={setData}
+        showLabels={showLabels}
+      />
+    </>
+  )
 }
+
+export default PageIcons

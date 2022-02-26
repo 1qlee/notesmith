@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput } from "../../form/FormComponents"
-import TitleBox from "../BarComponents/TitleBox"
-import Toolbox from "../BarComponents/Toolbox"
+import TitleBox from "../barComponents/TitleBox"
+import Toolbox from "../barComponents/Toolbox"
 
 const PageInput = styled.input`
   border-radius: 0.25rem;

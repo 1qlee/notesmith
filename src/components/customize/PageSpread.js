@@ -1,12 +1,8 @@
 import React, { useEffect, useState, useRef } from "react"
-import styled from "styled-components"
 import { colors, convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 
-import Ruled from "./Templates/Ruled"
-import Dot from "./Templates/Dot"
-import Graph from "./Templates/Graph"
-import Blank from "./Templates/Blank"
+import Template from "./pageComponents/Template"
 
 function CoverPage({
   bookData,
@@ -156,71 +152,6 @@ function Holes({
   )
 }
 
-function Template({
-  bookData,
-  currentPageSide,
-  pageData,
-  setPageData,
-  setSelectedPageSvg,
-  workingPageHeight,
-  workingPageWidth,
-  rightPageXPosition,
-  minimumMargin,
-}) {
-  const leftPageRef = useRef()
-  const rightPageRef = useRef()
-
-  useEffect(() => {
-    if (currentPageSide === "left") {
-      setSelectedPageSvg(leftPageRef.current)
-    }
-    else {
-      setSelectedPageSvg(rightPageRef.current)
-    }
-  }, [])
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-      id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
-      height={workingPageHeight}
-      width={workingPageWidth}
-      viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-      x={currentPageSide === "left" ? minimumMargin : rightPageXPosition}
-      y={minimumMargin}
-    >
-      {pageData.template === "blank" && (
-        <Blank
-          pageData={pageData}
-          currentPageSide={currentPageSide}
-        />
-      )}
-      {pageData.template === "ruled" && (
-        <Ruled
-          pageData={pageData}
-          setPageData={setPageData}
-          currentPageSide={currentPageSide}
-        />
-      )}
-      {pageData.template === "dot" && (
-        <Dot
-          pageData={pageData}
-          setPageData={setPageData}
-          currentPageSide={currentPageSide}
-        />
-      )}
-      {pageData.template === "graph" && (
-        <Graph
-          pageData={pageData}
-          setPageData={setPageData}
-          currentPageSide={currentPageSide}
-        />
-      )}
-    </svg>
-  )
-}
-
 function PageSvg({
   currentPageSide,
   minimumMargin,
@@ -321,7 +252,7 @@ function Page({
           isSelected={isSelected}
           pageSide={pageSide}
         />
-        {pageData.template ? (
+        {pageData.template && currentPageSide === pageSide ? (
           <Template
             bookData={bookData}
             currentPageSide={currentPageSide}
@@ -364,16 +295,11 @@ function PageSpread({
   const [currentPageSide, setCurrentPageSide] = useState("")
   const [leftPage, setLeftPage] = useState([])
   const [rightPage, setRightPage] = useState([])
-  const [coverPage, setCoverPage] = useState({
-    show: true,
-    side: "left",
-  })
   const leftPageRef = useRef()
   const rightPageRef = useRef()
   const canvasPageWidth = bookData.widthPixel
   const canvasPageHeight = bookData.heightPixel
   const minimumMargin = convertToPx(3.175)
-  const leftPageXPosition = minimumMargin
   const rightPageXPosition = canvasPageWidth + convertToPx(9.525)
   const pageSpreadWidth = canvasPageWidth * 2 // converted page spread width
   // the working area of the page (the part that accepts user input)

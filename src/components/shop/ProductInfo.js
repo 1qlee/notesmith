@@ -9,6 +9,7 @@ import { ProductDetails } from "./ShopComponents"
 import { StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
+import PageIcons from "../customize/PageIcons"
 import ColorPicker from "./ColorPicker"
 import Tag from "../ui/Tag"
 import Icon from "../Icon"
@@ -19,9 +20,10 @@ const ProductInfo = ({
   bookData,
   setBookData,
   stripeData,
+  selectedTemplate,
+  setSelectedTemplate,
 }) => {
   const { addItem } = useShoppingCart()
-  const [selectedTemplate, setSelectedTemplate] = ""
   const [loading, setLoading] = useState(false)
 
   return (
@@ -67,6 +69,28 @@ const ProductInfo = ({
           })}
         />
       </Content>
+      <Content
+        headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+        h3fontsize="0.75rem"
+        margin="2rem 0 0"
+      >
+        <h3>Page layout</h3>
+      </Content>
+      <Flexbox
+        flex="flex"
+        flexwrap="wrap"
+        justifycontent="flex-start"
+        alignitems="center"
+        margin="0 0 2rem"
+      >
+        <PageIcons
+          checkActiveVar={selectedTemplate.template}
+          data={selectedTemplate}
+          iconMargin="0 0.5rem"
+          setData={setSelectedTemplate}
+          showLabels={false}
+        />
+      </Flexbox>
       <Flexbox
         flex="flex"
         margin="0 0 1rem"
@@ -122,9 +146,9 @@ const ProductInfo = ({
       </Flexbox>
       <Content
         margin="2rem 0 0"
-        h3fontsize="0.75rem"
+        h3fontsize="1rem"
       >
-        <h3>NOTEBOOK DETAILS</h3>
+        <h3>Notebook Details</h3>
       </Content>
       <Content
         margin="0 0 0.5rem"

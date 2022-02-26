@@ -7,7 +7,7 @@ import styled from "styled-components"
 
 import { StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
-import { BookRadio } from "../Books/BookComponents"
+import { BookRadio } from "../books/BookComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import ColorPicker from "../../shop/ColorPicker"
 import Tag from "../../ui/Tag"

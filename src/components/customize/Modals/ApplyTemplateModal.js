@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import styled from "styled-components"
+import 'react-toastify/dist/ReactToastify.css'
 import { colors } from "../../../styles/variables"
-import { useFirebaseContext } from "../../../utils/auth"
 import { svgToObjects } from "../../../utils/helper-functions"
+import { ToastContainer, toast } from 'react-toastify'
+import { useFirebaseContext } from "../../../utils/auth"
 import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
 import Loading from "../../../assets/loading.svg"
 
@@ -63,7 +65,7 @@ function ApplyTemplateModal({
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [frequency, setFrequency] = useState("")
   const [frequencyNum, setFrequencyNum] = useState(2)
-  const [lowerPageBound, setLowerPageBound] = useState(1)
+  const [lowerPageBound, setLowerPageBound] = useState(selectedPage || 1)
   const [upperPageBound, setUpperPageBound] = useState(totalPages / 2)
   const [rangeIsFocused, setRangeIsFocused] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -517,6 +519,24 @@ function ApplyTemplateModal({
           null
         )}
       </ModalFooter>
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        draggablePercent={50}
+        hideProgressBar={false}
+        limit={3}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="bottom-center"
+        rtl={false}
+        theme="colored"
+        style={{
+          fontFamily: "Inter, Helvetica, Tahoma, sans-serif",
+          fontSize: "0.75rem",
+        }}
+      />
     </Modal>
   )
 }

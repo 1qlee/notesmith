@@ -3,7 +3,7 @@ import { Router } from "@reach/router"
 import PrivateRoute from "../components/auth/PrivateRoute"
 import Dashboard from "../components/auth/Dashboard"
 import Settings from "../components/auth/Settings"
-import Books from "../components/auth/Books"
+import Books from "../components/auth/books"
 
 const App = () => {
   return (

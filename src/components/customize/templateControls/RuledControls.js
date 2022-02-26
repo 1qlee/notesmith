@@ -1,12 +1,12 @@
 import React, { useRef } from "react"
-import { convertToPx, convertToMM } from "../../../styles/variables"
+import { convertToMM } from "../../../styles/variables"
 
-import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
+import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
+import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
-function GraphControls({
+function RuledControls({
   pageData,
   setPageData,
   selectedPageSvg,
@@ -15,15 +15,15 @@ function GraphControls({
   templateHeight,
   templateWidth,
 }) {
-  const horizontalDeadspace = pageData.pageWidth - templateWidth
+  const totalMargin = pageData.marginLeft + pageData.marginRight
+  const centeredMarginHorizontal = totalMargin / 2
   const verticalDeadspace = pageData.pageHeight - templateHeight
-  const rightAlignedMargin = convertToMM(horizontalDeadspace)
-  const bottomAlignedMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
-  const centeredMarginHorizontal = convertToMM(horizontalDeadspace / 2)
   const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
+  const bottomMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
+  const marginRightInput = useRef(null)
 
   function changeAlignment(value) {
     switch(value) {
@@ -31,25 +31,31 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
+          marginRight: totalMargin,
           marginLeft: 0,
         })
         marginLeftInput.current.value = 0
+        marginRightInput.current.value = totalMargin
         break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
           marginLeft: centeredMarginHorizontal,
+          marginRight: centeredMarginHorizontal,
         })
         marginLeftInput.current.value = centeredMarginHorizontal
+        marginRightInput.current.value = centeredMarginHorizontal
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: rightAlignedMargin,
+          marginLeft: totalMargin,
+          marginRight: 0,
         })
-        marginLeftInput.current.value = rightAlignedMargin
+        marginLeftInput.current.value = totalMargin
+        marginRightInput.current.value = 0
         break
       case "top":
         setPageData({
@@ -71,9 +77,9 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: bottomAlignedMargin,
+          marginTop: bottomMargin,
         })
-        marginTopInput.current.value = bottomAlignedMargin
+        marginTopInput.current.value = bottomMargin
         break
       default:
         break
@@ -96,9 +102,8 @@ function GraphControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
-          width="50%"
         >
-          <StyledLabel>Rows</StyledLabel>
+          <StyledLabel>Lines</StyledLabel>
           <StyledInput
             type="number"
             min="1"
@@ -117,28 +122,6 @@ function GraphControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
-          width="33%"
-        >
-          <StyledLabel>Columns</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
-            value={pageData.columns}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              columns: value,
-            }))}
-          />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          margin="0 0.5rem 0 0"
-          width="50%"
         >
           <StyledLabel>Spacing</StyledLabel>
           <StyledInput
@@ -151,7 +134,6 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              alignmentHorizontal: "",
               spacing: value
             }))}
           />
@@ -210,6 +192,30 @@ function GraphControls({
             }))}
           />
         </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          margin="0 0.5rem 0 0"
+        >
+          <StyledLabel>Right margin</StyledLabel>
+          <StyledInput
+            padding="0.5rem"
+            ref={marginRightInput}
+            step="1"
+            type="number"
+            value={pageData.marginRight.toString()}
+            width="100%"
+            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              marginRight: value,
+            }), maximumMarginWidth - pageData.marginLeft - 1)}
+            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+              ...pageData,
+              marginRight: value,
+            }))}
+          />
+        </Flexbox>
       </Flexbox>
       <Flexbox
         flex="flex"
@@ -263,13 +269,13 @@ function GraphControls({
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.175, value => setPageData({...pageData, thickness: value}), 3)}
+            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({...pageData, thickness: value}), 3)}
             type="number"
-            min="0.175"
-            step="0.1"
+            min="0.088"
+            step="0.01"
             max="3"
             padding="0.5rem"
-            width="4rem"
+            width="4.25rem"
           />
           <StyledRange
             margin="0 0 0 0.5rem"
@@ -277,11 +283,11 @@ function GraphControls({
           >
             <input
               type="range"
-              min="0.175"
-              step="0.1"
+              min="0.088"
+              step="0.01"
               max="3"
               value={pageData.thickness}
-              onChange={e => setPageData({...pageData, thickness: parseFloat(e.target.value)})}
+              onChange={e => setPageData({...pageData, thickness: e.target.value})}
             />
           </StyledRange>
         </Flexbox>
@@ -290,4 +296,4 @@ function GraphControls({
   )
 }
 
-export default GraphControls
+export default RuledControls

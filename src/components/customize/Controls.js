@@ -4,8 +4,8 @@ import { colors } from "../../styles/variables"
 import Line from "../../assets/customize/line.svg"
 import { ArrowCircleRight } from "phosphor-react"
 
-import Templatesbar from "./Bars/Templatesbar"
-import Checkoutbar from "./Bars/Checkoutbar"
+import Templatesbar from "./bars/templatesbar"
+import Checkoutbar from "./bars/Checkoutbar"
 import Icon from "../Icon"
 import Button from "../Button"
 

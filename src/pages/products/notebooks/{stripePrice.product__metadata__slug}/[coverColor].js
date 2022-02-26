@@ -6,6 +6,7 @@ import { StaticImage } from "gatsby-plugin-image"
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
+import Template from "../../../../components/customize/pageComponents/Template"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Layout from "../../../../components/layout/Layout"
 import Nav from "../../../../components/layout/Nav"
@@ -18,6 +19,24 @@ const ProductPage = ({ data, params }) => {
   const [bookData, setBookData] = useState({
     ...products,
     coverColor: coverColor,
+  })
+  const [selectedTemplate, setSelectedTemplate] = useState({
+    template: "blank",
+    show: false,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.088,
+    dotRadius: 0.6,
+    rows: 43,
+    columns: 27,
+    marginTop: 2.273,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 127,
+    lineWidth: 100,
   })
 
   useEffect(() => {
@@ -33,7 +52,7 @@ const ProductPage = ({ data, params }) => {
     }
     else {
       // else navigate to appropriate coverColor
-      navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`)
+      navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
   }, [bookData.coverColor])
 
@@ -59,11 +78,17 @@ const ProductPage = ({ data, params }) => {
                     />
                   </Cell>
                   <Cell width={2}>
-                    <ProductInfo
-                      bookData={bookData}
-                      setBookData={setBookData}
-                      stripeData={data.stripePrice}
-                    />
+                    {selectedTemplate.show ? (
+                      null
+                    ) : (
+                      <ProductInfo
+                        bookData={bookData}
+                        setBookData={setBookData}
+                        stripeData={data.stripePrice}
+                        selectedTemplate={selectedTemplate}
+                        setSelectedTemplate={setSelectedTemplate}
+                      />
+                    )}
                   </Cell>
                 </Grid>
               </SectionContent>
