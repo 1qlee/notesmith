@@ -9,7 +9,6 @@ import AlignmentControls from "./AlignmentControls"
 function RuledControls({
   pageData,
   setPageData,
-  selectedPageSvg,
   maximumMarginHeight,
   maximumMarginWidth,
   templateHeight,

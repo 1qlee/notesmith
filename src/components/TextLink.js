@@ -1,11 +1,14 @@
 import styled from "styled-components"
 
 const TextLink = styled.a`
-  display: ${props => props.flex || "flex"};
   align-items: ${props => props.alignitems};
+  border-bottom: ${props => props.borderbottom};
   color: ${props => props.color};
-  transition: color 0.2s;
+  display: ${props => props.flex || "flex"};
+  justify-content: ${props => props.justifycontent};
   margin: ${props => props.margin};
+  padding: ${props => props.padding};
+  transition: color 0.2s;
   width: ${props => props.width};
   &:hover {
     color: ${props => props.hovercolor};

@@ -151,12 +151,13 @@ function RuledPageIcon({
           <HorizontalLine width="80%" />
         </Flexbox>
       </PageOutline>
-      {showLabels && (
-        <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
+      {showLabels ? (
+          <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
       )}
-      <ReactTooltip
-        effect="solid"
-      />
     </PageWrapper>
   )
 }
@@ -231,12 +232,13 @@ function DotPageIcon({
           </Flexbox>
         </Flexbox>
       </PageOutline>
-      {showLabels && (
+      {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
       )}
-      <ReactTooltip
-        effect="solid"
-      />
     </PageWrapper>
   )
 }
@@ -287,12 +289,13 @@ function GraphPageIcon({
           <HorizontalLine width="80%" />
         </GraphOutline>
       </PageOutline>
-      {showLabels && (
+      {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Graph</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
       )}
-      <ReactTooltip
-        effect="solid"
-      />
     </PageWrapper>
   )
 }
@@ -330,12 +333,13 @@ function BlankPageIcon({
       data-tip={dataTip}
     >
       <PageOutline className="page-outline" />
-      {showLabels && (
+      {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
       )}
-      <ReactTooltip
-        effect="solid"
-      />
     </PageWrapper>
   )
 }

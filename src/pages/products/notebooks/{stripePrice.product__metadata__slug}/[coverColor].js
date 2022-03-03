@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql, navigate } from "gatsby"
-import { spacing } from "../../../../styles/variables"
+import { spacing, convertToPx } from "../../../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
+import { Flexbox } from "../../../../components/layout/Flexbox"
 import Template from "../../../../components/customize/pageComponents/Template"
+import Templatesbar from "../../../../components/customize/bars/Templatesbar"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Layout from "../../../../components/layout/Layout"
 import Nav from "../../../../components/layout/Nav"
@@ -16,10 +18,12 @@ const ProductPage = ({ data, params }) => {
   const { products, stripePrice } = data
   const { id, unit_amount, product } = stripePrice
   const { coverColor } = params
+  const [currentPageSide, setCurrentPageSide] = useState("left")
   const [bookData, setBookData] = useState({
     ...products,
     coverColor: coverColor,
   })
+  const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [selectedTemplate, setSelectedTemplate] = useState({
     template: "blank",
     show: false,
@@ -37,7 +41,13 @@ const ProductPage = ({ data, params }) => {
     marginRight: 0,
     width: 127,
     lineWidth: 100,
+    pageHeight: bookData.heightPixel - convertToPx(6.35),
+    pageWidth: bookData.widthPixel - convertToPx(13.335),
   })
+  const canvasSize = {
+    height: 688,
+    width: 445,
+  }
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -70,25 +80,41 @@ const ProductPage = ({ data, params }) => {
                   columnGap={spacing.xlarge}
                 >
                   <Cell width={3}>
-                    <StaticImage
-                      src="../images/index-image-2.jpg"
-                      alt="Notesmith notebooks"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                  </Cell>
-                  <Cell width={2}>
                     {selectedTemplate.show ? (
-                      null
+                      <Flexbox
+                        flex="flex"
+                      >
+                        <Templatesbar
+                          pageData={selectedTemplate}
+                          setPageData={setSelectedTemplate}
+                          selectedPageSvg={selectedPageSvg}
+                        />
+                        <Template
+                          bookData={bookData}
+                          canvasSize={canvasSize}
+                          currentPageSide={currentPageSide}
+                          pageData={selectedTemplate}
+                          setPageData={setSelectedTemplate}
+                          setSelectedPageSvg={setSelectedPageSvg}
+                        />
+                      </Flexbox>
                     ) : (
-                      <ProductInfo
-                        bookData={bookData}
-                        setBookData={setBookData}
-                        stripeData={data.stripePrice}
-                        selectedTemplate={selectedTemplate}
-                        setSelectedTemplate={setSelectedTemplate}
+                      <StaticImage
+                        src="../images/index-image-2.jpg"
+                        alt="Notesmith notebooks"
+                        placeholder="blurred"
+                        quality={100}
                       />
                     )}
+                  </Cell>
+                  <Cell width={2}>
+                    <ProductInfo
+                      bookData={bookData}
+                      setBookData={setBookData}
+                      stripeData={data.stripePrice}
+                      selectedTemplate={selectedTemplate}
+                      setSelectedTemplate={setSelectedTemplate}
+                    />
                   </Cell>
                 </Grid>
               </SectionContent>
@@ -114,18 +140,22 @@ export const pageQuery = graphql`
       }
     }
     products: productsJson(slug: { eq: $product__metadata__slug}) {
-      name
-      size
-      slug
       camelName
-      numOfPages
-      paperWeight
-      paperColor
-      paperTooth
       category
       description
-      stripePriceId
+      heightInch
+      heightPixel
+      name
+      numOfPages
+      paperColor
+      paperTooth
+      paperWeight
       price
+      size
+      slug
+      stripePriceId
+      widthInch
+      widthPixel
       colors {
         name
         hex

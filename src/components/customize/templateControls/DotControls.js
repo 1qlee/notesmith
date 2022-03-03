@@ -9,7 +9,6 @@ import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } fr
 function DotControls({
   pageData,
   setPageData,
-  selectedPageSvg,
   maximumMarginHeight,
   maximumMarginWidth,
   templateHeight,

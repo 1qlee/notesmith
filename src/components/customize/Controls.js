@@ -100,11 +100,8 @@ function Controls({
             pageData={pageData}
             setShowModal={setShowModal}
             setPageData={setPageData}
-            selectedPage={selectedPage}
             selectedPageSvg={selectedPageSvg}
-          >
-            Templates
-          </Templatesbar>
+          />
         </ControlsContent>
       )}
       {activeTab === 2 && (
