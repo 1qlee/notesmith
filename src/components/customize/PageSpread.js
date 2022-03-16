@@ -8,9 +8,7 @@ import PageBackground from "./pageComponents/PageBackground"
 
 function CoverPage({
   bookData,
-  canvasPageHeight,
-  canvasPageWidth,
-  pageSide,
+  canvasPageSize,
   selectedPage,
 }) {
 
@@ -18,29 +16,28 @@ function CoverPage({
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageHeight}
-        width={canvasPageWidth}
-        viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
+        height={canvasPageSize.height}
+        width={canvasPageSize.width}
+        viewBox={`0 0 ${canvasPageSize.width} ${canvasPageSize.height}`}
         x="0"
         y="0"
       >
         <rect
-          width={canvasPageWidth}
-          height={canvasPageHeight}
+          width={canvasPageSize.width}
+          height={canvasPageSize.height}
           fill={colors.white}>
         </rect>
         <text
-          x={(bookData.widthPixel / 2) - 80}
-          y={bookData.heightPixel / 2}
-          width={bookData.widthPixel}
+          x={(canvasPageSize.width / 2) - 80}
+          y={canvasPageSize.height / 2}
+          width={canvasPageSize.width}
           fill={colors.gray.nineHundred}
         >
           THIS IS THE COVER PAGE
         </text>
         <Holes
           currentPageSide="left"
-          canvasPageWidth={canvasPageWidth}
-          canvasPageHeight={canvasPageHeight}
+          canvasPageSize={canvasPageSize}
         />
       </svg>
     )
@@ -49,29 +46,28 @@ function CoverPage({
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageHeight}
-        width={canvasPageWidth}
-        viewBox={`0 0 ${canvasPageWidth} ${canvasPageHeight}`}
+        height={canvasPageSize.height}
+        width={canvasPageSize.width}
+        viewBox={`0 0 ${canvasPageSize.width} ${canvasPageSize.height}`}
         x="0"
         y="0"
       >
         <rect
-          width={canvasPageWidth}
-          height={canvasPageHeight}
+          width={canvasPageSize.width}
+          height={canvasPageSize.height}
           fill={colors.white}>
         </rect>
         <text
-          x={(bookData.widthPixel / 2) - 80}
-          y={bookData.heightPixel / 2}
-          width={bookData.widthPixel}
+          x={(canvasPageSize.width / 2) - 80}
+          y={canvasPageSize.height / 2}
+          width={canvasPageSize.width}
           fill={colors.gray.nineHundred}
         >
           THIS IS THE COVER PAGE
         </text>
         <Holes
           currentPageSide="right"
-          canvasPageWidth={canvasPageWidth}
-          canvasPageHeight={canvasPageHeight}
+          canvasPageSize={canvasPageSize}
         />
       </svg>
     )
@@ -146,8 +142,7 @@ function PageSvg({
 
 function Page({
   bookData,
-  canvasPageHeight,
-  canvasPageWidth,
+  canvasPageSize,
   currentPageSide,
   isSelected,
   minimumMargin,
@@ -158,6 +153,7 @@ function Page({
   rightPageXPosition,
   selectedPage,
   setPageData,
+  setPageContentSize,
   setSelectedPageSvg,
   workingPageHeight,
   workingPageWidth,
@@ -173,23 +169,24 @@ function Page({
     return (
       <>
         <PageBackground
-          canvasPageHeight={canvasPageHeight}
-          canvasPageWidth={canvasPageWidth}
           currentPageSide={currentPageSide}
           isSelected={isSelected}
+          canvasPageSize={canvasPageSize}
           pageSide={pageSide}
         />
         {pageData.template && currentPageSide === pageSide ? (
           <Template
             bookData={bookData}
+            canvasPageSize={canvasPageSize}
             currentPageSide={currentPageSide}
+            minimumMargin={minimumMargin}
             pageData={pageData}
             rightPageXPosition={rightPageXPosition}
             setPageData={setPageData}
+            setPageContentSize={setPageContentSize}
             setSelectedPageSvg={setSelectedPageSvg}
             workingPageHeight={workingPageHeight}
             workingPageWidth={workingPageWidth}
-            minimumMargin={minimumMargin}
           />
         ) : (
           <PageSvg
@@ -210,11 +207,13 @@ function Page({
 }
 
 function PageSpread({
+  bookData,
   canvasPages,
+  canvasPageSize,
   canvasSize,
   pageData,
-  bookData,
   selectedPage,
+  setPageContentSize,
   setPageData,
   setSelectedPageSvg,
 }) {
@@ -224,14 +223,12 @@ function PageSpread({
   const [rightPage, setRightPage] = useState([])
   const leftPageRef = useRef()
   const rightPageRef = useRef()
-  const canvasPageWidth = bookData.widthPixel
-  const canvasPageHeight = bookData.heightPixel
   const minimumMargin = convertToPx(3.175)
-  const rightPageXPosition = canvasPageWidth + convertToPx(9.525)
-  const pageSpreadWidth = canvasPageWidth * 2 // converted page spread width
+  const rightPageXPosition = canvasPageSize.width + convertToPx(10.16)
+  const pageSpreadWidth = canvasPageSize.width * 2 // converted page spread width
   // the working area of the page (the part that accepts user input)
-  const workingPageHeight = canvasPageHeight - convertToPx(6.35) // minus top and bottom margins
-  const workingPageWidth = canvasPageWidth - convertToPx(12.7) // minus left and right margins
+  const workingPageHeight = canvasPageSize.height - convertToPx(6.35) // minus top and bottom margins
+  const workingPageWidth = canvasPageSize.width - convertToPx(13.335) // minus left and right margins
 
   // get the page from the db and push its svg elements into an array
   async function generateSvgs(pageId, pageSide) {
@@ -294,21 +291,19 @@ function PageSpread({
     <svg
       id="page-spread"
       xmlns="http://www.w3.org/2000/svg"
-      width={canvasSize.width}
-      height={canvasSize.height}
+      height={canvasPageSize.height + 2}
+      width={canvasPageSize.width * 2 + 3}
       x={(canvasSize.width - pageSpreadWidth) / 2}
-      y={(canvasSize.height - canvasPageHeight) / 2}
+      y={(canvasSize.height - canvasPageSize.height) / 2}
     >
       <CoverPage
         bookData={bookData}
-        canvasPageWidth={canvasPageWidth}
-        canvasPageHeight={canvasPageHeight}
+        canvasPageSize={canvasPageSize}
         selectedPage={selectedPage}
       />
       <Page
         bookData={bookData}
-        canvasPageHeight={canvasPageHeight}
-        canvasPageWidth={canvasPageWidth}
+        canvasPageSize={canvasPageSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
         minimumMargin={minimumMargin}
@@ -319,14 +314,14 @@ function PageSpread({
         rightPageXPosition={rightPageXPosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
+        setPageContentSize={setPageContentSize}
         setSelectedPageSvg={setSelectedPageSvg}
         workingPageHeight={workingPageHeight}
         workingPageWidth={workingPageWidth}
       />
       <Page
         bookData={bookData}
-        canvasPageHeight={canvasPageHeight}
-        canvasPageWidth={canvasPageWidth}
+        canvasPageSize={canvasPageSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
         minimumMargin={minimumMargin}
@@ -337,6 +332,7 @@ function PageSpread({
         rightPageXPosition={rightPageXPosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
+        setPageContentSize={setPageContentSize}
         setSelectedPageSvg={setSelectedPageSvg}
         workingPageHeight={workingPageHeight}
         workingPageWidth={workingPageWidth}

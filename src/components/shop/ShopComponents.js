@@ -57,6 +57,7 @@ function CartQuantityTracker(props) {
     <QuantityWrapper
       padding={props.wrapperpadding}
       boxshadow={props.wrapperboxshadow}
+      id={props.id}
     >
       <QuantityButton
         disabled={props.product.quantity === 1}

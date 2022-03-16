@@ -91,7 +91,7 @@ const Content = styled.div`
     color: ${props => props.smallcolor || colors.primary.eightHundred};
     font-size: ${props => props.smallfontsize};
     display: block;
-    margin: 0.5rem 0;
+    margin: ${props => props.smallmargin || "0.5rem 0"};
   }
   a {
     color: ${props => props.linkcolor || colors.link.normal};

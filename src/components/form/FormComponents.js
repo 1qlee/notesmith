@@ -92,6 +92,7 @@ function QuantityTracker(props) {
         border="none"
         padding={props.counterpadding}
         fontsize={props.counterfontsize}
+        id={props.id}
         margin="0 0.25rem"
         min="1"
         onChange={e => handleChange(e)}

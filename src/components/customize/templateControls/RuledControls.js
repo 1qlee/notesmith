@@ -7,18 +7,18 @@ import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
 
 function RuledControls({
-  pageData,
-  setPageData,
+  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
-  templateHeight,
-  templateWidth,
+  pageContentSize,
+  pageData,
+  setPageData,
 }) {
-  const totalMargin = pageData.marginLeft + pageData.marginRight
-  const centeredMarginHorizontal = totalMargin / 2
-  const verticalDeadspace = pageData.pageHeight - templateHeight
-  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
-  const bottomMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
+  const totalHorizontalMargin = pageData.marginLeft + pageData.marginRight
+  const totalVerticalMargin = canvasPageSize.height - pageContentSize.height - 24
+  const centeredHorizontalMargin = totalHorizontalMargin / 2
+  const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2)
+  const bottomMargin = convertToMM(totalVerticalMargin) - pageData.thickness * 2
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -30,30 +30,30 @@ function RuledControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginRight: totalMargin,
+          marginRight: totalHorizontalMargin,
           marginLeft: 0,
         })
         marginLeftInput.current.value = 0
-        marginRightInput.current.value = totalMargin
+        marginRightInput.current.value = totalHorizontalMargin
         break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: centeredMarginHorizontal,
-          marginRight: centeredMarginHorizontal,
+          marginLeft: centeredHorizontalMargin,
+          marginRight: centeredHorizontalMargin,
         })
-        marginLeftInput.current.value = centeredMarginHorizontal
-        marginRightInput.current.value = centeredMarginHorizontal
+        marginLeftInput.current.value = centeredHorizontalMargin
+        marginRightInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: totalMargin,
+          marginLeft: totalHorizontalMargin,
           marginRight: 0,
         })
-        marginLeftInput.current.value = totalMargin
+        marginLeftInput.current.value = totalHorizontalMargin
         marginRightInput.current.value = 0
         break
       case "top":
@@ -68,9 +68,9 @@ function RuledControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: centeredMarginVertical,
+          marginTop: centeredVerticalMargin,
         })
-        marginTopInput.current.value = centeredMarginVertical
+        marginTopInput.current.value = centeredVerticalMargin
         break
       case "bottom":
         setPageData({

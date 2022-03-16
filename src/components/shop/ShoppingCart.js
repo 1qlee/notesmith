@@ -1,135 +1,162 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, convertToDecimal } from "../../styles/variables"
+import { Link } from "gatsby"
+import { colors, convertToDecimal, spacing } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { Trash } from "phosphor-react"
-import { GatsbyImage } from "gatsby-plugin-image"
+import { GatsbyImage, StaticImage } from "gatsby-plugin-image"
 
 import { CartQuantityTracker } from "./ShopComponents"
 import { Flexbox } from "../layout/Flexbox"
+import Button from "../Button"
 import Content from "../Content"
 import TextLink from "../TextLink"
 import Icon from "../Icon"
-
-const CartWrapper = styled.div`
-  background-color: ${colors.white};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
-`
 
 function ShoppingCart() {
   const {
     cartDetails,
     setItemQuantity,
-    removeItem
+    removeItem,
+    totalPrice,
   } = useShoppingCart()
   const cartItems = []
 
   // push all product objects in cartDetails to an array
   for (const product in cartDetails) {
     cartItems.push(cartDetails[product])
+    console.log(cartDetails[product])
   }
 
   return (
-    <>
+    <div>
       <Content
         margin="0 0 2rem 0"
-        h1fontsize="2rem"
+        h1fontweight="400"
+        h1fontsize="2.5rem"
       >
-        <h1>Cart</h1>
+        <h1>Your cart</h1>
       </Content>
-      <CartWrapper>
-        {cartItems.length > 0 ? (
-          <>
+      {cartItems.length > 0 ? (
+        <>
+          <table>
+            <thead>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th style={{textAlign:"right"}}>Total</th>
+            </thead>
             {cartItems.map((item, index) => (
-              <Flexbox
-                key={index}
-                flex="flex"
-                justifycontent="space-between"
-                padding="1rem"
-                alignitems="center"
-              >
-                <Flexbox
-                  flex="flex"
-                  alignitems="center"
-                >
-                  <GatsbyImage
-                    image={item.images.nodes[0].childImageSharp.gatsbyImageData}
-                    alt=""
-                    style={{marginRight:"1rem", width: "50px"}}
-                    loading="eager"
-                  />
-                  <Content
-                    h3fontweight="400"
-                    h3margin="0"
-                    h3fontsize="1.2rem"
+              <tr key={index}>
+                <td>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    height="100%"
                   >
-                    <p>{item.name}</p>
-                  </Content>
-                </Flexbox>
-                <Flexbox
-                  flex="flex"
-                  alignitems="center"
-                >
-                  <Content
-                    margin="0 1rem 0 0"
+                    <GatsbyImage
+                      image={item.image.gatsbyImageData}
+                      alt="product thumbnail"
+                    />
+                    <Content
+                      paragraphmargin="0"
+                      paragraphfontsize="1.25rem"
+                      smallfontsize="0.875rem"
+                      smallmargin="0"
+                      margin="0 0 0 1rem"
+                    >
+                      <p>{item.name}</p>
+                      <a>
+                        <small>View details</small>
+                      </a>
+                    </Content>
+                  </Flexbox>
+                </td>
+                <td>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    height="100%"
                   >
-                    <p>
-                      ${convertToDecimal(item.price, 2)}
-                    </p>
-                  </Content>
-                  <CartQuantityTracker
-                    buttonwidth="1rem"
-                    buttonheight="1rem"
-                    counterwidth="6rem"
-                    counterfontsize="0.825rem"
-                    iconsize="0.625rem"
-                    setItemQuantity={setItemQuantity}
-                    product={item}
-                    counterpadding="0.5rem"
-                  />
-                </Flexbox>
-                <Flexbox
-                  flex="flex"
-                  alignitems="center"
-                >
-                  <Content
-                    h3color={colors.primary.nineHundred}
-                    h3fontweight="400"
-                    h3margin="0"
-                    h3fontsize="1.25rem"
-                    margin="0 1rem 0 0"
+                    <Content
+                      paragraphmargin="0"
+                      paragraphfontsize="1.25rem"
+                    >
+                      <p>
+                        ${convertToDecimal(item.price, 2)}
+                      </p>
+                    </Content>
+                  </Flexbox>
+                </td>
+                <td>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    height="100%"
                   >
-                    <h3>${convertToDecimal(item.value, 2)}</h3>
-                  </Content>
-                  <TextLink
-                    color={colors.gray.sixHundred}
-                    hovercolor={colors.gray.nineHundred}
-                    margin="0"
-                    width="1rem"
-                    onClick={e => {
-                      e.preventDefault()
-                      removeItem(item.id)
-                    }}
+                    <CartQuantityTracker
+                      buttonwidth="1rem"
+                      buttonheight="1rem"
+                      counterwidth="6rem"
+                      counterfontsize="0.825rem"
+                      iconsize="0.625rem"
+                      setItemQuantity={setItemQuantity}
+                      product={item}
+                      counterpadding="0.5rem"
+                    />
+                  </Flexbox>
+                </td>
+                <td>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    justifycontent="flex-end"
+                    height="100%"
                   >
-                    <Icon>
-                      <Trash size="1rem" />
-                    </Icon>
-                  </TextLink>
-                </Flexbox>
-              </Flexbox>
+                    <Content
+                      paragraphmargin="0"
+                      paragraphfontsize="1.25rem"
+                    >
+                      <p>${convertToDecimal(item.value, 2)}</p>
+                    </Content>
+                  </Flexbox>
+                </td>
+              </tr>
             ))}
-          </>
-        ) : (
-          <Content
-            margin="1rem 0"
-            paragraphtextalign="center"
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style={{textAlign:"right"}}><span style={{marginRight: "6rem"}}>Subtotal</span><span style={{fontSize:"1.25rem"}}>${parseFloat(totalPrice / 100)}</span></td>
+            </tr>
+          </table>
+          <Flexbox
+            width="100%"
+            flex="flex"
+            justifycontent="flex-end"
+            margin="2rem 0 0"
           >
-            <p>You have no items in your cart.</p>
-          </Content>
-        )}
-      </CartWrapper>
-    </>
+            <Button
+              backgroundcolor={colors.primary.sixHundred}
+              color={colors.white}
+              padding="1rem"
+              as={Link}
+              to="/checkout"
+              width="12rem"
+            >
+              Checkout
+            </Button>
+          </Flexbox>
+        </>
+      ) : (
+        <Content
+          margin="1rem 0"
+          paragraphtextalign="center"
+        >
+          <p>You have no items in your cart.</p>
+        </Content>
+      )}
+    </div>
   )
 }
 

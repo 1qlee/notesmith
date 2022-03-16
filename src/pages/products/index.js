@@ -5,8 +5,8 @@ function Products({ data }) {
   return (
     <div>
       <div>Notebooks</div>
-      {data.allStripeProduct.nodes.map(product => (
-        <Link key={product.name} to={`/products/${product.metadata.category}/${product.metadata.slug}`}>
+      {data.allProductsJson.nodes.map(product => (
+        <Link key={product.name} to={`/products/${product.category}/${product.slug}`}>
           {product.name}
         </Link>
       ))}
@@ -16,13 +16,11 @@ function Products({ data }) {
 
 export const query = graphql`
   query {
-    allStripeProduct {
+    allProductsJson {
       nodes {
         name
-        metadata {
-          category
-          slug
-        }
+        slug
+        category
       }
     }
   }

@@ -3,27 +3,28 @@ import { colors } from "../../../styles/variables"
 
 function Holes({
   currentPageSide,
-  canvasPageHeight,
-  canvasPageWidth
+  canvasPageSize,
 }) {
   const [holes, setHoles] = useState([])
 
   function generateHoles() {
     const holesArray = []
-    const numOfHoles = (canvasPageHeight - 26) / 26 // page height minus the size of one hole incl margin divided by that same value
-    const leftHolesXPosition = canvasPageWidth - 26
-    const rightHolesXPosition = 10
+    const verticalMargin = 30.24 // 8mm on top and bottom of holes
+    const holeSize = 15.12 // 4mm square
+    const numOfHoles = (canvasPageSize.height - verticalMargin * 2) / (holeSize * 2) // holeSize is equal to the space btwn each hole
+    const leftHolesXPosition = canvasPageSize.width - holeSize * 2
+    const rightHolesXPosition = 11.34 // left margin
     // for loop to generate appropriate number of holes for the page height
     for (let i = 0; i < numOfHoles; i++) {
       // hole property object
       const hole = {
-        width: 15.12,
-        height: 15.12,
+        width: holeSize,
+        height: holeSize,
         fill: colors.gray.oneHundred,
         strokeWidth: 1,
         stroke: colors.gray.threeHundred,
         x: currentPageSide === "left" ? leftHolesXPosition : rightHolesXPosition,
-        y: 26 * i + 10
+        y: verticalMargin + holeSize * 2 * i
       }
 
       holesArray.push(hole)
@@ -34,7 +35,7 @@ function Holes({
 
   useEffect(() => {
     generateHoles()
-  }, [])
+  }, [canvasPageSize, currentPageSide])
 
   return (
     <g>

@@ -16,7 +16,7 @@ const Orders = styled.div`
 `
 
 function OrderSummary({ hideButton, selectedRate, taxRate }) {
-  const { cartDetails, totalPrice, formattedTotalPrice } = useShoppingCart()
+  const { cartDetails, totalPrice } = useShoppingCart()
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
 
   // calculate the total price of the user's cart incl shipping

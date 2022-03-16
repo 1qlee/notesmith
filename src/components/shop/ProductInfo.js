@@ -1,16 +1,18 @@
 import React, { useState } from "react"
-import { graphql, Link } from "gatsby"
+import { graphql, Link, navigate } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
-import { CaretDown, PenNib, File, Book, LinkSimpleHorizontal, Truck, Package } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
+import { v4 as uuidv4 } from 'uuid';
 import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"
-import { StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
+import { QuantityTracker, StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import PageIcons from "../customize/PageIcons"
 import ColorPicker from "./ColorPicker"
+import Notification from "../ui/Notification"
 import Tag from "../ui/Tag"
 import Icon from "../Icon"
 import Button from "../Button"
@@ -18,41 +20,66 @@ import Content from "../Content"
 
 const ProductInfo = ({
   bookData,
+  cartThumbnail,
   setBookData,
-  stripeData,
   selectedTemplate,
   setSelectedTemplate,
 }) => {
   const { addItem } = useShoppingCart()
   const [loading, setLoading] = useState(false)
+  const [itemQuantity, setItemQuantity] = useState(1)
+
+  function handleAddCartButton(bookData) {
+    // create a promise to add items to cart then redirect user to cart
+    const addItemsToCart = new Promise((resolve, reject) => {
+      // use-shopping-cart function to add items to cart
+      resolve(
+        addItem({
+          name: bookData.name,
+          id: uuidv4(),
+          price_id: bookData.stripePriceId,
+          price: bookData.price,
+          currency: "USD",
+          coverColor: bookData.coverColor,
+          slug: bookData.slug,
+          image: cartThumbnail,
+        }, {count: itemQuantity})
+      )
+    })
+
+    addItemsToCart.then(res => {
+      return navigate("/cart")
+    }).catch(error => {
+      console.log(error)
+    })
+  }
 
   return (
     <ProductDetails>
       <Content
-        h1fontsize="2.5rem"
-        h2fontsize="2rem"
-        h2fontweight="400"
-        h1margin="0"
-        h2margin="0"
         margin="0 0 1rem"
         paragraphfontsize="1.125rem"
       >
         <Flexbox
           flex="flex"
-          alignitems="center"
           justifycontent="space-between"
           margin="0 0 1rem"
         >
-          <Flexbox
+          <Content
             margin="0 1rem 0 0"
+            h1fontsize="2.5rem"
+            h1margin="0"
           >
             <h1>{bookData.name}</h1>
-          </Flexbox>
-          <Flexbox>
-            <h2>${stripeData.unit_amount / 100}</h2>
-          </Flexbox>
+          </Content>
+          <Content
+            h2fontsize="2rem"
+            h2fontweight="400"
+          >
+            <h2>${bookData.price / 100}</h2>
+          </Content>
         </Flexbox>
-        <p>{stripeData.product.description}</p>
+        <p>{bookData.description}</p>
       </Content>
       <Content
         headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
@@ -87,6 +114,7 @@ const ProductInfo = ({
           checkActiveVar={selectedTemplate.template}
           data={selectedTemplate}
           iconMargin="0 0.5rem"
+          isProductPage={true}
           setData={setSelectedTemplate}
           showLabels={false}
         />
@@ -94,133 +122,84 @@ const ProductInfo = ({
       <Flexbox
         flex="flex"
         margin="0 0 1rem"
+        alignitems="flex-end"
       >
+        <div>
+          <StyledLabel htmlFor="quantity-tracker" margin="0 0 1rem">Quantity</StyledLabel>
+          <QuantityTracker
+            id="quantity-tracker"
+            buttonwidth="1rem"
+            buttonheight="1rem"
+            counterwidth="100%"
+            counterpadding="1rem"
+            counterfontsize="0.825rem"
+            iconsize="0.625rem"
+            setItemQuantity={setItemQuantity}
+          />
+        </div>
         <Button
           backgroundcolor={colors.primary.sixHundred}
+          border={`1px solid ${colors.primary.sixHundred}`}
           className={loading ? "is-loading" : null}
           color={colors.primary.white}
           disabled={loading}
-          as={Link}
-          to={`/customize/${bookData.slug}/`}
+          margin="0 0 0 1rem"
           padding="1rem"
+          onClick={() => handleAddCartButton(bookData)}
           width="100%"
         >
-          {loading ? (
-            <Loading height="1rem" width="1rem" />
-          ) : (
-            <span>
-              Customize page layouts and purchase
-            </span>
-          )}
+          Add to cart
         </Button>
       </Flexbox>
       <Flexbox
         flex="flex"
-        justifycontent="space-between"
-        className="has-border-bottom"
-        bordercolor={colors.gray.fourHundred}
-        padding="0 0 2rem"
+        alignitems="center"
+        margin="0 0 2rem"
       >
         <Content
-          paragraphfontsize="0.75rem"
-          linkfontsize="0.85rem"
+          paragraphfontsize="0.825rem"
+          paragraphcolor={colors.gray.sevenHundred}
         >
-          <a>Return Policy</a>
+          <p>Free shipping for orders over $40</p>
+          <p>30 day return policy</p>
         </Content>
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon
-            margin="0 0.5rem 0 0"
-          >
-            <Truck size="1rem" weight="duotone" colors={colors.gray.sixHundred} />
-          </Icon>
-          <Content
-            paragraphfontsize="0.85rem"
-            paragraphcolor={colors.gray.sevenHundred}
-          >
-            <p>Free shipping for orders over $40</p>
-          </Content>
-        </Flexbox>
       </Flexbox>
-      <Content
-        margin="2rem 0 0"
-        h3fontsize="1rem"
+      <Notification
+        backgroundcolor={colors.paper.offWhite}
+        bordercolor={colors.primary.sixHundred}
+        margin="0 0 2rem"
+        padding="1rem"
       >
-        <h3>Notebook Details</h3>
-      </Content>
-      <Content
-        margin="0 0 0.5rem"
-        paragraphcolor={colors.gray.sevenHundred}
-      >
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon margin="0 0.5rem 0 0">
-            <PenNib size="1.25rem" weight="duotone" color={colors.gray.sixHundred} />
-          </Icon>
-          <p>Fountain pen friendly paper</p>
-        </Flexbox>
-      </Content>
-      <Content
-        margin="0 0 0.5rem"
-        paragraphcolor={colors.gray.sevenHundred}
-      >
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon margin="0 0.5rem 0 0">
-            <File size="1.25rem" weight="duotone" color={colors.gray.sixHundred} />
-          </Icon>
-          <p>70lb smooth, white paper inside</p>
-        </Flexbox>
-      </Content>
-      <Content
-        margin="0 0 0.5rem"
-        paragraphcolor={colors.gray.sevenHundred}
-      >
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon margin="0 0.5rem 0 0">
-            <Book size="1.25rem" weight="duotone" color={colors.gray.sixHundred} />
-          </Icon>
-          <p>80c linen paper cover</p>
-        </Flexbox>
-      </Content>
-      <Content
-        margin="0 0 0.5rem"
-        paragraphcolor={colors.gray.sevenHundred}
-      >
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon margin="0 0.5rem 0 0">
-            <LinkSimpleHorizontal size="1.25rem" weight="duotone" color={colors.gray.sixHundred} />
-          </Icon>
-          <p>Saddle stitch binding</p>
-        </Flexbox>
-      </Content>
-      <Content
-        paragraphcolor={colors.gray.sevenHundred}
-      >
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          <Icon
-            margin="0 0.5rem 0 0"
+        <div>
+          <Content
+            margin="0 0 1rem"
           >
-            <Package size="1.25rem" weight="duotone" color={colors.gray.sixHundred} />
-          </Icon>
-          <p>Always made to order</p>
-        </Flexbox>
-      </Content>
+            <p>Need more control over your page layouts? Our editor allows you to use more design tools and also allows each page to be edited individually. You must create or log into a Notesmith account to use the editor.</p>
+          </Content>
+          <Button
+            color={colors.primary.sixHundred}
+            className={loading ? "is-loading" : null}
+            backgroundcolor={colors.white}
+            border={`1px solid ${colors.primary.sixHundred}`}
+            disabled={loading}
+            as={Link}
+            to={`/customize/${bookData.slug}/`}
+            padding="1rem"
+            width="100%"
+          >
+            {loading ? (
+              <Loading height="1rem" width="1rem" />
+            ) : (
+              <span>
+                Customize page layouts in editor
+              </span>
+            )}
+            <Icon margin="0 0 0 0.5rem">
+              <ArrowRight size="1rem" />
+            </Icon>
+          </Button>
+        </div>
+      </Notification>
     </ProductDetails>
   )
 }

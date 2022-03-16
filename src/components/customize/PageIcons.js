@@ -69,9 +69,9 @@ const VerticalLine = styled.span`
 const Dot = styled.span`
   border-radius: 100%;
   background-color: ${props => props.backgroundcolor || colors.gray.sixHundred};
-  height: ${props => props.height || "3px"};
+  height: ${props => props.height || "1px"};
   transition: background-color 0.2s;
-  width: ${props => props.width || "3px"};
+  width: ${props => props.width || "1px"};
 `
 
 const HorizontalLine = styled.span`
@@ -108,6 +108,7 @@ function RuledPageIcon({
   data,
   dataTip,
   isActive,
+  isProductPage,
   iconMargin,
   showLabels,
 }) {
@@ -117,14 +118,14 @@ function RuledPageIcon({
         ...data,
         alignmentHorizontal: "center",
         alignmentVertical: "middle",
-        show: true,
+        show: isProductPage ? true : false,
         template: "ruled",
         spacing: 5,
         opacity: 1,
         thickness: 0.088,
         dotRadius: 0.6,
-        rows: 43,
-        columns: 27,
+        rows: 42,
+        columns: 26,
         marginTop: 2.273,
         marginBottom: 0,
         marginLeft: 0,
@@ -167,6 +168,7 @@ function DotPageIcon({
   data,
   dataTip,
   isActive,
+  isProductPage,
   iconMargin,
   showLabels,
 }) {
@@ -176,14 +178,14 @@ function DotPageIcon({
         ...data,
         alignmentHorizontal: "center",
         alignmentVertical: "middle",
-        show: true,
+        show: isProductPage ? true : false,
         template: "dot",
         spacing: 5,
         opacity: 1,
         thickness: 0.175,
         dotRadius: 0.1,
-        rows: 43,
-        columns: 27,
+        rows: 42,
+        columns: 26,
         marginTop: 2.173,
         marginBottom: 0,
         marginLeft: 0.899,
@@ -211,6 +213,7 @@ function DotPageIcon({
           >
             <Dot />
             <Dot />
+            <Dot />
           </Flexbox>
           <Flexbox
             flex="flex"
@@ -220,6 +223,7 @@ function DotPageIcon({
           >
             <Dot />
             <Dot />
+            <Dot />
           </Flexbox>
           <Flexbox
             flex="flex"
@@ -227,6 +231,7 @@ function DotPageIcon({
             justifycontent="space-around"
             width="100%"
           >
+            <Dot />
             <Dot />
             <Dot />
           </Flexbox>
@@ -248,6 +253,7 @@ function GraphPageIcon({
   data,
   dataTip,
   isActive,
+  isProductPage,
   iconMargin,
   showLabels,
 }) {
@@ -257,13 +263,13 @@ function GraphPageIcon({
         ...data,
         alignmentHorizontal: "center",
         alignmentVertical: "middle",
-        show: true,
+        show: isProductPage ? true : false,
         template: "graph",
         spacing: 5,
         opacity: 1,
         thickness: 0.088,
         dotRadius: 0.6,
-        rows: 43,
+        rows: 42,
         columns: 25,
         marginTop: 2.251,
         marginBottom: 0,
@@ -305,6 +311,7 @@ function BlankPageIcon({
   data,
   dataTip,
   isActive,
+  isProductPage,
   iconMargin,
   showLabels,
 }) {
@@ -314,14 +321,14 @@ function BlankPageIcon({
         ...data,
         alignmentHorizontal: "center",
         alignmentVertical: "middle",
-        show: true,
+        show: isProductPage ? true : false,
         template: "blank",
         spacing: 5,
         opacity: 1,
         thickness: 0.175,
         dotRadius: 0.6,
-        rows: 43,
-        columns: 27,
+        rows: 42,
+        columns: 26,
         marginTop: 4.687,
         marginBottom: 0,
         marginLeft: 0,
@@ -348,6 +355,7 @@ function PageIcons({
   checkActiveVar,
   data,
   iconMargin,
+  isProductPage,
   setData,
   showLabels,
 }) {
@@ -358,6 +366,7 @@ function PageIcons({
         dataTip="Blank"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "blank"}
+        isProductPage={isProductPage}
         setData={setData}
         showLabels={showLabels}
       />
@@ -366,6 +375,7 @@ function PageIcons({
         dataTip="Ruled"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "ruled"}
+        isProductPage={isProductPage}
         setData={setData}
         showLabels={showLabels}
       />
@@ -374,6 +384,7 @@ function PageIcons({
         dataTip="Dot grid"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "dot"}
+        isProductPage={isProductPage}
         setData={setData}
         showLabels={showLabels}
       />
@@ -382,6 +393,7 @@ function PageIcons({
         dataTip="Graph"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "graph"}
+        isProductPage={isProductPage}
         setData={setData}
         showLabels={showLabels}
       />

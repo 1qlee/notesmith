@@ -5,23 +5,22 @@ import Holes from "./Holes"
 
 function PageBackground({
   currentPageSide,
-  canvasPageWidth,
-  canvasPageHeight,
   isSelected,
+  canvasPageSize,
   pageSide,
 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       id={pageSide === "left" ? "page-background-left" : "page-background-right"}
-      width={canvasPageWidth}
-      height={canvasPageHeight}
-      x={pageSide === "left" ? "1" : canvasPageWidth + 2}
+      width={canvasPageSize.width}
+      height={canvasPageSize.height}
+      x={pageSide === "left" ? "1" : canvasPageSize.width + 2}
       y="1"
       style={isSelected ? { outline: `1px solid ${colors.primary.sixHundred}` } : null}
     >
-      <rect width={canvasPageWidth} height={canvasPageHeight - 2} fill={colors.white}></rect>
-      <Holes currentPageSide={pageSide} canvasPageWidth={canvasPageWidth} canvasPageHeight={canvasPageHeight} />
+      <rect width={canvasPageSize.width} height={canvasPageSize.height - 2} fill={colors.white}></rect>
+      <Holes currentPageSide={pageSide} canvasPageSize={canvasPageSize} />
     </svg>
   )
 }

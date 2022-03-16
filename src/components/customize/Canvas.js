@@ -11,13 +11,17 @@ import Workspace from "./Workspace"
 const StyledCanvas = styled.div`
   display: block;
   background-color: ${colors.paper.offWhite};
+  height: ${props => props.height || "100%"};
+  width: ${props => props.width || "100%"};
 `
 
 function Canvas({
-  canvasPages,
-  canvasSize,
   bookData,
+  canvasPages,
+  canvasPageSize,
+  canvasSize,
   pageData,
+  setPageContentSize,
   selectedPage,
   setPageData,
   setSelectedPageSvg,
@@ -25,12 +29,7 @@ function Canvas({
 
   return (
     <Workspace>
-      <StyledCanvas
-        style={{
-          width: canvasSize.width,
-          height: canvasSize.height
-        }}
-      >
+      <StyledCanvas>
         <svg
           id="page-root"
           xlinkns="http://www.w3.org/1999/xlink"
@@ -38,11 +37,13 @@ function Canvas({
           height={canvasSize.height}
         >
           <PageSpread
+            bookData={bookData}
             canvasPages={canvasPages}
+            canvasPageSize={canvasPageSize}
             canvasSize={canvasSize}
             pageData={pageData}
-            bookData={bookData}
             selectedPage={selectedPage}
+            setPageContentSize={setPageContentSize}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
           />

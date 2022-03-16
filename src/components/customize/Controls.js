@@ -64,11 +64,13 @@ const ControlTab = styled.li`
 function Controls({
   bookData,
   canvasPages,
+  canvasPageSize,
+  pageContentSize,
   pageData,
   productData,
   productImageData,
-  selectedPageSvg,
   selectedPage,
+  selectedPageSvg,
   setBookData,
   setPageData,
   setShowModal,
@@ -97,10 +99,12 @@ function Controls({
       {activeTab === 1 && (
         <ControlsContent>
           <Templatesbar
+            canvasPageSize={canvasPageSize}
+            pageContentSize={pageContentSize}
             pageData={pageData}
-            setShowModal={setShowModal}
-            setPageData={setPageData}
             selectedPageSvg={selectedPageSvg}
+            setPageData={setPageData}
+            setShowModal={setShowModal}
           />
         </ControlsContent>
       )}

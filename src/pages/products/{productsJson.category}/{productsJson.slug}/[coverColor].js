@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql, navigate } from "gatsby"
 import { spacing, convertToPx } from "../../../../styles/variables"
-import { StaticImage } from "gatsby-plugin-image"
+import { StaticImage, GatsbyImage } from "gatsby-plugin-image"
+import ImageGallery from 'react-image-gallery'
+import "../../../../styles/gallery.css"
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import { Flexbox } from "../../../../components/layout/Flexbox"
-import Template from "../../../../components/customize/pageComponents/Template"
-import Templatesbar from "../../../../components/customize/bars/Templatesbar"
-import ProductInfo from "../../../../components/shop/ProductInfo"
 import Layout from "../../../../components/layout/Layout"
 import Nav from "../../../../components/layout/Nav"
+import ProductInfo from "../../../../components/shop/ProductInfo"
 import Seo from "../../../../components/layout/Seo"
+import Template from "../../../../components/customize/pageComponents/Template"
+import Templatesbar from "../../../../components/customize/bars/Templatesbar"
 
 const ProductPage = ({ data, params }) => {
-  const { products, stripePrice } = data
-  const { id, unit_amount, product } = stripePrice
+  const { productData, productImages, productThumbnails } = data
   const { coverColor } = params
-  const [currentPageSide, setCurrentPageSide] = useState("left")
+  const [currentPageSide, setCurrentPageSide] = useState("right")
+  const canvasPageSize = {
+    height: 816,
+    width: 528,
+  }
   const [bookData, setBookData] = useState({
-    ...products,
+    ...productData,
     coverColor: coverColor,
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -33,7 +38,7 @@ const ProductPage = ({ data, params }) => {
     opacity: 1,
     thickness: 0.088,
     dotRadius: 0.6,
-    rows: 43,
+    rows: 42,
     columns: 27,
     marginTop: 2.273,
     marginBottom: 0,
@@ -44,9 +49,30 @@ const ProductPage = ({ data, params }) => {
     pageHeight: bookData.heightPixel - convertToPx(6.35),
     pageWidth: bookData.widthPixel - convertToPx(13.335),
   })
-  const canvasSize = {
-    height: 688,
-    width: 445,
+  const [leftPages, setLeftPages] = useState({})
+  const [rightPages, setRightPages] = useState({})
+  const [pageContentSize, setPageContentSize] = useState({})
+  const [activeImages, setActiveImages] = useState([])
+  const [cartThumbnail, setCartThumbnail] = useState([])
+  const workingPageHeight = canvasPageSize.height - convertToPx(6.35)
+  const workingPageWidth = canvasPageSize.width - convertToPx(13.335)
+
+  function parseImages(images, color, thumbnails) {
+    // filter images by the specified color
+    const dummyArray = []
+    const filteredImages = images.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
+    const filteredThumbnails = thumbnails.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
+    const firstThumbnail = filteredThumbnails[0].childImageSharp
+
+    filteredImages.forEach((img, index) => {
+      dummyArray.push({
+        original: img.childImageSharp.fluid.src,
+        thumbnail: filteredThumbnails[index].childImageSharp.fluid.src,
+      })
+    })
+
+    setCartThumbnail(firstThumbnail)
+    setActiveImages(dummyArray)
   }
 
   useEffect(() => {
@@ -56,7 +82,7 @@ const ProductPage = ({ data, params }) => {
       // redirect the user to the first color by default
       navigate(`/products/${bookData.category}/${bookData.slug}/${defaultCoverColor}`, { replace: true })
       setBookData({
-        ...products,
+        ...productData,
         coverColor: defaultCoverColor
       })
     }
@@ -64,6 +90,8 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
+
+    parseImages(productImages, bookData.coverColor, productThumbnails)
   }, [bookData.coverColor])
 
   return (
@@ -77,41 +105,54 @@ const ProductPage = ({ data, params }) => {
               <SectionContent>
                 <Grid
                   columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.xlarge}
+                  columnGap={spacing.medium}
                 >
-                  <Cell width={3}>
+                  <Cell width={4}>
                     {selectedTemplate.show ? (
                       <Flexbox
                         flex="flex"
                       >
                         <Templatesbar
+                          canvasPageSize={canvasPageSize}
+                          currentPageSide={currentPageSide}
+                          pageContentSize={pageContentSize}
                           pageData={selectedTemplate}
-                          setPageData={setSelectedTemplate}
                           selectedPageSvg={selectedPageSvg}
+                          setCurrentPageSide={setCurrentPageSide}
+                          setLeftPages={setLeftPages}
+                          setPageData={setSelectedTemplate}
+                          setRightPages={setRightPages}
                         />
                         <Template
                           bookData={bookData}
-                          canvasSize={canvasSize}
+                          canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
                           pageData={selectedTemplate}
+                          setPageContentSize={setPageContentSize}
                           setPageData={setSelectedTemplate}
                           setSelectedPageSvg={setSelectedPageSvg}
+                          workingPageHeight={workingPageHeight}
+                          workingPageWidth={workingPageWidth}
                         />
                       </Flexbox>
                     ) : (
-                      <StaticImage
-                        src="../images/index-image-2.jpg"
-                        alt="Notesmith notebooks"
-                        placeholder="blurred"
-                        quality={100}
-                      />
+                      <div>
+                        <ImageGallery
+                          items={activeImages}
+                          thumbnailPosition="left"
+                          showPlayButton={false}
+                          showNav={false}
+                          showBullets={true}
+                          showFullscreenButton={false}
+                        />
+                      </div>
                     )}
                   </Cell>
                   <Cell width={2}>
                     <ProductInfo
                       bookData={bookData}
+                      cartThumbnail={cartThumbnail}
                       setBookData={setBookData}
-                      stripeData={data.stripePrice}
                       selectedTemplate={selectedTemplate}
                       setSelectedTemplate={setSelectedTemplate}
                     />
@@ -127,19 +168,8 @@ const ProductPage = ({ data, params }) => {
 }
 
 export const pageQuery = graphql`
-  query ProductPageQuery($product__metadata__slug: String!) {
-    stripePrice(product: {metadata: {slug: { eq: $product__metadata__slug }}}) {
-      id,
-      unit_amount,
-      currency,
-      product {
-        id
-        name
-        description
-        images
-      }
-    }
-    products: productsJson(slug: { eq: $product__metadata__slug}) {
+  query ProductPageQuery($id: String!, $slug: String!) {
+    productData: productsJson(id: { eq: $id }) {
       camelName
       category
       description
@@ -160,6 +190,36 @@ export const pageQuery = graphql`
         name
         hex
         slug
+      }
+    }
+    productImages: allFile(filter: { relativeDirectory: { eq: $slug }}) {
+      nodes {
+        childImageSharp {
+          fluid {
+            src
+            originalName
+          }
+          gatsbyImageData(
+            width: 839
+            placeholder: BLURRED
+            formats: [AUTO, WEBP, AVIF]
+          )
+        }
+      }
+    }
+    productThumbnails: allFile(filter: { relativeDirectory: { eq: $slug }}) {
+      nodes {
+        childImageSharp {
+          fluid {
+            src
+            originalName
+          }
+          gatsbyImageData(
+            width: 100
+            placeholder: BLURRED
+            formats: [AUTO, WEBP, AVIF]
+          )
+        }
       }
     }
   }

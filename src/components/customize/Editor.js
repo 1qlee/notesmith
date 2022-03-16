@@ -30,6 +30,10 @@ const Editor = ({ bookId, productData, productImageData }) => {
     width: 1456,
     height: 919,
   })
+  const canvasPageSize = {
+    height: 816,
+    width: 528,
+  }
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
@@ -44,11 +48,13 @@ const Editor = ({ bookId, productData, productImageData }) => {
     pageWidth: bookData.widthPixel - convertToPx(13.335),
     rows: 43,
     spacing: 5,
+    show: false,
     template: "",
     templateSize: {},
     thickness: 0.175,
     width: 1,
   })
+  const [pageContentSize, setPageContentSize] = useState({})
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
@@ -201,20 +207,24 @@ const Editor = ({ bookId, productData, productImageData }) => {
               setSelectedPage={setSelectedPage}
             />
             <Canvas
-              canvasPages={canvasPages}
-              canvasSize={canvasSize}
               bookData={bookData}
+              canvasPages={canvasPages}
+              canvasPageSize={canvasPageSize}
+              canvasSize={canvasSize}
               pageData={pageData}
+              setPageContentSize={setPageContentSize}
               selectedPage={selectedPage}
-              setSelectedPageSvg={setSelectedPageSvg}
               setPageData={setPageData}
+              setSelectedPageSvg={setSelectedPageSvg}
             />
             <Controls
               bookData={bookData}
               canvasPages={canvasPages}
+              canvasPageSize={canvasPageSize}
               pageData={pageData}
               productData={productData}
               productImageData={productImageData}
+              pageContentSize={pageContentSize}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
               setBookData={setBookData}

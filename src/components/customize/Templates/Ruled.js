@@ -38,6 +38,7 @@ function Ruled({
 
       // loop will exit if the last line has passed the height of the page
       if (lineY > pageData.pageHeight) {
+        console.log(lineY, pageData.pageHeight)
         // change the number of rows displayed
         setPageData({
           ...pageData,

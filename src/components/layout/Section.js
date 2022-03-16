@@ -4,7 +4,7 @@ import { colors, spacing, widths } from "../../styles/variables"
 const SectionMain = styled.main`
   background-color: ${colors.paper.offWhite};
   position: relative;
-  padding: 6rem 0 0;
+  padding: 0;
   height: 100%;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;

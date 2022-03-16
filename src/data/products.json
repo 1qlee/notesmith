@@ -18,13 +18,43 @@
     "widthPixel": 528,
     "colors": [
       {
-        "slug": "bright-white",
-        "name": "Bright White",
+        "slug": "white",
+        "name": "White",
         "hex": "#fff"
       },
       {
-        "slug": "deep-black",
-        "name": "Deep Black",
+        "slug": "black",
+        "name": "Black",
+        "hex": "#000"
+      }
+    ]
+  },
+  {
+    "camelName": "wiredNotebookA4",
+    "category": "notebooks",
+    "description": "One signature, custom-printed Notesmith wired notebook with your fully custom layouts on every page. Our notebooks are made-to-order especially for you and are made with fountain pen friendly paper.",
+    "heightInch": "8.5",
+    "heightPixel": 816,
+    "name": "Wired Notebook A4",
+    "numOfPages": 140,
+    "paperColor": "Bright white",
+    "paperTooth": "Ultra smooth",
+    "paperWeight": "70lb",
+    "price": 2000,
+    "size": "A5",
+    "slug": "wired-notebook-a4",
+    "stripePriceId": "price_1IbAlnIN24Fw2SWdOVRXdimr",
+    "widthInch": "5.5",
+    "widthPixel": 528,
+    "colors": [
+      {
+        "slug": "orange",
+        "name": "Orange",
+        "hex": "#FFA500"
+      },
+      {
+        "slug": "black",
+        "name": "Black",
         "hex": "#000"
       }
     ]

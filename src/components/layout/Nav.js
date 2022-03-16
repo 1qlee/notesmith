@@ -3,10 +3,9 @@ import PropTypes from "prop-types"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
-import { Tote } from "phosphor-react"
+import { ShoppingBag } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
-import { InstagramLogo } from "phosphor-react"
 
 import Button from "../Button"
 import Icon from "../Icon"
@@ -14,7 +13,8 @@ import Logo from "../Logo"
 
 const StyledNav = styled.nav`
   background-color: ${colors.white};
-  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
 `
 
 const NavSection = styled.div`
@@ -38,8 +38,8 @@ const NavItem = styled.div`
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   transition: color 0.1s, background-color 0.1s;
   &:hover {
-    background-color: ${colors.primary.sixHundred};
-    color: ${colors.gray.oneHundred};
+    text-decoration: underline;
+    cursor: pointer;
   }
 `
 
@@ -47,68 +47,11 @@ const HorizontalNav = styled.div`
   background-color: ${colors.paper.offWhite};
   display: ${props => props.hideNavbar ? "none" : "flex"};
   align-items: center;
-  position: fixed;
+  position: relative;
   justify-content: space-between;
-  left: 50%;
-  height: 82px;
-  transform: translateX(-50%);
   width: 100%;
-  padding: 0 2rem;
-  z-index: 9;
   @media only screen and (max-width: ${widths.tablet}) {
     padding-left: 0;
-  }
-`
-
-const VerticalNav = styled.div`
-  background-color: ${colors.primary.sixHundred};
-  height: 100%;
-  position: fixed;
-  width: 80px;
-  z-index: 10;
-  @media only screen and (max-width: ${widths.tablet}) {
-    width: 100%;
-    height: 1rem;
-  }
-`
-
-const VerticalNavInnerBox = styled.div`
-  background-color: ${colors.paper.cream};
-  box-shadow: 1px 0 4px ${colors.shadow.float};
-  height: 100%;
-  left: 0;
-  text-align: center;
-  padding-top: 1rem;
-  position: relative;
-  width: 80px;
-  @media only screen and (max-width: ${widths.tablet}) {
-    height: 1rem;
-    width: 100%;
-    padding-top: 0;
-    display: flex;
-    align-items: center;
-  }
-`
-
-const VerticalNavItem = styled.div`
-  white-space: nowrap;
-  transform: rotate(90deg);
-  &:first-child {
-    margin-top: 96px;
-  }
-  @media only screen and (max-width: ${widths.tablet}) {
-    transform: rotate(0deg);
-  }
-`
-
-const VerticalNavFooter = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 1rem;
-  @media only screen and (max-width: ${widths.tablet}) {
-    display: none;
   }
 `
 
@@ -145,13 +88,35 @@ const ChapterNameHeader = styled.div`
 
 const NavLogo = styled.div`
   width: 160px;
-  height: 80px;
+  padding: 1rem 0;
   transition: background-color 0.1s;
   &:hover {
     svg {
       stroke: ${colors.primary.sixHundred};
     }
   }
+`
+
+const CartCounterWrapper = styled.div`
+  position: relative;
+`
+
+const CartCounter = styled.div`
+  min-height: 1rem;
+  min-width: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  line-height: .5rem;
+  font-size: 0.625rem;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  background-color: ${colors.primary.sixHundred};
+  color: ${colors.primary.white};
+  border-radius: 4px;
+  position: absolute;
+  left: calc(100% - 0.25rem);
+  top: -0.9rem;
 `
 
 function Nav(props) {
@@ -169,53 +134,56 @@ function Nav(props) {
         {!loading && (
           <>
             <NavSection justifycontent="center">
-              <Link to="/products/">
-                <NavItem>Shop</NavItem>
-              </Link>
+              <NavItem
+                as={Link}
+                to="/products/"
+              >
+                Shop
+              </NavItem>
               {user ? (
                 <>
-                  <Link to="/app/dashboard">
-                    <NavItem>
-                      Dashboard
-                    </NavItem>
-                  </Link>
+                  <NavItem
+                    as={Link}
+                    to="/app/dashboard"
+                  >
+                    Dashboard
+                  </NavItem>
                   <NavItem
                     onClick={() => signOut()}
+                    as="a"
                   >
                     Sign out
                   </NavItem>
                 </>
               ) : (
                 <>
-                  <Link to="/signin">
-                    <NavItem>
-                      Sign in
-                    </NavItem>
-                  </Link>
-                  <Link to="/signup">
-                    <NavItem className="last-item">
-                      Sign Up
-                    </NavItem>
-                  </Link>
+                  <NavItem
+                    as={Link}
+                    to="/signin"
+                  >
+                    Sign in
+                  </NavItem>
+                  <NavItem
+                    as={Link}
+                    to="/signup"
+                    className="last-item"
+                  >
+                    Sign Up
+                  </NavItem>
                 </>
               )}
             </NavSection>
-            <Button
-              className="has-icon"
-              backgroundcolor={colors.primary.sixHundred}
-              color={colors.gray.oneHundred}
+            <NavItem
               as={Link}
               to="/cart"
             >
-              <Icon>
-                <Tote size="1.5rem" />
-              </Icon>
-              {cartCount === 1 ? (
-                <span>{cartCount} item</span>
-              ) : (
-                <span>{cartCount} items</span>
-              )}
-            </Button>
+              <CartCounterWrapper
+                cartCount={cartCount}
+              >
+                Cart
+                <CartCounter>{cartCount}</CartCounter>
+              </CartCounterWrapper>
+            </NavItem>
           </>
         )}
       </HorizontalNav>

@@ -36,7 +36,7 @@ const AlignmentButton = styled(Button)`
 function AlignmentControls({ pageData, setPageData, changeAlignment }) {
   return (
     <>
-      <StyledLabel>Horizontal Alignment</StyledLabel>
+      <StyledLabel>Horizontal alignment</StyledLabel>
       <AlignmentButtonWrapper>
         <AlignmentButton
           backgroundcolor={colors.white}
@@ -69,7 +69,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           Right
         </AlignmentButton>
       </AlignmentButtonWrapper>
-      <StyledLabel>Vertical Alignment</StyledLabel>
+      <StyledLabel>Vertical alignment</StyledLabel>
       <AlignmentButtonWrapper>
         <AlignmentButton
           backgroundcolor={colors.white}

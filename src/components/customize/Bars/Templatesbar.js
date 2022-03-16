@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors, convertToMM } from "../../../styles/variables"
-import { CaretDown, ArrowRight } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
 import PageIcons from "../PageIcons"
 import Content from "../../Content"
 import Button from "../../Button"
@@ -30,28 +29,58 @@ const FloatingTemplatesbar = styled.div`
   background-color: ${colors.white};
   margin-right: 2rem;
   width: 300px;
-  height: 100%;
+  height: 688px;
   z-index: 10;
   border-radius: 0 0.25rem 0.25rem 0;
   box-shadow: 8px 0 16px ${colors.shadow.float};
 `
 
+const PageIcon = styled.div`
+  align-items: center;
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.gray.threeHundred};
+  display: flex;
+  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-size: 0.825rem;
+  justify-content: center;
+  padding: 0.5rem;
+  transition: border-color 0.2s, background-color 0.2s;
+  margin: ${props => props.margin};
+  &:hover {
+    border-color: ${colors.gray.sixHundred};
+    background-color: ${colors.primary.hover};
+    cursor: pointer;
+  }
+  &.is-active {
+    background-color: ${colors.primary.sixHundred};
+    color: ${colors.primary.white};
+  }
+`
+
 function Templatesbar({
+  canvasPageSize,
+  currentPageSide,
   pageData,
+  pageContentSize,
   selectedPageSvg,
+  setCurrentPageSide,
+  setLeftPages,
   setPageData,
+  setRightPages,
   setShowModal,
 }) {
   const [loading, setLoading] = useState(false)
-  const lineWidthMM = convertToMM(pageData.pageWidth)
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
-  const templateHeight = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().height : null
-  const templateWidth = selectedPageSvg ? selectedPageSvg.getBoundingClientRect().width : null
+
+  useEffect(() => {
+
+  }, [pageContentSize])
 
   if (pageData.show) {
     return (
       <FloatingTemplatesbar>
+        <p>{pageContentSize.height}</p>
         <TextLink
           color={colors.gray.sixHundred}
           hovercolor={colors.gray.nineHundred}
@@ -75,40 +104,47 @@ function Templatesbar({
           flexdirection="column"
           justifycontent="space-between"
           borderradius="0.25rem"
+          height="calc(100% - 49px)"
           margin="0 0 0 auto"
         >
           <TemplatesContent>
             <Content
               headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
               h3fontsize="0.75rem"
-              margin="0"
+              h3margin="0 0 0.5rem 0"
+              margin="0 0 1rem 0"
             >
-              <h3>Page layout</h3>
+              <h3>Page side</h3>
+              <Flexbox
+                flex="flex"
+                margin="0"
+              >
+                <PageIcon
+                  margin="0 0.5rem 0 0"
+                  className={currentPageSide === "left" ? "is-active" : null}
+                  onClick={() => setCurrentPageSide("left")}
+                >
+                  L
+                </PageIcon>
+                <PageIcon
+                  margin="0 0.5rem 0 0"
+                  className={currentPageSide === "right" ? "is-active" : null}
+                  onClick={() => setCurrentPageSide("right")}
+                >
+                  R
+                </PageIcon>
+              </Flexbox>
             </Content>
-            <Flexbox
-              flex="flex"
-              flexwrap="wrap"
-              alignitems="center"
-              margin="0 0 2rem 0"
-            >
-              <PageIcons
-                checkActiveVar={pageData.template}
-                data={pageData}
-                iconMargin="0 0.5rem"
-                setData={setPageData}
-                showLabels={false}
-              />
-            </Flexbox>
             {pageData.template !== "blank" && pageData.template !== "none" && (
               <>
                 {pageData.template === "ruled" && (
                   <RuledControls
-                    pageData={pageData}
-                    setPageData={setPageData}
+                    canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
-                    templateHeight={templateHeight}
-                    templateWidth={templateWidth}
+                    pageData={pageData}
+                    setPageData={setPageData}
+                    pageContentSize={pageContentSize}
                   />
                 )}
                 {pageData.template === "dot" && (
@@ -117,8 +153,7 @@ function Templatesbar({
                     setPageData={setPageData}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
-                    templateHeight={templateHeight}
-                    templateWidth={templateWidth}
+                    pageContentSize={pageContentSize}
                   />
                 )}
                 {pageData.template === "graph" && (
@@ -127,8 +162,7 @@ function Templatesbar({
                     setPageData={setPageData}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
-                    templateHeight={templateHeight}
-                    templateWidth={templateWidth}
+                    pageContentSize={pageContentSize}
                   />
                 )}
               </>
@@ -149,6 +183,7 @@ function Templatesbar({
               padding="1rem"
               width="100%"
               disabled={pageData.template === "none" ? true : false}
+              onClick={() => currentPageSide === "left" ? setLeftPages(pageData) : setRightPages(pageData)}
             >
               Apply template
             </Button>
@@ -175,6 +210,7 @@ function Templatesbar({
           >
             <PageIcons
               checkActiveVar={pageData.template}
+              isProductPage={false}
               setData={setPageData}
               data={pageData}
               showLabels={true}
@@ -184,12 +220,12 @@ function Templatesbar({
             <>
               {pageData.template === "ruled" && (
                 <RuledControls
-                  pageData={pageData}
-                  setPageData={setPageData}
+                  canvasPageSize={canvasPageSize}
                   maximumMarginHeight={maximumMarginHeight}
                   maximumMarginWidth={maximumMarginWidth}
-                  templateHeight={templateHeight}
-                  templateWidth={templateWidth}
+                  pageData={pageData}
+                  setPageData={setPageData}
+                  pageContentSize={pageContentSize}
                 />
               )}
               {pageData.template === "dot" && (
@@ -198,8 +234,7 @@ function Templatesbar({
                   setPageData={setPageData}
                   maximumMarginHeight={maximumMarginHeight}
                   maximumMarginWidth={maximumMarginWidth}
-                  templateHeight={templateHeight}
-                  templateWidth={templateWidth}
+                  pageContentSize={pageContentSize}
                 />
               )}
               {pageData.template === "graph" && (
@@ -208,8 +243,7 @@ function Templatesbar({
                   setPageData={setPageData}
                   maximumMarginHeight={maximumMarginHeight}
                   maximumMarginWidth={maximumMarginWidth}
-                  templateHeight={templateHeight}
-                  templateWidth={templateWidth}
+                  pageContentSize={pageContentSize}
                 />
               )}
             </>
