@@ -4,10 +4,12 @@ import { navigate } from "gatsby"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { ArrowLeft } from "phosphor-react"
+import { ArrowLeft, CheckSquare, Square } from "phosphor-react"
+import { useFirebaseContext } from "../../utils/auth"
 
 import { Flexbox } from "../layout/Flexbox"
-import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
+import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
+import ShippingInfo from "./ShippingInfo"
 import Button from "../Button"
 import Icon from "../Icon"
 import Loading from "../../assets/loading.svg"
@@ -34,42 +36,49 @@ const cardOptions = {
 
 const cardElementStyle = {
   backgroundColor: `${colors.white}`,
-  padding: "1rem",
+  border: `1px solid ${colors.gray.threeHundred}`,
   borderRadius: "0.25rem",
-  boxShadow: `0 1px 2px ${colors.shadow.float}`,
-  marginBottom: "1rem"
+  marginBottom: "0.5rem",
+  padding: "1rem",
 }
 
 const cardElementErrorStyle = {
+  backgroundColor: `${colors.white}`,
+  border: `1px solid ${colors.red.sixHundred}`,
+  borderRadius: "0.25rem",
+  marginBottom: "0.5rem",
   padding: "1rem",
-  boxShadow: `0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite}`,
-  marginBottom: "1rem"
 }
 
 const CardDetailsWrapper = styled.div`
   &.is-focused {
-    box-shadow: 0 0 0 1px ${colors.primary.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
+    border-color: ${colors.gray.sixHundred};
   }
 `
 
 function CheckoutForm({
   address,
-  authKey,
   clientSecret,
   customer,
+  pid,
   processing,
   selectedRate,
   setActiveTab,
-  setAddress,
-  setCustomer,
+  setLoading,
+  setPaymentProcessing,
   setProcessing,
+  setShippingMethod,
+  setShowShippingMethod,
+  shipmentId,
+  shippingMethod,
   taxRate,
 }) {
-  const { clearCart } = useShoppingCart()
   const [error, setError] = useState(null)
   const [focused, setFocused] = useState(false)
-  const stripe = useStripe()
+  const { clearCart, cartDetails } = useShoppingCart()
+  const { user, firebaseDb } = useFirebaseContext()
   const elements = useElements()
+  const stripe = useStripe()
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -77,15 +86,39 @@ function CheckoutForm({
     setError(event.error ? event.error.message : "")
   }
 
+  // save each order item to the database
+  const saveOrderItems = async (cartItems, orderData) => {
+    let cartItemsObject = {}
+    // loop through all items in the cart
+    for (const cartItem in cartItems) {
+      const cartItemId = cartItems[cartItem].id
+      // save each cart item's ID to our dummy object so we can save it to the order later
+      cartItemsObject[cartItemId] = true
+      // save each item into the database by its id
+      await firebaseDb.ref(`/orderItems/${cartItemId}`).set({
+        ...cartItems[cartItem],
+        pid: pid, // need pid to link the item to the order
+      }).catch(error => {
+        console.error("Error writing order items to the database.")
+      })
+    }
+
+    // save the order to the database by its pid
+    await firebaseDb.ref(`/orders/${pid}`).set({
+      ...orderData,
+      pid: pid,
+      orderItems: cartItemsObject,
+    })
+  }
+
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
-    const pid = localStorage.getItem("pid")
     e.preventDefault()
     // show processing UI state
     setProcessing(true)
 
     // send the payment details to Stripe
-    const payload = await stripe.confirmCardPayment(clientSecret, {
+    await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
         billing_details: {
@@ -96,53 +129,65 @@ function CheckoutForm({
       receipt_email: customer.email,
     }).then(res => {
       if (res.error) {
-        setError(res.error.message)
-        setProcessing(false)
+        throw res.error
       }
-      else {
-        // clear errors, cart, localStorage
-        setError(null)
-        clearCart()
-        localStorage.removeItem("pid")
 
-        navigate(`/orders/${pid}?key=${authKey}`, {
-          state: {
-            msg: "Congratulations, your order has been successfully completed! We will get started on preparing your order right away. Please note that it may take 5 to 10 business days for our custom products to ship."
-          }
-        })
-      }
+      // buy the shipping label from easypost
+      purchaseShippingLabel(res.paymentIntent.created)
+    }).catch(error => {
+      setError(error.message)
+      setProcessing(false)
     })
   }
 
-  const purchaseShippingLabel = async () => {
-    const pid = localStorage.getItem("pid")
+  const purchaseShippingLabel = async (createdDate) => {
+    // shows loader
+    setPaymentProcessing(true)
 
-    const shippingLabel = await fetch("/.netlify/functions/create-shipping", {
+    const shippingLabel = await fetch("/.netlify/functions/create-shipment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        rateId: selectedRate,
-        pid: pid
+        pid: pid,
       })
     }).then(res => {
-      // clear errors, cart, localStorage
+      return res.json()
+    }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+
+      const trackingCode = data.shippingLabel.tracking_code
+      const { trackingUrl, totalAmount, authKey, taxRate, shippingRate } = data
+      const orderData = {
+        address: address,
+        customer: customer,
+        shippingRate: shippingRate,
+        taxRate: taxRate,
+        totalAmount: totalAmount,
+        authKey: authKey,
+        createdDate: createdDate,
+        tracking:  {
+          code: trackingCode,
+          url: trackingUrl
+        },
+      }
+
+      saveOrderItems(cartDetails, orderData)
+
+      // remove items from cart and clear pid from localStorage
       setError(null)
       clearCart()
       localStorage.removeItem("pid")
-
-      return res.json()
-    }).then(data => {
-      const trackingCode = data.shippingLabel.tracking_code
-      const { trackingUrl, totalAmount, authKey } = data
 
       // redirect the user to the orders summary page
       navigate(`/orders/${pid}?key=${authKey}`, {
         state: {
           address: address,
           customer: customer,
-          shippingRate: selectedRate,
+          shippingRate: shippingRate,
           taxRate: taxRate,
           totalAmount: totalAmount,
           tracking:  {
@@ -151,8 +196,8 @@ function CheckoutForm({
           }
         }
       })
-    }).catch(err => {
-      console.log(err)
+    }).catch(error => {
+      setError(error)
     })
   }
 
@@ -161,6 +206,13 @@ function CheckoutForm({
       onSubmit={submitPaymentForm}
       id="checkout-payment-form"
     >
+      <ShippingInfo
+        address={address}
+        customer={customer}
+        setActiveTab={setActiveTab}
+        shippingMethod={shippingMethod}
+        setShowShippingMethod={setShowShippingMethod}
+      />
       <StyledFieldset>
         <StyledLabel htmlFor="card-element">Card Information</StyledLabel>
       </StyledFieldset>
@@ -189,13 +241,19 @@ function CheckoutForm({
         flex="flex"
         justifycontent="space-between"
         alignitems="center"
+        margin="2rem 0 0"
       >
         <TextLink
-          color={colors.gray.sixHundred}
-          hovercolor={colors.gray.nineHundred}
+          color={colors.primary.threeHundred}
+          hovercolor={colors.primary.sixHundred}
           className="has-icon"
           alignitems="flex-end"
-          onClick={() => setActiveTab(2)}
+          onClick={() => {
+            setActiveTab(1)
+            setProcessing(false)
+            setShowShippingMethod(true)
+            setShippingMethod(null)
+          }}
         >
           <Icon>
             <ArrowLeft size="1rem" />
@@ -206,7 +264,7 @@ function CheckoutForm({
           backgroundcolor={colors.primary.sixHundred}
           className={processing ? "is-loading" : null}
           color={colors.white}
-          disabled={error || processing}
+          disabled={error || processing || !taxRate}
           form="checkout-payment-form"
           id="submit"
           padding="1rem"

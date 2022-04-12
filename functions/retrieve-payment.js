@@ -7,26 +7,24 @@ exports.handler = async (event) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    let isPaymentPaid;
-
     // if a charge exists on this paymentIntent, return it to the client
     // the client will then create a new paymentIntent instead
-    if (paymentIntent.charges.data[0]) {
-      isPaymentPaid = paymentIntent.charges.data[0].paid;
-    }
+    const isPaymentPaid = paymentIntent.charges.data[0] ? paymentIntent.charges.data[0].paid : null;
 
+    console.log(`Found and retrieved paymentIntent: ${pid}`);
     return {
       statusCode: 200,
       body: JSON.stringify({
-        isPaymentPaid: isPaymentPaid || null,
-        paymentIntent: paymentIntent
+        isPaymentPaid: isPaymentPaid,
+        paymentIntent: paymentIntent,
       })
     }
   } catch (error) {
+    console.error(`Could not find paymentIntent: ${pid}`);
     return {
       statusCode: 400,
       body: JSON.stringify({
-        msg: "Could not retrieve your order information. Please clear your cart and try again."
+        msg: "We could not retrieve your order information. Please clear your cart and try again."
       })
     }
   }

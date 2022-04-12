@@ -1,19 +1,17 @@
 import React, { useState } from "react"
-import { graphql, Link, navigate } from "gatsby"
-import { colors, spacing } from "../../styles/variables"
+import { Link, navigate } from "gatsby"
+import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { ArrowRight } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid';
 import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"
-import { QuantityTracker, StyledFieldset, StyledLabel, SelectWrapper, StyledSelect, SelectIcon } from "../form/FormComponents"
+import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import { Grid, Cell } from "styled-css-grid"
 import PageIcons from "../customize/PageIcons"
 import ColorPicker from "./ColorPicker"
 import Notification from "../ui/Notification"
-import Tag from "../ui/Tag"
 import Icon from "../Icon"
 import Button from "../Button"
 import Content from "../Content"
@@ -21,6 +19,8 @@ import Content from "../Content"
 const ProductInfo = ({
   bookData,
   cartThumbnail,
+  leftPageData,
+  rightPageData,
   setBookData,
   selectedTemplate,
   setSelectedTemplate,
@@ -35,14 +35,18 @@ const ProductInfo = ({
       // use-shopping-cart function to add items to cart
       resolve(
         addItem({
+          category: bookData.category,
+          coverColor: bookData.coverColor,
+          currency: "USD",
+          id: uuidv4(), // unique cart item id
+          image: cartThumbnail,
+          leftPageData: leftPageData,
           name: bookData.name,
-          id: uuidv4(),
           price_id: bookData.stripePriceId,
           price: bookData.price,
-          currency: "USD",
-          coverColor: bookData.coverColor,
+          rightPageData: rightPageData,
           slug: bookData.slug,
-          image: cartThumbnail,
+          weight: bookData.weight,
         }, {count: itemQuantity})
       )
     })
@@ -160,13 +164,13 @@ const ProductInfo = ({
           paragraphfontsize="0.825rem"
           paragraphcolor={colors.gray.sevenHundred}
         >
-          <p>Free shipping for orders over $40</p>
+          <p>Free shipping for orders over $60</p>
           <p>30 day return policy</p>
         </Content>
       </Flexbox>
       <Notification
-        backgroundcolor={colors.paper.offWhite}
-        bordercolor={colors.primary.sixHundred}
+        backgroundcolor={colors.white}
+        bordercolor={colors.gray.threeHundred}
         margin="0 0 2rem"
         padding="1rem"
       >

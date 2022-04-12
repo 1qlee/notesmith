@@ -439,7 +439,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section
-          backgroundcolor={colors.paper.offWhite}
+          backgroundcolor={colors.white}
         >
           <Container>
             <LayoutContainer>

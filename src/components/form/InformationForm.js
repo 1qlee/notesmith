@@ -4,6 +4,7 @@ import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { useFirebaseContext } from "../../utils/auth"
 import { ArrowLeft, CaretDown } from "phosphor-react"
+import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector'
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"
@@ -13,17 +14,19 @@ import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
 function InformationForm({
-  setActiveTab,
-  setFormError,
-  setShowModal,
-  setProcessing,
-  setAddress,
-  setCustomer,
-  setLoading,
-  processing,
-  customer,
   address,
-  loading
+  customer,
+  loading,
+  processing,
+  setAddress,
+  setAddressError,
+  setCustomer,
+  setFormError,
+  setLoading,
+  setProcessing,
+  setShowModal,
+  setShowShippingMethod,
+  showShippingMethod,
 }) {
   const { cartDetails } = useShoppingCart()
   const [nameError, setNameError] = useState("")
@@ -32,9 +35,44 @@ function InformationForm({
   const [cityError, setCityError] = useState("")
   const [stateError, setStateError] = useState("")
   const [postalError, setPostalError] = useState("")
+  const whiteList = [
+    "AR",
+    "AT",
+    "AU",
+    "BE",
+    "BR",
+    "CA",
+    "CH",
+    "CN",
+    "DE",
+    "DK",
+    "ES",
+    "FI",
+    "FR",
+    "GB",
+    "GR",
+    "HU",
+    "ID",
+    "IE",
+    "IL",
+    "IN",
+    "IS",
+    "IT",
+    "JP",
+    "KR",
+    "LU",
+    "MX",
+    "NL",
+    "NO",
+    "PH",
+    "PT",
+    "SE",
+    "US",
+  ]
 
   // handle submitting the shipping form
   async function submitInformationForm(e) {
+    setFormError("")
     e.preventDefault()
     // show processing UI state
     setProcessing(true)
@@ -49,34 +87,26 @@ function InformationForm({
         address: address // send address from props
       })
     }).then(res => {
-      // parse the response object
-      const response = res.json()
-
-      // the response object is a Promise for some reason
-      response.then(obj => {
-        // if the response contains any errors, throw an Error
-        if (obj.errors) {
-          throw obj.errors
-        }
-        else {
-          return obj
-        }
-      }).then(data => {
-        // call the function to update paymentIntent with the user's information
-        updatePaymentInfo()
-      }).catch(err => {
-        setProcessing(false)
-        setFormError(err)
-        // modal will handle the error message(s)
-        setShowModal({
-          show: true
-        })
+      return res.json()
+    }).then(data => {
+      // data.errors is an array of error message strings
+      if (data.errors) {
+        throw data.errors
+      }
+      // call the function to update paymentIntent with the user's information
+      updatePaymentInfo()
+    }).catch(errors => {
+      setProcessing(false)
+      setAddressError(errors)
+      // modal will handle the error message(s)
+      setShowModal({
+        show: true
       })
-
     })
   }
 
   async function updatePaymentInfo() {
+    setFormError("")
     // update the paymentIntent with shipping form data
     const payment = await fetch("/.netlify/functions/create-payment", {
       method: "post",
@@ -84,25 +114,24 @@ function InformationForm({
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        productData: {...cartDetails}, // always send current cart items
+        cartItems: {...cartDetails}, // always send current cart items
         paymentId: localStorage.getItem("pid"), // need pid from localStorage to update the corresponding paymentIntent
         email: customer.email,
         address: {address: {...address}, name: customer.name}, // always send shipping information
         customer: customer
       })
     }).then(res => {
-      setFormError({
-        msg: ""
-      })
       return res.json()
     }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+
       setProcessing(false)
-      setActiveTab(2)
-    }).catch(err => {
+      setShowShippingMethod(true)
+    }).catch(error => {
       setProcessing(false)
-      setFormError({
-        msg: "Something went wrong processing your information."
-      })
+      setFormError(error)
     })
   }
 
@@ -137,9 +166,7 @@ function InformationForm({
 
   function onInputFocus(e) {
     const name = e.target.getAttribute("name")
-    setFormError({
-      msg: ""
-    })
+    setFormError("")
 
     switch(name) {
       case "name":
@@ -263,104 +290,70 @@ function InformationForm({
         />
       </StyledFieldset>
       <StyledFieldset
+        className="is-vertical"
+        margin="0 0 1rem 0"
+      >
+        <StyledLabel htmlFor="checkout-city">City</StyledLabel>
+        <StyledInput
+          id="checkout-city"
+          onBlur={e => validateInput(e)}
+          onFocus={e => onInputFocus(e)}
+          className={cityError && "is-error"}
+          name="city"
+          onChange={e => setAddress({...address, city: e.target.value})}
+          placeholder="New York"
+          required
+          type="text"
+          value={address.city}
+        />
+        {cityError && (
+          <ErrorLine
+            color={colors.red.sixHundred}
+          >
+            {cityError}
+          </ErrorLine>
+        )}
+      </StyledFieldset>
+      <StyledFieldset
         className="is-flex"
         margin="0 0 1rem 0"
       >
         <StyledFieldset
           className="is-vertical"
         >
-          <StyledLabel htmlFor="checkout-city">City</StyledLabel>
-          <StyledInput
-            id="checkout-city"
-            onBlur={e => validateInput(e)}
-            onFocus={e => onInputFocus(e)}
-            className={cityError && "is-error"}
-            name="city"
-            onChange={e => setAddress({...address, city: e.target.value})}
-            placeholder="New York"
-            required
-            type="text"
-            value={address.city}
-          />
-          {cityError && (
-            <ErrorLine
-              color={colors.red.sixHundred}
-            >
-              {cityError}
-            </ErrorLine>
-          )}
+          <SelectWrapper>
+            <StyledLabel htmlFor="checkout-country">Country</StyledLabel>
+            <StyledSelect
+              as={CountryDropdown}
+              id="checkout-country"
+              name="country"
+              onChange={value => setAddress({ ...address, country: value })}
+              required
+              value={address.country}
+              whitelist={whiteList}
+            />
+            <SelectIcon>
+              <CaretDown size="1rem" />
+            </SelectIcon>
+          </SelectWrapper>
         </StyledFieldset>
         <StyledFieldset
           className="is-vertical"
         >
           <SelectWrapper>
-            <StyledLabel htmlFor="checkout-state">State</StyledLabel>
+            <StyledLabel htmlFor="checkout-state">State / Region</StyledLabel>
             <StyledSelect
-              id="checkout-state"
+              as={RegionDropdown}
               className={stateError && "is-error"}
+              country={address.country}
+              disableWhenEmpty={true}
+              id="checkout-state"
               name="state"
-              onBlur={e => validateInput(e)}
-              onChange={e => setAddress({...address, state: e.target.value})}
-              onFocus={e => onInputFocus(e)}
-              placeholder="NY"
+              onChange={value => setAddress({ ...address, state: value })}
               required
-              type="email"
               value={address.state}
               width="100%"
-            >
-              <option default value="">- Select a state -</option>
-              <option value="AL">Alabama</option>
-              <option value="AK">Alaska</option>
-              <option value="AZ">Arizona</option>
-              <option value="AR">Arkansas</option>
-              <option value="CA">California</option>
-              <option value="CO">Colorado</option>
-              <option value="CT">Connecticut</option>
-              <option value="DE">Delaware</option>
-              <option value="DC">District Of Columbia</option>
-              <option value="FL">Florida</option>
-              <option value="GA">Georgia</option>
-              <option value="HI">Hawaii</option>
-              <option value="ID">Idaho</option>
-              <option value="IL">Illinois</option>
-              <option value="IN">Indiana</option>
-              <option value="IA">Iowa</option>
-              <option value="KS">Kansas</option>
-              <option value="KY">Kentucky</option>
-              <option value="LA">Louisiana</option>
-              <option value="ME">Maine</option>
-              <option value="MD">Maryland</option>
-              <option value="MA">Massachusetts</option>
-              <option value="MI">Michigan</option>
-              <option value="MN">Minnesota</option>
-              <option value="MS">Mississippi</option>
-              <option value="MO">Missouri</option>
-              <option value="MT">Montana</option>
-              <option value="NE">Nebraska</option>
-              <option value="NV">Nevada</option>
-              <option value="NH">New Hampshire</option>
-              <option value="NJ">New Jersey</option>
-              <option value="NM">New Mexico</option>
-              <option value="NY">New York</option>
-              <option value="NC">North Carolina</option>
-              <option value="ND">North Dakota</option>
-              <option value="OH">Ohio</option>
-              <option value="OK">Oklahoma</option>
-              <option value="OR">Oregon</option>
-              <option value="PA">Pennsylvania</option>
-              <option value="RI">Rhode Island</option>
-              <option value="SC">South Carolina</option>
-              <option value="SD">South Dakota</option>
-              <option value="TN">Tennessee</option>
-              <option value="TX">Texas</option>
-              <option value="UT">Utah</option>
-              <option value="VT">Vermont</option>
-              <option value="VA">Virginia</option>
-              <option value="WA">Washington</option>
-              <option value="WV">West Virginia</option>
-              <option value="WI">Wisconsin</option>
-              <option value="WY">Wyoming</option>
-            </StyledSelect>
+            />
             <SelectIcon>
               <CaretDown size="1rem" />
             </SelectIcon>
@@ -382,8 +375,8 @@ function InformationForm({
             className={postalError && "is-error"}
             name="postal_code"
             onBlur={e => validateInput(e)}
-            onChange={e => setAddress({...address, postal_code: e.target.value})}
             onFocus={e => onInputFocus(e)}
+            onChange={e => setAddress({...address, postal_code: e.target.value})}
             placeholder="12345"
             type="text"
             value={address.postal_code}
@@ -403,8 +396,8 @@ function InformationForm({
         alignitems="center"
       >
         <TextLink
-          color={colors.gray.sixHundred}
-          hovercolor={colors.gray.nineHundred}
+          color={colors.primary.threeHundred}
+          hovercolor={colors.primary.sixHundred}
           className="has-icon"
           alignitems="flex-end"
           as={Link}
@@ -424,7 +417,7 @@ function InformationForm({
           className={processing ? "is-loading" : null}
           form="checkout-shipping-form"
           type="submit"
-          width="200px"
+          width="11.75rem"
         >
           {processing ? (
             <Loading height="1rem" width="1rem" />

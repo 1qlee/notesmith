@@ -24,17 +24,17 @@ const loading = keyframes`
 `
 
 const StyledNotification = styled.div`
-  align-items: center;
+  align-items: ${props => props.alignitems || "center"};
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
   border-radius: 0.25rem;
   border: 1px solid ${props => props.bordercolor || colors.gray.threeHundred};
   color: ${props => props.color};
   display: flex;
-  justify-content: space-between;
-  transition: background-color 0.2s, color 0.2s;
-  padding: ${props => props.padding};
+  justify-content: ${props => props.justifycontent || "space-between"};
   margin: ${props => props.margin || "1rem 0"};
+  padding: ${props => props.padding};
+  transition: background-color 0.2s, color 0.2s;
   z-index: 8000;
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);

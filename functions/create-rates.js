@@ -2,13 +2,24 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 const easypostApi = require('@easypost/api');
 const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
+function calculateTotalWeight(cartItems) {
+  let totalWeight = 0;
+
+  for (let i = 0; i < cartItems.length; i++) {
+    const totalItemWeight = cartItems[i].weight * cartItems[i].quantity
+    totalWeight += totalItemWeight
+  };
+
+  return totalWeight;
+}
+
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { address, name, email, productData } = body;
-  let products = [];
+  const { address, name, email, cartItems } = body;
+  let cartItemsArray = [];
 
-  for (const product in productData) {
-    products.push(productData[product])
+  for (const cartItem in cartItems) {
+    cartItemsArray.push(cartItems[cartItem])
   };
 
   // always sending from our business address
@@ -18,7 +29,7 @@ exports.handler = async (event) => {
     city: 'Roslyn',
     state: 'NY',
     zip: '11576',
-    email: "general@notesmithbooks.com"
+    email: "general@notesmithbooks.com",
   });
 
   const toAddress = new easypost.Address({
@@ -26,15 +37,16 @@ exports.handler = async (event) => {
     street2: address.line2,
     city: address.city,
     state: address.state,
-    zip: address.postal_code
+    country: address.country,
+    zip: address.postal_code,
   });
 
   // physical package size
   const parcel = new easypost.Parcel({
-    length: 12,
-    width: 8.5,
-    height: 1,
-    weight: products[0].quantity * 2.8 * 2 // assumption that there is only one product
+    width: 9,
+    length: 6,
+    height: 2,
+    weight: calculateTotalWeight(cartItemsArray),  // assumption that there is only one product
   });
 
   // create a new easypost Shipment object
@@ -44,7 +56,9 @@ exports.handler = async (event) => {
     parcel: parcel,
     carrier_accounts: [
       "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
-      "ca_113990b2b7b94d4b9280cbe4fc0f4433"
+      "ca_113990b2b7b94d4b9280cbe4fc0f4433", // UPS
+      "ca_c1a5ccb5ccca4344b654fb98612fa8a9", // DHL
+      "ca_6f9cf63ed25945f098109d60bdc34358", // FedEx
     ]
   });
 
@@ -63,18 +77,21 @@ exports.handler = async (event) => {
     // this variable is an object containing info relevant to the rate
     const cheapestRate = ratesSortedDescending[0];
 
+    console.log("Successfully created and returned shipping rates to the user.");
     return {
       statusCode: 200,
       body: JSON.stringify({
         cheapestRate: cheapestRate,
+        allRates: ratesSortedDescending,
         shipmentId: shipmentId,
       })
     };
   } catch(error) {
+    console.error("Something went wrong when trying to create shipping rates.");
     return {
       statusCode: 400,
       body: JSON.stringify({
-        msg: "Something went wrong. Please refresh and try again."
+        error: "Something went wrong. Please refresh the page and try again."
       })
     }
   }

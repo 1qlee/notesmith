@@ -9,6 +9,7 @@ exports.handler = async (event) => {
   const authKey = cryptojs.MD5(pid);
 
    try {
+     console.log("Updating paymentIntent with the selected shipping information.");
      const paymentIntent = await stripe.paymentIntents.update(
        pid,
        {
@@ -20,6 +21,7 @@ exports.handler = async (event) => {
        }
      );
 
+     console.log("Successfully updated PI metadata with shipping information.");
      return {
        statusCode: 200,
        body: JSON.stringify({
@@ -28,10 +30,11 @@ exports.handler = async (event) => {
        })
      }
    } catch(error) {
+     console.error("Something went wrong when updating shipping information.");
      return {
        statusCode: 400,
        body: JSON.stringify({
-         msg: "Something went wrong when updating shipping information."
+         error: "Something went wrong when updating shipping information."
        })
      }
    }

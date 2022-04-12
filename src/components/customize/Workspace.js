@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const Workspace = styled.div`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   height: 100%;
   left: 164px;
   overflow: auto;

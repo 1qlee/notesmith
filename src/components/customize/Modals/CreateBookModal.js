@@ -66,7 +66,7 @@ function CreateBookModal({
           },
           "uid": user.uid,
         }).catch(error => {
-          console.log("error writing page to the database")
+          console.error("error writing page to the database")
         })
       }
 

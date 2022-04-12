@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import "../../../styles/toastify.css"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput } from "../../form/FormComponents"

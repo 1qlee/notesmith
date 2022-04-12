@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import 'react-toastify/dist/ReactToastify.css'
+import "../../../styles/toastify.css"
 import { colors } from "../../../styles/variables"
 import { svgToObjects } from "../../../utils/helper-functions"
 import { ToastContainer, toast } from 'react-toastify'
@@ -89,9 +89,6 @@ function ApplyTemplateModal({
     return firebaseDb.ref().update(updates, error => {
       if (error) {
         console.log(error)
-      }
-      else {
-        console.log(`Successfully updated ${pageId}`)
       }
     })
   }
@@ -191,6 +188,7 @@ function ApplyTemplateModal({
 
     // update canvasPages with the updated array clone
     setCanvasPages(canvasPagesClone)
+    toast.success("Succesfully updated pages!")
 
     setLoading(false)
     setShowModal({
@@ -258,21 +256,23 @@ function ApplyTemplateModal({
       <ModalHeader>Apply template to pages</ModalHeader>
       <ModalContent>
         <Notification
-          backgroundcolor={colors.paper.offWhite}
+          backgroundcolor={colors.red.twoHundred}
           bordercolor={colors.red.twoHundred}
           margin="0 0 2rem"
           padding="1rem"
         >
           <Icon
             backgroundcolor={colors.red.twoHundred}
-            padding="0.5rem"
             borderradius="100%"
             margin="0 1rem 0 0"
             className="is-pulsating"
+            pulseColor={colors.red.threeHundred}
           >
             <WarningCircle size="1.5rem" weight="fill" color={colors.red.sixHundred} />
           </Icon>
-          <Content>
+          <Content
+            paragraphcolor={colors.red.nineHundred}
+          >
             <p>Applying a template will remove all existing layouts and styles from these pages.</p>
             {user ? (
               null

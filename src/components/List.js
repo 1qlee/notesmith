@@ -9,7 +9,7 @@ const ListWrapper = styled.ul`
 
 const ListItem = styled.li`
   align-items: center;
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   border-left: ${props => props.dark ? `4px solid ${colors.primary.oneHundred}` : `4px solid ${colors.primary.sixHundred}`};
   box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
   color: ${props => props.dark ? colors.primary.oneHundred : colors.primary.sevenHundred};

@@ -15,11 +15,17 @@ function PageBackground({
       id={pageSide === "left" ? "page-background-left" : "page-background-right"}
       width={canvasPageSize.width}
       height={canvasPageSize.height}
-      x={pageSide === "left" ? "1" : canvasPageSize.width + 2}
-      y="1"
-      style={isSelected ? { outline: `1px solid ${colors.primary.sixHundred}` } : null}
+      x={pageSide === "left" ? "0" : canvasPageSize.width}
+      y="0"
     >
-      <rect width={canvasPageSize.width} height={canvasPageSize.height - 2} fill={colors.white}></rect>
+      <rect
+        width={canvasPageSize.width}
+        height={canvasPageSize.height}
+        fill={colors.white}
+        stroke={colors.gray.threeHundred}
+        strokeWidth="2px"
+        style={isSelected ? { stroke: colors.primary.sixHundred } : null}
+      ></rect>
       <Holes currentPageSide={pageSide} canvasPageSize={canvasPageSize} />
     </svg>
   )

@@ -6,7 +6,7 @@ import "./master.css"
 import { colors } from "../../styles/variables"
 
 const StyledLayout = styled.div`
-  background-color: ${props => props.backgroundcolor || colors.paper.offWhite};
+  background-color: ${props => props.backgroundcolor || colors.white};
   height: 100%;
   overflow-x: hidden;
   position: relative;

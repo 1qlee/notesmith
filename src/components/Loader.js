@@ -37,7 +37,7 @@ const moving = keyframes`
 `
 
 const LoaderWrapper = styled.div`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +102,7 @@ const StyledLoader = styled.div`
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
   animation-direction: reverse;
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   margin: 0 auto;
   text-align: center;
   height: 100%;

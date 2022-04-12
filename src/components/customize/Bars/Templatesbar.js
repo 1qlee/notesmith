@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors, convertToMM } from "../../../styles/variables"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
+import { svgToObjects } from "../../../utils/helper-functions"
+import "../../../styles/toastify.css"
+import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageIcons from "../PageIcons"
@@ -25,14 +28,20 @@ const TemplatesContent = styled.div`
   }
 `
 
+const TemplatesFooter = styled.div`
+  padding: 1rem;
+  border-radius: 0 0 0.25rem 0.25rem;
+  border-top: 1px solid ${colors.gray.threeHundred};
+`
+
 const FloatingTemplatesbar = styled.div`
   background-color: ${colors.white};
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.gray.threeHundred};
+  height: 688px;
   margin-right: 2rem;
   width: 300px;
-  height: 688px;
   z-index: 10;
-  border-radius: 0 0.25rem 0.25rem 0;
-  box-shadow: 8px 0 16px ${colors.shadow.float};
 `
 
 const PageIcon = styled.div`
@@ -64,12 +73,13 @@ function Templatesbar({
   pageContentSize,
   selectedPageSvg,
   setCurrentPageSide,
-  setLeftPages,
+  setLeftPageData,
   setPageData,
-  setRightPages,
+  setRightPageData,
   setShowModal,
 }) {
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
 
@@ -77,10 +87,26 @@ function Templatesbar({
 
   }, [pageContentSize])
 
+  function handleSetTemplate() {
+    setLoading(true)
+
+    // create artificial async
+    setTimeout(() => {
+      if (currentPageSide === "left") {
+        setLeftPageData(pageData)
+      }
+      else {
+        setRightPageData(pageData)
+      }
+
+      setLoading(false)
+      toast.success(`Applied template to ${currentPageSide} pages!`)
+    }, 500)
+  }
+
   if (pageData.show) {
     return (
       <FloatingTemplatesbar>
-        <p>{pageContentSize.height}</p>
         <TextLink
           color={colors.gray.sixHundred}
           hovercolor={colors.gray.nineHundred}
@@ -168,13 +194,7 @@ function Templatesbar({
               </>
             )}
           </TemplatesContent>
-          <Flexbox
-            padding="1rem"
-            backgroundcolor={colors.white}
-            className="has-border-top"
-            bordercolor={colors.gray.threeHundred}
-            borderradius="0 0 0.25rem 0"
-          >
+          <TemplatesFooter>
             <Button
               backgroundcolor={colors.primary.sixHundred}
               className={loading ? "is-loading" : null}
@@ -183,12 +203,47 @@ function Templatesbar({
               padding="1rem"
               width="100%"
               disabled={pageData.template === "none" ? true : false}
-              onClick={() => currentPageSide === "left" ? setLeftPages(pageData) : setRightPages(pageData)}
+              onClick={() => handleSetTemplate()}
             >
-              Apply template
+              {loading ? (
+                <Icon>
+                  <CircleNotch size="1rem" />
+                </Icon>
+              ) : (
+                <>
+                  {success ? (
+                    <>
+                      <Icon margin="0 0.5rem 0 0">
+                        <CheckCircle size="1rem" weight="bold" />
+                      </Icon>
+                      <span>Success!</span>
+                    </>
+                  ) : (
+                    <span>Apply template</span>
+                  )}
+                </>
+              )}
             </Button>
-          </Flexbox>
+          </TemplatesFooter>
         </Flexbox>
+        <ToastContainer
+          autoClose={3000}
+          closeOnClick
+          draggable
+          draggablePercent={50}
+          hideProgressBar={false}
+          limit={3}
+          newestOnTop={false}
+          pauseOnFocusLoss
+          pauseOnHover
+          position="bottom-center"
+          rtl={false}
+          theme="colored"
+          style={{
+            fontFamily: "Inter, Helvetica, Tahoma, sans-serif",
+            fontSize: "0.75rem",
+          }}
+        />
       </FloatingTemplatesbar>
     )
   }
@@ -249,12 +304,7 @@ function Templatesbar({
             </>
           )}
         </TemplatesContent>
-        <Flexbox
-          padding="1rem"
-          backgroundcolor={colors.white}
-          className="has-border-top"
-          bordercolor={colors.gray.threeHundred}
-        >
+        <TemplatesFooter>
           <Button
             backgroundcolor={colors.primary.sixHundred}
             className={loading ? "is-loading" : null}
@@ -270,7 +320,7 @@ function Templatesbar({
           >
             Apply template
           </Button>
-        </Flexbox>
+        </TemplatesFooter>
       </Flexbox>
     )
   }

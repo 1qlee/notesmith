@@ -12,11 +12,13 @@ exports.handler = async (event) => {
     street2: address.line2,
     city: address.city,
     state: address.state,
+    country: address.country,
     zip: address.postal_code
   });
   const verifiedAddress = await addressToVerify.save()
 
   if (verifiedAddress.verifications.delivery.success) {
+    console.log("Address succesfully verified.")
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -25,6 +27,7 @@ exports.handler = async (event) => {
     }
   }
   else {
+    console.error("Address could NOT be verified.")
     return {
       statusCode: 400,
       body: JSON.stringify({

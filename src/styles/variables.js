@@ -17,7 +17,7 @@ const colors = {
     active: "#bcdcbc",
     white: "#eef6f6",
     whiteLight: "#cde5e4",
-    oneHundred: "#98A7A6",
+    oneHundred: "#dde4e3",
     twoHundred: "#7C8F8E",
     threeHundred: "#607675",
     fourHundred: "#4A6462",

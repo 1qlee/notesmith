@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
+import { Loader } from "@googlemaps/js-api-loader"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { CheckCircle, Circle, ArrowLeft } from "phosphor-react"
+import { CheckCircle, Circle, CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledLabel } from "../form/FormComponents"
+import ShippingInfo from "./ShippingInfo"
 import Icon from "../Icon"
-import Loading from "../../assets/loading.svg"
+import Content from "../Content"
 import TextLink from "../TextLink"
 import Button from "../Button"
 
@@ -24,35 +26,7 @@ const ShippingInfoContainer = styled.div`
   width: 100%;
 `
 
-const Infobox = styled.div`
-  background-color: ${colors.white};
-  padding: ${props => props.padding ? props.padding : "0 1rem"};
-  border-radius: 0.25rem;
-  box-shadow: 0 1px 2px ${colors.shadow.float};
-  margin-bottom: 2rem;
-`
-
-const InfoItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid ${colors.gray.threeHundred};
-  padding: 1rem 0;
-  &:last-child {
-    border-bottom: none;
-  }
-`
-
-const InfoItemText = styled.p`
-  color: ${props => props.color};
-  flex: ${props => props.flex};
-  margin: ${props => props.margin ? props.margin : 0};
-`
-
-const ShippingItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  border-radius: 0.25rem;
-  padding: 1rem;
+const ShippingItem = styled(Flexbox)`
   &:hover {
     background-color: ${colors.primary.hover};
     cursor: pointer;
@@ -61,39 +35,53 @@ const ShippingItem = styled.div`
     background-color: ${colors.primary.active};
   }
   &.is-loading {
-    box-shadow: 0 2px 0 ${colors.green.sixHundred}, 0 -2px 0 ${colors.green.sixHundred}, 2px 0 0 ${colors.green.sixHundred}, -2px 0 0 ${colors.green.sixHundred};
+    background-color: ${colors.gray.oneHundred};
   }
   svg {
     &.is-loading {
       animation: ${rotate} 0.5s linear infinite;
     }
   }
+  &:first-child,
+  &:last-child {
+    border-radius: 0.25rem;
+  }
 `
 
 const ShippingForm = ({
-  activeTab,
   address,
   customer,
   processing,
   selectedRate,
+  setAddress,
   setActiveTab,
   setAuthKey,
   setFormError,
   setProcessing,
   setSelectedRate,
   setShipmentId,
+  setShowShippingMethod,
+  shippingMethod,
+  setShippingMethod,
   setTaxRate,
   shipmentId,
 }) => {
   const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [cheapestRate, setCheapestRate] = useState()
-  const [shippingMethod, setShippingMethod] = useState()
+  const [allRates, setAllRates] = useState()
   const pid = localStorage.getItem("pid")
+
+  // load Google Maps API
+  const loader = new Loader({
+    apiKey: process.env.GATSBY_GOOGLE_MAPS_API,
+    version: "weekly",
+  });
 
   useEffect(() => {
     // fetch the cheapest shipping rate based on the user's address
     const createRates = async () => {
+      setFormError("")
       setLoading(true)
 
       // fetch shipping rates for the user's cart items
@@ -103,29 +91,74 @@ const ShippingForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          address: {...address},
+          address: address,
           name: customer.name,
           email: customer.email,
-          productData: cartDetails
+          cartItems: cartDetails,
         })
       }).then(res => {
         return res.json()
       }).then(data => {
+        if (data.error) {
+          throw data.error
+        }
         // save the cheapest rate to state
         setCheapestRate(data.cheapestRate)
+        // save all rates to state
+        setAllRates(data.allRates)
         // save the shipment id to state
         setShipmentId(data.shipmentId)
         setLoading(false)
-      }).catch(err => {
-        setFormError(err.msg)
+      }).catch(error => {
+        setLoading(false)
+        setFormError(error)
       })
     }
 
     createRates()
-  }, [])
+  }, [address, customer, cartDetails])
 
-  // calculate taxes using Taxjar's API
+  // calculate taxes for customers in New York
   const calculateTaxes = async () => {
+    setFormError("")
+    // check if customer's shipping address' state is New York
+    if (address.state === "New York") {
+      // load the constructor
+      loader.load().then(async google => {
+        const geocoder = new google.maps.Geocoder()
+        // call API geocode endpoint to get county information from address
+        await geocoder.geocode({ "address": `${address.line1}, ${address.city}, ${address.state} ${address.postal_code}` }, (results, status) => {
+          if (status === "OK") {
+            // tax is sometimes determined by 'sublocality' or 'locality' at its highest specificity
+            const locality = results[0].address_components.find(elem => elem.types.find(type => type === "sublocality" || type === "locality"))
+            // otherwise it is simply determined by county
+            const county = results[0].address_components.find(elem => elem.types.find(type => type === "administrative_area_level_2"))
+            const taxCounties = { locality: locality.long_name, county: county.long_name }
+
+            fetchTax(taxCounties)
+          }
+          else {
+            setProcessing(false)
+            console.log("Geocode request was not successful: " + status)
+          }
+        })
+      }).then(res => {
+        setProcessing(false)
+        setShowShippingMethod(false)
+        setActiveTab(2)
+      })
+    }
+    // else, simply move the user along to checkout
+    else {
+      // set tax to zero
+      setTaxRate(0)
+      setProcessing(false)
+      setShowShippingMethod(false)
+      setActiveTab(2)
+    }
+  }
+
+  const fetchTax = async (taxCounties) => {
     const totalTaxes = await fetch("/.netlify/functions/create-tax", {
       method: "post",
       headers: {
@@ -134,22 +167,28 @@ const ShippingForm = ({
       body: JSON.stringify({
         pid: pid, // need pid from localStorage to update the corresponding paymentIntent
         address: address,
-        shippingRate: cheapestRate.rate,
-        productData: cartDetails,
+        shippingRate: selectedRate.rate,
+        cartItems: cartDetails,
+        locality: taxCounties.locality,
+        county: taxCounties.county,
       })
     }).then(res => {
       return res.json()
     }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+
       setTaxRate(data.tax)
-      setProcessing(false)
-      setActiveTab(3)
     }).catch(error => {
       setProcessing(false)
-      setFormError(error.msg)
+      setFormError(error)
     })
   }
 
   const setShippingInfo = async () => {
+    setFormError("")
+
     await fetch("/.netlify/functions/set-shipping-info", {
       method: "post",
       headers: {
@@ -163,11 +202,15 @@ const ShippingForm = ({
     }).then(res => {
       return res.json()
     }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+
       setAuthKey(data.authKey)
       calculateTaxes()
     }).catch(error => {
       setProcessing(false)
-      setFormError(error.msg)
+      setFormError(error)
     })
   }
 
@@ -188,113 +231,119 @@ const ShippingForm = ({
 
   return (
     <ShippingInfoContainer>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        justifycontent="space-between"
-        padding="0 1rem 0 0"
-      >
-        <StyledLabel>Shipping Information</StyledLabel>
-        <TextLink
-          color={colors.link.normal}
-          hovercolor={colors.link.hover}
-          onClick={() => setActiveTab(1)}
-          margin="0 0 0.5rem 0"
+      <ShippingInfo
+        address={address}
+        customer={customer}
+        setActiveTab={setActiveTab}
+        shippingMethod={shippingMethod}
+        setShowShippingMethod={setShowShippingMethod}
+      />
+      <div>
+        <StyledLabel>Shipping method</StyledLabel>
+        <Flexbox
+          borderradius="0.25rem"
+          border={`1px solid ${colors.gray.threeHundred}`}
+          margin="0 0 2rem"
         >
-          Edit
-        </TextLink>
-      </Flexbox>
-      <Infobox>
-        <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Name</InfoItemText>
-          <InfoItemText flex="5">{customer.name}</InfoItemText>
-        </InfoItem>
-        <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Email</InfoItemText>
-          <InfoItemText flex="5">{customer.email}</InfoItemText>
-        </InfoItem>
-        <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Ship to</InfoItemText>
-          <InfoItemText flex="5">{address.line1}, {address.line2} {address.city}, {address.state} {address.postal_code}</InfoItemText>
-        </InfoItem>
-        {shippingMethod && (
-          <InfoItem>
-            <InfoItemText color={colors.gray.sixHundred} flex="1">Shipping</InfoItemText>
-            <InfoItemText flex="5">{cheapestRate.service} ({cheapestRate.carrier})</InfoItemText>
-          </InfoItem>
-        )}
-      </Infobox>
-      {activeTab === 2 && (
-        <>
-          <StyledLabel>Shipping method</StyledLabel>
-          <Infobox
-            padding="0"
-          >
-            {loading && (
-              <ShippingItem className="is-loading">
-                <Loading className="is-loading" height="1rem" width="1rem" style={{stroke: colors.green.sixHundred, fill: colors.green.sixHundred}} />
-                <InfoItemText flex="1" margin="0 0.5rem">Calculating shipping rates...</InfoItemText>
-              </ShippingItem>
-            )}
-            {cheapestRate && !loading && (
-              <ShippingItem
-                onClick={index => {
-                  setShippingMethod(cheapestRate.id)
-                  setSelectedRate(cheapestRate)
-                }}
-                className={shippingMethod === cheapestRate.id ? "is-selected" : null}
-              >
-                {shippingMethod === cheapestRate.id ? (
-                  <Icon>
-                    <CheckCircle size="1rem" />
-                  </Icon>
-                ) : (
-                  <Icon>
-                    <Circle size="1rem" />
-                  </Icon>
-                )}
-                <InfoItemText flex="1" margin="0 0.5rem">{cheapestRate.service} ({cheapestRate.carrier})</InfoItemText>
-                <InfoItemText flex="0">${cheapestRate.rate}</InfoItemText>
-              </ShippingItem>
-            )}
-          </Infobox>
-          <Flexbox
-            flex="flex"
-            justifycontent="space-between"
-            alignitems="center"
-          >
-            <TextLink
-              color={colors.link.normal}
-              hovercolor={colors.link.hover}
-              className="has-icon"
-              alignitems="flex-end"
-              onClick={() => setActiveTab(1)}
-            >
-              <Icon>
-                <ArrowLeft size="1rem" />
-              </Icon>
-              <span>Back to info</span>
-            </TextLink>
-            <Button
-              disabled={!shippingMethod || processing}
-              id="submit"
-              backgroundcolor={colors.primary.sixHundred}
-              color={colors.white}
-              className={processing ? "is-loading" : null}
+          {loading && (
+            <ShippingItem
+              className="is-loading"
+              justifycontent="flex-start"
+              alignitems="center"
               padding="1rem"
-              form="checkout-shipping-form"
-              onClick={() => submitShippingInfo()}
-              width="200px"
+              flex="flex"
             >
-            {processing ? (
-              <Loading height="1rem" width="1rem" />
-            ) : (
-              "Continue"
-            )}
-            </Button>
-          </Flexbox>
-        </>
-      )}
+              <Icon margin="0 0.5rem 0 0">
+                <CircleNotch className="is-loading" size="1.25rem" color={colors.gray.sixHundred} />
+              </Icon>
+              <p>Calculating shipping rates...</p>
+            </ShippingItem>
+          )}
+          {cheapestRate && !loading && (
+            <ShippingItem
+              onClick={index => {
+                setShippingMethod(cheapestRate.id)
+                setSelectedRate(cheapestRate)
+              }}
+              className={shippingMethod === cheapestRate.id ? "is-selected" : null}
+              justifycontent="flex-start"
+              alignitems="flex-start"
+              padding="1rem"
+              flex="flex"
+            >
+              {shippingMethod === cheapestRate.id ? (
+                <Icon margin="0 0.5rem 0 0">
+                  <CheckCircle color={colors.primary.sixHundred} size="1rem" weight="bold" />
+                </Icon>
+              ) : (
+                <Icon margin="0 0.5rem 0 0">
+                  <Circle size="1rem" />
+                </Icon>
+              )}
+              <Flexbox
+                flex="flex"
+                justifycontent="space-between"
+                width="100%"
+              >
+                <Content
+                  paragraphcolor={colors.gray.nineHundred}
+                  paragraphlineheight="1"
+                  paragraphmarginbottom="0.25rem"
+                  smallcolor={colors.gray.sixHundred}
+                  smallfontsize="0.875rem"
+                  smallmargin="0"
+                >
+                  <p>Ground shipping</p>
+                  {cheapestRate.delivery_days && (
+                    <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
+                  )}
+                </Content>
+                <p>${cheapestRate.rate}</p>
+              </Flexbox>
+            </ShippingItem>
+          )}
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          justifycontent="space-between"
+          alignitems="center"
+        >
+          <TextLink
+            color={colors.primary.threeHundred}
+            hovercolor={colors.primary.sixHundred}
+            className="has-icon"
+            alignitems="flex-end"
+            onClick={() => {
+              setProcessing(false)
+              setShowShippingMethod(false)
+            }}
+          >
+            <Icon>
+              <ArrowLeft size="1rem" />
+            </Icon>
+            <span>Back to info</span>
+          </TextLink>
+          <Button
+            disabled={!shippingMethod || processing}
+            id="submit"
+            backgroundcolor={colors.primary.sixHundred}
+            color={colors.white}
+            className={processing ? "is-loading" : null}
+            padding="1rem"
+            form="checkout-shipping-form"
+            onClick={() => submitShippingInfo()}
+            width="200px"
+          >
+          {processing ? (
+            <Icon>
+              <CircleNotch size="1rem" color={colors.white} />
+            </Icon>
+          ) : (
+            "Continue"
+          )}
+          </Button>
+        </Flexbox>
+      </div>
     </ShippingInfoContainer>
   )
 }

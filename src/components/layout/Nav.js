@@ -41,10 +41,13 @@ const NavItem = styled.div`
     text-decoration: underline;
     cursor: pointer;
   }
+  &:last-child {
+    padding: 1rem 0 1rem 1rem;
+  }
 `
 
 const HorizontalNav = styled.div`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   display: ${props => props.hideNavbar ? "none" : "flex"};
   align-items: center;
   position: relative;
@@ -177,11 +180,13 @@ function Nav(props) {
               as={Link}
               to="/cart"
             >
-              <CartCounterWrapper
-                cartCount={cartCount}
-              >
+              <CartCounterWrapper>
                 Cart
-                <CartCounter>{cartCount}</CartCounter>
+                {cartCount > 0 && (
+                  <CartCounter>
+                    {cartCount}
+                  </CartCounter>
+                )}
               </CartCounterWrapper>
             </NavItem>
           </>

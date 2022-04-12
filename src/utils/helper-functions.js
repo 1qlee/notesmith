@@ -48,7 +48,22 @@ function svgToObjects(svgNode, indexTracker) {
   return svgObject
 }
 
+function convertUnix(timestamp) {
+  const date = new Date(timestamp * 1000);
+  const options = {
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  }
+  const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date)
+
+  return formattedDate
+}
+
 export {
   createAttributes,
   svgToObjects,
+  convertUnix,
 }

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react"
+import { colors } from "../../../styles/variables"
 
 import Holes from "../pageComponents/Holes"
 import Ruled from "../templates/Ruled"
@@ -62,6 +63,8 @@ function Template({
             height={canvasPageSize.height}
             width={canvasPageSize.width}
             fill="#fff"
+            stroke={colors.gray.threeHundred}
+            strokeWidth="2px"
           >
           </rect>
           <Holes currentPageSide={currentPageSide} canvasPageSize={canvasPageSize} />

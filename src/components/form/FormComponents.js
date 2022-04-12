@@ -71,6 +71,7 @@ function QuantityTracker(props) {
     <QuantityWrapper
       padding={props.wrapperpadding}
       boxshadow={props.wrapperboxshadow}
+      width={props.wrapperwidth}
     >
       <QuantityButton
         disabled={quantity === 1}
@@ -122,6 +123,7 @@ function QuantityTracker(props) {
 
 const QuantityWrapper = styled.div`
   position: relative;
+  width: ${props => props.width};
 `
 
 const QuantityButton = styled.button`
@@ -323,9 +325,6 @@ const RadioInput = styled.div`
       border-color: ${colors.gray.sixHundred};
     }
   }
-  svg {
-    filter: drop-shadow(0px 0px 1px ${colors.primary.twoHundred});
-  }
   input[type="radio"] {
     opacity: 0;
     width: 0;
@@ -342,7 +341,7 @@ const RadioInput = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${colors.primary.nineHundred};
+  color: ${props => props.color || colors.primary.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
@@ -359,7 +358,7 @@ const StyledFloatingLabel = styled(StyledLabel)`
 const StyledInput = styled.input`
   background-color: ${colors.white};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: 1px solid ${colors.gray.threeHundred};
+  border: 1px solid ${props => props.bordercolor || colors.gray.threeHundred};
   color: ${colors.primary.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
@@ -381,7 +380,7 @@ const StyledInput = styled.input`
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
   }
   &::placeholder {
@@ -407,19 +406,20 @@ const StyledSelect = styled.select`
   border: 1px solid ${colors.gray.threeHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize || "0.8rem"};
-  padding: ${props => props.padding || "1rem"};
+  padding: ${props => props.padding || "1rem 4rem 1rem 1rem"};
   height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;
   &.is-error {
-    box-shadow: 0 0 0 2px ${colors.red.sixHundred}, inset 0 0 0 1px ${colors.paper.offWhite};
+    border-color: ${colors.red.sixHundred};
   }
   &:hover {
     cursor: pointer;
+    background-color: ${colors.gray.oneHundred};
   }
   &:active,
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    border-color: ${colors.primary.sixHundred};
     outline: none;
   }
 `

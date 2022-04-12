@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { colors, convertToDecimal, spacing } from "../../styles/variables"
-import Loading from "../../assets/loading.svg"
+import { useFirebaseContext } from "../../utils/auth"
+import { CircleNotch } from "phosphor-react"
+import { convertUnix } from "../../utils/helper-functions"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import { Container, LayoutContainer } from "../layout/Container"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
@@ -9,7 +12,9 @@ import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/For
 import { Grid, Cell } from "styled-css-grid"
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../Button"
+import TextLink from "../TextLink"
 import Content from "../Content"
+import Notification from "../ui/Notification"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import Nav from "../layout/Nav"
@@ -29,7 +34,9 @@ const Order = ({ location, orderId }) => {
   const isBrowser = typeof window !== "undefined"
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
-  const [loading, setLoading] = useState(true)
+  const { loading, user, firebaseDb } = useFirebaseContext()
+  const [orderInfo, setOrderInfo] = useState(null)
+  const [orderItems, setOrderItems] = useState(null)
   const [address, setAddress] = useState()
   const [customer, setCustomer] = useState()
   const [createdDate, setCreatedDate] = useState()
@@ -48,60 +55,45 @@ const Order = ({ location, orderId }) => {
   })
 
   useEffect(() => {
-    const retrieveOrder = async () => {
-      const response = await fetch("/.netlify/functions/retrieve-order", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          pid: orderId
-        })
-      }).then(res => {
-        return res.json()
-      }).then(data => {
-        const { shipping, metadata, amount, charges, receipt_email } = data.paymentIntent
-        const { orderItem, productItem } = data
-        const date = new Date(charges.data[0].created * 1000)
+    async function retrieveOrder() {
+      // retrieve order info from the db based on orderId
+      await firebaseDb.ref(`orders/${orderId}`).once("value").then(async snapshot => {
+        const value = snapshot.val()
+        console.log(value)
 
-        // if an authKey is provided in the URL then show personal information
-        if (urlAuthKey === metadata.authKey) {
-          setShowInfo(true)
-          // wipe the authKey from the URL
-          isBrowser && window.history.replaceState({}, "", `/orders/${orderId}`)
+        if (!value) {
+          setOrderNotFound(true)
         }
         else {
-          setShowInfo(false)
-        }
+          // check if authkeys match, and show info if it does
+          if (value.authKey === urlAuthKey) {
+            // save order info to state
+            setShowInfo(true)
+            setOrderInfo(value)
+            const orderItemsArray = []
 
-        setCreatedDate(date.toLocaleString())
-        setAddress(shipping.address)
-        setCustomer({...customer, name: shipping.name, email: receipt_email})
-        setProduct({
-          name: productItem.name,
-          description: productItem.description,
-          images: productItem.images
-        })
-        setPrice({
-          unit_amount: orderItem.unit_amount,
-          quantity: metadata.quantity,
-          shippingRate: metadata.shippingRate,
-          taxRate: metadata.taxRate,
-          totalAmount: amount
-        })
-        setTracking({
-          url: metadata.trackingUrl,
-          code: metadata.tracking
-        })
-        setLoading(false)
-      }).catch(err => {
-        setLoading(false)
-        setOrderNotFound(true)
+            for (const orderItem in value.orderItems) {
+              await firebaseDb.ref(`orderItems/${orderItem}`).once("value").then(snapshot => {
+                orderItemsArray.push(snapshot.val())
+
+                console.log(snapshot.val())
+              })
+            }
+
+            setOrderItems(orderItemsArray)
+          }
+          else {
+            setShowInfo(false)
+            setOrderInfo(null)
+          }
+        }
       })
     }
 
-    retrieveOrder()
-  }, [orderId, location.state])
+    if (!loading) {
+      retrieveOrder()
+    }
+  }, [orderId, loading])
 
   function handleEmailResend(e) {
     e.preventDefault()
@@ -168,95 +160,27 @@ const Order = ({ location, orderId }) => {
                   </>
                 ) : (
                   <>
-                    {loading ? (
-                      <Loader className="has-nav" />
-                    ) : (
+                    {orderInfo && (
                       <Flexbox
                         flex="flex"
                         flexdirection="column"
                         maxwidth="600px"
                       >
                         <Content
-                          margin="0 0 1rem"
+                          margin="0 0 2rem"
                           h2margin="0"
                           h2fontweight="400"
-                          paragraphcolor={colors.gray.sixHundred}
-                          paragraphmarginbottom="0"
                         >
                           <h2>Order Summary</h2>
-                          <p>{createdDate}</p>
-                        </Content>
-                        <Content
-                          margin="0 0 2rem"
-                        >
-                          {showInfo ? (
-                            <p>{location.state ? location.state.msg : "Here is the summary for your Notesmith order."}</p>
-                          ) : (
-                            <p>Can't see your order details? Try checking your email for your order confirmation receipt and click the button inside. If you've lost the email, enter the email address associated with this order and we'll send you another one.</p>
-                          )}
-                          <form
-                            onSubmit={e => handleEmailResend(e)}
-                            id="email-resend"
-                          >
-                            <StyledFieldset
-                              className="is-vertical"
-                              margin="1rem 0"
-                            >
-                              <StyledLabel>Email</StyledLabel>
-                              <Flexbox
-                                flex="flex"
-                                width="100%"
-                              >
-                                <StyledInput
-                                  placeholder="Email address associated with this order"
-                                  borderradius="0.25rem"
-                                  className={error.success ? null : "is-error"}
-                                  id="email"
-                                  type="email"
-                                  name="email"
-                                  autocomplete="email"
-                                  onChange={e => {
-                                    setError({
-                                      show: false,
-                                      msg: "",
-                                      color: colors.red.sixHundred,
-                                      success: true,
-                                    })
-                                    setResendEmail(e.target.value)
-                                  }}
-                                  width="100%"
-                                />
-                                <Button
-                                  form="email-resend"
-                                  color={colors.white}
-                                  backgroundcolor={colors.primary.sixHundred}
-                                  borderradius="0.25rem"
-                                  padding="1rem"
-                                  margin="0 0 0 0.5rem"
-                                  form="email-resend"
-                                  type="submit"
-                                  disabled={processing}
-                                  className={processing ? "is-loading" : null}
-                                >
-                                  {processing ? (
-                                    <Loading height="1rem" width="46px" />
-                                  ) : (
-                                    "Resend"
-                                  )}
-                                </Button>
-                              </Flexbox>
-                              {error.show && (
-                                <ErrorLine color={error.color}>
-                                  <span>{error.msg}</span>
-                                </ErrorLine>
-                              )}
-                            </StyledFieldset>
-                          </form>
                         </Content>
                         <Grid
                           columns="repeat(auto-fit,minmax(120px,1fr))"
                           columnGap={spacing.normal}
                         >
+                          <Cell>
+                            <StyledLabel>Order date</StyledLabel>
+                            <p>{convertUnix(orderInfo.createdDate)}</p>
+                          </Cell>
                           <Cell>
                             <Content
                               h3fontsize="1rem"
@@ -266,8 +190,8 @@ const Order = ({ location, orderId }) => {
                               <StyledLabel>Shipping address</StyledLabel>
                               {showInfo ? (
                                 <>
-                                  <p>{address.line1} {address.line2}</p>
-                                  <p>{address.city}, {address.state} {address.postal_code}</p>
+                                  <p>{orderInfo.address.line1} {orderInfo.address.line2}</p>
+                                  <p>{orderInfo.address.city}, {orderInfo.address.state} {orderInfo.address.postal_code}</p>
                                 </>
                               ) : (
                                 <>
@@ -287,26 +211,17 @@ const Order = ({ location, orderId }) => {
                             >
                               <StyledLabel>Tracking</StyledLabel>
                               {showInfo ? (
-                                <>
-                                  <Flexbox
-                                    flex="flex"
-                                    justifycontent="space-between"
-                                  >
-                                    <p>Code</p>
-                                    <p>{tracking.code ? tracking.code : "Still being updated"}</p>
-                                  </Flexbox>
-                                  <Flexbox
-                                    flex="flex"
-                                    justifycontent="space-between"
-                                  >
-                                    {tracking.url && (
-                                      <>
-                                        <p>Link</p>
-                                        <a href={tracking.url} target="_blank" rel="noopener noreferrer">Tracking service</a>
-                                      </>
-                                    )}
-                                  </Flexbox>
-                                </>
+                                <TextLink
+                                  href={orderInfo.tracking.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  fontfamily="Crimson Pro"
+                                  fontsize="1rem"
+                                  color={colors.primary.threeHundred}
+                                  hovercolor={colors.primary.sixHundred}
+                                >
+                                  {orderInfo.tracking.code ? orderInfo.tracking.code : "Still being updated"}
+                                </TextLink>
                               ) : (
                                 <>
                                   <PlaceholderLine width="4rem" />
@@ -316,47 +231,55 @@ const Order = ({ location, orderId }) => {
                             </Content>
                           </Cell>
                         </Grid>
-                        <Content
-                          h3fontsize="1rem"
-                          margin="0"
-                          paragraphmarginbottom="0"
-                        >
-                          <StyledLabel>Order</StyledLabel>
-                          <Flexbox
-                            flex="flex"
-                            boxshadow={`0 1px 2px ${colors.shadow.float}`}
-                            borderradius="0.25rem"
-                            justifycontent="space-between"
-                            backgroundcolor={colors.white}
-                            alignitems="center"
-                            padding="1rem"
-                          >
-                            {showInfo ? (
-                              <>
-                                <img src={product.images[0]} width="100" alt={product.name} />
-                                <p>{product.name}</p>
-                                <p>x {price.quantity}</p>
-                                <p>${convertToDecimal(price.unit_amount * price.quantity, 2)}</p>
-                              </>
-                            ) : (
-                              <PlaceholderLine width="12rem" />
-                            )}
-                          </Flexbox>
-                        </Content>
-                        <Content
-                          h3fontsize="1rem"
-                          margin="0"
-                          paragraphmarginbottom="0"
+                        <StyledLabel>Your order</StyledLabel>
+                        <Flexbox
+                          border={`1px solid ${colors.gray.threeHundred}`}
+                          borderradius="0.25rem"
+                          margin="0 0 2rem"
                         >
                           {showInfo ? (
                             <>
+                              {orderItems && orderItems.map(item => (
+                                <Flexbox
+                                  flex="flex"
+                                  borderradius="0.25rem"
+                                  justifycontent="space-between"
+                                  backgroundcolor={colors.white}
+                                  alignitems="center"
+                                  padding="1rem"
+                                >
+                                  <GatsbyImage
+                                    image={item.image.gatsbyImageData}
+                                    alt="product thumbnail"
+                                  />
+                                  <p>{item.name}</p>
+                                  <p>x{item.quantity}</p>
+                                  <p>{item.formattedValue}</p>
+                                </Flexbox>
+                              ))}
+                            </>
+                          ) : (
+                            <PlaceholderLine width="12rem" />
+                          )}
+                          {showInfo ? (
+                            <>
+                              <Flexbox
+                                flex="flex"
+                                justifycontent="space-between"
+                                className="has-border-top"
+                                bordercolor={colors.gray.threeHundred}
+                                padding="1rem"
+                              >
+                                <p>Subtotal</p>
+                                <p>${convertToDecimal((orderInfo.totalAmount - orderInfo.shippingRate - orderInfo.taxRate)).toFixed(2)}</p>
+                              </Flexbox>
                               <Flexbox
                                 flex="flex"
                                 justifycontent="space-between"
                                 padding="1rem"
                               >
                                 <p>Shipping</p>
-                                <p>${convertToDecimal(price.shippingRate, 2)}</p>
+                                <p>${parseFloat(orderInfo.shippingRate / 100)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
@@ -366,7 +289,7 @@ const Order = ({ location, orderId }) => {
                                 className="has-border-bottom"
                               >
                                 <p>Tax</p>
-                                <p>${convertToDecimal(price.taxRate, 2)}</p>
+                                <p>${parseFloat(orderInfo.taxRate / 100)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
@@ -380,7 +303,7 @@ const Order = ({ location, orderId }) => {
                                   h3fontweight="400"
                                   h3color={colors.primary.nineHundred}
                                 >
-                                  <h3>${convertToDecimal(price.totalAmount, 2)}</h3>
+                                  <h3>${parseFloat(orderInfo.totalAmount / 100)}</h3>
                                 </Content>
                               </Flexbox>
                             </>
@@ -393,14 +316,79 @@ const Order = ({ location, orderId }) => {
                               <PlaceholderLine width="6rem" />
                             </Content>
                           )}
-                        </Content>
-                        <Content
-                          margin="1rem"
-                          paragraphfontsize="1rem"
-                          paragraphcolor={colors.gray.sixHundred}
-                        >
-                          <p>If you have any questions regarding this order, please <a href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId}`}>send us an email</a>.</p>
-                        </Content>
+                        </Flexbox>
+                        {!showInfo && (
+                          <Notification
+                            backgroundcolor={colors.primary.oneHundred}
+                            bordercolor={colors.primary.sixHundred}
+                            margin="0 0 2rem"
+                            padding="1rem"
+                          >
+                            <Content>
+                              <p>Can't see your order details? Try checking your email for your order confirmation receipt and click the button inside. If you've lost the email, enter the email address associated with this order and we'll send you another one.</p>
+                              <form
+                                onSubmit={e => handleEmailResend(e)}
+                                id="email-resend"
+                              >
+                                <StyledFieldset
+                                  className="is-vertical"
+                                  margin="1rem 0"
+                                >
+                                  <StyledLabel>Email</StyledLabel>
+                                  <Flexbox
+                                    flex="flex"
+                                    width="100%"
+                                  >
+                                    <StyledInput
+                                      placeholder="Email address associated with this order"
+                                      borderradius="0.25rem"
+                                      bordercolor={colors.primary.sixHundred}
+                                      className={error.success ? null : "is-error"}
+                                      id="email"
+                                      type="email"
+                                      name="email"
+                                      autocomplete="email"
+                                      onChange={e => {
+                                        setError({
+                                          show: false,
+                                          msg: "",
+                                          color: colors.red.sixHundred,
+                                          success: true,
+                                        })
+                                        setResendEmail(e.target.value)
+                                      }}
+                                      width="100%"
+                                    />
+                                    <Button
+                                      form="email-resend"
+                                      color={colors.white}
+                                      backgroundcolor={colors.primary.sixHundred}
+                                      borderradius="0.25rem"
+                                      padding="1rem"
+                                      margin="0 0 0 0.5rem"
+                                      form="email-resend"
+                                      type="submit"
+                                      disabled={processing}
+                                      className={processing ? "is-loading" : null}
+                                    >
+                                      {processing ? (
+                                        <CircleNotch size="1rem" />
+                                      ) : (
+                                        "Resend"
+                                      )}
+                                    </Button>
+                                  </Flexbox>
+                                  {error.show && (
+                                    <ErrorLine color={error.color}>
+                                      <span>{error.msg}</span>
+                                    </ErrorLine>
+                                  )}
+                                </StyledFieldset>
+                              </form>
+                              <p>If you have any questions regarding this order, please <a href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId}`}>send us an email</a>.</p>
+                            </Content>
+                          </Notification>
+                        )}
                       </Flexbox>
                     )}
                   </>

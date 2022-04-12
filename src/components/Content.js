@@ -77,6 +77,7 @@ const Content = styled.div`
   li {
     margin: 0.5rem 0;
     font-size: ${props => props.lifontsize || "1rem"};
+    color: ${props => props.licolor};
   }
   p {
     color: ${props => props.paragraphcolor || colors.primary.eightHundred};
@@ -85,21 +86,24 @@ const Content = styled.div`
     font-weight: ${props => props.paragraphfontweight};
     line-height: ${props => props.paragraphlineheight || "1.5"};
     text-align: ${props => props.paragraphtextalign};
+    text-transform: ${props => props.paragraphtexttransform};
     margin-bottom: ${props => props.paragraphmarginbottom};
   }
   small {
     color: ${props => props.smallcolor || colors.primary.eightHundred};
     font-size: ${props => props.smallfontsize};
+    font-family: ${props => props.smallfontfamily};
     display: block;
     margin: ${props => props.smallmargin || "0.5rem 0"};
   }
   a {
-    color: ${props => props.linkcolor || colors.link.normal};
+    color: ${props => props.linkcolor || colors.primary.threeHundred};
     font-size: ${props => props.linkfontsize};
     text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;
-      opacity: 0.7;
+      color: ${props => props.linkcolorhover || colors.primary.sixHundred};
+      text-decoration: ${props => props.linktextdecorationhover || "underline"};
     }
   }
 `

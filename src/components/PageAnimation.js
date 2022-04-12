@@ -29,7 +29,7 @@ const PageAnimationWrapper = styled.div`
 
 const PageContainer = styled.div`
   align-items: center;
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   box-shadow: 0 1px 3px ${colors.shadow.dark}, 0 0 1px ${colors.shadow.dark};
   display: flex;
   flex-wrap: wrap;

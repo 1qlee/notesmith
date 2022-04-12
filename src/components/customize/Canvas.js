@@ -10,7 +10,7 @@ import Workspace from "./Workspace"
 
 const StyledCanvas = styled.div`
   display: block;
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   height: ${props => props.height || "100%"};
   width: ${props => props.width || "100%"};
 `

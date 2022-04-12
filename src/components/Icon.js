@@ -11,10 +11,10 @@ const rotate = keyframes`
   }
 `
 
-const pulsate = keyframes`
+const pulsate = pulseColor => keyframes`
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 0 ${pulseColor};
   }
   50% {
     transform: scale(1);
@@ -46,9 +46,8 @@ const StyledIcon = styled.span`
   }
   &.is-pulsating {
     svg {
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
       transform: scale(1);
-      animation: ${pulsate} 2s linear infinite;
+      animation: ${props => pulsate(props.pulseColor)} 2s linear infinite;
       border-radius: 100%;
     }
   }

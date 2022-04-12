@@ -49,8 +49,46 @@ const ProductPage = ({ data, params }) => {
     pageHeight: bookData.heightPixel - convertToPx(6.35),
     pageWidth: bookData.widthPixel - convertToPx(13.335),
   })
-  const [leftPages, setLeftPages] = useState({})
-  const [rightPages, setRightPages] = useState({})
+  const [leftPageData, setLeftPageData] = useState({
+    template: "blank",
+    show: false,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.088,
+    dotRadius: 0.6,
+    rows: 42,
+    columns: 27,
+    marginTop: 2.273,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 127,
+    lineWidth: 100,
+    pageHeight: bookData.heightPixel - convertToPx(6.35),
+    pageWidth: bookData.widthPixel - convertToPx(13.335),
+  })
+  const [rightPageData, setRightPageData] = useState({
+    template: "blank",
+    show: false,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.088,
+    dotRadius: 0.6,
+    rows: 42,
+    columns: 27,
+    marginTop: 2.273,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 127,
+    lineWidth: 100,
+    pageHeight: bookData.heightPixel - convertToPx(6.35),
+    pageWidth: bookData.widthPixel - convertToPx(13.335),
+  })
   const [pageContentSize, setPageContentSize] = useState({})
   const [activeImages, setActiveImages] = useState([])
   const [cartThumbnail, setCartThumbnail] = useState([])
@@ -119,9 +157,9 @@ const ProductPage = ({ data, params }) => {
                           pageData={selectedTemplate}
                           selectedPageSvg={selectedPageSvg}
                           setCurrentPageSide={setCurrentPageSide}
-                          setLeftPages={setLeftPages}
+                          setLeftPageData={setLeftPageData}
                           setPageData={setSelectedTemplate}
-                          setRightPages={setRightPages}
+                          setRightPageData={setRightPageData}
                         />
                         <Template
                           bookData={bookData}
@@ -152,8 +190,10 @@ const ProductPage = ({ data, params }) => {
                     <ProductInfo
                       bookData={bookData}
                       cartThumbnail={cartThumbnail}
-                      setBookData={setBookData}
+                      leftPageData={leftPageData}
+                      rightPageData={rightPageData}
                       selectedTemplate={selectedTemplate}
+                      setBookData={setBookData}
                       setSelectedTemplate={setSelectedTemplate}
                     />
                   </Cell>
@@ -184,6 +224,7 @@ export const pageQuery = graphql`
       size
       slug
       stripePriceId
+      weight
       widthInch
       widthPixel
       colors {
