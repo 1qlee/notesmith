@@ -4,7 +4,7 @@ const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
 // will have to update the paymentIntent metadata object with tracking information
 const updatePaymentIntent = async (pid, shippingLabel) => {
-  console.log("Updating payment intent with tracking information.")
+  console.log("[Netlify] Updating payment intent with tracking information.")
   await stripe.paymentIntents.update(
     pid,
     {
@@ -19,6 +19,7 @@ const updatePaymentIntent = async (pid, shippingLabel) => {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { pid } = body;
+  // paymentIntent has all purchase info
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
   const { rateId, shipmentId, authKey, tax, shippingRate } = paymentIntent.metadata;
   const totalAmount = paymentIntent.amount;
@@ -28,7 +29,7 @@ exports.handler = async (event) => {
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
     // buy the shipping label from easypost
     const shippingLabel = await userShipment.buy(rateId);
-    console.log(`Bought shipping label for: ${pid}`)
+    console.log(`[Netlify] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information
     updatePaymentIntent(pid, shippingLabel);
@@ -45,6 +46,8 @@ exports.handler = async (event) => {
       })
     }
   } catch(error) {
+    console.log(error)
+
     return {
       statusCode: 400,
       body: JSON.stringify({

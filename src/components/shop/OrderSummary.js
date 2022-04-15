@@ -106,7 +106,7 @@ function OrderSummary({ selectedRate, taxRate }) {
           bordercolor={colors.gray.threeHundred}
         >
           <p>Subtotal</p>
-          <p>${convertToDecimal(totalPrice, 2).toFixed(2)}</p>
+          <p>${convertToDecimal(totalPrice, 2)}</p>
         </Flexbox>
         <Flexbox
           padding="1rem"
@@ -129,7 +129,7 @@ function OrderSummary({ selectedRate, taxRate }) {
         >
           <p>Taxes</p>
           {taxRate ? (
-            <p>${(taxRate / 100).toFixed(2)}</p>
+            <p>${convertToDecimal(taxRate, 2)}</p>
           ) : (
             <p>---</p>
           )}

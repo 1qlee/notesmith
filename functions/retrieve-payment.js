@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     // the client will then create a new paymentIntent instead
     const isPaymentPaid = paymentIntent.charges.data[0] ? paymentIntent.charges.data[0].paid : null;
 
-    console.log(`Found and retrieved paymentIntent: ${pid}`);
+    console.log(`[Netlify] Found and retrieved paymentIntent: ${pid}`);
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -20,7 +20,7 @@ exports.handler = async (event) => {
       })
     }
   } catch (error) {
-    console.error(`Could not find paymentIntent: ${pid}`);
+    console.error(`[Netlify] Could not find paymentIntent: ${pid}`);
     return {
       statusCode: 400,
       body: JSON.stringify({

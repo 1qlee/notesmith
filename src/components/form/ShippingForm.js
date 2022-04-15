@@ -91,9 +91,7 @@ const ShippingForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          address: address,
-          name: customer.name,
-          email: customer.email,
+          pid: pid,
           cartItems: cartDetails,
         })
       }).then(res => {
@@ -118,12 +116,40 @@ const ShippingForm = ({
     createRates()
   }, [address, customer, cartDetails])
 
+  const setShippingInfo = async () => {
+    setFormError("")
+
+    await fetch("/.netlify/functions/set-shipping-info", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
+        shipmentId: shipmentId,
+        rateId: selectedRate.id,
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+
+      setAuthKey(data.authKey)
+      calculateTaxes()
+    }).catch(error => {
+      setProcessing(false)
+      setFormError(error)
+    })
+  }
+
   // calculate taxes for customers in New York
   const calculateTaxes = async () => {
     setFormError("")
     // check if customer's shipping address' state is New York
     if (address.state === "New York") {
-      // load the constructor
+      // load Google Maps API constructor
       loader.load().then(async google => {
         const geocoder = new google.maps.Geocoder()
         // call API geocode endpoint to get county information from address
@@ -148,10 +174,9 @@ const ShippingForm = ({
         setActiveTab(2)
       })
     }
-    // else, simply move the user along to checkout
     else {
       // set tax to zero
-      setTaxRate(0)
+      setZeroTax()
       setProcessing(false)
       setShowShippingMethod(false)
       setActiveTab(2)
@@ -159,16 +184,13 @@ const ShippingForm = ({
   }
 
   const fetchTax = async (taxCounties) => {
-    const totalTaxes = await fetch("/.netlify/functions/create-tax", {
+    await fetch("/.netlify/functions/create-tax", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        address: address,
-        shippingRate: selectedRate.rate,
-        cartItems: cartDetails,
         locality: taxCounties.locality,
         county: taxCounties.county,
       })
@@ -186,18 +208,14 @@ const ShippingForm = ({
     })
   }
 
-  const setShippingInfo = async () => {
-    setFormError("")
-
-    await fetch("/.netlify/functions/set-shipping-info", {
+  const setZeroTax = async () => {
+    await fetch("/.netlify/functions/set-zero-tax", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        shipmentId: shipmentId,
-        shippingRate: selectedRate
       })
     }).then(res => {
       return res.json()
@@ -206,8 +224,7 @@ const ShippingForm = ({
         throw data.error
       }
 
-      setAuthKey(data.authKey)
-      calculateTaxes()
+      setTaxRate(0)
     }).catch(error => {
       setProcessing(false)
       setFormError(error)

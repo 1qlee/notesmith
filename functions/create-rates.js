@@ -15,7 +15,8 @@ function calculateTotalWeight(cartItems) {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { address, name, email, cartItems } = body;
+  const { pid, cartItems } = body;
+  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
   let cartItemsArray = [];
 
   for (const cartItem in cartItems) {
@@ -33,12 +34,12 @@ exports.handler = async (event) => {
   });
 
   const toAddress = new easypost.Address({
-    street1: address.line1,
-    street2: address.line2,
-    city: address.city,
-    state: address.state,
-    country: address.country,
-    zip: address.postal_code,
+    street1: paymentIntent.shipping.address.line1,
+    street2: paymentIntent.shipping.address.line2,
+    city: paymentIntent.shipping.address.city,
+    state: paymentIntent.shipping.address.state,
+    country: paymentIntent.shipping.address.country,
+    zip: paymentIntent.shipping.address.postal_code,
   });
 
   // physical package size
@@ -77,7 +78,7 @@ exports.handler = async (event) => {
     // this variable is an object containing info relevant to the rate
     const cheapestRate = ratesSortedDescending[0];
 
-    console.log("Successfully created and returned shipping rates to the user.");
+    console.log("[Netlify] Successfully created and returned shipping rates to the user.");
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -87,7 +88,7 @@ exports.handler = async (event) => {
       })
     };
   } catch(error) {
-    console.error("Something went wrong when trying to create shipping rates.");
+    console.error("[Netlify] Something went wrong when trying to create shipping rates.");
     return {
       statusCode: 400,
       body: JSON.stringify({

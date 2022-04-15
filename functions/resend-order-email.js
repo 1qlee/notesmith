@@ -5,11 +5,6 @@ sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 sendgridClient.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 
 const convertToDecimal = (num, places) => {
-  const lastTwoDigits = num.toString().substr(-2)
-
-  if (lastTwoDigits === "00") {
-    return num / 100
-  }
 
   return ((num * 1.0) / 100).toFixed(places)
 }

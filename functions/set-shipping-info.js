@@ -1,27 +1,43 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
+const cryptojs = require("crypto-js");
 const easypostApi = require('@easypost/api');
 const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
-const cryptojs = require("crypto-js");
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, shipmentId, shippingRate } = body;
+  const { pid, shipmentId, rateId } = body;
   const authKey = cryptojs.MD5(pid);
+  // retrieve pre-existing Shipment from Easypost
+  console.log(`[Netlify] Retrieving user's shipment from Easypost: ${shipmentId}`);
+  const userShipment = await easypost.Shipment.retrieve(shipmentId);
+  // find the user's selected rate based on its ID
+  // usershipment.rates is an array containing all rate objects
+  console.log(`[Netlify] Finding user's selected rate from all shipment's rates: ${rateId}`);
+  const userRate = userShipment.rates.find(rate => rate.id === rateId);
+  const shippingRate = Math.round(userRate.rate * 100);
+  const shippingRateId = userRate.id;
+  const shippingRateCarrier = userRate.carrier;
+  // get subtotal from paymentIntent
+  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
+  const subtotal = parseInt(paymentIntent.metadata.subtotal);
 
    try {
-     console.log("Updating paymentIntent with the selected shipping information.");
-     const paymentIntent = await stripe.paymentIntents.update(
+     console.log("[Netlify] Updating paymentIntent with the selected shipping information.");
+     await stripe.paymentIntents.update(
        pid,
        {
+         amount: subtotal + shippingRate,
          metadata: {
            shipmentId: shipmentId,
-           rateId: shippingRate.id,
+           rateId: shippingRateId,
+           shippingRate: shippingRate,
+           carrier: shippingRateCarrier,
            authKey: `${authKey}`
          }
        }
      );
 
-     console.log("Successfully updated PI metadata with shipping information.");
+     console.log("[Netlify] Successfully updated PI metadata with shipping information.");
      return {
        statusCode: 200,
        body: JSON.stringify({
@@ -30,7 +46,7 @@ exports.handler = async (event) => {
        })
      }
    } catch(error) {
-     console.error("Something went wrong when updating shipping information.");
+     console.error("[Netlify] Something went wrong when updating shipping information.");
      return {
        statusCode: 400,
        body: JSON.stringify({

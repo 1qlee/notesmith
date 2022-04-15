@@ -18,15 +18,15 @@ const calcOrderAmount = async (cartItems) => {
 
 exports.handler = async (event) => {
   // product data we received from the client
-  const body = JSON.parse(event.body)
-  const { cartItems, paymentId, email, customer } = body
-  const shipping = body.address
-  let paymentIntent, newCustomer
-  let cartItemsArray = []
+  const body = JSON.parse(event.body);
+  const { cartItems, paymentId, email, customer } = body;
+  const shipping = body.address;
+  let paymentIntent, newCustomer;
+  let cartItemsArray = [];
 
   // if there are no items, return an error
   if (!cartItems) {
-    console.error("There are no cart items.")
+    console.error("[Netlify] There are no cart items.");
 
     return {
       statusCode: 400,
@@ -40,31 +40,41 @@ exports.handler = async (event) => {
     // productData is a tree of objects
     for (const cartItem in cartItems) {
       // push each cart item into
-      cartItemsArray.push(cartItems[cartItem])
+      cartItemsArray.push(cartItems[cartItem]);
     }
   }
 
   try {
+    // save subtotal
+    const subtotal = await calcOrderAmount(cartItemsArray);
     // if a pid already exists
     if (paymentId) {
-      console.log(`Updating existing paymentIntent: ${paymentId}`)
+      console.log(`[Netlify] Updating existing paymentIntent: ${paymentId}`);
       // update the existing paymentIntent
       paymentIntent = await stripe.paymentIntents.update(
         paymentId,
         {
-          amount: await calcOrderAmount(cartItemsArray),
+          amount: subtotal,
           shipping: shipping,
           receipt_email: email,
-          currency: "USD"
+          currency: "USD",
+          metadata: {
+            subtotal: subtotal
+          }
         }
       )
     }
+    // this will only fire when cart items are new AKA when there is no stripe paymentIntent already created
+    // therefore this will only be called from checkout.js, not from InformationForm
     else {
-      console.log(`Creating new paymentIntent...`)
+      console.log(`[Netlify] Creating new paymentIntent...`)
       // else create a new paymentIntent
       paymentIntent = await stripe.paymentIntents.create({
-        amount: await calcOrderAmount(cartItemsArray),
-        currency: "USD"
+        amount: subtotal,
+        currency: "USD",
+        metadata: {
+          subtotal: subtotal
+        }
       })
     }
 

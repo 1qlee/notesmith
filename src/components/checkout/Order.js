@@ -15,8 +15,8 @@ import Button from "../Button"
 import TextLink from "../TextLink"
 import Content from "../Content"
 import Notification from "../ui/Notification"
+import Icon from "../Icon"
 import Layout from "../layout/Layout"
-import Loader from "../Loader"
 import Nav from "../layout/Nav"
 import Seo from "../layout/Seo"
 
@@ -37,12 +37,6 @@ const Order = ({ location, orderId }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [orderInfo, setOrderInfo] = useState(null)
   const [orderItems, setOrderItems] = useState(null)
-  const [address, setAddress] = useState()
-  const [customer, setCustomer] = useState()
-  const [createdDate, setCreatedDate] = useState()
-  const [price, setPrice] = useState()
-  const [product, setProduct] = useState()
-  const [tracking, setTracking] = useState()
   const [showInfo, setShowInfo] = useState(false)
   const [orderNotFound, setOrderNotFound] = useState(false)
   const [resendEmail, setResendEmail] = useState()
@@ -59,7 +53,6 @@ const Order = ({ location, orderId }) => {
       // retrieve order info from the db based on orderId
       await firebaseDb.ref(`orders/${orderId}`).once("value").then(async snapshot => {
         const value = snapshot.val()
-        console.log(value)
 
         if (!value) {
           setOrderNotFound(true)
@@ -84,7 +77,7 @@ const Order = ({ location, orderId }) => {
           }
           else {
             setShowInfo(false)
-            setOrderInfo(null)
+            setOrderInfo({})
           }
         }
       })
@@ -97,7 +90,16 @@ const Order = ({ location, orderId }) => {
 
   function handleEmailResend(e) {
     e.preventDefault()
-    if (resendEmail === customer.email) {
+    if (!resendEmail) {
+      setError({
+        show: true,
+        msg: "Please enter an email.",
+        color: colors.red.sixHundred,
+        success: false,
+      })
+    }
+
+    if (resendEmail === orderInfo.customer.email) {
       resendOrderEmail()
     }
     else {
@@ -168,10 +170,11 @@ const Order = ({ location, orderId }) => {
                       >
                         <Content
                           margin="0 0 2rem"
-                          h2margin="0"
+                          h2margin="0 0 1rem"
                           h2fontweight="400"
                         >
                           <h2>Order Summary</h2>
+                          <p>Here is the summary for your order. If you have any questions please <a href={`mailto:general@notesmithbooks.com?subject=[Order Form] ${orderId}`}>contact us</a>.</p>
                         </Content>
                         <Grid
                           columns="repeat(auto-fit,minmax(120px,1fr))"
@@ -179,7 +182,11 @@ const Order = ({ location, orderId }) => {
                         >
                           <Cell>
                             <StyledLabel>Order date</StyledLabel>
-                            <p>{convertUnix(orderInfo.createdDate)}</p>
+                            {showInfo ? (
+                              <p>{convertUnix(orderInfo.createdDate)}</p>
+                            ) : (
+                              <PlaceholderLine width="4rem" />
+                            )}
                           </Cell>
                           <Cell>
                             <Content
@@ -236,6 +243,7 @@ const Order = ({ location, orderId }) => {
                           border={`1px solid ${colors.gray.threeHundred}`}
                           borderradius="0.25rem"
                           margin="0 0 2rem"
+                          padding={showInfo ? "0" : "1rem"}
                         >
                           {showInfo ? (
                             <>
@@ -247,6 +255,7 @@ const Order = ({ location, orderId }) => {
                                   backgroundcolor={colors.white}
                                   alignitems="center"
                                   padding="1rem"
+                                  key={item.id}
                                 >
                                   <GatsbyImage
                                     image={item.image.gatsbyImageData}
@@ -271,7 +280,7 @@ const Order = ({ location, orderId }) => {
                                 padding="1rem"
                               >
                                 <p>Subtotal</p>
-                                <p>${convertToDecimal((orderInfo.totalAmount - orderInfo.shippingRate - orderInfo.taxRate)).toFixed(2)}</p>
+                                <p>${convertToDecimal((orderInfo.totalAmount - orderInfo.shippingRate - orderInfo.taxRate), 2)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
@@ -279,7 +288,7 @@ const Order = ({ location, orderId }) => {
                                 padding="1rem"
                               >
                                 <p>Shipping</p>
-                                <p>${parseFloat(orderInfo.shippingRate / 100)}</p>
+                                <p>${convertToDecimal(orderInfo.shippingRate, 2)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
@@ -289,7 +298,7 @@ const Order = ({ location, orderId }) => {
                                 className="has-border-bottom"
                               >
                                 <p>Tax</p>
-                                <p>${parseFloat(orderInfo.taxRate / 100)}</p>
+                                <p>${convertToDecimal(orderInfo.taxRate, 2)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
@@ -303,7 +312,7 @@ const Order = ({ location, orderId }) => {
                                   h3fontweight="400"
                                   h3color={colors.primary.nineHundred}
                                 >
-                                  <h3>${parseFloat(orderInfo.totalAmount / 100)}</h3>
+                                  <h3>${convertToDecimal(orderInfo.totalAmount, 2)}</h3>
                                 </Content>
                               </Flexbox>
                             </>
@@ -319,7 +328,7 @@ const Order = ({ location, orderId }) => {
                         </Flexbox>
                         {!showInfo && (
                           <Notification
-                            backgroundcolor={colors.primary.oneHundred}
+                            backgroundcolor={colors.gray.oneHundred}
                             bordercolor={colors.primary.sixHundred}
                             margin="0 0 2rem"
                             padding="1rem"
@@ -348,6 +357,7 @@ const Order = ({ location, orderId }) => {
                                       type="email"
                                       name="email"
                                       autocomplete="email"
+                                      required
                                       onChange={e => {
                                         setError({
                                           show: false,
@@ -372,7 +382,9 @@ const Order = ({ location, orderId }) => {
                                       className={processing ? "is-loading" : null}
                                     >
                                       {processing ? (
-                                        <CircleNotch size="1rem" />
+                                        <Icon width="46px">
+                                          <CircleNotch size="1rem" color={colors.white} />
+                                        </Icon>
                                       ) : (
                                         "Resend"
                                       )}
@@ -385,7 +397,6 @@ const Order = ({ location, orderId }) => {
                                   )}
                                 </StyledFieldset>
                               </form>
-                              <p>If you have any questions regarding this order, please <a href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId}`}>send us an email</a>.</p>
                             </Content>
                           </Notification>
                         )}

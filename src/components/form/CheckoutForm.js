@@ -4,7 +4,7 @@ import { navigate } from "gatsby"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { ArrowLeft, CheckSquare, Square } from "phosphor-react"
+import { ArrowLeft, CheckSquare, Square, CircleNotch } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -12,7 +12,6 @@ import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/For
 import ShippingInfo from "./ShippingInfo"
 import Button from "../Button"
 import Icon from "../Icon"
-import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
 const cardOptions = {
@@ -87,6 +86,7 @@ function CheckoutForm({
   }
 
   // save each order item to the database
+  // save the entire order to the database
   const saveOrderItems = async (cartItems, orderData) => {
     let cartItemsObject = {}
     // loop through all items in the cart
@@ -132,18 +132,27 @@ function CheckoutForm({
         throw res.error
       }
 
+      const createdDate = res.paymentIntent.created
+      const paymentInfo = {
+        createdDate: createdDate,
+      }
+
       // buy the shipping label from easypost
-      purchaseShippingLabel(res.paymentIntent.created)
+      // send it payment info to save to the order
+      purchaseShippingLabel(paymentInfo)
     }).catch(error => {
       setError(error.message)
       setProcessing(false)
     })
   }
 
-  const purchaseShippingLabel = async (createdDate) => {
+  // fetch easypost api to purchase a shipping label
+  // takes options arg to save to orders (database)
+  const purchaseShippingLabel = async (options) => {
     // shows loader
     setPaymentProcessing(true)
 
+    // all purchase info is in the paymentIntent, so just send pid
     const shippingLabel = await fetch("/.netlify/functions/create-shipment", {
       method: "post",
       headers: {
@@ -154,28 +163,29 @@ function CheckoutForm({
       })
     }).then(res => {
       return res.json()
-    }).then(data => {
+    }).then(async data => {
       if (data.error) {
         throw data.error
       }
 
+      // extract data
       const trackingCode = data.shippingLabel.tracking_code
       const { trackingUrl, totalAmount, authKey, taxRate, shippingRate } = data
       const orderData = {
+        ...options,
         address: address,
+        authKey: authKey,
         customer: customer,
         shippingRate: shippingRate,
         taxRate: taxRate,
         totalAmount: totalAmount,
-        authKey: authKey,
-        createdDate: createdDate,
         tracking:  {
           code: trackingCode,
           url: trackingUrl
         },
       }
 
-      saveOrderItems(cartDetails, orderData)
+      await saveOrderItems(cartDetails, orderData)
 
       // remove items from cart and clear pid from localStorage
       setError(null)
@@ -183,19 +193,7 @@ function CheckoutForm({
       localStorage.removeItem("pid")
 
       // redirect the user to the orders summary page
-      navigate(`/orders/${pid}?key=${authKey}`, {
-        state: {
-          address: address,
-          customer: customer,
-          shippingRate: shippingRate,
-          taxRate: taxRate,
-          totalAmount: totalAmount,
-          tracking:  {
-            code: trackingCode,
-            url: trackingUrl
-          }
-        }
-      })
+      navigate(`/orders/${pid}?key=${authKey}`)
     }).catch(error => {
       setError(error)
     })
@@ -264,14 +262,16 @@ function CheckoutForm({
           backgroundcolor={colors.primary.sixHundred}
           className={processing ? "is-loading" : null}
           color={colors.white}
-          disabled={error || processing || !taxRate}
+          disabled={error || processing}
           form="checkout-payment-form"
           id="submit"
           padding="1rem"
           width="200px"
         >
           {processing ? (
-            <Loading height="1rem" width="1rem" />
+            <Icon>
+              <CircleNotch size="1rem" color={colors.white} />
+            </Icon>
           ) : (
             "Pay now"
           )}
