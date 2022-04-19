@@ -269,7 +269,7 @@ function ShoppingCart() {
                 alignitems="center"
               >
                 <p>Subtotal</p>
-                <p>${parseFloat(totalPrice / 100)}</p>
+                <p>${convertToDecimal(totalPrice, 2)}</p>
               </Flexbox>
             </Content>
           </Flexbox>

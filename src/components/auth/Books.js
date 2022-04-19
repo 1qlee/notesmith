@@ -304,7 +304,7 @@ const Books = () => {
 
   return (
     <Layout>
-      <Seo title="Dashboard" />
+      <Seo title="Books" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
           <Sidebar page="Books" />

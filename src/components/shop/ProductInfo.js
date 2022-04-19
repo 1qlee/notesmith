@@ -3,7 +3,7 @@ import { Link, navigate } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { ArrowRight } from "phosphor-react"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"

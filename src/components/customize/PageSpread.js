@@ -186,37 +186,37 @@ function PageSpread({
 
   useEffect(() => {
     // even pages
-    if (selectedPage % 2 === 0) {
-      // set page side in state
-      setCurrentPageSide("left")
-
-      // if it's the last page, show only the left page
-      if (selectedPage === bookData.numOfPages) {
-        generateSvgs(canvasPages[selectedPage - 1].pageId, "left")
-        setRightPage([])
-      }
-      // otherwise show the 2-page spread
-      else {
-        generateSvgs(canvasPages[selectedPage - 1].pageId, "left")
-        generateSvgs(canvasPages[selectedPage].pageId, "right")
-      }
-    }
-    // odd pages
-    else {
-      // set page side in state
-      setCurrentPageSide("right")
-
-      // if it's the first page, show only the right page
-      if (selectedPage === 1) {
-        generateSvgs(canvasPages[selectedPage - 1].pageId, "right")
-        setLeftPage([])
-      }
-      // otherwise show the 2-page spread
-      else {
-        generateSvgs(canvasPages[selectedPage - 2].pageId, "left")
-        generateSvgs(canvasPages[selectedPage - 1].pageId, "right")
-      }
-    }
+    // if (selectedPage % 2 === 0) {
+    //   // set page side in state
+    //   setCurrentPageSide("left")
+    //
+    //   // if it's the last page, show only the left page
+    //   if (selectedPage === bookData.numOfPages) {
+    //     generateSvgs(canvasPages[selectedPage - 1].pageId, "left")
+    //     setRightPage([])
+    //   }
+    //   // otherwise show the 2-page spread
+    //   else {
+    //     generateSvgs(canvasPages[selectedPage - 1].pageId, "left")
+    //     generateSvgs(canvasPages[selectedPage].pageId, "right")
+    //   }
+    // }
+    // // odd pages
+    // else {
+    //   // set page side in state
+    //   setCurrentPageSide("right")
+    //
+    //   // if it's the first page, show only the right page
+    //   if (selectedPage === 1) {
+    //     generateSvgs(canvasPages[selectedPage - 1].pageId, "right")
+    //     setLeftPage([])
+    //   }
+    //   // otherwise show the 2-page spread
+    //   else {
+    //     generateSvgs(canvasPages[selectedPage - 2].pageId, "left")
+    //     generateSvgs(canvasPages[selectedPage - 1].pageId, "right")
+    //   }
+    // }
   }, [selectedPage])
 
   return (

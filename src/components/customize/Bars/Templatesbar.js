@@ -108,20 +108,20 @@ function Templatesbar({
     return (
       <FloatingTemplatesbar>
         <TextLink
-          color={colors.gray.sixHundred}
-          hovercolor={colors.gray.nineHundred}
-          flex="flex"
-          justifycontent="flex-end"
           borderbottom={`1px solid ${colors.gray.threeHundred}`}
+          color={colors.primary.threeHundred}
+          flex="flex"
+          hovercolor={colors.primary.sixHundred}
+          justifycontent="flex-end"
           padding="1rem"
           onClick={() => setPageData({
             ...pageData,
             show: false,
           })}
         >
-          <p>Back to product</p>
+          Back to images
           <Icon margin="0 0 0 0.25rem">
-            <ArrowRight size="1rem" />
+            <ArrowRight size="0.825rem" />
           </Icon>
         </TextLink>
         <Flexbox

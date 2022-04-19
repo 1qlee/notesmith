@@ -9,13 +9,15 @@ import Button from "../Button"
 
 const StyledSelect = styled.div`
   position: relative;
+  border: 1px solid ${colors.gray.threeHundred};
+  border-radius: 0.25rem;
   display: inline-block;
   margin-right: 0.5rem;
 `
 
 const SelectMenu = styled.div`
   background-color: ${colors.white};
-  box-shadow: ${colors.shadow.modal};
+  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: 0.25rem;
   padding: 0.5rem 0;
   position: absolute;

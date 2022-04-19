@@ -4,7 +4,7 @@ import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.modal};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
   border-radius: 0.25rem;
   left: 50%;
   min-width: ${widths.modal};

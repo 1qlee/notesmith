@@ -4,7 +4,7 @@ import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import Loading from "../../../assets/loading.svg"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
-import { useFirebaseContext } from "../../../utils/auth"
+import SVG from "react-inlinesvg"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageBox from "../barComponents/PageBox"
@@ -72,36 +72,21 @@ const Page = memo(props => {
   } = props
   const {
     canvasPages,
+    canvasPageTemplates,
     pageData,
     selectedPage,
     setSelectedPage,
     setPageData,
   } = data
   const columnCount = 2
-  // current page based on index of canvasPages
+  // current page based on index of canvasPages calculated from WindowsGrid row and column values
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
-  const { firebaseDb } = useFirebaseContext()
   const [svgArray, setSvgArray] = useState([])
 
-  // gets the first few elements from the array of svgs
-  async function generateSvgPreview(currentPage) {
-    const dummyArray = []
-    const { pageId, pageNumber } = currentPage
 
-    // db call to get the page with pageId
-    await firebaseDb.ref(`pages/${pageId}/svg`).limitToFirst(3).once("value").then(snapshot => {
-      // loop through each svg element (up to 10)
-      snapshot.forEach(svgElem => {
-        const elem = svgElem.val()
-        // push svg object into our makeshift array incl. pageNumber prop
-        dummyArray.push(elem)
-      })
-    }).catch(err => {
-      console.log(err)
-    })
-
-    setSvgArray(dummyArray)
-  }
+  useEffect(() => {
+    console.log(canvasPageTemplates)
+  }, [canvasPages, canvasPageTemplates])
 
   // change the selected page number
   function handleSelectPage(value) {
@@ -113,81 +98,44 @@ const Page = memo(props => {
     setSelectedPage(pageNumber)
   }
 
-  useEffect(() => {
-    generateSvgPreview(currentPage)
-  }, [canvasPages])
-
   return (
     <StyledPage
       onClick={e => handleSelectPage(currentPage.pageNumber)}
       className={selectedPage === currentPage.pageNumber ? "is-active" : null}
       style={style}
     >
-      <svg
+      <SVG
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 48 64`}
+        viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+        src={canvasPageTemplates[currentPage.pageId]}
         x="0"
         y="0"
-      >
-        {svgArray.map((elem, index) => (
-          <React.Fragment key={`${elem.name}-${index}`}>
-            {elem.name === "circle" && (
-              <circle
-                cx={elem.cx}
-                cy={elem.cy}
-                opacity={elem.opacity}
-                fill={elem.fill}
-                r={elem.r}
-              >
-              </circle>
-            )}
-            {elem.name === "rect" && (
-              <rect
-                fill={elem.fill}
-                width={elem.width}
-                height={elem.height}
-              >
-              </rect>
-            )}
-            {elem.name === "line" && (
-              <line
-                fill={elem.fill}
-                stroke={elem.stroke}
-                strokeWidth={elem.strokeWidth}
-                opacity={elem.opacity}
-                x1={elem.x1}
-                x2={elem.x2}
-                y1={elem.y1}
-                y2={elem.y2}
-              >
-              </line>
-            )}
-          </React.Fragment>
-        ))}
-      </svg>
+      />
       <p>{currentPage.pageNumber}</p>
     </StyledPage>
   )
 }, areEqual)
 
-const createItemData = memoizeOne((canvasPages, pageData, selectedPage, setSelectedPage, setPageData) => ({
+const createItemData = memoizeOne((canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData) => ({
   canvasPages,
+  canvasPageTemplates,
   pageData,
   selectedPage,
-  setSelectedPage,
   setPageData,
+  setSelectedPage,
 }))
 
 function Pagebar({
-  canvasPages,
   bookData,
+  canvasPages,
+  canvasPageTemplates,
   pageData,
   selectedPage,
   setPageData,
   setSelectedPage,
 }) {
   const windowRef = useRef(null)
-  const itemData = createItemData(canvasPages, pageData, selectedPage, setSelectedPage, setPageData)
+  const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData)
 
   return (
     <PagebarWrapper>

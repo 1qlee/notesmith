@@ -9,7 +9,7 @@ import Content from "../Content"
 const ColorOption = styled.button`
   background-color: ${props => props.color};
   border-radius: 100%;
-  border: 1px solid ${colors.gray.threeHundred};
+  border: 1px solid ${colors.gray.sixHundred};
   height: 1.5rem;
   position: relative;
   width: 1.5rem;
@@ -22,7 +22,7 @@ const ColorOption = styled.button`
     left: -0.25rem;
     position: absolute;
     top: -0.25rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s;
     width: calc(100% + 0.5rem);
   }
   &.is-active {

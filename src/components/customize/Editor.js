@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
+import { v4 as uuidv4 } from 'uuid';
 
 import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
@@ -58,11 +59,19 @@ const Editor = ({ bookId, productData, productImageData }) => {
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
+  const [canvasPageTemplates, setCanvasPageTemplates] = useState({})
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
 
   // creates blank svgs for when the user is not logged in
   function createBlankSvgs() {
+    // create a unique id for a blank page
+    const blankPageId = uuidv4()
+    // create a page object that will be referenced by every page in the demo
+    const demoPagesObject = {
+      [blankPageId]: `<svg xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
+    }
+    setCanvasPageTemplates(demoPagesObject)
     // blank array holds the svgs
     const pagesArray = []
 
@@ -70,12 +79,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
     for (let i = 0; i < bookData.numOfPages; i++) {
       // blank white rectangle inside the svg is set to pageSizes' width and height
       pagesArray.push({
-        svg: {
-          name: "rect",
-          height: pageData.pageHeight,
-          width: pageData.pageWidth,
-          fill: "#fff",
-        },
+        pageId: blankPageId,
         pageNumber: i + 1,
       })
     }
@@ -87,22 +91,24 @@ const Editor = ({ bookId, productData, productImageData }) => {
 
   useEffect(() => {
     console.log("editor rendered")
-    function getBook() {
+    // queries db for the book by bookId
+    async function getBook() {
       // ref for the book using bookId in the URL
-      firebaseDb.ref(`books/${bookId}`).on("value", snapshot => {
+      await firebaseDb.ref(`books/${bookId}`).once("value").then(snapshot => {
         // if the book exists in the database
         if (snapshot.exists()) {
-          const bookVals = snapshot.val()
+          const bookValues = snapshot.val()
 
           // validate that this book belongs to the current user
-          if (user.uid === snapshot.val().uid) {
+          if (user.uid === bookValues.uid) {
             // if the user uid and book uid match
             // set book in state
-            setBookData(bookVals)
-            // set pages in state
-            getPages(bookVals.pages)
+            setBookData(bookValues)
+            // call getPages and send it the book's pages object
+            getPages(bookValues.pages)
           }
           else {
+            // else redirect the user to the generic editor page (based on the product they had selected)
             navigate(`/customize/${productData.slug}`)
           }
         }
@@ -116,25 +122,32 @@ const Editor = ({ bookId, productData, productImageData }) => {
 
     // query the db for pages using bookId
     async function getPages(bookPages) {
-      // this array will hold the pages
-      const pagesArray = []
-      // keep track of index
-      let pageIndex = 1
+      const pagesObject = {} // dummy object to hold pages
+      const pagesArray = [] // dummy array to hold all book pages
 
-      // loop through each page in bookPages object using the pageId key
-      for (const pageId in bookPages) {
-        const pageObject = {
-          pageId: pageId,
-          pageNumber: pageIndex,
-        }
+      // first, query db for all pages that have the same bookId
+      await firebaseDb.ref(`pages/`).orderByChild("bookId").equalTo(bookId).once("value").then(snapshot => {
+        // loop through each page
+        snapshot.forEach(page => {
+          const pageValue = page.val()
 
-        pagesArray.push(pageObject)
-        pageIndex++
+          // insert into pagesObject with id:svg pair
+          pagesObject[pageValue.id] = pageValue.svg
+        })
+      })
+
+      console.log(pagesObject)
+
+      // loop through bookPages argument which is an object of all pages
+      for (const page in bookPages) {
+        pagesArray.push(bookPages[page])
       }
-      // set pages in state
-      setCanvasPages(pagesArray)
+
+      setCanvasPageTemplates(pagesObject) // canvasPageTemplates holds all page svg "templates"
+      setCanvasPages(pagesArray) // all canvasPages have a reference to a template
       setInitializing(false)
     }
+
     // first check if there is a user logged in because
     // users that are not logged in should not be able to access bookId's
     if (user) {
@@ -201,6 +214,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
             <Pagebar
               bookData={bookData}
               canvasPages={canvasPages}
+              canvasPageTemplates={canvasPageTemplates}
               pageData={pageData}
               selectedPage={selectedPage}
               setPageData={setPageData}

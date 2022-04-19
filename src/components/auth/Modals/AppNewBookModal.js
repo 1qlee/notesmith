@@ -17,8 +17,10 @@ import Button from "../../Button"
 import Content from "../../Content"
 
 const StepContent = styled.div`
+  min-height: 32px;
   max-height: 300px;
   overflow-y: auto;
+  margin-bottom: 1rem;
 `
 
 function NewBookModal({
@@ -28,6 +30,7 @@ function NewBookModal({
 }) {
   const { user, firebaseDb } = useFirebaseContext()
   const [step, setStep] = useState(0)
+  const [stepTitle, setStepTitle] = useState("Select book type")
   const [bookTitleError, setBookTitleError] = useState({
     show: false,
     msg: "",
@@ -78,34 +81,27 @@ function NewBookModal({
       // create a new book key (id)
       const newBookRef = firebaseDb.ref("books/").push()
       const newBookKey = newBookRef.key
+      // create a new page to point the new book's pages to
+      // it will just be a blank svg rect
+      const newPageRef = firebaseDb.ref("pages/").push()
+      const newPageKey = newPageRef.key
+
+      // set data into the newly created page
+      newPageRef.set({
+        svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
+        bookId: newBookKey,
+        id: newPageKey,
+      })
       const pagesObject = {}
-      // create pages for the new book
+
+      // loop that sets page data into the new book
+      // each page will refer to the newly created page
       for (let i = 1; i <= bookData.numOfPages; i++) {
-        // create a new page key (id)
-        const newPageRef = firebaseDb.ref("pages/").push()
-        const newPageKey = newPageRef.key
-        let newPageSvg = null
-        // keep track of each page in this object - it will be used later to set pages in 'books'
-        pagesObject[`${newPageKey}`] = true
-        // svg for a blank page
-        newPageSvg = {
-          name: "rect",
-          width: bookData.widthPixel - convertToPx(12.7),
-          height: bookData.heightPixel - convertToPx(6.35),
-          fill: "#fff",
+        // save page to the dummy object along with page number and a reference to the page created earlier
+        pagesObject[i] = {
+          pageNumber: i,
+          pageId: newPageKey,
         }
-        // write the new page into the db
-        newPageRef.set({
-          "bookId": newBookKey,
-          "id": newPageKey,
-          "pageNumber": i,
-          "svg": {
-            "rect-01": newPageSvg,
-          },
-          "uid": user.uid,
-        }).catch(error => {
-          console.log("error writing page to the database")
-        })
       }
       // write the new book into the db
       newBookRef.set({
@@ -156,135 +152,123 @@ function NewBookModal({
         backgroundcolor={colors.white}
       >
         <Content
-          h3fontsize="1.25rem"
-          margin="0 0 1rem 0"
+          margin="0 0 0.5rem 0"
+          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          h3fontsize="0.75rem"
+          h3margin="0"
+          paragraphmarginbottom="1rem"
         >
           <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
+          {step === 0 && (
+            <h3>Select type of book</h3>
+          )}
+          {step === 1 && (
+            <h3>Select cover color</h3>
+          )}
+          {step === 2 && (
+            <h3>Enter a title</h3>
+          )}
         </Content>
         {step === 0 && (
           <StepContent>
-            <Content
-              margin="0 0 1rem"
-              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-              h3fontsize="0.75rem"
-              h3margin="0 0 0.5rem 0"
-            >
-              <h3>1. Type of book</h3>
-              {productsData.allProductsJson.nodes.map((product, index) => (
-                <BookRadio
-                  onClick={() => handleClick({
-                    ...product,
-                    coverColor: "",
-                  }, 1, index)}
-                  isActive={bookData.name === product.name}
-                  key={product.name}
+            {productsData.allProductsJson.nodes.map((product, index) => (
+              <BookRadio
+                onClick={() => handleClick({
+                  ...product,
+                  coverColor: "",
+                }, 1, index)}
+                isActive={bookData.name === product.name}
+                className={index === 0 && "has-border-top"}
+                key={product.name}
+              >
+                <Flexbox
+                  flex="flex"
+                  justifycontent="space-between"
+                  width="100%"
                 >
-                  <Flexbox
-                    flex="flex"
-                    borderradius="0.25rem"
-                    justifycontent="space-between"
-                    width="100%"
+                  <Tag
+                    fontsize="0.75rem"
+                    fontfamily="Inter, Helvetica, Tahoma, sans-serif"
+                    fontweight="700"
+                    backgroundcolor={colors.primary.oneHundred}
+                    color={colors.primary.nineHundred}
+                    boxshadow="none"
+                    padding="0.25rem 0.5rem"
+                    margin="0 0 0.25rem"
                   >
-                    <Tag
-                      fontsize="0.75rem"
-                      fontfamily="Inter, Helvetica, Tahoma, sans-serif"
-                      fontweight="700"
-                      backgroundcolor={colors.yellow.oneHundred}
-                      color={colors.primary.nineHundred}
-                      padding="0.25rem 0.5rem"
-                      margin="0 0 0.25rem"
-                    >
-                      {product.name}
-                    </Tag>
-                    <Content
-                      paragraphfontsize="1.25rem"
-                      paragraphmarginbottom="0"
-                      paragraphtextalign="right"
-                      paragraphlineheight="1"
-                    >
-                      <p>${product.price / 100}</p>
-                    </Content>
-                  </Flexbox>
+                    {product.name}
+                  </Tag>
                   <Content
-                    paragraphfontsize="0.875rem"
-                    padding="0 0 0 0.5rem"
+                    paragraphfontsize="1.25rem"
+                    paragraphmarginbottom="0"
+                    paragraphtextalign="right"
+                    paragraphlineheight="1"
                   >
-                    <p>This notebook has {product.numOfPages} total pages.</p>
+                    <p>${product.price / 100}</p>
                   </Content>
-                </BookRadio>
-              ))}
-            </Content>
+                </Flexbox>
+                <Content
+                  paragraphfontsize="0.875rem"
+                  padding="0 0 0 0.5rem"
+                >
+                  <p>This notebook has {product.numOfPages} total pages.</p>
+                </Content>
+              </BookRadio>
+            ))}
           </StepContent>
         )}
         {step === 1 && (
           <StepContent>
-            <Content
-              margin="0 0 1rem"
-              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-              h3fontsize="0.75rem"
-              h3margin="0 0 0.5rem 0"
+            <Flexbox
+              flex="flex"
+              alignitems="center"
+              margin="0.25rem 0 0"
+              justifycontent="space-between"
+              width="100%"
             >
-              <h3>2. Cover color</h3>
-              <Flexbox
-                flex="flex"
-                alignitems="center"
-                borderradius="0.25rem"
-                justifycontent="space-between"
-                width="100%"
-              >
-                <ColorPicker
-                  data={productsData.allProductsJson.nodes[selectedBook].colors}
-                  selectedColor={bookData.coverColor}
-                  cbFunction={color => handleClick({
-                    ...bookData,
-                    coverColor: color,
-                  }, 2, )}
-                />
-                <p style={{textTransform: "capitalize"}}>{bookData.coverColor.replace('-', ' ')}</p>
-              </Flexbox>
-            </Content>
+              <ColorPicker
+                data={productsData.allProductsJson.nodes[selectedBook].colors}
+                selectedColor={bookData.coverColor}
+                cbFunction={color => handleClick({
+                  ...bookData,
+                  coverColor: color,
+                }, 2, )}
+              />
+            </Flexbox>
           </StepContent>
         )}
         {step === 2 && (
           <StepContent>
-            <Content
-              margin="0 0 1rem"
-              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-              h3fontsize="0.75rem"
-              h3margin="0 0 0.5rem 0"
+            <form
+              id="new-book-form"
+              autoComplete="off"
+              onSubmit={e => e.preventDefault()}
             >
-              <form
-                id="new-book-form"
-                autoComplete="off"
-                onSubmit={e => e.preventDefault()}
-              >
-                <h3>3. Title</h3>
-                <StyledInput
-                  borderradius="0.25rem"
-                  type="text"
-                  id="new-book-title"
-                  name="new-book-title"
-                  autocomplete="false"
-                  placeholder="Enter a title"
-                  onChange={e => setBookData({
-                    ...bookData,
-                    title: e.target.value.trim(),
-                  })}
-                  onFocus={() => setBookTitleError({
-                    show: false,
-                    msg: "",
-                  })}
-                />
-                {bookTitleError.show && (
-                  <ErrorLine color={colors.red.sixHundred}>
-                    <Icon>
-                      <Warning weight="fill" color={colors.red.sixHundred} size={18} />
-                    </Icon>
-                    <span>{bookTitleError.msg}</span>
-                  </ErrorLine>
-                )}
-              </form>
-            </Content>
+              <StyledInput
+                borderradius="0.25rem"
+                type="text"
+                id="new-book-title"
+                name="new-book-title"
+                autocomplete="false"
+                placeholder="Enter a title"
+                onChange={e => setBookData({
+                  ...bookData,
+                  title: e.target.value.trim(),
+                })}
+                onFocus={() => setBookTitleError({
+                  show: false,
+                  msg: "",
+                })}
+              />
+              {bookTitleError.show && (
+                <ErrorLine color={colors.red.sixHundred}>
+                  <Icon>
+                    <Warning weight="fill" color={colors.red.sixHundred} size={18} />
+                  </Icon>
+                  <span>{bookTitleError.msg}</span>
+                </ErrorLine>
+              )}
+            </form>
           </StepContent>
         )}
         <Flexbox
@@ -324,7 +308,7 @@ function NewBookModal({
         >
           {processing ? (
             <Icon>
-              <CircleNotch />
+              <CircleNotch size="1rem" />
             </Icon>
           ) : (
             "Create book"

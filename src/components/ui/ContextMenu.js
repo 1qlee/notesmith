@@ -4,7 +4,7 @@ import { colors } from "../../styles/variables"
 
 const StyledContextMenu = styled.article`
   background-color: ${colors.white};
-  box-shadow: ${colors.shadow.modal};
+  box-shadow: ${colors.shadow.layeredSmall};
   border-radius: 0 0.25rem 0.25rem;
   font-size: 0.8rem;
   padding: 0.5rem 0;
@@ -36,6 +36,7 @@ const ContextMenuLink = styled.a`
 
 const ContextMenuDivider = styled.hr`
   background-color: ${colors.gray.threeHundred};
+  height: 1px;
   margin: 0.5rem 0;
 `
 
