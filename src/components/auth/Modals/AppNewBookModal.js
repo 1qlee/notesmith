@@ -68,7 +68,7 @@ function NewBookModal({
   `)
 
   // creating a new book in the db
-  function createNewBook() {
+  async function createNewBook() {
     setProcessing(true)
     if (!bookData.title || bookData.title.trim().length === 0) {
       setProcessing(false)
@@ -87,10 +87,11 @@ function NewBookModal({
       const newPageKey = newPageRef.key
 
       // set data into the newly created page
-      newPageRef.set({
-        svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
+      await newPageRef.set({
         bookId: newBookKey,
         id: newPageKey,
+        svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
+        uid: user.uid,
       })
       const pagesObject = {}
 
@@ -104,7 +105,7 @@ function NewBookModal({
         }
       }
       // write the new book into the db
-      newBookRef.set({
+      await newBookRef.set({
         "coverColor": bookData.coverColor,
         "date_created": new Date().valueOf(),
         "heightPixel": bookData.heightPixel,
@@ -152,10 +153,10 @@ function NewBookModal({
         backgroundcolor={colors.white}
       >
         <Content
-          margin="0 0 0.5rem 0"
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
           h3fontsize="0.75rem"
           h3margin="0"
+          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          margin="0 0 0.5rem 0"
           paragraphmarginbottom="1rem"
         >
           <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>

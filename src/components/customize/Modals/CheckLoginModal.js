@@ -1,11 +1,13 @@
 import React from "react"
 import { Link } from "gatsby"
 import { colors } from "../../../styles/variables"
+import { Info } from "phosphor-react"
 
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import Icon from "../../Icon"
 import Button from "../../Button"
 import Content from "../../Content"
+import Notification from "../../ui/Notification"
 
 function CheckLoginModal({ setShowModal }) {
   return (
@@ -13,12 +15,33 @@ function CheckLoginModal({ setShowModal }) {
       setShowModal={setShowModal}
       width="300px"
     >
-      <ModalHeader>Sign in or create an account to create layouts</ModalHeader>
+      <ModalHeader>Sign in or create an account</ModalHeader>
       <ModalContent>
+        <Notification
+          alignitems="flex-start"
+          backgroundcolor={colors.gray.oneHundred}
+          bordercolor={colors.gray.oneHundred}
+          margin="0 0 1rem"
+          padding="1rem"
+        >
+          <Icon
+            borderradius="100%"
+            margin="0.25rem 1rem 0 0"
+            className="is-pulsating"
+            pulseColor={colors.green.threeHundred}
+          >
+            <Info size="1.5rem" weight="fill" color={colors.green.sixHundred} />
+          </Icon>
+          <Content
+            paragraphcolor={colors.gray.nineHundred}
+          >
+            <p>You won't be able to purchase notebooks with custom layouts without first making a Notesmith account.</p>
+          </Content>
+        </Notification>
         <Content
           paragraphmarginbottom="1rem"
+          linkcolor={colors.link.normal}
         >
-          <p>You won't be able to purchase notebooks with custom layouts without first making a Notesmith account.</p>
           <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to create notebooks with custom layouts.</p>
         </Content>
       </ModalContent>
@@ -26,7 +49,8 @@ function CheckLoginModal({ setShowModal }) {
         justifycontent="flex-end"
       >
         <Button
-          backgroundcolor={colors.gray.twoHundred}
+          backgroundcolor={colors.gray.oneHundred}
+          color={colors.gray.nineHundred}
           fontsize="0.8rem"
           margin="0 0 0 auto"
           flex="flex"
@@ -36,7 +60,7 @@ function CheckLoginModal({ setShowModal }) {
           })}
         >
           <span>
-            I just want to browse
+            Browse demo anyway
           </span>
         </Button>
       </ModalFooter>

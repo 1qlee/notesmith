@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
@@ -223,6 +223,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
             <Canvas
               bookData={bookData}
               canvasPages={canvasPages}
+              canvasPageTemplates={canvasPageTemplates}
               canvasPageSize={canvasPageSize}
               canvasSize={canvasSize}
               pageData={pageData}
@@ -240,7 +241,6 @@ const Editor = ({ bookId, productData, productImageData }) => {
               productImageData={productImageData}
               pageContentSize={pageContentSize}
               selectedPage={selectedPage}
-              selectedPageSvg={selectedPageSvg}
               setBookData={setBookData}
               setPageData={setPageData}
               setShowModal={setShowModal}
@@ -265,14 +265,16 @@ const Editor = ({ bookId, productData, productImageData }) => {
           )}
           {showModal.type === "template" && (
             <ApplyTemplateModal
-              bookId={bookId}
               bookData={bookData}
-              pageData={pageData}
-              setCanvasPages={setCanvasPages}
+              bookId={bookId}
               canvasPages={canvasPages}
-              setShowModal={setShowModal}
+              canvasPageTemplates={canvasPageTemplates}
+              pageData={pageData}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
+              setCanvasPages={setCanvasPages}
+              setCanvasPageTemplates={setCanvasPageTemplates}
+              setShowModal={setShowModal}
               user={user}
             />
           )}

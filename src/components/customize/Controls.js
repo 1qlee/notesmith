@@ -70,7 +70,6 @@ function Controls({
   productData,
   productImageData,
   selectedPage,
-  selectedPageSvg,
   setBookData,
   setPageData,
   setShowModal,
@@ -102,7 +101,6 @@ function Controls({
             canvasPageSize={canvasPageSize}
             pageContentSize={pageContentSize}
             pageData={pageData}
-            selectedPageSvg={selectedPageSvg}
             setPageData={setPageData}
             setShowModal={setShowModal}
           />

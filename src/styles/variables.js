@@ -105,6 +105,11 @@ const colors = {
   highlighter: "#ffff00"
 }
 
+const fonts = {
+  primary: "'Crimson Pro', Georgia, serif",
+  secondary: "'Inter', Helvetica, Tahoma, sans-serif"
+}
+
 const widths = {
   sidebar: "300px",
   modal: "480px",
@@ -150,4 +155,4 @@ const convertFloatFixed = (number, places) => {
   return parseFloat(number).toFixed(places)
 }
 
-export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal, convertFloatFixed }
+export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal, convertFloatFixed, fonts }

@@ -2,11 +2,10 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import "../../../styles/toastify.css"
 import { colors } from "../../../styles/variables"
-import { svgToObjects } from "../../../utils/helper-functions"
 import { ToastContainer, toast } from 'react-toastify'
 import { useFirebaseContext } from "../../../utils/auth"
-import { WarningCircle, CheckCircle, Circle, ArrowRight } from "phosphor-react"
-import Loading from "../../../assets/loading.svg"
+import { WarningCircle, CheckCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
+import { v4 as uuidv4 } from 'uuid'
 
 import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -37,7 +36,13 @@ const PageRangeInput = styled.input`
   border-radius: 0.25rem;
   text-align: center;
   width: 2.5rem;
-  /* Chrome, Safari, Edge, Opera */
+  &:hover,
+  &:focus {
+    background-color: ${colors.gray.oneHundred};
+  }
+  &:focus {
+    outline: none;
+  }
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -50,14 +55,16 @@ const PageRangeInput = styled.input`
 `
 
 function ApplyTemplateModal({
-  bookId,
   bookData,
-  pageData,
+  bookId,
   canvasPages,
-  setCanvasPages,
-  setShowModal,
+  canvasPageTemplates,
+  pageData,
   selectedPage,
   selectedPageSvg,
+  setCanvasPages,
+  setCanvasPageTemplates,
+  setShowModal,
   user,
 }) {
   const { firebaseDb } = useFirebaseContext()
@@ -70,41 +77,84 @@ function ApplyTemplateModal({
   const [rangeIsFocused, setRangeIsFocused] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  function handleTemplateApply(value) {
+  function handleTemplateApply() {
     setLoading(true)
 
-    // have to purposely delay applyTemplate() because it freezes the UI
-    // preventing the loading state from occuring
-    setTimeout(() => {
-      applyTemplate(value)
-    }, 10)
-  }
-
-  // simple function to update a specific page's svg field in the database
-  // requires a pageId and a SVG string
-  function updatePageSvg(pageId, newPageSvg) {
-    const updates = {}
-    updates[`/pages/${pageId}/svg`] = newPageSvg
-
-    return firebaseDb.ref().update(updates, error => {
-      if (error) {
-        console.log(error)
-      }
-    })
+    if (!selectedApply) {
+      toast.error("No choices were selected.")
+    }
+    else {
+      // have to purposely delay applyTemplate() because it freezes the UI
+      // preventing the loading state from occuring
+      setTimeout(() => {
+        applyTemplate(selectedApply)
+      }, 10)
+    }
   }
 
   async function applyTemplate(value) {
     // clone the canvasPages array
     const pageNumber = parseInt(selectedPage) - 1
     const canvasPagesClone = [...canvasPages]
-    const newPageSvg = svgToObjects(selectedPageSvg, 0)
+    const newPageSvg = selectedPageSvg.outerHTML
+    let newPageId
 
+    if (!user) {
+      // create a new id for the template
+      const newTemplateId = uuidv4()
+      // create a page object so that it can be referenced
+      const demoPagesObject = {
+        [newTemplateId]: newPageSvg,
+      }
+
+      // set the new template to state
+      setCanvasPageTemplates({
+        ...canvasPageTemplates,
+        ...demoPagesObject,
+      })
+
+      // save the page id to variable
+      newPageId = newTemplateId
+    }
+    else {
+      // create a new ref for the new page
+      const newPageKey = firebaseDb.ref("pages/").push().key
+
+      // insert new page into pages table
+      await firebaseDb.ref("pages/").set({
+        bookId: bookId,
+        id: newPageKey,
+        svg: newPageSvg,
+        uid: user.uid,
+      })
+
+      // set the new template to state
+      setCanvasPageTemplates({
+        ...canvasPageTemplates,
+        [newPageKey]: newPageSvg,
+      })
+
+      // save the page id to variable
+      newPageId = newPageKey
+    }
+
+    // update canvas pages
+    async function updateCanvasPages(pages) {
+      // if user is not signed in then only update pages in state
+      if (!user) {
+        setCanvasPages(pages)
+      }
+      else {
+        await firebaseDb.ref(`books/${bookId}/pages`).set(pages)
+
+      }
+    }
+
+    // switch function to apply template to the user's desired pages
     switch(value) {
       case "apply-current":
         // change the corresponding page's svg in our cloned array
-        canvasPagesClone[pageNumber].svg = newPageSvg
-        // update the svg field for this entry in the firebase db
-        await updatePageSvg(canvasPagesClone[pageNumber].pageId, newPageSvg)
+        canvasPagesClone[pageNumber].pageId = newPageId
         break
       case "apply-range":
         // change the corresponding page's svg in our cloned array
@@ -115,32 +165,24 @@ function ApplyTemplateModal({
             case "even":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             case "odd":
               if (i % 2 !== 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             case "other":
               if (i % frequencyNum === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
-              canvasPagesClone[i - 1].svg = newPageSvg
-              // update the svg field for each appropriate page in the firebase db
-              await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+              canvasPagesClone[i - 1].pageId = newPageId
           }
         }
         break
@@ -153,32 +195,24 @@ function ApplyTemplateModal({
             case "even":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             case "odd":
               if (i % 2 !== 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             case "other":
               if (i % frequencyNum === 0) {
                 // change the corresponding page's svg in our cloned array
-                canvasPagesClone[i - 1].svg = newPageSvg
-                // update the svg field for each appropriate page in the firebase db
-                await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+                canvasPagesClone[i - 1].pageId = newPageId
               }
               break
             default:
               // change the corresponding page's svg in our cloned array
-              canvasPagesClone[i - 1].svg = newPageSvg
-              // update the svg field for each appropriate page in the firebase db
-              await updatePageSvg(canvasPagesClone[i - 1].pageId, newPageSvg)
+              canvasPagesClone[i - 1].pageId = newPageId
           }
         }
         break
@@ -186,8 +220,9 @@ function ApplyTemplateModal({
         break
     }
 
+
     // update canvasPages with the updated array clone
-    setCanvasPages(canvasPagesClone)
+    updateCanvasPages(canvasPagesClone)
     toast.success("Succesfully updated pages!")
 
     setLoading(false)
@@ -256,31 +291,24 @@ function ApplyTemplateModal({
       <ModalHeader>Apply template to pages</ModalHeader>
       <ModalContent>
         <Notification
-          backgroundcolor={colors.red.twoHundred}
-          bordercolor={colors.red.twoHundred}
-          margin="0 0 2rem"
+          alignitems="flex-start"
+          backgroundcolor={colors.gray.oneHundred}
+          bordercolor={colors.gray.oneHundred}
+          margin="0 0 1rem"
           padding="1rem"
         >
           <Icon
-            backgroundcolor={colors.red.twoHundred}
             borderradius="100%"
-            margin="0 1rem 0 0"
+            margin="0.25rem 1rem 0 0"
             className="is-pulsating"
-            pulseColor={colors.red.threeHundred}
+            pulseColor={colors.yellow.threeHundred}
           >
-            <WarningCircle size="1.5rem" weight="fill" color={colors.red.sixHundred} />
+            <WarningCircle size="1.5rem" weight="fill" color={colors.yellow.sixHundred} />
           </Icon>
           <Content
-            paragraphcolor={colors.red.nineHundred}
+            paragraphcolor={colors.gray.nineHundred}
           >
             <p>Applying a template will remove all existing layouts and styles from these pages.</p>
-            {user ? (
-              null
-            ) : (
-              <p>
-                Note: This feature is not available in demo mode.
-              </p>
-            )}
           </Content>
         </Notification>
         <Grid
@@ -307,9 +335,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-current">
                   <Icon margin="0 0.5rem 0 0">
                     {selectedApply === "apply-current" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>Current page only</span>
@@ -328,9 +356,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-all">
                   <Icon margin="0 0.5rem 0 0">
                     {selectedApply === "apply-all" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>All pages</span>
@@ -349,9 +377,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-range">
                   <Icon margin="0 0.5rem 0 0">
                     {selectedApply === "apply-range" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>Page range</span>
@@ -376,7 +404,7 @@ function ApplyTemplateModal({
                   <Icon
                     margin="0.125rem 0.25rem 0"
                   >
-                    <ArrowRight weight="regular" color={colors.gray.nineHundred} size={14} />
+                    <ArrowsHorizontal weight="regular" color={colors.gray.nineHundred} size={16} />
                   </Icon>
                   <PageRangeInput
                     type="number"
@@ -403,7 +431,7 @@ function ApplyTemplateModal({
               flexdirection="column"
               margin="0 0 2rem 0"
             >
-              <StyledLabel>Frequency</StyledLabel>
+              <StyledLabel>Frequency (optional)</StyledLabel>
               <RadioInput
                 margin="0 0 0.5rem 0"
               >
@@ -417,9 +445,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-even">
                   <Icon margin="0 0.5rem 0 0">
                     {frequency === "even" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>Even pages</span>
@@ -438,9 +466,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-odd">
                   <Icon margin="0 0.5rem 0 0">
                     {frequency === "odd" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>Odd pages</span>
@@ -459,9 +487,9 @@ function ApplyTemplateModal({
                 <label htmlFor="apply-other">
                   <Icon margin="0 0.5rem 0 0">
                     {frequency === "other" ? (
-                      <CheckCircle weight="duotone" color={colors.link.normal} size={18} />
+                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
-                      <Circle weight="regular" color={colors.link.normal} size={18} />
+                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
                   </Icon>
                   <span>Every</span>
@@ -499,25 +527,23 @@ function ApplyTemplateModal({
         >
           Cancel
         </Button>
-        {user ? (
-          <Button
-            backgroundcolor={colors.primary.sixHundred}
-            color={colors.primary.white}
-            padding="0.5rem"
-            borderradius="0.25rem"
-            onClick={() => handleTemplateApply(selectedApply)}
-            className={loading ? "is-loading" : null}
-            disabled={loading}
-          >
-            {loading ? (
-              <Loading height="1rem" width="3rem" />
-            ) : (
-              "Confirm"
-            )}
-          </Button>
-        ) : (
-          null
-        )}
+        <Button
+          backgroundcolor={colors.primary.sixHundred}
+          color={colors.primary.white}
+          padding="0.5rem"
+          borderradius="0.25rem"
+          onClick={() => handleTemplateApply()}
+          className={loading ? "is-loading" : null}
+          disabled={loading || !selectedApply}
+        >
+          {loading ? (
+            <Icon width="3rem">
+              <CircleNotch size="1rem" />
+            </Icon>
+          ) : (
+            "Confirm"
+          )}
+        </Button>
       </ModalFooter>
       <ToastContainer
         autoClose={3000}

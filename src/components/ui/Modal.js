@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { colors, widths, fonts } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
@@ -30,7 +30,8 @@ const ModalHeader = styled.div`
   border-bottom: ${props => props.border || `1px solid ${colors.gray.threeHundred}`};
   border-radius: 0.25rem 0.25rem 0 0;
   color: ${props => props.color || colors.primary.nineHundred};
-  font-size: 1.25rem;
+  font-size: 0.875rem;
+  font-family: ${fonts.secondary};
   font-weight: 700;
   padding: 1rem;
 `

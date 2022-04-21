@@ -83,11 +83,6 @@ const Page = memo(props => {
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
   const [svgArray, setSvgArray] = useState([])
 
-
-  useEffect(() => {
-    console.log(canvasPageTemplates)
-  }, [canvasPages, canvasPageTemplates])
-
   // change the selected page number
   function handleSelectPage(value) {
     const pageNumber = parseInt(value)

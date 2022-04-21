@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { colors, convertToMM } from "../../../styles/variables"
-import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
-import { svgToObjects } from "../../../utils/helper-functions"
 import "../../../styles/toastify.css"
+import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
+import { colors, convertToMM } from "../../../styles/variables"
+import { svgToObjects } from "../../../utils/helper-functions"
 import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../../layout/Flexbox"
@@ -71,7 +71,6 @@ function Templatesbar({
   currentPageSide,
   pageData,
   pageContentSize,
-  selectedPageSvg,
   setCurrentPageSide,
   setLeftPageData,
   setPageData,
@@ -102,6 +101,19 @@ function Templatesbar({
       setLoading(false)
       toast.success(`Applied template to ${currentPageSide} pages!`)
     }, 500)
+  }
+
+  function handleApplyTemplateButton() {
+    // don't show the modal if no template is selected
+    if (!pageData.template) {
+      toast.error("Click and select a template first!")
+    }
+    else {
+      setShowModal({
+        show: true,
+        type: "template"
+      })
+    }
   }
 
   if (pageData.show) {
@@ -312,11 +324,8 @@ function Templatesbar({
             color={colors.primary.white}
             padding="1rem"
             width="100%"
-            disabled={pageData.template === "none" ? true : false}
-            onClick={() => setShowModal({
-              show: true,
-              type: "template"
-            })}
+            disabled={!pageData.template}
+            onClick={() => handleApplyTemplateButton()}
           >
             Apply template
           </Button>
