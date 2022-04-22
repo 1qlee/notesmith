@@ -149,7 +149,7 @@ function BooksContainer({
                   {book.title}
                 </p>
               )}
-              <small>Created on {convertTime(book.date_created)}</small>
+              <small>Created on {convertTime(book.dateCreated)}</small>
             </Book>
           </Cell>
         ))}

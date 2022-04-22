@@ -49,14 +49,12 @@ function PageBox({
   bookData,
   setSelectedPage,
   selectedPage,
-  windowRef,
 }) {
   const pageSelectorInput = useRef(null)
 
   function validatePageChange(value) {
     // if the input is somehow not a number
     const pageNumber = isNaN(value) ? 1 : parseInt(value)
-    console.log(windowRef.current)
 
     // validation logic
     if (pageNumber <= 0) {

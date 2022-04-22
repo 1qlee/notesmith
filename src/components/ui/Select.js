@@ -152,11 +152,11 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
           </SelectOption>
           <SelectOption
             onClick={e => {handleMenuClick({
-              dbValue: "date_created",
+              dbValue: "dateCreated",
               domValue: "Date created"
             })}}
           >
-            {currentDbValue === "date_created" && (
+            {currentDbValue === "dateCreated" && (
               <SelectIcon>
                 <Icon>
                   <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />

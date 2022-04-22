@@ -72,7 +72,6 @@ function Template({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-          id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
           height={workingPageHeight}
           width={workingPageWidth}
           viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
@@ -115,7 +114,6 @@ function Template({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-        id={currentPageSide === "left" ? "left-side-page" : "right-side-page"}
         height={workingPageHeight}
         width={workingPageWidth}
         viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}

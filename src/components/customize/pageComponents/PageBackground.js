@@ -12,7 +12,6 @@ function PageBackground({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      id={pageSide === "left" ? "page-background-left" : "page-background-right"}
       width={canvasPageSize.width}
       height={canvasPageSize.height}
       x={pageSide === "left" ? "0" : canvasPageSize.width}

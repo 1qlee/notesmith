@@ -84,11 +84,7 @@ function ApplyTemplateModal({
       toast.error("No choices were selected.")
     }
     else {
-      // have to purposely delay applyTemplate() because it freezes the UI
-      // preventing the loading state from occuring
-      setTimeout(() => {
-        applyTemplate(selectedApply)
-      }, 10)
+      applyTemplate(selectedApply)
     }
   }
 
@@ -121,7 +117,7 @@ function ApplyTemplateModal({
       const newPageKey = firebaseDb.ref("pages/").push().key
 
       // insert new page into pages table
-      await firebaseDb.ref("pages/").set({
+      await firebaseDb.ref(`pages/${newPageKey}`).set({
         bookId: bookId,
         id: newPageKey,
         svg: newPageSvg,
@@ -139,15 +135,35 @@ function ApplyTemplateModal({
     }
 
     // update canvas pages
-    async function updateCanvasPages(pages) {
-      // if user is not signed in then only update pages in state
-      if (!user) {
-        setCanvasPages(pages)
+    async function updatePagesDb(pages) {
+      // if user is signed, update pages in db
+      if (user) {
+        await firebaseDb.ref(`books/${bookId}/pages`).set(pages).then(() => {
+          cleanupPagesDb(pages)
+        })
       }
-      else {
-        await firebaseDb.ref(`books/${bookId}/pages`).set(pages)
 
-      }
+      // set pages in state
+      setCanvasPages(pages)
+    }
+
+    // cleans up non-used pre-existing pages associated with the book
+    async function cleanupPagesDb(pages) {
+      // get all pages associated with the book
+      await firebaseDb.ref(`pages/`).orderByChild("bookId").equalTo(bookId).once("value").then(snapshot => {
+        const allExistingPages = snapshot.val()
+
+        // loop through all pages
+        for (const existingPage in allExistingPages) {
+          // look for matching page id's in canvasPages
+          const pageExists = pages.find(page => page.pageId === allExistingPages[existingPage].id)
+
+          // if there is no match, delete the page from the db
+          if (!pageExists) {
+            firebaseDb.ref("pages").child(allExistingPages[existingPage].id).remove()
+          }
+        }
+      })
     }
 
     // switch function to apply template to the user's desired pages
@@ -222,7 +238,7 @@ function ApplyTemplateModal({
 
 
     // update canvasPages with the updated array clone
-    updateCanvasPages(canvasPagesClone)
+    updatePagesDb(canvasPagesClone)
     toast.success("Succesfully updated pages!")
 
     setLoading(false)

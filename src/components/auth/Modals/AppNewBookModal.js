@@ -27,6 +27,7 @@ function NewBookModal({
   bookData,
   setShowModal,
   setBookData,
+  toast,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
   const [step, setStep] = useState(0)
@@ -70,12 +71,13 @@ function NewBookModal({
   // creating a new book in the db
   async function createNewBook() {
     setProcessing(true)
+    // check to see if title is empty
     if (!bookData.title || bookData.title.trim().length === 0) {
-      setProcessing(false)
       setBookTitleError({
         show: true,
         msg: "Please enter a title."
       })
+      setProcessing(false)
     }
     else {
       // create a new book key (id)
@@ -93,27 +95,27 @@ function NewBookModal({
         svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
         uid: user.uid,
       })
-      const pagesObject = {}
+      const pagesArray = []
 
       // loop that sets page data into the new book
       // each page will refer to the newly created page
-      for (let i = 1; i <= bookData.numOfPages; i++) {
+      for (let i = 0; i < bookData.numOfPages; i++) {
         // save page to the dummy object along with page number and a reference to the page created earlier
-        pagesObject[i] = {
-          pageNumber: i,
+        pagesArray.push({
+          pageNumber: i + 1,
           pageId: newPageKey,
-        }
+        })
       }
       // write the new book into the db
       await newBookRef.set({
         "coverColor": bookData.coverColor,
-        "date_created": new Date().valueOf(),
+        "dateCreated": new Date().valueOf(),
         "heightPixel": bookData.heightPixel,
         "heightInch": bookData.heightInch,
         "id": newBookKey,
         "name": bookData.name,
         "numOfPages": bookData.numOfPages,
-        "pages": pagesObject,
+        "pages": pagesArray,
         "size": bookData.size,
         "title": bookData.title,
         "uid": user.uid,
@@ -127,8 +129,11 @@ function NewBookModal({
         // redirect the user to the book creation page
         navigate(`/customize/${bookData.slug}/${newBookKey}`)
       }).catch(error => {
-        console.log("error writing book to the database")
-        console.error(error)
+        toast.error("Error creating book. Please try again.")
+        setShowModal({
+          show: false,
+          type: "createbook",
+        })
       })
     }
   }

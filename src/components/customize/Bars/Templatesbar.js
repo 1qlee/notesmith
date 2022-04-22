@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import "../../../styles/toastify.css"
 import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
 import { colors, convertToMM } from "../../../styles/variables"
 import { svgToObjects } from "../../../utils/helper-functions"
 import { ToastContainer, toast } from 'react-toastify'
+import "../../../styles/toastify.css"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageIcons from "../PageIcons"

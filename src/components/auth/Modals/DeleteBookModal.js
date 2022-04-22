@@ -18,7 +18,11 @@ function DeleteBookModal({
   setShowModal,
 }) {
   return (
-    <Modal>
+    <Modal
+      width="300px"
+      setShowModal={setShowModal}
+    >
+      <ModalHeader>Delete this book</ModalHeader>
       <ModalContent
         backgroundcolor={colors.white}
       >
@@ -26,8 +30,7 @@ function DeleteBookModal({
           h3fontsize="1.25rem"
           h3margin="0 0 0 0"
         >
-          <h3>Delete this book</h3>
-          <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>?</p>
+          <p>Are you sure you want to delete <b>{bookToBeDeleted.title}</b>? The book and all of its pages will be removed.</p>
         </Content>
       </ModalContent>
       <ModalFooter

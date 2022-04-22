@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { convertToPx } from "../../styles/variables"
+import { convertToPx, fonts } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { v4 as uuidv4 } from 'uuid'
+import { ToastContainer, toast } from 'react-toastify'
+import "../../styles/toastify.css"
 
 import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
@@ -136,8 +138,6 @@ const Editor = ({ bookId, productData, productImageData }) => {
         })
       })
 
-      console.log(pagesObject)
-
       // loop through bookPages argument which is an object of all pages
       for (const page in bookPages) {
         pagesArray.push(bookPages[page])
@@ -256,11 +256,12 @@ const Editor = ({ bookId, productData, productImageData }) => {
           )}
           {showModal.type === "signedIn" && (
             <CreateBookModal
-              setShowModal={setShowModal}
               bookData={bookData}
               pageData={pageData}
-              setBookData={setBookData}
               productData={productData}
+              setBookData={setBookData}
+              setShowModal={setShowModal}
+              toast={toast}
             />
           )}
           {showModal.type === "template" && (
@@ -280,6 +281,24 @@ const Editor = ({ bookId, productData, productImageData }) => {
           )}
         </>
       )}
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        draggablePercent={50}
+        hideProgressBar={false}
+        limit={3}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="bottom-center"
+        rtl={false}
+        theme="colored"
+        style={{
+          fontFamily: fonts.secondary,
+          fontSize: "0.75rem",
+        }}
+      />
     </>
   )
 }

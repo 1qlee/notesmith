@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning } from "phosphor-react"
 import { jsPDF as createPdf } from 'jspdf'
-import Loading from "../../assets/loading.svg"
+import { ToastContainer, toast } from 'react-toastify'
+import "../../../styles/toastify.css"
 import 'svg2pdf.js'
 
 import { BookRadio } from "./books/BookComponents"
@@ -149,12 +150,12 @@ const Books = () => {
     }
 
     // sort by date created
-    if (method === "date_created") {
+    if (method === "dateCreated") {
       // if books parameter exists, that means we are on the initial load
       // else we'll just be changing userBooks as defined in useState
       books ?
-        copiedArray = books.sort((a, b) => a.date_created - b.date_created) :
-        copiedArray = userBooks.sort((a, b) => a.date_created - b.date_created)
+        copiedArray = books.sort((a, b) => a.dateCreated - b.dateCreated) :
+        copiedArray = userBooks.sort((a, b) => a.dateCreated - b.dateCreated)
       // have to create a new array so the components knows state has changed
 
       const sortedBooksArray = Array.from(copiedArray)
@@ -234,18 +235,16 @@ const Books = () => {
 
         // write the new page into the db
         newPageRef.set({
-          "date_created": new Date().valueOf(),
+          "dateCreated": new Date().valueOf(),
           "id": newPageKey,
-          "size": child.val().size,
           "bookId": newBookKey,
           "uid": uid,
-          "pageNumber": child.val().pageNumber
         })
       })
     }).then(() => {
       // write the duplicated book into the db
       newBookRef.set({
-        "date_created": new Date().valueOf(),
+        "dateCreated": new Date().valueOf(),
         "size": book.size,
         "title": `${book.title} (Copy)`,
         "id": newBookKey,
@@ -357,9 +356,10 @@ const Books = () => {
         <>
           {showModal.type === "createbook" && (
             <NewBookModal
-              setShowModal={setShowModal}
-              setBookData={setBookData}
               bookData={bookData}
+              setBookData={setBookData}
+              setShowModal={setShowModal}
+              toast={toast}
             />
           )}
           {showModal.type === "deletebook" && (
@@ -371,6 +371,24 @@ const Books = () => {
           )}
         </>
       )}
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        draggablePercent={50}
+        hideProgressBar={false}
+        limit={3}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="bottom-center"
+        rtl={false}
+        theme="colored"
+        style={{
+          fontFamily: fonts.secondary,
+          fontSize: "0.75rem",
+        }}
+      />
     </Layout>
   )
 }

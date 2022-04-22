@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useRef } from "react"
+import React, { useState, useEffect, memo } from "react"
 import { colors } from "../../../styles/variables"
 import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import Loading from "../../../assets/loading.svg"
@@ -81,7 +81,6 @@ const Page = memo(props => {
   const columnCount = 2
   // current page based on index of canvasPages calculated from WindowsGrid row and column values
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
-  const [svgArray, setSvgArray] = useState([])
 
   // change the selected page number
   function handleSelectPage(value) {
@@ -129,7 +128,6 @@ function Pagebar({
   setPageData,
   setSelectedPage,
 }) {
-  const windowRef = useRef(null)
   const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData)
 
   return (
@@ -138,11 +136,9 @@ function Pagebar({
         bookData={bookData}
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}
-        windowRef={windowRef}
       />
       <WindowGrid
         className="window-grid"
-        ref={windowRef}
         useIsScrolling
         columnCount={2}
         columnWidth={64}

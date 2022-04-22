@@ -64,7 +64,7 @@ function PageSpread({
         setRightPage(canvasPages[selectedPage - 1].pageId)
       }
     }
-  }, [selectedPage])
+  }, [selectedPage, canvasPages, canvasPageTemplates])
 
   return (
     <svg
@@ -178,7 +178,6 @@ function Page({
             height={workingPageHeight}
             width={workingPageWidth}
             viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-            id={pageSide === "left" ? "left-side-page" : "right-side-page"}
             x={pageSide === "left" ? minimumMargin : rightPageXPosition}
             y={minimumMargin}
             src={canvasPageTemplates[pageSvg]}

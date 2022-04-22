@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react"
+import React, { useState } from "react"
 import { Link, navigate } from "gatsby"
 import styled from "styled-components"
 import { Warning, CircleNotch } from "phosphor-react"
-import { colors } from "../../../styles/variables"
+import { colors, convertToPx } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
 
 import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
@@ -13,11 +13,13 @@ import Button from "../../Button"
 import Content from "../../Content"
 
 function CreateBookModal({
-  setShowModal,
-  setBookData,
   bookData,
+  coverColor,
   pageData,
   productData,
+  setBookData,
+  setShowModal,
+  toast,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
   const [processing, setProcessing] = useState(false)
@@ -25,9 +27,8 @@ function CreateBookModal({
     show: false,
     msg: "",
   })
-  const buttonRef = useRef(null)
 
-  function createNewBook() {
+  async function createNewBook() {
     setProcessing(true)
     // if the booktitle is empty
     if (!bookData.title || bookData.title.trim().length === 0) {
@@ -38,42 +39,36 @@ function CreateBookModal({
       setProcessing(false)
     }
     else {
+      // create a new book key (id)
       const newBookRef = firebaseDb.ref("books/").push()
       const newBookKey = newBookRef.key
+      // create a new page to point the new book's pages to
+      // it will just be a blank svg rect
+      const newPageRef = firebaseDb.ref("pages/").push()
+      const newPageKey = newPageRef.key
+
+      // set data into the newly created page
+      await newPageRef.set({
+        bookId: newBookKey,
+        id: newPageKey,
+        svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
+        uid: user.uid,
+      })
       const pagesObject = {}
 
+      // loop that sets page data into the new book
+      // each page will refer to the newly created page
       for (let i = 1; i <= bookData.numOfPages; i++) {
-        // create a new page key (id)
-        const newPageRef = firebaseDb.ref("pages/").push()
-        const newPageKey = newPageRef.key
-        let newPageSvg = null
-        // keep track of each page in this object - it will be used later to set pages in 'books'
-        pagesObject[`${newPageKey}`] = true
-        // svg for a blank page
-        newPageSvg = {
-          name: "rect",
-          width: pageData.pageHeight,
-          height: pageData.pageWidth,
-          fill: "#fff",
+        // save page to the dummy object along with page number and a reference to the page created earlier
+        pagesObject[i] = {
+          pageNumber: i,
+          pageId: newPageKey,
         }
-        // write the new page into the db
-        newPageRef.set({
-          "bookId": newBookKey,
-          "id": newPageKey,
-          "pageNumber": i,
-          "svg": {
-            "rect-01": newPageSvg,
-          },
-          "uid": user.uid,
-        }).catch(error => {
-          console.error("error writing page to the database")
-        })
       }
-
       // write the new book into the db
-      newBookRef.set({
+      await newBookRef.set({
         "coverColor": bookData.coverColor,
-        "date_created": new Date().valueOf(),
+        "dateCreated": new Date().valueOf(),
         "heightPixel": bookData.heightPixel,
         "heightInch": bookData.heightInch,
         "id": newBookKey,
@@ -95,11 +90,10 @@ function CreateBookModal({
           type: "",
         })
         setProcessing(false)
-
-        // finally, redirect the user to the newly created book page
+        // redirect the user to the book creation page
         navigate(`/customize/${productData.slug}/${newBookKey}`, { replace: true })
       }).catch(error => {
-        console.log("error writing book to the database")
+        toast.error("Error creating book. Please try again.")
       })
     }
   }
@@ -171,7 +165,6 @@ function CreateBookModal({
           flex="flex"
           fontsize="0.8rem"
           onClick={e => createNewBook()}
-          ref={buttonRef}
         >
           {processing ? (
             <Icon width="74px">

@@ -58,14 +58,14 @@ const ContextMenu = (
       left: coordinates.x
     }}>
       <ContextMenuLink
-        href={`/customize/notebook/${selectedBookId}`}
+        href={`/customize/${selectedBook.slug}/${selectedBookId}`}
       >
         <ContextMenuItem>
           Open
         </ContextMenuItem>
       </ContextMenuLink>
       <ContextMenuLink
-        href={`/customize/notebook/${selectedBookId}`}
+        href={`/customize/${selectedBook.slug}/${selectedBookId}`}
         target="_blank"
         rel="noopener noreferrer"
       >
