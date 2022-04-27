@@ -4,7 +4,6 @@ import { convertToPx, fonts } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { v4 as uuidv4 } from 'uuid'
 import { ToastContainer, toast } from 'react-toastify'
-import "../../styles/toastify.css"
 
 import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
@@ -276,6 +275,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
               setCanvasPages={setCanvasPages}
               setCanvasPageTemplates={setCanvasPageTemplates}
               setShowModal={setShowModal}
+              toast={toast}
               user={user}
             />
           )}

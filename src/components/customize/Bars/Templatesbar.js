@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
-import { colors, convertToMM } from "../../../styles/variables"
+import { colors, convertToMM, fonts } from "../../../styles/variables"
 import { svgToObjects } from "../../../utils/helper-functions"
-import { ToastContainer, toast } from 'react-toastify'
-import "../../../styles/toastify.css"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageIcons from "../PageIcons"
@@ -44,21 +42,23 @@ const FloatingTemplatesbar = styled.div`
   z-index: 10;
 `
 
-const PageIcon = styled.div`
-  align-items: center;
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+const PageButtonWrapper = styled.div`
   display: flex;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: 0.825rem;
-  justify-content: center;
-  padding: 0.5rem;
-  transition: border-color 0.2s, background-color 0.2s;
-  margin: ${props => props.margin};
-  &:hover {
-    border-color: ${colors.gray.sixHundred};
+  border: 1px solid ${colors.gray.threeHundred};
+  background-color: ${colors.white};
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+`
+
+const PageButton = styled(Button)`
+  flex: 1;
+  &:not(:last-child) {
+    margin-right: 2px;
+  }
+  &:hover,
+  &:focus {
     background-color: ${colors.primary.hover};
-    cursor: pointer;
   }
   &.is-active {
     background-color: ${colors.primary.sixHundred};
@@ -76,6 +76,7 @@ function Templatesbar({
   setPageData,
   setRightPageData,
   setShowModal,
+  toast,
 }) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -89,18 +90,15 @@ function Templatesbar({
   function handleSetTemplate() {
     setLoading(true)
 
-    // create artificial async
-    setTimeout(() => {
-      if (currentPageSide === "left") {
-        setLeftPageData(pageData)
-      }
-      else {
-        setRightPageData(pageData)
-      }
+    if (currentPageSide === "left") {
+      setLeftPageData(pageData)
+    }
+    else {
+      setRightPageData(pageData)
+    }
 
-      setLoading(false)
-      toast.success(`Applied template to ${currentPageSide} pages!`)
-    }, 500)
+    setLoading(false)
+    toast.success(`Applied template to ${currentPageSide} pages!`)
   }
 
   function handleApplyTemplateButton() {
@@ -153,25 +151,28 @@ function Templatesbar({
               margin="0 0 1rem 0"
             >
               <h3>Page side</h3>
-              <Flexbox
-                flex="flex"
-                margin="0"
-              >
-                <PageIcon
-                  margin="0 0.5rem 0 0"
-                  className={currentPageSide === "left" ? "is-active" : null}
+              <PageButtonWrapper>
+                <PageButton
+                  backgroundcolor={colors.white}
+                  borderradius="0.25rem"
+                  boxshadow="none"
+                  padding="0.25rem 0.5rem"
                   onClick={() => setCurrentPageSide("left")}
+                  className={currentPageSide === "left" ? "is-active" : null}
                 >
-                  L
-                </PageIcon>
-                <PageIcon
-                  margin="0 0.5rem 0 0"
-                  className={currentPageSide === "right" ? "is-active" : null}
+                  Left
+                </PageButton>
+                <PageButton
+                  backgroundcolor={colors.white}
+                  borderradius="0.25rem"
+                  boxshadow="none"
+                  padding="0.25rem 0.5rem"
                   onClick={() => setCurrentPageSide("right")}
+                  className={currentPageSide === "right" ? "is-active" : null}
                 >
-                  R
-                </PageIcon>
-              </Flexbox>
+                  Right
+                </PageButton>
+              </PageButtonWrapper>
             </Content>
             {pageData.template !== "blank" && pageData.template !== "none" && (
               <>
@@ -238,24 +239,6 @@ function Templatesbar({
             </Button>
           </TemplatesFooter>
         </Flexbox>
-        <ToastContainer
-          autoClose={3000}
-          closeOnClick
-          draggable
-          draggablePercent={50}
-          hideProgressBar={false}
-          limit={3}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          position="bottom-center"
-          rtl={false}
-          theme="colored"
-          style={{
-            fontFamily: "Inter, Helvetica, Tahoma, sans-serif",
-            fontSize: "0.75rem",
-          }}
-        />
       </FloatingTemplatesbar>
     )
   }

@@ -147,7 +147,7 @@ function Nav(props) {
                 <>
                   <NavItem
                     as={Link}
-                    to="/app/dashboard"
+                    to="/account/dashboard"
                   >
                     Dashboard
                   </NavItem>

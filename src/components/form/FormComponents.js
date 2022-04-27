@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { Minus, Plus } from "phosphor-react"
 
 import Icon from "../Icon"
@@ -223,30 +223,35 @@ const StyledRange = styled.div`
   input[type=range] {
     -webkit-appearance: none;
     width: 100%;
-    background: transparent;
-    &:active {
+    background: ${colors.gray.threeHundred};
+    border-radius: 0.25rem;
+    height: 0.5rem;
+    &:hover,
+    &:focus {
       &::-webkit-slider-thumb {
-        box-shadow: 0 1px 0px ${colors.shadow.float};
+        background-color: ${colors.primary.fourHundred};
       }
     }
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: ${colors.white};
+    background-color: ${colors.primary.sixHundred};
+    border: 2px solid ${colors.primary.white};
     border-radius: 100%;
-    border: 2px solid ${colors.primary.sixHundred};
-    box-shadow: 0 1px 2px ${colors.shadow.float};
+    box-shadow: 0 2px 4px ${colors.primary.shadow};
     cursor: pointer;
     height: 1.25rem;
     margin-top: -0.375rem;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
     width: 1.25rem;
   }
   input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 0.5rem;
+    background: transparent;
+    border-radius: 0.25rem;
+    -webkit-appearance: none;
     cursor: pointer;
-    background: ${colors.gray.threeHundred};
+    height: 0.5rem;
+    width: 100%;
   }
 `
 
@@ -437,6 +442,27 @@ const ErrorLine = styled.div`
   }
 `
 
+const StyledTable = styled.table`
+  border-radius: 0.25rem;
+  border: 1px solid ${colors.gray.threeHundred};
+  thead {
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+  th, td {
+    padding: 1rem;
+  }
+  th {
+    font-family: ${fonts.secondary};
+    font-size: 0.825rem;
+    font-weight: 700;
+  }
+  tr {
+    &.is-selected {
+      background-color: ${colors.primary.hover};
+    }
+  }
+`
+
 export {
   QuantityTracker,
   QuantityWrapper,
@@ -448,6 +474,7 @@ export {
   StyledRadio,
   StyledRange,
   StyledSelect,
+  StyledTable,
   SelectIcon,
   StyledFloatingLabel,
   StyledLabel,

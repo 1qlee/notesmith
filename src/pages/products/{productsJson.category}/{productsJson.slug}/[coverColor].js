@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql, navigate } from "gatsby"
-import { spacing, convertToPx } from "../../../../styles/variables"
+import { spacing, convertToPx, fonts } from "../../../../styles/variables"
 import { StaticImage, GatsbyImage } from "gatsby-plugin-image"
-import ImageGallery from 'react-image-gallery'
+import { ToastContainer, toast } from 'react-toastify'
 import "../../../../styles/gallery.css"
+import ImageGallery from 'react-image-gallery'
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
@@ -30,7 +31,7 @@ const ProductPage = ({ data, params }) => {
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [selectedTemplate, setSelectedTemplate] = useState({
-    template: "blank",
+    template: "",
     show: false,
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
@@ -49,46 +50,8 @@ const ProductPage = ({ data, params }) => {
     pageHeight: bookData.heightPixel - convertToPx(6.35),
     pageWidth: bookData.widthPixel - convertToPx(13.335),
   })
-  const [leftPageData, setLeftPageData] = useState({
-    template: "blank",
-    show: false,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
-    spacing: 5,
-    opacity: 1,
-    thickness: 0.088,
-    dotRadius: 0.6,
-    rows: 42,
-    columns: 27,
-    marginTop: 2.273,
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    width: 127,
-    lineWidth: 100,
-    pageHeight: bookData.heightPixel - convertToPx(6.35),
-    pageWidth: bookData.widthPixel - convertToPx(13.335),
-  })
-  const [rightPageData, setRightPageData] = useState({
-    template: "blank",
-    show: false,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
-    spacing: 5,
-    opacity: 1,
-    thickness: 0.088,
-    dotRadius: 0.6,
-    rows: 42,
-    columns: 27,
-    marginTop: 2.273,
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    width: 127,
-    lineWidth: 100,
-    pageHeight: bookData.heightPixel - convertToPx(6.35),
-    pageWidth: bookData.widthPixel - convertToPx(13.335),
-  })
+  const [leftPageData, setLeftPageData] = useState({})
+  const [rightPageData, setRightPageData] = useState({})
   const [pageContentSize, setPageContentSize] = useState({})
   const [activeImages, setActiveImages] = useState([])
   const [cartThumbnail, setCartThumbnail] = useState([])
@@ -155,6 +118,7 @@ const ProductPage = ({ data, params }) => {
                           currentPageSide={currentPageSide}
                           pageContentSize={pageContentSize}
                           pageData={selectedTemplate}
+                          toast={toast}
                           selectedPageSvg={selectedPageSvg}
                           setCurrentPageSide={setCurrentPageSide}
                           setLeftPageData={setLeftPageData}
@@ -195,6 +159,7 @@ const ProductPage = ({ data, params }) => {
                       selectedTemplate={selectedTemplate}
                       setBookData={setBookData}
                       setSelectedTemplate={setSelectedTemplate}
+                      toast={toast}
                     />
                   </Cell>
                 </Grid>
@@ -203,6 +168,24 @@ const ProductPage = ({ data, params }) => {
           </Container>
         </Section>
       </SectionMain>
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        draggablePercent={50}
+        hideProgressBar={false}
+        limit={3}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="bottom-center"
+        rtl={false}
+        theme="colored"
+        style={{
+          fontFamily: fonts.secondary,
+          fontSize: "0.75rem",
+        }}
+      />
     </Layout>
   )
 }

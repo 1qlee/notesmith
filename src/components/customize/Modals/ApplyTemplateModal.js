@@ -1,8 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import "../../../styles/toastify.css"
 import { colors } from "../../../styles/variables"
-import { ToastContainer, toast } from 'react-toastify'
 import { useFirebaseContext } from "../../../utils/auth"
 import { WarningCircle, CheckCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid'
@@ -65,6 +63,7 @@ function ApplyTemplateModal({
   setCanvasPages,
   setCanvasPageTemplates,
   setShowModal,
+  toast,
   user,
 }) {
   const { firebaseDb } = useFirebaseContext()
@@ -561,24 +560,6 @@ function ApplyTemplateModal({
           )}
         </Button>
       </ModalFooter>
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick
-        draggable
-        draggablePercent={50}
-        hideProgressBar={false}
-        limit={3}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="bottom-center"
-        rtl={false}
-        theme="colored"
-        style={{
-          fontFamily: "Inter, Helvetica, Tahoma, sans-serif",
-          fontSize: "0.75rem",
-        }}
-      />
     </Modal>
   )
 }

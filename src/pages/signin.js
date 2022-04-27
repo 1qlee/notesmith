@@ -19,7 +19,7 @@ const Login = () => {
     return <Loader />
   }
   if (user) {
-    navigate(`/app/dashboard`, { replace: true })
+    navigate(`/account/dashboard`, { replace: true })
     return null
   }
 

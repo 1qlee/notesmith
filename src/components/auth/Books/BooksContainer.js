@@ -4,7 +4,7 @@ import { spacing } from "../../../styles/variables"
 import { Grid, Cell } from "styled-css-grid"
 
 import { Book } from "./BookComponents"
-import { StyledInput } from "../../form/FormComponents"
+import { StyledInput, StyledTable } from "../../form/FormComponents"
 import ContextMenu from "../../ui/ContextMenu"
 
 // should export this function to utils
@@ -49,7 +49,7 @@ function BooksContainer({
   function handleRenameBook(e) {
     e.preventDefault()
     // db function from props
-    renameBook(selectedBookTitle, newBookTitle, selectedBookId)
+    renameBook(newBookTitle, selectedBookId)
     setShowBookTitleInput(false)
   }
 
@@ -107,21 +107,22 @@ function BooksContainer({
   }, [])
 
   return (
-    <>
-      <Grid
-        columns="repeat(auto-fill, minmax(250px, 1fr))"
-        data-clickoutside={true}
-        height="100%"
-        onClick={e => handleClickOutside(e)}
-        rowGap={spacing.normal}
-        style={{gridAutoRows: "min-content", padding: "2rem"}}
-      >
-        {userBooks.map(book => (
-          <Cell
-            key={book.id}
-          >
-            <Book
+    <div
+      data-clickoutside={true}
+      onClick={e => handleClickOutside(e)}
+    >
+      <StyledTable>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Date created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userBooks.map(book => (
+            <tr
               data-title={book.title}
+              key={book.id}
               onClick={e => handleBookSelect(e, book)}
               onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
               tabIndex="0"
@@ -130,30 +131,32 @@ function BooksContainer({
                 handleShowContextMenu(e, book)
               }}
             >
-              {selectedBookId === book.id && showBookTitleInput ? (
-                <form onSubmit={e => handleRenameBook(e)}>
-                  <StyledInput
-                    type="text"
-                    id="new-book-title"
-                    name="new-book-title"
-                    autocomplete="chrome-off"
-                    defaultValue={selectedBookTitle}
-                    onChange={e => setNewBookTitle(e.target.value.trim())}
-                    padding="0"
-                    borderradius="0"
-                    ref={renameBookTitleRef}
-                  />
-                </form>
-              ) : (
-                <p>
-                  {book.title}
-                </p>
-              )}
-              <small>Created on {convertTime(book.dateCreated)}</small>
-            </Book>
-          </Cell>
-        ))}
-      </Grid>
+              <td>
+                {selectedBookId === book.id && showBookTitleInput ? (
+                  <form onSubmit={e => handleRenameBook(e)}>
+                    <StyledInput
+                      type="text"
+                      id="new-book-title"
+                      name="new-book-title"
+                      autocomplete="chrome-off"
+                      defaultValue={selectedBookTitle}
+                      onChange={e => setNewBookTitle(e.target.value.trim())}
+                      padding="0"
+                      borderradius="0"
+                      ref={renameBookTitleRef}
+                    />
+                  </form>
+                ) : (
+                  <p>
+                    {book.title}
+                  </p>
+                )}
+              </td>
+              <td>{convertTime(book.dateCreated)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </StyledTable>
       <ContextMenu
         selectedBook={selectedBook}
         selectedBookId={selectedBookId}
@@ -163,7 +166,7 @@ function BooksContainer({
         showContextMenu={showContextMenu}
         setShowBookTitleInput={setShowBookTitleInput}
       />
-    </>
+    </div>
   )
 }
 

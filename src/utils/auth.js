@@ -37,15 +37,15 @@ export const FirebaseProvider = ({
 
     initFirebase()
   }, [user])
-
-  function sendEmailVerification(cb) {
-    user.sendEmailVerification().then(() => {
-      console.log("Sending verification email...")
-      cb(true)
-    }).catch(error => {
-      cb(error)
-    })
-  }
+  
+  // function sendEmailVerification(cb) {
+  //   user.sendEmailVerification().then(() => {
+  //     console.log("Sending verification email...")
+  //     cb(true)
+  //   }).catch(error => {
+  //     cb(error)
+  //   })
+  // }
 
   return (
     <FirebaseContext.Provider
@@ -53,7 +53,6 @@ export const FirebaseProvider = ({
         user,
         loading,
         firebaseDb,
-        sendEmailVerification,
         login: (...p) => firebaseAuth.signInWithEmailAndPassword(...p),
         signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
         signOut: (...p) => firebaseAuth.signOut(...p),

@@ -5,7 +5,7 @@ import { colors } from "../../styles/variables"
 const StyledContextMenu = styled.article`
   background-color: ${colors.white};
   box-shadow: ${colors.shadow.layeredSmall};
-  border-radius: 0 0.25rem 0.25rem;
+  border-radius: 0.25rem;
   font-size: 0.8rem;
   padding: 0.5rem 0;
   position: absolute;

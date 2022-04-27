@@ -45,6 +45,7 @@ const SectionAppContent = styled.section`
 
 const SectionAppWorkspace = styled.div`
   height: ${props => props.heightmargin ? `calc(100vh - ${props.heightmargin})` : "100vh"};
+  padding: ${props => props.padding || "2rem"};
   width: 100%;
 `
 

@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
 
+import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 import { colors } from "../../styles/variables"
 

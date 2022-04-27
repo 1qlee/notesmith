@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import { Link, navigate } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, CircleNotch } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid'
-import Loading from "../../assets/loading.svg"
 
 import { ProductDetails } from "./ShopComponents"
 import { QuantityTracker, StyledLabel } from "../form/FormComponents"
@@ -24,12 +23,25 @@ const ProductInfo = ({
   setBookData,
   selectedTemplate,
   setSelectedTemplate,
+  toast,
 }) => {
   const { addItem } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
 
   function handleAddCartButton(bookData) {
+    if (!bookData.coverColor) {
+      toast.error("Select a cover color.")
+    }
+    else if (!itemQuantity) {
+      toast.error("Enter a quantity.")
+    }
+    else if (!leftPageData.template) {
+      toast.error("Apply a template to left pages.")
+    }
+    else if (!rightPageData.template) {
+      toast.error("Apply a template to right pages.")
+    }
     // create a promise to add items to cart then redirect user to cart
     const addItemsToCart = new Promise((resolve, reject) => {
       // use-shopping-cart function to add items to cart
@@ -67,6 +79,7 @@ const ProductInfo = ({
         <Flexbox
           flex="flex"
           justifycontent="space-between"
+          alignitems="center"
           margin="0 0 1rem"
         >
           <Content
@@ -77,8 +90,9 @@ const ProductInfo = ({
             <h1>{bookData.name}</h1>
           </Content>
           <Content
-            h2fontsize="2rem"
+            h2fontsize="2.5rem"
             h2fontweight="400"
+            h2margin="0"
           >
             <h2>${bookData.price / 100}</h2>
           </Content>
@@ -123,6 +137,24 @@ const ProductInfo = ({
           showLabels={false}
         />
       </Flexbox>
+      {leftPageData.template && (
+        <Content
+          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          h3fontsize="0.75rem"
+          margin="2rem 0 0"
+        >
+          <h3>Left side pages</h3>
+        </Content>
+      )}
+      {rightPageData.template && (
+        <Content
+          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          h3fontsize="0.75rem"
+          margin="2rem 0 0"
+        >
+          <h3>Right side pages</h3>
+        </Content>
+      )}
       <Flexbox
         flex="flex"
         margin="0 0 1rem"
@@ -146,7 +178,7 @@ const ProductInfo = ({
           border={`1px solid ${colors.primary.sixHundred}`}
           className={loading ? "is-loading" : null}
           color={colors.primary.white}
-          disabled={loading}
+          disabled={loading || !bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
           margin="0 0 0 1rem"
           padding="1rem"
           onClick={() => handleAddCartButton(bookData)}
@@ -169,8 +201,8 @@ const ProductInfo = ({
         </Content>
       </Flexbox>
       <Notification
-        backgroundcolor={colors.white}
-        bordercolor={colors.gray.threeHundred}
+        backgroundcolor={colors.gray.oneHundred}
+        bordercolor={colors.gray.oneHundred}
         margin="0 0 2rem"
         padding="1rem"
       >
@@ -178,7 +210,7 @@ const ProductInfo = ({
           <Content
             margin="0 0 1rem"
           >
-            <p>Need more control over your page layouts? Our editor allows you to use more design tools and also allows each page to be edited individually. You must create or log into a Notesmith account to use the editor.</p>
+            <p>Need more control over your page layouts? Use our online editor and gain access to more design tools as well as the ability to edit each page individually!</p>
           </Content>
           <Button
             color={colors.primary.sixHundred}
@@ -192,7 +224,7 @@ const ProductInfo = ({
             width="100%"
           >
             {loading ? (
-              <Loading height="1rem" width="1rem" />
+              <CircleNotch size="1rem" />
             ) : (
               <span>
                 Customize page layouts in editor

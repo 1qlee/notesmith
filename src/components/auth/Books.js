@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { colors, fonts } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
 import { jsPDF as createPdf } from 'jspdf'
 import { ToastContainer, toast } from 'react-toastify'
-import "../../../styles/toastify.css"
 import 'svg2pdf.js'
 
-import { BookRadio } from "./books/BookComponents"
 import { Flexbox } from "../layout/Flexbox"
-import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Select } from "../ui/Select"
-import { StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import BooksContainer from "./books/booksContainer"
 import Button from "../Button"
-import Content from "../Content"
 import DeleteBookModal from "./modals/DeleteBookModal"
-import Icon from "../Icon"
 import Layout from "../layout/Layout"
 import Loader from "../Loader"
 import NewBookModal from "./modals/AppNewBookModal"
@@ -48,11 +41,10 @@ const Books = () => {
     show: false,
     type: "createbook",
   })
-  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     function getUserBooks() {
-      // if there is are no sort variables in localStorage, set some defaults
+      // if there are no sort variables in localStorage, set some defaults
       if (!getLocalStorage("sortMethod") || !getLocalStorage("sortOrder") || !getLocalStorage("sortValue")) {
         setLocalStorage("sortValue", "Alphabetical")
         setLocalStorage("sortMethod", "title")
@@ -87,7 +79,7 @@ const Books = () => {
     return () => {
       setLoading(false)
     }
-  }, [])
+  }, [user])
 
   // check if we're in the browser and set local storage
   function setLocalStorage(key, data) {
@@ -184,7 +176,7 @@ const Books = () => {
     }
   }
 
-  function renameBook(oldBookTitle, newBookTitle, bookId, cb) {
+  function renameBook(newBookTitle, bookId) {
     const updates = {}
     // update the specified book by its bookId
     // only updates the title field
@@ -192,7 +184,7 @@ const Books = () => {
 
     firebaseDb.ref().update(updates, error => {
       if (error) {
-        console.log("Error occurred when updating book title.")
+        toast.error("Failed to update book title.")
       }
     })
   }
@@ -209,7 +201,7 @@ const Books = () => {
         })
       })
     }).catch(error => {
-      console.log(error)
+      toast.error("Failed to delete book.")
     })
     // hide modal
     setShowModal({
@@ -218,7 +210,7 @@ const Books = () => {
     })
   }
 
-  function duplicateBook(book) {
+  async function duplicateBook(book) {
     // create a new key
     const newBookRef = booksRef.push()
     const newBookKey = newBookRef.key
@@ -226,30 +218,49 @@ const Books = () => {
     const pagesObject = {}
 
     // get all pages for this bookId
-    pagesRef.orderByChild("bookId").equalTo(book.id).once("value").then(snapshot => {
+    await pagesRef.orderByChild("bookId").equalTo(book.id).once("value").then(snapshot => {
       snapshot.forEach(child => {
+        const page = child.val()
         // create a new page key (id)
         const newPageRef = pagesRef.push()
         const newPageKey = newPageRef.key
-        pagesObject[`${newPageKey}`] = true
+        // creating key:value pairs for old page id to new page id
+        pagesObject[page.id] = newPageKey
 
         // write the new page into the db
         newPageRef.set({
-          "dateCreated": new Date().valueOf(),
-          "id": newPageKey,
           "bookId": newBookKey,
+          "svg": page.svg,
+          "id": newPageKey,
           "uid": uid,
         })
       })
     }).then(() => {
+      const pagesArray = []
+
+      for (let i = 0; i < book.pages.length; i++) {
+        pagesArray.push({
+          pageId: pagesObject[book.pages[i].pageId],
+          pageNumber: book.pages[i].pageNumber,
+        })
+      }
+
       // write the duplicated book into the db
       newBookRef.set({
+        "coverColor": book.coverColor,
         "dateCreated": new Date().valueOf(),
-        "size": book.size,
-        "title": `${book.title} (Copy)`,
+        "heightInch": book.heightInch,
+        "heightPixel": book.heightPixel,
         "id": newBookKey,
+        "name": book.name,
+        "numOfPages": book.numOfPages,
+        "pages": pagesArray,
+        "size": book.size,
+        "slug": book.slug,
+        "title": `${book.title} (Copy)`,
         "uid": uid,
-        "pages": pagesObject
+        "widthInch": book.widthInch,
+        "widthPixel": book.widthPixel,
       }).then(() => {
         // afterwards, log that book id into 'users/userId/books/bookId'
         userBooksRef.child(newBookKey).set(true)
@@ -263,10 +274,10 @@ const Books = () => {
       compress: true,
     })
     const downloadBookRef = firebaseDb.ref('books/-Mo-pISGlvG2AxeVFsXz')
+    let pageNum = 1
 
     downloadBookRef.once("value").then(snapshot => {
       const pages = snapshot.val().pages
-      let index = 1
 
       console.log("initializing pdf...")
       bookPdf.deletePage(1)
@@ -278,9 +289,9 @@ const Books = () => {
           const pageSvg = snapshot.val().svg
           const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
 
-          console.log("adding page: ", index)
+          console.log("adding page: ", pageNum)
           bookPdf.addPage([139.7, 215.9], "portrait")
-          bookPdf.setPage(index)
+          bookPdf.setPage(pageNum)
 
           bookPdf.svg(node, {
             x: 0,
@@ -289,12 +300,12 @@ const Books = () => {
             height: 215.9,
           }).then(() => {
 
-            if (index === numOfPages) {
+            if (pageNum === numOfPages) {
               console.log("saving pdf")
               bookPdf.save()
             }
 
-            index++
+            pageNum++
           })
         })
       }
@@ -303,10 +314,12 @@ const Books = () => {
 
   return (
     <Layout>
-      <Seo title="Books" />
+      <Seo title="My Books" />
       <SectionMain className="has-no-padding has-max-height">
         <SectionApp>
-          <Sidebar page="Books" />
+          <Sidebar
+            page="Books"
+          />
           <SectionAppContent>
             <Flexbox
               flex="flex"

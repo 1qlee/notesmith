@@ -14,7 +14,7 @@ const colors = {
   primary: {
     shadow: "rgba(74,100,98,0.35)",
     hover: "#EBEEEE",
-    active: "#bcdcbc",
+    active: "#d0dddd",
     white: "#eef6f6",
     whiteLight: "#cde5e4",
     oneHundred: "#dde4e3",
@@ -138,7 +138,6 @@ const regex = {
 }
 
 const convertToDecimal = (num, places) => {
-  const lastTwoDigits = num.toString().substr(-2)
 
   return ((num * 1.0) / 100).toFixed(places)
 }

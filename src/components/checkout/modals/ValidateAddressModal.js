@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { WarningCircle, CircleNotch } from "phosphor-react"
 import { colors, convertToPx } from "../../../styles/variables"
-import { Link, navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 
 import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"

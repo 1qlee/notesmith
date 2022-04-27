@@ -32,7 +32,7 @@ const Dashboard = () => {
                 {!user.emailVerified && (
                   <Content linkcolor={colors.link.normal}>
                     <p>Verify your email.</p>
-                    <p>We sent a verification link to {user.email}. If you didn't receive it, <a onClick={sendEmailVerification}>resend the email</a> or <Link to="/app/settings">update your email</Link> to verify with a different email.
+                    <p>We sent a verification link to {user.email}. If you didn't receive it, <a onClick={sendEmailVerification}>resend the email</a> or <Link to="/account/settings">update your email</Link> to verify with a different email.
                     </p>
                   </Content>
                 )}
