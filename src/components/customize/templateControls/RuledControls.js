@@ -19,7 +19,6 @@ function RuledControls({
   const totalVerticalMargin = pageData.pageHeight - pageContentSize.height - convertToPx(pageData.thickness * 2) // subtract content height from page height (in pixels)
   const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2) // half of total vertical margin is center (convert back to MM)
   const bottomMargin = convertToMM(totalVerticalMargin)
-  console.log(bottomMargin)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)

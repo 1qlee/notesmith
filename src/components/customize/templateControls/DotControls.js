@@ -7,19 +7,17 @@ import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function DotControls({
-  pageData,
-  setPageData,
+  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
-  templateHeight,
-  templateWidth,
+  pageContentSize,
+  pageData,
+  setPageData,
 }) {
-  const horizontalDeadspace = pageData.pageWidth - templateWidth
-  const verticalDeadspace = pageData.pageHeight - templateHeight
-  const rightAlignedMargin = convertToMM(horizontalDeadspace)
-  const bottomAlignedMargin = convertToMM(verticalDeadspace)
-  const centeredMarginHorizontal = convertToMM(horizontalDeadspace / 2)
-  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
+  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width)
+  const centeredHorizontalMargin = totalHorizontalMargin / 2
+  const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height)
+  const centeredVerticalMargin = totalVerticalMargin / 2
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -38,17 +36,17 @@ function DotControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: centeredMarginHorizontal,
+          marginLeft: centeredHorizontalMargin,
         })
-        marginLeftInput.current.value = centeredMarginHorizontal
+        marginLeftInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: rightAlignedMargin,
+          marginLeft: totalHorizontalMargin,
         })
-        marginLeftInput.current.value = rightAlignedMargin
+        marginLeftInput.current.value = totalHorizontalMargin
         break
       case "top":
         setPageData({
@@ -62,17 +60,17 @@ function DotControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: centeredMarginVertical,
+          marginTop: centeredVerticalMargin,
         })
-        marginTopInput.current.value = centeredMarginVertical
+        marginTopInput.current.value = centeredVerticalMargin
         break
       case "bottom":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: bottomAlignedMargin,
+          marginTop: totalVerticalMargin,
         })
-        marginTopInput.current.value = bottomAlignedMargin
+        marginTopInput.current.value = totalVerticalMargin
         break
       default:
         break

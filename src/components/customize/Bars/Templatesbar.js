@@ -177,27 +177,29 @@ function Templatesbar({
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
                     pageData={pageData}
                     setPageData={setPageData}
-                    pageContentSize={pageContentSize}
                   />
                 )}
                 {pageData.template === "dot" && (
                   <DotControls
-                    pageData={pageData}
-                    setPageData={setPageData}
+                    canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
                     pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setPageData={setPageData}
                   />
                 )}
                 {pageData.template === "graph" && (
                   <GraphControls
-                    pageData={pageData}
-                    setPageData={setPageData}
+                    canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
                     pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setPageData={setPageData}
                   />
                 )}
               </>
