@@ -15,6 +15,7 @@ function Template({
   pageData,
   productPageTemplate,
   rightPageXPosition,
+  selectedTemplate,
   setPageData,
   setPageContentSize,
   setSelectedPageSvg,
@@ -26,22 +27,30 @@ function Template({
 
   useEffect(() => {
     if (currentPageSide === "left") {
+      const currentPage = leftPageRef.current
+      console.log(currentPage)
+      const currentPageSize = currentPage.getBBox()
+
       setSelectedPageSvg(leftPageRef.current)
-      console.log(leftPageRef.current.getBoundingClientRect().height)
       setPageContentSize({
-        height: leftPageRef.current.getBoundingClientRect().height,
-        width: leftPageRef.current.getBoundingClientRect().width,
+        height: currentPageSize.height,
+        width: currentPageSize.width,
       })
     }
     else {
-      setSelectedPageSvg(rightPageRef.current)
-      console.log(rightPageRef.current.getBoundingClientRect().height)
-      setPageContentSize({
-        height: rightPageRef.current.getBoundingClientRect().height,
-        width: rightPageRef.current.getBoundingClientRect().width,
+      const currentPage = new Promise((resolve,reject) => {
+        resolve(rightPageRef.current)
+      }).then(response => {
+        const currentPageSize = response.getBBox()
+
+        setSelectedPageSvg(response.current)
+        setPageContentSize({
+          height: currentPageSize.height,
+          width: currentPageSize.width,
+        })
       })
     }
-  }, [currentPageSide, pageData])
+  }, [currentPageSide, pageData, selectedTemplate, leftPageRef, rightPageRef])
 
   if (pageData.show) {
     return (

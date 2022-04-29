@@ -1,9 +1,9 @@
 import React from "react"
 import PrivateRoute from "../../components/auth/PrivateRoute"
-import Books from "../../components/auth/Books"
+import UserBooks from "../../components/auth/UserBooks"
 
 function BooksPage() {
-  return <PrivateRoute component={Books} />
+  return <PrivateRoute component={UserBooks} />
 }
 
 export default BooksPage

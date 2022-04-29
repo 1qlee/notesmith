@@ -6,7 +6,6 @@ import { WarningCircle } from "phosphor-react"
 
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Grid, Cell } from "styled-css-grid"
-import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
 import SettingsForm from "../form/SettingsForm"
 import Icon from "../Icon"
 import Button from "../Button"
@@ -15,7 +14,7 @@ import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 import Notification from "../ui/Notification"
 
-const Settings = () => {
+const UserSettings = () => {
   const { user, sendEmailVerification } = useFirebaseContext()
   const [verificationEmailSent, setVerificationEmailSent] = useState()
   const [notification, setNotification] = useState({
@@ -67,4 +66,4 @@ const Settings = () => {
   )
 }
 
-export default Settings
+export default UserSettings

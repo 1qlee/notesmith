@@ -1,10 +1,5 @@
-import React from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-
-import { Flexbox } from "../../layout/Flexbox"
-import Content from "../../Content"
-import Tag from "../../ui/Tag"
 
 const BookRadio = styled.div`
   display: block;

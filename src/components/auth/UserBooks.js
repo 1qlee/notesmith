@@ -8,23 +8,22 @@ import 'svg2pdf.js'
 import { Flexbox } from "../layout/Flexbox"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import { Select } from "../ui/Select"
-import BooksContainer from "./books/booksContainer"
+import BooksContainer from "./books/BooksContainer"
 import Button from "../Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
-import Loader from "../Loader"
 import NewBookModal from "./modals/AppNewBookModal"
 import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
-const Books = () => {
+const UserBooks = () => {
   const isBrowser = typeof window !== "undefined"
-  const { user, firebaseDb } = useFirebaseContext()
+  const { loading, user, firebaseDb } = useFirebaseContext()
   const { uid } = user
   const booksRef = firebaseDb.ref("books/")
   const userBooksRef = firebaseDb.ref(`users/${uid}/books`)
   const pagesRef = firebaseDb.ref("pages/")
-  const [loading, setLoading] = useState(true)
+  const [processing, setProcessing] = useState(false)
   const [bookData, setBookData] = useState({
     size: "",
     numOfPages: 140,
@@ -35,7 +34,7 @@ const Books = () => {
     title: "",
     coverColor: "",
   })
-  const [userBooks, setUserBooks] = useState()
+  const [userBooks, setUserBooks] = useState([])
   const [bookToBeDeleted, setBookToBeDeleted] = useState()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -43,7 +42,8 @@ const Books = () => {
   })
 
   useEffect(() => {
-    function getUserBooks() {
+    async function getUserBooks() {
+      setProcessing(true)
       // if there are no sort variables in localStorage, set some defaults
       if (!getLocalStorage("sortMethod") || !getLocalStorage("sortOrder") || !getLocalStorage("sortValue")) {
         setLocalStorage("sortValue", "Alphabetical")
@@ -52,7 +52,7 @@ const Books = () => {
       }
 
       // get all books that match the user's uid
-      booksRef.orderByChild('uid').equalTo(uid).on("value", snapshot => {
+      await booksRef.orderByChild('uid').equalTo(uid).on("value", snapshot => {
         const booksArray = []
         // push them into an array const
         snapshot.forEach(child => {
@@ -70,16 +70,15 @@ const Books = () => {
         )
 
         // remove loading ui
-        setLoading(false)
+        setProcessing(false)
       })
     }
 
-    getUserBooks()
-
-    return () => {
-      setLoading(false)
+    if (!loading) {
+      getUserBooks()
     }
-  }, [user])
+
+  }, [loading, user])
 
   // check if we're in the browser and set local storage
   function setLocalStorage(key, data) {
@@ -350,18 +349,13 @@ const Books = () => {
                 Download book
               </Button>
             </Flexbox>
-            <SectionAppWorkspace heightmargin="4rem">
-              {loading ? (
-                <Loader className="is-app" />
-              ) : (
-                <BooksContainer
-                  userBooks={userBooks}
-                  renameBook={renameBook}
-                  duplicateBook={duplicateBook}
-                  handleBookDelete={handleBookDelete}
-                />
-              )}
-            </SectionAppWorkspace>
+            <BooksContainer
+              duplicateBook={duplicateBook}
+              handleBookDelete={handleBookDelete}
+              processing={processing}
+              renameBook={renameBook}
+              userBooks={userBooks}
+            />
           </SectionAppContent>
         </SectionApp>
       </SectionMain>
@@ -406,4 +400,4 @@ const Books = () => {
   )
 }
 
-export default Books
+export default UserBooks

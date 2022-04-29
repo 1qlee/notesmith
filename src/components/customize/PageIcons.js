@@ -1,16 +1,17 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 
 const PageWrapper = styled.a`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin: ${props => props.margin};
+  position: relative;
   p {
     padding: 0.25rem;
     border-radius: 0.25rem;
@@ -47,6 +48,39 @@ const PageWrapper = styled.a`
       }
     }
   }
+  &:focus {
+    span {
+      background-color: ${colors.primary.sixHundred};
+    }
+    p {
+      background-color: ${colors.primary.sixHundred};
+      color: ${colors.primary.white};
+    }
+    .page-outline {
+      border-color: ${colors.primary.sixHundred};
+      box-shadow: 0 0 2px ${colors.primary.active};
+      transform: scale(1.05);
+    }
+  }
+`
+
+const PageBadge = styled.span`
+  align-items: center;
+  background-color: ${colors.primary.sixHundred};
+  border-radius: 20px;
+  color: ${colors.primary.white};
+  display: flex;
+  font-family: ${fonts.secondary};
+  font-size: 0.5rem;
+  justify-content: center;
+  left: ${props => props.left};
+  padding: 4px;
+  height: 1rem;
+  width: 1rem;
+  position: absolute;
+  right: ${props => props.right};
+  top: -0.5rem;
+  z-index: 9;
 `
 
 const PageOutline = styled.div`
@@ -110,6 +144,8 @@ function RuledPageIcon({
   isActive,
   isProductPage,
   iconMargin,
+  leftPageData,
+  rightPageData,
   showLabels,
 }) {
   return (
@@ -136,6 +172,20 @@ function RuledPageIcon({
       margin={iconMargin}
       data-tip={dataTip}
     >
+      {(isProductPage && leftPageData.template === "ruled") && (
+        <PageBadge
+          left="-0.5rem"
+        >
+          L
+        </PageBadge>
+      )}
+      {(isProductPage && rightPageData.template === "ruled") && (
+        <PageBadge
+          right="-0.5rem"
+        >
+          R
+        </PageBadge>
+      )}
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
@@ -153,7 +203,7 @@ function RuledPageIcon({
         </Flexbox>
       </PageOutline>
       {showLabels ? (
-          <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
+        <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
       ) : (
         <ReactTooltip
           effect="solid"
@@ -170,6 +220,8 @@ function DotPageIcon({
   isActive,
   isProductPage,
   iconMargin,
+  leftPageData,
+  rightPageData,
   showLabels,
 }) {
   return (
@@ -196,6 +248,20 @@ function DotPageIcon({
       margin={iconMargin}
       data-tip={dataTip}
     >
+      {(isProductPage && leftPageData.template === "dot") && (
+        <PageBadge
+          left="-0.5rem"
+        >
+          L
+        </PageBadge>
+      )}
+      {(isProductPage && rightPageData.template === "dot") && (
+        <PageBadge
+          right="-0.5rem"
+        >
+          R
+        </PageBadge>
+      )}
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
@@ -255,6 +321,8 @@ function GraphPageIcon({
   isActive,
   isProductPage,
   iconMargin,
+  leftPageData,
+  rightPageData,
   showLabels,
 }) {
   return (
@@ -281,6 +349,20 @@ function GraphPageIcon({
       margin={iconMargin}
       data-tip={dataTip}
     >
+      {(isProductPage && leftPageData.template === "graph") && (
+        <PageBadge
+          left="-0.5rem"
+        >
+          L
+        </PageBadge>
+      )}
+      {(isProductPage && rightPageData.template === "graph") && (
+        <PageBadge
+          right="-0.5rem"
+        >
+          R
+        </PageBadge>
+      )}
       <PageOutline className="page-outline">
         <GraphOutline>
           <VerticalLine height="80%" />
@@ -313,6 +395,8 @@ function BlankPageIcon({
   isActive,
   isProductPage,
   iconMargin,
+  leftPageData,
+  rightPageData,
   showLabels,
 }) {
   return (
@@ -339,6 +423,20 @@ function BlankPageIcon({
       margin={iconMargin}
       data-tip={dataTip}
     >
+      {(isProductPage && leftPageData.template === "blank") && (
+        <PageBadge
+          left="-0.5rem"
+        >
+          L
+        </PageBadge>
+      )}
+      {(isProductPage && rightPageData.template === "blank") && (
+        <PageBadge
+          right="-0.5rem"
+        >
+          R
+        </PageBadge>
+      )}
       <PageOutline className="page-outline" />
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
@@ -356,6 +454,8 @@ function PageIcons({
   data,
   iconMargin,
   isProductPage,
+  leftPageData,
+  rightPageData,
   setData,
   showLabels,
 }) {
@@ -367,6 +467,8 @@ function PageIcons({
         iconMargin={iconMargin}
         isActive={checkActiveVar === "blank"}
         isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
       />
@@ -376,6 +478,8 @@ function PageIcons({
         iconMargin={iconMargin}
         isActive={checkActiveVar === "ruled"}
         isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
       />
@@ -385,6 +489,8 @@ function PageIcons({
         iconMargin={iconMargin}
         isActive={checkActiveVar === "dot"}
         isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
       />
@@ -394,6 +500,8 @@ function PageIcons({
         iconMargin={iconMargin}
         isActive={checkActiveVar === "graph"}
         isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
       />

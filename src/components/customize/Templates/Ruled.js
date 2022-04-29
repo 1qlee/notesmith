@@ -4,7 +4,6 @@ import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/var
 function Ruled({
   pageData,
   setPageData,
-  currentPageSide,
 }) {
   const [lines, setLines] = useState([])
   const [lineStyle, setLineStyle] = useState({})
@@ -17,7 +16,7 @@ function Ruled({
       // calculations and conversions to px
       const lineX1 = convertToPx(pageData.marginLeft)
       const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness
+      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness * (i + 1)
       setLineStyle({
         fill: "none",
         stroke: "#000",

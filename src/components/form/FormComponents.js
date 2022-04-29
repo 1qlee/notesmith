@@ -444,7 +444,6 @@ const ErrorLine = styled.div`
 
 const StyledTable = styled.table`
   border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
   thead {
     border-radius: 0.25rem 0.25rem 0 0;
   }

@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { convertToMM } from "../../../styles/variables"
+import { convertToMM, convertToPx } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
@@ -14,11 +14,12 @@ function RuledControls({
   pageData,
   setPageData,
 }) {
-  const totalHorizontalMargin = pageData.marginLeft + pageData.marginRight
-  const totalVerticalMargin = canvasPageSize.height - pageContentSize.height - 24
-  const centeredHorizontalMargin = totalHorizontalMargin / 2
-  const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2)
-  const bottomMargin = convertToMM(totalVerticalMargin) - pageData.thickness * 2
+  const totalHorizontalMargin = pageData.marginLeft + pageData.marginRight // sum of left and right margins
+  const centeredHorizontalMargin = totalHorizontalMargin / 2 // half of total horizontal margin is center
+  const totalVerticalMargin = pageData.pageHeight - pageContentSize.height - convertToPx(pageData.thickness * 2) // subtract content height from page height (in pixels)
+  const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2) // half of total vertical margin is center (convert back to MM)
+  const bottomMargin = convertToMM(totalVerticalMargin)
+  console.log(bottomMargin)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -235,7 +236,7 @@ function RuledControls({
             }), 1)}
             type="number"
             min="0.5"
-            step="0.1"
+            step="0.01"
             max="1"
             padding="0.5rem"
             width="4rem"
@@ -247,7 +248,7 @@ function RuledControls({
             <input
               type="range"
               min="0.5"
-              step="0.1"
+              step="0.01"
               max="1"
               value={pageData.opacity}
               onChange={e => setPageData({...pageData, opacity: e.target.value})}
@@ -271,7 +272,7 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({...pageData, thickness: value}), 3)}
             type="number"
             min="0.088"
-            step="0.01"
+            step="0.001"
             max="3"
             padding="0.5rem"
             width="4.25rem"
@@ -283,7 +284,7 @@ function RuledControls({
             <input
               type="range"
               min="0.088"
-              step="0.01"
+              step="0.001"
               max="3"
               value={pageData.thickness}
               onChange={e => setPageData({...pageData, thickness: e.target.value})}

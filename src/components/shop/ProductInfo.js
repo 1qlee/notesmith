@@ -133,28 +133,12 @@ const ProductInfo = ({
           data={selectedTemplate}
           iconMargin="0 0.5rem"
           isProductPage={true}
+          leftPageData={leftPageData}
+          rightPageData={rightPageData}
           setData={setSelectedTemplate}
           showLabels={false}
         />
       </Flexbox>
-      {leftPageData.template && (
-        <Content
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-          h3fontsize="0.75rem"
-          margin="2rem 0 0"
-        >
-          <h3>Left side pages</h3>
-        </Content>
-      )}
-      {rightPageData.template && (
-        <Content
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-          h3fontsize="0.75rem"
-          margin="2rem 0 0"
-        >
-          <h3>Right side pages</h3>
-        </Content>
-      )}
       <Flexbox
         flex="flex"
         margin="0 0 1rem"

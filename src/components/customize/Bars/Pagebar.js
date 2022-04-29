@@ -1,14 +1,11 @@
-import React, { useState, useEffect, memo } from "react"
+import React, { memo } from "react"
 import { colors } from "../../../styles/variables"
 import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
-import Loading from "../../../assets/loading.svg"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
-import SVG from "react-inlinesvg"
+import Svg from "react-inlinesvg"
 
-import { Flexbox } from "../../layout/Flexbox"
 import PageBox from "../barComponents/PageBox"
-import Icon from "../../Icon"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
@@ -68,7 +65,6 @@ const Page = memo(props => {
     columnIndex,
     rowIndex,
     style,
-    index,
   } = props
   const {
     canvasPages,
@@ -98,7 +94,7 @@ const Page = memo(props => {
       className={selectedPage === currentPage.pageNumber ? "is-active" : null}
       style={style}
     >
-      <SVG
+      <Svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
         src={canvasPageTemplates[currentPage.pageId]}

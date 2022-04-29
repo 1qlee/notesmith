@@ -1,13 +1,9 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, convertToPx, convertToMM } from "../../../styles/variables"
-import { AlignLeft, AlignCenterVertical, AlignRight, AlignTop, AlignBottom, AlignCenterHorizontal } from "phosphor-react"
+import { colors } from "../../../styles/variables"
 
-import { Flexbox } from "../../layout/Flexbox"
 import { StyledLabel } from "../../form/FormComponents"
-import Content from "../../Content"
 import Button from "../../Button"
-import Icon from "../../Icon"
 
 const AlignmentButtonWrapper = styled.div`
   display: flex;

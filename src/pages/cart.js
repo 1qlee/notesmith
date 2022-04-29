@@ -6,12 +6,12 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import ShoppingCart from "../components/shop/ShoppingCart"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import SEO from "../components/layout/Seo"
+import Seo from "../components/layout/Seo"
 
 const Cart = () => {
   return (
     <Layout>
-      <SEO title="Your cart" />
+      <Seo title="Your cart" />
       <Nav />
       <SectionMain className="has-max-height">
         <Section>

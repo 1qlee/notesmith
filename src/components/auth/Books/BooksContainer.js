@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { navigate } from "gatsby"
-import { spacing } from "../../../styles/variables"
-import { Grid, Cell } from "styled-css-grid"
 
-import { Book } from "./BookComponents"
 import { StyledInput, StyledTable } from "../../form/FormComponents"
+import { SectionAppWorkspace } from "../../layout/Section"
 import ContextMenu from "../../ui/ContextMenu"
+import Loader from "../../Loader"
 
 // should export this function to utils
 function convertTime(time) {
@@ -16,10 +15,11 @@ function convertTime(time) {
 }
 
 function BooksContainer({
-  userBooks,
-  renameBook,
-  handleBookDelete,
   duplicateBook,
+  handleBookDelete,
+  processing,
+  renameBook,
+  userBooks,
 }) {
   const [selectedBook, setSelectedBook] = useState()
   const [selectedBookDOM, setSelectedBookDOM] = useState(null)
@@ -106,8 +106,13 @@ function BooksContainer({
     }
   }, [])
 
+  if (processing) {
+    return <Loader className="is-app" />
+  }
+
   return (
-    <div
+    <SectionAppWorkspace
+      heightmargin="4rem"
       data-clickoutside={true}
       onClick={e => handleClickOutside(e)}
     >
@@ -119,7 +124,7 @@ function BooksContainer({
           </tr>
         </thead>
         <tbody>
-          {userBooks.map(book => (
+          {userBooks && userBooks.map(book => (
             <tr
               data-title={book.title}
               key={book.id}
@@ -166,7 +171,7 @@ function BooksContainer({
         showContextMenu={showContextMenu}
         setShowBookTitleInput={setShowBookTitleInput}
       />
-    </div>
+    </SectionAppWorkspace>
   )
 }
 

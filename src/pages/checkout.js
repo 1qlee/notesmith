@@ -7,25 +7,21 @@ import { useShoppingCart } from "use-shopping-cart"
 import { WarningCircle } from "phosphor-react"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
-import { ErrorLine } from "../components/form/FormComponents"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
-import { Modal, ModalHeader, ModalContent, ModalFooter } from "../components/ui/Modal"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import Breadcrumb from "../components/Breadcrumb"
-import Button from "../components/Button"
 import CheckoutForm from "../components/form/CheckoutForm"
 import Content from "../components/Content"
-import InformationForm from "../components/form/InformationForm"
-import Notification from "../components/ui/Notification"
-import Layout from "../components/layout/Layout"
 import Icon from "../components/Icon"
+import InformationForm from "../components/form/InformationForm"
+import Layout from "../components/layout/Layout"
 import Loader from "../components/Loader"
 import Nav from "../components/layout/Nav"
+import Notification from "../components/ui/Notification"
 import OrderSummary from "../components/shop/OrderSummary"
 import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
-import TextLink from "../components/TextLink"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
@@ -35,7 +31,6 @@ const Checkout = ({ location }) => {
   const [activeTab, setActiveTab] = useState(1)
   const [clientSecret, setClientSecret] = useState("")
   const [loading, setLoading] = useState(false)
-  const [loadingMsg, setLoadingMsg] = useState("")
   const [processing, setProcessing] = useState(false)
   const [formError, setFormError] = useState("")
   const [addressError, setAddressError] = useState("")
@@ -80,7 +75,7 @@ const Checkout = ({ location }) => {
       setLoading(true)
 
       // call on the retrieve-payment function defined in Netlify
-      const response = await fetch("/.netlify/functions/retrieve-payment", {
+      await fetch("/.netlify/functions/retrieve-payment", {
         method: "post",
         headers: {
           "Content-Type": "application/json"
@@ -134,7 +129,7 @@ const Checkout = ({ location }) => {
       localStorage.removeItem("pid")
 
       // call on the create-payment function defined in Netlify
-      const response = await fetch("/.netlify/functions/create-payment", {
+      await fetch("/.netlify/functions/create-payment", {
         method: "post",
         headers: {
           "Content-Type": "application/json"
@@ -391,7 +386,7 @@ const Checkout = ({ location }) => {
                     </Grid>
                   )}
                   {loading && (
-                    <Loader className="has-nav" msg={loadingMsg} />
+                    <Loader className="has-nav" msg="Do not refresh the page!" />
                   )}
                 </SectionContent>
               </LayoutContainer>

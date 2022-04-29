@@ -9,7 +9,7 @@ import Content from "../Content"
 import Seo from "../layout/Seo"
 import Sidebar from "../ui/Sidebar"
 
-const Dashboard = () => {
+const UserDashboard = () => {
   const { signOut, user, sendEmailVerification } = useFirebaseContext()
 
   function handleSignOut() {
@@ -45,4 +45,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default UserDashboard

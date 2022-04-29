@@ -1,12 +1,11 @@
 import React, { useState } from "react"
-import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { QuantityTracker, StyledLabel, StyledFieldset, SelectWrapper, StyledSelect, SelectIcon } from "../../form/FormComponents"
+import { QuantityTracker } from "../../form/FormComponents"
 import Button from "../../Button"
 import Content from "../../Content"
 import ColorPicker from "../../shop/ColorPicker"
@@ -17,7 +16,7 @@ function Checkoutbar({
   productImageData,
   setBookData,
 }) {
-  const { user, firebaseDb } = useFirebaseContext()
+  const { firebaseDb } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
 

@@ -7,6 +7,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import { CartQuantityTracker } from "./ShopComponents"
 import { Flexbox } from "../layout/Flexbox"
+import { StyledTable } from "../form/FormComponents"
 import Button from "../Button"
 import Content from "../Content"
 import TextLink from "../TextLink"
@@ -61,7 +62,7 @@ function ShoppingCart() {
       </Content>
       {cartItems.length > 0 ? (
         <>
-          <table>
+          <StyledTable>
             <thead>
               <tr>
                 <th>Product</th>
@@ -253,7 +254,7 @@ function ShoppingCart() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </StyledTable>
           <Flexbox
             flex="flex"
             justifycontent="flex-end"

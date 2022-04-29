@@ -31,7 +31,6 @@ function NewBookModal({
 }) {
   const { user, firebaseDb } = useFirebaseContext()
   const [step, setStep] = useState(0)
-  const [stepTitle, setStepTitle] = useState("Select book type")
   const [bookTitleError, setBookTitleError] = useState({
     show: false,
     msg: "",

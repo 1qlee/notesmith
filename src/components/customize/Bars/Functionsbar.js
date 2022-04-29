@@ -4,19 +4,8 @@ import { colors } from "../../../styles/variables"
 import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput } from "../../form/FormComponents"
 import TitleBox from "../barComponents/TitleBox"
 import Toolbox from "../barComponents/Toolbox"
-
-const PageInput = styled.input`
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.sixHundred};
-  margin-right: 0.25rem;
-  padding: 0.25rem;
-  text-align: center;
-  width: 50px;
-  z-index: 9;
-`
 
 function Functionsbar({
   selectedPage,
@@ -26,20 +15,6 @@ function Functionsbar({
   bookId,
   children
 }) {
-  const [showTitleInput, setShowTitleInput] = useState(false)
-  const [newBookTitle, setNewBookTitle] = useState("")
-
-  function handlePageChange(value) {
-    if (value > bookData.numOfPages) {
-      setSelectedPage(bookData.numOfPages)
-    }
-    else if (value < 1) {
-      setSelectedPage(1)
-    }
-    else {
-      setSelectedPage(parseInt(value))
-    }
-  }
 
   return (
     <Flexbox

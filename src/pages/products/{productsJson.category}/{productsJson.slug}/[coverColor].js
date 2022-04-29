@@ -133,6 +133,7 @@ const ProductPage = ({ data, params }) => {
                           setPageContentSize={setPageContentSize}
                           setPageData={setSelectedTemplate}
                           setSelectedPageSvg={setSelectedPageSvg}
+                          selectedTemplate={selectedTemplate}
                           workingPageHeight={workingPageHeight}
                           workingPageWidth={workingPageWidth}
                         />

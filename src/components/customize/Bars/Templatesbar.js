@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
 import { colors, convertToMM, fonts } from "../../../styles/variables"
-import { svgToObjects } from "../../../utils/helper-functions"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageIcons from "../PageIcons"
@@ -83,10 +82,6 @@ function Templatesbar({
   const maximumMarginHeight = convertToMM(pageData.pageHeight)
   const maximumMarginWidth = convertToMM(pageData.pageWidth)
 
-  useEffect(() => {
-
-  }, [pageContentSize])
-
   function handleSetTemplate() {
     setLoading(true)
 
@@ -127,6 +122,7 @@ function Templatesbar({
           onClick={() => setPageData({
             ...pageData,
             show: false,
+            template: "",
           })}
         >
           Back to images
@@ -145,7 +141,7 @@ function Templatesbar({
         >
           <TemplatesContent>
             <Content
-              headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+              headingfontfamily={fonts.secondary}
               h3fontsize="0.75rem"
               h3margin="0 0 0.5rem 0"
               margin="0 0 1rem 0"

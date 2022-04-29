@@ -31,10 +31,9 @@ const PlaceholderLine = styled.div`
 `
 
 const Order = ({ location, orderId }) => {
-  const isBrowser = typeof window !== "undefined"
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
-  const { loading, user, firebaseDb } = useFirebaseContext()
+  const { loading, firebaseDb } = useFirebaseContext()
   const [orderInfo, setOrderInfo] = useState(null)
   const [orderItems, setOrderItems] = useState(null)
   const [showInfo, setShowInfo] = useState(false)
