@@ -6,7 +6,7 @@ import ReactTooltip from "react-tooltip"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 
-const PageWrapper = styled.a`
+const StyledPage = styled.a`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -22,11 +22,14 @@ const PageWrapper = styled.a`
   }
   &.is-active {
     span {
-      background-color: ${colors.primary.sixHundred};
+      background-color: ${colors.gray.nineHundred};
     }
     p {
-      background-color: ${colors.primary.sixHundred};
+      background-color: ${colors.gray.nineHundred};
       color: ${colors.primary.white};
+    }
+    polygon {
+      stroke: ${colors.gray.nineHundred};
     }
     .page-outline {
       border-color: ${colors.primary.sixHundred};
@@ -45,6 +48,9 @@ const PageWrapper = styled.a`
       }
       div {
         border-color: ${colors.gray.nineHundred};
+      }
+      polygon {
+        stroke: ${colors.gray.nineHundred};
       }
     }
   }
@@ -137,6 +143,43 @@ const PageLabel = styled.p`
   color: ${colors.gray.sevenHundred};
 `
 
+function Page({
+  children,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  leftPageData,
+  margin,
+  rightPageData,
+  setData,
+}) {
+  return (
+    <StyledPage
+      onClick={() => setData(data)}
+      className={isActive ? "is-active" : null}
+      margin={margin}
+      data-tip={dataTip}
+    >
+      {(isProductPage && leftPageData.template === data.template) && (
+        <PageBadge
+          left="-0.5rem"
+        >
+          L
+        </PageBadge>
+      )}
+      {(isProductPage && rightPageData.template === data.template) && (
+        <PageBadge
+          right="-0.5rem"
+        >
+          R
+        </PageBadge>
+      )}
+      {children}
+    </StyledPage>
+  )
+}
+
 function RuledPageIcon({
   setData,
   data,
@@ -148,44 +191,36 @@ function RuledPageIcon({
   rightPageData,
   showLabels,
 }) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "ruled",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.088,
+    dotRadius: 0.6,
+    rows: 42,
+    columns: 26,
+    marginTop: 0.379,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 127,
+  }
+
   return (
-    <PageWrapper
-      onClick={() => setData({
-        ...data,
-        alignmentHorizontal: "center",
-        alignmentVertical: "middle",
-        show: isProductPage ? true : false,
-        template: "ruled",
-        spacing: 5,
-        opacity: 1,
-        thickness: 0.088,
-        dotRadius: 0.6,
-        rows: 42,
-        columns: 26,
-        marginTop: 0.379,
-        marginBottom: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        width: 127,
-      })}
-      className={isActive ? "is-active" : null}
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
       margin={iconMargin}
-      data-tip={dataTip}
+      rightPageData={rightPageData}
+      setData={setData}
     >
-      {(isProductPage && leftPageData.template === "ruled") && (
-        <PageBadge
-          left="-0.5rem"
-        >
-          L
-        </PageBadge>
-      )}
-      {(isProductPage && rightPageData.template === "ruled") && (
-        <PageBadge
-          right="-0.5rem"
-        >
-          R
-        </PageBadge>
-      )}
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
@@ -209,7 +244,7 @@ function RuledPageIcon({
           effect="solid"
         />
       )}
-    </PageWrapper>
+    </Page>
   )
 }
 
@@ -224,44 +259,36 @@ function DotPageIcon({
   rightPageData,
   showLabels,
 }) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "dot",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.175,
+    dotRadius: 0.1,
+    rows: 42,
+    columns: 25,
+    marginTop: 0.123,
+    marginBottom: 0,
+    marginLeft: 1.881,
+    marginRight: 0,
+    width: 1,
+  }
+
   return (
-    <PageWrapper
-      onClick={() => setData({
-        ...data,
-        alignmentHorizontal: "center",
-        alignmentVertical: "middle",
-        show: isProductPage ? true : false,
-        template: "dot",
-        spacing: 5,
-        opacity: 1,
-        thickness: 0.175,
-        dotRadius: 0.1,
-        rows: 42,
-        columns: 25,
-        marginTop: 0.123,
-        marginBottom: 0,
-        marginLeft: 1.881,
-        marginRight: 0,
-        width: 1,
-      })}
-      className={isActive ? "is-active" : null}
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
       margin={iconMargin}
-      data-tip={dataTip}
+      rightPageData={rightPageData}
+      setData={setData}
     >
-      {(isProductPage && leftPageData.template === "dot") && (
-        <PageBadge
-          left="-0.5rem"
-        >
-          L
-        </PageBadge>
-      )}
-      {(isProductPage && rightPageData.template === "dot") && (
-        <PageBadge
-          right="-0.5rem"
-        >
-          R
-        </PageBadge>
-      )}
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
@@ -310,7 +337,7 @@ function DotPageIcon({
           effect="solid"
         />
       )}
-    </PageWrapper>
+    </Page>
   )
 }
 
@@ -325,44 +352,36 @@ function GraphPageIcon({
   rightPageData,
   showLabels,
 }) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "graph",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.088,
+    dotRadius: 0.6,
+    rows: 42,
+    columns: 25,
+    marginTop: 2.229,
+    marginBottom: 0,
+    marginLeft: 0.6375,
+    marginRight: 0,
+    width: 127,
+  }
+
   return (
-    <PageWrapper
-      onClick={() => setData({
-        ...data,
-        alignmentHorizontal: "center",
-        alignmentVertical: "middle",
-        show: isProductPage ? true : false,
-        template: "graph",
-        spacing: 5,
-        opacity: 1,
-        thickness: 0.088,
-        dotRadius: 0.6,
-        rows: 42,
-        columns: 25,
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0.638,
-        marginRight: 0,
-        width: 127,
-      })}
-      className={isActive ? "is-active" : null}
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
       margin={iconMargin}
-      data-tip={dataTip}
+      rightPageData={rightPageData}
+      setData={setData}
     >
-      {(isProductPage && leftPageData.template === "graph") && (
-        <PageBadge
-          left="-0.5rem"
-        >
-          L
-        </PageBadge>
-      )}
-      {(isProductPage && rightPageData.template === "graph") && (
-        <PageBadge
-          right="-0.5rem"
-        >
-          R
-        </PageBadge>
-      )}
       <PageOutline className="page-outline">
         <GraphOutline>
           <VerticalLine height="80%" />
@@ -384,7 +403,7 @@ function GraphPageIcon({
           effect="solid"
         />
       )}
-    </PageWrapper>
+    </Page>
   )
 }
 
@@ -399,44 +418,36 @@ function BlankPageIcon({
   rightPageData,
   showLabels,
 }) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "blank",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.175,
+    dotRadius: 0.6,
+    rows: 42,
+    columns: 26,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 1,
+  }
+
   return (
-    <PageWrapper
-      onClick={() => setData({
-        ...data,
-        alignmentHorizontal: "center",
-        alignmentVertical: "middle",
-        show: isProductPage ? true : false,
-        template: "blank",
-        spacing: 5,
-        opacity: 1,
-        thickness: 0.175,
-        dotRadius: 0.6,
-        rows: 42,
-        columns: 26,
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        width: 1,
-      })}
-      className={isActive ? "is-active" : null}
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
       margin={iconMargin}
-      data-tip={dataTip}
+      rightPageData={rightPageData}
+      setData={setData}
     >
-      {(isProductPage && leftPageData.template === "blank") && (
-        <PageBadge
-          left="-0.5rem"
-        >
-          L
-        </PageBadge>
-      )}
-      {(isProductPage && rightPageData.template === "blank") && (
-        <PageBadge
-          right="-0.5rem"
-        >
-          R
-        </PageBadge>
-      )}
       <PageOutline className="page-outline" />
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
@@ -445,7 +456,64 @@ function BlankPageIcon({
           effect="solid"
         />
       )}
-    </PageWrapper>
+    </Page>
+  )
+}
+
+function HexagonPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "hexagon",
+    spacing: 5,
+    opacity: 1,
+    thickness: 0.175,
+    hexagonRadius: 5,
+    rows: 29,
+    columns: 14,
+    marginTop: -5,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    width: 1,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100" style={{marginTop:"4px"}}>
+          <polygon points="30.1,84.5 10.2,50 30.1,15.5 69.9,15.5 89.8,50 69.9,84.5" fill="#fff" stroke="#757575" strokeWidth="6"/>
+        </svg>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
   )
 }
 
@@ -499,6 +567,17 @@ function PageIcons({
         dataTip="Graph"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "graph"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <HexagonPageIcon
+        data={data}
+        dataTip="Hexagon"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "hexagon"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

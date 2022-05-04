@@ -9,12 +9,13 @@ function Graph({ pageData, setPageData }) {
   function createColumns() {
     // placeholder array
     const lineColumnsArray = []
+    const lineThickness = convertToPx(pageData.thickness)
     // grid column lines
     for (let i = 0; i < pageData.columns; i++) {
-      const lineY1 = convertToPx(pageData.marginTop)
-      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop) + convertToPx(pageData.thickness / 2)
-      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing) + convertToPx(pageData.thickness / 2)
-      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.thickness / 2)
+      const lineY1 = convertToPx(pageData.marginTop) + lineThickness
+      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop) + lineThickness
+      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing) + lineThickness
+      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + lineThickness
       // first  column
       const firstColumnLine = {
         fill: "none",
@@ -64,10 +65,10 @@ function Graph({ pageData, setPageData }) {
     // grid row lines
     for (let i = 0; i < pageData.rows; i++) {
       // calculations and conversions to px
-      const lineX1 = convertToPx(pageData.marginLeft)
-      const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft) + convertToPx(pageData.thickness)
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing) + convertToPx(pageData.thickness / 2)
-      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.thickness / 2)
+      const lineX1 = convertToPx(pageData.marginLeft) + lineThickness
+      const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft) + lineThickness
+      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing) + lineThickness
+      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness
       // first row line
       const firstRowLine = {
         fill: "none",
@@ -119,34 +120,38 @@ function Graph({ pageData, setPageData }) {
 
   return (
     <>
-      {lineRows && lineRows.map((line, index) => (
-        <line
-          key={index}
-          fill={line.fill}
-          stroke={line.stroke}
-          strokeWidth={line.strokeWidth}
-          opacity={line.opacity}
-          x1={line.x1}
-          x2={line.x2}
-          y1={line.y1}
-          y2={line.y2}
-        >
-        </line>
-      ))}
-      {lineColumns && lineColumns.map((line, index) => (
-        <line
-          key={index}
-          fill={line.fill}
-          stroke={line.stroke}
-          strokeWidth={line.strokeWidth}
-          opacity={line.opacity}
-          x1={line.x1}
-          x2={line.x2}
-          y1={line.y1}
-          y2={line.y2}
-        >
-        </line>
-      ))}
+      <g>
+        {lineRows && lineRows.map((line, index) => (
+          <line
+            key={index}
+            fill={line.fill}
+            stroke={line.stroke}
+            strokeWidth={line.strokeWidth}
+            opacity={line.opacity}
+            x1={line.x1}
+            x2={line.x2}
+            y1={line.y1}
+            y2={line.y2}
+          >
+          </line>
+        ))}
+      </g>
+      <g>
+        {lineColumns && lineColumns.map((line, index) => (
+          <line
+            key={index}
+            fill={line.fill}
+            stroke={line.stroke}
+            strokeWidth={line.strokeWidth}
+            opacity={line.opacity}
+            x1={line.x1}
+            x2={line.x2}
+            y1={line.y1}
+            y2={line.y2}
+          >
+          </line>
+        ))}
+      </g>
     </>
   )
 }

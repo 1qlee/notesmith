@@ -39,6 +39,7 @@ const ProductPage = ({ data, params }) => {
     opacity: 1,
     thickness: 0.088,
     dotRadius: 0.6,
+    hexagonRadius: 1,
     rows: 42,
     columns: 27,
     marginTop: 0,

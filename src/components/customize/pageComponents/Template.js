@@ -6,6 +6,7 @@ import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
 import Blank from "../templates/Blank"
+import Hexagon from "../templates/Hexagon"
 
 function Template({
   bookData,
@@ -109,6 +110,13 @@ function Template({
           )}
           {pageData.template === "graph" && (
             <Graph
+              pageData={pageData}
+              setPageData={setPageData}
+              currentPageSide={currentPageSide}
+            />
+          )}
+          {pageData.template === "hexagon" && (
+            <Hexagon
               pageData={pageData}
               setPageData={setPageData}
               currentPageSide={currentPageSide}

@@ -12,6 +12,7 @@ import TextLink from "../../TextLink"
 import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
+import HexagonControls from "../templateControls/HexagonControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -194,6 +195,16 @@ function Templatesbar({
                 )}
                 {pageData.template === "graph" && (
                   <GraphControls
+                    canvasPageSize={canvasPageSize}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "hexagon" && (
+                  <HexagonControls
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}

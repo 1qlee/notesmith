@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { convertToPx, convertToMM } from "../../../styles/variables"
+import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
@@ -7,19 +7,18 @@ import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function GraphControls({
-  pageData,
-  setPageData,
+  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
-  templateHeight,
-  templateWidth,
+  pageContentSize,
+  pageData,
+  setPageData,
 }) {
-  const horizontalDeadspace = pageData.pageWidth - templateWidth
-  const verticalDeadspace = pageData.pageHeight - templateHeight
-  const rightAlignedMargin = convertToMM(horizontalDeadspace)
-  const bottomAlignedMargin = convertToMM(verticalDeadspace) - pageData.thickness * 2
-  const centeredMarginHorizontal = convertToMM(horizontalDeadspace / 2)
-  const centeredMarginVertical = convertToMM(verticalDeadspace / 2)
+  const strokeMargin = pageData.thickness * 2 // the stroke width of two lines must be subtracted from all margin measurements
+  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width) - strokeMargin
+  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2).toFixed(3))
+  const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height) - strokeMargin
+  const centeredVerticalMargin = Number((totalVerticalMargin / 2).toFixed(3))
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -38,17 +37,17 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: centeredMarginHorizontal,
+          marginLeft: centeredHorizontalMargin,
         })
-        marginLeftInput.current.value = centeredMarginHorizontal
+        marginLeftInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: rightAlignedMargin,
+          marginLeft: totalHorizontalMargin,
         })
-        marginLeftInput.current.value = rightAlignedMargin
+        marginLeftInput.current.value = totalHorizontalMargin
         break
       case "top":
         setPageData({
@@ -62,17 +61,17 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: centeredMarginVertical,
+          marginTop: centeredVerticalMargin,
         })
-        marginTopInput.current.value = centeredMarginVertical
+        marginTopInput.current.value = centeredVerticalMargin
         break
       case "bottom":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: bottomAlignedMargin,
+          marginTop: totalVerticalMargin,
         })
-        marginTopInput.current.value = bottomAlignedMargin
+        marginTopInput.current.value = totalVerticalMargin
         break
       default:
         break

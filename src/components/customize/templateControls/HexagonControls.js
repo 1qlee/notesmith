@@ -6,7 +6,7 @@ import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents
 import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
 
-function RuledControls({
+function HexagonControls({
   canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
@@ -14,7 +14,7 @@ function RuledControls({
   pageData,
   setPageData,
 }) {
-  const totalHorizontalMargin = pageData.marginLeft + pageData.marginRight // sum of left and right margins
+  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width) // sum of left and right margins
   const centeredHorizontalMargin = Number((totalHorizontalMargin / 2).toFixed(3)) // half of total horizontal margin is center
   const totalVerticalMargin = pageData.pageHeight - pageContentSize.height - convertToPx(pageData.thickness * 2) // subtract content height from page height (in pixels)
   const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2) // half of total vertical margin is center (convert back to MM)
@@ -22,7 +22,6 @@ function RuledControls({
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
-  const marginRightInput = useRef(null)
 
   function changeAlignment(value) {
     switch(value) {
@@ -30,31 +29,25 @@ function RuledControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginRight: totalHorizontalMargin,
           marginLeft: 0,
         })
         marginLeftInput.current.value = 0
-        marginRightInput.current.value = totalHorizontalMargin
         break
       case "center":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
           marginLeft: centeredHorizontalMargin,
-          marginRight: centeredHorizontalMargin,
         })
         marginLeftInput.current.value = centeredHorizontalMargin
-        marginRightInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
           marginLeft: totalHorizontalMargin,
-          marginRight: 0,
         })
         marginLeftInput.current.value = totalHorizontalMargin
-        marginRightInput.current.value = 0
         break
       case "top":
         setPageData({
@@ -101,8 +94,9 @@ function RuledControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
+          width="50%"
         >
-          <StyledLabel>Lines</StyledLabel>
+          <StyledLabel>Rows</StyledLabel>
           <StyledInput
             type="number"
             min="1"
@@ -121,19 +115,20 @@ function RuledControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
+          width="50%"
         >
-          <StyledLabel>Spacing</StyledLabel>
+          <StyledLabel>Columns</StyledLabel>
           <StyledInput
             type="number"
             min="1"
             step="1"
-            value={pageData.spacing}
+            value={pageData.columns}
             padding="0.5rem"
             width="100%"
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              spacing: value
+              alignmentHorizontal: "",
+              columns: value,
             }))}
           />
         </Flexbox>
@@ -156,12 +151,12 @@ function RuledControls({
             padding="0.5rem"
             width="100%"
             value={pageData.marginTop.toString()}
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+            onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               alignmentVertical: "",
               marginTop: value
             }), maximumMarginHeight)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+            onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               marginTop: value
             }))}
@@ -180,38 +175,14 @@ function RuledControls({
             type="number"
             value={pageData.marginLeft.toString()}
             width="100%"
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+            onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
               marginLeft: value,
-            }), maximumMarginWidth - pageData.marginRight - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
+            }), maximumMarginWidth)}
+            onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               marginLeft: value,
-            }))}
-          />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          margin="0 0.5rem 0 0"
-        >
-          <StyledLabel>Right margin</StyledLabel>
-          <StyledInput
-            padding="0.5rem"
-            ref={marginRightInput}
-            step="1"
-            type="number"
-            value={pageData.marginRight.toString()}
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginRight: value,
-            }), maximumMarginWidth - pageData.marginLeft - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
-              ...pageData,
-              marginRight: value,
             }))}
           />
         </Flexbox>
@@ -291,8 +262,53 @@ function RuledControls({
           </StyledRange>
         </Flexbox>
       </Flexbox>
+      <Flexbox
+        flex="flex"
+        flexdirection="column"
+        margin="0 0 1rem 0"
+      >
+        <StyledLabel>Hex radius</StyledLabel>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          width="100%"
+        >
+          <StyledInput
+            value={pageData.hexagonRadius}
+            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+              ...pageData,
+              hexagonRadius: value,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            }), 100)}
+            type="number"
+            min="1"
+            max="100"
+            step="0.1"
+            padding="0.5rem"
+            width="4rem"
+          />
+          <StyledRange
+            margin="0 0 0 0.5rem"
+            width="100%"
+          >
+            <input
+              type="range"
+              min="1"
+              step="0.1"
+              value={pageData.hexagonRadius}
+              onChange={e => setPageData({
+                ...pageData,
+                hexagonRadius: e.target.value,
+                alignmentVertical: "",
+                alignmentHorizontal: "",
+              })}
+            />
+          </StyledRange>
+        </Flexbox>
+      </Flexbox>
     </>
   )
 }
 
-export default RuledControls
+export default HexagonControls

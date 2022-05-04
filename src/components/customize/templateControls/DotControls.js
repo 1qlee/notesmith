@@ -15,9 +15,9 @@ function DotControls({
   setPageData,
 }) {
   const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width)
-  const centeredHorizontalMargin = totalHorizontalMargin / 2
+  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2).toFixed(3))
   const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height)
-  const centeredVerticalMargin = totalVerticalMargin / 2
+  const centeredVerticalMargin = Number((totalVerticalMargin / 2).toFixed(3))
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
