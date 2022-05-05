@@ -42,7 +42,7 @@ function Hexagon({
       for (let col = 0; col < pageData.columns; col++) {
         for (let row = 0; row < pageData.rows; row++) {
           const offset = (Math.sqrt(3) * radius) / 2
-          let x = marginLeft + offset * col * 2
+          let x = marginLeft + offset * col * 2 + strokeWidth
           let y = marginTop + offset * row * Math.sqrt(3) + strokeWidth
 
           if (row % 2 !== 0) {

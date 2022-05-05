@@ -14,11 +14,14 @@ function HexagonControls({
   pageData,
   setPageData,
 }) {
-  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width) // sum of left and right margins
-  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2).toFixed(3)) // half of total horizontal margin is center
-  const totalVerticalMargin = pageData.pageHeight - pageContentSize.height - convertToPx(pageData.thickness * 2) // subtract content height from page height (in pixels)
-  const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2) // half of total vertical margin is center (convert back to MM)
-  const bottomMargin = convertToMM(totalVerticalMargin)
+  const hexWidth = (parseFloat(pageData.hexagonRadius) * Math.sqrt(3)) / 2 // half of the width of a single hexagon
+  const hexHeight = parseFloat(pageData.hexagonRadius)
+  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2 // subtract content from page width to get white space
+  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2) + hexWidth).toFixed(3) // half of total horizontal margin plus offset from hexWidth
+  const rightHorizontalMargin = Number(totalHorizontalMargin + hexWidth).toFixed(3)
+  const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2 // subtract content from page height
+  const centeredVerticalMargin = Number((totalVerticalMargin / 2) + hexHeight).toFixed(3) // half of total vertical margin plus offset from hexHeight
+  const bottomVerticalMargin = Number(totalVerticalMargin + hexHeight).toFixed(3)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -29,9 +32,9 @@ function HexagonControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: 0,
+          marginLeft: hexWidth.toFixed(3),
         })
-        marginLeftInput.current.value = 0
+        marginLeftInput.current.value = hexWidth.toFixed(3)
         break
       case "center":
         setPageData({
@@ -45,17 +48,17 @@ function HexagonControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: totalHorizontalMargin,
+          marginLeft: rightHorizontalMargin,
         })
-        marginLeftInput.current.value = totalHorizontalMargin
+        marginLeftInput.current.value = rightHorizontalMargin
         break
       case "top":
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: 0,
+          marginTop: hexHeight.toFixed(3),
         })
-        marginTopInput.current.value = 0
+        marginTopInput.current.value = hexHeight.toFixed(3)
         break
       case "middle":
         setPageData({
@@ -69,9 +72,9 @@ function HexagonControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: bottomMargin,
+          marginTop: bottomVerticalMargin,
         })
-        marginTopInput.current.value = bottomMargin
+        marginTopInput.current.value = bottomVerticalMargin
         break
       default:
         break

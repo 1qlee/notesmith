@@ -11,22 +11,10 @@ function Graph({ pageData, setPageData }) {
     const lineColumnsArray = []
     const lineThickness = convertToPx(pageData.thickness)
     // grid column lines
-    for (let i = 0; i < pageData.columns; i++) {
-      const lineY1 = convertToPx(pageData.marginTop) + lineThickness
-      const lineY2 = convertToPx((pageData.rows) * pageData.spacing) + convertToPx(pageData.marginTop) + lineThickness
-      const lineX = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + convertToPx(pageData.spacing) + lineThickness
-      const lineXFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + lineThickness
-      // first  column
-      const firstColumnLine = {
-        fill: "none",
-        stroke: "#000",
-        strokeWidth: lineThickness,
-        opacity: pageData.opacity,
-        x1: convertFloatFixed(lineXFirst, 3),
-        x2: convertFloatFixed(lineXFirst, 3),
-        y1: convertFloatFixed(lineY1, 3),
-        y2: convertFloatFixed(lineY2, 3),
-      }
+    for (let col = 0; col < pageData.columns; col++) {
+      const lineY1 = convertToPx(pageData.marginTop)
+      const lineY2 = convertToPx(pageData.rows * pageData.spacing) + lineY1
+      const lineX = col * convertToPx(pageData.spacing) + convertToPx(pageData.marginLeft) + lineThickness
       // line object that holds line properties
       const line = {
         fill: "none",
@@ -39,15 +27,11 @@ function Graph({ pageData, setPageData }) {
         y2: convertFloatFixed(lineY2, 3),
       }
 
-      if (i === 0) {
-        lineColumnsArray.push(firstColumnLine)
-      }
-
       // break the loop if columns break past the right side margin
       if (lineX > pageData.pageWidth) {
         setPageData({
           ...pageData,
-          columns: i,
+          columns: col,
         })
         break
       }
@@ -63,23 +47,11 @@ function Graph({ pageData, setPageData }) {
     // placeholder array
     const lineRowsArray = []
     // grid row lines
-    for (let i = 0; i < pageData.rows; i++) {
+    for (let row = 0; row < pageData.rows; row++) {
       // calculations and conversions to px
       const lineX1 = convertToPx(pageData.marginLeft) + lineThickness
       const lineX2 = convertToPx((pageData.columns) * pageData.spacing + pageData.marginLeft) + lineThickness
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + convertToPx(pageData.spacing) + lineThickness
-      const lineYFirst = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness
-      // first row line
-      const firstRowLine = {
-        fill: "none",
-        stroke: "#000",
-        strokeWidth: lineThickness,
-        opacity: pageData.opacity,
-        x1: lineX1,
-        x2: lineX2,
-        y1: lineYFirst,
-        y2: lineYFirst,
-      }
+      const lineY = row * convertToPx(pageData.spacing) + convertToPx(pageData.marginTop) + lineThickness
       // line object
       const line = {
         fill: "none",
@@ -92,16 +64,12 @@ function Graph({ pageData, setPageData }) {
         y2: lineY,
       }
 
-      if (i === 0) {
-        lineRowsArray.push(firstRowLine)
-      }
-
       // loop will exit if the last line has passed the height of the page
       if (lineY > pageData.pageHeight) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
-          rows: i,
+          rows: row,
         })
         break
       }
