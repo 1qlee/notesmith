@@ -361,13 +361,10 @@ function GraphPageIcon({
     spacing: 5,
     opacity: 1,
     thickness: 0.088,
-    dotRadius: 0.6,
-    rows: 42,
-    columns: 25,
-    marginTop: 2.229,
-    marginBottom: 0,
-    marginLeft: 0.6375,
-    marginRight: 0,
+    rows: 41,
+    columns: 24,
+    marginTop: 0.335,
+    marginLeft: 2.036,
     width: 127,
   }
 
@@ -477,17 +474,13 @@ function HexagonPageIcon({
     alignmentVertical: "middle",
     show: isProductPage ? true : false,
     template: "hexagon",
-    spacing: 5,
     opacity: 1,
     thickness: 0.175,
     hexagonRadius: 5,
-    rows: 29,
-    columns: 14,
-    marginTop: -5,
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    width: 1,
+    rows: 30,
+    columns: 16,
+    marginTop: -7.902,
+    marginLeft: -8.442,
   }
 
   return (
@@ -507,7 +500,55 @@ function HexagonPageIcon({
         </svg>
       </PageOutline>
       {showLabels ? (
-        <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+        <PageLabel margin="0.5rem 0 0 0">Hexagon</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
+  )
+}
+
+function IsometricPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "isometric",
+    opacity: 1,
+    thickness: 0.175,
+    marginTop: 0,
+    marginLeft: 0,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        Iso
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Isometric</PageLabel>
       ) : (
         <ReactTooltip
           effect="solid"
@@ -578,6 +619,17 @@ function PageIcons({
         dataTip="Hexagon"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "hexagon"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <IsometricPageIcon
+        data={data}
+        dataTip="Isometric"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "isometric"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

@@ -40,6 +40,7 @@ const ProductPage = ({ data, params }) => {
     thickness: 0.088,
     dotRadius: 0.6,
     hexagonRadius: 1,
+    angle: 30,
     rows: 42,
     columns: 27,
     marginTop: 0,

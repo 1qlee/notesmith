@@ -185,8 +185,8 @@ const ProductInfo = ({
         </Content>
       </Flexbox>
       <Notification
-        backgroundcolor={colors.gray.oneHundred}
-        bordercolor={colors.gray.oneHundred}
+        backgroundcolor={colors.white}
+        bordercolor={colors.gray.nineHundred}
         margin="0 0 2rem"
         padding="1rem"
       >

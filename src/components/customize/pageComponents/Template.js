@@ -7,6 +7,7 @@ import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
 import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
+import Isometric from "../templates/Isometric"
 
 function Template({
   bookData,
@@ -122,6 +123,13 @@ function Template({
               currentPageSide={currentPageSide}
             />
           )}
+          {pageData.template === "isometric" && (
+            <Isometric
+              pageData={pageData}
+              setPageData={setPageData}
+              currentPageSide={currentPageSide}
+            />
+          )}
         </svg>
       </svg>
     )
@@ -159,6 +167,20 @@ function Template({
         )}
         {pageData.template === "graph" && (
           <Graph
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "hexagon" && (
+          <Hexagon
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "isometric" && (
+          <Isometric
             currentPageSide={currentPageSide}
             pageData={pageData}
             setPageData={setPageData}

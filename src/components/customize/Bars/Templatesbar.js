@@ -13,6 +13,7 @@ import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
 import HexagonControls from "../templateControls/HexagonControls"
+import IsometricControls from "../templateControls/IsometricControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -205,6 +206,16 @@ function Templatesbar({
                 )}
                 {pageData.template === "hexagon" && (
                   <HexagonControls
+                    canvasPageSize={canvasPageSize}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "isometric" && (
+                  <IsometricControls
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
