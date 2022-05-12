@@ -5,26 +5,28 @@ function Isometric({
   pageData,
   setPageData,
 }) {
-  const [lines, setLines] = useState([])
-  const [linesTwo, setLinesTwo] = useState([])
+  const [linesTop, setLinesTop] = useState([])
+  const [linesSides, setLinesSides] = useState([])
   const [lineStyle, setLineStyle] = useState({})
   const lineThickness = convertToPx(pageData.thickness)
   const lineSpacing = convertToPx(pageData.spacing)
   const { angle } = pageData
 
   useEffect(() => {
-    function createLines() {
+    function createLinesTop() {
       const linesArray = []
+      let index = 1
 
-      for (let posX = 0; posX < pageData.pageWidth; posX += lineSpacing) {
-        const sideLength = pageData.pageWidth - posX
-        let posY = sideLength * Math.tan(angle * Math.PI / 180)
+      for (let posX = lineSpacing; posX < pageData.pageHeight; posX += lineSpacing) {
+        const additionalWidth = Math.tan(angle * Math.PI / 180) * lineSpacing * index
+        const adjacentSide = pageData.pageHeight + additionalWidth
+        let posX2 = adjacentSide * Math.tan(angle * Math.PI / 180)
 
         const lineCoordsOne = {
-          x1: posX,
+          x1: additionalWidth,
           y1: 0,
-          x2: pageData.pageWidth,
-          y2: posY,
+          x2: posX2,
+          y2: pageData.pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
@@ -32,48 +34,27 @@ function Isometric({
         }
 
         const lineCoordsTwo = {
-          x1: sideLength,
+          x1: pageData.pageWidth - additionalWidth,
           y1: 0,
-          x2: 0,
-          y2: posY,
+          x2: pageData.pageWidth - posX2,
+          y2: pageData.pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: pageData.opacity,
         }
 
-        const lineCoordsThree = {
-          x1: posX,
-          y1: pageData.pageHeight,
-          x2: pageData.pageWidth,
-          y2: pageData.pageHeight - posY,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
-          opacity: pageData.opacity,
-        }
-
-        const lineCoordsFour = {
-          x1: sideLength,
-          y1: pageData.pageHeight,
-          x2: 0,
-          y2: pageData.pageHeight - posY,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
-          opacity: pageData.opacity,
-        }
-
-        linesArray.push(lineCoordsOne, lineCoordsTwo, lineCoordsThree, lineCoordsFour)
+        linesArray.push(lineCoordsOne, lineCoordsTwo)
+        index++
       }
 
-      setLines(linesArray)
+      setLinesTop(linesArray)
     }
 
-    function createLinesTwo() {
+    function createLinesSides() {
       const linesArray = []
 
-      for (let posY = -pageData.pageHeight; posY < pageData.pageHeight; posY += lineSpacing) {
+      for (let posY = 0; posY < pageData.pageHeight; posY += lineSpacing) {
         const sideLength = pageData.pageHeight - posY
         let posX = sideLength * Math.tan(angle * Math.PI / 180)
 
@@ -102,10 +83,11 @@ function Isometric({
         linesArray.push(lineCoordsOne, lineCoordsTwo)
       }
 
-    setLinesTwo(linesArray)
+    setLinesSides(linesArray)
   }
 
-    createLinesTwo()
+    createLinesTop()
+    createLinesSides()
   }, [pageData])
 
   return (
@@ -118,7 +100,7 @@ function Isometric({
         fill="none"
         stroke="#000"
       />
-      {lines.map((line, index) => (
+      {linesTop.map((line, index) => (
         <line
           fill={line.fill}
           key={index}
@@ -131,7 +113,7 @@ function Isometric({
           y2={line.y2}
         />
       ))}
-      {linesTwo.map((line, index) => (
+      {linesSides.map((line, index) => (
         <line
           fill={line.fill}
           key={index}

@@ -1,10 +1,12 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
+import { Hexagon, DiamondsFour } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
+import Icon from "../Icon"
 
 const StyledPage = styled.a`
   align-items: center;
@@ -21,15 +23,9 @@ const StyledPage = styled.a`
     transition: transform 0.2s;
   }
   &.is-active {
-    span {
-      background-color: ${colors.gray.nineHundred};
-    }
     p {
       background-color: ${colors.gray.nineHundred};
       color: ${colors.primary.white};
-    }
-    polygon {
-      stroke: ${colors.gray.nineHundred};
     }
     .page-outline {
       border-color: ${colors.primary.sixHundred};
@@ -40,24 +36,15 @@ const StyledPage = styled.a`
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      span {
-        background-color: ${colors.gray.nineHundred};
-      }
       p {
         color: ${colors.gray.nineHundred};
       }
       div {
         border-color: ${colors.gray.nineHundred};
       }
-      polygon {
-        stroke: ${colors.gray.nineHundred};
-      }
     }
   }
   &:focus {
-    span {
-      background-color: ${colors.primary.sixHundred};
-    }
     p {
       background-color: ${colors.primary.sixHundred};
       color: ${colors.primary.white};
@@ -495,9 +482,9 @@ function HexagonPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 100 100" style={{marginTop:"4px"}}>
-          <polygon points="30.1,84.5 10.2,50 30.1,15.5 69.9,15.5 89.8,50 69.9,84.5" fill="#fff" stroke="#757575" strokeWidth="6"/>
-        </svg>
+        <Icon width="100%" height="100%">
+          <Hexagon size="1rem" />
+        </Icon>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Hexagon</PageLabel>
@@ -545,7 +532,9 @@ function IsometricPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        Iso
+        <Icon width="100%" height="100%">
+          <DiamondsFour size="1rem" />
+        </Icon>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Isometric</PageLabel>
