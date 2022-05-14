@@ -10,23 +10,45 @@ function Isometric({
   const [lineStyle, setLineStyle] = useState({})
   const lineThickness = convertToPx(pageData.thickness)
   const lineSpacing = convertToPx(pageData.spacing)
-  const { angle } = pageData
+  const { pageWidth, pageHeight } = pageData
+  const angle = parseInt(pageData.angle)
+  const complementaryAngle = 90 - angle
 
   useEffect(() => {
     function createLinesTop() {
       const linesArray = []
-      let index = 1
+      // the amount each line will move on the X axis
+      const lineSpacingTop = Math.tan(angle * Math.PI / 180) * lineSpacing
+      // the total number of lines that must be created
+      const numOfLinesTop = pageWidth / lineSpacingTop
 
-      for (let posX = lineSpacing; posX < pageData.pageHeight; posX += lineSpacing) {
-        const additionalWidth = Math.tan(angle * Math.PI / 180) * lineSpacing * index
-        const adjacentSide = pageData.pageHeight + additionalWidth
-        let posX2 = adjacentSide * Math.tan(angle * Math.PI / 180)
+      for (let numOfLines = 0; numOfLines < numOfLinesTop; numOfLines++) {
+        // add one to numOfLines to escape the zero
+        const realNumOfLines = numOfLines + 1
+        // the side adjacent to the angle of our "triangle" used to calculate the line's x2 position
+        const adjacentSide = realNumOfLines * lineSpacing + pageHeight
+        // the starting x position of the line
+        const posX1 = lineSpacingTop * realNumOfLines
+        const posX2 = adjacentSide * Math.tan(angle * Math.PI / 180)
+        const invertedPosX1 = pageWidth - posX1
+        let adjustedPosY2
+
+        // if the starting point of the line exceeds the width of the page, break out of the loop
+        if (posX1 > pageWidth) {
+          break
+        }
+        // if the ending point of the line exceeds the width of the page, triangulate a new ending point
+        // based on a smaller "triangle"
+        if (posX2 > pageWidth) {
+          adjustedPosY2 = invertedPosX1 * Math.tan(complementaryAngle * Math.PI / 180)
+          console.log("x2", adjustedPosY2)
+        }
 
         const lineCoordsOne = {
-          x1: additionalWidth,
+          x1: posX1,
           y1: 0,
-          x2: posX2,
-          y2: pageData.pageHeight,
+          x2: adjustedPosY2 ? pageWidth : posX2,
+          y2: adjustedPosY2 || pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
@@ -34,10 +56,10 @@ function Isometric({
         }
 
         const lineCoordsTwo = {
-          x1: pageData.pageWidth - additionalWidth,
+          x1: invertedPosX1,
           y1: 0,
-          x2: pageData.pageWidth - posX2,
-          y2: pageData.pageHeight,
+          x2: adjustedPosY2 ? 0 : pageWidth - posX2,
+          y2: adjustedPosY2 || pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
@@ -45,7 +67,6 @@ function Isometric({
         }
 
         linesArray.push(lineCoordsOne, lineCoordsTwo)
-        index++
       }
 
       setLinesTop(linesArray)
@@ -53,16 +74,25 @@ function Isometric({
 
     function createLinesSides() {
       const linesArray = []
+      // the total number of lines that must be created
+      const numOfLinesSides = pageHeight / lineSpacing
 
-      for (let posY = 0; posY < pageData.pageHeight; posY += lineSpacing) {
-        const sideLength = pageData.pageHeight - posY
-        let posX = sideLength * Math.tan(angle * Math.PI / 180)
+      for (let numOfLines = 0; numOfLines < numOfLinesSides; numOfLines++) {
+        // the side adjacent to the angle of our "triangle" used to calculate the line's x2 position
+        const posY1 = numOfLines * lineSpacing
+        const adjacentSide = pageHeight - numOfLines * lineSpacing
+        let posX2 = adjacentSide * Math.tan(angle * Math.PI / 180)
+        let adjustedPosY2
+
+        if (posX2 > pageWidth) {
+          adjustedPosY2 = pageWidth * Math.tan(complementaryAngle * Math.PI / 180) + posY1
+        }
 
         const lineCoordsOne = {
           x1: 0,
-          y1: posY,
-          x2: posX,
-          y2: pageData.pageHeight,
+          y1: posY1,
+          x2: adjustedPosY2 ? pageWidth : posX2,
+          y2: adjustedPosY2 || pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
@@ -70,10 +100,10 @@ function Isometric({
         }
 
         const lineCoordsTwo = {
-          x1: pageData.pageWidth,
-          y1: posY,
-          x2: pageData.pageWidth - posX,
-          y2: pageData.pageHeight,
+          x1: pageWidth,
+          y1: posY1,
+          x2: adjustedPosY2 ? 0 : pageWidth - posX2,
+          y2: adjustedPosY2 || pageHeight,
           fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
@@ -93,8 +123,8 @@ function Isometric({
   return (
     <>
       <rect
-        width={pageData.pageWidth}
-        height={pageData.pageHeight}
+        width={pageWidth}
+        height={pageHeight}
         strokeWidth={lineThickness}
         strokeOpacity={pageData.opacity}
         fill="none"
