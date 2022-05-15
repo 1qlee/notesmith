@@ -255,6 +255,25 @@ const StyledRange = styled.div`
   }
 `
 
+const StyledCheckbox = styled.div`
+  align-items: center;
+  border-radius: 0.25rem;
+  display: flex;
+  flex: 1;
+  margin: ${props => props.margin};
+  padding: ${props => props.padding || "0.25rem 0.5rem"};
+  transition: background-color 0.2s;
+  justify-content: center;
+  span {
+    font-family: ${fonts.secondary};
+    font-size: ${props => props.fontsize || "0.75rem"}
+  }
+  &:hover {
+    background-color: ${colors.primary.hover};
+    cursor: pointer;
+  }
+`
+
 const StyledRadio = styled.div`
   flex: 1;
   &:not(:last-child) {
@@ -469,6 +488,7 @@ export {
   Counter,
   AuthFormWrapper,
   SelectWrapper,
+  StyledCheckbox,
   StyledFieldset,
   StyledRadio,
   StyledRange,

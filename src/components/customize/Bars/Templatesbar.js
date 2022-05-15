@@ -68,10 +68,12 @@ const PageButton = styled(Button)`
 `
 
 function Templatesbar({
+  borderData,
   canvasPageSize,
   currentPageSide,
   pageData,
   pageContentSize,
+  setBorderData,
   setCurrentPageSide,
   setLeftPageData,
   setPageData,
@@ -155,6 +157,7 @@ function Templatesbar({
                   borderradius="0.25rem"
                   boxshadow="none"
                   padding="0.25rem 0.5rem"
+                  fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("left")}
                   className={currentPageSide === "left" ? "is-active" : null}
                 >
@@ -165,6 +168,7 @@ function Templatesbar({
                   borderradius="0.25rem"
                   boxshadow="none"
                   padding="0.25rem 0.5rem"
+                  fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("right")}
                   className={currentPageSide === "right" ? "is-active" : null}
                 >
@@ -196,11 +200,13 @@ function Templatesbar({
                 )}
                 {pageData.template === "graph" && (
                   <GraphControls
+                    borderData={borderData}
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
                     pageContentSize={pageContentSize}
                     pageData={pageData}
+                    setBorderData={setBorderData}
                     setPageData={setPageData}
                   />
                 )}
@@ -216,11 +222,13 @@ function Templatesbar({
                 )}
                 {pageData.template === "isometric" && (
                   <IsometricControls
+                    borderData={borderData}
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}
                     maximumMarginWidth={maximumMarginWidth}
                     pageContentSize={pageContentSize}
                     pageData={pageData}
+                    setBorderData={setBorderData}
                     setPageData={setPageData}
                   />
                 )}

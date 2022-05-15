@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Isometric({
+  borderData,
   pageData,
   setPageData,
 }) {
@@ -9,7 +10,7 @@ function Isometric({
   const [linesSides, setLinesSides] = useState([])
   const [lineStyle, setLineStyle] = useState({})
   const lineThickness = convertToPx(pageData.thickness)
-  const lineSpacing = convertToPx(pageData.spacing)
+  const lineSpacing = convertToPx(pageData.spacing) + convertToPx(pageData.thickness)
   const { pageWidth, pageHeight } = pageData
   const angle = parseInt(pageData.angle)
   const complementaryAngle = 90 - angle
@@ -122,14 +123,16 @@ function Isometric({
 
   return (
     <>
-      <rect
-        width={pageWidth}
-        height={pageHeight}
-        strokeWidth={lineThickness}
-        strokeOpacity={pageData.opacity}
-        fill="none"
-        stroke="#000"
-      />
+      {borderData.toggle && (
+        <rect
+          width={pageWidth}
+          height={pageHeight}
+          strokeWidth={borderData.sync ? lineThickness : convertToPx(borderData.thickness)}
+          strokeOpacity={borderData.sync ? pageData.opacity : borderData.opacity}
+          fill="none"
+          stroke="#000"
+        />
+      )}
       {linesTop.map((line, index) => (
         <line
           fill={line.fill}

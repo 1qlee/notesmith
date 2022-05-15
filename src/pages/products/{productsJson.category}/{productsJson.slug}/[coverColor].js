@@ -31,26 +31,32 @@ const ProductPage = ({ data, params }) => {
   })
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [selectedTemplate, setSelectedTemplate] = useState({
-    template: "",
-    show: false,
     alignmentHorizontal: "center",
     alignmentVertical: "top",
-    spacing: 5,
-    opacity: 1,
-    thickness: 0.088,
+    angle: 30,
+    columns: 27,
     dotRadius: 0.6,
     hexagonRadius: 1,
-    angle: 30,
-    rows: 42,
-    columns: 27,
-    marginTop: 0,
+    lineWidth: 100,
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
-    width: 127,
-    lineWidth: 100,
+    marginTop: 0,
+    opacity: 1,
     pageHeight: bookData.heightPixel - convertToPx(6.35),
     pageWidth: bookData.widthPixel - convertToPx(13.335),
+    rows: 42,
+    show: false,
+    spacing: 5,
+    template: "",
+    thickness: 0.088,
+    width: 127,
+  })
+  const [borderData, setBorderData] = useState({
+    sync: true,
+    toggle: true,
+    thickness: 0.088,
+    opacity: 1,
   })
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
@@ -116,18 +122,21 @@ const ProductPage = ({ data, params }) => {
                         flex="flex"
                       >
                         <Templatesbar
+                          borderData={borderData}
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
                           pageContentSize={pageContentSize}
                           pageData={selectedTemplate}
-                          toast={toast}
                           selectedPageSvg={selectedPageSvg}
+                          setBorderData={setBorderData}
                           setCurrentPageSide={setCurrentPageSide}
                           setLeftPageData={setLeftPageData}
                           setPageData={setSelectedTemplate}
                           setRightPageData={setRightPageData}
+                          toast={toast}
                         />
                         <Template
+                          borderData={borderData}
                           bookData={bookData}
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}

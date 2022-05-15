@@ -515,6 +515,7 @@ function IsometricPageIcon({
     show: isProductPage ? true : false,
     template: "isometric",
     opacity: 1,
+    angle: 60,
     thickness: 0.175,
     marginTop: 0,
     marginLeft: 0,

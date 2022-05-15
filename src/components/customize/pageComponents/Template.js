@@ -11,6 +11,7 @@ import Isometric from "../templates/Isometric"
 
 function Template({
   bookData,
+  borderData,
   canvasPageSize,
   currentPageSide,
   minimumMargin,
@@ -111,9 +112,10 @@ function Template({
           )}
           {pageData.template === "graph" && (
             <Graph
+              borderData={borderData}
+              currentPageSide={currentPageSide}
               pageData={pageData}
               setPageData={setPageData}
-              currentPageSide={currentPageSide}
             />
           )}
           {pageData.template === "hexagon" && (
@@ -125,9 +127,10 @@ function Template({
           )}
           {pageData.template === "isometric" && (
             <Isometric
+              borderData={borderData}
+              currentPageSide={currentPageSide}
               pageData={pageData}
               setPageData={setPageData}
-              currentPageSide={currentPageSide}
             />
           )}
         </svg>

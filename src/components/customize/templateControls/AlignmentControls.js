@@ -39,6 +39,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("left")}
           className={pageData.alignmentHorizontal === "left" ? "is-active" : null}
         >
@@ -49,6 +50,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("center")}
           className={pageData.alignmentHorizontal === "center" ? "is-active" : null}
         >
@@ -59,6 +61,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("right")}
           className={pageData.alignmentHorizontal === "right" ? "is-active" : null}
         >
@@ -72,6 +75,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("top")}
           className={pageData.alignmentVertical === "top" ? "is-active" : null}
         >
@@ -82,6 +86,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("middle")}
           className={pageData.alignmentVertical === "middle" ? "is-active" : null}
         >
@@ -92,6 +97,7 @@ function AlignmentControls({ pageData, setPageData, changeAlignment }) {
           borderradius="0.25rem"
           boxshadow="none"
           padding="0.25rem 0.5rem"
+          fontsize="0.75rem"
           onClick={() => changeAlignment("bottom")}
           className={pageData.alignmentVertical === "bottom" ? "is-active" : null}
         >
