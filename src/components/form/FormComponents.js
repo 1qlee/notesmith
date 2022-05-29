@@ -84,7 +84,7 @@ function QuantityTracker(props) {
         <Icon style={{width:"100%", height: "100%"}}>
           <Minus
             size={props.iconsize}
-            color={quantity === 1 ? colors.gray.threeHundred : colors.gray.nineHundred}
+            color={quantity === 1 ? colors.gray.nineHundred : colors.gray.nineHundred}
             weight="bold"
           />
         </Icon>
@@ -144,8 +144,7 @@ const QuantityButton = styled.button`
 
 const Counter = styled.input`
   background-color: ${colors.white};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+  border: 1px solid ${colors.gray.nineHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize};
   padding: ${props => props.padding || "1rem"};
@@ -160,7 +159,7 @@ const Counter = styled.input`
     margin: 0;
   }
   &:focus {
-    border-color: ${colors.primary.sixHundred};
+    border-color: ${colors.gray.nineHundred};
     outline: none;
   }
   &:hover {
@@ -224,21 +223,20 @@ const StyledRange = styled.div`
     -webkit-appearance: none;
     width: 100%;
     background: ${colors.gray.threeHundred};
-    border-radius: 0.25rem;
     height: 0.5rem;
     &:hover,
     &:focus {
       &::-webkit-slider-thumb {
-        background-color: ${colors.primary.fourHundred};
+        background-color: ${colors.gray.twoHundred};
       }
     }
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: ${colors.primary.sixHundred};
-    border: 2px solid ${colors.primary.white};
+    background-color: ${colors.gray.oneHundred};
+    border: 2px solid ${colors.gray.nineHundred};
+    box-shadow: ${colors.shadow.layeredSmall};
     border-radius: 100%;
-    box-shadow: 0 2px 4px ${colors.primary.shadow};
     cursor: pointer;
     height: 1.25rem;
     margin-top: -0.375rem;
@@ -257,7 +255,6 @@ const StyledRange = styled.div`
 
 const StyledCheckbox = styled.div`
   align-items: center;
-  border-radius: 0.25rem;
   display: flex;
   flex: 1;
   margin: ${props => props.margin};
@@ -269,7 +266,7 @@ const StyledCheckbox = styled.div`
     font-size: ${props => props.fontsize || "0.75rem"}
   }
   &:hover {
-    background-color: ${colors.primary.hover};
+    background-color: ${colors.gray.oneHundred};
     cursor: pointer;
   }
 `
@@ -281,7 +278,7 @@ const StyledRadio = styled.div`
   }
   label {
     box-shadow: inset 0 1px 1px ${colors.shadow.inset}, inset 0 0 1px ${colors.shadow.inset};
-    border: 1px solid ${colors.gray.threeHundred};
+    border: 1px solid ${colors.gray.nineHundred};
     box-sizing: border-box;
     display: block;
     height: 100%;
@@ -297,7 +294,7 @@ const StyledRadio = styled.div`
       }
     }
     .radio-header {
-      border-bottom: 1px solid ${colors.gray.threeHundred};
+      border-bottom: 1px solid ${colors.gray.nineHundred};
       padding: 0.5rem;
       display: flex;
       align-items: center;
@@ -323,7 +320,7 @@ const StyledRadio = styled.div`
   input[type="radio"]:checked ~ label {
     border: 1px solid ${colors.link.normal};
     .radio-header {
-      background-color:  ${colors.primary.oneHundred};
+      background-color:  ${colors.gray.oneHundred};
       color: ${colors.link.normal};
       border-color: ${colors.link.normal};
     }
@@ -365,7 +362,7 @@ const RadioInput = styled.div`
 `
 
 const StyledLabel = styled.label`
-  color: ${props => props.color || colors.primary.nineHundred};
+  color: ${props => props.color || colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
@@ -381,9 +378,9 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: 1px solid ${props => props.bordercolor || colors.gray.threeHundred};
-  color: ${colors.primary.nineHundred};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
+  border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
+  color: ${colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.8rem"};
@@ -399,16 +396,16 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    border-color: ${colors.primary.sixHundred};
+    border-color: ${colors.gray.sixHundred};
     outline: none;
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.gray.oneHundred};
+      background-color: ${colors.gray.twoHundred};
     }
   }
   &::placeholder {
-    color: ${colors.primary.threeHundred};
+    color: ${colors.gray.threeHundred};
     opacity: 1;
   }
 `
@@ -426,8 +423,8 @@ const SelectIcon = styled.span`
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
-  border: 1px solid ${colors.gray.threeHundred};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
+  border: 1px solid ${colors.gray.nineHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize || "0.8rem"};
   padding: ${props => props.padding || "1rem 4rem 1rem 1rem"};
@@ -443,7 +440,7 @@ const StyledSelect = styled.select`
   }
   &:active,
   &:focus {
-    border-color: ${colors.primary.sixHundred};
+    border-color: ${colors.gray.nineHundred};
     outline: none;
   }
 `
@@ -462,10 +459,6 @@ const ErrorLine = styled.div`
 `
 
 const StyledTable = styled.table`
-  border-radius: 0.25rem;
-  thead {
-    border-radius: 0.25rem 0.25rem 0 0;
-  }
   th, td {
     padding: 1rem;
   }
@@ -476,7 +469,7 @@ const StyledTable = styled.table`
   }
   tr {
     &.is-selected {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
   }
 `

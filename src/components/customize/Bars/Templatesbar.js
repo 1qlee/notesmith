@@ -14,6 +14,7 @@ import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
 import HexagonControls from "../templateControls/HexagonControls"
 import IsometricControls from "../templateControls/IsometricControls"
+import SeyesControls from "../templateControls/SeyesControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -29,14 +30,12 @@ const TemplatesContent = styled.div`
 
 const TemplatesFooter = styled.div`
   padding: 1rem;
-  border-radius: 0 0 0.25rem 0.25rem;
-  border-top: 1px solid ${colors.gray.threeHundred};
+  border-top: 1px solid ${colors.gray.nineHundred};
 `
 
 const FloatingTemplatesbar = styled.div`
   background-color: ${colors.white};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+  border: 1px solid ${colors.gray.nineHundred};
   height: 688px;
   margin-right: 2rem;
   width: 300px;
@@ -45,25 +44,61 @@ const FloatingTemplatesbar = styled.div`
 
 const PageButtonWrapper = styled.div`
   display: flex;
-  border: 1px solid ${colors.gray.threeHundred};
+  border: 1px solid ${colors.gray.nineHundred};
   background-color: ${colors.white};
   padding: 0.25rem;
-  border-radius: 0.25rem;
   margin-bottom: 1rem;
 `
 
 const PageButton = styled(Button)`
   flex: 1;
+  position: relative;
+  &:not(:last-child) {
+    margin-right: 2px;
+  }
+  &:not(:last-child) {
+    margin-right: 2px;
+  }
+  span {
+    color: ${colors.gray.nineHundred};
+    position: relative;
+    transition: color 0.2s;
+    z-index: 99;
+  }
   &:not(:last-child) {
     margin-right: 2px;
   }
   &:hover,
   &:focus {
-    background-color: ${colors.primary.hover};
+    box-shadow: none;
+    &:not(.is-active) {
+      span {
+        color: ${colors.gray.nineHundred};
+      }
+    }
   }
   &.is-active {
-    background-color: ${colors.primary.sixHundred};
-    color: ${colors.primary.white};
+    &::before {
+      transform: translateX(5px);
+      width: 100%;
+      opacity: 1;
+    }
+    span {
+      color: ${colors.gray.oneHundred};
+    }
+  }
+  &::before {
+    background-color: ${colors.gray.nineHundred};
+    border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
+    content: "";
+    height: 100%;
+    left: -5px;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    transition: transform 0.2s, width 0.2s ease-in, background-color 0.2s, opacity 0.2s;
+    width: 0;
+    will-change: width, transform;
   }
 `
 
@@ -116,30 +151,32 @@ function Templatesbar({
   if (pageData.show) {
     return (
       <FloatingTemplatesbar>
-        <TextLink
-          borderbottom={`1px solid ${colors.gray.threeHundred}`}
-          color={colors.primary.threeHundred}
+        <Flexbox
           flex="flex"
-          hovercolor={colors.primary.sixHundred}
           justifycontent="flex-end"
+          className="has-border-bottom"
           padding="1rem"
-          onClick={() => setPageData({
-            ...pageData,
-            show: false,
-            template: "",
-          })}
         >
-          Back to images
-          <Icon margin="0 0 0 0.25rem">
-            <ArrowRight size="0.825rem" />
-          </Icon>
-        </TextLink>
+          <TextLink
+            color={colors.gray.nineHundred}
+            onClick={() => setPageData({
+              ...pageData,
+              show: false,
+              template: "",
+            })}
+          >
+            Back to images
+            <Icon margin="0 0 0 0.25rem">
+              <ArrowRight size="0.825rem" />
+            </Icon>
+          </TextLink>
+        </Flexbox>
         <Flexbox
           backgroundcolor={colors.white}
           flex="flex"
           flexdirection="column"
           justifycontent="space-between"
-          borderradius="0.25rem"
+          borderradius="0"
           height="calc(100% - 49px)"
           margin="0 0 0 auto"
         >
@@ -154,25 +191,25 @@ function Templatesbar({
               <PageButtonWrapper>
                 <PageButton
                   backgroundcolor={colors.white}
-                  borderradius="0.25rem"
+                  borderradius="0"
                   boxshadow="none"
                   padding="0.25rem 0.5rem"
                   fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("left")}
                   className={currentPageSide === "left" ? "is-active" : null}
                 >
-                  Left
+                  <span>Left</span>
                 </PageButton>
                 <PageButton
                   backgroundcolor={colors.white}
-                  borderradius="0.25rem"
+                  borderradius="0"
                   boxshadow="none"
                   padding="0.25rem 0.5rem"
                   fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("right")}
                   className={currentPageSide === "right" ? "is-active" : null}
                 >
-                  Right
+                  <span>Right</span>
                 </PageButton>
               </PageButtonWrapper>
             </Content>
@@ -232,15 +269,27 @@ function Templatesbar({
                     setPageData={setPageData}
                   />
                 )}
+                {pageData.template === "seyes" && (
+                  <SeyesControls
+                    borderData={borderData}
+                    canvasPageSize={canvasPageSize}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setBorderData={setBorderData}
+                    setPageData={setPageData}
+                  />
+                )}
               </>
             )}
           </TemplatesContent>
           <TemplatesFooter>
             <Button
-              backgroundcolor={colors.primary.sixHundred}
+              backgroundcolor={colors.gray.nineHundred}
               className={loading ? "is-loading" : null}
-              borderradius="0.25rem"
-              color={colors.primary.white}
+              borderradius="0"
+              color={colors.gray.oneHundred}
               padding="1rem"
               width="100%"
               disabled={pageData.template === "none" ? true : false}
@@ -329,10 +378,10 @@ function Templatesbar({
         </TemplatesContent>
         <TemplatesFooter>
           <Button
-            backgroundcolor={colors.primary.sixHundred}
+            backgroundcolor={colors.gray.nineHundred}
             className={loading ? "is-loading" : null}
-            borderradius="0.25rem"
-            color={colors.primary.white}
+            borderradius="0"
+            color={colors.gray.oneHundred}
             padding="1rem"
             width="100%"
             disabled={!pageData.template}

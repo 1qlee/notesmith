@@ -1,12 +1,12 @@
 import React, { useRef } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
 
-import { StyledFieldset, StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
+import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
+import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
-function GraphControls({
+function SeyesControls({
   canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
@@ -14,11 +14,16 @@ function GraphControls({
   pageData,
   setPageData,
 }) {
-  const strokeMargin = pageData.thickness * 2 // the stroke width of two lines must be subtracted from all margin measurements
-  const totalHorizontalMargin = Number(convertToMM(pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2).toFixed(3)
-  const centeredHorizontalMargin = totalHorizontalMargin / 2
-  const totalVerticalMargin = Number(convertToMM(pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2).toFixed(3)
-  const centeredVerticalMargin = totalVerticalMargin / 2
+  const { columns, rows, thickness, spacing } = pageData
+  const pageHeight = convertToMM(pageData.pageHeight)
+  const pageWidth = convertToMM(pageData.pageWidth)
+  const contentWidth = (columns - 1) * spacing * 4 + columns * thickness
+  const totalHorizontalMargin = pageWidth - contentWidth
+  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3) // half of total horizontal margin is center
+  const rightAlignedHorizontalMargin = convertFloatFixed(totalHorizontalMargin - thickness * 2, 3)
+  const totalVerticalMargin = pageData.pageHeight - pageContentSize.height - convertToPx(pageData.thickness * 2) // subtract content height from page height (in pixels)
+  const centeredVerticalMargin = convertToMM(totalVerticalMargin / 2) // half of total vertical margin is center (convert back to MM)
+  const bottomMargin = convertToMM(totalVerticalMargin)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -45,9 +50,9 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: totalHorizontalMargin,
+          marginLeft: rightAlignedHorizontalMargin,
         })
-        marginLeftInput.current.value = totalHorizontalMargin
+        marginLeftInput.current.value = rightAlignedHorizontalMargin
         break
       case "top":
         setPageData({
@@ -69,9 +74,9 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: totalVerticalMargin,
+          marginTop: bottomMargin,
         })
-        marginTopInput.current.value = totalVerticalMargin
+        marginTopInput.current.value = bottomMargin
         break
       default:
         break
@@ -94,7 +99,6 @@ function GraphControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
-          width="33%"
         >
           <StyledLabel>Rows</StyledLabel>
           <StyledInput
@@ -107,7 +111,7 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: value,
+              rows: parseInt(value),
             }))}
           />
         </Flexbox>
@@ -115,7 +119,6 @@ function GraphControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
-          width="33%"
         >
           <StyledLabel>Columns</StyledLabel>
           <StyledInput
@@ -128,7 +131,7 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              columns: value,
+              columns: parseInt(value),
             }))}
           />
         </Flexbox>
@@ -136,7 +139,6 @@ function GraphControls({
           flex="flex"
           flexdirection="column"
           margin="0 0.5rem 0 0"
-          width="33%"
         >
           <StyledLabel>Spacing</StyledLabel>
           <StyledInput
@@ -149,8 +151,7 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              alignmentHorizontal: "",
-              spacing: value
+              spacing: convertFloatFixed(value, 3),
             }))}
           />
         </Flexbox>
@@ -176,11 +177,11 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
+              marginTop: convertFloatFixed(value, 3),
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginTop: value
+              marginTop: convertFloatFixed(value, 3),
             }))}
           />
         </Flexbox>
@@ -200,11 +201,11 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginLeft: value,
-            }), maximumMarginWidth - pageData.marginRight - 1)}
+              marginLeft: convertFloatFixed(value, 3),
+            }), maximumMarginWidth)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginLeft: value,
+              marginLeft: convertFloatFixed(value, 3),
             }))}
           />
         </Flexbox>
@@ -224,11 +225,11 @@ function GraphControls({
             value={pageData.opacity}
             onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
               ...pageData,
-              opacity: value,
+              opacity: parseFloat(value),
             }), 1)}
             type="number"
             min="0.5"
-            step="0.1"
+            step="0.01"
             max="1"
             padding="0.5rem"
             width="4rem"
@@ -240,10 +241,13 @@ function GraphControls({
             <input
               type="range"
               min="0.5"
-              step="0.1"
+              step="0.01"
               max="1"
               value={pageData.opacity}
-              onChange={e => setPageData({...pageData, opacity: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                opacity: parseFloat(e.target.value)
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -261,10 +265,13 @@ function GraphControls({
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({...pageData, thickness: value}), 3)}
+            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+              ...pageData,
+              thickness: parseFloat(value),
+            }), 3)}
             type="number"
             min="0.088"
-            step="0.01"
+            step="0.001"
             max="3"
             padding="0.5rem"
             width="4.25rem"
@@ -276,10 +283,13 @@ function GraphControls({
             <input
               type="range"
               min="0.088"
-              step="0.01"
+              step="0.001"
               max="3"
               value={pageData.thickness}
-              onChange={e => setPageData({...pageData, thickness: parseFloat(e.target.value)})}
+              onChange={e => setPageData({
+                ...pageData,
+                thickness: parseFloat(e.target.value),
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -288,4 +298,4 @@ function GraphControls({
   )
 }
 
-export default GraphControls
+export default SeyesControls

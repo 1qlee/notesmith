@@ -258,7 +258,7 @@ const ShippingForm = ({
       <div>
         <StyledLabel>Shipping method</StyledLabel>
         <Flexbox
-          borderradius="0.25rem"
+          borderradius="0"
           border={`1px solid ${colors.gray.threeHundred}`}
           margin="0 0 2rem"
         >

@@ -229,7 +229,7 @@ function Checkoutbar({
       >
         <Button
           backgroundcolor={colors.primary.sixHundred}
-          borderradius="0.25rem"
+          borderradius="0"
           color={colors.primary.white}
           padding="1rem"
           width="100%"

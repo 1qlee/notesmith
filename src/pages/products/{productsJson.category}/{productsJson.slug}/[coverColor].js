@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useStaticQuery, graphql, navigate } from "gatsby"
-import { spacing, convertToPx, fonts } from "../../../../styles/variables"
+import { spacing, convertToPx, fonts, convertToMM } from "../../../../styles/variables"
 import { StaticImage, GatsbyImage } from "gatsby-plugin-image"
 import { ToastContainer, toast } from 'react-toastify'
 import "../../../../styles/gallery.css"
@@ -29,12 +29,16 @@ const ProductPage = ({ data, params }) => {
     ...productData,
     coverColor: coverColor,
   })
+  const pageHeight = bookData.heightPixel - convertToPx(6.35)
+  const pageWidth = bookData.widthPixel - convertToPx(13.335)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [selectedTemplate, setSelectedTemplate] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
     angle: 30,
     columns: 27,
+    contentHeight: convertToMM(pageHeight),
+    contentWidth: convertToMM(pageWidth),
     dotRadius: 0.6,
     hexagonRadius: 1,
     lineWidth: 100,
@@ -43,14 +47,13 @@ const ProductPage = ({ data, params }) => {
     marginRight: 0,
     marginTop: 0,
     opacity: 1,
-    pageHeight: bookData.heightPixel - convertToPx(6.35),
-    pageWidth: bookData.widthPixel - convertToPx(13.335),
+    pageHeight: pageHeight,
+    pageWidth: pageWidth,
     rows: 42,
     show: false,
     spacing: 5,
     template: "",
     thickness: 0.088,
-    width: 127,
   })
   const [borderData, setBorderData] = useState({
     sync: true,
@@ -186,13 +189,14 @@ const ProductPage = ({ data, params }) => {
         draggable
         draggablePercent={50}
         hideProgressBar={false}
+        icon={false}
         limit={3}
         newestOnTop={false}
         pauseOnFocusLoss
         pauseOnHover
         position="bottom-center"
         rtl={false}
-        theme="colored"
+        theme="dark"
         style={{
           fontFamily: fonts.secondary,
           fontSize: "0.75rem",

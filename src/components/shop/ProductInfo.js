@@ -158,10 +158,10 @@ const ProductInfo = ({
           />
         </div>
         <Button
-          backgroundcolor={colors.primary.sixHundred}
-          border={`1px solid ${colors.primary.sixHundred}`}
+          backgroundcolor={colors.gray.nineHundred}
+          border={`1px solid ${colors.gray.nineHundred}`}
           className={loading ? "is-loading" : null}
-          color={colors.primary.white}
+          color={colors.gray.oneHundred}
           disabled={loading || !bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
           margin="0 0 0 1rem"
           padding="1rem"
@@ -197,10 +197,10 @@ const ProductInfo = ({
             <p>Need more control over your page layouts? Use our online editor and gain access to more design tools as well as the ability to edit each page individually!</p>
           </Content>
           <Button
-            color={colors.primary.sixHundred}
+            color={colors.gray.oneHundred}
             className={loading ? "is-loading" : null}
-            backgroundcolor={colors.white}
-            border={`1px solid ${colors.primary.sixHundred}`}
+            backgroundcolor={colors.gray.nineHundred}
+            border={`1px solid ${colors.gray.nineHundred}`}
             disabled={loading}
             as={Link}
             to={`/customize/${bookData.slug}/`}

@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
-import { Hexagon, DiamondsFour } from "phosphor-react"
+import { colors, fonts, convertToMM } from "../../styles/variables"
+import { Hexagon, DiamondsFour, Table } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -16,7 +16,6 @@ const StyledPage = styled.a`
   position: relative;
   p {
     padding: 0.25rem;
-    border-radius: 0.25rem;
     transition: 0.2s background-color, 0.2s color;
   }
   .page-outline {
@@ -25,11 +24,11 @@ const StyledPage = styled.a`
   &.is-active {
     p {
       background-color: ${colors.gray.nineHundred};
-      color: ${colors.primary.white};
+      color: ${colors.gray.oneHundred};
     }
     .page-outline {
-      border-color: ${colors.primary.sixHundred};
-      box-shadow: 0 0 2px ${colors.primary.active};
+      border-color: ${colors.gray.nineHundred};
+      box-shadow: ${colors.shadow.layeredSmall};
       transform: scale(1.05);
     }
   }
@@ -46,12 +45,12 @@ const StyledPage = styled.a`
   }
   &:focus {
     p {
-      background-color: ${colors.primary.sixHundred};
-      color: ${colors.primary.white};
+      background-color: ${colors.gray.nineHundred};
+      color: ${colors.gray.oneHundred};
     }
     .page-outline {
-      border-color: ${colors.primary.sixHundred};
-      box-shadow: 0 0 2px ${colors.primary.active};
+      border-color: ${colors.gray.nineHundred};
+      box-shadow: ${colors.shadow.layeredSmall}
       transform: scale(1.05);
     }
   }
@@ -59,9 +58,9 @@ const StyledPage = styled.a`
 
 const PageBadge = styled.span`
   align-items: center;
-  background-color: ${colors.primary.sixHundred};
+  background-color: ${colors.gray.nineHundred};
   border-radius: 20px;
-  color: ${colors.primary.white};
+  color: ${colors.gray.oneHundred};
   display: flex;
   font-family: ${fonts.secondary};
   font-size: 0.5rem;
@@ -77,7 +76,6 @@ const PageBadge = styled.span`
 `
 
 const PageOutline = styled.div`
-  border-radius: 0.25rem;
   border: 1px solid ${props => props.bordercolor || colors.gray.sixHundred};
   height: ${props => props.height || "30px"};
   background-color: ${colors.white};
@@ -462,7 +460,7 @@ function HexagonPageIcon({
     show: isProductPage ? true : false,
     template: "hexagon",
     opacity: 1,
-    thickness: 0.175,
+    thickness: 0.088,
     hexagonRadius: 5,
     rows: 30,
     columns: 16,
@@ -516,7 +514,9 @@ function IsometricPageIcon({
     template: "isometric",
     opacity: 1,
     angle: 60,
-    thickness: 0.175,
+    thickness: 0.088,
+    width: convertToMM(data.pageWidth),
+    height: convertToMM(data.pageHeight),
     marginTop: 0,
     marginLeft: 0,
   }
@@ -539,6 +539,59 @@ function IsometricPageIcon({
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Isometric</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
+  )
+}
+
+function SeyesPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "seyes",
+    opacity: 1,
+    thickness: 0.088,
+    spacing: 2,
+    rows: 91,
+    columns: 12,
+    marginTop: 15,
+    marginLeft: 30,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        <Icon width="100%" height="100%">
+          <Table size="1rem" />
+        </Icon>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Seyes</PageLabel>
       ) : (
         <ReactTooltip
           effect="solid"
@@ -620,6 +673,17 @@ function PageIcons({
         dataTip="Isometric"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "isometric"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <SeyesPageIcon
+        data={data}
+        dataTip="Seyes"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "seyes"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

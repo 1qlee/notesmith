@@ -335,7 +335,7 @@ const UserBooks = () => {
               <Button
                 color={colors.white}
                 backgroundcolor={colors.primary.sixHundred}
-                borderradius="0.25rem"
+                borderradius="0"
                 onClick={() => setShowModal({
                   show: true,
                   type: "createbook",

@@ -151,7 +151,7 @@ const convertToPx = mm => {
 }
 
 const convertFloatFixed = (number, places) => {
-  return parseFloat(number).toFixed(places)
+  return parseFloat((Math.round(number * places * 10) / (places * 10)).toFixed(places))
 }
 
 export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal, convertFloatFixed, fonts }

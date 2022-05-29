@@ -250,7 +250,7 @@ function NewBookModal({
               onSubmit={e => e.preventDefault()}
             >
               <StyledInput
-                borderradius="0.25rem"
+                borderradius="0"
                 type="text"
                 id="new-book-title"
                 name="new-book-title"

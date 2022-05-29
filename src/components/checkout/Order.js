@@ -240,7 +240,7 @@ const Order = ({ location, orderId }) => {
                         <StyledLabel>Your order</StyledLabel>
                         <Flexbox
                           border={`1px solid ${colors.gray.threeHundred}`}
-                          borderradius="0.25rem"
+                          borderradius="0"
                           margin="0 0 2rem"
                           padding={showInfo ? "0" : "1rem"}
                         >
@@ -249,7 +249,7 @@ const Order = ({ location, orderId }) => {
                               {orderItems && orderItems.map(item => (
                                 <Flexbox
                                   flex="flex"
-                                  borderradius="0.25rem"
+                                  borderradius="0"
                                   justifycontent="space-between"
                                   backgroundcolor={colors.white}
                                   alignitems="center"
@@ -349,7 +349,7 @@ const Order = ({ location, orderId }) => {
                                   >
                                     <StyledInput
                                       placeholder="Email address associated with this order"
-                                      borderradius="0.25rem"
+                                      borderradius="0"
                                       bordercolor={colors.primary.sixHundred}
                                       className={error.success ? null : "is-error"}
                                       id="email"
@@ -372,7 +372,7 @@ const Order = ({ location, orderId }) => {
                                       form="email-resend"
                                       color={colors.white}
                                       backgroundcolor={colors.primary.sixHundred}
-                                      borderradius="0.25rem"
+                                      borderradius="0"
                                       padding="1rem"
                                       margin="0 0 0 0.5rem"
                                       form="email-resend"

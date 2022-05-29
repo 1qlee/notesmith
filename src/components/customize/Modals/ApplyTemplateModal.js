@@ -534,7 +534,7 @@ function ApplyTemplateModal({
         <Button
           backgroundcolor={colors.gray.oneHundred}
           padding="0.5rem"
-          borderradius="0.25rem"
+          borderradius="0"
           margin="0 0.5rem 0"
           onClick={() => setShowModal({
             show: false,
@@ -546,7 +546,7 @@ function ApplyTemplateModal({
           backgroundcolor={colors.primary.sixHundred}
           color={colors.primary.white}
           padding="0.5rem"
-          borderradius="0.25rem"
+          borderradius="0"
           onClick={() => handleTemplateApply()}
           className={loading ? "is-loading" : null}
           disabled={loading || !selectedApply}

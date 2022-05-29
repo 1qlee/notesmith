@@ -6,7 +6,6 @@ function Ruled({
   setPageData,
 }) {
   const [lines, setLines] = useState([])
-  const [lineStyle, setLineStyle] = useState({})
 
   function createLines() {
     const linesArray = []
@@ -17,12 +16,6 @@ function Ruled({
       const lineX1 = convertToPx(pageData.marginLeft)
       const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
       const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness * (i + 1)
-      setLineStyle({
-        fill: "none",
-        stroke: "#000",
-        strokeWidth: lineThickness,
-        opacity: pageData.opacity,
-      })
       // line object
       const line = {
         fill: "none",
@@ -37,7 +30,6 @@ function Ruled({
 
       // loop will exit if the last line has passed the height of the page
       if (lineY > pageData.pageHeight) {
-        console.log(lineY, pageData.pageHeight)
         // change the number of rows displayed
         setPageData({
           ...pageData,

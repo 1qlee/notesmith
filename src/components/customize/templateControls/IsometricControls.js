@@ -19,6 +19,13 @@ function IsometricControls({
   setBorderData,
   setPageData,
 }) {
+  const contentWidth = convertToPx(pageData.contentWidth)
+  const contentHeight = convertToPx(pageData.contentHeight)
+  const totalHorizontalMargin = convertFloatFixed(pageData.pageWidth - contentWidth, 3)
+  const centeredHorizontalMargin = totalHorizontalMargin / 2
+  const totalVerticalMargin = convertFloatFixed(pageData.pageHeight - contentHeight, 3)
+  const centeredVerticalMargin = totalVerticalMargin / 2
+
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
 
@@ -40,8 +47,57 @@ function IsometricControls({
   }
 
   function changeAlignment(value) {
-    for (let line = 0; line < pageData.pageWidth; line++) {
-
+    switch(value) {
+      case "left":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: 0,
+        })
+        marginLeftInput.current.value = 0
+        break
+      case "center":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: centeredHorizontalMargin,
+        })
+        marginLeftInput.current.value = centeredHorizontalMargin
+        break
+      case "right":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: totalHorizontalMargin,
+        })
+        marginLeftInput.current.value = totalHorizontalMargin
+        break
+      case "top":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: 0,
+        })
+        marginTopInput.current.value = 0
+        break
+      case "middle":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: centeredVerticalMargin,
+        })
+        marginTopInput.current.value = centeredVerticalMargin
+        break
+      case "bottom":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: totalVerticalMargin,
+        })
+        marginTopInput.current.value = totalVerticalMargin
+        break
+      default:
+        break
     }
   }
 
@@ -57,8 +113,8 @@ function IsometricControls({
         flexdirection="column"
         flex="flex"
         margin="0 0 1rem"
-        border={`1px solid ${colors.gray.threeHundred}`}
-        borderradius="0.25rem"
+        border={`1px solid ${colors.gray.nineHundred}`}
+        borderradius="0"
       >
         <Flexbox
           alignitems="center"
@@ -116,7 +172,7 @@ function IsometricControls({
                   value={borderData.opacity}
                   onChange={e => validateMinValue(e.target.value, 0.5, value => setBorderData({
                     ...borderData,
-                    opacity: value,
+                    opacity: convertFloatFixed(value, 3),
                   }), 1)}
                   type="number"
                   min="0.5"
@@ -135,7 +191,10 @@ function IsometricControls({
                     step="0.01"
                     max="1"
                     value={borderData.opacity}
-                    onChange={e => setBorderData({...borderData, opacity: e.target.value})}
+                    onChange={e => setBorderData({
+                      ...borderData,
+                      opacity: convertFloatFixed(e.target.value),
+                    })}
                   />
                 </StyledRange>
               </Flexbox>
@@ -143,7 +202,7 @@ function IsometricControls({
             <Flexbox
               flex="flex"
               flexdirection="column"
-              margin="0 0 1rem 0"
+              margin="0.5rem"
             >
               <StyledLabel>Thickness</StyledLabel>
               <Flexbox
@@ -200,7 +259,6 @@ function IsometricControls({
             width="100%"
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
-              alignmentHorizontal: "",
               angle: value,
             }))}
           />
@@ -220,10 +278,55 @@ function IsometricControls({
             width="100%"
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              alignmentHorizontal: "",
               spacing: value
             }))}
+          />
+        </Flexbox>
+      </Flexbox>
+      <Flexbox
+        flex="flex"
+        alignitems="center"
+        margin="0 0 1rem"
+      >
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          margin="0 0.5rem 0 0"
+          width="50%"
+        >
+          <StyledLabel>Width</StyledLabel>
+          <StyledInput
+            type="number"
+            min="1"
+            step="1"
+            value={pageData.contentWidth}
+            padding="0.5rem"
+            width="100%"
+            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              width: value,
+            }), convertToMM(pageData.pageWidth) - pageData.marginLeft)}
+          />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          width="50%"
+        >
+          <StyledLabel>Height</StyledLabel>
+          <StyledInput
+            type="number"
+            min="1"
+            step="1"
+            value={pageData.contentHeight}
+            padding="0.5rem"
+            width="100%"
+            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              height: value
+            }), convertToMM(pageData.pageHeight) - pageData.marginTop)}
           />
         </Flexbox>
       </Flexbox>
@@ -244,11 +347,11 @@ function IsometricControls({
             step="1"
             padding="0.5rem"
             width="100%"
-            value={pageData.marginTop.toString()}
+            value={pageData.marginTop}
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
+              marginTop: value,
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
@@ -266,7 +369,7 @@ function IsometricControls({
             ref={marginLeftInput}
             step="1"
             type="number"
-            value={pageData.marginLeft.toString()}
+            value={pageData.marginLeft}
             width="100%"
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,

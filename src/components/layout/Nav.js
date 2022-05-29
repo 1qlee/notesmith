@@ -8,6 +8,7 @@ import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
 
 import Button from "../Button"
+import TextLink from "../TextLink"
 import Icon from "../Icon"
 import Logo from "../Logo"
 
@@ -23,24 +24,16 @@ const NavSection = styled.div`
   flex: 1 1 0;
   justify-content: ${props => props.justifycontent};
   height: 100%;
-  &.has-border-left {
-    border-left: 2px solid ${colors.primary.sixHundred};
-  }
 `
 
 const NavItem = styled.div`
-  color: ${colors.primary.fourHundred};
+  color: ${colors.gray.nineHundred};
   font-weight: 700;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
   font-size: 0.825rem;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  transition: color 0.1s, background-color 0.1s;
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
   &:last-child {
     padding: 1rem 0 1rem 1rem;
   }
@@ -100,26 +93,8 @@ const NavLogo = styled.div`
   }
 `
 
-const CartCounterWrapper = styled.div`
-  position: relative;
-`
-
-const CartCounter = styled.div`
-  min-height: 1rem;
-  min-width: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.25rem;
-  line-height: .5rem;
-  font-size: 0.625rem;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  background-color: ${colors.primary.sixHundred};
-  color: ${colors.primary.white};
-  border-radius: 4px;
-  position: absolute;
-  left: calc(100% - 0.25rem);
-  top: -0.9rem;
+const CartCounter = styled.span`
+  margin-left: 0.25rem;
 `
 
 function Nav(props) {
@@ -137,57 +112,67 @@ function Nav(props) {
         {!loading && (
           <>
             <NavSection justifycontent="center">
-              <NavItem
-                as={Link}
-                to="/products/"
-              >
-                Shop
+              <NavItem>
+                <TextLink
+                  as={Link}
+                  to="/products"
+                >
+                  Shop
+                </TextLink>
               </NavItem>
               {user ? (
                 <>
-                  <NavItem
-                    as={Link}
-                    to="/account/dashboard"
-                  >
-                    Dashboard
+                  <NavItem>
+                    <TextLink
+                      as={Link}
+                      to="/account/dashboard"
+                    >
+                      Dashboard
+                    </TextLink>
                   </NavItem>
-                  <NavItem
-                    onClick={() => signOut()}
-                    as="a"
-                  >
-                    Sign out
+                  <NavItem>
+                    <TextLink
+                      onClick={() => signOut()}
+                    >
+                      Sign out
+                    </TextLink>
                   </NavItem>
                 </>
               ) : (
                 <>
-                  <NavItem
-                    as={Link}
-                    to="/signin"
-                  >
-                    Sign in
+                  <NavItem>
+                    <TextLink
+                      as={Link}
+                      to="/signin"
+                    >
+                      Sign in
+                    </TextLink>
                   </NavItem>
                   <NavItem
-                    as={Link}
-                    to="/signup"
                     className="last-item"
                   >
-                    Sign Up
+                    <TextLink
+                      as={Link}
+                      to="/signup"
+                    >
+                      Sign up
+                    </TextLink>
                   </NavItem>
                 </>
               )}
             </NavSection>
-            <NavItem
-              as={Link}
-              to="/cart"
-            >
-              <CartCounterWrapper>
+            <NavItem>
+              <TextLink
+                as={Link}
+                to="/cart"
+              >
                 Cart
                 {cartCount > 0 && (
                   <CartCounter>
-                    {cartCount}
+                    ({cartCount})
                   </CartCounter>
                 )}
-              </CartCounterWrapper>
+              </TextLink>
             </NavItem>
           </>
         )}

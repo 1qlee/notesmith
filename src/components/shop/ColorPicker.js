@@ -27,7 +27,7 @@ const ColorOption = styled.button`
   }
   &.is-active {
     &::before {
-      border-color: ${colors.primary.sixHundred}
+      border-color: ${colors.gray.nineHundred}
     }
   }
   &:not(:last-child) {
@@ -35,7 +35,7 @@ const ColorOption = styled.button`
   }
   &:focus {
     &::before {
-      border-color: ${colors.primary.sixHundred};
+      border-color: ${colors.gray.sixHundred};
     }
   }
   &:hover,

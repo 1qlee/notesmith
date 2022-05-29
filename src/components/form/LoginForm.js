@@ -87,7 +87,7 @@ const LoginForm = (props) => {
             onFocus={() => setAuthError({
               msg: ""
             })}
-            borderradius="0.25rem"
+            borderradius="0"
             id="email"
             type="email"
             name="email"
@@ -116,7 +116,7 @@ const LoginForm = (props) => {
             onFocus={() => setAuthError({
               msg: ""
             })}
-            borderradius="0.25rem"
+            borderradius="0"
             id="password"
             type="password"
             name="password"
@@ -138,7 +138,7 @@ const LoginForm = (props) => {
           <Button
             color={colors.white}
             backgroundcolor={colors.primary.sixHundred}
-            borderradius="0.25rem"
+            borderradius="0"
             type="submit"
             form="login-form"
             width="100%"

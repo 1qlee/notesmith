@@ -144,7 +144,7 @@ const SignUpForm = () => {
             <StyledInput
               onChange={e => validateEmail(e.currentTarget.value)}
               className={emailError.msg && "is-error"}
-              borderradius="0.25rem"
+              borderradius="0"
               id="email"
               type="email"
               name="email"
@@ -166,7 +166,7 @@ const SignUpForm = () => {
               onChange={(e) => validatePassword(e.currentTarget.value)}
               onBlur={(e) => validatePasswordOnBlur(e.currentTarget.value)}
               className={passwordError.msg && "is-error"}
-              borderradius="0.25rem"
+              borderradius="0"
               id="password"
               type="password"
               name="password"
@@ -195,7 +195,7 @@ const SignUpForm = () => {
             <Button
               color={colors.white}
               backgroundcolor={colors.primary.sixHundred}
-              borderradius="0.25rem"
+              borderradius="0"
               disabled={passwordValidated && emailValidated && email.length > 0 ? false : true}
               type="submit"
               form="signup-form"

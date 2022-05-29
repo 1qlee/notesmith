@@ -8,6 +8,7 @@ import Graph from "../templates/Graph"
 import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
+import Seyes from "../templates/Seyes"
 
 function Template({
   bookData,
@@ -133,6 +134,14 @@ function Template({
               setPageData={setPageData}
             />
           )}
+          {pageData.template === "seyes" && (
+            <Seyes
+              borderData={borderData}
+              currentPageSide={currentPageSide}
+              pageData={pageData}
+              setPageData={setPageData}
+            />
+          )}
         </svg>
       </svg>
     )
@@ -184,6 +193,13 @@ function Template({
         )}
         {pageData.template === "isometric" && (
           <Isometric
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "seyes" && (
+          <Seyes
             currentPageSide={currentPageSide}
             pageData={pageData}
             setPageData={setPageData}
