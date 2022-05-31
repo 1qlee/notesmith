@@ -40,6 +40,7 @@ const ProductPage = ({ data, params }) => {
     contentHeight: convertToMM(pageHeight),
     contentWidth: convertToMM(pageWidth),
     dotRadius: 0.6,
+    groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
     marginBottom: 0,

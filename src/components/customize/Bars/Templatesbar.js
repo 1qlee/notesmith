@@ -15,6 +15,7 @@ import GraphControls from "../templateControls/GraphControls"
 import HexagonControls from "../templateControls/HexagonControls"
 import IsometricControls from "../templateControls/IsometricControls"
 import SeyesControls from "../templateControls/SeyesControls"
+import MusicControls from "../templateControls/MusicControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -271,6 +272,18 @@ function Templatesbar({
                 )}
                 {pageData.template === "seyes" && (
                   <SeyesControls
+                    borderData={borderData}
+                    canvasPageSize={canvasPageSize}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setBorderData={setBorderData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "music" && (
+                  <MusicControls
                     borderData={borderData}
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}

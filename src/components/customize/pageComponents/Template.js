@@ -9,6 +9,7 @@ import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
+import Music from "../templates/Music"
 
 function Template({
   bookData,
@@ -142,6 +143,14 @@ function Template({
               setPageData={setPageData}
             />
           )}
+          {pageData.template === "music" && (
+            <Music
+              borderData={borderData}
+              currentPageSide={currentPageSide}
+              pageData={pageData}
+              setPageData={setPageData}
+            />
+          )}
         </svg>
       </svg>
     )
@@ -200,6 +209,14 @@ function Template({
         )}
         {pageData.template === "seyes" && (
           <Seyes
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "music" && (
+          <Music
+            borderData={borderData}
             currentPageSide={currentPageSide}
             pageData={pageData}
             setPageData={setPageData}

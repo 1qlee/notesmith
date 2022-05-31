@@ -133,7 +133,7 @@ function IsometricControls({
               margin="0 0.25rem 0 0"
             >
               {borderData.toggle ? (
-                <CheckSquare size="1rem" color={colors.primary.sixHundred} weight="fill" />
+                <CheckSquare size="1rem" color={colors.gray.nineHundred} weight="fill" />
               ) : (
                 <Square size="1rem" />
               )}
@@ -147,7 +147,7 @@ function IsometricControls({
               margin="0 0.25rem 0 0"
             >
               {borderData.sync ? (
-                <CheckSquare size="1rem" color={colors.primary.sixHundred} weight="fill" />
+                <CheckSquare size="1rem" color={colors.gray.nineHundred} weight="fill" />
               ) : (
                 <Square size="1rem" />
               )}
@@ -172,7 +172,7 @@ function IsometricControls({
                   value={borderData.opacity}
                   onChange={e => validateMinValue(e.target.value, 0.5, value => setBorderData({
                     ...borderData,
-                    opacity: convertFloatFixed(value, 3),
+                    opacity: parseFloat(value),
                   }), 1)}
                   type="number"
                   min="0.5"
@@ -193,7 +193,7 @@ function IsometricControls({
                     value={borderData.opacity}
                     onChange={e => setBorderData({
                       ...borderData,
-                      opacity: convertFloatFixed(e.target.value),
+                      opacity:parseFloat(e.target.value),
                     })}
                   />
                 </StyledRange>
