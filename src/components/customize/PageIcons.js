@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts, convertToMM } from "../../styles/variables"
-import { Hexagon, Diamond, Table, MusicNote, GridFour, DotsNine } from "phosphor-react"
+import { Hexagon, Diamond, Table, MusicNote, PencilLine } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -215,7 +215,6 @@ function RuledPageIcon({
           width="100%"
           height="100%"
         >
-          <HorizontalLine width="80%" />
           <HorizontalLine width="80%" />
           <HorizontalLine width="80%" />
           <HorizontalLine width="80%" />
@@ -515,6 +514,7 @@ function IsometricPageIcon({
     opacity: 1,
     angle: 60,
     thickness: 0.088,
+    spacing: 5,
     width: convertToMM(data.pageWidth),
     height: convertToMM(data.pageHeight),
     marginTop: 0,
@@ -621,10 +621,11 @@ function MusicPageIcon({
     opacity: 1,
     thickness: 0.088,
     spacing: 2,
-    groupSpacing: 8,
-    rows: 13,
-    marginTop: 0,
+    groupSpacing: 7,
+    rows: 14,
+    marginTop: 0.379,
     marginLeft: 0,
+    marginRight: 0,
   }
 
   return (
@@ -645,6 +646,60 @@ function MusicPageIcon({
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Music</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
+  )
+}
+
+function HandwritingPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "handwriting",
+    opacity: 1,
+    thickness: 0.088,
+    spacing: 5,
+    groupSpacing: 5,
+    rows: 14,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        <Icon width="100%" height="100%">
+          <PencilLine size="1rem" />
+        </Icon>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Handwriting</PageLabel>
       ) : (
         <ReactTooltip
           effect="solid"
@@ -748,6 +803,17 @@ function PageIcons({
         dataTip="Music"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "music"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <HandwritingPageIcon
+        data={data}
+        dataTip="Handwriting"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "handwriting"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

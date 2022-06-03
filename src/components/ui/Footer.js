@@ -21,7 +21,7 @@ function getDate() {
 
 const Footer = () => {
   return (
-    <Section backgroundcolor={colors.primary.sixHundred}>
+    <Section backgroundcolor={colors.gray.nineHundred}>
       <Container>
         <LayoutContainer>
           <SectionContent padding={`${spacing.large} 0`}>
@@ -33,9 +33,9 @@ const Footer = () => {
               >
                 <Cell>
                   <Content
-                    paragraphcolor={colors.primary.whiteLight}
+                    paragraphcolor={colors.gray.oneHundred}
                   >
-                    <Logo color={colors.primary.white} />
+                    <Logo color={colors.gray.oneHundred} />
                     <p>
                       © {getDate()} Notesmith LLC. All rights reserved.
                     </p>

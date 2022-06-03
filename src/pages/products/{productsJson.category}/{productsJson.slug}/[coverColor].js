@@ -54,6 +54,7 @@ const ProductPage = ({ data, params }) => {
     show: false,
     spacing: 5,
     template: "",
+    test: 0,
     thickness: 0.088,
   })
   const [borderData, setBorderData] = useState({
@@ -61,6 +62,12 @@ const ProductPage = ({ data, params }) => {
     toggle: true,
     thickness: 0.088,
     opacity: 1,
+  })
+  const [dashedLineData, setDashedLineData] = useState({
+    sync: true,
+    thickness: 0.088,
+    opacity: 1,
+    dasharray: 2,
   })
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
@@ -129,11 +136,13 @@ const ProductPage = ({ data, params }) => {
                           borderData={borderData}
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
+                          dashedLineData={dashedLineData}
                           pageContentSize={pageContentSize}
                           pageData={selectedTemplate}
                           selectedPageSvg={selectedPageSvg}
                           setBorderData={setBorderData}
                           setCurrentPageSide={setCurrentPageSide}
+                          setDashedLineData={setDashedLineData}
                           setLeftPageData={setLeftPageData}
                           setPageData={setSelectedTemplate}
                           setRightPageData={setRightPageData}
@@ -144,6 +153,7 @@ const ProductPage = ({ data, params }) => {
                           bookData={bookData}
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
+                          dashedLineData={dashedLineData}
                           pageData={selectedTemplate}
                           setPageContentSize={setPageContentSize}
                           setPageData={setSelectedTemplate}

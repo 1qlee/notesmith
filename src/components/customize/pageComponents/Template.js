@@ -10,12 +10,14 @@ import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
 import Music from "../templates/Music"
+import Handwriting from "../templates/Handwriting"
 
 function Template({
   bookData,
   borderData,
   canvasPageSize,
   currentPageSide,
+  dashedLineData,
   minimumMargin,
   pageData,
   productPageTemplate,
@@ -151,6 +153,14 @@ function Template({
               setPageData={setPageData}
             />
           )}
+          {pageData.template === "handwriting" && (
+            <Handwriting
+              dashedLineData={dashedLineData}
+              currentPageSide={currentPageSide}
+              pageData={pageData}
+              setPageData={setPageData}
+            />
+          )}
         </svg>
       </svg>
     )
@@ -217,6 +227,14 @@ function Template({
         {pageData.template === "music" && (
           <Music
             borderData={borderData}
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "handwriting" && (
+          <Handwriting
+            dashedLineData={dashedLineData}
             currentPageSide={currentPageSide}
             pageData={pageData}
             setPageData={setPageData}

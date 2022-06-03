@@ -16,6 +16,7 @@ import HexagonControls from "../templateControls/HexagonControls"
 import IsometricControls from "../templateControls/IsometricControls"
 import SeyesControls from "../templateControls/SeyesControls"
 import MusicControls from "../templateControls/MusicControls"
+import HandwritingControls from "../templateControls/HandwritingControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -107,10 +108,12 @@ function Templatesbar({
   borderData,
   canvasPageSize,
   currentPageSide,
-  pageData,
+  dashedLineData,
   pageContentSize,
+  pageData,
   setBorderData,
   setCurrentPageSide,
+  setDashedLineData,
   setLeftPageData,
   setPageData,
   setRightPageData,
@@ -291,6 +294,18 @@ function Templatesbar({
                     pageContentSize={pageContentSize}
                     pageData={pageData}
                     setBorderData={setBorderData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "handwriting" && (
+                  <HandwritingControls
+                    canvasPageSize={canvasPageSize}
+                    dashedLineData={dashedLineData}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setDashedLineData={setDashedLineData}
                     setPageData={setPageData}
                   />
                 )}

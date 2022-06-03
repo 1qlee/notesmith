@@ -1,17 +1,21 @@
 import React, { useRef } from "react"
-import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertToPx, convertFloatFixed, colors } from "../../../styles/variables"
+import { Square, CheckSquare } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange , NumberInput} from "../../form/FormComponents"
+import { StyledInput, StyledLabel, StyledRange, StyledCheckbox } from "../../form/FormComponents"
 import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
+import Icon from "../../Icon"
 
-function RuledControls({
+function HandwritingControls({
   canvasPageSize,
+  dashedLineData,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
   pageData,
+  setDashedLineData,
   setPageData,
 }) {
   const { marginLeft, marginRight, thickness } = pageData
@@ -19,11 +23,11 @@ function RuledControls({
   const pageWidth = convertToMM(pageData.pageWidth)
   const contentHeight = convertToMM(pageContentSize.height)
   const contentWidth = convertToMM(pageContentSize.width)
-  const totalHorizontalMargin = convertFloatFixed(marginLeft + marginRight, 3) // sum of left and right margins
+  const totalHorizontalMargin = marginLeft + marginRight // sum of left and right margins
   const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3) // half of total horizontal margin is center
-  const totalVerticalMargin = convertFloatFixed(pageHeight - contentHeight - thickness, 3) // subtract content height from page height
-  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3) // half of total vertical margin is center
-  const bottomMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
+  const totalVerticalMargin = convertFloatFixed(pageHeight - contentHeight - thickness * 2, 3) // subtract content height from page height (in pixels)
+  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3) // half of total vertical margin is center (convert back to MM)
+  const bottomMargin = totalVerticalMargin
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -90,6 +94,23 @@ function RuledControls({
     }
   }
 
+  function handleDashedLineSync() {
+    if (!dashedLineData.sync) {
+      setDashedLineData({
+        ...dashedLineData,
+        sync: true,
+        opacity: 1,
+        thickness: 0.088,
+      })
+    }
+    else {
+      setDashedLineData({
+        ...dashedLineData,
+        sync: false,
+      })
+    }
+  }
+
   return (
     <>
       <AlignmentControls
@@ -97,21 +118,161 @@ function RuledControls({
         setPageData={setPageData}
         changeAlignment={changeAlignment}
       />
+      <StyledLabel>Dashed line options</StyledLabel>
       <Flexbox
-        flex="flex"
         flexdirection="column"
+        flex="flex"
+        margin="0 0 1rem"
+        border={`1px solid ${colors.gray.nineHundred}`}
+        borderradius="0"
       >
-        <StyledLabel>Test</StyledLabel>
-        <NumberInput
-          currentValue={pageData.test}
-          data={pageData}
-          max="100"
-          min="1"
-          onChange={setPageData}
-          padding="0.5rem 1.5rem 0.5rem 0.5rem"
-          step="1"
-          width="4.25rem"
-        />
+        <Flexbox
+          alignitems="center"
+          flex="flex"
+          padding="0.25rem"
+        >
+          <StyledCheckbox
+            onClick={() => handleDashedLineSync()}
+            flex="unset"
+          >
+            <Icon
+              margin="0 0.25rem 0 0"
+            >
+              {dashedLineData.sync ? (
+                <CheckSquare size="1rem" color={colors.gray.nineHundred} weight="fill" />
+              ) : (
+                <Square size="1rem" />
+              )}
+            </Icon>
+            <span>Sync dashed line style</span>
+          </StyledCheckbox>
+        </Flexbox>
+        {!dashedLineData.sync && (
+          <>
+            <Flexbox
+              flex="flex"
+            >
+              <Flexbox
+                flex="flex"
+                flexdirection="column"
+                margin="0.5rem"
+              >
+                <StyledLabel>Dash / gap size</StyledLabel>
+                <StyledInput
+                  type="text"
+                  value={dashedLineData.dasharray}
+                  padding="0.5rem"
+                  width="100%"
+                  onChange={e => setDashedLineData({
+                    ...dashedLineData,
+                    dasharray: e.target.value,
+                  })}
+                />
+              </Flexbox>
+              <Flexbox
+                flex="flex"
+                flexdirection="column"
+                margin="0.5rem"
+              >
+                <StyledLabel>Offset</StyledLabel>
+                <StyledInput
+                  type="text"
+                  value={dashedLineData.dashoffset}
+                  padding="0.5rem"
+                  width="100%"
+                  onChange={e => setDashedLineData({
+                    ...dashedLineData,
+                    dashoffset: e.target.value,
+                  })}
+                />
+              </Flexbox>
+            </Flexbox>
+            <Flexbox
+              flex="flex"
+              flexdirection="column"
+              margin="0.5rem"
+            >
+              <StyledLabel>Opacity</StyledLabel>
+              <Flexbox
+                flex="flex"
+                alignitems="center"
+                width="100%"
+              >
+                <StyledInput
+                  value={dashedLineData.opacity}
+                  onChange={e => validateMinValue(e.target.value, 0.5, value => setDashedLineData({
+                    ...dashedLineData,
+                    opacity: parseFloat(value),
+                  }), 1)}
+                  type="number"
+                  min="0.5"
+                  step="0.01"
+                  max="1"
+                  padding="0.5rem"
+                  width="4.25rem"
+                />
+                <StyledRange
+                  margin="0 0 0 0.5rem"
+                  width="100%"
+                >
+                  <input
+                    type="range"
+                    min="0.5"
+                    step="0.01"
+                    max="1"
+                    value={dashedLineData.opacity}
+                    onChange={e => setDashedLineData({
+                      ...dashedLineData,
+                      opacity: parseFloat(e.target.value),
+                    })}
+                  />
+                </StyledRange>
+              </Flexbox>
+            </Flexbox>
+            <Flexbox
+              flex="flex"
+              flexdirection="column"
+              margin="0.5rem"
+            >
+              <StyledLabel>Thickness</StyledLabel>
+              <Flexbox
+                flex="flex"
+                alignitems="center"
+                width="100%"
+              >
+                <StyledInput
+                  value={dashedLineData.thickness}
+                  onChange={e => validateMinValue(e.target.value, 0.088, value => setDashedLineData({
+                    ...dashedLineData,
+                    thickness: value
+                  }), 3)}
+                  type="number"
+                  min="0.088"
+                  step="0.001"
+                  max="3"
+                  padding="0.5rem"
+                  width="4.25rem"
+                />
+                <StyledRange
+                  margin="0 0 0 0.5rem"
+                  width="100%"
+                >
+                  <input
+                    type="range"
+                    min="0.088"
+                    step="0.001"
+                    max="3"
+                    value={dashedLineData.thickness}
+                    onChange={e => setDashedLineData({
+                      ...dashedLineData,
+                      thickness: parseFloat(e.target.value)
+                    })}
+                  />
+                </StyledRange>
+              </Flexbox>
+            </Flexbox>
+          </>
+        )}
       </Flexbox>
       <Flexbox
         flex="flex"
@@ -123,7 +284,7 @@ function RuledControls({
           flexdirection="column"
           margin="0 0.5rem 0 0"
         >
-          <StyledLabel>Lines</StyledLabel>
+          <StyledLabel>Rows</StyledLabel>
           <StyledInput
             type="number"
             min="1"
@@ -134,15 +295,16 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: parseInt(value),
+              rows: value,
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
+          margin="0 0.5rem 0 0"
         >
-          <StyledLabel>Spacing</StyledLabel>
+          <StyledLabel>Line spacing</StyledLabel>
           <StyledInput
             type="number"
             min="1"
@@ -154,6 +316,25 @@ function RuledControls({
               ...pageData,
               alignmentVertical: "",
               spacing: parseFloat(value)
+            }))}
+          />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+        >
+          <StyledLabel>Row spacing</StyledLabel>
+          <StyledInput
+            type="number"
+            min="1"
+            step="1"
+            value={pageData.groupSpacing}
+            padding="0.5rem"
+            width="100%"
+            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              groupSpacing: parseFloat(value)
             }))}
           />
         </Flexbox>
@@ -179,7 +360,7 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: parseFloat(value)
+              marginTop: value
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
@@ -203,7 +384,7 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginLeft: parseFloat(value),
+              marginLeft: value,
             }), maximumMarginWidth - pageData.marginRight - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
@@ -226,7 +407,7 @@ function RuledControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginRight: parseFloat(value),
+              marginRight: value,
             }), maximumMarginWidth - pageData.marginLeft - 1)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
@@ -250,7 +431,7 @@ function RuledControls({
             value={pageData.opacity}
             onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
               ...pageData,
-              opacity: parseFloat(value),
+              opacity: value,
             }), 1)}
             type="number"
             min="0.5"
@@ -271,7 +452,7 @@ function RuledControls({
               value={pageData.opacity}
               onChange={e => setPageData({
                 ...pageData,
-                opacity: parseFloat(e.target.value)
+                opacity: e.target.value,
               })}
             />
           </StyledRange>
@@ -292,8 +473,7 @@ function RuledControls({
             value={pageData.thickness}
             onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              thickness: parseFloat(value)
+              thickness: value,
             }), 3)}
             type="number"
             min="0.088"
@@ -314,8 +494,7 @@ function RuledControls({
               value={pageData.thickness}
               onChange={e => setPageData({
                 ...pageData,
-                alignmentVertical: "",
-                thickness: parseFloat(e.target.value)
+                thickness: e.target.value,
               })}
             />
           </StyledRange>
@@ -325,4 +504,4 @@ function RuledControls({
   )
 }
 
-export default RuledControls
+export default HandwritingControls

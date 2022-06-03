@@ -278,7 +278,7 @@ function IsometricControls({
             width="100%"
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
-              spacing: value
+              spacing: parseFloat(value)
             }))}
           />
         </Flexbox>

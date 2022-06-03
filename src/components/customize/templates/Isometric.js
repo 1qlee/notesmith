@@ -142,7 +142,7 @@ function Isometric({
 
     createLinesTop()
     createLinesSides()
-  }, [pageData])
+  }, [pageData, borderData])
 
   return (
     <svg

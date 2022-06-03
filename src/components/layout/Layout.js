@@ -4,6 +4,7 @@ import styled from "styled-components"
 
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
+import Footer from "../ui/Footer"
 import { colors } from "../../styles/variables"
 
 const StyledLayout = styled.div`
@@ -22,6 +23,7 @@ const Layout = ({ children, className, backgroundcolor }) => {
   return (
     <StyledLayout className={className} backgroundcolor={backgroundcolor}>
       {children}
+      <Footer />
     </StyledLayout>
   )
 }

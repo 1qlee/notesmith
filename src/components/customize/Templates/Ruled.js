@@ -6,16 +6,23 @@ function Ruled({
   setPageData,
 }) {
   const [lines, setLines] = useState([])
+  const { pageWidth, pageHeight, thickness, spacing } = pageData
+  const marginLeft = convertToPx(pageData.marginLeft)
+  const marginRight = convertToPx(pageData.marginRight)
+  const marginTop = convertToPx(pageData.marginTop)
+  const lineThickness = convertToPx(thickness)
+  const lineSpacing = convertToPx(spacing)
 
   function createLines() {
     const linesArray = []
-    const lineThickness = convertToPx(pageData.thickness)
 
     for (let i = 0; i < pageData.rows; i++) {
       // calculations and conversions to px
-      const lineX1 = convertToPx(pageData.marginLeft)
-      const lineX2 = pageData.pageWidth - convertToPx(pageData.marginRight)
-      const lineY = (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + lineThickness * (i + 1)
+      const halfLineThickness = lineThickness / 2
+      const spaceBtwnLines = i === 0 ? halfLineThickness : lineThickness * i + halfLineThickness
+      const lineX1 = marginLeft
+      const lineX2 = pageWidth - marginRight
+      const lineY = i * lineSpacing + marginTop + spaceBtwnLines
       // line object
       const line = {
         fill: "none",
@@ -29,7 +36,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > pageData.pageHeight) {
+      if (lineY > pageHeight) {
         // change the number of rows displayed
         setPageData({
           ...pageData,

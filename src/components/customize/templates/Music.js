@@ -6,12 +6,14 @@ function Music({
   setPageData,
 }) {
   const [staves, setStaves] = useState([])
-  const { pageWidth, pageHeight, opacity, rows } = pageData
-  const lineSpacing = convertToPx(pageData.spacing)
-  const staffSpacing = convertToPx(pageData.groupSpacing)
-  const lineThickness = convertToPx(pageData.thickness)
+  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness} = pageData
+  const lineSpacing = convertToPx(spacing)
+  const staffSpacing = convertToPx(groupSpacing)
+  const lineThickness = convertToPx(thickness)
+  const halfLineThickness = lineThickness / 2
   const marginTop = convertToPx(pageData.marginTop)
   const marginLeft = convertToPx(pageData.marginLeft)
+  const marginRight = convertToPx(pageData.marginRight)
 
   function createStaves() {
     const stavesArray = []
@@ -20,13 +22,11 @@ function Music({
       const linesArray = []
 
       for (let line = 0; line < 5; line++) {
-        const halfLineThickness = lineThickness / 2
-        const staffHeight = lineSpacing * 4 + lineThickness * 4 // staff always has 5 lines
-        const spaceBtwnStaves = row * (staffSpacing + staffHeight)
-        console.log(spaceBtwnStaves)
-        const spaceBtwnLines = line === 0 ? halfLineThickness : lineThickness * line + halfLineThickness
+        const staffHeight = lineSpacing * 4 + lineThickness * 4 // staff always has 5 lines, but multiply by 4 since first line doesn't really count
+        const spaceBtwnStaves = row * (staffSpacing + staffHeight + lineThickness) // have to add lineThickness to escape the previous staff's last line
+        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness // the first line of the page needs to escape deadspace at the top
         const posX1 = marginLeft
-        const posX2 = pageWidth
+        const posX2 = pageWidth - marginRight
         const posY1 = marginTop + line * lineSpacing + spaceBtwnStaves + spaceBtwnLines
         const posY2 = posY1
         const lineProps = {
@@ -64,8 +64,8 @@ function Music({
 
   return (
     <>
-      {staves.map(staff => (
-        <g>
+      {staves.map((staff, index) => (
+        <g key={index}>
           {staff.map((line, index) => (
             <line
               key={index}

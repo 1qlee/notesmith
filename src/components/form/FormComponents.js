@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { Minus, Plus } from "phosphor-react"
+import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
 
 import Icon from "../Icon"
 
@@ -120,6 +120,130 @@ function QuantityTracker(props) {
     </QuantityWrapper>
   )
 }
+
+function NumberInput({
+  min,
+  max,
+  data,
+  onChange,
+  step,
+  currentValue,
+  padding,
+  width,
+}) {
+  const [number, setNumber] = useState(0)
+  const numberInput = useRef(null)
+
+  function validateInput(value) {
+    const floatValue = parseFloat(value)
+    const maxValue = parseFloat(max)
+    const minValue = parseFloat(min)
+
+    if (!value || isNaN(floatValue)) {
+      console.log("invalid")
+      numberInput.current.value = currentValue
+      return
+    }
+    else if (floatValue < min) {
+      console.log("low:", value)
+      onChange({
+        ...data,
+        test: min,
+      })
+      numberInput.current.value = min
+    }
+    else if (floatValue > max) {
+      console.log("high:", floatValue)
+      onChange({
+        ...data,
+        test: max,
+      })
+      numberInput.current.value = max
+    }
+    else {
+      console.log("success")
+      onChange({
+        ...data,
+        test: floatValue,
+      })
+      numberInput.current.value = floatValue
+    }
+  }
+
+  function validateClick(direction) {
+    if (direction === "up") {
+      validateInput(currentValue + 1)
+    }
+    else {
+      validateInput(currentValue - 1)
+    }
+  }
+
+  function handleKeyDown(e) {
+    const keyCode = e.keyCode
+    const value = e.target.value
+
+    if (keyCode === 13 || keyCode === 27) {
+      e.target.blur()
+      validateInput(value)
+    }
+  }
+
+  return (
+    <NumberInputWrapper
+      width={width}
+    >
+      <StyledInput
+        ref={numberInput}
+        type="text"
+        padding={padding}
+        width={width}
+        onKeyDown={e => handleKeyDown(e)}
+        onBlur={e => validateInput(e.target.value)}
+      />
+      <NumberInputIcon
+        right="0"
+        top="0"
+        width="1rem"
+        onClick={() => validateClick("up")}
+      >
+        <CaretUp color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
+      </NumberInputIcon>
+      <NumberInputIcon
+        right="0"
+        bottom="0"
+        width="1rem"
+        onClick={() => validateClick("down")}
+      >
+        <CaretDown color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
+      </NumberInputIcon>
+    </NumberInputWrapper>
+  )
+}
+
+const NumberInputWrapper = styled.div`
+  position: relative;
+  width: ${props => props.width};
+`
+
+const NumberInputIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: ${props => props.height || "1rem"};
+  background-color: ${colors.gray.nineHundred};
+  left: ${props => props.left};
+  position: absolute;
+  right: ${props => props.right};
+  bottom: ${props => props.bottom};
+  top: ${props => props.top};
+  width: ${props => props.width};
+  user-select: none;
+  &:hover {
+    cursor: pointer;
+    background-color: ${colors.gray.eightHundred};
+  }
+`
 
 const QuantityWrapper = styled.div`
   position: relative;
@@ -256,7 +380,7 @@ const StyledRange = styled.div`
 const StyledCheckbox = styled.div`
   align-items: center;
   display: flex;
-  flex: 1;
+  flex: ${props => props.flex || "1"};
   margin: ${props => props.margin};
   padding: ${props => props.padding || "0.25rem 0.5rem"};
   transition: background-color 0.2s;
@@ -475,22 +599,23 @@ const StyledTable = styled.table`
 `
 
 export {
+  AuthFormWrapper,
+  Counter,
+  ErrorLine,
+  NumberInput,
+  QuantityButton,
   QuantityTracker,
   QuantityWrapper,
-  QuantityButton,
-  Counter,
-  AuthFormWrapper,
+  RadioInput,
+  SelectIcon,
   SelectWrapper,
   StyledCheckbox,
   StyledFieldset,
+  StyledFloatingLabel,
+  StyledInput,
+  StyledLabel,
   StyledRadio,
   StyledRange,
   StyledSelect,
   StyledTable,
-  SelectIcon,
-  StyledFloatingLabel,
-  StyledLabel,
-  StyledInput,
-  RadioInput,
-  ErrorLine
 }

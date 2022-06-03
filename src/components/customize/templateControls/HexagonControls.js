@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { convertToMM, convertToPx } from "../../../styles/variables"
+import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
@@ -14,14 +14,19 @@ function HexagonControls({
   pageData,
   setPageData,
 }) {
-  const hexWidth = (parseFloat(pageData.hexagonRadius) * Math.sqrt(3)) / 2 // half of the width of a single hexagon
-  const hexHeight = parseFloat(pageData.hexagonRadius)
-  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2 // subtract content from page width to get white space
-  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2) + hexWidth).toFixed(3) // half of total horizontal margin plus offset from hexWidth
-  const rightHorizontalMargin = Number(totalHorizontalMargin + hexWidth).toFixed(3)
-  const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2 // subtract content from page height
-  const centeredVerticalMargin = Number((totalVerticalMargin / 2) + hexHeight).toFixed(3) // half of total vertical margin plus offset from hexHeight
-  const bottomVerticalMargin = Number(totalVerticalMargin + hexHeight).toFixed(3)
+  const { hexagonRadius, thickness } = pageData
+  const hexWidth = hexagonRadius * (Math.sqrt(3) / 2) // half of the width of a single hexagon
+  const hexHeight = hexagonRadius
+  const pageWidth = convertToMM(pageData.pageWidth)
+  const pageHeight = convertToMM(pageData.pageHeight)
+  const contentWidth = convertToMM(pageContentSize.width)
+  const contentHeight = convertToMM(pageContentSize.height)
+  const totalHorizontalMargin = pageWidth - contentWidth - thickness * 2 // subtract content from page width to get white space
+  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2 + hexWidth, 3) // half of total horizontal margin plus offset from hexWidth
+  const rightHorizontalMargin = convertFloatFixed(totalHorizontalMargin + hexWidth, 3)
+  const totalVerticalMargin = pageHeight - contentHeight - thickness * 2 // subtract content from page height
+  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2 + hexHeight, 3) // half of total vertical margin plus offset from hexHeight
+  const bottomVerticalMargin = convertFloatFixed(totalVerticalMargin + hexHeight, 3)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -32,9 +37,9 @@ function HexagonControls({
         setPageData({
           ...pageData,
           alignmentHorizontal: value,
-          marginLeft: hexWidth.toFixed(3),
+          marginLeft: convertFloatFixed(hexWidth, 3),
         })
-        marginLeftInput.current.value = hexWidth.toFixed(3)
+        marginLeftInput.current.value = convertFloatFixed(hexWidth, 3)
         break
       case "center":
         setPageData({
@@ -56,9 +61,9 @@ function HexagonControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: hexHeight.toFixed(3),
+          marginTop: convertFloatFixed(hexHeight, 3),
         })
-        marginTopInput.current.value = hexHeight.toFixed(3)
+        marginTopInput.current.value = convertFloatFixed(hexHeight, 3)
         break
       case "middle":
         setPageData({
@@ -110,14 +115,13 @@ function HexagonControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: value,
+              rows: parseInt(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
           width="50%"
         >
           <StyledLabel>Columns</StyledLabel>
@@ -131,7 +135,7 @@ function HexagonControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              columns: value,
+              columns: parseInt(value),
             }))}
           />
         </Flexbox>
@@ -157,18 +161,17 @@ function HexagonControls({
             onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
+              marginTop: parseFloat(value),
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
-              marginTop: value
+              marginTop: parseFloat(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
@@ -181,11 +184,11 @@ function HexagonControls({
             onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginLeft: value,
+              marginLeft: parseFloat(value),
             }), maximumMarginWidth)}
             onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
               ...pageData,
-              marginLeft: value,
+              marginLeft: parseFloat(value),
             }))}
           />
         </Flexbox>
@@ -205,7 +208,7 @@ function HexagonControls({
             value={pageData.opacity}
             onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
               ...pageData,
-              opacity: value,
+              opacity: parseFloat(value),
             }), 1)}
             type="number"
             min="0.5"
@@ -224,7 +227,10 @@ function HexagonControls({
               step="0.01"
               max="1"
               value={pageData.opacity}
-              onChange={e => setPageData({...pageData, opacity: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                opacity: parseFloat(e.target.value)
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -242,7 +248,10 @@ function HexagonControls({
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({...pageData, thickness: value}), 3)}
+            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+              ...pageData,
+              thickness: parseFloat(value)
+            }), 3)}
             type="number"
             min="0.088"
             step="0.001"
@@ -260,7 +269,10 @@ function HexagonControls({
               step="0.001"
               max="3"
               value={pageData.thickness}
-              onChange={e => setPageData({...pageData, thickness: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                thickness: parseFloat(e.target.value)
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -280,7 +292,7 @@ function HexagonControls({
             value={pageData.hexagonRadius}
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
-              hexagonRadius: value,
+              hexagonRadius: parseFloat(value),
               alignmentVertical: "",
               alignmentHorizontal: "",
             }), 100)}
@@ -302,7 +314,7 @@ function HexagonControls({
               value={pageData.hexagonRadius}
               onChange={e => setPageData({
                 ...pageData,
-                hexagonRadius: e.target.value,
+                hexagonRadius: parseFloat(e.target.value),
                 alignmentVertical: "",
                 alignmentHorizontal: "",
               })}

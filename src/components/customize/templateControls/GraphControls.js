@@ -15,10 +15,11 @@ function GraphControls({
   setPageData,
 }) {
   const strokeMargin = pageData.thickness * 2 // the stroke width of two lines must be subtracted from all margin measurements
-  const totalHorizontalMargin = Number(convertToMM(pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2).toFixed(3)
-  const centeredHorizontalMargin = totalHorizontalMargin / 2
-  const totalVerticalMargin = Number(convertToMM(pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2).toFixed(3)
-  const centeredVerticalMargin = totalVerticalMargin / 2
+  const totalHorizontalMargin = convertToMM((pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2)
+  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3)
+  const totalVerticalMargin = convertToMM((pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2)
+  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3)
+  const bottomAlignedMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -69,9 +70,9 @@ function GraphControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: totalVerticalMargin,
+          marginTop: bottomAlignedMargin,
         })
-        marginTopInput.current.value = totalVerticalMargin
+        marginTopInput.current.value = bottomAlignedMargin
         break
       default:
         break
@@ -107,7 +108,7 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: value,
+              rows: parseInt(value),
             }))}
           />
         </Flexbox>
@@ -128,14 +129,13 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              columns: value,
+              columns: parseInt(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
           width="33%"
         >
           <StyledLabel>Spacing</StyledLabel>
@@ -150,7 +150,7 @@ function GraphControls({
               ...pageData,
               alignmentVertical: "",
               alignmentHorizontal: "",
-              spacing: value
+              spacing: parseFloat(value)
             }))}
           />
         </Flexbox>
@@ -176,18 +176,17 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
+              marginTop: parseFloat(value),
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginTop: value
+              marginTop: parseFloat(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
         >
           <StyledLabel>Left margin</StyledLabel>
           <StyledInput
@@ -200,11 +199,11 @@ function GraphControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginLeft: value,
-            }), maximumMarginWidth - pageData.marginRight - 1)}
+              marginLeft: parseFloat(value),
+            }), maximumMarginWidth)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginLeft: value,
+              marginLeft: parseFloat(value),
             }))}
           />
         </Flexbox>
@@ -224,11 +223,11 @@ function GraphControls({
             value={pageData.opacity}
             onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
               ...pageData,
-              opacity: value,
+              opacity: parseFloat(value),
             }), 1)}
             type="number"
             min="0.5"
-            step="0.1"
+            step="0.01"
             max="1"
             padding="0.5rem"
             width="4rem"
@@ -240,10 +239,13 @@ function GraphControls({
             <input
               type="range"
               min="0.5"
-              step="0.1"
+              step="0.01"
               max="1"
               value={pageData.opacity}
-              onChange={e => setPageData({...pageData, opacity: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                opacity: parseFloat(e.target.value)
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -261,7 +263,10 @@ function GraphControls({
         >
           <StyledInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({...pageData, thickness: value}), 3)}
+            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+              ...pageData,
+              thickness: parseFloat(value)
+            }), 3)}
             type="number"
             min="0.088"
             step="0.01"
@@ -279,7 +284,10 @@ function GraphControls({
               step="0.01"
               max="3"
               value={pageData.thickness}
-              onChange={e => setPageData({...pageData, thickness: parseFloat(e.target.value)})}
+              onChange={e => setPageData({
+                ...pageData,
+                thickness: parseFloat(e.target.value),
+              })}
             />
           </StyledRange>
         </Flexbox>

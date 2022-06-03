@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { convertToPx, convertToMM } from "../../../styles/variables"
+import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { StyledFieldset, StyledLabel, StyledInput, StyledRange } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
@@ -15,9 +15,10 @@ function DotControls({
   setPageData,
 }) {
   const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width)
-  const centeredHorizontalMargin = Number((totalHorizontalMargin / 2).toFixed(3))
+  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3)
   const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height)
-  const centeredVerticalMargin = Number((totalVerticalMargin / 2).toFixed(3))
+  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3)
+  const bottomAlignedMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
 
   const marginTopInput = useRef(null)
   const marginLeftInput = useRef(null)
@@ -68,9 +69,9 @@ function DotControls({
         setPageData({
           ...pageData,
           alignmentVertical: value,
-          marginTop: totalVerticalMargin,
+          marginTop: bottomAlignedMargin,
         })
-        marginTopInput.current.value = totalVerticalMargin
+        marginTopInput.current.value = bottomAlignedMargin
         break
       default:
         break
@@ -106,7 +107,7 @@ function DotControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: value,
+              rows: parseInt(value),
             }))}
           />
         </Flexbox>
@@ -127,14 +128,13 @@ function DotControls({
             onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              columns: value,
+              columns: parseInt(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
           width="33%"
         >
           <StyledLabel>Spacing</StyledLabel>
@@ -149,7 +149,7 @@ function DotControls({
               ...pageData,
               alignmentHorizontal: "",
               alignmentVertical: "",
-              spacing: value
+              spacing: parseFloat(value),
             }))}
           />
         </Flexbox>
@@ -176,18 +176,17 @@ function DotControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
+              marginTop: parseFloat(value),
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginTop: value
+              marginTop: parseFloat(value),
             }))}
           />
         </Flexbox>
         <Flexbox
           flex="flex"
           flexdirection="column"
-          margin="0 0.5rem 0 0"
           width="50%"
         >
           <StyledLabel>Left margin</StyledLabel>
@@ -201,11 +200,11 @@ function DotControls({
             onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
-              marginLeft: value
+              marginLeft: parseFloat(value)
             }), maximumMarginHeight)}
             onBlur={e => validateOnBlur(e, 0, value => setPageData({
               ...pageData,
-              marginLeft: value
+              marginLeft: parseFloat(value)
             }))}
           />
         </Flexbox>
@@ -225,11 +224,11 @@ function DotControls({
             value={pageData.opacity}
             onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
               ...pageData,
-              opacity: value,
+              opacity: parseFloat(value),
             }), 1)}
             type="number"
             min="0.5"
-            step="0.1"
+            step="0.01"
             max="1"
             padding="0.5rem"
             width="4rem"
@@ -241,10 +240,13 @@ function DotControls({
             <input
               type="range"
               min="0.2"
-              step="0.1"
+              step="0.01"
               max="1"
               value={pageData.opacity}
-              onChange={e => setPageData({...pageData, opacity: e.target.value})}
+              onChange={e => setPageData({
+                ...pageData,
+                opacity: parseFloat(e.target.value),
+              })}
             />
           </StyledRange>
         </Flexbox>
@@ -264,7 +266,7 @@ function DotControls({
             value={pageData.dotRadius}
             onChange={e => validateMinValue(e.target.value, 0.02, value => setPageData({
               ...pageData,
-              dotRadius: value,
+              dotRadius: parseFloat(value),
               alignmentVertical: "",
               alignmentHorizontal: "",
             }), 1)}
@@ -287,7 +289,7 @@ function DotControls({
               value={pageData.dotRadius}
               onChange={e => setPageData({
                 ...pageData,
-                dotRadius: e.target.value,
+                dotRadius: parseFloat(e.target.value),
                 alignmentVertical: "",
                 alignmentHorizontal: "",
               })}
