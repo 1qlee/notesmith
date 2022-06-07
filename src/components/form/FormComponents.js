@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react"
+import React, { useEffect, useState, useRef, useCallback } from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
+import { colors, fonts, convertFloatFixed } from "../../styles/variables"
 import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
 
 import Icon from "../Icon"
@@ -122,70 +122,111 @@ function QuantityTracker(props) {
 }
 
 function NumberInput({
-  min,
   max,
-  data,
+  min,
   onChange,
-  step,
-  currentValue,
   padding,
+  step,
+  value,
   width,
 }) {
-  const [number, setNumber] = useState(0)
-  const numberInput = useRef(null)
+  const [startLongPress, setStartLongPress] = useState({
+    start: false,
+    direction: "",
+  })
+  const [inputValue, setInputValue] = useState(value || 1)
+  const inputRef = useRef(null)
 
-  function validateInput(value) {
-    const floatValue = parseFloat(value)
+  useEffect(() => {
+    let timerId
+
+    if (startLongPress.start) {
+      if (startLongPress.direction === "up") {
+        timerId = setTimeout(() => {
+          setInterval(validateClick("up"), 50)
+        }, 150)
+      }
+      else {
+        timerId = setTimeout(() => {
+          setInterval(validateClick("down"), 50)
+        }, 150)
+      }
+    }
+    else {
+      clearTimeout(timerId)
+    }
+
+    if (inputValue > value) {
+      setInputValue(value)
+    }
+
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [value, startLongPress])
+
+  const start = useCallback((direction) => {
+    setStartLongPress({ start: true, direction: direction });
+  }, []);
+  const stop = useCallback(() => {
+    setStartLongPress({ start: false });
+  }, []);
+
+  function validateInput(newValue) {
+    const floatValue = newValue || newValue === 0 ? convertFloatFixed(parseFloat(newValue), 3) : convertFloatFixed(parseFloat(inputValue), 3)
     const maxValue = parseFloat(max)
     const minValue = parseFloat(min)
 
-    if (!value || isNaN(floatValue)) {
-      console.log("invalid")
-      numberInput.current.value = currentValue
+    if (isNaN(floatValue)) {
+      console.log("1")
+      setInputValue(value)
       return
     }
     else if (floatValue < min) {
-      console.log("low:", value)
-      onChange({
-        ...data,
-        test: min,
-      })
-      numberInput.current.value = min
+      console.log("2")
+      setInputValue(min)
+      onChange(min)
     }
     else if (floatValue > max) {
-      console.log("high:", floatValue)
-      onChange({
-        ...data,
-        test: max,
-      })
-      numberInput.current.value = max
+      console.log("3")
+      setInputValue(max)
+      onChange(max)
     }
     else {
-      console.log("success")
-      onChange({
-        ...data,
-        test: floatValue,
-      })
-      numberInput.current.value = floatValue
+      setInputValue(floatValue)
+      onChange(floatValue)
+      console.log("4")
     }
   }
 
+  // to increment or decrement the value by the step
   function validateClick(direction) {
+    const floatStep = parseFloat(step)
+    const floatValue = parseFloat(inputValue)
+
     if (direction === "up") {
-      validateInput(currentValue + 1)
+      validateInput(floatValue + floatStep)
     }
     else {
-      validateInput(currentValue - 1)
+      validateInput(floatValue - floatStep)
     }
   }
 
   function handleKeyDown(e) {
     const keyCode = e.keyCode
-    const value = e.target.value
 
+    // enter or ESC
     if (keyCode === 13 || keyCode === 27) {
       e.target.blur()
-      validateInput(value)
+      validateInput()
+    }
+    // up arrow
+    if (keyCode === 38) {
+      validateClick("up")
+    }
+    // down arrow
+    if (keyCode === 40) {
+      validateClick("down")
     }
   }
 
@@ -194,18 +235,24 @@ function NumberInput({
       width={width}
     >
       <StyledInput
-        ref={numberInput}
-        type="text"
-        padding={padding}
-        width={width}
+        onBlur={e => validateInput(inputValue)}
+        onChange={e => setInputValue(e.target.value)}
         onKeyDown={e => handleKeyDown(e)}
-        onBlur={e => validateInput(e.target.value)}
+        padding={padding}
+        ref={inputRef}
+        type="text"
+        value={inputValue}
+        width={width}
       />
       <NumberInputIcon
         right="0"
         top="0"
         width="1rem"
         onClick={() => validateClick("up")}
+        onMouseDown={() => start("up")}
+        onMouseUp={() => stop()}
+        onTouchStart={() => start("up")}
+        onTouchEnd={() => stop()}
       >
         <CaretUp color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
       </NumberInputIcon>
@@ -214,6 +261,10 @@ function NumberInput({
         bottom="0"
         width="1rem"
         onClick={() => validateClick("down")}
+        onMouseDown={() => start("down")}
+        onMouseUp={() => stop()}
+        onTouchStart={() => start("down")}
+        onTouchEnd={() => stop()}
       >
         <CaretDown color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
       </NumberInputIcon>
@@ -230,7 +281,7 @@ const NumberInputIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: ${props => props.height || "1rem"};
+  height: ${props => props.height || "50%"};
   background-color: ${colors.gray.nineHundred};
   left: ${props => props.left};
   position: absolute;

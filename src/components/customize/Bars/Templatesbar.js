@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { ArrowRight, CircleNotch, CheckCircle } from "phosphor-react"
-import { colors, convertToMM, fonts } from "../../../styles/variables"
+import { colors, convertToMM, fonts, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import PageIcons from "../PageIcons"
@@ -122,8 +122,8 @@ function Templatesbar({
 }) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  const maximumMarginHeight = convertToMM(pageData.pageHeight)
-  const maximumMarginWidth = convertToMM(pageData.pageWidth)
+  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.thickness, 3)
+  const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
   function handleSetTemplate() {
     setLoading(true)
