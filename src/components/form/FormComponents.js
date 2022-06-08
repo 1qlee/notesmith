@@ -159,6 +159,9 @@ function NumberInput({
     if (inputValue > value) {
       setInputValue(value)
     }
+    if (value !== inputValue) {
+      setInputValue(value)
+    }
 
     return () => {
       clearTimeout(timerId)
@@ -174,23 +177,23 @@ function NumberInput({
 
   function validateInput(newValue) {
     const floatValue = newValue || newValue === 0 ? convertFloatFixed(parseFloat(newValue), 3) : convertFloatFixed(parseFloat(inputValue), 3)
-    const maxValue = parseFloat(max)
-    const minValue = parseFloat(min)
+    const minValue = convertFloatFixed(parseFloat(min), 3)
+    const maxValue = convertFloatFixed(parseFloat(max), 3)
 
     if (isNaN(floatValue)) {
       console.log("1")
       setInputValue(value)
       return
     }
-    else if (floatValue < min) {
+    else if (floatValue < minValue) {
       console.log("2")
-      setInputValue(min)
-      onChange(min)
+      setInputValue(minValue)
+      onChange(minValue)
     }
-    else if (floatValue > max) {
+    else if (floatValue > maxValue) {
       console.log("3")
-      setInputValue(max)
-      onChange(max)
+      setInputValue(maxValue)
+      onChange(maxValue)
     }
     else {
       setInputValue(floatValue)

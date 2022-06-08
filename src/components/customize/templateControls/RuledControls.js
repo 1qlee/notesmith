@@ -175,21 +175,17 @@ function RuledControls({
           flexdirection="column"
         >
           <StyledLabel>Right margin</StyledLabel>
-          <StyledInput
-            padding="0.5rem"
+          <NumberInput
+            value={pageData.marginRight}
+            min="0"
+            max={maximumMarginWidth - pageData.marginLeft - 1}
+            onChange={value => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginRight: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
             step="1"
-            type="number"
-            value={pageData.marginRight.toString()}
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginRight: parseFloat(value),
-            }), maximumMarginWidth - pageData.marginLeft - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
-              ...pageData,
-              marginRight: parseFloat(value),
-            }))}
           />
         </Flexbox>
       </Flexbox>
