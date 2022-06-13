@@ -9,6 +9,7 @@ function Isometric({
   const [linesTop, setLinesTop] = useState([])
   const [linesSides, setLinesSides] = useState([])
   const [lineStyle, setLineStyle] = useState({})
+  const { pageWidth, pageHeight } = pageData
   const lineThickness = convertToPx(pageData.thickness)
   const lineSpacing = convertToPx(pageData.spacing) + convertToPx(pageData.thickness)
   const contentWidth = convertToPx(pageData.contentWidth)
@@ -28,12 +29,12 @@ function Isometric({
       // the amount each line will move on the X-axis
       const lineSpacingTop = getTan(angle) * lineSpacing
       // the total number of lines that fit horizontally across the width of the page
-      let numOfLinesTop = contentWidth / lineSpacingTop
+      let numOfLinesTop = Math.floor(contentWidth / lineSpacingTop)
 
-      if (contentWidth + marginLeft > pageData.pageWidth) {
+      if (contentWidth + marginLeft > pageWidth) {
         const newContentWidth = contentWidth - marginLeft
 
-        numOfLinesTop = newContentWidth / lineSpacingTop
+        numOfLinesTop = Math.floor(newContentWidth / lineSpacingTop)
       }
 
       for (let numOfLines = 0; numOfLines < numOfLinesTop; numOfLines++) {
@@ -50,11 +51,6 @@ function Isometric({
         let adjustedPosY2
         let adjustedPosX2
 
-        // if the starting point of the line exceeds the width of the page, break out of the loop
-        if (posX1 > contentWidth) {
-          console.log("width exceeded: ", posX1 + marginLeft)
-          break
-        }
         // if the ending point of the line exceeds the width of the page, triangulate a new ending point
         // based on an adjacent triangle sharing a complementary angle
         if (posX2 > contentWidth) {

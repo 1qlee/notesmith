@@ -1,8 +1,8 @@
-import React, { useRef } from "react"
+import React from "react"
 import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange } from "../../form/FormComponents"
+import { StyledInput, StyledLabel, StyledRange, NumberInput } from "../../form/FormComponents"
 import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
 
@@ -28,9 +28,6 @@ function HexagonControls({
   const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2 + hexHeight, 3) // half of total vertical margin plus offset from hexHeight
   const bottomVerticalMargin = convertFloatFixed(totalVerticalMargin + hexHeight, 3)
 
-  const marginTopInput = useRef(null)
-  const marginLeftInput = useRef(null)
-
   function changeAlignment(value) {
     switch(value) {
       case "left":
@@ -39,7 +36,6 @@ function HexagonControls({
           alignmentHorizontal: value,
           marginLeft: convertFloatFixed(hexWidth, 3),
         })
-        marginLeftInput.current.value = convertFloatFixed(hexWidth, 3)
         break
       case "center":
         setPageData({
@@ -47,7 +43,6 @@ function HexagonControls({
           alignmentHorizontal: value,
           marginLeft: centeredHorizontalMargin,
         })
-        marginLeftInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
@@ -55,7 +50,6 @@ function HexagonControls({
           alignmentHorizontal: value,
           marginLeft: rightHorizontalMargin,
         })
-        marginLeftInput.current.value = rightHorizontalMargin
         break
       case "top":
         setPageData({
@@ -63,7 +57,6 @@ function HexagonControls({
           alignmentVertical: value,
           marginTop: convertFloatFixed(hexHeight, 3),
         })
-        marginTopInput.current.value = convertFloatFixed(hexHeight, 3)
         break
       case "middle":
         setPageData({
@@ -71,7 +64,6 @@ function HexagonControls({
           alignmentVertical: value,
           marginTop: centeredVerticalMargin,
         })
-        marginTopInput.current.value = centeredVerticalMargin
         break
       case "bottom":
         setPageData({
@@ -79,7 +71,6 @@ function HexagonControls({
           alignmentVertical: value,
           marginTop: bottomVerticalMargin,
         })
-        marginTopInput.current.value = bottomVerticalMargin
         break
       default:
         break
@@ -105,18 +96,16 @@ function HexagonControls({
           width="50%"
         >
           <StyledLabel>Rows</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
+          <NumberInput
             value={pageData.rows}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            min={1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              rows: parseInt(value),
-            }))}
+              rows: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -125,18 +114,16 @@ function HexagonControls({
           width="50%"
         >
           <StyledLabel>Columns</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
+          <NumberInput
             value={pageData.columns}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            min={1}
+            onChange={value => setPageData({
               ...pageData,
-              alignmentHorizontal: "",
-              columns: parseInt(value),
-            }))}
+              alignmentVertical: "",
+              columns: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
       </Flexbox>
@@ -151,22 +138,17 @@ function HexagonControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Top margin</StyledLabel>
-          <StyledInput
-            ref={marginTopInput}
-            type="number"
-            step="1"
-            padding="0.5rem"
-            width="100%"
-            value={pageData.marginTop.toString()}
-            onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
+          <NumberInput
+            value={pageData.marginTop}
+            min={-hexHeight * 2}
+            max={maximumMarginHeight}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: parseFloat(value),
-            }), maximumMarginHeight)}
-            onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
-              ...pageData,
-              marginTop: parseFloat(value),
-            }))}
+              marginTop: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -174,23 +156,63 @@ function HexagonControls({
           flexdirection="column"
         >
           <StyledLabel>Left margin</StyledLabel>
-          <StyledInput
-            padding="0.5rem"
-            ref={marginLeftInput}
-            step="1"
-            type="number"
-            value={pageData.marginLeft.toString()}
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, -pageData.hexagonRadius * 2, value => setPageData({
+          <NumberInput
+            value={pageData.marginLeft}
+            min={-hexWidth * 2}
+            max={maximumMarginWidth}
+            onChange={value => setPageData({
               ...pageData,
-              alignmentHorizontal: "",
-              marginLeft: parseFloat(value),
-            }), maximumMarginWidth)}
-            onBlur={e => validateOnBlur(e, -pageData.hexagonRadius * 2, value => setPageData({
-              ...pageData,
-              marginLeft: parseFloat(value),
-            }))}
+              alignmentVertical: "",
+              marginLeft: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
+        </Flexbox>
+      </Flexbox>
+      <Flexbox
+        flex="flex"
+        flexdirection="column"
+        margin="0 0 1rem 0"
+      >
+        <StyledLabel>Hex radius</StyledLabel>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          width="100%"
+        >
+          <NumberInput
+            max={100}
+            min={1}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.1}
+            value={pageData.hexagonRadius}
+            width="4.25rem"
+            onChange={value => setPageData({
+              ...pageData,
+              hexagonRadius: value,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            })}
+          />
+          <StyledRange
+            margin="0 0 0 0.5rem"
+            width="100%"
+          >
+            <input
+              max={100}
+              min={1}
+              step={0.1}
+              type="range"
+              value={pageData.hexagonRadius}
+              onChange={e => setPageData({
+                ...pageData,
+                hexagonRadius: parseFloat(e.target.value),
+                alignmentVertical: "",
+                alignmentHorizontal: "",
+              })}
+            />
+          </StyledRange>
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -204,18 +226,17 @@ function HexagonControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+            min={0.5}
+            max={1}
+            onChange={value => setPageData({
               ...pageData,
-              opacity: parseFloat(value),
-            }), 1)}
-            type="number"
-            min="0.5"
-            step="0.01"
-            max="1"
-            padding="0.5rem"
-            width="4rem"
+              opacity: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.01}
+            width="4.25rem"
           />
           <StyledRange
             margin="0 0 0 0.5rem"
@@ -223,13 +244,13 @@ function HexagonControls({
           >
             <input
               type="range"
-              min="0.5"
-              step="0.01"
-              max="1"
+              min={0.5}
+              step={0.01}
+              max={1}
               value={pageData.opacity}
               onChange={e => setPageData({
                 ...pageData,
-                opacity: parseFloat(e.target.value)
+                opacity: e.target.value,
               })}
             />
           </StyledRange>
@@ -246,17 +267,18 @@ function HexagonControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+            onChange={value => setPageData({
               ...pageData,
-              thickness: parseFloat(value)
-            }), 3)}
-            type="number"
-            min="0.088"
-            step="0.001"
-            max="3"
-            padding="0.5rem"
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+              thickness: value,
+            })}
+            min={0.088}
+            step={0.01}
+            max={3}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
             width="4.25rem"
           />
           <StyledRange
@@ -265,58 +287,13 @@ function HexagonControls({
           >
             <input
               type="range"
-              min="0.088"
-              step="0.001"
-              max="3"
+              min={0.088}
+              step={0.01}
+              max={3}
               value={pageData.thickness}
               onChange={e => setPageData({
                 ...pageData,
-                thickness: parseFloat(e.target.value)
-              })}
-            />
-          </StyledRange>
-        </Flexbox>
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        flexdirection="column"
-        margin="0 0 1rem 0"
-      >
-        <StyledLabel>Hex radius</StyledLabel>
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-          width="100%"
-        >
-          <StyledInput
-            value={pageData.hexagonRadius}
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
-              ...pageData,
-              hexagonRadius: parseFloat(value),
-              alignmentVertical: "",
-              alignmentHorizontal: "",
-            }), 100)}
-            type="number"
-            min="1"
-            max="100"
-            step="0.1"
-            padding="0.5rem"
-            width="4rem"
-          />
-          <StyledRange
-            margin="0 0 0 0.5rem"
-            width="100%"
-          >
-            <input
-              type="range"
-              min="1"
-              step="0.1"
-              value={pageData.hexagonRadius}
-              onChange={e => setPageData({
-                ...pageData,
-                hexagonRadius: parseFloat(e.target.value),
-                alignmentVertical: "",
-                alignmentHorizontal: "",
+                thickness: e.target.value,
               })}
             />
           </StyledRange>

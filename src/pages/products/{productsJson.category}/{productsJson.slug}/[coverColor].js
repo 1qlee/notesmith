@@ -67,7 +67,8 @@ const ProductPage = ({ data, params }) => {
     sync: true,
     thickness: 0.088,
     opacity: 1,
-    dasharray: 2,
+    dashArray: 2,
+    dashOffset: 0,
   })
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})

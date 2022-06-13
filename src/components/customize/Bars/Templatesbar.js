@@ -53,6 +53,8 @@ const PageButtonWrapper = styled.div`
 `
 
 const PageButton = styled(Button)`
+  background-color: ${colors.white};
+  border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
   flex: 1;
   position: relative;
   &:not(:last-child) {
@@ -73,10 +75,9 @@ const PageButton = styled(Button)`
   &:hover,
   &:focus {
     box-shadow: none;
+    background-color: ${colors.gray.twoHundred};
     &:not(.is-active) {
-      span {
-        color: ${colors.gray.nineHundred};
-      }
+      box-shadow: 0 0 -1px ${colors.gray.threeHundred};
     }
   }
   &.is-active {
@@ -92,13 +93,13 @@ const PageButton = styled(Button)`
   &::before {
     background-color: ${colors.gray.nineHundred};
     border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
+    opacity: 0;
     content: "";
     height: 100%;
     left: -5px;
-    opacity: 0;
     position: absolute;
     top: 0;
-    transition: transform 0.2s, width 0.2s ease-in, background-color 0.2s, opacity 0.2s;
+    transition: transform 0.2s, width 0.2s ease-in, background-color 0.2s;
     width: 0;
     will-change: width, transform;
   }
@@ -194,9 +195,6 @@ function Templatesbar({
               <h3>Page side</h3>
               <PageButtonWrapper>
                 <PageButton
-                  backgroundcolor={colors.white}
-                  borderradius="0"
-                  boxshadow="none"
                   padding="0.25rem 0.5rem"
                   fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("left")}
@@ -205,9 +203,6 @@ function Templatesbar({
                   <span>Left</span>
                 </PageButton>
                 <PageButton
-                  backgroundcolor={colors.white}
-                  borderradius="0"
-                  boxshadow="none"
                   padding="0.25rem 0.5rem"
                   fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("right")}

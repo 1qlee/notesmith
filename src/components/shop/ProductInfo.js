@@ -187,6 +187,7 @@ const ProductInfo = ({
       <Notification
         backgroundcolor={colors.white}
         bordercolor={colors.gray.nineHundred}
+        boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
         margin="0 0 2rem"
         padding="1rem"
       >

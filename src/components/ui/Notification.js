@@ -28,6 +28,7 @@ const StyledNotification = styled.div`
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
   border: 1px solid ${props => props.bordercolor || colors.gray.threeHundred};
+  box-shadow: ${props => props.boxshadow};
   color: ${props => props.color};
   display: flex;
   justify-content: ${props => props.justifycontent || "space-between"};

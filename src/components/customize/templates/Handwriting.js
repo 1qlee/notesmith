@@ -8,6 +8,7 @@ function Handwriting({
 }) {
   const [writingRows, setWritingRows] = useState([])
   const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness} = pageData
+  const dashOffset = convertToPx(dashedLineData.dashOffset)
   const lineSpacing = convertToPx(spacing)
   const rowSpacing = convertToPx(groupSpacing)
   const lineThickness = convertToPx(thickness)
@@ -16,9 +17,23 @@ function Handwriting({
   const marginLeft = convertToPx(pageData.marginLeft)
   const marginRight = convertToPx(pageData.marginRight)
 
+  function parseDashArray(value) {
+    if (value.length > 0) {
+      let dummyArray = []
+      // create an array from the dash array prop by splitting btwn spaces
+      let newDashArray = value.split(" ")
+      newDashArray.map(elem => {
+        dummyArray.push(convertToPx(parseFloat(elem)))
+      })
+
+      console.log(dummyArray)
+      return dummyArray
+    }
+  }
+
   function createWritingRows() {
     const rowsArray = []
-    console.log(dashedLineData)
+    const dashArray = parseDashArray(dashedLineData.dashArray)
 
     for (let row = 0; row < rows; row++) {
       const linesArray = []
@@ -39,8 +54,8 @@ function Handwriting({
             fill: "none",
             stroke: "#000",
             strokeWidth: dashedLineData.thickness,
-            strokeDasharray: dashedLineData.dasharray,
-            strokeDashoffset: dashedLineData.dashoffset,
+            strokeDasharray: dashedLineData.dashArray,
+            strokeDashoffset: dashOffset,
             opacity: dashedLineData.opacity,
             x1: posX1,
             x2: posX2,

@@ -1,9 +1,10 @@
-import React, { useRef } from "react"
+import React from "react"
 import { convertToMM, convertToPx, convertFloatFixed, colors } from "../../../styles/variables"
-import { Square, CheckSquare } from "phosphor-react"
+import { Square, CheckSquare, Question } from "phosphor-react"
+import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange, StyledCheckbox } from "../../form/FormComponents"
+import { StyledInput, StyledLabel, StyledRange, StyledCheckbox, NumberInput } from "../../form/FormComponents"
 import { validateOnBlur, validateMinValue } from "./template-functions"
 import AlignmentControls from "./AlignmentControls"
 import Icon from "../../Icon"
@@ -29,10 +30,6 @@ function HandwritingControls({
   const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3) // half of total vertical margin is center (convert back to MM)
   const bottomMargin = totalVerticalMargin
 
-  const marginTopInput = useRef(null)
-  const marginLeftInput = useRef(null)
-  const marginRightInput = useRef(null)
-
   function changeAlignment(value) {
     switch(value) {
       case "left":
@@ -42,8 +39,6 @@ function HandwritingControls({
           marginRight: totalHorizontalMargin,
           marginLeft: 0,
         })
-        marginLeftInput.current.value = 0
-        marginRightInput.current.value = totalHorizontalMargin
         break
       case "center":
         setPageData({
@@ -52,8 +47,6 @@ function HandwritingControls({
           marginLeft: centeredHorizontalMargin,
           marginRight: centeredHorizontalMargin,
         })
-        marginLeftInput.current.value = centeredHorizontalMargin
-        marginRightInput.current.value = centeredHorizontalMargin
         break
       case "right":
         setPageData({
@@ -62,8 +55,6 @@ function HandwritingControls({
           marginLeft: totalHorizontalMargin,
           marginRight: 0,
         })
-        marginLeftInput.current.value = totalHorizontalMargin
-        marginRightInput.current.value = 0
         break
       case "top":
         setPageData({
@@ -71,7 +62,6 @@ function HandwritingControls({
           alignmentVertical: value,
           marginTop: 0,
         })
-        marginTopInput.current.value = 0
         break
       case "middle":
         setPageData({
@@ -79,7 +69,6 @@ function HandwritingControls({
           alignmentVertical: value,
           marginTop: centeredVerticalMargin,
         })
-        marginTopInput.current.value = centeredVerticalMargin
         break
       case "bottom":
         setPageData({
@@ -87,7 +76,6 @@ function HandwritingControls({
           alignmentVertical: value,
           marginTop: bottomMargin,
         })
-        marginTopInput.current.value = bottomMargin
         break
       default:
         break
@@ -157,15 +145,27 @@ function HandwritingControls({
                 flexdirection="column"
                 margin="0.5rem"
               >
-                <StyledLabel>Dash / gap size</StyledLabel>
+                <StyledLabel>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                  >
+                    <span>Dash / gap size</span>
+                    <Icon margin="0 0 0 0.25rem" color={colors.gray.nineHundred}>
+                      <Question
+                        size="1rem"
+                        weight="fill"
+                      />
+                    </Icon>
+                  </Flexbox>
+                </StyledLabel>
                 <StyledInput
                   type="text"
                   value={dashedLineData.dasharray}
-                  padding="0.5rem"
-                  width="100%"
+                  padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   onChange={e => setDashedLineData({
                     ...dashedLineData,
-                    dasharray: e.target.value,
+                    dashArray: e.target.value
                   })}
                 />
               </Flexbox>
@@ -175,14 +175,14 @@ function HandwritingControls({
                 margin="0.5rem"
               >
                 <StyledLabel>Offset</StyledLabel>
-                <StyledInput
-                  type="text"
+                <NumberInput
+                  min={0}
+                  step={1}
                   value={dashedLineData.dashoffset}
-                  padding="0.5rem"
-                  width="100%"
-                  onChange={e => setDashedLineData({
+                  padding="0.5rem 1.5rem 0.5rem 0.5rem"
+                  onChange={value => setDashedLineData({
                     ...dashedLineData,
-                    dashoffset: e.target.value,
+                    dashoffset: value,
                   })}
                 />
               </Flexbox>
@@ -198,17 +198,16 @@ function HandwritingControls({
                 alignitems="center"
                 width="100%"
               >
-                <StyledInput
+                <NumberInput
                   value={dashedLineData.opacity}
-                  onChange={e => validateMinValue(e.target.value, 0.5, value => setDashedLineData({
+                  min={0.5}
+                  max={1}
+                  onChange={value => setDashedLineData({
                     ...dashedLineData,
-                    opacity: parseFloat(value),
-                  }), 1)}
-                  type="number"
-                  min="0.5"
-                  step="0.01"
-                  max="1"
-                  padding="0.5rem"
+                    opacity: value,
+                  })}
+                  padding="0.5rem 1.5rem 0.5rem 0.5rem"
+                  step={0.01}
                   width="4.25rem"
                 />
                 <StyledRange
@@ -217,9 +216,9 @@ function HandwritingControls({
                 >
                   <input
                     type="range"
-                    min="0.5"
-                    step="0.01"
-                    max="1"
+                    min={0.5}
+                    step={0.01}
+                    max={1}
                     value={dashedLineData.opacity}
                     onChange={e => setDashedLineData({
                       ...dashedLineData,
@@ -240,17 +239,17 @@ function HandwritingControls({
                 alignitems="center"
                 width="100%"
               >
-                <StyledInput
+                <NumberInput
                   value={dashedLineData.thickness}
-                  onChange={e => validateMinValue(e.target.value, 0.088, value => setDashedLineData({
+                  min={0.088}
+                  max={3}
+                  onChange={value => setDashedLineData({
                     ...dashedLineData,
-                    thickness: value
-                  }), 3)}
-                  type="number"
-                  min="0.088"
-                  step="0.001"
-                  max="3"
-                  padding="0.5rem"
+                    alignmentHorizontal: "",
+                    thickness: value,
+                  })}
+                  padding="0.5rem 1.5rem 0.5rem 0.5rem"
+                  step={0.001}
                   width="4.25rem"
                 />
                 <StyledRange
@@ -259,9 +258,9 @@ function HandwritingControls({
                 >
                   <input
                     type="range"
-                    min="0.088"
-                    step="0.001"
-                    max="3"
+                    min={0.088}
+                    step={0.001}
+                    max={3}
                     value={dashedLineData.thickness}
                     onChange={e => setDashedLineData({
                       ...dashedLineData,
@@ -285,18 +284,16 @@ function HandwritingControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Rows</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
+          <NumberInput
             value={pageData.rows}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            min={1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
               rows: value,
-            }))}
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -305,18 +302,16 @@ function HandwritingControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Line spacing</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
+          <NumberInput
             value={pageData.spacing}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            min={1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              spacing: parseFloat(value)
-            }))}
+              spacing: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -324,18 +319,16 @@ function HandwritingControls({
           flexdirection="column"
         >
           <StyledLabel>Row spacing</StyledLabel>
-          <StyledInput
-            type="number"
-            min="1"
-            step="1"
+          <NumberInput
             value={pageData.groupSpacing}
-            padding="0.5rem"
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 1, value => setPageData({
+            min={1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              groupSpacing: parseFloat(value)
-            }))}
+              groupSpacing: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
       </Flexbox>
@@ -350,22 +343,17 @@ function HandwritingControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Top margin</StyledLabel>
-          <StyledInput
-            ref={marginTopInput}
-            type="number"
-            step="1"
-            padding="0.5rem"
-            width="100%"
-            value={pageData.marginTop.toString()}
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+          <NumberInput
+            value={pageData.marginTop}
+            min={0}
+            max={maximumMarginHeight}
+            onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
-              marginTop: value
-            }), maximumMarginHeight)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
-              ...pageData,
-              marginTop: parseFloat(value)
-            }))}
+              marginTop: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -374,22 +362,17 @@ function HandwritingControls({
           margin="0 0.5rem 0 0"
         >
           <StyledLabel>Left margin</StyledLabel>
-          <StyledInput
-            padding="0.5rem"
-            ref={marginLeftInput}
-            step="1"
-            type="number"
-            value={pageData.marginLeft.toString()}
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+          <NumberInput
+            value={pageData.marginLeft}
+            min={0}
+            max={maximumMarginWidth - pageData.marginRight - 1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
               marginLeft: value,
-            }), maximumMarginWidth - pageData.marginRight - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
-              ...pageData,
-              marginLeft: parseFloat(value),
-            }))}
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -397,22 +380,17 @@ function HandwritingControls({
           flexdirection="column"
         >
           <StyledLabel>Right margin</StyledLabel>
-          <StyledInput
-            padding="0.5rem"
-            ref={marginRightInput}
-            step="1"
-            type="number"
-            value={pageData.marginRight.toString()}
-            width="100%"
-            onChange={e => validateMinValue(e.target.value, 0, value => setPageData({
+          <NumberInput
+            value={pageData.marginRight}
+            min={0}
+            max={maximumMarginWidth - pageData.marginLeft - 1}
+            onChange={value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
               marginRight: value,
-            }), maximumMarginWidth - pageData.marginLeft - 1)}
-            onBlur={e => validateOnBlur(e, 0, value => setPageData({
-              ...pageData,
-              marginRight: parseFloat(value),
-            }))}
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={1}
           />
         </Flexbox>
       </Flexbox>
@@ -427,18 +405,17 @@ function HandwritingControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+            min={0.5}
+            max={1}
+            onChange={value => setPageData({
               ...pageData,
               opacity: value,
-            }), 1)}
-            type="number"
-            min="0.5"
-            step="0.01"
-            max="1"
-            padding="0.5rem"
-            width="4rem"
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.01}
+            width="4.25rem"
           />
           <StyledRange
             margin="0 0 0 0.5rem"
@@ -446,9 +423,9 @@ function HandwritingControls({
           >
             <input
               type="range"
-              min="0.5"
-              step="0.01"
-              max="1"
+              min={0.5}
+              step={0.01}
+              max={1}
               value={pageData.opacity}
               onChange={e => setPageData({
                 ...pageData,
@@ -469,17 +446,17 @@ function HandwritingControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+            min={0.088}
+            max={3}
+            onChange={value => setPageData({
               ...pageData,
+              alignmentHorizontal: "",
               thickness: value,
-            }), 3)}
-            type="number"
-            min="0.088"
-            step="0.001"
-            max="3"
-            padding="0.5rem"
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.001}
             width="4.25rem"
           />
           <StyledRange
@@ -488,18 +465,21 @@ function HandwritingControls({
           >
             <input
               type="range"
-              min="0.088"
-              step="0.001"
-              max="3"
+              min={0.088}
+              step={0.001}
+              max={3}
               value={pageData.thickness}
               onChange={e => setPageData({
                 ...pageData,
-                thickness: e.target.value,
+                thickness: parseFloat(e.target.value),
               })}
             />
           </StyledRange>
         </Flexbox>
       </Flexbox>
+      <ReactTooltip
+        effect="solid"
+      />
     </>
   )
 }

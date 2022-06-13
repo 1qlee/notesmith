@@ -98,14 +98,14 @@ function RuledControls({
           <StyledLabel>Lines</StyledLabel>
           <NumberInput
             value={pageData.rows}
-            min="1"
+            min={1}
             onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
               rows: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step="1"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -116,14 +116,14 @@ function RuledControls({
           <StyledLabel>Spacing</StyledLabel>
           <NumberInput
             value={pageData.spacing}
-            min="1"
+            min={1}
             onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
               spacing: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step="1"
+            step={1}
           />
         </Flexbox>
       </Flexbox>
@@ -140,7 +140,7 @@ function RuledControls({
           <StyledLabel>Top margin</StyledLabel>
           <NumberInput
             value={pageData.marginTop}
-            min="0"
+            min={0}
             max={maximumMarginHeight}
             onChange={value => setPageData({
               ...pageData,
@@ -148,7 +148,7 @@ function RuledControls({
               marginTop: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step="1"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -159,15 +159,15 @@ function RuledControls({
           <StyledLabel>Left margin</StyledLabel>
           <NumberInput
             value={pageData.marginLeft}
-            min="0"
+            min={0}
             max={maximumMarginWidth - pageData.marginRight - 1}
             onChange={value => setPageData({
               ...pageData,
-              alignmentVertical: "",
+              alignmentHorizontal: "",
               marginLeft: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step="1"
+            step={1}
           />
         </Flexbox>
         <Flexbox
@@ -177,15 +177,15 @@ function RuledControls({
           <StyledLabel>Right margin</StyledLabel>
           <NumberInput
             value={pageData.marginRight}
-            min="0"
+            min={0}
             max={maximumMarginWidth - pageData.marginLeft - 1}
             onChange={value => setPageData({
               ...pageData,
-              alignmentVertical: "",
+              alignmentHorizontal: "",
               marginRight: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step="1"
+            step={1}
           />
         </Flexbox>
       </Flexbox>
@@ -200,18 +200,17 @@ function RuledControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.opacity}
-            onChange={e => validateMinValue(e.target.value, 0.5, value => setPageData({
+            min={0.5}
+            max={1}
+            onChange={value => setPageData({
               ...pageData,
-              opacity: parseFloat(value),
-            }), 1)}
-            type="number"
-            min="0.5"
-            step="0.01"
-            max="1"
-            padding="0.5rem"
-            width="4rem"
+              opacity: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.01}
+            width="4.25rem"
           />
           <StyledRange
             margin="0 0 0 0.5rem"
@@ -219,13 +218,13 @@ function RuledControls({
           >
             <input
               type="range"
-              min="0.5"
-              step="0.01"
-              max="1"
+              min={0.5}
+              step={0.01}
+              max={1}
               value={pageData.opacity}
               onChange={e => setPageData({
                 ...pageData,
-                opacity: parseFloat(e.target.value)
+                opacity: parseFloat(e.target.value),
               })}
             />
           </StyledRange>
@@ -242,18 +241,17 @@ function RuledControls({
           alignitems="center"
           width="100%"
         >
-          <StyledInput
+          <NumberInput
             value={pageData.thickness}
-            onChange={e => validateMinValue(e.target.value, 0.088, value => setPageData({
+            min={0.088}
+            max={3}
+            onChange={value => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              thickness: parseFloat(value)
-            }), 3)}
-            type="number"
-            min="0.088"
-            step="0.001"
-            max="3"
-            padding="0.5rem"
+              alignmentHorizontal: "",
+              thickness: value,
+            })}
+            padding="0.5rem 1.5rem 0.5rem 0.5rem"
+            step={0.001}
             width="4.25rem"
           />
           <StyledRange
@@ -262,9 +260,9 @@ function RuledControls({
           >
             <input
               type="range"
-              min="0.088"
-              step="0.001"
-              max="3"
+              min={0.088}
+              step={0.001}
+              max={3}
               value={pageData.thickness}
               onChange={e => setPageData({
                 ...pageData,

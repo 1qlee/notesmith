@@ -181,24 +181,20 @@ function NumberInput({
     const maxValue = convertFloatFixed(parseFloat(max), 3)
 
     if (isNaN(floatValue)) {
-      console.log("1")
       setInputValue(value)
       return
     }
     else if (floatValue < minValue) {
-      console.log("2")
       setInputValue(minValue)
       onChange(minValue)
     }
     else if (floatValue > maxValue) {
-      console.log("3")
       setInputValue(maxValue)
       onChange(maxValue)
     }
     else {
       setInputValue(floatValue)
       onChange(floatValue)
-      console.log("4")
     }
   }
 
@@ -574,7 +570,8 @@ const StyledInput = styled.input`
     width: auto;
   }
   &:focus {
-    border-color: ${colors.gray.sixHundred};
+    box-shadow: ${colors.shadow.focus};
+    border-color: ${colors.white};
     outline: none;
   }
   &:hover {

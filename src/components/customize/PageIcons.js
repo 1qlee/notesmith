@@ -28,8 +28,8 @@ const StyledPage = styled.a`
     }
     .page-outline {
       border-color: ${colors.gray.nineHundred};
-      box-shadow: ${colors.shadow.layeredSmall};
-      transform: scale(1.05);
+      box-shadow: 2px 2px 0 ${colors.gray.nineHundred};
+      transform: translate(-2px,-2px);
     }
   }
   &:hover {
@@ -515,8 +515,8 @@ function IsometricPageIcon({
     angle: 60,
     thickness: 0.088,
     spacing: 5,
-    width: convertToMM(data.pageWidth),
-    height: convertToMM(data.pageHeight),
+    contentWidth: convertToMM(data.pageWidth),
+    contentHeight: convertToMM(data.pageHeight),
     marginTop: 0,
     marginLeft: 0,
   }
@@ -614,8 +614,8 @@ function MusicPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "",
-    alignmentVertical: "",
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
     show: isProductPage ? true : false,
     template: "music",
     opacity: 1,
@@ -623,7 +623,7 @@ function MusicPageIcon({
     spacing: 2,
     groupSpacing: 7,
     rows: 14,
-    marginTop: 0.379,
+    marginTop: 0.147,
     marginLeft: 0,
     marginRight: 0,
   }

@@ -100,7 +100,8 @@ const colors = {
     layeredLarge: "0 12px 12px rgba(0,0,0,0.02), 0 24px 24px rgba(0,0,0,0.03), 0 48px 48px rgba(0,0,0,0.06), 0 96px 96px rgba(0,0,0,0.07)",
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
-    modal: "0 2px 12px rgba(0,0,0,0.25)"
+    modal: "0 2px 12px rgba(0,0,0,0.25)",
+    focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff"
   },
   highlighter: "#ffff00"
 }
