@@ -17,6 +17,7 @@ import IsometricControls from "../templateControls/IsometricControls"
 import SeyesControls from "../templateControls/SeyesControls"
 import MusicControls from "../templateControls/MusicControls"
 import HandwritingControls from "../templateControls/HandwritingControls"
+import CrossGridControls from "../templateControls/CrossGridControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -92,7 +93,7 @@ const PageButton = styled(Button)`
   }
   &::before {
     background-color: ${colors.gray.nineHundred};
-    border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
+    border-radius: 0.5rem;
     opacity: 0;
     content: "";
     height: 100%;
@@ -294,6 +295,18 @@ function Templatesbar({
                 )}
                 {pageData.template === "handwriting" && (
                   <HandwritingControls
+                    canvasPageSize={canvasPageSize}
+                    dashedLineData={dashedLineData}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setDashedLineData={setDashedLineData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "crossgrid" && (
+                  <CrossGridControls
                     canvasPageSize={canvasPageSize}
                     dashedLineData={dashedLineData}
                     maximumMarginHeight={maximumMarginHeight}

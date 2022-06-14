@@ -37,6 +37,11 @@ const StyledIcon = styled.span`
   margin: ${props => props.margin};
   height: ${props => props.height};
   width: ${props => props.width};
+  &.is-help {
+    &:hover {
+      cursor: help;
+    }
+  }
   &.is-loading {
     svg {
       animation: ${rotate} 0.5s linear infinite;

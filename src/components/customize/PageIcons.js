@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts, convertToMM } from "../../styles/variables"
-import { Hexagon, Diamond, Table, MusicNote, PencilLine } from "phosphor-react"
+import { Hexagon, Diamond, Table, MusicNote, PencilLine, Plus } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -185,7 +185,7 @@ function RuledPageIcon({
     spacing: 5,
     opacity: 1,
     thickness: 0.088,
-    dotRadius: 0.6,
+    radius: 0.6,
     rows: 42,
     columns: 26,
     marginTop: 0.379,
@@ -709,6 +709,63 @@ function HandwritingPageIcon({
   )
 }
 
+function CrossGridPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "crossgrid",
+    opacity: 1,
+    thickness: 0.088,
+    spacing: 5,
+    groupSpacing: 5,
+    rows: 14,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        <Icon width="100%" height="100%">
+          <Plus
+            size="1rem"
+            color={colors.gray.nineHundred}
+          />
+        </Icon>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Cross grid</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
+  )
+}
+
 function PageIcons({
   checkActiveVar,
   data,
@@ -814,6 +871,17 @@ function PageIcons({
         dataTip="Handwriting"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "handwriting"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <CrossGridPageIcon
+        data={data}
+        dataTip="Cross grid"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "crossgrid"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

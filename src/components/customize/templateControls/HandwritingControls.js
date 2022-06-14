@@ -151,17 +151,26 @@ function HandwritingControls({
                     alignitems="center"
                   >
                     <span>Dash / gap size</span>
-                    <Icon margin="0 0 0 0.25rem" color={colors.gray.nineHundred}>
+                    <Icon
+                      className="is-help"
+                      margin="0 0 0 0.25rem"
+                      color={colors.gray.nineHundred}
+                      data-tip="A series of number pairs that define dash size and gap size respectively. e.g. '2 6 6 2'"
+                    >
                       <Question
                         size="1rem"
                         weight="fill"
                       />
                     </Icon>
+                    <ReactTooltip
+                      effect="solid"
+                      data-multiline={true}
+                    />
                   </Flexbox>
                 </StyledLabel>
                 <StyledInput
                   type="text"
-                  value={dashedLineData.dasharray}
+                  value={dashedLineData.dashArray}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   onChange={e => setDashedLineData({
                     ...dashedLineData,
@@ -178,11 +187,11 @@ function HandwritingControls({
                 <NumberInput
                   min={0}
                   step={1}
-                  value={dashedLineData.dashoffset}
+                  value={dashedLineData.dashOffset}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   onChange={value => setDashedLineData({
                     ...dashedLineData,
-                    dashoffset: value,
+                    dashOffset: value,
                   })}
                 />
               </Flexbox>
@@ -477,9 +486,6 @@ function HandwritingControls({
           </StyledRange>
         </Flexbox>
       </Flexbox>
-      <ReactTooltip
-        effect="solid"
-      />
     </>
   )
 }

@@ -47,7 +47,7 @@ const AlignmentButton = styled(Button)`
   }
   &::before {
     background-color: ${colors.gray.nineHundred};
-    border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
+    border-radius: 0.5rem;
     opacity: 0;
     content: "";
     height: 100%;

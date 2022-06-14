@@ -11,6 +11,7 @@ import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
 import Music from "../templates/Music"
 import Handwriting from "../templates/Handwriting"
+import CrossGrid from "../templates/CrossGrid"
 
 function Template({
   bookData,
@@ -161,6 +162,14 @@ function Template({
               setPageData={setPageData}
             />
           )}
+          {pageData.template === "crossgrid" && (
+            <CrossGrid
+              dashedLineData={dashedLineData}
+              currentPageSide={currentPageSide}
+              pageData={pageData}
+              setPageData={setPageData}
+            />
+          )}
         </svg>
       </svg>
     )
@@ -234,6 +243,14 @@ function Template({
         )}
         {pageData.template === "handwriting" && (
           <Handwriting
+            dashedLineData={dashedLineData}
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        )}
+        {pageData.template === "crossgrid" && (
+          <CrossGrid
             dashedLineData={dashedLineData}
             currentPageSide={currentPageSide}
             pageData={pageData}

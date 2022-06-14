@@ -6,7 +6,7 @@ import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
-function DotControls({
+function CrossGridControls({
   canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
@@ -127,7 +127,7 @@ function DotControls({
           <StyledLabel>Spacing</StyledLabel>
           <NumberInput
             value={pageData.spacing}
-            min={1}
+            min={0}
             onChange={value => setPageData({
               ...pageData,
               alignmentHorizontal: "",
@@ -230,21 +230,21 @@ function DotControls({
         flexdirection="column"
         margin="0 0 1rem 0"
       >
-        <StyledLabel>Dot radius</StyledLabel>
+        <StyledLabel>Cross size</StyledLabel>
         <Flexbox
           flex="flex"
           alignitems="center"
           width="100%"
         >
           <NumberInput
-            value={pageData.radius}
-            min={0.02}
-            max={1}
+            value={pageData.size}
+            min={1}
+            max={5}
             onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
               alignmentHorizontal: "",
-              radius: value,
+              size: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
             step={0.01}
@@ -256,13 +256,13 @@ function DotControls({
           >
             <input
               type="range"
-              min={0.02}
+              min={1}
               step={0.01}
-              max={1}
-              value={pageData.radius}
+              max={5}
+              value={pageData.size}
               onChange={e => setPageData({
                 ...pageData,
-                radius: e.target.value,
+                size: e.target.value,
                 alignmentVertical: "",
                 alignmentHorizontal: "",
               })}
@@ -274,4 +274,4 @@ function DotControls({
   )
 }
 
-export default DotControls
+export default CrossGridControls

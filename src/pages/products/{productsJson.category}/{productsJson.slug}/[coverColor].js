@@ -39,7 +39,7 @@ const ProductPage = ({ data, params }) => {
     columns: 27,
     contentHeight: convertToMM(pageHeight),
     contentWidth: convertToMM(pageWidth),
-    dotRadius: 0.6,
+    radius: 0.6,
     groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
@@ -54,8 +54,8 @@ const ProductPage = ({ data, params }) => {
     show: false,
     spacing: 5,
     template: "",
-    test: 0,
     thickness: 0.088,
+    size: 1,
   })
   const [borderData, setBorderData] = useState({
     sync: true,
@@ -67,7 +67,7 @@ const ProductPage = ({ data, params }) => {
     sync: true,
     thickness: 0.088,
     opacity: 1,
-    dashArray: 2,
+    dashArray: "",
     dashOffset: 0,
   })
   const [leftPageData, setLeftPageData] = useState({})

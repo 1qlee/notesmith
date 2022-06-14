@@ -7,15 +7,15 @@ function Dot({ pageData, setPageData }) {
   function createDots() {
     // placeholder array for dots
     const dotsArray = []
-    const dotRadius = convertToPx(pageData.dotRadius)
-    const dotDiameter = dotRadius * 2
+    const radius = convertToPx(pageData.radius)
+    const dotDiameter = radius * 2
     // loop to create rows of dots
     for (let i = 0; i < pageData.rows; i++) {
       // placeholder array for rows of dots
       const dotsRow = []
       // object to hold dot position coordinates
       const dotPos = {
-        y: (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + dotRadius * (i + 1),
+        y: (i * convertToPx(pageData.spacing)) + convertToPx(pageData.marginTop) + radius * (i + 1),
         x: 0,
       }
       // loop will exit if the dots have passed the height of the page
@@ -30,11 +30,11 @@ function Dot({ pageData, setPageData }) {
       // loop to create each individual dot (aka columns) in a row
       for (let ii = 0; ii < pageData.columns; ii++) {
         // update dot's X position
-        dotPos.x = (ii * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + dotRadius * (ii + 1)
+        dotPos.x = (ii * convertToPx(pageData.spacing)) + convertToPx(pageData.marginLeft) + radius * (ii + 1)
         // create dot object with appropriate properties
         const dot = {
           fill: "#000",
-          radius: dotRadius,
+          radius: radius,
           opacity: pageData.opacity,
           cx: convertFloatFixed(dotPos.x, 3),
           cy: convertFloatFixed(dotPos.y, 3),
