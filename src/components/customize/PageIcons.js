@@ -76,7 +76,7 @@ const PageBadge = styled.span`
 `
 
 const PageOutline = styled.div`
-  border: 1px solid ${props => props.bordercolor || colors.gray.sixHundred};
+  border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   height: ${props => props.height || "30px"};
   background-color: ${colors.white};
   position: relative;
@@ -85,24 +85,27 @@ const PageOutline = styled.div`
 
 const VerticalLine = styled.span`
   display: block;
-  background-color: ${props => props.backgroundcolor || colors.gray.sixHundred};
+  background-color: ${props => props.backgroundcolor || colors.gray.nineHundred};
   height: ${props => props.height || "100%"};
+  margin: ${props => props.margin};
   transition: background-color 0.2s;
   width: ${props => props.width || "1px"};
 `
 
 const Dot = styled.span`
   border-radius: 100%;
-  background-color: ${props => props.backgroundcolor || colors.gray.sixHundred};
+  background-color: ${props => props.backgroundcolor || colors.gray.nineHundred};
   height: ${props => props.height || "1px"};
+  margin: ${props => props.margin};
   transition: background-color 0.2s;
   width: ${props => props.width || "1px"};
 `
 
 const HorizontalLine = styled.span`
   display: block;
-  background-color: ${props => props.backgroundcolor || colors.gray.sixHundred};
+  background-color: ${props => props.backgroundcolor || colors.gray.nineHundred};
   height: ${props => props.height || "1px"};
+  margin: ${props => props.margin};
   transition: background-color 0.2s;
   width: ${props => props.width || "100%"};
 `
@@ -479,7 +482,7 @@ function HexagonPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
+        <Icon height="100%" width="100%">
           <Hexagon size="1rem" />
         </Icon>
       </PageOutline>
@@ -533,9 +536,81 @@ function IsometricPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
-          <Diamond size="1rem" />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          margin="3px 2px 0"
+        >
+          <Icon margin="0 0 0 2px">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          margin="-3px 2px 0"
+        >
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          margin="-3px 2px 0"
+        >
+          <Icon margin="0 0 0 2px">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          margin="-3px 2px 0"
+        >
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          margin="-3px 2px 0"
+        >
+          <Icon margin="0 0 0 2px">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          margin="-3px 2px 0"
+        >
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon margin="0 -1px 0 0">
+            <Diamond size="6px" />
+          </Icon>
+          <Icon>
+            <Diamond size="6px" />
+          </Icon>
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Isometric</PageLabel>
@@ -586,9 +661,33 @@ function SeyesPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
-          <Table size="1rem" />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          style={{position:'absolute',top:0,left:0}}
+          width="100%"
+          height="100%"
+        >
+          <VerticalLine height="80%" width="1px" margin="0 0 0 8px" />
+          <VerticalLine height="80%" width="1px" margin="0 0 0 2px" />
+          <VerticalLine height="80%" width="1px" margin="0 0 0 2px" />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          height="100%"
+        >
+          <HorizontalLine width="80%" height="1px" margin="8px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="1px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
+          <HorizontalLine width="80%" height="1px" margin="1px 0 0" />
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Seyes</PageLabel>
@@ -694,9 +793,56 @@ function HandwritingPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
-          <PencilLine size="1rem" />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          justifycontent="space-between"
+          height="8px"
+          margin="0.25rem 0"
+        >
+          <HorizontalLine width="80%" />
+          <Flexbox
+            flex="flex"
+            justifycontent="space-around"
+            width="80%"
+          >
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+          </Flexbox>
+          <HorizontalLine width="80%" />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          justifycontent="space-between"
+          height="8px"
+          margin="0.25rem 0"
+        >
+          <HorizontalLine width="80%" />
+          <Flexbox
+            flex="flex"
+            justifycontent="space-around"
+            width="80%"
+          >
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+          </Flexbox>
+          <HorizontalLine width="80%" />
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Handwriting</PageLabel>
@@ -727,13 +873,11 @@ function CrossGridPageIcon({
     show: isProductPage ? true : false,
     template: "crossgrid",
     opacity: 1,
-    thickness: 0.088,
     spacing: 5,
-    groupSpacing: 5,
-    rows: 14,
-    marginTop: 0,
-    marginLeft: 0,
-    marginRight: 0,
+    rows: 35,
+    columns: 21,
+    marginTop: 2.271,
+    marginLeft: 2.68,
   }
 
   return (
@@ -748,12 +892,58 @@ function CrossGridPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
-          <Plus
-            size="1rem"
-            color={colors.gray.nineHundred}
-          />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          margin="2px 0 0 "
+        >
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+        >
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+        >
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+          <Icon width="100%" height="100%">
+            <Plus
+              size="0.5rem"
+              color={colors.gray.nineHundred}
+            />
+          </Icon>
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Cross grid</PageLabel>

@@ -32,7 +32,7 @@ function CrossGrid({ pageData, setPageData }) {
       crossPos.y3 = crossPos.y1 + crossRadius
       crossPos.y4 = crossPos.y3
       // loop will exit if the crosses have passed the height of the page
-      if (crossPos.y4 > pageData.pageHeight) {
+      if (crossPos.y2 > pageData.pageHeight) {
         // this essentially caps the number of total rows at the "exceeding" value
         setPageData({
           ...pageData,
