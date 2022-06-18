@@ -3,6 +3,9 @@ import styled from "styled-components"
 import { colors, fonts, convertToMM } from "../../styles/variables"
 import { Hexagon, Diamond, Table, MusicNote, PencilLine, Plus } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
+import IsoPageIcon from "../../assets/iso-grid.svg"
+import HexPageIcon from "../../assets/hexagon-grid.svg"
+import SeyesIcon from "../../assets/seyes.svg"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
@@ -77,10 +80,10 @@ const PageBadge = styled.span`
 
 const PageOutline = styled.div`
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
-  height: ${props => props.height || "30px"};
+  height: ${props => props.height || "36px"};
   background-color: ${colors.white};
   position: relative;
-  width: ${props => props.width || "22px"};
+  width: ${props => props.width || "26px"};
 `
 
 const VerticalLine = styled.span`
@@ -482,9 +485,17 @@ function HexagonPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon height="100%" width="100%">
-          <Hexagon size="1rem" />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          justifycontent="center"
+          height="100%"
+          width="100%"
+        >
+          <Icon>
+            <HexPageIcon />
+          </Icon>
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Hexagon</PageLabel>
@@ -538,77 +549,13 @@ function IsometricPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          margin="3px 2px 0"
+          alignitems="center"
+          justifycontent="center"
+          height="100%"
+          width="100%"
         >
-          <Icon margin="0 0 0 2px">
-            <Diamond size="6px" />
-          </Icon>
           <Icon>
-            <Diamond size="6px" />
-          </Icon>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          margin="-3px 2px 0"
-        >
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon>
-            <Diamond size="6px" />
-          </Icon>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          margin="-3px 2px 0"
-        >
-          <Icon margin="0 0 0 2px">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon>
-            <Diamond size="6px" />
-          </Icon>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          margin="-3px 2px 0"
-        >
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon>
-            <Diamond size="6px" />
-          </Icon>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          margin="-3px 2px 0"
-        >
-          <Icon margin="0 0 0 2px">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon>
-            <Diamond size="6px" />
-          </Icon>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          margin="-3px 2px 0"
-        >
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon margin="0 -1px 0 0">
-            <Diamond size="6px" />
-          </Icon>
-          <Icon>
-            <Diamond size="6px" />
+            <IsoPageIcon />
           </Icon>
         </Flexbox>
       </PageOutline>
@@ -664,29 +611,11 @@ function SeyesPageIcon({
         <Flexbox
           flex="flex"
           alignitems="center"
-          style={{position:'absolute',top:0,left:0}}
+          justifycontent="center"
           width="100%"
           height="100%"
         >
-          <VerticalLine height="80%" width="1px" margin="0 0 0 8px" />
-          <VerticalLine height="80%" width="1px" margin="0 0 0 2px" />
-          <VerticalLine height="80%" width="1px" margin="0 0 0 2px" />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          alignitems="center"
-          height="100%"
-        >
-          <HorizontalLine width="80%" height="1px" margin="8px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="1px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="0.5px" margin="1px 0 0" />
-          <HorizontalLine width="80%" height="1px" margin="1px 0 0" />
+          <SeyesIcon />
         </Flexbox>
       </PageOutline>
       {showLabels ? (
@@ -739,9 +668,33 @@ function MusicPageIcon({
       setData={setData}
     >
       <PageOutline className="page-outline">
-        <Icon width="100%" height="100%">
-          <MusicNote size="1rem" />
-        </Icon>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          height="12px"
+          width="100%"
+          margin="4px 0 0"
+        >
+          <HorizontalLine width="80%" margin="2px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          height="12px"
+          width="100%"
+        >
+          <HorizontalLine width="80%" margin="2px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+          <HorizontalLine width="80%" margin="1px 0 0 0" />
+        </Flexbox>
       </PageOutline>
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Music</PageLabel>
@@ -799,7 +752,7 @@ function HandwritingPageIcon({
           alignitems="center"
           justifycontent="space-between"
           height="8px"
-          margin="0.25rem 0"
+          margin="6px 0"
         >
           <HorizontalLine width="80%" />
           <Flexbox
@@ -855,6 +808,107 @@ function HandwritingPageIcon({
   )
 }
 
+function CalligraphyPageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    alignmentHorizontal: "center",
+    alignmentVertical: "middle",
+    show: isProductPage ? true : false,
+    template: "calligraphy",
+    opacity: 1,
+    thickness: 0.088,
+    spacing: 5,
+    groupSpacing: 5,
+    rows: 14,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+  }
+
+  return (
+    <Page
+      dataTip={dataTip}
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline className="page-outline">
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          justifycontent="space-between"
+          height="8px"
+          margin="6px 0"
+        >
+          <HorizontalLine width="80%" />
+          <Flexbox
+            flex="flex"
+            justifycontent="space-around"
+            width="80%"
+          >
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+          </Flexbox>
+          <HorizontalLine width="80%" />
+        </Flexbox>
+        <Flexbox
+          flex="flex"
+          flexdirection="column"
+          alignitems="center"
+          justifycontent="space-between"
+          height="8px"
+          margin="0.25rem 0"
+        >
+          <HorizontalLine width="80%" />
+          <Flexbox
+            flex="flex"
+            justifycontent="space-around"
+            width="80%"
+          >
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+            <HorizontalLine width="1px" />
+          </Flexbox>
+          <HorizontalLine width="80%" />
+        </Flexbox>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">Calligraphy</PageLabel>
+      ) : (
+        <ReactTooltip
+          effect="solid"
+        />
+      )}
+    </Page>
+  )
+}
+
 function CrossGridPageIcon({
   setData,
   data,
@@ -895,7 +949,7 @@ function CrossGridPageIcon({
         <Flexbox
           flex="flex"
           alignitems="center"
-          margin="2px 0 0 "
+          margin="4px 0 0 "
         >
           <Icon width="100%" height="100%">
             <Plus
@@ -1072,6 +1126,17 @@ function PageIcons({
         dataTip="Cross grid"
         iconMargin={iconMargin}
         isActive={checkActiveVar === "crossgrid"}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
+      <CalligraphyPageIcon
+        data={data}
+        dataTip="Calligraphy"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === "calligraphy"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

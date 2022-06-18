@@ -4,7 +4,6 @@ import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/var
 import { StyledFieldset, StyledInput, StyledLabel, StyledRange, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function GraphControls({
   canvasPageSize,
@@ -15,9 +14,9 @@ function GraphControls({
   setPageData,
 }) {
   const strokeMargin = pageData.thickness * 2 // the stroke width of two lines must be subtracted from all margin measurements
-  const totalHorizontalMargin = convertToMM((pageData.pageWidth - pageContentSize.width) - pageData.thickness * 2)
+  const totalHorizontalMargin = convertToMM((pageData.pageWidth - pageContentSize.width) - strokeMargin * 2)
   const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3)
-  const totalVerticalMargin = convertToMM((pageData.pageHeight - pageContentSize.height) - pageData.thickness * 2)
+  const totalVerticalMargin = convertToMM((pageData.pageHeight - pageContentSize.height) - pageData.thickness / 2)
   const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3)
   const bottomAlignedMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
 
@@ -261,6 +260,8 @@ function GraphControls({
               value={pageData.thickness}
               onChange={e => setPageData({
                 ...pageData,
+                alignmentVertical: "",
+                alignmentHorizontal: "",
                 thickness: e.target.value,
               })}
             />

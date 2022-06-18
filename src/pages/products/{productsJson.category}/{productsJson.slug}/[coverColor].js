@@ -35,6 +35,12 @@ const ProductPage = ({ data, params }) => {
   const [selectedTemplate, setSelectedTemplate] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
+    ascSpacing: 5,
+    dscSpacing: 5,
+    xHeight: 5,
+    slantSpacing: 5,
+    slantAngle: 55,
+    slants: 20,
     angle: 30,
     columns: 27,
     contentHeight: convertToMM(pageHeight),

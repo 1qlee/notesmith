@@ -131,7 +131,7 @@ const ProductInfo = ({
         <PageIcons
           checkActiveVar={selectedTemplate.template}
           data={selectedTemplate}
-          iconMargin="0 0.5rem"
+          iconMargin="0 1rem 1rem 0"
           isProductPage={true}
           leftPageData={leftPageData}
           rightPageData={rightPageData}

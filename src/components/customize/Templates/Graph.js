@@ -14,11 +14,11 @@ function Graph({ pageData, setPageData }) {
     // placeholder array
     const lineColumnsArray = []
     // grid column lines
-    for (let i = 0; i < pageData.columns; i++) {
+    for (let column = 0; column < pageData.columns; column++) {
       const lineY1 = marginTop
       const lineY2 = pageData.rows * (spacing + lineThickness) + lineY1 + lineThickness
       const lineXFirst = marginLeft + lineOffset
-      const lineX = lineXFirst + (i + 1) * (spacing + lineThickness)
+      const lineX = lineXFirst + (column + 1) * (spacing + lineThickness)
       // first  column
       const firstColumnLine = {
         fill: "none",
@@ -42,7 +42,7 @@ function Graph({ pageData, setPageData }) {
         y2: convertFloatFixed(lineY2, 3),
       }
 
-      if (i === 0) {
+      if (column === 0) {
         lineColumnsArray.push(firstColumnLine)
       }
 
@@ -50,7 +50,7 @@ function Graph({ pageData, setPageData }) {
       if (lineX + lineOffset > pageData.pageWidth) {
         setPageData({
           ...pageData,
-          columns: i,
+          columns: column,
         })
         break
       }
@@ -66,12 +66,12 @@ function Graph({ pageData, setPageData }) {
     // placeholder array
     const lineRowsArray = []
     // grid row lines
-    for (let i = 0; i < pageData.rows; i++) {
+    for (let row = 0; row < pageData.rows; row++) {
       // calculations and conversions to px
       const lineX1 = marginLeft + lineOffset
       const lineX2 = pageData.columns * (spacing + lineThickness) + lineX1
       const lineYFirst = marginTop + lineOffset
-      const lineY = lineYFirst + (i + 1) * (spacing + lineThickness)
+      const lineY = lineYFirst + (row + 1) * (spacing + lineThickness)
       // first row line
       const firstRowLine = {
         fill: "none",
@@ -95,7 +95,7 @@ function Graph({ pageData, setPageData }) {
         y2: lineY,
       }
 
-      if (i === 0) {
+      if (row === 0) {
         lineRowsArray.push(firstRowLine)
       }
 
@@ -104,7 +104,7 @@ function Graph({ pageData, setPageData }) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
-          rows: i,
+          rows: row,
         })
         break
       }

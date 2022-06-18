@@ -1,7 +1,6 @@
 import React from "react"
 import { convertToPx, convertToMM, convertFloatFixed, fonts, colors } from "../../../styles/variables"
 import { Square, CheckSquare } from "phosphor-react"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 import { StyledFieldset, StyledInput, StyledLabel, StyledRange, StyledCheckbox, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"

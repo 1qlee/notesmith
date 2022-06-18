@@ -18,6 +18,7 @@ import SeyesControls from "../templateControls/SeyesControls"
 import MusicControls from "../templateControls/MusicControls"
 import HandwritingControls from "../templateControls/HandwritingControls"
 import CrossGridControls from "../templateControls/CrossGridControls"
+import CalligraphyControls from "../templateControls/CalligraphyControls"
 
 const TemplatesContent = styled.div`
   overflow-y: auto;
@@ -307,6 +308,16 @@ function Templatesbar({
                 )}
                 {pageData.template === "crossgrid" && (
                   <CrossGridControls
+                    canvasPageSize={canvasPageSize}
+                    maximumMarginHeight={maximumMarginHeight}
+                    maximumMarginWidth={maximumMarginWidth}
+                    pageContentSize={pageContentSize}
+                    pageData={pageData}
+                    setPageData={setPageData}
+                  />
+                )}
+                {pageData.template === "calligraphy" && (
+                  <CalligraphyControls
                     canvasPageSize={canvasPageSize}
                     dashedLineData={dashedLineData}
                     maximumMarginHeight={maximumMarginHeight}
