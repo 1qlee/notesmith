@@ -28,14 +28,15 @@ const TextLink = styled.a`
   &::before {
     content: "";
     position: absolute;
-    left: 3px;
-    border-radius: 55% 64% 77% 26% / 33% 54% 45% 19%;
-    bottom: -0.25rem;
+    left: 2px;
+    bottom: -2px;
     width: 0;
-    height: 3px;
-    background-color: ${colors.gray.eightHundred};
-    will-change: width;
+    height: 4px;
+    transform: skew(-24deg);
     transition: width 0.2s;
+    background-image: linear-gradient(to right, ${colors.gray.threeHundred} 0%, ${colors.gray.nineHundred} 100%);
+    opacity: 0.5;
+    z-index: 8;
   }
 `
 

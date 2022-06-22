@@ -371,7 +371,8 @@ function CalligraphyControls({
           <StyledLabel>Slant angle</StyledLabel>
           <NumberInput
             value={pageData.slantAngle}
-            min={0}
+            min={1}
+            max={179}
             onChange={value => setPageData({
               ...pageData,
               alignmentVertical: "",
