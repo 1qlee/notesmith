@@ -580,7 +580,7 @@ const StyledInput = styled.input`
     }
   }
   &::placeholder {
-    color: ${colors.gray.threeHundred};
+    color: ${colors.gray.fiveHundred};
     opacity: 1;
   }
 `
@@ -634,6 +634,10 @@ const ErrorLine = styled.div`
 `
 
 const StyledTable = styled.table`
+  border: 1px solid ${colors.gray.nineHundred};
+  th,td,tr {
+    border-color: ${colors.gray.nineHundred};
+  }
   th, td {
     padding: 1rem;
   }

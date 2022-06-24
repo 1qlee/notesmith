@@ -1,10 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react"
+import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
+import { Plus } from "phosphor-react"
 
-import { StyledInput, StyledTable } from "../../form/FormComponents"
+import { Flexbox } from "../../layout/Flexbox"
 import { SectionAppWorkspace } from "../../layout/Section"
+import { StyledInput, StyledTable } from "../../form/FormComponents"
+import { Select } from "../../ui/Select"
+import Button from "../../Button"
+import Content from "../../Content"
 import ContextMenu from "../../ui/ContextMenu"
 import Loader from "../../Loader"
+import Icon from "../../Icon"
 
 // should export this function to utils
 function convertTime(time) {
@@ -16,10 +23,13 @@ function convertTime(time) {
 
 function BooksContainer({
   duplicateBook,
+  getLocalStorage,
   handleBookDelete,
   processing,
   renameBook,
   userBooks,
+  setShowModal,
+  sortBooks,
 }) {
   const [selectedBook, setSelectedBook] = useState()
   const [selectedBookDOM, setSelectedBookDOM] = useState(null)
@@ -116,6 +126,39 @@ function BooksContainer({
       data-clickoutside={true}
       onClick={e => handleClickOutside(e)}
     >
+      <Flexbox
+        flex="flex"
+        alignitems="center"
+        justifycontent="space-between"
+        margin="0 0 2rem 0"
+      >
+        <Content>
+          <h3>My Books</h3>
+          <p>Right-click any row in the table below to see more options.</p>
+        </Content>
+        <Button
+          color={colors.gray.oneHundred}
+          backgroundcolor={colors.gray.nineHundred}
+          borderradius="0"
+          onClick={() => setShowModal({
+            show: true,
+            type: "createbook",
+          })}
+        >
+          <Icon margin="0 0.25rem 0 0">
+            <Plus size="1rem" weight="fill" color={colors.gray.oneHundred} />
+          </Icon>
+          <span>New book</span>
+        </Button>
+      </Flexbox>
+      <div>
+        <Select
+          initialDbValue={getLocalStorage("sortMethod")}
+          initialOption={getLocalStorage("sortValue")}
+          initialSortOrder={getLocalStorage("sortOrder")}
+          mainFunction={sortBooks}
+        />
+      </div>
       <StyledTable>
         <thead>
           <tr>

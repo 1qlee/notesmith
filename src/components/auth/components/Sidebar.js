@@ -1,41 +1,44 @@
 import React from "react"
 import styled from "styled-components"
 import { Link } from "gatsby"
-import { widths, colors, fonts } from "../../styles/variables"
+import { widths, colors, fonts } from "../../../styles/variables"
 import { Books, ChalkboardSimple, GearSix, SignOut } from "phosphor-react"
-import { useFirebaseContext } from "../../utils/auth"
+import { useFirebaseContext } from "../../../utils/auth"
 
-import Content from "../Content"
-import Icon from "../Icon"
+import Icon from "../../Icon"
+import Logo from "../../Logo"
+import { Flexbox } from "../../layout/Flexbox"
 
 const StyledSidebar = styled.div`
   background-color: ${colors.white};
-  border-right: 1px solid ${colors.gray.threeHundred};
+  border-right: 1px solid ${colors.gray.nineHundred};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-width: ${widths.sidebar};
-  padding: 0 2rem;
   width: ${widths.sidebar};
 `
 
 const SidebarLink = styled.a`
-  color: ${colors.primary.sixHundred};
+  color: ${colors.gray.nineHundred};
   display: block;
-  border-radius: 0.25rem;
-  margin: 0.25rem 0;
   font-family: ${fonts.secondary};
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 1rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid ${colors.gray.nineHundred};
+  &:first-child {
+    border-top: 1px solid ${colors.gray.nineHundred};
+  }
   &:hover {
     &:not(.is-active) {
-      background-color: ${colors.primary.hover};
-      color: ${colors.primary.nineHundred};
+      background-color: ${colors.gray.twoHundred};
     }
   }
   &.is-active {
-    background-color: ${colors.gray.oneHundred};
-    color: ${colors.primary.nineHundred};
+    background-color: ${colors.gray.nineHundred};
+    color: ${colors.gray.oneHundred};
+    padding-left: 1.5rem;
   }
 `
 
@@ -44,8 +47,9 @@ const SidebarItem = styled.div`
   align-items: center;
 `
 
-const SidebarFooter = styled.div`
-
+const SidebarContent = styled.div`
+  height: calc(100% - 4rem);
+  width: 100%;
 `
 
 function Sidebar({
@@ -55,12 +59,14 @@ function Sidebar({
 
   return (
     <StyledSidebar>
-      <div>
-        <Content
-          margin="2rem 0"
-        >
-          <h3>Navigation</h3>
-        </Content>
+      <Flexbox
+        padding="1rem"
+        alignitems="center"
+        flex="flex"
+      >
+        <Logo width="125px" height="100%" color={colors.gray.nineHundred} />
+      </Flexbox>
+      <SidebarContent>
         <SidebarLink
           className={page === "Dashboard" ? "is-active" : null}
           as={Link}
@@ -68,7 +74,7 @@ function Sidebar({
         >
           <SidebarItem>
             <Icon margin="0 0.5rem 0 0">
-              <ChalkboardSimple size={20} />
+              <ChalkboardSimple size="1rem" />
             </Icon>
             <span>Dashboard</span>
           </SidebarItem>
@@ -80,7 +86,7 @@ function Sidebar({
         >
           <SidebarItem>
             <Icon margin="0 0.5rem 0 0">
-              <Books size={20} />
+              <Books size="1rem" />
             </Icon>
             <span>My Books</span>
           </SidebarItem>
@@ -94,26 +100,26 @@ function Sidebar({
             className={page === "Settings" ? "is-active" : null}
           >
             <Icon margin="0 0.5rem 0 0">
-              <GearSix size={20} />
+              <GearSix size="1rem" />
             </Icon>
             <span>Settings</span>
           </SidebarItem>
         </SidebarLink>
-      </div>
-      <SidebarFooter>
+      </SidebarContent>
+      <Flexbox>
         <SidebarLink
           onClick={() => signOut()}
         >
-        <SidebarItem
-          className={page === "Settings" ? "is-active" : null}
-        >
-          <Icon margin="0 0.5rem 0 0">
-            <SignOut size={20} />
-          </Icon>
-          <span>Sign out</span>
-        </SidebarItem>
+          <SidebarItem
+            className={page === "Settings" ? "is-active" : null}
+          >
+            <Icon margin="0 0.5rem 0 0">
+              <SignOut size={16} />
+            </Icon>
+            <span>Sign out</span>
+          </SidebarItem>
         </SidebarLink>
-      </SidebarFooter>
+      </Flexbox>
     </StyledSidebar>
   )
 }

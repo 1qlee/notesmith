@@ -44,6 +44,7 @@ const Button = styled.button`
   }
   &:focus {
     box-shadow: 0 0 0 2px ${colors.primary.sixHundred}, inset 1px 1px 0px 0px ${colors.white}, inset 1px -1px 0px 0px ${colors.white}, inset -1px -1px 0px 0px ${colors.white}, inset -1px 1px 0px 0px ${colors.white};
+    border-color: ${colors.white};
     outline: none;
   }
   &[disabled] {

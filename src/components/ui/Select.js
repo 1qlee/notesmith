@@ -1,18 +1,22 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import PropTypes from "prop-types"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { Check, CaretDown } from "phosphor-react"
 
 import Icon from "../Icon"
 import Button from "../Button"
+import { Flexbox } from "../layout/Flexbox"
 
 const StyledSelect = styled.div`
   position: relative;
-  border: 1px solid ${colors.gray.threeHundred};
-  border-radius: 0.25rem;
   display: inline-block;
-  margin-right: 0.5rem;
+  p {
+    font-size: 0.75rem;
+    font-family: ${fonts.secondary};
+    margin-right: 0.25rem;
+    color: ${colors.gray.sixHundred};
+  }
 `
 
 const SelectMenu = styled.div`
@@ -25,6 +29,7 @@ const SelectMenu = styled.div`
   top: calc(100% + 0.5rem);
   left: 0;
   width: calc(200% - 1.35rem);
+  z-index: 1000;
   &::before {
     content: "";
     position: absolute;
@@ -50,8 +55,7 @@ const SelectOption = styled.div`
   position: relative;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.blue.sixHundred};
-    color: ${colors.blue.oneHundred};
+    background-color: ${colors.gray.twoHundred};
   }
 `
 
@@ -121,17 +125,26 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
     <StyledSelect
       ref={menuRef}
     >
-      <Button
-        className="has-icon"
-        borderradius="0"
-        backgroundcolor={colors.white}
-        onClick={() => setShowMenu(!showMenu)}
+      <Flexbox
+        flex="flex"
+        alignitems="center"
+        margin="0 0 1rem 0"
       >
-        <span>{currentOption}</span>
-        <Icon>
-          <CaretDown weight="regular" color={colors.gray.nineHundred} size="0.5rem"  />
-        </Icon>
-      </Button>
+        <p>Sort:</p>
+        <Button
+          borderradius="0"
+          backgroundcolor={colors.white}
+          onClick={() => setShowMenu(!showMenu)}
+          fontsize="0.75rem"
+          padding="0.25rem"
+          border={`1px solid ${colors.gray.nineHundred}`}
+        >
+          <span>{currentOption}</span>
+          <Icon margin="0 0 0 0.125rem">
+            <CaretDown color={colors.gray.nineHundred} size="0.625rem"  />
+          </Icon>
+        </Button>
+      </Flexbox>
       {showMenu && (
         <SelectMenu onClick={e => handleClickOutsideMenu(e)}>
           <SelectHeading>Sort by</SelectHeading>

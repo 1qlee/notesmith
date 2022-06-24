@@ -2,7 +2,7 @@ import React from "react"
 import styled, { keyframes } from "styled-components"
 import { colors, widths } from "../styles/variables"
 
-import Logo from "./Logo"
+import Logo from "../assets/logo-animated.svg"
 
 const loading = keyframes`
   20%,
@@ -20,6 +20,20 @@ const loading = keyframes`
     opacity: 1;
   }
   100% {
+    opacity: 0;
+  }
+`
+
+const strokeOffset = keyframes`
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
     opacity: 0;
   }
 `
@@ -61,38 +75,39 @@ const LoaderWrapper = styled.div`
     top: 6rem;
     left: ${widths.sidebar};
   }
-  .letter-logo {
-    animation-name: ${loading};
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    will-change: transform;
+  .mask {
+    fill: none;
+    stroke: #fff;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: ${strokeOffset} 2.5s cubic-bezier(0.95, 0.05, 0.55, 0.95) infinite;
   }
-  #letter-n {
+  #mask-N {
     animation-delay: 0.1s;
   }
-  #letter-o {
+  #mask-o {
     animation-delay: 0.2s;
   }
-  #letter-t {
-    animation-delay: 0.25s;
-  }
-  #letter-e {
-    animation-delay: 0.3s;
-  }
-  #letter-s {
+  #mask-t1 {
     animation-delay: 0.35s;
   }
-  #letter-m {
-    animation-delay: 0.4s;
-  }
-  #letter-i {
-    animation-delay: 0.45s;
-  }
-  #letter-t2 {
+  #mask-e {
     animation-delay: 0.5s;
   }
-  #letter-h {
-    animation-delay: 0.55s;
+  #mask-s {
+    animation-delay: 0.65s;
+  }
+  #mask-m {
+    animation-delay: 0.8s;
+  }
+  #mask-i {
+    animation-delay: 0.95s;
+  }
+  #mask-t2 {
+    animation-delay: 1.1s;
+  }
+  #mask-h {
+    animation-delay: 1.25s;
   }
 `
 
@@ -116,12 +131,7 @@ const StyledLoader = styled.div`
 function Loader({ className, msg }) {
   return (
     <LoaderWrapper className={className}>
-      <div style={{position: 'relative', marginTop: '-48px', marginLeft: '-50px'}}>
-        <div style={{position: 'relative'}}>
-          <Logo color={colors.gray.nineHundred} height="152" width="352" />
-        </div>
-        <StyledLoader />
-      </div>
+      <Logo height="96" width="300" />
       <p>{msg}</p>
     </LoaderWrapper>
   )

@@ -104,8 +104,6 @@ function ShoppingCart() {
                               flex="inline-flex"
                               alignitems="center"
                               margin="0 0.5rem 0 0"
-                              color={colors.primary.threeHundred}
-                              hovercolor={colors.primary.sixHundred}
                               onClick={() => handleViewDetails(item.id)}
                             >
                               <span>View details</span>
@@ -120,9 +118,6 @@ function ShoppingCart() {
                           )}
                           <TextLink
                             fontsize="0.75rem"
-                            flex="inline-flex"
-                            color={colors.primary.threeHundred}
-                            hovercolor={colors.primary.sixHundred}
                             onClick={() => removeItem(item.id)}
                           >
                             Remove
@@ -281,8 +276,8 @@ function ShoppingCart() {
             margin="0 0 2rem"
           >
             <Button
-              backgroundcolor={colors.primary.sixHundred}
-              color={colors.white}
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
               padding="1rem"
               as={Link}
               to="/checkout"

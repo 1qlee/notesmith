@@ -112,7 +112,7 @@ const fonts = {
 }
 
 const widths = {
-  sidebar: "300px",
+  sidebar: "200px",
   modal: "480px",
   tablet: "800px",
   desktop: "1440px",

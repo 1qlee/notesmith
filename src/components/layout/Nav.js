@@ -86,11 +86,6 @@ const NavLogo = styled.div`
   width: 160px;
   padding: 1rem 0;
   transition: background-color 0.1s;
-  &:hover {
-    svg {
-      stroke: ${colors.primary.sixHundred};
-    }
-  }
 `
 
 const CartCounter = styled.span`
@@ -116,6 +111,7 @@ function Nav(props) {
                 <TextLink
                   as={Link}
                   to="/products"
+                  color={colors.gray.nineHundred}
                 >
                   Shop
                 </TextLink>
@@ -126,6 +122,7 @@ function Nav(props) {
                     <TextLink
                       as={Link}
                       to="/account/dashboard"
+                      color={colors.gray.nineHundred}
                     >
                       Dashboard
                     </TextLink>
@@ -133,6 +130,7 @@ function Nav(props) {
                   <NavItem>
                     <TextLink
                       onClick={() => signOut()}
+                      color={colors.gray.nineHundred}
                     >
                       Sign out
                     </TextLink>
@@ -144,6 +142,7 @@ function Nav(props) {
                     <TextLink
                       as={Link}
                       to="/signin"
+                      color={colors.gray.nineHundred}
                     >
                       Sign in
                     </TextLink>
@@ -154,6 +153,7 @@ function Nav(props) {
                     <TextLink
                       as={Link}
                       to="/signup"
+                      color={colors.gray.nineHundred}
                     >
                       Sign up
                     </TextLink>
@@ -165,6 +165,7 @@ function Nav(props) {
               <TextLink
                 as={Link}
                 to="/cart"
+                color={colors.gray.nineHundred}
               >
                 Cart
                 {cartCount > 0 && (

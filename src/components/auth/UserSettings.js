@@ -11,7 +11,7 @@ import Icon from "../Icon"
 import Button from "../Button"
 import Content from "../Content"
 import Seo from "../layout/Seo"
-import Sidebar from "../ui/Sidebar"
+import Sidebar from "./components/Sidebar"
 import Notification from "../ui/Notification"
 
 const UserSettings = () => {

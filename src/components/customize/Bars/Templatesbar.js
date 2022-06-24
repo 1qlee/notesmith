@@ -83,27 +83,43 @@ const PageButton = styled(Button)`
     }
   }
   &.is-active {
-    &::before {
-      transform: translateX(5px);
-      width: 100%;
-      opacity: 1;
-    }
-    span {
-      color: ${colors.gray.oneHundred};
+    &::before,
+    &::after {
+      border-color: ${colors.gray.nineHundred};
     }
   }
-  &::before {
-    background-color: ${colors.gray.nineHundred};
-    border-radius: 0.5rem;
-    opacity: 0;
-    content: "";
-    height: 100%;
-    left: -5px;
-    position: absolute;
+  &::after {
+    content:"";
+    z-index: 8;
+    left: 0;
     top: 0;
-    transition: transform 0.2s, width 0.2s ease-in, background-color 0.2s;
-    width: 0;
-    will-change: width, transform;
+    padding:0.1em 0.25em;
+    border: 2px solid transparent;
+    border-left-width: 0;
+    border-top-width: 0;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    transform:rotate(-1deg);
+    opacity: 0.95;
+    transition: border-color 0.2s;
+    border-radius:50%;
+  }
+  &::before {
+    content:"";
+    z-index: 8;
+    left: 0;
+    top: 0;
+    border: 2px solid transparent;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    transform:rotate(2deg);
+    opacity:0.95;
+    border-radius:50%;
+    padding:0.1em 0.25em;
+    transition: border-color 0.2s;
+    will-change: border, transform;
   }
 `
 
@@ -165,6 +181,8 @@ function Templatesbar({
           padding="1rem"
         >
           <TextLink
+            flex="flex"
+            alignitems="center"
             color={colors.gray.nineHundred}
             onClick={() => setPageData({
               ...pageData,
@@ -172,9 +190,9 @@ function Templatesbar({
               template: "",
             })}
           >
-            Back to images
-            <Icon margin="0 0 0 0.25rem">
-              <ArrowRight size="0.825rem" />
+            <span>Back to images</span>
+            <Icon margin="0 0 0 0.125rem">
+              <ArrowRight size="0.75rem" />
             </Icon>
           </TextLink>
         </Flexbox>

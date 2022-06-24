@@ -17,10 +17,11 @@ import Button from "../../Button"
 import Content from "../../Content"
 
 const StepContent = styled.div`
-  min-height: 32px;
+  min-height: 36px;
   max-height: 300px;
   overflow-y: auto;
   margin-bottom: 1rem;
+  padding: 2px;
 `
 
 function NewBookModal({
@@ -244,36 +245,29 @@ function NewBookModal({
         )}
         {step === 2 && (
           <StepContent>
-            <form
-              id="new-book-form"
-              autoComplete="off"
-              onSubmit={e => e.preventDefault()}
-            >
-              <StyledInput
-                borderradius="0"
-                type="text"
-                id="new-book-title"
-                name="new-book-title"
-                autocomplete="false"
-                placeholder="Enter a title"
-                onChange={e => setBookData({
-                  ...bookData,
-                  title: e.target.value.trim(),
-                })}
-                onFocus={() => setBookTitleError({
-                  show: false,
-                  msg: "",
-                })}
-              />
-              {bookTitleError.show && (
-                <ErrorLine color={colors.red.sixHundred}>
-                  <Icon>
-                    <Warning weight="fill" color={colors.red.sixHundred} size={18} />
-                  </Icon>
-                  <span>{bookTitleError.msg}</span>
-                </ErrorLine>
-              )}
-            </form>
+            <StyledInput
+              type="text"
+              id="new-book-title"
+              name="new-book-title"
+              autocomplete="false"
+              placeholder="Name your new book"
+              onChange={e => setBookData({
+                ...bookData,
+                title: e.target.value.trim(),
+              })}
+              onFocus={() => setBookTitleError({
+                show: false,
+                msg: "",
+              })}
+            />
+            {bookTitleError.show && (
+              <ErrorLine color={colors.red.sixHundred}>
+                <Icon>
+                  <Warning weight="fill" color={colors.red.sixHundred} size={18} />
+                </Icon>
+                <span>{bookTitleError.msg}</span>
+              </ErrorLine>
+            )}
           </StepContent>
         )}
         <Flexbox
@@ -293,7 +287,7 @@ function NewBookModal({
             </Button>
           )}
           <Progress
-            barcolor={colors.primary.threeHundred}
+            barcolor={colors.gray.nineHundred}
             completion={parseFloat(step / 3 * 100)}
             margin="0"
             wrappercolor={colors.gray.threeHundred}
@@ -302,11 +296,10 @@ function NewBookModal({
       </ModalContent>
       <ModalFooter>
         <Button
-          backgroundcolor={colors.primary.sixHundred}
+          backgroundcolor={colors.gray.nineHundred}
           className={processing ? "is-loading" : null}
-          color={colors.primary.white}
+          color={colors.gray.oneHundred}
           disabled={processing || !bookData.title || bookData.title.trim().length === 0 || step < 2}
-          form="new-book-form"
           onClick={e => createNewBook()}
           padding="1rem"
           width="100%"
@@ -316,7 +309,7 @@ function NewBookModal({
               <CircleNotch size="1rem" />
             </Icon>
           ) : (
-            "Create book"
+            <span>Submit</span>
           )}
         </Button>
       </ModalFooter>

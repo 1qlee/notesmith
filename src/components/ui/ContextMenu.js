@@ -21,8 +21,7 @@ const ContextMenuItem = styled.div`
   width: 100%;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.blue.sixHundred};
-    color: ${colors.blue.oneHundred};
+    background-color: ${colors.gray.twoHundred};
   }
 `
 

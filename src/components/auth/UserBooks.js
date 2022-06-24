@@ -7,14 +7,13 @@ import 'svg2pdf.js'
 
 import { Flexbox } from "../layout/Flexbox"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
-import { Select } from "../ui/Select"
 import BooksContainer from "./books/BooksContainer"
 import Button from "../Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
 import NewBookModal from "./modals/AppNewBookModal"
 import Seo from "../layout/Seo"
-import Sidebar from "../ui/Sidebar"
+import Sidebar from "./components/Sidebar"
 
 const UserBooks = () => {
   const isBrowser = typeof window !== "undefined"
@@ -324,25 +323,7 @@ const UserBooks = () => {
               flex="flex"
               alignitems="center"
               justifycontent="flex-start"
-              padding="1rem 2rem"
             >
-              <Select
-                initialDbValue={getLocalStorage("sortMethod")}
-                initialOption={getLocalStorage("sortValue")}
-                initialSortOrder={getLocalStorage("sortOrder")}
-                mainFunction={sortBooks}
-              />
-              <Button
-                color={colors.white}
-                backgroundcolor={colors.primary.sixHundred}
-                borderradius="0"
-                onClick={() => setShowModal({
-                  show: true,
-                  type: "createbook",
-                })}
-              >
-                New book
-              </Button>
               <Button
                 onClick={() => downloadBookPdf()}
               >
@@ -351,10 +332,13 @@ const UserBooks = () => {
             </Flexbox>
             <BooksContainer
               duplicateBook={duplicateBook}
+              getLocalStorage={getLocalStorage}
               handleBookDelete={handleBookDelete}
               processing={processing}
               renameBook={renameBook}
               userBooks={userBooks}
+              setShowModal={setShowModal}
+              sortBooks={sortBooks}
             />
           </SectionAppContent>
         </SectionApp>

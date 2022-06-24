@@ -7,7 +7,7 @@ import { colors } from "../../styles/variables"
 import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import Content from "../Content"
 import Seo from "../layout/Seo"
-import Sidebar from "../ui/Sidebar"
+import Sidebar from "./components/Sidebar"
 
 const UserDashboard = () => {
   const { signOut, user, sendEmailVerification } = useFirebaseContext()

@@ -4,7 +4,7 @@ import { colors } from "../styles/variables"
 const TextLink = styled.a`
   align-items: ${props => props.alignitems};
   border-bottom: ${props => props.borderbottom};
-  color: ${props => props.color};
+  color: ${props => props.color || colors.gray.sixHundred};
   display: ${props => props.flex || "flex"};
   justify-content: ${props => props.justifycontent};
   font-size: ${props => props.fontsize || "0.825rem"};
@@ -12,10 +12,15 @@ const TextLink = styled.a`
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;
-  transition: color 0.2s;
   width: ${props => props.width};
+  background:  no-repeat 0 100%;
+  background-image: linear-gradient(rgba(33,33,33,0.95), rgba(33,33,33,0.95));
+  background-size: 0% 1px;
+  transition: background-size 0.2s;
+  z-index: 5;
   &:hover {
-    color: ${props => props.hovercolor};
+    color: ${props => props.hovercolor || colors.gray.nineHundred};
+    background-size: 100% 1px;
     &::before {
       width: 100%;
     }
@@ -24,19 +29,6 @@ const TextLink = styled.a`
     span + span {
       margin-left: 0.25rem;
     }
-  }
-  &::before {
-    content: "";
-    position: absolute;
-    left: 2px;
-    bottom: -2px;
-    width: 0;
-    height: 4px;
-    transform: skew(-24deg);
-    transition: width 0.2s;
-    background-image: linear-gradient(to right, ${colors.gray.threeHundred} 0%, ${colors.gray.nineHundred} 100%);
-    opacity: 0.5;
-    z-index: 8;
   }
 `
 
