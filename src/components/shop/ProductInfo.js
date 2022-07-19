@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { Link, navigate } from "gatsby"
+import { navigate } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
-import { ArrowRight, CircleNotch } from "phosphor-react"
+import { Lightbulb } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid'
 
 import { ProductDetails } from "./ShopComponents"
@@ -185,7 +185,7 @@ const ProductInfo = ({
         </Content>
       </Flexbox>
       <Notification
-        backgroundcolor={colors.white}
+        backgroundcolor={colors.yellow.threeHundred}
         bordercolor={colors.gray.nineHundred}
         boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
         margin="0 0 2rem"
@@ -194,31 +194,21 @@ const ProductInfo = ({
         <div>
           <Content
             margin="0 0 1rem"
+            h5fontsize="0.75rem"
+            h5margin="0"
           >
-            <p>Need more control over your page layouts? Use our online editor and gain access to more design tools as well as the ability to edit each page individually!</p>
+            <Flexbox
+              flex="flex"
+              alignitems="center"
+              margin="0 0 0.5rem"
+            >
+              <Icon margin="0 0.25rem 0 0">
+                <Lightbulb size="1rem" weight="bold" color={colors.gray.nineHundred} />
+              </Icon>
+              <h5>Coming soon</h5>
+            </Flexbox>
+            <p>Need more control over your page layouts? Our online editor will give you access to more design tools as well as the ability to edit each page individually!</p>
           </Content>
-          <Button
-            color={colors.gray.oneHundred}
-            className={loading ? "is-loading" : null}
-            backgroundcolor={colors.gray.nineHundred}
-            border={`1px solid ${colors.gray.nineHundred}`}
-            disabled={loading}
-            as={Link}
-            to={`/customize/${bookData.slug}/`}
-            padding="1rem"
-            width="100%"
-          >
-            {loading ? (
-              <CircleNotch size="1rem" />
-            ) : (
-              <span>
-                Customize page layouts in editor
-              </span>
-            )}
-            <Icon margin="0 0 0 0.5rem">
-              <ArrowRight size="1rem" />
-            </Icon>
-          </Button>
         </div>
       </Notification>
     </ProductDetails>

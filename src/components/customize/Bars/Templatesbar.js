@@ -77,49 +77,29 @@ const PageButton = styled(Button)`
   &:hover,
   &:focus {
     box-shadow: none;
-    background-color: ${colors.gray.twoHundred};
-    &:not(.is-active) {
-      box-shadow: 0 0 -1px ${colors.gray.threeHundred};
-    }
   }
   &.is-active {
     &::before,
     &::after {
       border-color: ${colors.gray.nineHundred};
+      opacity: 1;
     }
   }
-  &::after {
-    content:"";
-    z-index: 8;
-    left: 0;
-    top: 0;
-    padding:0.1em 0.25em;
-    border: 2px solid transparent;
-    border-left-width: 0;
-    border-top-width: 0;
-    position:absolute;
-    width: 100%;
-    height: 100%;
-    transform:rotate(-1deg);
-    opacity: 0.95;
-    transition: border-color 0.2s;
-    border-radius:50%;
-  }
   &::before {
-    content:"";
-    z-index: 8;
-    left: 0;
-    top: 0;
+    border-radius: 50%;
     border: 2px solid transparent;
-    position:absolute;
-    width: 100%;
+    content: "";
     height: 100%;
-    transform:rotate(2deg);
-    opacity:0.95;
-    border-radius:50%;
-    padding:0.1em 0.25em;
-    transition: border-color 0.2s;
-    will-change: border, transform;
+    left: 20%;
+    opacity: 0;
+    padding: 0.1rem 0.25rem;
+    position: absolute;
+    top: 0;
+    transform: rotate(2deg);
+    transition: border-color 0.2s, opacity 0.2s;
+    width: 80%;
+    will-change: border-color, transform;
+    z-index: 8;
   }
 `
 

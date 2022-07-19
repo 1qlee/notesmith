@@ -419,11 +419,10 @@ hr {
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 0;
-  background: #E0E0E0;
-  border: none;
-  height: 1px;
+  border-top: 2px dotted #E0E0E0;
+  border-width: 2px 0 0 0;
+  background: transparent;
   box-sizing: content-box;
-  height: 0;
   overflow: visible;
 }
 address {

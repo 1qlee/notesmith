@@ -2,10 +2,11 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import Button from "../Button"
 import { colors, regex } from "../../styles/variables"
+import { CircleNotch } from "phosphor-react"
 
 import { StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import Loading from "../../assets/loading.svg"
+import Icon from "../Icon"
 
 const StyledRegisterForm = styled.form`
   display: ${props => props.formHidden ? "none" : "block"};
@@ -78,7 +79,10 @@ function RegisterForm(props) {
   }
 
   return (
-    <StyledRegisterForm id={`register-form-${props.id}`} onSubmit={e => sendgridSignUp(e)}>
+    <StyledRegisterForm 
+      id="register-form"
+      onSubmit={e => sendgridSignUp(e)}
+    >
       <Flexbox
         margin="2rem 0 0"
         alignitems="flex-end"
@@ -89,9 +93,9 @@ function RegisterForm(props) {
           className="is-vertical"
         >
           <StyledLabel
-            htmlFor={`email-${props.id}`}
+            htmlFor="register-form-input"
           >
-            Sign up for early access
+            Join the mailing list
           </StyledLabel>
           <StyledInput
             onFocus={() => setEmailError({
@@ -99,27 +103,30 @@ function RegisterForm(props) {
                     color: colors.red.sixHundred
                   })}
             onChange={e => setEmail(e.currentTarget.value)}
-            id={`email-${props.id}`}
+            id="register-form-input"
             type="email"
             name="email"
             placeholder="signmeup@gmail.com"
           />
         </StyledFieldset>
         <Button
-          color={colors.white}
-          backgroundcolor={colors.primary.sixHundred}
+          color={colors.gray.oneHundred}
+          backgroundcolor={colors.gray.nineHundred}
+          border={`1px solid ${colors.gray.nineHundred}`}
           padding="1rem"
           type="submit"
-          form={`register-form-${props.id}`}
+          form="register-form"
           className={loading ? "is-loading" : null}
-          height="49px"
           disabled={emailValidated}
-          margin="0 0 0 1px"
+          margin="0 0 0 2px"
+          width="80px"
         >
           {loading ? (
-            <Loading height="1rem" width="57px" />
+            <Icon>
+              <CircleNotch size="1rem" />
+            </Icon>
           ) : (
-            "Sign Up"
+            <span>Sign up</span>
           )}
         </Button>
       </Flexbox>
@@ -128,7 +135,6 @@ function RegisterForm(props) {
           <span>{emailError.msg}</span>
         </ErrorLine>
       )}
-      <small>Notesmith is in early access. Enter your email to join!</small>
     </StyledRegisterForm>
   )
 }

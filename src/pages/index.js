@@ -1,12 +1,14 @@
-import React, { useState } from "react"
+import React from "react"
 import { Book, HandWaving, Mouse, Package } from "phosphor-react"
 import { colors, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
+import DotDeco from "../assets/dot-deco.svg"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import Button from "../components/Button"
 import Content from "../components/Content"
 import Footer from "../components/ui/Footer"
 import Icon from "../components/Icon"
@@ -18,6 +20,9 @@ import PageGallery from "../components/PageGallery"
 import RegisterForm from "../components/form/RegisterForm"
 import Seo from "../components/layout/Seo"
 import Tag from "../components/ui/Tag"
+import CircledText from "../components/CircledText"
+import Book3d from "../components/Book3d"
+import PageCarousel from "../components/index/PageCarousel"
 
 const chapterData = {
   chapterOne: {
@@ -58,69 +63,66 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr"
-                  columnGap={spacing.large}
-                  justifycontent="center"
-                >
-                  <Grid
-                    flow="row"
-                    rowGap={spacing.normal}
-                    columns="minmax(0, 1fr)"
-                    rows="auto"
-                    justifycontent="center"
-                  >
-                    <Content
-                      margin="0 auto"
-                      headingtextalign="center"
-                      h1fontweight="400"
-                    >
-                      <h1>Custom notebooks <b>made by you</b></h1>
-                    </Content>
-                    <Content
-                      maxwidth={widths.content.index}
-                      paragraphfontsize="1.25rem"
-                      paragraphmarginbottom="1rem"
-                      margin="0 auto"
-                      smallfontsize="0.8rem"
-                    >
-                      <p>Fully customize the layout of every page in your notebook - from dot thickness to line spacing - and create your own custom-made notebook.</p>
-                      <RegisterForm id="1" />
-                    </Content>
-                    <Flexbox
-                      flex="flex"
-                      margin="2rem auto"
-                    >
-                      <PageGallery />
-                    </Flexbox>
-                  </Grid>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section backgroundcolor={colors.primary.sixHundred}>
-          <Container>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="1fr"
+                  columns="1fr 2fr"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
                 >
-                  <Cell center>
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2color={colors.primary.white}
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      headingtextalign="center"
+                  <Flexbox>
+                    <div
+                      style={{ position: 'absolute', top: "-100px", left: "-120px", zIndex: "1" }}
                     >
-                      <h2>Have you ever bought a notebook...</h2>
+                      <DotDeco width="300" height="300" />
+                    </div>
+                    <Content
+                      background={colors.white}
+                      paragraphfontsize="1.25rem"
+                      paragraphmarginbottom="1rem"
+                      smallfontsize="0.8rem"
+                      style={{ position: 'relative', zIndex: "3" }}
+                      margin="0 0 2rem"
+                    >
+                      <h1>Design <CircledText text="custom" /> notebooks</h1>
+                      <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
+                      <RegisterForm id="1" />
                     </Content>
-                    <PageAnimation />
-                  </Cell>
+                    <hr />
+                    <Content
+                      linkcolor={colors.green.nineHundred}
+                      linkcolorhover={colors.green.nineHundred}
+                      linktextdecorationhover="none"
+                      paragraphmarginbottom="1rem"
+                      margin="2rem 0 0"
+                    >
+                      <h3>Win a free notebook</h3>
+                      <p>Follow our Kickstarter to enter the raffle for a free notebook! Simply click the button below and then sign up to be notified of our launch.</p>
+                      <a
+                        href="www.kickstarter.com"
+                      >
+                        <Button
+                          color={colors.green.nineHundred}
+                          backgroundcolor="#05ce78"
+                          padding="1rem"
+                          width="300px"
+                        >
+                          <StaticImage
+                            src="../images/ks-icon.png"
+                            width={16}
+                            quality={100}
+                            loading="eager"
+                          />
+                          <span style={{ marginLeft: "0.5rem" }}>Follow us on Kickstarter</span>
+                        </Button>
+                      </a>
+                    </Content>
+                  </Flexbox>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    flexwrap="wrap"
+                    justifyContent="flex-end"
+                  >
+                    <PageCarousel />
+                  </Flexbox>
                 </Grid>
               </SectionContent>
             </LayoutContainer>
@@ -131,40 +133,33 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columns="1fr 2fr"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
                   justifyContent="center"
                   alignContent="center"
                 >
-                  <Cell
-                    width={3}
-                  >
+                  <Book3d>
                     <StaticImage
-                      src="../images/index-image-1.jpg"
+                      src="../images/cover-1.png"
                       alt="Notesmith logo image"
                       placeholder="blurred"
                       quality={100}
                     />
-                    <small>Notesmith notebook in packs of two.</small>
-                  </Cell>
-                  <Cell
-                    width={2}
-                    className="is-fullwidth-mobile"
-                  >
+                  </Book3d>
+                  <Cell>
                     <Content
                       margin="0 0 2rem 0"
                       h2margin="0 0 1.5rem 0"
                       h4color={colors.link.normal}
                       h4fontweight="400"
-                      h2fontweight="400"
                       h2fontsize="2.5rem"
                       paragraphfontsize="1.2rem"
                       paragraphmarginbottom="1rem"
                       maxwidth={widths.content.index}
                     >
-                      <h4>{chapterData.chapterTwo.heading}</h4>
-                      <h2>{chapterData.chapterTwo.title}</h2>
+                      <h4></h4>
+                      <h2>A truly unique notebook</h2>
                       <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                       <p>At Notesmith, we don't keep an inventory of bland, generic notebooks collecting dust in some warehouse. Every custom notebook is made to order in our New York factory by experienced printing veterans.</p>
                     </Content>
@@ -298,63 +293,52 @@ const IndexPage = ({ data }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
-                <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
+                <StaticImage
+                  src="../images/index-3.jpg"
+                  alt="Ink on paper"
+                  placeholder="blurred"
+                  quality={100}
+                />
+                <div
+                  style={{position:'relative',top:'0',left:'0'}}
                 >
-                  <Cell width={3}>
-                    <StaticImage
-                      src="../images/writing-closeup-3.jpg"
-                      alt="Notesmith notebook bundle"
-                      placeholder="blurred"
-                    />
-                    <small>A close-up of our paper. Ink is Pilot Iroshizuku take-sumi.</small>
-                  </Cell>
-                  <Cell
-                    width={2}
-                    className="is-fullwidth-mobile"
+                  <Content
+                    margin="0 0 2rem 0"
+                    h2margin="0 0 1.5rem 0"
+                    h4color={colors.link.normal}
+                    h4fontweight="400"
+                    h2fontweight="400"
+                    h2fontsize="2.5rem"
+                    paragraphfontsize="1.2rem"
+                    maxwidth={widths.content.index}
                   >
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      paragraphfontsize="1.2rem"
-                      maxwidth={widths.content.index}
+                    <h4>High quality. Fountain pen friendly.</h4>
+                    <h2>{chapterData.chapterThree.title}</h2>
+                    <p></p>
+                    <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
+                    <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
+                    <Notification
+                      backgroundcolor={colors.paper.cream}
+                      color={colors.primary.sevenHundred}
+                      bordercolor='transparent'
                     >
-                      <h4>{chapterData.chapterThree.heading}</h4>
-                      <h2>{chapterData.chapterThree.title}</h2>
-                      <p></p>
-                      <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
-                      <Notification
-                        backgroundcolor={colors.paper.cream}
-                        color={colors.primary.sevenHundred}
-                        bordercolor='transparent'
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
                       >
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
+                        <Icon>
+                          <HandWaving color={colors.primary.sevenHundred} size="1.5rem" />
+                        </Icon>
+                        <Content
+                          paragraphcolor={colors.primary.sevenHundred}
+                          paragraphfontsize="1rem"
                         >
-                          <Icon>
-                            <HandWaving color={colors.primary.sevenHundred} size="1.5rem" />
-                          </Icon>
-                          <Content
-                            paragraphcolor={colors.primary.sevenHundred}
-                            paragraphfontsize="1rem"
-                          >
-                            <p>We are working on discovering additional paper options.</p>
-                          </Content>
-                        </Flexbox>
-                      </Notification>
-                    </Content>
-                  </Cell>
-                </Grid>
+                          <p>We are working on discovering additional paper options.</p>
+                        </Content>
+                      </Flexbox>
+                    </Notification>
+                  </Content>
+                </div>
               </SectionContent>
             </LayoutContainer>
           </Container>

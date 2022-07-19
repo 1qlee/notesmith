@@ -5,7 +5,6 @@ const SectionMain = styled.main`
   background-color: ${colors.white};
   position: relative;
   padding: 0;
-  height: 100%;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;
   }
@@ -22,11 +21,13 @@ const SectionMain = styled.main`
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
+  position: relative;
   width: 100%;
 `
 
 const SectionContent = styled.div`
   padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
+  position: relative;
   @media only screen and (max-width: ${widths.tablet}) {
     padding: 4rem 0;
   }
