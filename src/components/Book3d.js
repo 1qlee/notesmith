@@ -42,13 +42,16 @@ const Pages = styled.div`
 `
 
 const Book3dWrapper = styled.div`
+  margin: 0 auto;
   perspective: 2800px;
+  height: 600px;
+  width: 410px;
 `
 
 const StyledBook3d = styled.div`
   position: relative;
   transform-style: preserve-3d;
-  transform: rotate3d (0,1,0,0);
+  transform: rotate3d(0,1,0,0);
   transition: 1s ease;
   animation: 1s ease 0s 1 ${initAnimation};
   &:hover {
@@ -66,12 +69,12 @@ const StyledBook3d = styled.div`
   &::after {
     position: absolute;
     top: 2px;
-    left: 20px;
-    content: '';
+    left: 24px;
+    content: "";
     width: 380px;
     height: 600px;
     transform: translateZ(-25px);
-    background-color: ##fcfeff;
+    background-color: #fcfeff;
     box-shadow: 4px -4px 16px ${colors.shadow.float}, 8px 8px 16px ${colors.shadow.float}, 4px 4px 16px ${colors.shadow.float}, 16px 8px 16px ${colors.shadow.float};
   }
 `

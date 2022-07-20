@@ -69,7 +69,6 @@ const Content = styled.div`
     font-size: ${props => props.h5fontsize || "1rem"};
     font-weight: ${props => props.h5fontweight || "700"};
     margin: ${props => props.h5margin};
-    text-transform: uppercase;
   }
   ul {
     padding-left: 1.125rem;

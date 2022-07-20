@@ -1,5 +1,5 @@
 import React from "react"
-import { Book, HandWaving, Mouse, Package } from "phosphor-react"
+import { Book, HandWaving, Mouse, Package, File, FrameCorners, Cards, Spiral } from "phosphor-react"
 import { colors, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import DotDeco from "../assets/dot-deco.svg"
@@ -23,6 +23,7 @@ import Tag from "../components/ui/Tag"
 import CircledText from "../components/CircledText"
 import Book3d from "../components/Book3d"
 import PageCarousel from "../components/index/PageCarousel"
+import SpineText from "../components/index/SpineText"
 
 const chapterData = {
   chapterOne: {
@@ -133,33 +134,187 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr 2fr"
+                  columns="1fr 1fr 1fr"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
                   justifyContent="center"
                   alignContent="center"
                 >
-                  <Book3d>
-                    <StaticImage
-                      src="../images/cover-1.png"
-                      alt="Notesmith logo image"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                  </Book3d>
+                  <Cell>
+                    <Flexbox
+                      flex="flex"
+                      justifycontent="space-between"
+                    >
+                      <SpineText
+                        fontsize="3rem"
+                      >
+                        Specifications
+                      </SpineText>
+                      <Flexbox
+                        width="300px"
+                      >
+                        <Flexbox
+                          boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
+                          border={`1px solid ${colors.gray.nineHundred}`}
+                          margin="0 0 2rem"
+                        >
+                          <Flexbox
+                            flex="flex"
+                            alignitems="center"
+                            margin="0 0 -1px"
+                            padding="0 1rem"
+                            bordercolor={colors.gray.nineHundred}
+                            className="has-border-bottom"
+                          >
+                            <Icon
+                              padding="0.5rem"
+                              backgroundcolor={colors.gray.nineHundred}
+                              height="100%"
+                              borderradius="100%"
+                            >
+                              <Cards size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
+                            </Icon>
+                            <Content
+                              h5fontsize="0.875rem"
+                              h5margin="0 0 0.25rem 0"
+                              padding="1rem"
+                            >
+                              <h5>Pages</h5>
+                              <p>70 sheets total (140 pages)</p>
+                            </Content>
+                          </Flexbox>
+                          <Flexbox
+                            flex="flex"
+                            alignitems="center"
+                            margin="0 0 -1px"
+                            padding="0 1rem"
+                            bordercolor={colors.gray.nineHundred}
+                            className="has-border-bottom"
+                          >
+                            <Icon
+                              padding="0.5rem"
+                              backgroundcolor={colors.gray.nineHundred}
+                              height="100%"
+                              borderradius="100%"
+                            >
+                              <FrameCorners size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
+                            </Icon>
+                            <Content
+                              h5fontsize="0.875rem"
+                              h5margin="0 0 0.25rem 0"
+                              padding="1rem"
+                            >
+                              <h5>Size</h5>
+                              <p>5.5" x 8.5" (A5)</p>
+                            </Content>
+                          </Flexbox>
+                          <Flexbox
+                            flex="flex"
+                            alignitems="center"
+                            margin="0 0 -1px"
+                            padding="0 1rem"
+                            bordercolor={colors.gray.nineHundred}
+                            className="has-border-bottom"
+                          >
+                            <Icon
+                              padding="0.5rem"
+                              backgroundcolor={colors.gray.nineHundred}
+                              height="100%"
+                              borderradius="100%"
+                            >
+                              <Book size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
+                            </Icon>
+                            <Content
+                              h5fontsize="0.875rem"
+                              h5margin="0 0 0.25rem 0"
+                              padding="1rem"
+                            >
+                              <h5>Cover</h5>
+                              <p>Sand matte laminated, extra thick</p>
+                            </Content>
+                          </Flexbox>
+                          <Flexbox
+                            flex="flex"
+                            alignitems="center"
+                            margin="0 0 -1px"
+                            padding="0 1rem"
+                            bordercolor={colors.gray.nineHundred}
+                            className="has-border-bottom"
+                          >
+                            <Icon
+                              padding="0.5rem"
+                              backgroundcolor={colors.gray.nineHundred}
+                              height="100%"
+                              borderradius="100%"
+                            >
+                              <File size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
+                            </Icon>
+                            <Content
+                              h5fontsize="0.875rem"
+                              h5margin="0 0 0.25rem 0"
+                              padding="1rem"
+                            >
+                              <h5>Paper</h5>
+                              <p>70lb ultra-smooth, bright white</p>
+                            </Content>
+                          </Flexbox>
+                          <Flexbox
+                            flex="flex"
+                            alignitems="center"
+                            margin="0 0 -1px"
+                            padding="0 1rem"
+                            bordercolor={colors.gray.nineHundred}
+                            className="has-border-bottom"
+                          >
+                            <Icon
+                              padding="0.5rem"
+                              backgroundcolor={colors.gray.nineHundred}
+                              height="100%"
+                              borderradius="100%"
+                            >
+                              <Spiral size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
+                            </Icon>
+                            <Content
+                              h5fontsize="0.875rem"
+                              h5margin="0 0 0.25rem 0"
+                              padding="1rem"
+                            >
+                              <h5>Binding</h5>
+                              <p>Gold colored wire-o</p>
+                            </Content>
+                          </Flexbox>
+                        </Flexbox>
+                        <hr />
+                        <Content
+                          margin="1rem 0 0"
+                        >
+                          <small>Since we are still in the early stages of development, all specifications may be subject to change.</small>
+                        </Content>
+                      </Flexbox>
+                    </Flexbox>
+                  </Cell>
+                  <Cell>
+                    <Book3d>
+                      <StaticImage
+                        src="../images/cover-1.png"
+                        alt="Notesmith logo image"
+                        placeholder="blurred"
+                        quality={100}
+                      />
+                    </Book3d>
+                  </Cell>
                   <Cell>
                     <Content
-                      margin="0 0 2rem 0"
                       h2margin="0 0 1.5rem 0"
                       h4color={colors.link.normal}
                       h4fontweight="400"
-                      h2fontsize="2.5rem"
+                      h2fontsize="3rem"
+                      h2fontweight="400"
                       paragraphfontsize="1.2rem"
                       paragraphmarginbottom="1rem"
                       maxwidth={widths.content.index}
                     >
-                      <h4></h4>
-                      <h2>A truly unique notebook</h2>
+                      <h2>Our signature notebook</h2>
                       <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                       <p>At Notesmith, we don't keep an inventory of bland, generic notebooks collecting dust in some warehouse. Every custom notebook is made to order in our New York factory by experienced printing veterans.</p>
                     </Content>
