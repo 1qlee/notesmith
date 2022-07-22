@@ -15,8 +15,6 @@ import Icon from "../components/Icon"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import Notification from "../components/ui/Notification"
-import PageAnimation from "../components/PageAnimation"
-import PageGallery from "../components/PageGallery"
 import RegisterForm from "../components/form/RegisterForm"
 import Seo from "../components/layout/Seo"
 import Tag from "../components/ui/Tag"
@@ -165,11 +163,11 @@ const IndexPage = ({ data }) => {
                             padding="0 1rem"
                             bordercolor={colors.gray.nineHundred}
                             className="has-border-bottom"
+                            height="101px"
                           >
                             <Icon
                               padding="0.5rem"
                               backgroundcolor={colors.gray.nineHundred}
-                              height="100%"
                               borderradius="100%"
                             >
                               <Cards size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
@@ -190,11 +188,11 @@ const IndexPage = ({ data }) => {
                             padding="0 1rem"
                             bordercolor={colors.gray.nineHundred}
                             className="has-border-bottom"
+                            height="101px"
                           >
                             <Icon
                               padding="0.5rem"
                               backgroundcolor={colors.gray.nineHundred}
-                              height="100%"
                               borderradius="100%"
                             >
                               <FrameCorners size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
@@ -215,11 +213,11 @@ const IndexPage = ({ data }) => {
                             padding="0 1rem"
                             bordercolor={colors.gray.nineHundred}
                             className="has-border-bottom"
+                            height="101px"
                           >
                             <Icon
                               padding="0.5rem"
                               backgroundcolor={colors.gray.nineHundred}
-                              height="100%"
                               borderradius="100%"
                             >
                               <Book size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
@@ -240,11 +238,11 @@ const IndexPage = ({ data }) => {
                             padding="0 1rem"
                             bordercolor={colors.gray.nineHundred}
                             className="has-border-bottom"
+                            height="101px"
                           >
                             <Icon
                               padding="0.5rem"
                               backgroundcolor={colors.gray.nineHundred}
-                              height="100%"
                               borderradius="100%"
                             >
                               <File size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
@@ -265,11 +263,11 @@ const IndexPage = ({ data }) => {
                             padding="0 1rem"
                             bordercolor={colors.gray.nineHundred}
                             className="has-border-bottom"
+                            height="101px"
                           >
                             <Icon
                               padding="0.5rem"
                               backgroundcolor={colors.gray.nineHundred}
-                              height="100%"
                               borderradius="100%"
                             >
                               <Spiral size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
@@ -294,38 +292,27 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                   </Cell>
                   <Cell>
-                    <Book3d>
-                      <StaticImage
-                        src="../images/cover-1.png"
-                        alt="Notesmith logo image"
-                        placeholder="blurred"
-                        quality={100}
-                      />
-                    </Book3d>
+                    <Book3d />
                   </Cell>
                   <Cell>
                     <Content
                       h2margin="0 0 1.5rem 0"
                       h4color={colors.link.normal}
                       h4fontweight="400"
-                      h2fontsize="3rem"
                       h2fontweight="400"
+                      h5fontsize="0.75rem"
                       paragraphfontsize="1.2rem"
-                      paragraphmarginbottom="1rem"
                       maxwidth={widths.content.index}
+                      margin="0 0 2rem"
                     >
-                      <h2>Our signature notebook</h2>
+                      <h2>A truly unique notebook</h2>
                       <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
-                      <p>At Notesmith, we don't keep an inventory of bland, generic notebooks collecting dust in some warehouse. Every custom notebook is made to order in our New York factory by experienced printing veterans.</p>
                     </Content>
-                    <Content
-                      h3fontweight="400"
-                    >
-                      <h3>How it works</h3>
-                    </Content>
+                    <hr />
                     <Grid
                       columns="repeat(auto-fit,minmax(135px,1fr))"
-                      columnGap={spacing.normal}
+                      gap={spacing.normal}
+                      style={{marginTop:"2rem"}}
                     >
                       <Cell>
                         <Flexbox
@@ -342,22 +329,6 @@ const IndexPage = ({ data }) => {
                               alignitems="center"
                               margin="0 0 0.5rem 0"
                             >
-                              <Tag
-                                margin="0"
-                                fontsize="1rem"
-                                padding="0.25rem 0.5rem"
-                                backgroundcolor={colors.paper.cream}
-                                color={colors.primary.sixHundred}
-                              >
-                                01
-                              </Tag>
-                              <Icon margin="0 0 0 0.25rem">
-                                <Mouse
-                                  size="1.5rem"
-                                  color={colors.primary.sixHundred}
-                                  weight="duotone"
-                                />
-                              </Icon>
                             </Flexbox>
                             <h3>Design layout</h3>
                             <p>Use our online tool to create your custom layout.</p>
@@ -379,22 +350,6 @@ const IndexPage = ({ data }) => {
                               alignitems="center"
                               margin="0 0 0.5rem 0"
                             >
-                              <Tag
-                                margin="0"
-                                fontsize="1rem"
-                                padding="0.25rem 0.5rem"
-                                backgroundcolor={colors.paper.cream}
-                                color={colors.primary.sixHundred}
-                              >
-                                02
-                              </Tag>
-                              <Icon margin="0 0 0 0.25rem">
-                                <Book
-                                  size="1.5rem"
-                                  color={colors.primary.sixHundred}
-                                  weight="duotone"
-                                />
-                              </Icon>
                             </Flexbox>
                             <h3>Create notebook</h3>
                             <p>Put together your notebook with your custom pages.</p>
@@ -415,22 +370,6 @@ const IndexPage = ({ data }) => {
                             alignitems="center"
                             margin="0 0 0.5rem 0"
                           >
-                            <Tag
-                              margin="0"
-                              fontsize="1rem"
-                              padding="0.25rem 0.5rem"
-                              backgroundcolor={colors.paper.cream}
-                              color={colors.primary.sixHundred}
-                            >
-                              03
-                            </Tag>
-                            <Icon margin="0 0 0 0.25rem">
-                              <Package
-                                size="1.5rem"
-                                color={colors.primary.sixHundred}
-                                weight="duotone"
-                              />
-                            </Icon>
                           </Flexbox>
                             <h3>Packed and ready</h3>
                             <p>Congratulations, your notebook is being shipped to you!</p>

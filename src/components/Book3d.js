@@ -1,5 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
+import { StaticImage } from "gatsby-plugin-image"
 import { colors } from "../styles/variables"
 
 const initAnimation = keyframes`
@@ -9,13 +10,13 @@ const initAnimation = keyframes`
 `
 
 const Pages = styled.div`
-  position: absolute;
   content: '';
-  left: ${props => props.left || 0};
+  height: calc(100% - 8px);
+  left: ${props => props.left || "36px"};
+  position: absolute;
   top: 4px;
+  transform: translateX(377px) rotate3d(0,1,0,90deg);
   width: 48px;
-  height: 596px;
-  transform: translateX(382px) rotate3d(0,1,0,90deg);
   background: linear-gradient(90deg,
     ${colors.gray.oneHundred} 0%,
     ${colors.gray.threeHundred} 5%,
@@ -41,11 +42,59 @@ const Pages = styled.div`
   );
 `
 
+const FrontFakeCover = styled.div`
+  background-color: #e8eaee;
+  content: "";
+  height: 100%;
+  left: 30px;
+  position: absolute;
+  top: 0;
+  transform: translateZ(25px);
+  transition: box-shadow 0.4s;
+  width: calc(100% - 30px);
+  z-index: 1;
+`
+
+const BackFakeCover = styled.div`
+  background-color: #e8eaee;
+  box-shadow: 2px 4px 16px ${colors.shadow.float}, 2px 8px 24px ${colors.shadow.float};
+  content: "";
+  height: 100%;
+  left: 32px;
+  position: absolute;
+  top: 0;
+  transform: translateZ(-25px);
+  transition: box-shadow 0.4s;
+  width: calc(100% - 32px);
+  z-index: 1;
+`
+
+const FrontCover = styled.div`
+  position: absolute;
+  background-color: white;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  transform: translateZ(25px);
+  transform-style: preserve-3d;
+`
+
+const BackCover = styled.div`
+  position: absolute;
+  background-color: white;
+  top: 2px;
+  left: 0;
+  content: "";
+  z-index: 2;
+  transform: translateZ(-25px) rotateY(180deg);
+  transform-style: preserve-3d;
+`
+
 const Book3dWrapper = styled.div`
   margin: 0 auto;
   perspective: 2800px;
-  height: 600px;
-  width: 410px;
+  height: 628px;
+  width: 439px;
 `
 
 const StyledBook3d = styled.div`
@@ -54,38 +103,46 @@ const StyledBook3d = styled.div`
   transform: rotate3d(0,1,0,0);
   transition: 1s ease;
   animation: 1s ease 0s 1 ${initAnimation};
+  height: 100%;
+  width: 100%;
+  will-change: transform;
   &:hover {
-    transform: rotate3d(0,1,0,-30deg);
-  }
-  & > :first-child {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateZ(25px);
-    height: 600px;
-    width: 410px;
-    filter: brightness(1.05) contrast(1.2);
-  }
-  &::after {
-    position: absolute;
-    top: 2px;
-    left: 24px;
-    content: "";
-    width: 380px;
-    height: 600px;
-    transform: translateZ(-25px);
-    background-color: #fcfeff;
-    box-shadow: 4px -4px 16px ${colors.shadow.float}, 8px 8px 16px ${colors.shadow.float}, 4px 4px 16px ${colors.shadow.float}, 16px 8px 16px ${colors.shadow.float};
+    transform: rotate3d(0,1,0,-180deg);
+    .front-cover {
+      box-shadow: 2px 4px 16px ${colors.shadow.float}, 2px 8px 24px ${colors.shadow.float};
+    }
+    .back-cover {
+      box-shadow: none;
+    }
   }
 `
 
-function Book3d({ children }) {
+function Book3d(props) {
   return (
     <Book3dWrapper>
       <StyledBook3d>
-        {children}
-        <Pages left="-380px" />
+        <FrontCover>
+          <StaticImage
+            className="image"
+            src="../images/index/front-cover-white.jpg"
+            alt="Notesmith logo image"
+            placeholder="blurred"
+            quality={100}
+          />
+        </FrontCover>
+        <FrontFakeCover className="front-cover" />
+        <Pages left="-366px" />
         <Pages />
+        <BackFakeCover className="back-cover" />
+        <BackCover>
+          <StaticImage
+            className="image"
+            src="../images/index/back-cover-white.jpg"
+            alt="Notesmith logo image"
+            placeholder="blurred"
+            quality={100}
+          />
+        </BackCover>
       </StyledBook3d>
     </Book3dWrapper>
   )
