@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react"
-import { convertToPx } from "../../../styles/variables"
+import React from "react"
 
 function Blank({
   pageData,

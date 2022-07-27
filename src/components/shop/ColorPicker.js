@@ -1,10 +1,9 @@
+import React from "react"
 import { colors } from "../../styles/variables"
-import React, { useEffect } from "react"
 import ReactTooltip from "react-tooltip"
 import styled from "styled-components"
 
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
 
 const ColorOption = styled.button`
   background-color: ${props => props.color};
@@ -57,12 +56,7 @@ function ColorPicker({
   cbFunction
 }) {
   return (
-    <Flexbox
-      flex="flex"
-      alignitems="center"
-      padding="0 0 0 0.25rem"
-      flexwrap="wrap"
-    >
+    <>
       {data.map(color => (
         <ColorOption
           data-tip={color.name}
@@ -75,7 +69,7 @@ function ColorPicker({
       <ReactTooltip
         effect="solid"
       />
-    </Flexbox>
+    </>
   )
 }
 

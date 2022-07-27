@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts, convertToMM } from "../../styles/variables"
-import { Hexagon, Diamond, Table, MusicNote, PencilLine, Plus } from "phosphor-react"
+import { Plus } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
 import HexPageIcon from "../../assets/hexagon-grid.svg"
@@ -80,10 +80,10 @@ const PageBadge = styled.span`
 
 const PageOutline = styled.div`
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
-  height: ${props => props.height || "36px"};
+  height: ${props => props.height || "40px"};
   background-color: ${colors.white};
   position: relative;
-  width: ${props => props.width || "26px"};
+  width: ${props => props.width || "30px"};
 `
 
 const VerticalLine = styled.span`
@@ -674,7 +674,7 @@ function MusicPageIcon({
           alignitems="center"
           height="12px"
           width="100%"
-          margin="4px 0 0"
+          margin="6px 0 0"
         >
           <HorizontalLine width="80%" margin="2px 0 0 0" />
           <HorizontalLine width="80%" margin="1px 0 0 0" />
@@ -752,7 +752,7 @@ function HandwritingPageIcon({
           alignitems="center"
           justifycontent="space-between"
           height="8px"
-          margin="6px 0"
+          margin="8px 0"
         >
           <HorizontalLine width="80%" />
           <Flexbox
@@ -949,7 +949,7 @@ function CrossGridPageIcon({
         <Flexbox
           flex="flex"
           alignitems="center"
-          margin="4px 0 0 "
+          margin="6px 0 0 "
         >
           <Icon width="100%" height="100%">
             <Plus

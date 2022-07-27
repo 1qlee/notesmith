@@ -3,6 +3,8 @@ import { colors, widths } from "../styles/variables"
 
 const Content = styled.div`
   background: ${props => props.background};
+  border: ${props => props.border};
+  border-bottom: ${props => props.borderbottom};
   box-shadow: ${props => props.boxshadow};
   display: block;
   margin: ${props => props.margin};

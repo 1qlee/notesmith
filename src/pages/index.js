@@ -1,6 +1,6 @@
-import React from "react"
-import { Book, HandWaving, Mouse, Package, File, FrameCorners, Cards, Spiral } from "phosphor-react"
-import { colors, spacing, widths } from "../styles/variables"
+import React, { useState } from "react"
+import { Book, HandWaving, File, FrameCorners, Cards, Spiral, ArrowDownLeft } from "phosphor-react"
+import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import DotDeco from "../assets/dot-deco.svg"
 
@@ -13,26 +13,18 @@ import Content from "../components/Content"
 import Footer from "../components/ui/Footer"
 import Icon from "../components/Icon"
 import Layout from "../components/layout/Layout"
+import PageIcons from "../components/customize/PageIcons"
 import Nav from "../components/layout/Nav"
 import Notification from "../components/ui/Notification"
 import RegisterForm from "../components/form/RegisterForm"
 import Seo from "../components/layout/Seo"
 import Tag from "../components/ui/Tag"
 import CircledText from "../components/CircledText"
-import Book3d from "../components/Book3d"
+import Book3d from "../components/index/Book3d"
 import PageCarousel from "../components/index/PageCarousel"
 import SpineText from "../components/index/SpineText"
 
 const chapterData = {
-  chapterOne: {
-    title: "Custom notebooks made-to-order",
-    chapter: "01"
-  },
-  chapterTwo: {
-    title: "Create a truly unique notebook of your own",
-    chapter: "02",
-    heading: "Commitment to customization",
-  },
   chapterThree: {
     title: "High quality, fountain pen friendly paper",
     chapter: "03",
@@ -51,6 +43,41 @@ const chapterData = {
 }
 
 const IndexPage = ({ data }) => {
+  const [pageData, setPageData] = useState({
+    alignmentHorizontal: "center",
+    alignmentVertical: "top",
+    ascSpacing: 5,
+    dscSpacing: 5,
+    xHeight: 5,
+    slantSpacing: 5,
+    slantAngle: 55,
+    slants: 20,
+    angle: 30,
+    columns: 27,
+    radius: 0.6,
+    groupSpacing: 5,
+    hexagonRadius: 1,
+    lineWidth: 100,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 0,
+    pageWidth: 366,
+    pageHeight: 612,
+    opacity: 1,
+    rows: 42,
+    show: false,
+    spacing: 5,
+    template: "",
+    thickness: 0.088,
+    size: 1,
+  })
+  const leftPageData = {
+    template: ""
+  }
+  const rightPageData = {
+    template: ""
+  }
 
   return (
     <Layout>
@@ -292,91 +319,67 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                   </Cell>
                   <Cell>
-                    <Book3d />
+                    <Book3d 
+                      pageData={pageData}
+                      setPageData={setPageData}
+                    />
                   </Cell>
                   <Cell>
                     <Content
                       h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
+                      h2fontsize="2.5rem"
                       h2fontweight="400"
                       h5fontsize="0.75rem"
                       paragraphfontsize="1.2rem"
                       maxwidth={widths.content.index}
                       margin="0 0 2rem"
                     >
-                      <h2>A truly unique notebook</h2>
+                      <h2>Our signature custom notebook</h2>
                       <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                     </Content>
-                    <hr />
-                    <Grid
-                      columns="repeat(auto-fit,minmax(135px,1fr))"
-                      gap={spacing.normal}
-                      style={{marginTop:"2rem"}}
+                    <Content
+                      borderbottom={`2px solid ${colors.gray.nineHundred}`}
+                      h3margin="0"
+                      h3fontsize="0.75rem"
+                      headingfontfamily={fonts.secondary}
+                      padding="0 0 1rem"
+                      margin="2rem 0"
                     >
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                            <Flexbox
-                              flex="flex"
-                              alignitems="center"
-                              margin="0 0 0.5rem 0"
-                            >
-                            </Flexbox>
-                            <h3>Design layout</h3>
-                            <p>Use our online tool to create your custom layout.</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                            <Flexbox
-                              flex="flex"
-                              alignitems="center"
-                              margin="0 0 0.5rem 0"
-                            >
-                            </Flexbox>
-                            <h3>Create notebook</h3>
-                            <p>Put together your notebook with your custom pages.</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 0.5rem 0"
-                          >
-                          </Flexbox>
-                            <h3>Packed and ready</h3>
-                            <p>Congratulations, your notebook is being shipped to you!</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                    </Grid>
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="flex-end"
+                      >
+                        <Icon>
+                          <ArrowDownLeft size="1rem" color={colors.gray.nineHundred} weight="fill" />
+                        </Icon>
+                        <h3>Check out the demo below</h3>
+                      </Flexbox>
+                    </Content>
+                    <Content
+                      headingfontfamily={fonts.secondary}
+                      h3fontsize="0.75rem"
+                    >
+                      <h3>Select a layout</h3>
+                      <Flexbox
+                        flex="flex"
+                        flexwrap="wrap"
+                        margin="0 0 1rem"
+                      >
+                        <PageIcons
+                          checkActiveVar={pageData.template}
+                          data={pageData}
+                          iconMargin="0 1rem 1rem 0"
+                          isProductPage={true}
+                          leftPageData={leftPageData}
+                          rightPageData={rightPageData}
+                          setData={setPageData}
+                          showLabels={false}
+                        />
+                      </Flexbox>
+                      <h3>Spacing</h3>
+                      
+                    </Content>
                   </Cell>
                 </Grid>
               </SectionContent>
