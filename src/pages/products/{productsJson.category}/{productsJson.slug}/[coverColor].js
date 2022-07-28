@@ -45,7 +45,7 @@ const ProductPage = ({ data, params }) => {
     columns: 27,
     contentHeight: convertToMM(pageHeight),
     contentWidth: convertToMM(pageWidth),
-    radius: 0.6,
+    radius: 0.1,
     groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,

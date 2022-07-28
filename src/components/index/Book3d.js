@@ -127,6 +127,8 @@ const StyledBook3d = styled.div`
 `
 
 function Book3d({
+  borderData,
+  dashedLineData,
   pageData,
   setPageData,
 }) {
@@ -161,6 +163,8 @@ function Book3d({
             {pageData.template ? (
               <>
                 <DemoTemplate
+                  borderData={borderData}
+                  dashedLineData={dashedLineData}
                   pageData={pageData}
                   setPageData={setPageData}
                 />

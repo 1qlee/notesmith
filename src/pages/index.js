@@ -8,6 +8,7 @@ import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import { RangeInput, StyledLabel } from "../components/form/FormComponents"
 import Button from "../components/Button"
 import Content from "../components/Content"
 import Footer from "../components/ui/Footer"
@@ -51,10 +52,10 @@ const IndexPage = ({ data }) => {
     xHeight: 5,
     slantSpacing: 5,
     slantAngle: 55,
-    slants: 20,
+    slants: 21,
     angle: 30,
     columns: 27,
-    radius: 0.6,
+    radius: 0.1,
     groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
@@ -63,7 +64,7 @@ const IndexPage = ({ data }) => {
     marginRight: 0,
     marginTop: 0,
     pageWidth: 366,
-    pageHeight: 612,
+    pageHeight: 607,
     opacity: 1,
     rows: 42,
     show: false,
@@ -71,6 +72,19 @@ const IndexPage = ({ data }) => {
     template: "",
     thickness: 0.088,
     size: 1,
+  })
+  const [borderData, setBorderData] = useState({
+    sync: true,
+    toggle: true,
+    thickness: 0.088,
+    opacity: 1,
+  })
+  const [dashedLineData, setDashedLineData] = useState({
+    sync: true,
+    thickness: 0.088,
+    opacity: 1,
+    dashArray: "",
+    dashOffset: 0,
   })
   const leftPageData = {
     template: ""
@@ -320,6 +334,8 @@ const IndexPage = ({ data }) => {
                   </Cell>
                   <Cell>
                     <Book3d 
+                      borderData={borderData}
+                      dashedLineData={dashedLineData}
                       pageData={pageData}
                       setPageData={setPageData}
                     />
@@ -356,29 +372,146 @@ const IndexPage = ({ data }) => {
                         <h3>Check out the demo below</h3>
                       </Flexbox>
                     </Content>
-                    <Content
-                      headingfontfamily={fonts.secondary}
-                      h3fontsize="0.75rem"
+                    <StyledLabel
+                      margin="0 0 1rem"
+                    >Select a layout</StyledLabel>
+                    <Flexbox
+                      flex="flex"
+                      flexwrap="wrap"
+                      margin="0 0 1rem"
                     >
-                      <h3>Select a layout</h3>
-                      <Flexbox
-                        flex="flex"
-                        flexwrap="wrap"
-                        margin="0 0 1rem"
+                      <PageIcons
+                        checkActiveVar={pageData.template}
+                        data={pageData}
+                        iconMargin="0 1rem 1rem 0"
+                        isProductPage={true}
+                        leftPageData={leftPageData}
+                        rightPageData={rightPageData}
+                        setData={setPageData}
+                        showLabels={false}
+                      />
+                    </Flexbox>
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
+                      margin="0 0 1rem"
+                      width="100%"
+                    >
+                      <StyledLabel 
+                        margin="0"
+                        htmlFor="opacity-input"
+                        width="100px"
                       >
-                        <PageIcons
-                          checkActiveVar={pageData.template}
-                          data={pageData}
-                          iconMargin="0 1rem 1rem 0"
-                          isProductPage={true}
-                          leftPageData={leftPageData}
-                          rightPageData={rightPageData}
-                          setData={setPageData}
-                          showLabels={false}
-                        />
-                      </Flexbox>
-                      <h3>Spacing</h3>
-                      
+                        Opacity
+                      </StyledLabel>
+                      <RangeInput
+                        id="opacity-input"
+                        min={0.5}
+                        step={0.01}
+                        max={1}
+                        value={pageData.opacity}
+                        onChange={e => setPageData({
+                          ...pageData,
+                          opacity: e.target.value,
+                        })}
+                        width="100%"
+                      />
+                    </Flexbox>
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
+                      margin="0 0 1rem"
+                      width="100%"
+                    >
+                      <StyledLabel 
+                        margin="0"
+                        htmlFor="thickness-input"
+                        width="100px"
+                      >
+                        Thickness
+                      </StyledLabel>
+                      <RangeInput
+                        id="thickness-input"
+                        min={0.088}
+                        step={0.001}
+                        max={3}
+                        value={pageData.thickness}
+                        onChange={e => setPageData({
+                          ...pageData,
+                          thickness: parseFloat(e.target.value),
+                        })}
+                        width="100%"
+                      />
+                    </Flexbox>
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
+                      margin="0 0 1rem"
+                      width="100%"
+                    >
+                      <StyledLabel 
+                        margin="0"
+                        htmlFor="spacing-input"
+                        width="100px"
+                      >
+                        Spacing
+                      </StyledLabel>
+                      <RangeInput
+                        id="spacing-input"
+                        min={1}
+                        step={0.1}
+                        max={20}
+                        value={pageData.spacing}
+                        onChange={e => setPageData({
+                          ...pageData,
+                          spacing: e.target.value,
+                          groupSpacing: e.target.value,
+                        })}
+                        width="100%"
+                      />
+                    </Flexbox>
+                    <Button
+                      backgroundcolor={colors.gray.nineHundred}
+                      color={colors.gray.oneHundred}
+                      padding="1rem"
+                      width="100%"
+                      margin="1rem 0"
+                      onClick={() => setPageData({
+                        alignmentHorizontal: "center",
+                        alignmentVertical: "top",
+                        ascSpacing: 5,
+                        dscSpacing: 5,
+                        xHeight: 5,
+                        slantSpacing: 5,
+                        slantAngle: 55,
+                        slants: 21,
+                        angle: 30,
+                        columns: 27,
+                        radius: 0.1,
+                        groupSpacing: 5,
+                        hexagonRadius: 1,
+                        lineWidth: 100,
+                        marginBottom: 0,
+                        marginLeft: 0,
+                        marginRight: 0,
+                        marginTop: 0,
+                        pageWidth: 366,
+                        pageHeight: 607,
+                        opacity: 1,
+                        rows: 42,
+                        show: false,
+                        spacing: 5,
+                        template: pageData.template,
+                        thickness: 0.088,
+                        size: 1,
+                      })}
+                    >
+                      Reset layout
+                    </Button>
+                    <hr />
+                    <Content
+                      margin="1rem 0 0">
+                      <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
                     </Content>
                   </Cell>
                 </Grid>

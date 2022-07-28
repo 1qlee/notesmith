@@ -271,6 +271,38 @@ function NumberInput({
   )
 }
 
+function RangeInput({
+  min,
+  max,
+  value,
+  step,
+  onChange,
+  width,
+}) {
+  const inputRef = useRef(null)
+  
+  useEffect(() => {
+    const currentPercent = (value - min) * 100 / (max - min) + "% 100%"
+    inputRef.current.style.backgroundSize = currentPercent
+  }, [value])
+
+  return (
+    <StyledRange
+      width={width}
+    >
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={e => onChange(e)}
+        ref={inputRef}
+      />
+    </StyledRange>
+  )
+}
+
 const NumberInputWrapper = styled.div`
   position: relative;
   width: ${props => props.width};
@@ -395,35 +427,40 @@ const StyledRange = styled.div`
   margin: ${props => props.margin};
   input[type=range] {
     -webkit-appearance: none;
+    margin-right: 15px;
     width: 100%;
+    height: 7px;
     background: ${colors.gray.threeHundred};
-    height: 0.5rem;
-    &:hover,
+    background-image: linear-gradient(${colors.gray.nineHundred}, ${colors.gray.nineHundred});
+    background-size: 70% 100%;
+    background-repeat: no-repeat;
+    &:hover {
+      &::-webkit-slider-thumb {
+        border-color: ${colors.gray.eightHundred};
+      }
+    }
     &:focus {
       &::-webkit-slider-thumb {
-        background-color: ${colors.gray.twoHundred};
+        border-width: 4px;
       }
     }
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: ${colors.gray.oneHundred};
-    border: 2px solid ${colors.gray.nineHundred};
-    box-shadow: ${colors.shadow.layeredSmall};
-    border-radius: 100%;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border: 6px solid ${colors.gray.nineHundred};
+    background: ${colors.gray.oneHundred};
     cursor: pointer;
-    height: 1.25rem;
-    margin-top: -0.375rem;
-    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
-    width: 1.25rem;
+    box-shadow: 0 0 2px 0 #555;
+    transition: background 0.2s, border-color 0.2s, border 0.2s;
   }
   input[type=range]::-webkit-slider-runnable-track {
-    background: transparent;
-    border-radius: 0.25rem;
     -webkit-appearance: none;
-    cursor: pointer;
-    height: 0.5rem;
-    width: 100%;
+    box-shadow: none;
+    border: none;
+    background: transparent;
   }
 `
 
@@ -542,6 +579,7 @@ const StyledLabel = styled.label`
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: 700;
   margin: ${props => props.margin || "0 0 0.5rem 0"};
+  width: ${props => props.width};
 `
 
 const StyledFloatingLabel = styled(StyledLabel)`
@@ -662,6 +700,7 @@ export {
   QuantityTracker,
   QuantityWrapper,
   RadioInput,
+  RangeInput,
   SelectIcon,
   SelectWrapper,
   StyledCheckbox,

@@ -21,6 +21,8 @@ const StyledDemoTemplate = styled.div`
 `
 
 function DemoTemplate({
+  borderData,
+  dashedLineData,
   pageData,
   setPageData,
 }) {
@@ -62,6 +64,7 @@ function DemoTemplate({
         )}
         {pageData.template === "isometric" && (
           <Isometric
+            borderData={borderData}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -80,18 +83,21 @@ function DemoTemplate({
         )}
         {pageData.template === "handwriting" && (
           <Handwriting
+            dashedLineData={dashedLineData}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "crossgrid" && (
           <CrossGrid
+            dashedLineData={dashedLineData}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "calligraphy" && (
           <Calligraphy
+            dashedLineData={dashedLineData}
             pageData={pageData}
             setPageData={setPageData}
           />

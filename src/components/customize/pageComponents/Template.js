@@ -15,14 +15,12 @@ import CrossGrid from "../templates/CrossGrid"
 import Calligraphy from "../templates/Calligraphy"
 
 function Template({
-  bookData,
   borderData,
   canvasPageSize,
   currentPageSide,
   dashedLineData,
   minimumMargin,
   pageData,
-  productPageTemplate,
   rightPageXPosition,
   selectedTemplate,
   setPageData,
@@ -141,7 +139,6 @@ function Template({
           )}
           {pageData.template === "seyes" && (
             <Seyes
-              borderData={borderData}
               currentPageSide={currentPageSide}
               pageData={pageData}
               setPageData={setPageData}
@@ -149,7 +146,6 @@ function Template({
           )}
           {pageData.template === "music" && (
             <Music
-              borderData={borderData}
               currentPageSide={currentPageSide}
               pageData={pageData}
               setPageData={setPageData}
@@ -244,7 +240,6 @@ function Template({
         )}
         {pageData.template === "music" && (
           <Music
-            borderData={borderData}
             currentPageSide={currentPageSide}
             pageData={pageData}
             setPageData={setPageData}

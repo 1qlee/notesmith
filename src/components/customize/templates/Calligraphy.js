@@ -5,9 +5,9 @@ function Calligraphy({
   pageData,
   setPageData,
 }) {
-  const [writingRows, setWritingRows] = useState([])
+  const [lineRows, setLineRows] = useState([])
   const [slantRows, setSlantRows] = useState([])
-  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness, slantAngle, slants } = pageData
+  const { pageWidth, pageHeight, opacity, rows, groupSpacing, thickness, slantAngle, slants } = pageData
   const ascSpacing = convertToPx(pageData.ascSpacing)
   const dscSpacing = convertToPx(pageData.dscSpacing)
   const xHeight = convertToPx(pageData.xHeight)
@@ -26,7 +26,7 @@ function Calligraphy({
       return Math.tan(angle * Math.PI / 180)
     }
 
-    function createSlants(slantsArray, spaceBtwnRows) {
+    function createSlants(slantsArray, spaceBtwnRows, row) {
       const maxPosX = pageWidth - marginRight
       const compSlantAngle = 90 - slantAngle
 
@@ -75,6 +75,7 @@ function Calligraphy({
           x2: posX2,
           y1: posY1,
           y2: posY2,
+          row: row,
         }
 
         slantsArray.push(slantProps)
@@ -108,15 +109,15 @@ function Calligraphy({
           x2: posX2,
           y1: posY1,
           y2: posY2,
+          row: row,
         }
 
         // break the loop if we are past the height of the page
         if (posY1 > pageHeight) {
-          setPageData({
+          return setPageData({
             ...pageData,
             rows: row,
           })
-          break
         }
         else {
           linesArray.push(lineProps)
@@ -124,64 +125,49 @@ function Calligraphy({
       }
     }
 
-    function createWritingRows() {
-      const rowsArray = []
-      const slantRowsArray = []
+    function createRows() {
+      const dummyLinesArray = []
+      const dummySlantsArray = []
 
       for (let row = 0; row < rows; row++) {
-        const linesArray = []
-        const slantsArray = []
         const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
 
-        createSlants(slantsArray, spaceBtwnRows)
-        createLines(linesArray, spaceBtwnRows, row)
-
-        rowsArray.push(linesArray)
-        slantRowsArray.push(slantsArray)
+        createSlants(dummySlantsArray, spaceBtwnRows, row)
+        createLines(dummyLinesArray, spaceBtwnRows, row)
       }
 
-      setWritingRows(rowsArray)
-      setSlantRows(slantRowsArray)
+      setLineRows(dummyLinesArray)
+      setSlantRows(dummySlantsArray)
     }
 
-    createWritingRows()
+    createRows()
   }, [pageData])
 
   return (
     <>
-      {writingRows.map((row, index) => (
-        <>
-          <g key={`row-${index}`}>
-            {row.map((line, index) => (
-              <line
-                key={index}
-                stroke={line.stroke}
-                strokeWidth={line.strokeWidth}
-                opacity={line.opacity}
-                x1={line.x1}
-                x2={line.x2}
-                y1={line.y1}
-                y2={line.y2}
-              />
-            ))}
-          </g>
-          {slantRows.map((slantRow, index) => (
-            <g key={`slant-${index}`}>
-              {slantRow.map((slant, index) => (
-                <line
-                  key={index}
-                  stroke={slant.stroke}
-                  strokeWidth={slant.strokeWidth}
-                  opacity={slant.opacity}
-                  x1={slant.x1}
-                  x2={slant.x2}
-                  y1={slant.y1}
-                  y2={slant.y2}
-                />
-              ))}
-            </g>
-          ))}
-        </>
+      {lineRows.map((line, index) => (
+        <line
+          key={`${line.row}-${index}`}
+          stroke={line.stroke}
+          strokeWidth={line.strokeWidth}
+          opacity={line.opacity}
+          x1={line.x1}
+          x2={line.x2}
+          y1={line.y1}
+          y2={line.y2}
+        />
+      ))}
+      {slantRows.map((slant, index) => (
+        <line
+          key={`${slant.row}-${index}`}
+          stroke={slant.stroke}
+          strokeWidth={slant.strokeWidth}
+          opacity={slant.opacity}
+          x1={slant.x1}
+          x2={slant.x2}
+          y1={slant.y1}
+          y2={slant.y2}
+        />
       ))}
     </>
   )
