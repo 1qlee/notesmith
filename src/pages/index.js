@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Book, HandWaving, File, FrameCorners, Cards, Spiral, ArrowDownLeft } from "phosphor-react"
+import { Book, Star, File, FrameCorners, Cards, Spiral, ArrowDownLeft } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import DotDeco from "../assets/dot-deco.svg"
@@ -22,6 +22,7 @@ import Seo from "../components/layout/Seo"
 import Tag from "../components/ui/Tag"
 import CircledText from "../components/CircledText"
 import Book3d from "../components/index/Book3d"
+import Progress from "../components/ui/Progress"
 import PageCarousel from "../components/index/PageCarousel"
 import SpineText from "../components/index/SpineText"
 
@@ -120,10 +121,10 @@ const IndexPage = ({ data }) => {
                       smallfontsize="0.8rem"
                       style={{ position: 'relative', zIndex: "3" }}
                       margin="0 0 2rem"
+                      h1margin="0 0 2rem"
                     >
                       <h1>Design <CircledText text="custom" /> notebooks</h1>
                       <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
-                      <RegisterForm id="1" />
                     </Content>
                     <hr />
                     <Content
@@ -133,10 +134,10 @@ const IndexPage = ({ data }) => {
                       paragraphmarginbottom="1rem"
                       margin="2rem 0 0"
                     >
-                      <h3>Win a free notebook</h3>
+                      <h3>Win a free notebook!</h3>
                       <p>Follow our Kickstarter to enter the raffle for a free notebook! Simply click the button below and then sign up to be notified of our launch.</p>
                       <a
-                        href="www.kickstarter.com"
+                        href="https://www.kickstarter.com"
                       >
                         <Button
                           color={colors.green.nineHundred}
@@ -342,7 +343,7 @@ const IndexPage = ({ data }) => {
                   </Cell>
                   <Cell>
                     <Content
-                      h2margin="0 0 1.5rem 0"
+                      h2margin="0 0 2rem 0"
                       h2fontsize="2.5rem"
                       h2fontweight="400"
                       h5fontsize="0.75rem"
@@ -439,6 +440,8 @@ const IndexPage = ({ data }) => {
                         onChange={e => setPageData({
                           ...pageData,
                           thickness: parseFloat(e.target.value),
+                          radius: parseFloat(e.target.value),
+                          size: parseFloat(e.target.value),
                         })}
                         width="100%"
                       />
@@ -466,48 +469,53 @@ const IndexPage = ({ data }) => {
                           ...pageData,
                           spacing: e.target.value,
                           groupSpacing: e.target.value,
+                          hexagonRadius: e.target.value,
                         })}
                         width="100%"
                       />
                     </Flexbox>
-                    <Button
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      padding="1rem"
-                      width="100%"
-                      margin="1rem 0"
-                      onClick={() => setPageData({
-                        alignmentHorizontal: "center",
-                        alignmentVertical: "top",
-                        ascSpacing: 5,
-                        dscSpacing: 5,
-                        xHeight: 5,
-                        slantSpacing: 5,
-                        slantAngle: 55,
-                        slants: 21,
-                        angle: 30,
-                        columns: 27,
-                        radius: 0.1,
-                        groupSpacing: 5,
-                        hexagonRadius: 1,
-                        lineWidth: 100,
-                        marginBottom: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        marginTop: 0,
-                        pageWidth: 366,
-                        pageHeight: 607,
-                        opacity: 1,
-                        rows: 42,
-                        show: false,
-                        spacing: 5,
-                        template: pageData.template,
-                        thickness: 0.088,
-                        size: 1,
-                      })}
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
                     >
-                      Reset layout
-                    </Button>
+                      <Button
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={`1px solid ${colors.gray.nineHundred}`}
+                        padding="1rem"
+                        margin="0 1rem 0 0"
+                        width="50%"
+                        onClick={() => setPageData({
+                          ...pageData,
+                          template: "",
+                        })}
+                      >
+                        Hide layout
+                      </Button>
+                      <Button
+                        backgroundcolor={colors.gray.nineHundred}
+                        color={colors.gray.oneHundred}
+                        border={`1px solid ${colors.gray.nineHundred}`}
+                        padding="1rem"
+                        width="50%"
+                        margin="1rem 0"
+                        onClick={() => setPageData({
+                          ...pageData,
+                          slants: 21,
+                          columns: 27,
+                          radius: 0.1,
+                          groupSpacing: 5,
+                          hexagonRadius: 1,
+                          lineWidth: 100,
+                          opacity: 1,
+                          rows: pageData.template === "seyes" ? 97 : 42,
+                          thickness: 0.088,
+                          size: 1,
+                        })}
+                      >
+                        Reset layout
+                      </Button>
+                    </Flexbox>
                     <hr />
                     <Content
                       margin="1rem 0 0">
@@ -523,52 +531,184 @@ const IndexPage = ({ data }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
-                <StaticImage
-                  src="../images/index-3.jpg"
-                  alt="Ink on paper"
-                  placeholder="blurred"
-                  quality={100}
-                />
-                <div
-                  style={{position:'relative',top:'0',left:'0'}}
+                <Grid
+                  columns="450px 1fr"
+                  rows="minmax(45px, auto)"
+                  columnGap={spacing.large}
                 >
-                  <Content
-                    margin="0 0 2rem 0"
-                    h2margin="0 0 1.5rem 0"
-                    h4color={colors.link.normal}
-                    h4fontweight="400"
-                    h2fontweight="400"
-                    h2fontsize="2.5rem"
-                    paragraphfontsize="1.2rem"
-                    maxwidth={widths.content.index}
-                  >
-                    <h4>High quality. Fountain pen friendly.</h4>
-                    <h2>{chapterData.chapterThree.title}</h2>
-                    <p></p>
-                    <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
-                    <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
-                    <Notification
-                      backgroundcolor={colors.paper.cream}
-                      color={colors.primary.sevenHundred}
-                      bordercolor='transparent'
+                  <Cell>
+                    <Content
+                      paragraphfontsize="1.2rem"
+                      margin="0 0 2rem 0"
+                      h2fontweight="400"
+                      h2fontsize="2.5rem"
+                      h2margin="0 0 2rem 0"
+                    >
+                      <h2>Fountain pen friendly, high quality paper</h2>
+                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
+                    </Content>
+                    <Flexbox
+                      boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
+                      border={`1px solid ${colors.gray.nineHundred}`}
+                      margin="0 0 2rem"
                     >
                       <Flexbox
                         flex="flex"
                         alignitems="center"
+                        justifycontent="space-between"
+                        padding="1rem"
+                        bordercolor={colors.gray.nineHundred}
+                        className="has-border-bottom"
                       >
-                        <Icon>
-                          <HandWaving color={colors.primary.sevenHundred} size="1.5rem" />
-                        </Icon>
-                        <Content
-                          paragraphcolor={colors.primary.sevenHundred}
-                          paragraphfontsize="1rem"
+                        <StyledLabel
+                          margin="0"
+                          width="100px"
                         >
-                          <p>We are working on discovering additional paper options.</p>
-                        </Content>
+                          Bleeding
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={93}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>4.7</span>
+                        </Tag>
                       </Flexbox>
-                    </Notification>
-                  </Content>
-                </div>
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="space-between"
+                        padding="1rem"
+                        bordercolor={colors.gray.nineHundred}
+                        className="has-border-bottom"
+                      >
+                        <StyledLabel
+                          margin="0"
+                          width="100px"
+                        >
+                          Feathering
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={90}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>4.5</span>
+                        </Tag>
+                      </Flexbox>
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="space-between"
+                        padding="1rem"
+                        bordercolor={colors.gray.nineHundred}
+                        className="has-border-bottom"
+                      >
+                        <StyledLabel
+                          margin="0"
+                          width="100px"
+                        >
+                          Ghosting
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={75}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>3.8</span>
+                        </Tag>
+                      </Flexbox>
+                    </Flexbox>
+                    <hr />
+                    <Content
+                      margin="1rem 0 0"
+                    >
+                      <small>Results are from a survey conducted on 100 early test users.</small>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <Grid
+                      columns="repeat(2, 1fr)"
+                      rows="repeat(2, 1fr)"
+                      rowGap={spacing.normal}
+                      columnGap={spacing.normal}
+                    >
+                      <Cell
+                        width={1}
+                        height={1}
+                      >
+                        <StaticImage
+                          src="../images/index/ink-on-paper-2.jpg"
+                          alt="Ink on paper"
+                          placeholder="blurred"
+                          quality={100}
+                        />
+                      </Cell>
+                      <Cell
+                        width={1}
+                        height={1}
+                        top={2}
+                      >
+                        <StaticImage
+                          src="../images/index/ink-on-paper-3.jpg"
+                          alt="Ink on paper"
+                          placeholder="blurred"
+                          quality={100}
+                        />
+                      </Cell>
+                      <Cell
+                        width={1}
+                        height={3}
+                      >
+                        <StaticImage
+                          src="../images/index/ink-on-paper-vertical.jpg"
+                          alt="Ink on paper"
+                          placeholder="blurred"
+                          quality={100}
+                        />
+                      </Cell>
+                    </Grid>
+                 </Cell>
+                </Grid>
               </SectionContent>
             </LayoutContainer>
           </Container>
@@ -579,7 +719,7 @@ const IndexPage = ({ data }) => {
               <SectionContent>
               <Content
                 margin="0 0 2rem 0"
-                h2margin="0 0 1.5rem 0"
+                h2margin="0 0 2rem 0"
                 h4color={colors.link.normal}
                 h4fontweight="400"
                 h2fontweight="400"
