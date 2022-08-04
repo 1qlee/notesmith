@@ -118,7 +118,7 @@ const widths = {
   desktop: "1440px",
   widescreen: "2560px",
   content: {
-    index: "400px"
+    index: "440px"
   },
   breakpoint: {
     index: "936px"

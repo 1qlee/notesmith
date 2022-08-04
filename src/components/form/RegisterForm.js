@@ -84,7 +84,6 @@ function RegisterForm(props) {
       onSubmit={e => sendgridSignUp(e)}
     >
       <Flexbox
-        margin="2rem 0 0"
         alignitems="flex-end"
         flex="flex"
       >
@@ -92,11 +91,6 @@ function RegisterForm(props) {
           width="100%"
           className="is-vertical"
         >
-          <StyledLabel
-            htmlFor="register-form-input"
-          >
-            Join the mailing list
-          </StyledLabel>
           <StyledInput
             onFocus={() => setEmailError({
                     msg: "",

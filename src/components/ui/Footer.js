@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors, spacing } from "../../styles/variables"
 
@@ -35,7 +36,11 @@ const Footer = () => {
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
                   >
-                    <Logo color={colors.gray.oneHundred} />
+                    <Link
+                      to="/"
+                    >
+                     <Logo color={colors.gray.oneHundred} />
+                    </Link>
                     <p>
                       © {getDate()} Notesmith LLC. All rights reserved.
                     </p>

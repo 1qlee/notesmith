@@ -282,7 +282,8 @@ function RangeInput({
   const inputRef = useRef(null)
   
   useEffect(() => {
-    const currentPercent = (value - min) * 100 / (max - min) + "% 100%"
+    const currentPercent = Math.abs((value - min) * 100 / (max - min)) + "% 100%"
+    console.log(currentPercent)
     inputRef.current.style.backgroundSize = currentPercent
   }, [value])
 

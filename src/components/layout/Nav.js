@@ -3,19 +3,22 @@ import PropTypes from "prop-types"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
-import { ShoppingBag } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
 
-import Button from "../Button"
 import TextLink from "../TextLink"
-import Icon from "../Icon"
 import Logo from "../Logo"
 
 const StyledNav = styled.nav`
   background-color: ${colors.white};
   max-width: 1440px;
   margin: 0 auto;
+  @media only screen and (max-width: 1479px) {
+    margin: 0 1rem;
+  }
+  @media only screen and (max-width: 600px) {
+    margin: 0 2rem;
+  }
 `
 
 const NavSection = styled.div`
@@ -48,37 +51,6 @@ const HorizontalNav = styled.div`
   width: 100%;
   @media only screen and (max-width: ${widths.tablet}) {
     padding-left: 0;
-  }
-`
-
-const ChapterNumberHeader = styled.h2`
-  margin: 1rem 1rem 96px 1rem;
-  color: ${colors.primary.sixHundred};
-  @media only screen and (max-width: ${widths.tablet}) {
-    margin: 0 1rem 0;
-    font-size: 0.6rem;
-    padding: 0.25rem;
-  }
-`
-
-const ChapterNameHeader = styled.div`
-  color: ${colors.primary.sixHundred};
-  display: inline-block;
-  letter-spacing: 1px;
-  padding: 0.25rem;
-  position: relative;
-  text-transform: uppercase;
-  p {
-    color: ${props => props.color};
-    margin-bottom: 0;
-    font-weight: 700;
-    font-size: 0.8rem;
-    font-family: "Crimson Pro";
-  }
-  @media only screen and (max-width: ${widths.tablet}) {
-    p {
-      font-size: 0.6rem;
-    }
   }
 `
 

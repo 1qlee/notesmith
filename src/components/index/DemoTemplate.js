@@ -4,7 +4,6 @@ import styled from "styled-components"
 import Ruled from "../customize/templates/Ruled"
 import Dot from "../customize/templates/Dot"
 import Graph from "../customize/templates/Graph"
-import Blank from "../customize/templates/Blank"
 import Hexagon from "../customize/templates/Hexagon"
 import Isometric from "../customize/templates/Isometric"
 import Seyes from "../customize/templates/Seyes"
@@ -15,9 +14,11 @@ import Calligraphy from "../customize/templates/Calligraphy"
 
 const StyledDemoTemplate = styled.div`
   position: absolute;
-  top: 12px;
-  left: 58px;
+  top: 1.9%;
+  left: 13.2%;
   z-index: 5;
+  width: 84%;
+  height: 96%;
 `
 
 function DemoTemplate({
@@ -30,13 +31,13 @@ function DemoTemplate({
     <StyledDemoTemplate>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={pageData.pageHeight}
-        width={pageData.pageWidth}
+        height="100%"
+        width="100%"
         x="0"
         y="0"
       >
         {pageData.template === "blank" && (
-          <></>
+          null
         )}
         {pageData.template === "ruled" && (
           <Ruled
@@ -88,7 +89,7 @@ function DemoTemplate({
             setPageData={setPageData}
           />
         )}
-        {pageData.template === "crossgrid" && (
+        {pageData.template === "cross" && (
           <CrossGrid
             dashedLineData={dashedLineData}
             pageData={pageData}

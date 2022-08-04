@@ -159,7 +159,7 @@ function Template({
               setPageData={setPageData}
             />
           )}
-          {pageData.template === "crossgrid" && (
+          {pageData.template === "cross" && (
             <CrossGrid
               dashedLineData={dashedLineData}
               currentPageSide={currentPageSide}
@@ -253,7 +253,7 @@ function Template({
             setPageData={setPageData}
           />
         )}
-        {pageData.template === "crossgrid" && (
+        {pageData.template === "cross" && (
           <CrossGrid
             currentPageSide={currentPageSide}
             pageData={pageData}

@@ -550,9 +550,8 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s;
 }
 /* Make css-grid cells on the index page to stretch fullwidth in smaller viewport */
-@media only screen and (max-width: 936px) {
-  .is-fullwidth-mobile {
-    grid-column-end: span 3 !important;
+@media only screen and (max-width: 960px) {
+  .is-responsive-960 {
   }
 }
 .window-grid::-webkit-scrollbar {

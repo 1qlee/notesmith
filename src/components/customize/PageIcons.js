@@ -923,7 +923,7 @@ function CrossGridPageIcon({
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
     show: isProductPage ? true : false,
-    template: "crossgrid",
+    template: "cross",
     opacity: 1,
     spacing: 5,
     rows: 35,
@@ -1123,7 +1123,7 @@ function PageIcons({
         data={data}
         dataTip="Cross grid"
         iconMargin={iconMargin}
-        isActive={checkActiveVar === "crossgrid"}
+        isActive={checkActiveVar === "cross"}
         isProductPage={isProductPage}
         leftPageData={leftPageData}
         rightPageData={rightPageData}

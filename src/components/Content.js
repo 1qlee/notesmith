@@ -10,6 +10,7 @@ const Content = styled.div`
   margin: ${props => props.margin};
   max-width: ${props => props.maxwidth};
   padding: ${props => props.padding ? props.padding : "0"};
+  position: relative;
   width: ${props => props.width};
   @media only screen and (max-width: ${widths.breakpoint.index}) {
     max-width: none;
@@ -32,7 +33,7 @@ const Content = styled.div`
     margin: ${props => props.h1margin};
   }
   h2 {
-    font-size: ${props => props.h2fontsize || "2rem"};
+    font-size: ${props => props.h2fontsize || "3rem"};
     color: ${props => props.h2color || colors.gray.nineHundred};
     font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};

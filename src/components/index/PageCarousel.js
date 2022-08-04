@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
+
 import Sweater from "../../assets/peeps/sweater-paper.svg"
 import Cyclops from "../../assets/peeps/cyclops-paper.svg"
 import Hoodie from "../../assets/peeps/hoodie-paper.svg"
@@ -37,6 +38,17 @@ const Profile = styled.div`
   bottom: 0;
   left: -150px;
   z-index: 2;
+  @media only screen and (max-width: 1000px) {
+    left: 50%;
+  }
+  @media only screen and (max-width: 600px) {
+    left: 8rem;
+    bottom: -2rem;
+    svg {
+      width: 150px;
+      height: 150px;
+    }
+  }
 `
 
 function PageCarousel() {

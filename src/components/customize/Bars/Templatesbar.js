@@ -304,7 +304,7 @@ function Templatesbar({
                     setPageData={setPageData}
                   />
                 )}
-                {pageData.template === "crossgrid" && (
+                {pageData.template === "cross" && (
                   <CrossGridControls
                     canvasPageSize={canvasPageSize}
                     maximumMarginHeight={maximumMarginHeight}

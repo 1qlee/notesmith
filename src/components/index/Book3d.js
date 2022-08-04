@@ -7,21 +7,7 @@ import { Flexbox } from "../layout/Flexbox"
 import ColorPicker from "../shop/ColorPicker"
 import DemoTemplate from "./DemoTemplate"
 
-const initAnimation = keyframes`
-  to {
-    transform: rotate3d(0,1,0,0);
-  }
-`
-
-const Pages = styled.div`
-  content: '';
-  height: 100%;
-  left: ${props => props.left || "34px"};
-  position: absolute;
-  top: 0;
-  transform: translateX(377px) rotate3d(0,1,0,90deg);
-  width: 46px;
-  background: linear-gradient(90deg,
+const gradient = `linear-gradient(90deg,
     ${colors.gray.oneHundred} 0%,
     ${colors.gray.threeHundred} 5%,
     ${colors.gray.oneHundred} 10%,
@@ -43,7 +29,40 @@ const Pages = styled.div`
     ${colors.gray.oneHundred} 90%,
     ${colors.gray.threeHundred} 95%,
     ${colors.gray.oneHundred} 100%
-  );
+  )`
+
+const initAnimation = keyframes`
+  to {
+    transform: rotate3d(0,1,0,0);
+  }
+`
+
+const LeftSpinePages = styled.div`
+  content: '';
+  height: 100%;
+  left: 8px;
+  position: absolute;
+  top: 0;
+  transform: rotate3d(0,1,0,90deg);
+  width: 46px;
+  background: ${gradient};
+  @media only screen and (max-width: 1548px) {
+    left: 0;
+  }
+`
+
+const RightSpinePages = styled.div`
+  content: '';
+  height: 100%;
+  left: 26px;
+  position: absolute;
+  top: 0;
+  transform: translateX(377px) rotate3d(0,1,0,90deg);
+  width: 46px;
+  background: ${gradient};
+  @media only screen and (max-width: 1548px) {
+    transform: translateX(276px) rotate3d(0,1,0,90deg);
+  }
 `
 
 const FrontFakeCover = styled.div`
@@ -97,10 +116,14 @@ const BackCover = styled.div`
 const Book3dWrapper = styled.div`
   margin: 0 auto;
   perspective: 2800px;
-  height: 628px;
-  width: 436px;
+  height: 615px;
+  width: 427px;
   &:hover {
     cursor: pointer;
+  }
+  @media only screen and (max-width: 1548px) {
+    height: 471px;
+    width: 327px;
   }
 `
 
@@ -172,7 +195,7 @@ function Book3d({
                   className="image"
                   src="../../images/index/blank-page.jpg"
                   alt="Notesmith logo image"
-                  placeholder="blurred"
+                  placeholder="tracedSVG"
                   quality={100}
                 />
               </>
@@ -181,18 +204,18 @@ function Book3d({
                 {coverColor === "white" && (
                   <StaticImage
                     className="image"
-                    src="../../images/index/front-cover-white.jpg"
+                    src="../../images/index/test.jpg"
                     alt="Notesmith logo image"
-                    placeholder="blurred"
+                    placeholder="tracedSVG"
                     quality={100}
                   />
                 )}
                 {coverColor === "black" && (
                   <StaticImage
                     className="image"
-                    src="../../images/index/front-cover-black.jpg"
+                    src="../../images/index/test-black.jpg"
                     alt="Notesmith logo image"
-                    placeholder="blurred"
+                    placeholder="tracedSVG"
                     quality={100}
                   />
                 )}
@@ -200,25 +223,25 @@ function Book3d({
             )}
           </FrontCover>
           <FrontFakeCover className="front-cover" />
-          <Pages left="-366px" />
-          <Pages />
+          <LeftSpinePages />
+          <RightSpinePages />
           <BackFakeCover className="back-cover" />
           <BackCover>
             {coverColor === "white" && (
               <StaticImage
                 className="image"
-                src="../../images/index/back-cover-white.jpg"
+                src="../../images/index/test-back.jpg"
                 alt="Notesmith logo image"
-                placeholder="blurred"
+                placeholder="tracedSVG"
                 quality={100}
               />
             )}
             {coverColor === "black" && (
               <StaticImage
                 className="image"
-                src="../../images/index/back-cover-black.jpg"
+                src="../../images/index/test-black-back.jpg"
                 alt="Notesmith logo image"
-                placeholder="blurred"
+                placeholder="tracedSVG"
                 quality={100}
               />
             )}

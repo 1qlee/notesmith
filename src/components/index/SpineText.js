@@ -3,6 +3,7 @@ import styled from "styled-components"
 
 const StyledSpineText = styled.div`
   font-size: ${props => props.fontsize};
+  font-weight: ${props => props.fontweight};
   display: inline-block;
   writing-mode: vertical-lr;
   transform: rotate(180deg);
