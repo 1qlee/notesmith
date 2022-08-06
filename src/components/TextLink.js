@@ -14,13 +14,13 @@ const TextLink = styled.a`
   position: relative;
   width: ${props => props.width};
   background:  no-repeat 0 100%;
-  background-image: linear-gradient(rgba(33,33,33,0.95), rgba(33,33,33,0.95));
-  background-size: 0% 1px;
+  background-image: linear-gradient(${colors.yellow.threeHundred}, ${colors.yellow.oneHundred});
+  background-size: 0% 40%;
   transition: background-size 0.2s;
   z-index: 5;
   &:hover {
     color: ${props => props.hovercolor || colors.gray.nineHundred};
-    background-size: 100% 1px;
+    background-size: 100% 40%;
     &::before {
       width: 100%;
     }

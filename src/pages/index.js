@@ -498,7 +498,7 @@ const IndexPage = ({ data }) => {
                       h2margin="0 0 2rem 0"
                     >
                       <h2>Fountain pen friendly, high quality paper</h2>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
+                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
                     </Content>
                     <Flexbox
                       boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}

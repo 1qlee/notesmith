@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
 import { colors } from "../../styles/variables"
@@ -44,7 +44,7 @@ const LeftSpinePages = styled.div`
   position: absolute;
   top: 0;
   transform: rotate3d(0,1,0,90deg);
-  width: 46px;
+  width: 36px;
   background: ${gradient};
   @media only screen and (max-width: 1548px) {
     left: 0;
@@ -54,11 +54,11 @@ const LeftSpinePages = styled.div`
 const RightSpinePages = styled.div`
   content: '';
   height: 100%;
-  left: 26px;
+  left: 31px;
   position: absolute;
   top: 0;
   transform: translateX(377px) rotate3d(0,1,0,90deg);
-  width: 46px;
+  width: 36px;
   background: ${gradient};
   @media only screen and (max-width: 1548px) {
     transform: translateX(276px) rotate3d(0,1,0,90deg);
@@ -72,7 +72,7 @@ const FrontFakeCover = styled.div`
   left: 30px;
   position: absolute;
   top: 0;
-  transform: translateZ(25px);
+  transform: translateZ(20px);
   transition: box-shadow 0.4s;
   width: calc(100% - 30px);
   z-index: 1;
@@ -86,7 +86,7 @@ const BackFakeCover = styled.div`
   left: 32px;
   position: absolute;
   top: 0;
-  transform: translateZ(-25px);
+  transform: translateZ(-20px);
   transition: box-shadow 0.4s;
   width: calc(100% - 32px);
   z-index: 1;
@@ -98,7 +98,7 @@ const FrontCover = styled.div`
   top: 0;
   left: 0;
   z-index: 3;
-  transform: translateZ(25px);
+  transform: translateZ(20px);
   transform-style: preserve-3d;
 `
 
@@ -109,7 +109,7 @@ const BackCover = styled.div`
   left: 0;
   content: "";
   z-index: 2;
-  transform: translateZ(-25px) rotateY(180deg);
+  transform: translateZ(-20px) rotateY(180deg);
   transform-style: preserve-3d;
 `
 
@@ -155,6 +155,7 @@ function Book3d({
   pageData,
   setPageData,
 }) {
+  const book3dRef = useRef(null)
   const [hovered, setHovered] = useState(false)
   const [showBackCover, setShowBackCover] = useState(false)
   const [coverColor, setCoverColor] = useState("white")
@@ -171,12 +172,17 @@ function Book3d({
     },
   ]
 
+  useEffect(() => {
+    console.log(book3dRef.current.getBoundingClientRect().width)
+  }, [book3dRef.current.getBoundingClientRect().width])
+
   return (
     <>
       <Book3dWrapper
         onMouseOver={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={() => setShowBackCover(!showBackCover)}
+        ref={book3dRef}
       >
         <StyledBook3d
           hovered={hovered}
