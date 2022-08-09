@@ -28,6 +28,7 @@ import Reviews from "../components/index/Reviews"
 import Seo from "../components/layout/Seo"
 import SpineText from "../components/index/SpineText"
 import Tag from "../components/ui/Tag"
+import { BoxList, BoxListItem } from "../components/index/BoxList"
 
 const IndexPage = ({ data }) => {
   const [pageData, setPageData] = useState({
@@ -153,7 +154,11 @@ const IndexPage = ({ data }) => {
                     flexwrap="wrap"
                     justifyContent="flex-end"
                   >
-                    <PageCarousel />
+                    <StaticImage 
+                      src="../images/index/shit.jpg"
+                      quality={100}
+                      loading="eager"
+                    />
                   </Flexbox>
                 </Grid>
               </SectionContent>
@@ -170,36 +175,49 @@ const IndexPage = ({ data }) => {
                   rowGap={spacing.large}
                   className="responsive-book-columns"
                 >
-                  <Cell>
-                    <Content
-                      h2margin="0 0 2rem 0"
-                      h2fontsize="3rem"
-                      h5fontsize="0.75rem"
-                      paragraphfontsize="1.2rem"
-                      paragraphmarginbottom="1rem"
-                      maxwidth={widths.content.index}
-                      margin="0 0 2rem"
-                    >
-                      <h2>Our signature custom notebook</h2>
-                      <p>Notesmith gives you the power to <i>customize every single page</i> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
-                      <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
-                    </Content>
-                    <Button
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      border={`1px solid ${colors.gray.nineHundred}`}
-                      padding="1rem"
-                      as={Link}
-                      to="/products/notebooks/wired-notebook-a5/white"
-                    >
-                      <span>Create your notebook now</span>
-                      <Icon
-                        margin="0 0 0 0.25rem"
+                  <Grid
+                    columns="80px 1fr"
+                    columnGap={spacing.large}
+                  >
+                    <Cell>
+                      <SpineText
+                        fontsize="2rem"
+                        fontweight="700"
                       >
-                        <ArrowRight size="1.25rem" color={colors.gray.oneHundred} />
-                      </Icon>
-                    </Button>
-                  </Cell>
+                        Product
+                      </SpineText>
+                    </Cell>
+                    <Cell>
+                      <Content
+                        h2margin="0 0 2rem 0"
+                        h2fontsize="3rem"
+                        h2fontweight="400"
+                        h5fontsize="0.75rem"
+                        paragraphfontsize="1.2rem"
+                        paragraphmarginbottom="1rem"
+                        maxwidth={widths.content.index}
+                        margin="0 0 2rem"
+                      >
+                        <h2>Our signature custom notebook</h2>
+                        <p>Notesmith gives you the power to <Highlight><i>customize every single page</i></Highlight> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                      </Content>
+                      <Button
+                        backgroundcolor={colors.gray.nineHundred}
+                        color={colors.gray.oneHundred}
+                        border={`1px solid ${colors.gray.nineHundred}`}
+                        padding="1rem"
+                        as={Link}
+                        to="/products/notebooks/wired-notebook-a5/white"
+                      >
+                        <span>Create your notebook now</span>
+                        <Icon
+                          margin="0 0 0 0.25rem"
+                        >
+                          <ArrowRight size="1.25rem" color={colors.gray.oneHundred} />
+                        </Icon>
+                      </Button>
+                    </Cell>
+                  </Grid>
                   <Cell>
                     <Book3d 
                       borderData={borderData}
@@ -310,37 +328,50 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr 2fr"
+                  columns="2fr 1fr"
                   columnGap={spacing.large}
                 >
                   <Cell>
-                    <Flexbox
-                      flex="flex"
-                      justifycontent="space-between"
+                    <Grid
+                      columns="1fr 400px"
+                      columnGap={spacing.large}
                     >
-                      <SpineText
-                        fontsize="3rem"
-                        fontweight="700"
+                      <Grid
+                        columns="80px 1fr"
+                        columnGap={spacing.large}
                       >
-                        Specifications
-                      </SpineText>
-                      <Flexbox
-                        width="300px"
-                        margin="0 0 0 2rem"
-                      >
-                        <Flexbox
-                          boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
-                          border={`1px solid ${colors.gray.nineHundred}`}
-                          margin="0 0 2rem"
-                        >
+                        <Cell>
+                          <SpineText
+                            fontsize="2rem"
+                            fontweight="700"
+                          >
+                            Specifications
+                          </SpineText>
+                        </Cell>
+                        <Cell>
                           <Flexbox
                             flex="flex"
-                            alignitems="center"
-                            margin="0 0 -1px"
-                            padding="0 1rem"
-                            bordercolor={colors.gray.nineHundred}
-                            className="has-border-bottom"
-                            height="101px"
+                            justifycontent="space-between"
+                          >
+                            <Content
+                              h2fontweight="400"
+                              h2margin="0 0 2rem"
+                              paragraphfontsize="1.2rem"
+                              paragraphmarginbottom="1rem"
+                            >
+                              <h2>Crafted with high quality materials</h2>
+                              <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
+                              <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
+                            </Content>
+                          </Flexbox>
+                        </Cell>
+                      </Grid>
+                      <Cell>
+                        <BoxList
+                          margin="0 0 2rem"
+                        >
+                          <BoxListItem
+                            height="103px"
                           >
                             <Icon
                               padding="0.5rem"
@@ -357,15 +388,9 @@ const IndexPage = ({ data }) => {
                               <h5>Pages</h5>
                               <p>70 sheets total (140 pages)</p>
                             </Content>
-                          </Flexbox>
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 -1px"
-                            padding="0 1rem"
-                            bordercolor={colors.gray.nineHundred}
-                            className="has-border-bottom"
-                            height="101px"
+                          </BoxListItem>
+                          <BoxListItem
+                            height="103px"
                           >
                             <Icon
                               padding="0.5rem"
@@ -382,15 +407,9 @@ const IndexPage = ({ data }) => {
                               <h5>Size</h5>
                               <p>5.5" x 8.5" (A5)</p>
                             </Content>
-                          </Flexbox>
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 -1px"
-                            padding="0 1rem"
-                            bordercolor={colors.gray.nineHundred}
-                            className="has-border-bottom"
-                            height="101px"
+                          </BoxListItem>
+                          <BoxListItem
+                            height="103px"
                           >
                             <Icon
                               padding="0.5rem"
@@ -407,15 +426,9 @@ const IndexPage = ({ data }) => {
                               <h5>Cover</h5>
                               <p>Sand matte laminated, extra thick</p>
                             </Content>
-                          </Flexbox>
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 -1px"
-                            padding="0 1rem"
-                            bordercolor={colors.gray.nineHundred}
-                            className="has-border-bottom"
-                            height="101px"
+                          </BoxListItem>
+                          <BoxListItem
+                            height="103px"
                           >
                             <Icon
                               padding="0.5rem"
@@ -432,15 +445,9 @@ const IndexPage = ({ data }) => {
                               <h5>Paper</h5>
                               <p>70lb ultra-smooth, bright white</p>
                             </Content>
-                          </Flexbox>
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 -1px"
-                            padding="0 1rem"
-                            bordercolor={colors.gray.nineHundred}
-                            className="has-border-bottom"
-                            height="101px"
+                          </BoxListItem>
+                          <BoxListItem
+                            height="103px"
                           >
                             <Icon
                               padding="0.5rem"
@@ -457,23 +464,24 @@ const IndexPage = ({ data }) => {
                               <h5>Binding</h5>
                               <p>Gold colored wire-o</p>
                             </Content>
-                          </Flexbox>
-                        </Flexbox>
+                          </BoxListItem>
+                        </BoxList>
                         <hr />
                         <Content
                           margin="1rem 0 0"
                         >
                           <small>Since we are still in the early stages of development, all specifications may be subject to change.</small>
                         </Content>
-                      </Flexbox>
-                    </Flexbox>
+                      </Cell>
+                    </Grid>
                   </Cell>
                   <Cell>
-                    <StaticImage 
-                      src="../images/index/notebook-deconstructed-cork-2.jpg"
-                      alt="Notebook deconstructed on cork background"
+                    <StaticImage
+                      src="../images/index/shit-2.jpg"
+                      alt="Notebook deconstructed"
                       placeholder="tracedSVG"
                       loading="eager"
+                      height={680}
                       quality={100}
                     />
                   </Cell>
@@ -487,183 +495,181 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="450px 1fr"
-                  rows="minmax(45px, auto)"
+                  columns="1fr 2fr"
                   columnGap={spacing.large}
                 >
                   <Cell>
-                    <Content
-                      paragraphfontsize="1.2rem"
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 2rem 0"
-                    >
-                      <h2>Fountain pen friendly, high quality paper</h2>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
-                    </Content>
-                    <Flexbox
-                      boxshadow={`4px 4px 0 ${colors.gray.nineHundred}`}
-                      border={`1px solid ${colors.gray.nineHundred}`}
-                      margin="0 0 2rem"
-                    >
-                      <Flexbox
-                        flex="flex"
-                        alignitems="center"
-                        justifycontent="space-between"
-                        padding="1rem"
-                        bordercolor={colors.gray.nineHundred}
-                        className="has-border-bottom"
-                      >
-                        <StyledLabel
-                          margin="0"
-                          width="100px"
-                        >
-                          Bleeding
-                        </StyledLabel>
-                        <Progress
-                          barcolor={colors.gray.nineHundred}
-                          completion={93}
-                          margin="0"
-                          wrappercolor={colors.gray.threeHundred}
-                        />
-                        <Tag
-                          backgroundcolor={colors.gray.nineHundred}
-                          color={colors.gray.oneHundred}
-                          padding="0.25rem"
-                          fontfamily={fonts.secondary}
-                          margin="0 0 0 0.5rem"
-                        >
-                          <Icon
-                            margin="0 1px 1px 0"
-                          >
-                            <Star weight="fill" color={colors.gray.oneHundred} />
-                          </Icon>
-                          <span>4.7</span>
-                        </Tag>
-                      </Flexbox>
-                      <Flexbox
-                        flex="flex"
-                        alignitems="center"
-                        justifycontent="space-between"
-                        padding="1rem"
-                        bordercolor={colors.gray.nineHundred}
-                        className="has-border-bottom"
-                      >
-                        <StyledLabel
-                          margin="0"
-                          width="100px"
-                        >
-                          Feathering
-                        </StyledLabel>
-                        <Progress
-                          barcolor={colors.gray.nineHundred}
-                          completion={90}
-                          margin="0"
-                          wrappercolor={colors.gray.threeHundred}
-                        />
-                        <Tag
-                          backgroundcolor={colors.gray.nineHundred}
-                          color={colors.gray.oneHundred}
-                          padding="0.25rem"
-                          fontfamily={fonts.secondary}
-                          margin="0 0 0 0.5rem"
-                        >
-                          <Icon
-                            margin="0 1px 1px 0"
-                          >
-                            <Star weight="fill" color={colors.gray.oneHundred} />
-                          </Icon>
-                          <span>4.5</span>
-                        </Tag>
-                      </Flexbox>
-                      <Flexbox
-                        flex="flex"
-                        alignitems="center"
-                        justifycontent="space-between"
-                        padding="1rem"
-                        bordercolor={colors.gray.nineHundred}
-                        className="has-border-bottom"
-                      >
-                        <StyledLabel
-                          margin="0"
-                          width="100px"
-                        >
-                          Ghosting
-                        </StyledLabel>
-                        <Progress
-                          barcolor={colors.gray.nineHundred}
-                          completion={75}
-                          margin="0"
-                          wrappercolor={colors.gray.threeHundred}
-                        />
-                        <Tag
-                          backgroundcolor={colors.gray.nineHundred}
-                          color={colors.gray.oneHundred}
-                          padding="0.25rem"
-                          fontfamily={fonts.secondary}
-                          margin="0 0 0 0.5rem"
-                        >
-                          <Icon
-                            margin="0 1px 1px 0"
-                          >
-                            <Star weight="fill" color={colors.gray.oneHundred} />
-                          </Icon>
-                          <span>3.8</span>
-                        </Tag>
-                      </Flexbox>
-                    </Flexbox>
-                    <hr />
-                    <Content
-                      margin="1rem 0 0"
-                    >
-                      <small>Results are from a survey conducted on early test users.</small>
-                    </Content>
-                  </Cell>
-                  <Cell>
                     <Grid
-                      columns="repeat(2, 1fr)"
-                      rows="repeat(2, 1fr)"
-                      rowGap={spacing.normal}
-                      columnGap={spacing.normal}
+                      columns="80px 1fr"
+                      columnGap={spacing.large}
                     >
-                      <Cell
-                        width={1}
-                        height={1}
-                      >
-                        <StaticImage
-                          src="../images/index/ink-on-paper-2.jpg"
-                          alt="Ink on paper"
-                          placeholder="tracedSVG"
-                          loading="eager"
-                          quality={100}
-                        />
+                      <Cell>
+                        <SpineText
+                          fontsize="2rem"
+                          fontweight="700"
+                        >
+                          Paper
+                        </SpineText>
                       </Cell>
-                      <Cell
-                        width={1}
-                        height={1}
-                        top={2}
-                      >
-                        <StaticImage
-                          src="../images/index/ink-on-paper-3.jpg"
-                          alt="Ink on paper"
-                          placeholder="tracedSVG"
-                          loading="eager"
-                          quality={100}
-                        />
-                        <small>Ink shown is Iroshizuku take-sumi by Pilot.</small>
-                      </Cell>
-                      <Cell
-                        width={1}
-                        height={3}
-                      >
-                        <StaticImage
-                          src="../images/index/ink-on-paper-vertical.jpg"
-                          alt="Ink on paper"
-                          placeholder="tracedSVG"
-                          quality={100}
-                        />
+                      <Cell>
+                        <Content
+                          paragraphfontsize="1.2rem"
+                          margin="0 0 2rem 0"
+                          h2margin="0 0 2rem 0"
+                        >
+                          <h2>Fountain pen friendly paper</h2>
+                          <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
+                        </Content>
+                        <BoxList
+                          margin="0 0 2rem"
+                        >
+                          <BoxListItem
+                            padding="1rem"
+                            justifycontent="space-between"
+                          >
+                            <StyledLabel
+                              margin="0"
+                              width="100px"
+                            >
+                              Bleeding
+                            </StyledLabel>
+                            <Progress
+                              barcolor={colors.gray.nineHundred}
+                              completion={93}
+                              margin="0"
+                              wrappercolor={colors.gray.threeHundred}
+                            />
+                            <Tag
+                              backgroundcolor={colors.gray.nineHundred}
+                              color={colors.gray.oneHundred}
+                              padding="0.25rem"
+                              fontfamily={fonts.secondary}
+                              margin="0 0 0 0.5rem"
+                            >
+                              <Icon
+                                margin="0 1px 1px 0"
+                              >
+                                <Star weight="fill" color={colors.gray.oneHundred} />
+                              </Icon>
+                              <span>4.7</span>
+                            </Tag>
+                          </BoxListItem>
+                          <BoxListItem
+                            padding="1rem"
+                            justifycontent="space-between"
+                          >
+                            <StyledLabel
+                              margin="0"
+                              width="112px"
+                            >
+                              Feathering
+                            </StyledLabel>
+                            <Progress
+                              barcolor={colors.gray.nineHundred}
+                              completion={90}
+                              margin="0"
+                              wrappercolor={colors.gray.threeHundred}
+                            />
+                            <Tag
+                              backgroundcolor={colors.gray.nineHundred}
+                              color={colors.gray.oneHundred}
+                              padding="0.25rem"
+                              fontfamily={fonts.secondary}
+                              margin="0 0 0 0.5rem"
+                            >
+                              <Icon
+                                margin="0 1px 1px 0"
+                              >
+                                <Star weight="fill" color={colors.gray.oneHundred} />
+                              </Icon>
+                              <span>4.5</span>
+                            </Tag>
+                          </BoxListItem>
+                          <BoxListItem
+                            padding="1rem"
+                            justifycontent="space-between"
+                          >
+                            <StyledLabel
+                              margin="0"
+                              width="100px"
+                            >
+                              Ghosting
+                            </StyledLabel>
+                            <Progress
+                              barcolor={colors.gray.nineHundred}
+                              completion={75}
+                              margin="0"
+                              wrappercolor={colors.gray.threeHundred}
+                            />
+                            <Tag
+                              backgroundcolor={colors.gray.nineHundred}
+                              color={colors.gray.oneHundred}
+                              padding="0.25rem"
+                              fontfamily={fonts.secondary}
+                              margin="0 0 0 0.5rem"
+                            >
+                              <Icon
+                                margin="0 1px 1px 0"
+                              >
+                                <Star weight="fill" color={colors.gray.oneHundred} />
+                              </Icon>
+                              <span>3.8</span>
+                            </Tag>
+                          </BoxListItem>
+                        </BoxList>
+                        <hr />
+                        <Content
+                          margin="1rem 0 0"
+                        >
+                          <small>Results are from a survey conducted on early test users.</small>
+                        </Content>
                       </Cell>
                     </Grid>
-                 </Cell>
+                  </Cell>
+                  <Grid
+                    columns="repeat(2, 1fr)"
+                    rows="repeat(2, 1fr)"
+                    rowGap={spacing.normal}
+                    columnGap={spacing.normal}
+                  >
+                    <Cell
+                      width={1}
+                      height={1}
+                    >
+                      <StaticImage
+                        src="../images/index/ink-on-paper-2.jpg"
+                        alt="Ink on paper"
+                        placeholder="tracedSVG"
+                        loading="eager"
+                        quality={100}
+                      />
+                    </Cell>
+                    <Cell
+                      width={1}
+                      height={1}
+                      top={2}
+                    >
+                      <StaticImage
+                        src="../images/index/ink-on-paper-3.jpg"
+                        alt="Ink on paper"
+                        placeholder="tracedSVG"
+                        loading="eager"
+                        quality={100}
+                      />
+                      <small>Ink shown is Iroshizuku take-sumi by Pilot.</small>
+                    </Cell>
+                    <Cell
+                      width={1}
+                      height={3}
+                    >
+                      <StaticImage
+                        src="../images/index/ink-on-paper-vertical.jpg"
+                        alt="Ink on paper"
+                        placeholder="tracedSVG"
+                        quality={100}
+                      />
+                    </Cell>
+                  </Grid>
                 </Grid>
               </SectionContent>
             </LayoutContainer>

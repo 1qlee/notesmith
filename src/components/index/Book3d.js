@@ -114,7 +114,6 @@ const BackCover = styled.div`
 `
 
 const Book3dWrapper = styled.div`
-  margin: 0 auto;
   perspective: 2800px;
   height: 615px;
   width: 427px;
@@ -174,7 +173,7 @@ function Book3d({
 
   useEffect(() => {
     console.log(book3dRef.current.getBoundingClientRect().width)
-  }, [book3dRef.current.getBoundingClientRect().width])
+  }, [book3dRef.current])
 
   return (
     <>
@@ -199,7 +198,7 @@ function Book3d({
                 />
                 <StaticImage
                   className="image"
-                  src="../../images/index/blank-page.jpg"
+                  src="../../images/index/testy-page.jpg"
                   alt="Notesmith logo image"
                   placeholder="tracedSVG"
                   quality={100}
@@ -210,7 +209,7 @@ function Book3d({
                 {coverColor === "white" && (
                   <StaticImage
                     className="image"
-                    src="../../images/index/test.jpg"
+                    src="../../images/index/testy.jpg"
                     alt="Notesmith logo image"
                     placeholder="tracedSVG"
                     quality={100}
@@ -236,7 +235,7 @@ function Book3d({
             {coverColor === "white" && (
               <StaticImage
                 className="image"
-                src="../../images/index/test-back.jpg"
+                src="../../images/index/testy-back.jpg"
                 alt="Notesmith logo image"
                 placeholder="tracedSVG"
                 quality={100}
@@ -258,7 +257,7 @@ function Book3d({
         flex="flex"
         alignitems="center"
         justifycontent="center"
-        margin="1rem 0 0"
+        margin="1.25rem 0 0"
         flexwrap="wrap"
       >
         <ColorPicker 
