@@ -1,10 +1,11 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { Book, Star, File, FrameCorners, Cards, Spiral, ArrowCircleDown, ArrowRight } from "phosphor-react"
+import { Star, ArrowCircleDown, ArrowRight } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import "../components/index/index.css"
 
+import { BoxList, StyledBoxList } from "../components/index/BoxList"
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
@@ -28,7 +29,6 @@ import Reviews from "../components/index/Reviews"
 import Seo from "../components/layout/Seo"
 import SpineText from "../components/index/SpineText"
 import Tag from "../components/ui/Tag"
-import { BoxList, BoxListItem } from "../components/index/BoxList"
 
 const IndexPage = ({ data }) => {
   const [pageData, setPageData] = useState({
@@ -349,123 +349,20 @@ const IndexPage = ({ data }) => {
                           </SpineText>
                         </Cell>
                         <Cell>
-                          <Flexbox
-                            flex="flex"
-                            justifycontent="space-between"
+                          <Content
+                            h2fontweight="400"
+                            h2margin="0 0 2rem"
+                            paragraphfontsize="1.2rem"
+                            paragraphmarginbottom="1rem"
                           >
-                            <Content
-                              h2fontweight="400"
-                              h2margin="0 0 2rem"
-                              paragraphfontsize="1.2rem"
-                              paragraphmarginbottom="1rem"
-                            >
-                              <h2>Crafted with high quality materials</h2>
-                              <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
-                              <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
-                            </Content>
-                          </Flexbox>
+                            <h2>Crafted with high quality materials</h2>
+                            <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
+                            <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
+                          </Content>
                         </Cell>
                       </Grid>
                       <Cell>
-                        <BoxList
-                          margin="0 0 2rem"
-                        >
-                          <BoxListItem
-                            height="103px"
-                          >
-                            <Icon
-                              padding="0.5rem"
-                              backgroundcolor={colors.gray.nineHundred}
-                              borderradius="100%"
-                            >
-                              <Cards size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-                            </Icon>
-                            <Content
-                              h5fontsize="0.875rem"
-                              h5margin="0 0 0.25rem 0"
-                              padding="1rem"
-                            >
-                              <h5>Pages</h5>
-                              <p>70 sheets total (140 pages)</p>
-                            </Content>
-                          </BoxListItem>
-                          <BoxListItem
-                            height="103px"
-                          >
-                            <Icon
-                              padding="0.5rem"
-                              backgroundcolor={colors.gray.nineHundred}
-                              borderradius="100%"
-                            >
-                              <FrameCorners size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-                            </Icon>
-                            <Content
-                              h5fontsize="0.875rem"
-                              h5margin="0 0 0.25rem 0"
-                              padding="1rem"
-                            >
-                              <h5>Size</h5>
-                              <p>5.5" x 8.5" (A5)</p>
-                            </Content>
-                          </BoxListItem>
-                          <BoxListItem
-                            height="103px"
-                          >
-                            <Icon
-                              padding="0.5rem"
-                              backgroundcolor={colors.gray.nineHundred}
-                              borderradius="100%"
-                            >
-                              <Book size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-                            </Icon>
-                            <Content
-                              h5fontsize="0.875rem"
-                              h5margin="0 0 0.25rem 0"
-                              padding="1rem"
-                            >
-                              <h5>Cover</h5>
-                              <p>Sand matte laminated, extra thick</p>
-                            </Content>
-                          </BoxListItem>
-                          <BoxListItem
-                            height="103px"
-                          >
-                            <Icon
-                              padding="0.5rem"
-                              backgroundcolor={colors.gray.nineHundred}
-                              borderradius="100%"
-                            >
-                              <File size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-                            </Icon>
-                            <Content
-                              h5fontsize="0.875rem"
-                              h5margin="0 0 0.25rem 0"
-                              padding="1rem"
-                            >
-                              <h5>Paper</h5>
-                              <p>70lb ultra-smooth, bright white</p>
-                            </Content>
-                          </BoxListItem>
-                          <BoxListItem
-                            height="103px"
-                          >
-                            <Icon
-                              padding="0.5rem"
-                              backgroundcolor={colors.gray.nineHundred}
-                              borderradius="100%"
-                            >
-                              <Spiral size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-                            </Icon>
-                            <Content
-                              h5fontsize="0.875rem"
-                              h5margin="0 0 0.25rem 0"
-                              padding="1rem"
-                            >
-                              <h5>Binding</h5>
-                              <p>Gold colored wire-o</p>
-                            </Content>
-                          </BoxListItem>
-                        </BoxList>
+                        <BoxList />
                         <hr />
                         <Content
                           margin="1rem 0 0"
@@ -516,20 +413,23 @@ const IndexPage = ({ data }) => {
                           paragraphfontsize="1.2rem"
                           margin="0 0 2rem 0"
                           h2margin="0 0 2rem 0"
+                          h2fontweight="400"
                         >
                           <h2>Fountain pen friendly paper</h2>
-                          <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
+                          <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                         </Content>
-                        <BoxList
+                        <StyledBoxList
                           margin="0 0 2rem"
                         >
-                          <BoxListItem
+                          <Flexbox
                             padding="1rem"
+                            flex="flex"
+                            alignitems="center"
                             justifycontent="space-between"
                           >
                             <StyledLabel
                               margin="0"
-                              width="100px"
+                              width="128px"
                             >
                               Bleeding
                             </StyledLabel>
@@ -553,14 +453,16 @@ const IndexPage = ({ data }) => {
                               </Icon>
                               <span>4.7</span>
                             </Tag>
-                          </BoxListItem>
-                          <BoxListItem
+                          </Flexbox>
+                          <Flexbox
                             padding="1rem"
+                            flex="flex"
+                            alignitems="center"
                             justifycontent="space-between"
                           >
                             <StyledLabel
                               margin="0"
-                              width="112px"
+                              width="128px"
                             >
                               Feathering
                             </StyledLabel>
@@ -584,14 +486,16 @@ const IndexPage = ({ data }) => {
                               </Icon>
                               <span>4.5</span>
                             </Tag>
-                          </BoxListItem>
-                          <BoxListItem
+                          </Flexbox>
+                          <Flexbox
                             padding="1rem"
+                            flex="flex"
+                            alignitems="center"
                             justifycontent="space-between"
                           >
                             <StyledLabel
                               margin="0"
-                              width="100px"
+                              width="128px"
                             >
                               Ghosting
                             </StyledLabel>
@@ -615,8 +519,8 @@ const IndexPage = ({ data }) => {
                               </Icon>
                               <span>3.8</span>
                             </Tag>
-                          </BoxListItem>
-                        </BoxList>
+                          </Flexbox>
+                        </StyledBoxList>
                         <hr />
                         <Content
                           margin="1rem 0 0"
@@ -656,7 +560,7 @@ const IndexPage = ({ data }) => {
                         loading="eager"
                         quality={100}
                       />
-                      <small>Ink shown is Iroshizuku take-sumi by Pilot.</small>
+                      <small>Written using a Pilot VP with Iroshizuku take-sumi by Pilot.</small>
                     </Cell>
                     <Cell
                       width={1}
@@ -680,17 +584,26 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr"
+                  columns="80px 1fr"
                   columnGap={spacing.large}
                 >
                   <Cell>
+                    <SpineText
+                      fontsize="2rem"
+                      fontweight="700"
+                    >
+                      Reviews
+                    </SpineText>
+                  </Cell>
+                  <Cell>
                     <Content
-                      h2margin="2rem 0"
+                      h2margin="0 0 2rem"
+                      h2fontweight="400"
                       paragraphfontsize="1.2rem"
                       width={widths.content.index}
                       margin="0 0 2rem"
                     >
-                      <h2>Reviews</h2>
+                      <h2>What users are saying</h2>
                       <p>Read what some of our early test users had to say about their experience with Notesmith. (Users have been cartoonized for anonymity.)</p>
                     </Content>
                     <Reviews />

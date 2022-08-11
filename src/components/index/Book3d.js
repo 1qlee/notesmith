@@ -40,11 +40,12 @@ const initAnimation = keyframes`
 const LeftSpinePages = styled.div`
   content: '';
   height: 100%;
-  left: 8px;
+  left: 12px;
   position: absolute;
   top: 0;
   transform: rotate3d(0,1,0,90deg);
   width: 36px;
+  z-index: 1;
   background: ${gradient};
   @media only screen and (max-width: 1548px) {
     left: 0;

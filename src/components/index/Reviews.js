@@ -14,11 +14,13 @@ import Content from "../Content"
 
 const StyledReviews = styled.div`
   background-image: url(${LinesBkgd});
+  background-size: cover;
+  background-repeat: no-repeat;
 `
 
 const ReviewContent = styled.div`
-  border: 1px solid ${colors.gray.nineHundred};
-  box-shadow: 4px 4px 0 ${colors.gray.nineHundred};
+  border: 2px solid ${colors.gray.nineHundred};
+  box-shadow: 6px 6px 0 ${colors.gray.threeHundred};
   padding: 1rem;
   min-height: 106px;
   display: flex;
