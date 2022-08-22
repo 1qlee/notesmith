@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react"
-import { useStaticQuery, graphql, navigate } from "gatsby"
+import { graphql, navigate } from "gatsby"
 import { spacing, convertToPx, fonts, convertToMM } from "../../../../styles/variables"
-import { StaticImage, GatsbyImage } from "gatsby-plugin-image"
 import { ToastContainer, toast } from 'react-toastify'
 import "../../../../styles/gallery.css"
-import ImageGallery from 'react-image-gallery'
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
@@ -15,6 +13,7 @@ import Nav from "../../../../components/layout/Nav"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Seo from "../../../../components/layout/Seo"
 import Template from "../../../../components/customize/pageComponents/Template"
+import ProductImages from "../../../../components/shop/ProductImages"
 import Templatesbar from "../../../../components/customize/bars/Templatesbar"
 
 const ProductPage = ({ data, params }) => {
@@ -79,28 +78,9 @@ const ProductPage = ({ data, params }) => {
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
   const [pageContentSize, setPageContentSize] = useState({})
-  const [activeImages, setActiveImages] = useState([])
   const [cartThumbnail, setCartThumbnail] = useState([])
   const workingPageHeight = canvasPageSize.height - convertToPx(6.35)
   const workingPageWidth = canvasPageSize.width - convertToPx(13.335)
-
-  function parseImages(images, color, thumbnails) {
-    // filter images by the specified color
-    const dummyArray = []
-    const filteredImages = images.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
-    const filteredThumbnails = thumbnails.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
-    const firstThumbnail = filteredThumbnails[0].childImageSharp
-
-    filteredImages.forEach((img, index) => {
-      dummyArray.push({
-        original: img.childImageSharp.fluid.src,
-        thumbnail: filteredThumbnails[index].childImageSharp.fluid.src,
-      })
-    })
-
-    setCartThumbnail(firstThumbnail)
-    setActiveImages(dummyArray)
-  }
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -117,9 +97,7 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
-
-    parseImages(productImages, bookData.coverColor, productThumbnails)
-  }, [bookData.coverColor])
+  }, [bookData.coverColor, coverColor])
 
   return (
     <Layout>
@@ -132,7 +110,7 @@ const ProductPage = ({ data, params }) => {
               <SectionContent>
                 <Grid
                   columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.medium}
+                  columnGap={spacing.large}
                 >
                   <Cell width={4}>
                     {selectedTemplate.show ? (
@@ -171,16 +149,12 @@ const ProductPage = ({ data, params }) => {
                         />
                       </Flexbox>
                     ) : (
-                      <div>
-                        <ImageGallery
-                          items={activeImages}
-                          thumbnailPosition="left"
-                          showPlayButton={false}
-                          showNav={false}
-                          showBullets={true}
-                          showFullscreenButton={false}
-                        />
-                      </div>
+                      <ProductImages
+                        coverColor={coverColor}
+                        productImages={productImages}
+                        productThumbnails={productThumbnails}
+                        setCartThumbnail={setCartThumbnail}
+                      />
                     )}
                   </Cell>
                   <Cell width={2}>
@@ -258,9 +232,9 @@ export const pageQuery = graphql`
             originalName
           }
           gatsbyImageData(
-            width: 839
-            placeholder: BLURRED
-            formats: [AUTO, WEBP, AVIF]
+            width: 800
+            placeholder: TRACED_SVG
+            quality: 100
           )
         }
       }
@@ -273,9 +247,10 @@ export const pageQuery = graphql`
             originalName
           }
           gatsbyImageData(
-            width: 100
-            placeholder: BLURRED
-            formats: [AUTO, WEBP, AVIF]
+            width: 80
+            height: 80
+            placeholder: TRACED_SVG
+            quality: 100
           )
         }
       }

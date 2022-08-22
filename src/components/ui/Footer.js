@@ -6,6 +6,7 @@ import { colors, spacing } from "../../styles/variables"
 import { Section, SectionContent } from "../layout/Section"
 import { Container, LayoutContainer } from "../layout/Container"
 import { Grid, Cell } from "styled-css-grid"
+import RegisterForm from "../form/RegisterForm"
 import Content from "../Content"
 import Logo from "../Logo"
 
@@ -28,7 +29,7 @@ const Footer = () => {
           <SectionContent padding={`${spacing.large} 0`}>
             <StyledFooter>
               <Grid
-                columns="repeat(auto-fit,minmax(120px,1fr))"
+                columns="repeat(3, 1fr)"
                 columnGap={spacing.normal}
                 rowGap={spacing.normal}
               >
@@ -45,6 +46,22 @@ const Footer = () => {
                       © {getDate()} Notesmith LLC. All rights reserved.
                     </p>
                   </Content>
+                </Cell>
+                <Cell></Cell>
+                <Cell>
+                  <Content
+                    paragraphcolor={colors.gray.oneHundred}
+                    h3color={colors.gray.oneHundred}
+                    h3fontweight="400"
+                    h3margin="0 0 0.5rem"
+                    margin="0 0 1rem"
+                  >
+                    <h3>Stay up to date</h3>
+                    <p>Sign up to get access to promotions, special offers, news, and much more.</p>
+                  </Content>
+                  <RegisterForm 
+                    color="light"
+                  />
                 </Cell>
               </Grid>
             </StyledFooter>

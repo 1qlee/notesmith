@@ -1,17 +1,13 @@
-import React, { useState } from "react"
+import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
-import Content from "../Content"
+import { colors, fonts } from "../../styles/variables"
 import Icon from "../Icon"
-import { Cards, FrameCorners, Book, File, Spiral, ArrowRight } from "phosphor-react"
-import { Flexbox } from "../layout/Flexbox"
+import { ArrowRight } from "phosphor-react"
 
 const StyledBoxList = styled.div`
   padding: ${props => props.padding};
   width: ${props => props.width};
   margin: ${props => props.margin};
-  box-shadow: 6px 6px 0 ${colors.gray.threeHundred};
-  border: 2px solid ${colors.gray.nineHundred};
 `
 
 const BoxListItem = styled.div`
@@ -19,25 +15,19 @@ const BoxListItem = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  border-top: 2px solid ${colors.gray.nineHundred};
   z-index: 1;
-  h5, p {
-    color: ${colors.gray.nineHundred};
-  }
-  &:not(:last-child) {
-    border-bottom: 2px solid ${colors.gray.nineHundred};
-  }
   &.is-active {
+    h5, p {
+      color: ${colors.gray.oneHundred};
+    }
     &::after {
       width: calc(100% - 48px);
       opacity: 1;
       transform: translateX(4px);
     }
-    .boxlist-icon {
-      background-color: ${colors.yellow.fourHundred};
-      svg {
-        fill: ${colors.yellow.sixHundred};
-        stroke: ${colors.yellow.sixHundred};
-      }
+    .boxlist-content {
+      transform: translateX(2rem);
     }
   }
   &::after {
@@ -47,7 +37,7 @@ const BoxListItem = styled.div`
     left: -4px;
     width: 4px;
     height: 100%;
-    background: linear-gradient(0deg, ${colors.yellow.threeHundred} 0%, ${colors.yellow.twoHundred} 60%);
+    background: ${colors.gray.nineHundred};
     transition: width 0.2s ease-in, opacity 0.2s, transform 0.2s;
     opacity: 0;
     z-index: -1;
@@ -63,17 +53,34 @@ const BoxListItem = styled.div`
         opacity: 0.5;
         transform: translateX(0);
       }
+      .boxlist-content {
+        transform: translateX(2rem);
+      }
     }
   }
 `
 
 const BoxListContent = styled.div`
-  display: flex;
-  align-items: center;
   margin: ${props => props.margin};
   padding: ${props => props.padding || "0 1rem"};
   height: ${props => props.height};
+  padding: 1rem 0;
   flex: 1;
+  transition: transform 0.2s, padding 0.2s;
+  h5 {
+    font-family: ${fonts.secondary};
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  h5, p {
+    color: ${colors.gray.nineHundred};
+  }
+  &.is-active {
+    padding: 1rem;
+  }
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 `
 
 const BoxListIcon = styled(Icon)`
@@ -88,13 +95,21 @@ const BoxListIcon = styled(Icon)`
   }
 `
 
+function BoxListImages({
+  activeImage,
+}) {
+  return (
+    <div></div>
+  )
+}
+
 function BoxList({
   width,
   margin,
   padding,
+  activeImage,
+  setActiveImage,
 }) {
-  const [activeItem, setActiveItem] = useState()
-
   return (
     <StyledBoxList
       width={width}
@@ -102,141 +117,81 @@ function BoxList({
       padding={padding}
     >
       <BoxListItem
-        onClick={() => setActiveItem(0)}
-        className={activeItem === 0 && "is-active"}
+        onClick={() => setActiveImage(0)}
+        className={activeImage === 0 && "is-active"}
       >
-        <BoxListContent>
-          <Icon
-            padding="0.5rem"
-            borderradius="100%"
-            className="boxlist-icon"
-            backgroundcolor={colors.gray.nineHundred}
-          >
-            <Cards size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-          </Icon>
-          <Content
-            h5fontsize="0.875rem"
-            h5margin="0 0 0.25rem 0"
-            padding="1rem"
-          >
-            <h5>Pages</h5>
-            <p>70 sheets total (140 pages)</p>
-          </Content>
+        <BoxListContent
+          className="boxlist-content"
+        >
+          <h5>Pages</h5>
+          <p>70 sheets total (140 pages)</p>
         </BoxListContent>
         <BoxListIcon
-          className={activeItem === 0 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+          className={activeImage === 0 ? "is-active boxlist-arrow" : "boxlist-arrow"}
         >
           <ArrowRight size="1.5rem" />
         </BoxListIcon>
       </BoxListItem>
       <BoxListItem
-        onClick={() => setActiveItem(1)}
-        className={activeItem === 1 && "is-active"}
+        onClick={() => setActiveImage(1)}
+        className={activeImage === 1 && "is-active"}
       >
-        <BoxListContent>
-          <Icon
-            padding="0.5rem"
-            className="boxlist-icon"
-            backgroundcolor={colors.gray.nineHundred}
-            borderradius="100%"
-          >
-            <FrameCorners size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-          </Icon>
-          <Content
-            h5fontsize="0.875rem"
-            h5margin="0 0 0.25rem 0"
-            padding="1rem"
-          >
-            <h5>Size</h5>
-            <p>5.5" x 8.5" (A5)</p>
-          </Content>
+        <BoxListContent
+          className="boxlist-content"
+        >
+          <h5>Size</h5>
+          <p>5.5" x 8.5" (A5)</p>
         </BoxListContent>
         <BoxListIcon
-          className={activeItem === 1 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+          className={activeImage === 1 ? "is-active boxlist-arrow" : "boxlist-arrow"}
         >
           <ArrowRight size="1.5rem" />
         </BoxListIcon>
       </BoxListItem>
       <BoxListItem
-        onClick={() => setActiveItem(2)}
-        className={activeItem === 2 && "is-active"}
+        onClick={() => setActiveImage(2)}
+        className={activeImage === 2 && "is-active"}
       >
-        <BoxListContent>
-          <Icon
-            padding="0.5rem"
-            className="boxlist-icon"
-            backgroundcolor={colors.gray.nineHundred}
-            borderradius="100%"
-          >
-            <Book size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-          </Icon>
-          <Content
-            h5fontsize="0.875rem"
-            h5margin="0 0 0.25rem 0"
-            padding="1rem"
-          >
-            <h5>Cover</h5>
-            <p>Sand matte laminated, extra thick</p>
-          </Content>
+        <BoxListContent
+          className="boxlist-content"
+        >
+          <h5>Cover</h5>
+          <p>Sand matte laminated, extra thick</p>
         </BoxListContent>
         <BoxListIcon
-          className={activeItem === 2 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+          className={activeImage === 2 ? "is-active boxlist-arrow" : "boxlist-arrow"}
         >
           <ArrowRight size="1.5rem" />
         </BoxListIcon>
       </BoxListItem>
       <BoxListItem
-        onClick={() => setActiveItem(3)}
-        className={activeItem === 3 && "is-active"}
+        onClick={() => setActiveImage(3)}
+        className={activeImage === 3 && "is-active"}
       >
-        <BoxListContent>
-          <Icon
-            padding="0.5rem"
-            className="boxlist-icon"
-            backgroundcolor={colors.gray.nineHundred}
-            borderradius="100%"
-          >
-            <File size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-          </Icon>
-          <Content
-            h5fontsize="0.875rem"
-            h5margin="0 0 0.25rem 0"
-            padding="1rem"
-          >
-            <h5>Paper</h5>
-            <p>70lb ultra-smooth, bright white</p>
-          </Content>
+        <BoxListContent
+          className="boxlist-content"
+        >
+          <h5>Paper</h5>
+          <p>70lb ultra-smooth, bright white</p>
         </BoxListContent>
         <BoxListIcon
-          className={activeItem === 3 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+          className={activeImage === 3 ? "is-active boxlist-arrow" : "boxlist-arrow"}
         >
           <ArrowRight size="1.5rem" />
         </BoxListIcon>
       </BoxListItem>
       <BoxListItem
-        onClick={() => setActiveItem(4)}
-        className={activeItem === 4 && "is-active"}
+        onClick={() => setActiveImage(4)}
+        className={activeImage === 4 && "is-active"}
       >
-        <BoxListContent>
-          <Icon
-            padding="0.5rem"
-            className="boxlist-icon"
-            backgroundcolor={colors.gray.nineHundred}
-            borderradius="100%"
-          >
-            <Spiral size="1.5rem" color={colors.gray.oneHundred} weight="fill" />
-          </Icon>
-          <Content
-            h5fontsize="0.875rem"
-            h5margin="0 0 0.25rem 0"
-            padding="1rem"
-          >
-            <h5>Binding</h5>
-            <p>Gold colored wire-o</p>
-          </Content>
+        <BoxListContent
+          className="boxlist-content"
+        >
+          <h5>Binding</h5>
+          <p>Gold colored wire-o</p>
         </BoxListContent>
         <BoxListIcon
-          className={activeItem === 4 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+          className={activeImage === 4 ? "is-active boxlist-arrow" : "boxlist-arrow"}
         >
           <ArrowRight size="1.5rem" />
         </BoxListIcon>
@@ -245,4 +200,4 @@ function BoxList({
   )
 }
 
-export { BoxList, StyledBoxList }
+export { BoxList, StyledBoxList, BoxListImages }

@@ -115,6 +115,7 @@ const BackCover = styled.div`
 `
 
 const Book3dWrapper = styled.div`
+  margin: 0 auto;
   perspective: 2800px;
   height: 615px;
   width: 427px;
@@ -134,9 +135,8 @@ const StyledBook3d = styled.div`
   animation: 1s ease 0s 1 ${initAnimation};
   height: 100%;
   width: 100%;
-  will-change: transform;
   &:not(.is-active) {
-    transform: ${props => props.hovered ? "rotate3d(0,1,0,-30deg)" : "rotate3d(0,1,0,0)"};
+    transform: ${props => props.hovered ? "rotate3d(0,1,0,-30deg)" : null};
   }
   &.is-active {
     transform: rotate3d(0,1,0,-180deg);
@@ -172,10 +172,6 @@ function Book3d({
     },
   ]
 
-  useEffect(() => {
-    console.log(book3dRef.current.getBoundingClientRect().width)
-  }, [book3dRef.current])
-
   return (
     <>
       <Book3dWrapper
@@ -199,7 +195,7 @@ function Book3d({
                 />
                 <StaticImage
                   className="image"
-                  src="../../images/index/testy-page.jpg"
+                  src="../../images/index/blank-page.jpg"
                   alt="Notesmith logo image"
                   placeholder="tracedSVG"
                   quality={100}
@@ -210,7 +206,7 @@ function Book3d({
                 {coverColor === "white" && (
                   <StaticImage
                     className="image"
-                    src="../../images/index/testy.jpg"
+                    src="../../images/index/front-cover-white.jpg"
                     alt="Notesmith logo image"
                     placeholder="tracedSVG"
                     quality={100}
@@ -219,7 +215,7 @@ function Book3d({
                 {coverColor === "black" && (
                   <StaticImage
                     className="image"
-                    src="../../images/index/test-black.jpg"
+                    src="../../images/index/front-cover-black.jpg"
                     alt="Notesmith logo image"
                     placeholder="tracedSVG"
                     quality={100}
@@ -236,7 +232,7 @@ function Book3d({
             {coverColor === "white" && (
               <StaticImage
                 className="image"
-                src="../../images/index/testy-back.jpg"
+                src="../../images/index/back-cover-white.jpg"
                 alt="Notesmith logo image"
                 placeholder="tracedSVG"
                 quality={100}
@@ -245,7 +241,7 @@ function Book3d({
             {coverColor === "black" && (
               <StaticImage
                 className="image"
-                src="../../images/index/test-black-back.jpg"
+                src="../../images/index/back-cover-black.jpg"
                 alt="Notesmith logo image"
                 placeholder="tracedSVG"
                 quality={100}

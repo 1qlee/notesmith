@@ -8,11 +8,9 @@ import { StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormCompo
 import { Flexbox } from "../layout/Flexbox"
 import Icon from "../Icon"
 
-const StyledRegisterForm = styled.form`
-  display: ${props => props.formHidden ? "none" : "block"};
-`
-
-function RegisterForm(props) {
+function RegisterForm({
+  color,
+}) {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState({
@@ -79,7 +77,7 @@ function RegisterForm(props) {
   }
 
   return (
-    <StyledRegisterForm 
+    <form 
       id="register-form"
       onSubmit={e => sendgridSignUp(e)}
     >
@@ -100,13 +98,12 @@ function RegisterForm(props) {
             id="register-form-input"
             type="email"
             name="email"
-            placeholder="signmeup@gmail.com"
+            placeholder="Enter your email address"
           />
         </StyledFieldset>
         <Button
-          color={colors.gray.oneHundred}
-          backgroundcolor={colors.gray.nineHundred}
-          border={`1px solid ${colors.gray.nineHundred}`}
+          color={color === "dark" ? colors.gray.oneHundred : colors.gray.nineHundred}
+          backgroundcolor={color === "dark" ? colors.gray.nineHundred : colors.gray.oneHundred}
           padding="1rem"
           type="submit"
           form="register-form"
@@ -129,7 +126,7 @@ function RegisterForm(props) {
           <span>{emailError.msg}</span>
         </ErrorLine>
       )}
-    </StyledRegisterForm>
+    </form>
   )
 }
 

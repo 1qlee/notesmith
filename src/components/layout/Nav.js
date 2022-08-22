@@ -66,7 +66,7 @@ const CartCounter = styled.span`
 
 function Nav(props) {
   const { user, signOut, loading } = useFirebaseContext()
-  const { cartCount, totalPrice } = useShoppingCart()
+  const { cartCount } = useShoppingCart()
 
   return (
     <StyledNav>
@@ -82,7 +82,7 @@ function Nav(props) {
               <NavItem>
                 <TextLink
                   as={Link}
-                  to="/products"
+                  to="/products/notebooks/wired-notebook-a5/white"
                   color={colors.gray.nineHundred}
                 >
                   Shop

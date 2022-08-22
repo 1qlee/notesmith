@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { Star, ArrowCircleDown, ArrowRight } from "phosphor-react"
+import { Star, ArrowCircleDown, ArrowRight, WarningCircle } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import "../components/index/index.css"
 
-import { BoxList, StyledBoxList } from "../components/index/BoxList"
+import { BoxList, BoxListImages } from "../components/index/BoxList"
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
@@ -31,6 +31,7 @@ import SpineText from "../components/index/SpineText"
 import Tag from "../components/ui/Tag"
 
 const IndexPage = ({ data }) => {
+  const [activeImage, setActiveImage] = useState(0)
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
@@ -90,7 +91,7 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  className="responsive-side-margin responsive-splash-columns"
+                  className="stack-columns-600"
                   columns="1fr 2fr"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
@@ -173,11 +174,12 @@ const IndexPage = ({ data }) => {
                   columns="repeat(3, 1fr)"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
-                  className="responsive-book-columns"
+                  className="autofit-columns-1195"
                 >
                   <Grid
                     columns="80px 1fr"
                     columnGap={spacing.large}
+                    className="stack-columns-600"
                   >
                     <Cell>
                       <SpineText
@@ -328,57 +330,244 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="2fr 1fr"
+                  columns="repeat(3, 1fr)"
                   columnGap={spacing.large}
+                  className="stack-columns-600 autofit-columns-1195"
                 >
-                  <Cell>
-                    <Grid
-                      columns="1fr 400px"
-                      columnGap={spacing.large}
-                    >
-                      <Grid
-                        columns="80px 1fr"
-                        columnGap={spacing.large}
+                  <Grid
+                    columns="80px 1fr"
+                    columnGap={spacing.large}
+                    className="stack-columns-600"
+                  >
+                    <Cell>
+                      <SpineText
+                        fontweight="700"
+                        fontsize="2rem"
                       >
-                        <Cell>
-                          <SpineText
-                            fontsize="2rem"
-                            fontweight="700"
-                          >
-                            Specifications
-                          </SpineText>
-                        </Cell>
-                        <Cell>
-                          <Content
-                            h2fontweight="400"
-                            h2margin="0 0 2rem"
-                            paragraphfontsize="1.2rem"
-                            paragraphmarginbottom="1rem"
-                          >
-                            <h2>Crafted with high quality materials</h2>
-                            <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
-                            <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
-                          </Content>
-                        </Cell>
-                      </Grid>
-                      <Cell>
-                        <BoxList />
-                        <hr />
-                        <Content
-                          margin="1rem 0 0"
+                        Specifications
+                      </SpineText>
+                    </Cell>
+                    <Cell>
+                      <Content
+                        h2fontweight="400"
+                        h2margin="0 0 2rem"
+                        paragraphfontsize="1.2rem"
+                        paragraphmarginbottom="1rem"
+                      >
+                        <h2>Crafted with high quality materials</h2>
+                        <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
+                        <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
+                      </Content>
+                    </Cell>
+                  </Grid>
+                  <Cell>
+                    <BoxList
+                      margin="0 0 1rem"
+                      activeImage={activeImage}
+                      setActiveImage={setActiveImage}
+                    />
+                    <hr />
+                    <Flexbox
+                      flex="flex"
+                      margin="1rem 0 0"
+                      alignitems="flex-start"
+                    >
+                      <Icon>
+                        <WarningCircle />
+                      </Icon>
+                      <Content
+                        margin="0 0 0 0.25rem"
+                        smallmargin="0"
+                      >
+                        <small>Since we are still in the early stages of development, all specifications may be subject to change.</small>
+                      </Content>
+                    </Flexbox>
+                  </Cell>
+                  <Cell>
+                    <BoxListImages />
+                  </Cell>
+                </Grid>
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
+        <Section>
+          <Container>
+            <LayoutContainer>
+              <SectionContent>
+                <Grid
+                  columns="repeat(3, 1fr)"
+                  columnGap={spacing.large}
+                  className="stack-columns-600 autofit-columns-1195"
+                >
+                  <Grid
+                    columns="80px 1fr"
+                    columnGap={spacing.large}
+                    className="stack-columns-600"
+                  >
+                    <Cell>
+                      <SpineText
+                        fontsize="2rem"
+                        fontweight="700"
+                      >
+                        Paper
+                      </SpineText>
+                    </Cell>
+                    <Cell>
+                      <Content
+                        paragraphfontsize="1.2rem"
+                        margin="0 0 2rem 0"
+                        h2margin="0 0 2rem 0"
+                        h2fontweight="400"
+                      >
+                        <h2>Fountain pen friendly paper</h2>
+                        <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
+                      </Content>
+                      <Flexbox
+                        padding="1rem 0"
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="space-between"
+                        className="has-border-bottom"
+                        bordercolor={colors.gray.nineHundred}
+                      >
+                        <StyledLabel
+                          margin="0"
+                          width="128px"
                         >
-                          <small>Since we are still in the early stages of development, all specifications may be subject to change.</small>
+                          Bleeding
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={93}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>4.7</span>
+                        </Tag>
+                      </Flexbox>
+                      <Flexbox
+                        padding="1rem 0"
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="space-between"
+                        className="has-border-bottom"
+                        bordercolor={colors.gray.nineHundred}
+                      >
+                        <StyledLabel
+                          margin="0"
+                          width="128px"
+                        >
+                          Feathering
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={90}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>4.5</span>
+                        </Tag>
+                      </Flexbox>
+                      <Flexbox
+                        padding="1rem 0"
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="space-between"
+                        className="has-border-bottom"
+                        margin="0 0 1rem"
+                      >
+                        <StyledLabel
+                          margin="0"
+                          width="128px"
+                        >
+                          Ghosting
+                        </StyledLabel>
+                        <Progress
+                          barcolor={colors.gray.nineHundred}
+                          completion={75}
+                          margin="0"
+                          wrappercolor={colors.gray.threeHundred}
+                        />
+                        <Tag
+                          backgroundcolor={colors.gray.nineHundred}
+                          color={colors.gray.oneHundred}
+                          padding="0.25rem"
+                          fontfamily={fonts.secondary}
+                          margin="0 0 0 0.5rem"
+                        >
+                          <Icon
+                            margin="0 1px 1px 0"
+                          >
+                            <Star weight="fill" color={colors.gray.oneHundred} />
+                          </Icon>
+                          <span>3.8</span>
+                        </Tag>
+                      </Flexbox>
+                      <hr />
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                        margin="1rem 0 0"
+                      >
+                        <Icon>
+                          <WarningCircle />
+                        </Icon>
+                        <Content
+                          margin="0 0 0 0.25rem"
+                          smallmargin="0"
+                        >
+                          <small>Results are from a survey conducted on early test users.</small>
                         </Content>
-                      </Cell>
-                    </Grid>
+                      </Flexbox>
+                    </Cell>
+                  </Grid>
+                  <Cell>
+                    <StaticImage
+                      src="../images/index/ink-on-paper-2.jpg"
+                      alt="Ink on paper"
+                      placeholder="tracedSVG"
+                      loading="eager"
+                      quality={100}
+                    />
+                    <StaticImage
+                      src="../images/index/ink-on-paper-3.jpg"
+                      alt="Ink on paper"
+                      placeholder="tracedSVG"
+                      loading="eager"
+                      quality={100}
+                    />
                   </Cell>
                   <Cell>
                     <StaticImage
-                      src="../images/index/shit-2.jpg"
-                      alt="Notebook deconstructed"
-                      placeholder="tracedSVG"
+                      src="../images/index/ink-on-paper-vertical.jpg"
+                      alt="Ink on paper"
                       loading="eager"
-                      height={680}
+                      placeholder="tracedSVG"
                       quality={100}
                     />
                   </Cell>
@@ -392,200 +581,9 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="1fr 2fr"
-                  columnGap={spacing.large}
-                >
-                  <Cell>
-                    <Grid
-                      columns="80px 1fr"
-                      columnGap={spacing.large}
-                    >
-                      <Cell>
-                        <SpineText
-                          fontsize="2rem"
-                          fontweight="700"
-                        >
-                          Paper
-                        </SpineText>
-                      </Cell>
-                      <Cell>
-                        <Content
-                          paragraphfontsize="1.2rem"
-                          margin="0 0 2rem 0"
-                          h2margin="0 0 2rem 0"
-                          h2fontweight="400"
-                        >
-                          <h2>Fountain pen friendly paper</h2>
-                          <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
-                        </Content>
-                        <StyledBoxList
-                          margin="0 0 2rem"
-                        >
-                          <Flexbox
-                            padding="1rem"
-                            flex="flex"
-                            alignitems="center"
-                            justifycontent="space-between"
-                          >
-                            <StyledLabel
-                              margin="0"
-                              width="128px"
-                            >
-                              Bleeding
-                            </StyledLabel>
-                            <Progress
-                              barcolor={colors.gray.nineHundred}
-                              completion={93}
-                              margin="0"
-                              wrappercolor={colors.gray.threeHundred}
-                            />
-                            <Tag
-                              backgroundcolor={colors.gray.nineHundred}
-                              color={colors.gray.oneHundred}
-                              padding="0.25rem"
-                              fontfamily={fonts.secondary}
-                              margin="0 0 0 0.5rem"
-                            >
-                              <Icon
-                                margin="0 1px 1px 0"
-                              >
-                                <Star weight="fill" color={colors.gray.oneHundred} />
-                              </Icon>
-                              <span>4.7</span>
-                            </Tag>
-                          </Flexbox>
-                          <Flexbox
-                            padding="1rem"
-                            flex="flex"
-                            alignitems="center"
-                            justifycontent="space-between"
-                          >
-                            <StyledLabel
-                              margin="0"
-                              width="128px"
-                            >
-                              Feathering
-                            </StyledLabel>
-                            <Progress
-                              barcolor={colors.gray.nineHundred}
-                              completion={90}
-                              margin="0"
-                              wrappercolor={colors.gray.threeHundred}
-                            />
-                            <Tag
-                              backgroundcolor={colors.gray.nineHundred}
-                              color={colors.gray.oneHundred}
-                              padding="0.25rem"
-                              fontfamily={fonts.secondary}
-                              margin="0 0 0 0.5rem"
-                            >
-                              <Icon
-                                margin="0 1px 1px 0"
-                              >
-                                <Star weight="fill" color={colors.gray.oneHundred} />
-                              </Icon>
-                              <span>4.5</span>
-                            </Tag>
-                          </Flexbox>
-                          <Flexbox
-                            padding="1rem"
-                            flex="flex"
-                            alignitems="center"
-                            justifycontent="space-between"
-                          >
-                            <StyledLabel
-                              margin="0"
-                              width="128px"
-                            >
-                              Ghosting
-                            </StyledLabel>
-                            <Progress
-                              barcolor={colors.gray.nineHundred}
-                              completion={75}
-                              margin="0"
-                              wrappercolor={colors.gray.threeHundred}
-                            />
-                            <Tag
-                              backgroundcolor={colors.gray.nineHundred}
-                              color={colors.gray.oneHundred}
-                              padding="0.25rem"
-                              fontfamily={fonts.secondary}
-                              margin="0 0 0 0.5rem"
-                            >
-                              <Icon
-                                margin="0 1px 1px 0"
-                              >
-                                <Star weight="fill" color={colors.gray.oneHundred} />
-                              </Icon>
-                              <span>3.8</span>
-                            </Tag>
-                          </Flexbox>
-                        </StyledBoxList>
-                        <hr />
-                        <Content
-                          margin="1rem 0 0"
-                        >
-                          <small>Results are from a survey conducted on early test users.</small>
-                        </Content>
-                      </Cell>
-                    </Grid>
-                  </Cell>
-                  <Grid
-                    columns="repeat(2, 1fr)"
-                    rows="repeat(2, 1fr)"
-                    rowGap={spacing.normal}
-                    columnGap={spacing.normal}
-                  >
-                    <Cell
-                      width={1}
-                      height={1}
-                    >
-                      <StaticImage
-                        src="../images/index/ink-on-paper-2.jpg"
-                        alt="Ink on paper"
-                        placeholder="tracedSVG"
-                        loading="eager"
-                        quality={100}
-                      />
-                    </Cell>
-                    <Cell
-                      width={1}
-                      height={1}
-                      top={2}
-                    >
-                      <StaticImage
-                        src="../images/index/ink-on-paper-3.jpg"
-                        alt="Ink on paper"
-                        placeholder="tracedSVG"
-                        loading="eager"
-                        quality={100}
-                      />
-                      <small>Written using a Pilot VP with Iroshizuku take-sumi by Pilot.</small>
-                    </Cell>
-                    <Cell
-                      width={1}
-                      height={3}
-                    >
-                      <StaticImage
-                        src="../images/index/ink-on-paper-vertical.jpg"
-                        alt="Ink on paper"
-                        placeholder="tracedSVG"
-                        quality={100}
-                      />
-                    </Cell>
-                  </Grid>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section>
-          <Container>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
                   columns="80px 1fr"
                   columnGap={spacing.large}
+                  className="stack-columns-600"
                 >
                   <Cell>
                     <SpineText
@@ -603,7 +601,7 @@ const IndexPage = ({ data }) => {
                       width={widths.content.index}
                       margin="0 0 2rem"
                     >
-                      <h2>What users are saying</h2>
+                      <h2>Feedback from our early test users</h2>
                       <p>Read what some of our early test users had to say about their experience with Notesmith. (Users have been cartoonized for anonymity.)</p>
                     </Content>
                     <Reviews />
@@ -616,30 +614,40 @@ const IndexPage = ({ data }) => {
         <Section>
           <Container>
             <LayoutContainer>
-              <SectionContent
-                padding="2rem 0"
-              >
+              <SectionContent>
                 <Grid
-                  columns={12}
+                  columns="1fr"
                   columnGap={spacing.large}
+                  className="stack-columns-600"
                 >
-                  <Cell
-                    width={6}
-                    left={2}
-                    middle center
-                  >
+                  <Cell center middle>
                     <Content
                       h2fontweight="400"
-                      h2fontsize="2rem"
+                      h2fontsize="3rem"
+                      margin="0 0 2rem"
                     >
-                      <h2>Stay up to date with all special offers, news, and more</h2>
+                      <h2>Coming soon to Kickstarter</h2>
                     </Content>
-                  </Cell>
-                  <Cell
-                    width={4}
-                    left={8}
-                  >
-                    <RegisterForm />
+                    <a
+                      href="https://www.kickstarter.com"
+                      target="_blank"
+
+                    >
+                      <Button
+                        color={colors.gray.oneHundred}
+                        backgroundcolor={colors.gray.nineHundred}
+                        padding="1rem"
+                        width="300px"
+                      >
+                        <StaticImage
+                          src="../images/ks-icon.png"
+                          width={16}
+                          quality={100}
+                          loading="eager"
+                        />
+                        <span style={{ marginLeft: "0.5rem" }}>Follow us on Kickstarter</span>
+                      </Button>
+                    </a>
                   </Cell>
                 </Grid>
               </SectionContent>

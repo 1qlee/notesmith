@@ -4,12 +4,13 @@
     }
   }
   @media only screen and (max-width: 600px) {
-    .responsive-splash-columns {
+    .stack-columns-600 {
       grid-template-columns: 1fr !important;
+      row-gap: 2rem;
     }
   }
   @media only screen and (max-width: 1195px) {
-    .responsive-book-columns {
+    .autofit-columns-1195 {
       grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)) !important;
     }
   }

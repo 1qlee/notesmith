@@ -19,10 +19,10 @@ const Flexbox = styled.div`
   width: ${props => props.width};
   max-width: ${props => props.maxwidth};
   &.has-border-bottom {
-    border-bottom: 1px solid ${props => props.bordercolor};
+    border-bottom: 2px solid ${props => props.bordercolor};
   }
   &.has-border-top {
-    border-top: 1px solid ${props => props.bordercolor};
+    border-top: 2px solid ${props => props.bordercolor};
   }
 `
 

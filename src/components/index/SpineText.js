@@ -13,6 +13,17 @@ const StyledSpineText = styled.div`
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   min-height: 620px;
+  @media only screen and (max-width: 600px) {
+    border-bottom: 2px solid ${colors.gray.nineHundred};
+    border-left: none;
+    margin-top: 0;
+    min-height: auto;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    transform: rotate(0deg);
+    width: 100%;
+    writing-mode: inherit;
+  }
 `
 
 function SpineText(props) {
