@@ -20,7 +20,8 @@ const StyledReviews = styled.div`
 
 const ReviewContent = styled.div`
   border: 2px solid ${colors.gray.nineHundred};
-  box-shadow: 6px 6px 0 ${colors.gray.threeHundred};
+  box-shadow: 4px 4px 0 ${colors.gray.nineHundred};
+  border-radius: 0.5rem;
   padding: 1rem;
   min-height: 106px;
   display: flex;

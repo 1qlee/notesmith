@@ -74,15 +74,16 @@ function ProductImages({
       console.log(filteredImages)
 
       filteredImages.forEach((img, index) => {
-        imagesDummyArray.unshift({
+        imagesDummyArray.push({
           main: img,
           thumbnail: filteredThumbnails[index],
         })
       })
 
       setActiveImageData(firstImage)
+      setActiveImage(0)
       setCartThumbnail(firstThumbnail)
-      setAllImages(imagesDummyArray.reverse())
+      setAllImages(imagesDummyArray)
     }
 
     parseImages(productImages, coverColor, productThumbnails)
