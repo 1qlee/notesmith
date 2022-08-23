@@ -6,14 +6,13 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'svg2pdf.js'
 
 import { Flexbox } from "../layout/Flexbox"
-import { SectionMain, SectionApp, SectionAppContent, SectionAppWorkspace } from "../layout/Section"
 import BooksContainer from "./books/BooksContainer"
 import Button from "../Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
 import NewBookModal from "./modals/AppNewBookModal"
 import Seo from "../layout/Seo"
-import Sidebar from "./components/Sidebar"
+import AuthLayout from "./components/AuthLayout"
 
 const UserBooks = () => {
   const isBrowser = typeof window !== "undefined"
@@ -313,55 +312,48 @@ const UserBooks = () => {
   return (
     <Layout>
       <Seo title="My Books" />
-      <SectionMain className="has-no-padding has-max-height">
-        <SectionApp>
-          <Sidebar
-            page="Books"
-          />
-          <SectionAppContent>
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="flex-start"
-            >
-              <Button
-                onClick={() => downloadBookPdf()}
-              >
-                Download book
-              </Button>
-            </Flexbox>
-            <BooksContainer
-              duplicateBook={duplicateBook}
-              getLocalStorage={getLocalStorage}
-              handleBookDelete={handleBookDelete}
-              processing={processing}
-              renameBook={renameBook}
-              userBooks={userBooks}
-              setShowModal={setShowModal}
-              sortBooks={sortBooks}
-            />
-          </SectionAppContent>
-        </SectionApp>
-      </SectionMain>
-      {showModal.show && (
-        <>
-          {showModal.type === "createbook" && (
-            <NewBookModal
-              bookData={bookData}
-              setBookData={setBookData}
-              setShowModal={setShowModal}
-              toast={toast}
-            />
-          )}
-          {showModal.type === "deletebook" && (
-            <DeleteBookModal
-              bookToBeDeleted={bookToBeDeleted}
-              deleteBook={deleteBook}
-              setShowModal={setShowModal}
-            />
-          )}
-        </>
-      )}
+      <AuthLayout page="Books">
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          justifycontent="flex-start"
+        >
+          <Button
+            onClick={() => downloadBookPdf()}
+          >
+            Download book
+          </Button>
+        </Flexbox>
+        <BooksContainer
+          duplicateBook={duplicateBook}
+          getLocalStorage={getLocalStorage}
+          handleBookDelete={handleBookDelete}
+          processing={processing}
+          renameBook={renameBook}
+          userBooks={userBooks}
+          setShowModal={setShowModal}
+          sortBooks={sortBooks}
+        />
+        {showModal.show && (
+          <>
+            {showModal.type === "createbook" && (
+              <NewBookModal
+                bookData={bookData}
+                setBookData={setBookData}
+                setShowModal={setShowModal}
+                toast={toast}
+              />
+            )}
+            {showModal.type === "deletebook" && (
+              <DeleteBookModal
+                bookToBeDeleted={bookToBeDeleted}
+                deleteBook={deleteBook}
+                setShowModal={setShowModal}
+              />
+            )}
+          </>
+        )}
+      </AuthLayout>
       <ToastContainer
         autoClose={3000}
         closeOnClick

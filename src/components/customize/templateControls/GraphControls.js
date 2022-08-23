@@ -1,12 +1,11 @@
 import React from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
-import { StyledFieldset, StyledInput, StyledLabel, StyledRange, NumberInput } from "../../form/FormComponents"
+import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
 
 function GraphControls({
-  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
@@ -205,22 +204,18 @@ function GraphControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -248,24 +243,20 @@ function GraphControls({
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.088}
-              step={0.01}
-              max={3}
-              value={pageData.thickness}
-              onChange={e => setPageData({
-                ...pageData,
-                alignmentVertical: "",
-                alignmentHorizontal: "",
-                thickness: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.088}
+            step={0.01}
+            max={3}
+            value={pageData.thickness}
+            onChange={e => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+              thickness: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

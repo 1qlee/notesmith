@@ -14,7 +14,7 @@ const TextLink = styled.a`
   position: relative;
   width: ${props => props.width};
   background:  no-repeat 0 100%;
-  background-image: linear-gradient(${colors.yellow.threeHundred}, ${colors.yellow.oneHundred});
+  background-image: linear-gradient(${colors.yellow.oneHundred}, ${colors.yellow.threeHundred});
   background-size: 0% 40%;
   transition: background-size 0.2s;
   z-index: 5;

@@ -1,11 +1,10 @@
 import React from "react"
-import { convertToMM, convertToPx, convertFloatFixed, colors } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
 import { Square, CheckSquare, Question } from "phosphor-react"
 import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange, StyledCheckbox, NumberInput } from "../../form/FormComponents"
-import { validateOnBlur, validateMinValue } from "./template-functions"
+import { StyledInput, StyledLabel, RangeInput, StyledCheckbox, NumberInput } from "../../form/FormComponents"
 import AlignmentControls from "./AlignmentControls"
 import Icon from "../../Icon"
 
@@ -219,22 +218,18 @@ function HandwritingControls({
                   step={0.01}
                   width="4.25rem"
                 />
-                <StyledRange
+                <RangeInput
                   margin="0 0 0 0.5rem"
                   width="100%"
-                >
-                  <input
-                    type="range"
-                    min={0.5}
-                    step={0.01}
-                    max={1}
-                    value={dashedLineData.opacity}
-                    onChange={e => setDashedLineData({
-                      ...dashedLineData,
-                      opacity: parseFloat(e.target.value),
-                    })}
-                  />
-                </StyledRange>
+                  min={0.5}
+                  step={0.01}
+                  max={1}
+                  value={dashedLineData.opacity}
+                  onChange={e => setDashedLineData({
+                    ...dashedLineData,
+                    opacity: parseFloat(e.target.value),
+                  })}
+                />
               </Flexbox>
             </Flexbox>
             <Flexbox
@@ -261,22 +256,18 @@ function HandwritingControls({
                   step={0.001}
                   width="4.25rem"
                 />
-                <StyledRange
+                <RangeInput
                   margin="0 0 0 0.5rem"
                   width="100%"
-                >
-                  <input
-                    type="range"
-                    min={0.088}
-                    step={0.001}
-                    max={3}
-                    value={dashedLineData.thickness}
-                    onChange={e => setDashedLineData({
-                      ...dashedLineData,
-                      thickness: parseFloat(e.target.value)
-                    })}
-                  />
-                </StyledRange>
+                  min={0.088}
+                  step={0.001}
+                  max={3}
+                  value={dashedLineData.thickness}
+                  onChange={e => setDashedLineData({
+                    ...dashedLineData,
+                    thickness: parseFloat(e.target.value)
+                  })}
+                />
               </Flexbox>
             </Flexbox>
           </>
@@ -426,22 +417,18 @@ function HandwritingControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -468,22 +455,18 @@ function HandwritingControls({
             step={0.001}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.088}
-              step={0.001}
-              max={3}
-              value={pageData.thickness}
-              onChange={e => setPageData({
-                ...pageData,
-                thickness: parseFloat(e.target.value),
-              })}
-            />
-          </StyledRange>
+            min={0.088}
+            step={0.001}
+            max={3}
+            value={pageData.thickness}
+            onChange={e => setPageData({
+              ...pageData,
+              thickness: parseFloat(e.target.value),
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Isometric({
   borderData,
@@ -8,9 +8,9 @@ function Isometric({
 }) {
   const [linesTop, setLinesTop] = useState([])
   const [linesSides, setLinesSides] = useState([])
-  const [lineStyle, setLineStyle] = useState({})
-  const { pageWidth, pageHeight } = pageData
+  const { pageWidth } = pageData
   const lineThickness = convertToPx(pageData.thickness)
+  const borderThickness = convertToPx(borderData.thickness)
   const lineSpacing = convertToPx(pageData.spacing) + convertToPx(pageData.thickness)
   const contentWidth = convertToPx(pageData.contentWidth)
   const contentHeight = convertToPx(pageData.contentHeight)
@@ -149,7 +149,7 @@ function Isometric({
         <rect
           width={contentWidth}
           height={contentHeight}
-          strokeWidth={borderData.sync ? lineThickness : convertToPx(borderData.thickness)}
+          strokeWidth={borderData.sync ? lineThickness : borderThickness}
           strokeOpacity={borderData.sync ? pageData.opacity : borderData.opacity}
           fill="none"
           stroke="#000"

@@ -1,13 +1,11 @@
-import React, { useRef } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import React from "react"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
-import { StyledFieldset, StyledLabel, StyledInput, StyledRange, NumberInput } from "../../form/FormComponents"
+import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function CrossGridControls({
-  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
@@ -207,22 +205,18 @@ function CrossGridControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -250,24 +244,20 @@ function CrossGridControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={1}
-              step={0.01}
-              max={5}
-              value={pageData.size}
-              onChange={e => setPageData({
-                ...pageData,
-                size: e.target.value,
-                alignmentVertical: "",
-                alignmentHorizontal: "",
-              })}
-            />
-          </StyledRange>
+            min={1}
+            step={0.01}
+            max={5}
+            value={pageData.size}
+            onChange={e => setPageData({
+              ...pageData,
+              size: e.target.value,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

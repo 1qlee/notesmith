@@ -34,12 +34,13 @@ const SectionContent = styled.div`
 `
 
 const SectionApp = styled.div`
-  display: flex;
   height: 100%;
   width: 100%;
 `
 
 const SectionAppContent = styled.section`
+  max-width: ${widths.desktop};
+  margin: 0 auto;
   height: 100%;
   width: 100%;
 `

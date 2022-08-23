@@ -40,7 +40,7 @@ const Footer = () => {
                     <Link
                       to="/"
                     >
-                     <Logo color={colors.gray.oneHundred} />
+                      <Logo color={colors.gray.oneHundred} />
                     </Link>
                     <p>
                       © {getDate()} Notesmith LLC. All rights reserved.

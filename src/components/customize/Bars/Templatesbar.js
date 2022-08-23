@@ -34,12 +34,12 @@ const TemplatesContent = styled.div`
 
 const TemplatesFooter = styled.div`
   padding: 1rem;
-  border-top: 1px solid ${colors.gray.nineHundred};
+  border-top: 2px solid ${colors.gray.nineHundred};
 `
 
 const FloatingTemplatesbar = styled.div`
   background-color: ${colors.white};
-  border: 1px solid ${colors.gray.nineHundred};
+  border: 2px solid ${colors.gray.nineHundred};
   height: 688px;
   margin-right: 2rem;
   width: 300px;
@@ -56,50 +56,21 @@ const PageButtonWrapper = styled.div`
 
 const PageButton = styled(Button)`
   background-color: ${colors.white};
-  border-radius: 0.5rem 0.25rem 0.75rem 1rem / 1rem 0.25rem 0.75rem 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem;
   flex: 1;
   position: relative;
-  &:not(:last-child) {
-    margin-right: 2px;
-  }
-  &:not(:last-child) {
-    margin-right: 2px;
-  }
-  span {
-    color: ${colors.gray.nineHundred};
-    position: relative;
-    transition: color 0.2s;
-    z-index: 99;
-  }
   &:not(:last-child) {
     margin-right: 2px;
   }
   &:hover,
   &:focus {
     box-shadow: none;
+    background-color: ${colors.gray.threeHundred};
   }
   &.is-active {
-    &::before,
-    &::after {
-      border-color: ${colors.gray.nineHundred};
-      opacity: 1;
-    }
-  }
-  &::before {
-    border-radius: 50%;
-    border: 2px solid transparent;
-    content: "";
-    height: 100%;
-    left: 20%;
-    opacity: 0;
-    padding: 0.1rem 0.25rem;
-    position: absolute;
-    top: 0;
-    transform: rotate(2deg);
-    transition: border-color 0.2s, opacity 0.2s;
-    width: 80%;
-    will-change: border-color, transform;
-    z-index: 8;
+    color: ${colors.gray.oneHundred};
+    background-color: ${colors.gray.nineHundred};
   }
 `
 
@@ -195,16 +166,12 @@ function Templatesbar({
               <h3>Page side</h3>
               <PageButtonWrapper>
                 <PageButton
-                  padding="0.25rem 0.5rem"
-                  fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("left")}
                   className={currentPageSide === "left" ? "is-active" : null}
                 >
                   <span>Left</span>
                 </PageButton>
                 <PageButton
-                  padding="0.25rem 0.5rem"
-                  fontsize="0.75rem"
                   onClick={() => setCurrentPageSide("right")}
                   className={currentPageSide === "right" ? "is-active" : null}
                 >

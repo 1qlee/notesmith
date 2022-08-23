@@ -133,8 +133,8 @@ function BooksContainer({
         margin="0 0 2rem 0"
       >
         <Content>
-          <h3>My Books</h3>
-          <p>Right-click any row in the table below to see more options.</p>
+          <h2>Books</h2>
+          <p>Right-click on any row in the table below to see more options.</p>
         </Content>
         <Button
           color={colors.gray.oneHundred}

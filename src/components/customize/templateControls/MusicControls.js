@@ -1,9 +1,8 @@
 import React from "react"
-import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange, NumberInput } from "../../form/FormComponents"
-import { validateOnBlur, validateMinValue } from "./template-functions"
+import { RangeInput, StyledLabel, NumberInput } from "../../form/FormComponents"
 import AlignmentControls from "./AlignmentControls"
 
 function MusicControls({
@@ -228,22 +227,18 @@ function MusicControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: parseFloat(e.target.value)
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: parseFloat(e.target.value)
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -270,23 +265,19 @@ function MusicControls({
             step={0.001}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.088}
-              step={0.001}
-              max={3}
-              value={pageData.thickness}
-              onChange={e => setPageData({
-                ...pageData,
-                alignmentVertical: "",
-                thickness: parseFloat(e.target.value)
-              })}
-            />
-          </StyledRange>
+            min={0.088}
+            step={0.001}
+            max={3}
+            value={pageData.thickness}
+            onChange={e => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              thickness: parseFloat(e.target.value)
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

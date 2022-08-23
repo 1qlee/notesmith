@@ -1,10 +1,9 @@
-import React, { useRef } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import React from "react"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
-import { StyledFieldset, StyledLabel, StyledInput, StyledRange, NumberInput } from "../../form/FormComponents"
+import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import AlignmentControls from "./AlignmentControls"
-import { validateInput, validateOnBlur, validateOnKeydown, validateMinValue } from "./template-functions"
 
 function DotControls({
   canvasPageSize,
@@ -207,22 +206,18 @@ function DotControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
-            margin="0 0 0 0.5rem"
+          <RangeInput
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value,
-              })}
-            />
-          </StyledRange>
+            margin="0 0 0 0.5rem"
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -250,24 +245,20 @@ function DotControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
-            margin="0 0 0 0.5rem"
+          <RangeInput
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.02}
-              step={0.01}
-              max={1}
-              value={pageData.radius}
-              onChange={e => setPageData({
-                ...pageData,
-                radius: e.target.value,
-                alignmentVertical: "",
-                alignmentHorizontal: "",
-              })}
-            />
-          </StyledRange>
+            margin="0 0 0 0.5rem"
+            min={0.02}
+            step={0.01}
+            max={1}
+            value={pageData.radius}
+            onChange={e => setPageData({
+              ...pageData,
+              radius: e.target.value,
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

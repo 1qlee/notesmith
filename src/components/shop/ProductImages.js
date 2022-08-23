@@ -52,11 +52,22 @@ function ProductImages({
   const [activeImageData, setActiveImageData] = useState(null)
 
   useEffect(() => {
+    function sortImages(a, b) {
+      if (a.childImageSharp.fluid.originalName.split("-")[1] < b.childImageSharp.fluid.originalName.split("-")[1]) {
+        return -1
+      }
+      else {
+        return 0
+      }
+    }
     // filter images by the specified color
     function parseImages(images, color, thumbnails) {
       const imagesDummyArray = []
       const filteredImages = images.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
       const filteredThumbnails = thumbnails.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
+      // sort images into ascending order
+      filteredImages.sort(sortImages)
+      filteredThumbnails.sort(sortImages)
       const firstImage = filteredImages[0]
       const firstThumbnail = filteredThumbnails[0]
 

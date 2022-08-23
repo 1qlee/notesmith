@@ -277,6 +277,7 @@ function RangeInput({
   value,
   step,
   onChange,
+  margin,
   width,
 }) {
   const inputRef = useRef(null)
@@ -288,6 +289,7 @@ function RangeInput({
 
   return (
     <StyledRange
+      margin={margin}
       width={width}
     >
       <input
@@ -323,7 +325,7 @@ const NumberInputIcon = styled.div`
   user-select: none;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray.eightHundred};
+    background-color: ${colors.gray.sixHundred};
   }
 `
 

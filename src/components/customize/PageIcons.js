@@ -827,6 +827,7 @@ function CalligraphyPageIcon({
     thickness: 0.088,
     spacing: 5,
     groupSpacing: 5,
+    slants: 28,
     rows: 14,
     marginTop: 0,
     marginLeft: 0,

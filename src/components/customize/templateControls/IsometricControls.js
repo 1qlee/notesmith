@@ -1,16 +1,14 @@
 import React from "react"
-import { convertToPx, convertToMM, convertFloatFixed, fonts, colors } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
 import { Square, CheckSquare } from "phosphor-react"
 
-import { StyledFieldset, StyledInput, StyledLabel, StyledRange, StyledCheckbox, NumberInput } from "../../form/FormComponents"
+import { StyledLabel, StyledCheckbox, NumberInput, RangeInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
-import Content from "../../Content"
 import AlignmentControls from "./AlignmentControls"
 
 function IsometricControls({
   borderData,
-  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
@@ -207,22 +205,18 @@ function IsometricControls({
                   step={0.01}
                   width="4.25rem"
                 />
-                <StyledRange
+                <RangeInput
                   margin="0 0 0 0.5rem"
                   width="100%"
-                >
-                  <input
-                    type="range"
-                    min={0.5}
-                    step={0.01}
-                    max={1}
-                    value={borderData.opacity}
-                    onChange={e => setBorderData({
-                      ...borderData,
-                      opacity: e.target.value,
-                    })}
-                  />
-                </StyledRange>
+                  min={0.5}
+                  step={0.01}
+                  max={1}
+                  value={borderData.opacity}
+                  onChange={e => setBorderData({
+                    ...borderData,
+                    opacity: e.target.value,
+                  })}
+                />
               </Flexbox>
             </Flexbox>
             <Flexbox
@@ -249,19 +243,15 @@ function IsometricControls({
                   step={0.001}
                   width="4.25rem"
                 />
-                <StyledRange
+                <RangeInput
                   margin="0 0 0 0.5rem"
                   width="100%"
-                >
-                  <input
-                    type="range"
-                    min="0.088"
-                    step="0.001"
-                    max="3"
-                    value={borderData.thickness}
-                    onChange={e => setBorderData({...borderData, thickness: parseFloat(e.target.value)})}
-                  />
-                </StyledRange>
+                  min="0.088"
+                  step="0.001"
+                  max="3"
+                  value={borderData.thickness}
+                  onChange={e => setBorderData({...borderData, thickness: parseFloat(e.target.value)})}
+                />
               </Flexbox>
             </Flexbox>
           </>
@@ -411,22 +401,18 @@ function IsometricControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              max={1}
-              step={0.01}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            max={1}
+            step={0.01}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -453,23 +439,19 @@ function IsometricControls({
             step={0.001}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.088}
-              step={0.001}
-              max={3}
-              value={pageData.thickness}
-              onChange={e => setPageData({
-                ...pageData,
-                alignmentVertical: "",
-                thickness: parseFloat(e.target.value)
-              })}
-            />
-          </StyledRange>
+            min={0.088}
+            step={0.001}
+            max={3}
+            value={pageData.thickness}
+            onChange={e => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              thickness: parseFloat(e.target.value)
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>

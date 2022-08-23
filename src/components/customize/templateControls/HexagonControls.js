@@ -1,13 +1,11 @@
 import React from "react"
-import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledRange, NumberInput } from "../../form/FormComponents"
-import { validateOnBlur, validateMinValue } from "./template-functions"
+import { RangeInput, StyledLabel, NumberInput } from "../../form/FormComponents"
 import AlignmentControls from "./AlignmentControls"
 
 function HexagonControls({
-  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
@@ -195,24 +193,20 @@ function HexagonControls({
               alignmentHorizontal: "",
             })}
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              max={100}
-              min={1}
-              step={0.1}
-              type="range"
-              value={pageData.hexagonRadius}
-              onChange={e => setPageData({
-                ...pageData,
-                hexagonRadius: parseFloat(e.target.value),
-                alignmentVertical: "",
-                alignmentHorizontal: "",
-              })}
-            />
-          </StyledRange>
+            max={100}
+            min={1}
+            step={0.1}
+            value={pageData.hexagonRadius}
+            onChange={e => setPageData({
+              ...pageData,
+              hexagonRadius: parseFloat(e.target.value),
+              alignmentVertical: "",
+              alignmentHorizontal: "",
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -238,22 +232,18 @@ function HexagonControls({
             step={0.01}
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.5}
-              step={0.01}
-              max={1}
-              value={pageData.opacity}
-              onChange={e => setPageData({
-                ...pageData,
-                opacity: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.5}
+            step={0.01}
+            max={1}
+            value={pageData.opacity}
+            onChange={e => setPageData({
+              ...pageData,
+              opacity: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
       <Flexbox
@@ -281,22 +271,18 @@ function HexagonControls({
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
             width="4.25rem"
           />
-          <StyledRange
+          <RangeInput
             margin="0 0 0 0.5rem"
             width="100%"
-          >
-            <input
-              type="range"
-              min={0.088}
-              step={0.01}
-              max={3}
-              value={pageData.thickness}
-              onChange={e => setPageData({
-                ...pageData,
-                thickness: e.target.value,
-              })}
-            />
-          </StyledRange>
+            min={0.088}
+            step={0.01}
+            max={3}
+            value={pageData.thickness}
+            onChange={e => setPageData({
+              ...pageData,
+              thickness: e.target.value,
+            })}
+          />
         </Flexbox>
       </Flexbox>
     </>
