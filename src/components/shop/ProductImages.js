@@ -71,8 +71,6 @@ function ProductImages({
       const firstImage = filteredImages[0]
       const firstThumbnail = filteredThumbnails[0]
 
-      console.log(filteredImages)
-
       filteredImages.forEach((img, index) => {
         imagesDummyArray.push({
           main: img,

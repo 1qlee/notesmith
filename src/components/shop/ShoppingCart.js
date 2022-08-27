@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import { colors, convertToDecimal } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { CaretDown, CaretUp } from "phosphor-react"
-import { GatsbyImage } from "gatsby-plugin-image"
+import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { CartQuantityTracker } from "./ShopComponents"
 import { Flexbox } from "../layout/Flexbox"
@@ -56,9 +56,9 @@ function ShoppingCart() {
       <Content
         margin="0 0 2rem 0"
         h1fontweight="400"
-        h1fontsize="2.5rem"
+        h1fontsize="3rem"
       >
-        <h1>Your cart</h1>
+        <h1>Cart</h1>
       </Content>
       {cartItems.length > 0 ? (
         <>
@@ -80,18 +80,26 @@ function ShoppingCart() {
                       alignitems="center"
                       height="100%"
                     >
-                      <GatsbyImage
-                        image={item.image.gatsbyImageData}
-                        alt="product thumbnail"
-                      />
+                      <Link
+                        to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+                      >
+                        <GatsbyImage
+                          image={getImage(item.image)}
+                          alt="product thumbnail"
+                        />
+                      </Link>
                       <Flexbox margin="0 0 0 1rem">
                         <Content
                           paragraphmargin="0"
-                          paragraphfontsize="1.25rem"
+                          paragraphfontsize="1.2rem"
                           smallfontsize="0.875rem"
                           smallmargin="0"
                         >
-                          <p>{item.name}</p>
+                          <Link
+                            to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+                          >
+                            <p><b>{item.name}</b></p>
+                          </Link>
                         </Content>
                         <Flexbox
                           flex="flex"
@@ -100,13 +108,14 @@ function ShoppingCart() {
                         >
                           {item.category === "notebooks" && (
                             <TextLink
-                              fontsize="0.75rem"
+                              fontsize="0.625rem"
                               flex="inline-flex"
                               alignitems="center"
                               margin="0 0.5rem 0 0"
                               onClick={() => handleViewDetails(item.id)}
+                              color={colors.gray.nineHundred}
                             >
-                              <span>View details</span>
+                              View details
                               <Icon margin="0 0 0 0.125rem">
                                 {activeItemIds[item.id] ? (
                                   <CaretUp size="0.625rem" />
@@ -117,8 +126,9 @@ function ShoppingCart() {
                             </TextLink>
                           )}
                           <TextLink
-                            fontsize="0.75rem"
+                            fontsize="0.625rem"
                             onClick={() => removeItem(item.id)}
+                            color={colors.gray.nineHundred}
                           >
                             Remove
                           </TextLink>
@@ -261,7 +271,7 @@ function ShoppingCart() {
                 width="12rem"
                 flex="flex"
                 justifycontent="space-between"
-                margin="2rem 0"
+                margin="2rem 1rem 2rem 0"
                 alignitems="center"
               >
                 <p>Subtotal</p>
@@ -279,6 +289,7 @@ function ShoppingCart() {
               backgroundcolor={colors.gray.nineHundred}
               color={colors.gray.oneHundred}
               padding="1rem"
+              margin="0 1rem 0 0"
               as={Link}
               to="/checkout"
               width="12rem"

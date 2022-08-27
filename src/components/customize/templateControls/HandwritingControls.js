@@ -111,7 +111,7 @@ function HandwritingControls({
         flex="flex"
         margin="0 0 1rem"
         border={`1px solid ${colors.gray.nineHundred}`}
-        borderradius="0"
+        borderradius="0.25rem"
       >
         <Flexbox
           alignitems="center"

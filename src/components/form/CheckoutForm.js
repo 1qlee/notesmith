@@ -35,7 +35,7 @@ const cardOptions = {
 
 const cardElementStyle = {
   backgroundColor: `${colors.white}`,
-  border: `1px solid ${colors.gray.threeHundred}`,
+  border: `1px solid ${colors.gray.nineHundred}`,
   borderRadius: "0.25rem",
   marginBottom: "0.5rem",
   padding: "1rem",
@@ -50,8 +50,11 @@ const cardElementErrorStyle = {
 }
 
 const CardDetailsWrapper = styled.div`
+  transition: box-shadow 0.2s, border-color 0.2s;
   &.is-focused {
-    border-color: ${colors.gray.sixHundred};
+    box-shadow: ${colors.shadow.focus};
+    border-color: ${colors.white};
+    outline: none;
   }
 `
 
@@ -242,8 +245,6 @@ function CheckoutForm({
         margin="2rem 0 0"
       >
         <TextLink
-          color={colors.primary.threeHundred}
-          hovercolor={colors.primary.sixHundred}
           className="has-icon"
           alignitems="flex-end"
           onClick={() => {
@@ -259,7 +260,7 @@ function CheckoutForm({
           <span>Edit shipping</span>
         </TextLink>
         <Button
-          backgroundcolor={colors.primary.sixHundred}
+          backgroundcolor={colors.gray.nineHundred}
           className={processing ? "is-loading" : null}
           color={colors.white}
           disabled={error || processing}

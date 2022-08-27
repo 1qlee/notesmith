@@ -16,7 +16,7 @@ const BreadcrumbContainer = styled.nav`
       a {
         cursor: not-allowed;
         &:hover {
-          color: ${colors.primary.threeHundred};
+          color: ${colors.gray.threeHundred};
         }
       }
     }
@@ -24,23 +24,23 @@ const BreadcrumbContainer = styled.nav`
       &::before {
         content: "/";
         position: absolute;
-        color: ${colors.primary.threeHundred};
+        color: ${colors.gray.sixHundred};
         right: -0.35rem;
       }
     }
   }
   a {
-    color: ${colors.primary.threeHundred};
+    color: ${colors.gray.sixHundred};
     position: relative;
     padding: 0 0.75rem 0 1rem;
     &.is-active {
-      color: ${colors.primary.sixHundred};
+      color: ${colors.gray.nineHundred};
     }
     &.first {
       padding-left: 0;
     }
     &:hover {
-      color: ${colors.primary.sixHundred};
+      color: ${colors.gray.sixHundred};
     }
   }
 `

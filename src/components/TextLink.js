@@ -4,26 +4,33 @@ import { colors } from "../styles/variables"
 const TextLink = styled.a`
   align-items: ${props => props.alignitems};
   border-bottom: ${props => props.borderbottom};
-  color: ${props => props.color || colors.gray.sixHundred};
+  color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex || "flex"};
-  justify-content: ${props => props.justifycontent};
-  font-size: ${props => props.fontsize || "0.825rem"};
   font-family: ${props => props.fontfamily || "Inter, Helvetica, Tahoma, sans-serif"};
+  font-size: ${props => props.fontsize || "0.825rem"};
+  justify-content: ${props => props.justifycontent};
+  line-height: 1;
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;
-  width: ${props => props.width};
-  background:  no-repeat 0 100%;
-  background-image: linear-gradient(${colors.yellow.oneHundred}, ${colors.yellow.threeHundred});
-  background-size: 0% 40%;
   transition: background-size 0.2s;
+  width: ${props => props.width};
   z-index: 5;
   &:hover {
-    color: ${props => props.hovercolor || colors.gray.nineHundred};
-    background-size: 100% 40%;
+    color: ${props => props.hovercolor};
     &::before {
       width: 100%;
     }
+  }
+  &::before {
+    background-color: ${colors.gray.nineHundred};
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    bottom: -4px;
+    transition: width 0.2s;
+    width: 0;
   }
   &.has-icon {
     span + span {

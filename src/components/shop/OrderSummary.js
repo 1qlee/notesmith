@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { colors, convertToDecimal } from "../../styles/variables"
-import { Link } from "gatsby"
 import { useShoppingCart } from "use-shopping-cart"
-import { GatsbyImage } from "gatsby-plugin-image"
+import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 
 const Orders = styled.div`
   background-color: ${colors.white};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+  border-radius: 0.5rem;
+  border: 2px solid ${colors.gray.nineHundred};
+  box-shadow: ${colors.shadow.solid};
   margin-bottom: 1rem;
+`
+
+const OrderSection = styled.div`
+  padding: 1rem;
+  border-bottom: 2px solid ${colors.gray.nineHundred};
 `
 
 function OrderSummary({ selectedRate, taxRate }) {
@@ -53,94 +58,86 @@ function OrderSummary({ selectedRate, taxRate }) {
   return (
     <>
       <Orders>
-        <Flexbox
-          className="has-border-bottom"
-          padding="1rem"
-          bordercolor={colors.gray.threeHundred}
-        >
+        <OrderSection>
           <Content
             h3margin="0"
             h3fontweight="400"
           >
             <h3>Order Summary</h3>
           </Content>
-        </Flexbox>
-        {cartItems.map(item => (
-          <Flexbox
-            alignitems="center"
-            flex="flex"
-            key={item.id}
-            padding="0.5rem 1rem"
-          >
-            <GatsbyImage
-              image={item.image.gatsbyImageData}
-              alt="product thumbnail"
-            />
+        </OrderSection>
+        <OrderSection>
+          {cartItems.map(item => (
             <Flexbox
+              alignitems="center"
               flex="flex"
-              justifycontent="space-between"
-              width="100%"
+              key={item.id}
             >
-              <Content
-                paragraphcolor={colors.gray.nineHundred}
-                paragraphlineheight="1"
-                paragraphmarginbottom="0.25rem"
-                smallcolor={colors.gray.sixHundred}
-                smallfontsize="0.875rem"
-                smallmargin="0"
+              <GatsbyImage
+                image={getImage(item.image)}
+                alt="product thumbnail"
+              />
+              <Flexbox
+                flex="flex"
+                justifycontent="space-between"
+                width="100%"
               >
-                <p>{item.name} <span style={{color:colors.gray.sixHundred}}><span style={{margin:'0 0.0675rem 0 0.25rem'}}>x</span>{item.quantity}</span></p>
-                {item.category === "notebooks" && (
-                  <small>{capitalizeText(item.coverColor)}, {capitalizeText(item.leftPageData.template)} left, {capitalizeText(item.rightPageData.template)} right</small>
-                )}
-              </Content>
-              <p>${convertToDecimal(item.price * item.quantity, 2)}</p>
+                <Content
+                  paragraphcolor={colors.gray.nineHundred}
+                  paragraphlineheight="1"
+                  paragraphmarginbottom="0.25rem"
+                  smallcolor={colors.gray.sixHundred}
+                  smallfontsize="0.875rem"
+                  smallmargin="0"
+                >
+                  <p>{item.name} <span style={{color:colors.gray.sixHundred}}><span style={{margin:'0 0.0675rem 0 0.25rem'}}>x</span>{item.quantity}</span></p>
+                  {item.category === "notebooks" && (
+                    <small>{capitalizeText(item.coverColor)}, {capitalizeText(item.leftPageData.template)} left, {capitalizeText(item.rightPageData.template)} right</small>
+                  )}
+                </Content>
+                <p>${convertToDecimal(item.price * item.quantity, 2)}</p>
+              </Flexbox>
             </Flexbox>
+          ))}
+        </OrderSection>
+        <OrderSection>
+          <Flexbox
+            margin="0 0 1rem"
+            flex="flex"
+            justifycontent="space-between"
+          >
+            <p>Subtotal</p>
+            <p>${convertToDecimal(totalPrice, 2)}</p>
           </Flexbox>
-        ))}
-        <Flexbox
-          padding="1rem"
-          flex="flex"
-          justifycontent="space-between"
-          className="has-border-top"
-          bordercolor={colors.gray.threeHundred}
-        >
-          <p>Subtotal</p>
-          <p>${convertToDecimal(totalPrice, 2)}</p>
-        </Flexbox>
-        <Flexbox
-          padding="1rem"
-          flex="flex"
-          justifycontent="space-between"
-          bordercolor={colors.gray.threeHundred}
-        >
-          <p>Shipping</p>
-          {selectedRate ? (
-            <p>${selectedRate.rate}</p>
-          ) : (
-            <p>---</p>
-          )}
-        </Flexbox>
-        <Flexbox
-          padding="1rem"
-          flex="flex"
-          justifycontent="space-between"
-          bordercolor={colors.gray.threeHundred}
-        >
-          <p>Taxes</p>
-          {taxRate ? (
-            <p>${convertToDecimal(taxRate, 2)}</p>
-          ) : (
-            <p>---</p>
-          )}
-        </Flexbox>
+          <Flexbox
+            margin="0 0 1rem"
+            flex="flex"
+            justifycontent="space-between"
+          >
+            <p>Shipping</p>
+            {selectedRate ? (
+              <p>${selectedRate.rate}</p>
+            ) : (
+              <p>---</p>
+            )}
+          </Flexbox>
+          <Flexbox
+            flex="flex"
+            justifycontent="space-between"
+          >
+            <p>Taxes</p>
+            {taxRate ? (
+              <p>${convertToDecimal(taxRate, 2)}</p>
+            ) : (
+              <p>---</p>
+            )}
+          </Flexbox>
+        </OrderSection>
         <Flexbox
           padding="1rem"
           flex="flex"
           justifycontent="space-between"
           alignitems="flex-end"
-          className="has-border-top"
-          bordercolor={colors.gray.threeHundred}
         >
           <Content
             paragraphmarginbottom="0"

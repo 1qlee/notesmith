@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
-import { Loader } from "@googlemaps/js-api-loader"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { CheckCircle, Circle, CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
-import { StyledLabel } from "../form/FormComponents"
+import Content from "../Content"
 import ShippingInfo from "./ShippingInfo"
 import Icon from "../Icon"
-import Content from "../Content"
 import TextLink from "../TextLink"
 import Button from "../Button"
+import Tag from "../ui/Tag"
 
 const rotate = keyframes`
   from {
@@ -26,13 +25,23 @@ const ShippingInfoContainer = styled.div`
   width: 100%;
 `
 
+const ShippingItemsContainer = styled.div`
+  margin-bottom: 2rem;
+`
+
 const ShippingItem = styled(Flexbox)`
+  border: 2px solid ${colors.gray.nineHundred}; 
+  border-radius: 0.5rem;
+  box-shadow: ${colors.shadow.solid};
+  transition: box-shadow 0.2s, transform 0.2s;
   &:hover {
-    background-color: ${colors.primary.hover};
+    background-color: ${colors.gray.oneHundred};
     cursor: pointer;
   }
   &.is-selected {
-    background-color: ${colors.primary.active};
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 ${colors.gray.nineHundred};
+    background-color: ${colors.yellow.threeHundred};
   }
   &.is-loading {
     background-color: ${colors.gray.oneHundred};
@@ -41,10 +50,6 @@ const ShippingItem = styled(Flexbox)`
     &.is-loading {
       animation: ${rotate} 0.5s linear infinite;
     }
-  }
-  &:first-child,
-  &:last-child {
-    border-radius: 0.25rem;
   }
 `
 
@@ -72,12 +77,6 @@ const ShippingForm = ({
   const [allRates, setAllRates] = useState()
   const pid = localStorage.getItem("pid")
 
-  // load Google Maps API
-  const loader = new Loader({
-    apiKey: process.env.GATSBY_GOOGLE_MAPS_API,
-    version: "weekly",
-  });
-
   useEffect(() => {
     // fetch the cheapest shipping rate based on the user's address
     const createRates = async () => {
@@ -85,7 +84,7 @@ const ShippingForm = ({
       setLoading(true)
 
       // fetch shipping rates for the user's cart items
-      const shippingPrice = await fetch("/.netlify/functions/create-rates", {
+      await fetch("/.netlify/functions/create-rates", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -149,29 +148,21 @@ const ShippingForm = ({
     setFormError("")
     // check if customer's shipping address' state is New York
     if (address.state === "New York") {
-      // load Google Maps API constructor
-      loader.load().then(async google => {
-        const geocoder = new google.maps.Geocoder()
-        // call API geocode endpoint to get county information from address
-        await geocoder.geocode({ "address": `${address.line1}, ${address.city}, ${address.state} ${address.postal_code}` }, (results, status) => {
-          if (status === "OK") {
-            // tax is sometimes determined by 'sublocality' or 'locality' at its highest specificity
-            const locality = results[0].address_components.find(elem => elem.types.find(type => type === "sublocality" || type === "locality"))
-            // otherwise it is simply determined by county
-            const county = results[0].address_components.find(elem => elem.types.find(type => type === "administrative_area_level_2"))
-            const taxCounties = { locality: locality.long_name, county: county.long_name }
+      await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address.line1} ${address.line2} ${address.city} ${address.state} ${address.postal_code}.json?country=${address.country}&proximity=ip&types=address&access_token=${process.env.GATSBY_MAPBOX_ACCESS_API}`)
+      .then(res => {
+        return res.json()
+      }).then(data => {
+        // find the array that holds county level info
+        const countyInfo = data.features[0].context.find(elem => elem.id.slice(0,8) === "district")
+        const countyName = countyInfo.text
 
-            fetchTax(taxCounties)
-          }
-          else {
-            setProcessing(false)
-            console.log("Geocode request was not successful: " + status)
-          }
-        })
-      }).then(res => {
+        fetchTax(countyName)
+      }).then(() => {
         setProcessing(false)
         setShowShippingMethod(false)
         setActiveTab(2)
+      }).catch(err => {
+        console.log(err)
       })
     }
     else {
@@ -183,7 +174,7 @@ const ShippingForm = ({
     }
   }
 
-  const fetchTax = async (taxCounties) => {
+  const fetchTax = async (countyName) => {
     await fetch("/.netlify/functions/create-tax", {
       method: "post",
       headers: {
@@ -191,8 +182,7 @@ const ShippingForm = ({
       },
       body: JSON.stringify({
         pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        locality: taxCounties.locality,
-        county: taxCounties.county,
+        county: countyName,
       })
     }).then(res => {
       return res.json()
@@ -255,112 +245,110 @@ const ShippingForm = ({
         shippingMethod={shippingMethod}
         setShowShippingMethod={setShowShippingMethod}
       />
-      <div>
-        <StyledLabel>Shipping method</StyledLabel>
-        <Flexbox
-          borderradius="0"
-          border={`1px solid ${colors.gray.threeHundred}`}
-          margin="0 0 2rem"
-        >
-          {loading && (
-            <ShippingItem
-              className="is-loading"
-              justifycontent="flex-start"
-              alignitems="center"
-              padding="1rem"
-              flex="flex"
-            >
-              <Icon margin="0 0.5rem 0 0">
-                <CircleNotch className="is-loading" size="1.25rem" color={colors.gray.sixHundred} />
-              </Icon>
-              <p>Calculating shipping rates...</p>
-            </ShippingItem>
-          )}
-          {cheapestRate && !loading && (
-            <ShippingItem
-              onClick={index => {
-                setShippingMethod(cheapestRate.id)
-                setSelectedRate(cheapestRate)
-              }}
-              className={shippingMethod === cheapestRate.id ? "is-selected" : null}
-              justifycontent="flex-start"
-              alignitems="flex-start"
-              padding="1rem"
-              flex="flex"
-            >
-              {shippingMethod === cheapestRate.id ? (
-                <Icon margin="0 0.5rem 0 0">
-                  <CheckCircle color={colors.primary.sixHundred} size="1rem" weight="bold" />
-                </Icon>
-              ) : (
-                <Icon margin="0 0.5rem 0 0">
-                  <Circle size="1rem" />
-                </Icon>
-              )}
-              <Flexbox
-                flex="flex"
-                justifycontent="space-between"
-                width="100%"
-              >
-                <Content
-                  paragraphcolor={colors.gray.nineHundred}
-                  paragraphlineheight="1"
-                  paragraphmarginbottom="0.25rem"
-                  smallcolor={colors.gray.sixHundred}
-                  smallfontsize="0.875rem"
-                  smallmargin="0"
-                >
-                  <p>Ground shipping</p>
-                  {cheapestRate.delivery_days && (
-                    <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
-                  )}
-                </Content>
-                <p>${cheapestRate.rate}</p>
-              </Flexbox>
-            </ShippingItem>
-          )}
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          justifycontent="space-between"
-          alignitems="center"
-        >
-          <TextLink
-            color={colors.primary.threeHundred}
-            hovercolor={colors.primary.sixHundred}
-            className="has-icon"
-            alignitems="flex-end"
-            onClick={() => {
-              setProcessing(false)
-              setShowShippingMethod(false)
-            }}
-          >
-            <Icon>
-              <ArrowLeft size="1rem" />
-            </Icon>
-            <span>Back to info</span>
-          </TextLink>
-          <Button
-            disabled={!shippingMethod || processing}
-            id="submit"
-            backgroundcolor={colors.primary.sixHundred}
-            color={colors.white}
-            className={processing ? "is-loading" : null}
+      <Content
+        headingfontfamily={fonts.secondary}
+        h3fontsize="0.875rem"
+        h3margin="0"
+        margin="0 0 1rem 0"
+      >
+        <h3>Shipping method</h3>
+      </Content>
+      <ShippingItemsContainer>
+        {loading && (
+          <ShippingItem
+            className="is-loading"
+            justifycontent="flex-start"
+            alignitems="center"
             padding="1rem"
-            form="checkout-shipping-form"
-            onClick={() => submitShippingInfo()}
-            width="200px"
+            flex="flex"
           >
-          {processing ? (
-            <Icon>
-              <CircleNotch size="1rem" color={colors.white} />
+            <Icon margin="0 0.5rem 0 0">
+              <CircleNotch className="is-loading" size="1.25rem" color={colors.gray.sixHundred} />
             </Icon>
-          ) : (
-            "Continue"
-          )}
-          </Button>
-        </Flexbox>
-      </div>
+            <p>Calculating shipping rates...</p>
+          </ShippingItem>
+        )}
+        {cheapestRate && !loading && (
+          <ShippingItem
+            onClick={() => {
+              setShippingMethod(cheapestRate.id)
+              setSelectedRate(cheapestRate)
+            }}
+            className={shippingMethod === cheapestRate.id ? "is-selected" : null}
+            justifycontent="flex-start"
+            alignitems="flex-start"
+            padding="1rem"
+            flex="flex"
+          >
+            {shippingMethod === cheapestRate.id ? (
+              <Icon margin="0 0.5rem 0 0">
+                <CheckCircle color={colors.gray.nineHundred} size="1rem" weight="fill" />
+              </Icon>
+            ) : (
+              <Icon margin="0 0.5rem 0 0">
+                <Circle size="1rem" />
+              </Icon>
+            )}
+            <Flexbox
+              flex="flex"
+              justifycontent="space-between"
+              width="100%"
+            >
+              <div>
+                <p>Ground shipping</p>
+                {cheapestRate.delivery_days && (
+                  <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
+                )}
+              </div>
+              <Tag
+                color={colors.gray.oneHundred}
+                backgroundcolor={colors.gray.nineHundred}
+                fontfamily={fonts.secondary}
+              >
+                ${cheapestRate.rate}
+              </Tag>
+            </Flexbox>
+          </ShippingItem>
+        )}
+      </ShippingItemsContainer>
+      <Flexbox
+        flex="flex"
+        justifycontent="space-between"
+        alignitems="center"
+      >
+        <TextLink
+          className="has-icon"
+          alignitems="flex-end"
+          onClick={() => {
+            setProcessing(false)
+            setShowShippingMethod(false)
+          }}
+        >
+          <Icon>
+            <ArrowLeft size="1rem" />
+          </Icon>
+          <span>Back to info</span>
+        </TextLink>
+        <Button
+          disabled={!shippingMethod || processing}
+          id="submit"
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.white}
+          className={processing ? "is-loading" : null}
+          padding="1rem"
+          form="checkout-shipping-form"
+          onClick={() => submitShippingInfo()}
+          width="200px"
+        >
+        {processing ? (
+          <Icon>
+            <CircleNotch size="1rem" color={colors.white} />
+          </Icon>
+        ) : (
+          "Continue"
+        )}
+        </Button>
+      </Flexbox>
     </ShippingInfoContainer>
   )
 }

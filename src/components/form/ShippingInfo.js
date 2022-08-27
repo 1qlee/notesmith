@@ -1,16 +1,17 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 import TextLink from "../TextLink"
-import { StyledLabel } from "../form/FormComponents"
+import Content from "../Content"
 import { Flexbox } from "../layout/Flexbox"
 
 const Infobox = styled.div`
   background-color: ${colors.white};
   padding: ${props => props.padding ? props.padding : "0 1rem"};
-  border-radius: 0.25rem;
-  border: 1px solid ${colors.gray.threeHundred};
+  border-radius: 0.5rem;
+  border: 2px solid ${colors.gray.nineHundred};
+  box-shadow: ${colors.shadow.solid};
   margin-bottom: 2rem;
 `
 
@@ -24,10 +25,17 @@ const InfoItem = styled.div`
   }
 `
 
+const InfoItemHeading = styled.h3`
+  color: ${colors.gray.nineHundred};
+  font-family: ${fonts.secondary};
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex: 1;
+`
+
 const InfoItemText = styled.p`
-  color: ${props => props.color};
-  flex: ${props => props.flex};
-  margin: ${props => props.margin ? props.margin : 0};
+  color: ${colors.gray.nineHundred};
+  flex: 5;
 `
 
 function ShippingInfo({
@@ -44,10 +52,16 @@ function ShippingInfo({
         alignitems="center"
         justifycontent="space-between"
       >
-        <StyledLabel>Shipping Information</StyledLabel>
+        <Content
+          headingfontfamily={fonts.secondary}
+          h3fontsize="0.875rem"
+          h3margin="0"
+          margin="0 0 1rem 0"
+        >
+          <h3>Shipping information</h3>
+        </Content>
         <TextLink
-          color={colors.primary.threeHundred}
-          hovercolor={colors.primary.sixHundred}
+          color={colors.gray.nineHundred}
           onClick={() => {
             setActiveTab(1)
             setShowShippingMethod(false)
@@ -59,21 +73,21 @@ function ShippingInfo({
       </Flexbox>
       <Infobox>
         <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Name</InfoItemText>
-          <InfoItemText flex="5">{customer.name}</InfoItemText>
+          <InfoItemHeading>Name</InfoItemHeading>
+          <InfoItemText>{customer.name}</InfoItemText>
         </InfoItem>
         <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Email</InfoItemText>
-          <InfoItemText flex="5">{customer.email}</InfoItemText>
+          <InfoItemHeading>Email</InfoItemHeading>
+          <InfoItemText>{customer.email}</InfoItemText>
         </InfoItem>
         <InfoItem>
-          <InfoItemText color={colors.gray.sixHundred} flex="1">Ship to</InfoItemText>
-          <InfoItemText flex="5">{address.line1}, {address.line2} {address.city}, {address.state} {address.postal_code}</InfoItemText>
+          <InfoItemHeading>Address</InfoItemHeading>
+          <InfoItemText>{address.line1}, {address.line2} {address.city}, {address.state} {address.postal_code}</InfoItemText>
         </InfoItem>
         {shippingMethod && (
           <InfoItem>
-            <InfoItemText color={colors.gray.sixHundred} flex="1">Shipping</InfoItemText>
-            <InfoItemText flex="5">Ground shipping</InfoItemText>
+            <InfoItemHeading>Shipping</InfoItemHeading>
+            <InfoItemText>Ground shipping</InfoItemText>
           </InfoItem>
         )}
       </Infobox>

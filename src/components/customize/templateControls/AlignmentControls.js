@@ -8,6 +8,7 @@ import Button from "../../Button"
 const AlignmentButtonWrapper = styled.div`
   display: flex;
   border: 1px solid ${colors.gray.nineHundred};
+  border-radius: 0.25rem;
   background-color: ${colors.white};
   padding: 0.25rem;
   margin-bottom: 1rem;

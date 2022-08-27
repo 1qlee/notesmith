@@ -35,7 +35,6 @@ function Template({
   useEffect(() => {
     if (currentPageSide === "left") {
       const currentPage = leftPageRef.current
-      console.log(currentPage)
       const currentPageSize = currentPage.getBBox()
 
       setSelectedPageSvg(leftPageRef.current)

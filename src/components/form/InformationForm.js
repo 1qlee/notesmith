@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Link } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { useFirebaseContext } from "../../utils/auth"
 import { ArrowLeft, CaretDown } from "phosphor-react"
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector'
 
@@ -78,7 +77,7 @@ function InformationForm({
     setProcessing(true)
 
     // validate the user's inputted address using easypost's API
-    const validateAddress = await fetch("/.netlify/functions/validate-address", {
+    await fetch("/.netlify/functions/validate-address", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -108,7 +107,7 @@ function InformationForm({
   async function updatePaymentInfo() {
     setFormError("")
     // update the paymentIntent with shipping form data
-    const payment = await fetch("/.netlify/functions/create-payment", {
+    await fetch("/.netlify/functions/create-payment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -192,6 +191,25 @@ function InformationForm({
     }
   }
 
+  function handleAddressAutofill(res) {
+    if (res) {
+      const address = res.features[0].properties
+      const { address_line1, address_line2, district, full_address, postcode, country, country_code, place, region, region_code } = address
+
+      setAddress({
+        line1: address_line1,
+        line2: address_line2,
+        city: place,
+        state: "",
+        postal_code: "",
+        country: "",
+      })
+    }
+    else {
+      return
+    }
+  }
+
   return (
     <form
       onSubmit={submitInformationForm}
@@ -255,17 +273,17 @@ function InformationForm({
         margin="0 0 1rem 0"
       >
         <StyledLabel htmlFor="checkout-line1">Address Line 1</StyledLabel>
-        <StyledInput
+        <StyledInput 
           id="checkout-line1"
           name="line1"
-          onChange={e => setAddress({...address, line1: e.target.value})}
+          onChange={e => setAddress({ ...address, line1: e.target.value })}
           onBlur={e => validateInput(e)}
           onFocus={e => onInputFocus(e)}
           className={line1Error && "is-error"}
           placeholder="123 Main Street"
           required
           type="text"
-          value={address.line1}
+          value={address.line1} 
         />
         {line1Error && (
           <ErrorLine
@@ -330,6 +348,7 @@ function InformationForm({
               onChange={value => setAddress({ ...address, country: value })}
               required
               value={address.country}
+              valueType="short"
               whitelist={whiteList}
             />
             <SelectIcon>
@@ -346,6 +365,7 @@ function InformationForm({
               as={RegionDropdown}
               className={stateError && "is-error"}
               country={address.country}
+              countryValueType="short"
               disableWhenEmpty={true}
               id="checkout-state"
               name="state"
@@ -396,8 +416,7 @@ function InformationForm({
         alignitems="center"
       >
         <TextLink
-          color={colors.primary.threeHundred}
-          hovercolor={colors.primary.sixHundred}
+          color={colors.gray.nineHundred}
           className="has-icon"
           alignitems="flex-end"
           as={Link}
@@ -411,8 +430,8 @@ function InformationForm({
         <Button
           disabled={processing}
           id="submit"
-          backgroundcolor={colors.primary.sixHundred}
-          color={colors.white}
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
           padding="1rem"
           className={processing ? "is-loading" : null}
           form="checkout-shipping-form"

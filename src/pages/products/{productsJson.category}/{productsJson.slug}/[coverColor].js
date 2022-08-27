@@ -109,14 +109,12 @@ const ProductPage = ({ data, params }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
+                  columns="300px 1fr 450px"
                   columnGap={spacing.large}
                 >
-                  <Cell width={4}>
-                    {selectedTemplate.show ? (
-                      <Flexbox
-                        flex="flex"
-                      >
+                  {selectedTemplate.show ? (
+                    <>
+                      <Cell>
                         <Templatesbar
                           borderData={borderData}
                           canvasPageSize={canvasPageSize}
@@ -133,6 +131,8 @@ const ProductPage = ({ data, params }) => {
                           setRightPageData={setRightPageData}
                           toast={toast}
                         />
+                      </Cell>
+                      <Cell center>
                         <Template
                           borderData={borderData}
                           bookData={bookData}
@@ -147,17 +147,19 @@ const ProductPage = ({ data, params }) => {
                           workingPageHeight={workingPageHeight}
                           workingPageWidth={workingPageWidth}
                         />
-                      </Flexbox>
-                    ) : (
+                      </Cell>
+                    </>
+                  ) : (
+                    <Cell width={2}>
                       <ProductImages
                         coverColor={coverColor}
                         productImages={productImages}
                         productThumbnails={productThumbnails}
                         setCartThumbnail={setCartThumbnail}
                       />
-                    )}
-                  </Cell>
-                  <Cell width={2}>
+                    </Cell>
+                  )}
+                  <Cell>
                     <ProductInfo
                       bookData={bookData}
                       cartThumbnail={cartThumbnail}
@@ -188,7 +190,6 @@ const ProductPage = ({ data, params }) => {
         pauseOnHover
         position="bottom-center"
         rtl={false}
-        theme="dark"
         style={{
           fontFamily: fonts.secondary,
           fontSize: "0.75rem",

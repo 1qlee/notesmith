@@ -357,7 +357,6 @@ table {
   margin-bottom: 0;
   font-size: 1rem;
   line-height: 1.45rem;
-  border-collapse: collapse;
   width: 100%;
 }
 fieldset {
@@ -546,7 +545,7 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #e4f1e4 inset;
+  -webkit-box-shadow: 0 0 0px 1000px #FEF3C7 inset;
   transition: background-color 5000s;
 }
 /* Make css-grid cells on the index page to stretch fullwidth in smaller viewport */

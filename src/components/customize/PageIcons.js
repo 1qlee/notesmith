@@ -6,9 +6,9 @@ import ReactTooltip from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
 import HexPageIcon from "../../assets/hexagon-grid.svg"
 import SeyesIcon from "../../assets/seyes.svg"
+import CalligraphyIcon from "../../assets/calligraphy.svg"
 
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
 import Icon from "../Icon"
 
 const StyledPage = styled.a`
@@ -61,12 +61,12 @@ const StyledPage = styled.a`
 
 const PageBadge = styled.span`
   align-items: center;
-  background-color: ${colors.gray.nineHundred};
+  background-color: ${colors.yellow.threeHundred};
   border-radius: 20px;
-  color: ${colors.gray.oneHundred};
+  color: ${colors.gray.nineHundred};
   display: flex;
   font-family: ${fonts.secondary};
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   justify-content: center;
   left: ${props => props.left};
   padding: 4px;
@@ -848,53 +848,12 @@ function CalligraphyPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          flexdirection="column"
           alignitems="center"
-          justifycontent="space-between"
-          height="8px"
-          margin="6px 0"
+          justifycontent="center"
+          width="100%"
+          height="100%"
         >
-          <HorizontalLine width="80%" />
-          <Flexbox
-            flex="flex"
-            justifycontent="space-around"
-            width="80%"
-          >
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-          </Flexbox>
-          <HorizontalLine width="80%" />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          alignitems="center"
-          justifycontent="space-between"
-          height="8px"
-          margin="0.25rem 0"
-        >
-          <HorizontalLine width="80%" />
-          <Flexbox
-            flex="flex"
-            justifycontent="space-around"
-            width="80%"
-          >
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-            <HorizontalLine width="1px" />
-          </Flexbox>
-          <HorizontalLine width="80%" />
+          <CalligraphyIcon />
         </Flexbox>
       </PageOutline>
       {showLabels ? (

@@ -244,6 +244,7 @@ function NumberInput({
         width={width}
       />
       <NumberInputIcon
+        pos="top"
         right="0"
         top="0"
         width="1rem"
@@ -256,6 +257,7 @@ function NumberInput({
         <CaretUp color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
       </NumberInputIcon>
       <NumberInputIcon
+        pos="bottom"
         right="0"
         bottom="0"
         width="1rem"
@@ -311,18 +313,19 @@ const NumberInputWrapper = styled.div`
 `
 
 const NumberInputIcon = styled.div`
-  display: flex;
   align-items: center;
-  justify-content: center;
-  height: ${props => props.height || "50%"};
   background-color: ${colors.gray.nineHundred};
+  bottom: ${props => props.bottom};
+  border-radius: ${props => props.pos === "top" ? "0 0.25rem 0 0" : "0 0 0.25rem 0" };
+  display: flex;
+  height: ${props => props.height || "50%"};
+  justify-content: center;
   left: ${props => props.left};
   position: absolute;
   right: ${props => props.right};
-  bottom: ${props => props.bottom};
   top: ${props => props.top};
-  width: ${props => props.width};
   user-select: none;
+  width: ${props => props.width};
   &:hover {
     cursor: pointer;
     background-color: ${colors.gray.sixHundred};
@@ -353,6 +356,7 @@ const QuantityButton = styled.button`
 const Counter = styled.input`
   background-color: ${colors.white};
   border: 1px solid ${colors.gray.nineHundred};
+  border-radius: 0.25rem;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize};
   padding: ${props => props.padding || "1rem"};
@@ -432,6 +436,7 @@ const StyledRange = styled.div`
     margin-right: 15px;
     width: 100%;
     height: 7px;
+    border-radius: 0.25rem;
     background: ${colors.gray.threeHundred};
     background-image: linear-gradient(${colors.gray.nineHundred}, ${colors.gray.nineHundred});
     background-size: 70% 100%;
@@ -468,6 +473,7 @@ const StyledRange = styled.div`
 
 const StyledCheckbox = styled.div`
   align-items: center;
+  border-radius: 0.25rem;
   display: flex;
   flex: ${props => props.flex || "1"};
   margin: ${props => props.margin};
@@ -479,7 +485,7 @@ const StyledCheckbox = styled.div`
     font-size: ${props => props.fontsize || "0.75rem"}
   }
   &:hover {
-    background-color: ${colors.gray.oneHundred};
+    background-color: ${colors.gray.threeHundred};
     cursor: pointer;
   }
 `
@@ -592,7 +598,7 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   color: ${colors.gray.nineHundred};
   display: block;
@@ -638,7 +644,7 @@ const SelectIcon = styled.span`
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: 1px solid ${colors.gray.nineHundred};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize || "0.8rem"};
@@ -674,14 +680,18 @@ const ErrorLine = styled.div`
 `
 
 const StyledTable = styled.table`
-  border: 1px solid ${colors.gray.nineHundred};
-  th,td,tr {
+  border: 2px solid ${colors.gray.nineHundred};
+  td,tr {
+    border-width: 2px;
     border-color: ${colors.gray.nineHundred};
+    border-bottom-width: 0;
   }
-  th, td {
+  th,td {
     padding: 1rem;
   }
   th {
+    border-color: ${colors.gray.nineHundred};
+    border-width: 2px;
     font-family: ${fonts.secondary};
     font-size: 0.825rem;
     font-weight: 700;

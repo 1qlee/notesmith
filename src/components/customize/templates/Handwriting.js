@@ -26,7 +26,6 @@ function Handwriting({
         dummyArray.push(convertToPx(parseFloat(elem)))
       })
 
-      console.log(dummyArray)
       return dummyArray
     }
   }
