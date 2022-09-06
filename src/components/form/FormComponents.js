@@ -681,6 +681,8 @@ const ErrorLine = styled.div`
 
 const StyledTable = styled.table`
   border: 2px solid ${colors.gray.nineHundred};
+  box-shadow: ${colors.shadow.solid};
+  border-radius: 0.5rem;
   td,tr {
     border-width: 2px;
     border-color: ${colors.gray.nineHundred};

@@ -65,9 +65,9 @@ const LoaderWrapper = styled.div`
   z-index: 999;
   &.has-nav {
     height: calc(100vh - 96px);
-    width: calc(100% - 4px);
+    width: calc(100% + 4px);
     top: 0;
-    left: 4px;
+    left: 0;
   }
   &.is-app {
     width: calc(100% - ${widths.sidebar});

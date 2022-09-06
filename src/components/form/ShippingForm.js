@@ -280,26 +280,32 @@ const ShippingForm = ({
             padding="1rem"
             flex="flex"
           >
-            {shippingMethod === cheapestRate.id ? (
-              <Icon margin="0 0.5rem 0 0">
-                <CheckCircle color={colors.gray.nineHundred} size="1rem" weight="fill" />
-              </Icon>
-            ) : (
-              <Icon margin="0 0.5rem 0 0">
-                <Circle size="1rem" />
-              </Icon>
-            )}
             <Flexbox
               flex="flex"
               justifycontent="space-between"
+              alignitems="center"
               width="100%"
             >
-              <div>
-                <p>Ground shipping</p>
-                {cheapestRate.delivery_days && (
-                  <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
+              <Flexbox
+                flex="flex"
+                alignitems="center"
+              >
+                {shippingMethod === cheapestRate.id ? (
+                  <Icon margin="0 0.5rem 0 0">
+                    <CheckCircle color={colors.gray.nineHundred} size="1rem" weight="fill" />
+                  </Icon>
+                ) : (
+                  <Icon margin="0 0.5rem 0 0">
+                    <Circle size="1rem" />
+                  </Icon>
                 )}
-              </div>
+                <div>
+                  <p>Ground shipping</p>
+                  {cheapestRate.delivery_days && (
+                    <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
+                  )}
+                </div>
+              </Flexbox>
               <Tag
                 color={colors.gray.oneHundred}
                 backgroundcolor={colors.gray.nineHundred}

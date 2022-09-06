@@ -16,7 +16,10 @@ const Content = styled.div`
     max-width: none;
   }
   &.has-border-bottom {
-    border-bottom: 1px solid ${props => props.bordercolor};
+    border-bottom: 2px solid ${props => props.bordercolor};
+  }
+  &.has-border-top {
+    border-top: 2px solid ${props => props.bordercolor};
   }
   h1,h2,h3,h4,h5,h6 {
     margin: 0 0 1rem;
@@ -99,13 +102,12 @@ const Content = styled.div`
     margin: ${props => props.smallmargin || "0.5rem 0"};
   }
   a {
-    color: ${props => props.linkcolor || colors.gray.threeHundred};
+    color: ${props => props.linkcolor};
     font-size: ${props => props.linkfontsize};
-    text-decoration: ${props => props.linktextdecoration};
+    font-family: ${props => props.linkfontfamily};
     &:hover {
       cursor: pointer;
-      color: ${props => props.linkcolorhover || colors.gray.sixHundred};
-      text-decoration: ${props => props.linktextdecorationhover || "underline"};
+      color: ${props => props.linkcolorhover};
     }
   }
 `

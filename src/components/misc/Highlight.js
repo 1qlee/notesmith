@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const StyledHighlight = styled.span`
-  background: linear-gradient(0deg, ${colors.yellow.threeHundred} 0%, transparent 60%);
+  background-image: linear-gradient(60deg, transparent 0%, ${colors.highlighter} 69%, transparent 100%);
 `
 
 function Highlight({ children }) {

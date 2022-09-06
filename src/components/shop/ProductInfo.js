@@ -4,13 +4,13 @@ import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { v4 as uuidv4 } from 'uuid'
 
-import { ProductDetails } from "./ShopComponents"
-import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import PageIcons from "../customize/PageIcons"
-import ColorPicker from "./ColorPicker"
+import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import Button from "../Button"
+import ColorPicker from "./ColorPicker"
 import Content from "../Content"
+import PageIcons from "../customize/PageIcons"
+import ProductInfoBox from "./ProductInfoBox"
 
 const ProductInfo = ({
   bookData,
@@ -70,31 +70,35 @@ const ProductInfo = ({
   }
 
   return (
-    <ProductDetails>
+    <>
       <Content
         margin="0 0 1rem 0"
-        h1fontsize="3rem"
+        h1fontsize="2rem"
         h1margin="0"
-      >
-        <h1>{bookData.name}</h1>
-      </Content>
-      <Content
         h2fontsize="2rem"
         h2fontweight="400"
         h2margin="0"
       >
-        <h2>${bookData.price / 100}</h2>
+        <Flexbox
+          flex="flex"
+          wrap="flex-wrap"
+          alignitems="center"
+          justifycontent="space-between"
+        >
+          <h1>{bookData.name}</h1>
+          <h2>${bookData.price / 100}</h2>
+        </Flexbox>
       </Content>
       <Content
-        margin="2rem 0"
         paragraphfontsize="1.2rem"
+        margin="0 0 32px"
       >
         <p>{bookData.description}</p>
       </Content>
       <Content
         headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
         h3fontsize="0.75rem"
-        margin="2rem 0"
+        margin="32px 0"
       >
         <h3>Cover color</h3>
         <ColorPicker
@@ -109,7 +113,7 @@ const ProductInfo = ({
       <Content
         headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
         h3fontsize="0.75rem"
-        margin="2rem 0 0"
+        margin="32px 0 0"
       >
         <h3>Page layout</h3>
       </Content>
@@ -118,7 +122,7 @@ const ProductInfo = ({
         flexwrap="wrap"
         justifycontent="flex-start"
         alignitems="center"
-        margin="0 0 2rem"
+        margin="0 0 16px"
       >
         <PageIcons
           checkActiveVar={selectedTemplate.template}
@@ -133,7 +137,7 @@ const ProductInfo = ({
       </Flexbox>
       <Flexbox
         flex="flex"
-        margin="0 0 1rem"
+        margin="0 0 2rem"
         alignitems="flex-end"
       >
         <div>
@@ -163,20 +167,13 @@ const ProductInfo = ({
           Add to cart
         </Button>
       </Flexbox>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        margin="0 0 2rem"
-      >
-        <Content
-          paragraphfontsize="0.825rem"
-          paragraphcolor={colors.gray.sevenHundred}
-        >
-          <p>Free shipping for orders over $60</p>
-          <p>30 day return policy</p>
-        </Content>
-      </Flexbox>
-    </ProductDetails>
+      {bookData.infoBoxes.map(box => (
+        <ProductInfoBox 
+          heading={box.heading}
+          text={box.text}
+        />
+      ))}
+    </>
   )
 }
 

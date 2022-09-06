@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { spacing, convertToPx, fonts, convertToMM } from "../../../../styles/variables"
+import { spacing, convertToPx, fonts, convertToMM, widths } from "../../../../styles/variables"
 import { ToastContainer, toast } from 'react-toastify'
 import "../../../../styles/gallery.css"
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
-import { Flexbox } from "../../../../components/layout/Flexbox"
+import Content from "../../../../components/Content"
 import Layout from "../../../../components/layout/Layout"
 import Nav from "../../../../components/layout/Nav"
+import ProductImages from "../../../../components/shop/ProductImages"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Seo from "../../../../components/layout/Seo"
 import Template from "../../../../components/customize/pageComponents/Template"
-import ProductImages from "../../../../components/shop/ProductImages"
 import Templatesbar from "../../../../components/customize/bars/Templatesbar"
 
 const ProductPage = ({ data, params }) => {
@@ -109,7 +109,7 @@ const ProductPage = ({ data, params }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="300px 1fr 450px"
+                  columns="300px 1fr 400px"
                   columnGap={spacing.large}
                 >
                   {selectedTemplate.show ? (
@@ -176,6 +176,38 @@ const ProductPage = ({ data, params }) => {
             </LayoutContainer>
           </Container>
         </Section>
+        <Section>
+          <Container>
+            <LayoutContainer>
+              <SectionContent
+                padding={`${spacing.large} 0`}
+                className="has-border-top"
+              >
+                <Grid
+                  columns="1fr 3fr"
+                  columnGap={spacing.large}
+                >
+                  <Cell>
+                    <Content
+                      headingfontfamily={fonts.secondary}
+                      h3fontsize="1rem"
+                    >
+                      <h3>Product Description</h3>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <Content
+                      paragraphfontsize="1.2rem"
+                      width={widths.content.normal}
+                    >
+                      <p>{bookData.longDescription}</p>
+                    </Content>
+                  </Cell>
+                </Grid>
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
       </SectionMain>
       <ToastContainer
         autoClose={3000}
@@ -205,6 +237,7 @@ export const pageQuery = graphql`
       camelName
       category
       description
+      longDescription
       heightInch
       heightPixel
       name
@@ -219,6 +252,10 @@ export const pageQuery = graphql`
       weight
       widthInch
       widthPixel
+      infoBoxes {
+        heading
+        text
+      }
       colors {
         name
         hex

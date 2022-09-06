@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { Star, ArrowCircleDown, ArrowRight, WarningCircle } from "phosphor-react"
+import { Star, ArrowUpRight, WarningCircle, ArrowRight } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import "../components/index/index.css"
@@ -13,23 +13,27 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import { StyledLabel } from "../components/form/FormComponents"
 import Book3d from "../components/index/Book3d"
 import Button from "../components/Button"
+import BoxText from "../components/index/BoxText"
 import CircledText from "../components/CircledText"
 import Content from "../components/Content"
 import DemoControls from "../components/index/DemoControls"
-import Highlight from "../components/misc/Highlight"
 import Icon from "../components/Icon"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
+import Notification from "../components/ui/Notification"
 import PageIcons from "../components/customize/PageIcons"
 import Pattern from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
 import Seo from "../components/layout/Seo"
-import SpineText from "../components/index/SpineText"
+import PageCarousel from "../components/index/PageCarousel"
+import TextLink from "../components/TextLink"
+import Tabs from "../components/ui/Tabs"
 import Tag from "../components/ui/Tag"
+import SectionHeading from "../components/index/SectionHeading"
 
 const IndexPage = ({ data }) => {
-  const [activeImage, setActiveImage] = useState(0)
+  const [activeTab, setActiveTab] = useState(0)
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
@@ -59,24 +63,24 @@ const IndexPage = ({ data }) => {
     thickness: 0.088,
     xHeight: 5,
   })
-  const [borderData, setBorderData] = useState({
-    sync: true,
-    toggle: false,
-    thickness: 0.088,
-    opacity: 1,
-  })
-  const [dashedLineData, setDashedLineData] = useState({
-    sync: true,
-    thickness: 0.088,
-    opacity: 1,
-    dashArray: "",
-    dashOffset: 0,
-  })
   const leftPageData = {
     template: ""
   }
   const rightPageData = {
     template: ""
+  }
+  const borderData = {
+    sync: true,
+    toggle: false,
+    thickness: 0.088,
+    opacity: 1,
+  }
+  const dashedLineData = {
+    sync: true,
+    thickness: 0.088,
+    opacity: 1,
+    dashArray: "",
+    dashOffset: 0,
   }
 
   return (
@@ -94,71 +98,82 @@ const IndexPage = ({ data }) => {
                   columnGap={spacing.large}
                   rowGap={spacing.large}
                 >
-                  <Flexbox>
-                    <Pattern 
-                      width={300}
-                      height={300}
-                      top="-100px"
-                      left="-120px"
-                      pattern="pattern-34"
-                      color={colors.gray.threeHundred}
-                      zindex="1"
-                    />
-                    <Content
-                      background={colors.white}
-                      paragraphfontsize="1.25rem"
-                      smallfontsize="0.8rem"
-                      style={{ position: 'relative', zIndex: "3" }}
-                      margin="0 0 2rem"
-                      h1margin="0 0 2rem"
-                    >
-                      <h1>Design <CircledText text="custom" /> notebooks</h1>
-                      <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
-                    </Content>
-                    <hr />
-                    <Content
-                      linkcolor={colors.green.nineHundred}
-                      linkcolorhover={colors.green.nineHundred}
-                      linktextdecorationhover="none"
-                      paragraphmarginbottom="1rem"
-                      margin="2rem 0 0"
-                    >
-                      <h3>Win a free notebook!</h3>
-                      <p>Follow our Kickstarter to enter the raffle for a free notebook! Simply click the button below and then sign up to be notified of our launch.</p>
-                      <a
-                        href="https://www.kickstarter.com"
-                        target="_blank"
-                        
+                  <Cell>
+                    <Flexbox>
+                      <Pattern
+                        width={300}
+                        height={300}
+                        top="-100px"
+                        left="-120px"
+                        pattern="pattern-34"
+                        color={colors.gray.threeHundred}
+                        zindex="1"
+                      />
+                      <Content
+                        background={colors.white}
+                        paragraphfontsize="1.25rem"
+                        smallfontsize="0.8rem"
+                        style={{ position: 'relative', zIndex: "3" }}
+                        margin="0 0 2rem"
+                        h1margin="0 0 2rem"
                       >
-                        <Button
-                          color={colors.gray.oneHundred}
-                          backgroundcolor={colors.gray.nineHundred}
-                          padding="1rem"
-                          width="300px"
+                        <h1>Design <CircledText text="custom" /> notebooks</h1>
+                        <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
+                      </Content>
+                      <Notification
+                        padding="16px"
+                      >
+                        <Content
+                          paragraphmarginbottom="1rem"
+                          h3fontsize="1rem"
+                          h3margin="0.5rem 0"
                         >
-                          <StaticImage
-                            src="../images/ks-icon.png"
-                            width={16}
-                            quality={100}
-                            loading="eager"
-                          />
-                          <span style={{ marginLeft: "0.5rem" }}>Follow us on Kickstarter</span>
-                        </Button>
-                      </a>
-                    </Content>
-                  </Flexbox>
-                  <Flexbox
-                    flex="flex"
-                    alignitems="center"
-                    flexwrap="wrap"
-                    justifyContent="flex-end"
-                  >
-                    <StaticImage 
-                      src="../images/index/shit.jpg"
-                      quality={100}
-                      loading="eager"
-                    />
-                  </Flexbox>
+                          <Tag
+                            padding="4px 8px"
+                            fontsize="0.625rem"
+                            fontweight="700"
+                            backgroundcolor={colors.yellow.threeHundred}
+                            borderradius="16px"
+                            color={colors.yellow.nineHundred}
+                          >
+                            Promotion
+                          </Tag>
+                          <h3>Chance to win a free notebook</h3>
+                          <p>Follow our Kickstarter to enter the raffle for a free notebook! Simply click the button below and then sign up to be notified of our launch.</p>
+                          <a
+                            href="https://www.kickstarter.com"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            <Button
+                              color={colors.gray.nineHundred}
+                              backgroundcolor="#05ce78"
+                              padding="1rem"
+                              width="100%"
+                            >
+                              <Icon
+                                margin="0 8px 0 0"
+                              >
+                                <StaticImage
+                                  src="../images/ks-icon.png"
+                                  width={16}
+                                  quality={100}
+                                  loading="eager"
+                                />
+                              </Icon>
+                              <span>Follow us on Kickstarter</span>
+                              <Icon>
+                                <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
+                              </Icon>
+                            </Button>
+                          </a>
+                        </Content>
+                      </Notification>
+                    </Flexbox>
+                  </Cell>
+                  <Cell>
+                    <PageCarousel />
+                  </Cell>
                 </Grid>
               </SectionContent>
             </LayoutContainer>
@@ -168,6 +183,9 @@ const IndexPage = ({ data }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
+                <SectionHeading>
+                  Signature custom notebook
+                </SectionHeading>
                 <Grid
                   columns="repeat(3, 1fr)"
                   columnGap={spacing.large}
@@ -175,31 +193,21 @@ const IndexPage = ({ data }) => {
                   className="autofit-columns-1195"
                 >
                   <Grid
-                    columns="80px 1fr"
-                    columnGap={spacing.large}
-                    className="stack-columns-600"
+                    columns="1fr"
                   >
-                    <Cell>
-                      <SpineText
-                        fontsize="2rem"
-                        fontweight="700"
-                      >
-                        Product
-                      </SpineText>
-                    </Cell>
                     <Cell>
                       <Content
                         h2margin="0 0 2rem 0"
                         h2fontsize="3rem"
                         h2fontweight="400"
                         h5fontsize="0.75rem"
-                        paragraphfontsize="1.2rem"
+                        paragraphfontsize="1.25rem"
                         paragraphmarginbottom="1rem"
                         maxwidth={widths.content.index}
                         margin="0 0 2rem"
                       >
-                        <h2>Our signature custom notebook</h2>
-                        <p>Notesmith gives you the power to <Highlight><i>customize every single page</i></Highlight> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                        <h2>Notebooks with your custom layouts on <b>every single page</b></h2>
+                        <p>With Notesmithm, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                       </Content>
                       <Button
                         backgroundcolor={colors.gray.nineHundred}
@@ -208,12 +216,13 @@ const IndexPage = ({ data }) => {
                         padding="1rem"
                         as={Link}
                         to="/products/notebooks/wired-notebook-a5/white"
+                        width="100%"
                       >
-                        <span>Create your notebook now</span>
+                        <span>Learn more</span>
                         <Icon
                           margin="0 0 0 0.25rem"
                         >
-                          <ArrowRight size="1.25rem" color={colors.gray.oneHundred} />
+                          <ArrowUpRight size="1.25rem" color={colors.gray.oneHundred} weight="bold" />
                         </Icon>
                       </Button>
                     </Cell>
@@ -227,24 +236,6 @@ const IndexPage = ({ data }) => {
                     />
                   </Cell>
                   <Cell>
-                    <Content
-                      borderbottom={`2px solid ${colors.gray.nineHundred}`}
-                      h3margin="0"
-                      h3fontsize="1rem"
-                      headingfontfamily={fonts.secondary}
-                      padding="0 0 1rem"
-                      margin="0 0 2rem"
-                    >
-                      <Flexbox
-                        flex="flex"
-                        alignitems="center"
-                      >
-                        <h3>Check out the demo</h3>
-                        <Icon margin="0 0 0 0.25rem">
-                          <ArrowCircleDown size="1.25rem" color={colors.gray.nineHundred} weight="fill" />
-                        </Icon>
-                      </Flexbox>
-                    </Content>
                     <StyledLabel
                       margin="0 0 1rem"
                     >
@@ -327,42 +318,53 @@ const IndexPage = ({ data }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
+                <SectionHeading>
+                  High quality materials
+                </SectionHeading>
                 <Grid
-                  columns="repeat(3, 1fr)"
+                  columns="1fr 2fr"
                   columnGap={spacing.large}
                   className="stack-columns-600 autofit-columns-1195"
                 >
                   <Grid
-                    columns="80px 1fr"
-                    columnGap={spacing.large}
-                    className="stack-columns-600"
+                    columns="1fr"
                   >
-                    <Cell>
-                      <SpineText
-                        fontweight="700"
-                        fontsize="2rem"
-                      >
-                        Specifications
-                      </SpineText>
-                    </Cell>
                     <Cell>
                       <Content
                         h2fontweight="400"
                         h2margin="0 0 2rem"
-                        paragraphfontsize="1.2rem"
+                        paragraphfontsize="1.25rem"
                         paragraphmarginbottom="1rem"
+                        margin="0 0 32px"
                       >
-                        <h2>Crafted with high quality materials</h2>
-                        <p>From cover to cover, our notebooks are built with thoughtfully curated components without cutting corners.</p>
-                        <p>Every custom notebook is <Highlight><i>made to order</i></Highlight> in our New York factory by experienced printing veterans.</p>
+                        <h2>Notebooks created with carefully curated components</h2>
+                        <p>From the beginning, our only goal was to create a high quality notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                       </Content>
+                      <Grid
+                        columns="repeat(auto-fit, minmax(120px, 1fr))"
+                        columnGap={spacing.normal}
+                      >
+                        <Cell>
+                          <BoxText>
+                            <h3>Made-to-order</h3>
+                            <p>Every notebook is custom made upon receiving an order.</p>
+                          </BoxText>
+                        </Cell>
+                        <Cell>
+                          <BoxText>
+                            <h3>American-made</h3>
+                            <p>All products are manufactured in our New York factory.</p>
+                          </BoxText>
+                        </Cell>
+                      </Grid>
                     </Cell>
                   </Grid>
                   <Cell>
-                    <BoxList
-                      margin="0 0 1rem"
-                      activeImage={activeImage}
-                      setActiveImage={setActiveImage}
+                    <Tabs 
+                      tabList={["Paper", "Cover", "Lamination", "Binding"]}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                      fontsize="2rem"
                     />
                     <hr />
                     <Flexbox
@@ -389,37 +391,93 @@ const IndexPage = ({ data }) => {
             </LayoutContainer>
           </Container>
         </Section>
+        <Section
+          backgroundcolor={colors.gray.nineHundred}
+        >
+          <Container>
+            <LayoutContainer>
+              <SectionContent
+                padding={`${spacing.large} ${spacing.xlarge}`}
+              >
+                <Grid
+                  columns="1fr 1fr"
+                  columnGap={spacing.large}
+                  className="stack-columns-600"
+                >
+                  <Cell>
+                    <Content
+                      h2fontweight="400"
+                      h2fontsize="2rem"
+                      h2color={colors.gray.oneHundred}
+                    >
+                      <h2>Notesmith is launching exclusively on Kickstarter this fall.</h2>
+                    </Content>
+                  </Cell>
+                  <Cell>
+                    <Content
+                      paragraphcolor={colors.gray.oneHundred}
+                      paragraphfontsize="1.25rem"
+                    >
+                      <p>
+                        Please follow our Kickstarter campaign to be notified of our launch. You will be subscribed to updates, news, and more information regarding Notesmith and our products.
+                      </p>
+                    </Content>
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
+                      margin="16px 0 0"
+                    >
+                      <TextLink
+                        href="https://www.kickstarter.com"
+                        color={colors.gray.oneHundred}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        texttransform="uppercase"
+                        fontweight="700"
+                        underlinecolor={colors.gray.oneHundred}
+                      >
+                        Follow us on Kickstarter
+                      </TextLink>
+                      <Icon
+                        margin="0 0 0 8px"
+                      >
+                        <ArrowRight 
+                          size="1rem" 
+                          color={colors.gray.oneHundred} 
+                          weight="bold"
+                        />
+                      </Icon>
+                    </Flexbox>
+                  </Cell>
+                </Grid>
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
         <Section>
           <Container>
             <LayoutContainer>
               <SectionContent>
+                <SectionHeading>
+                  Fountain pen friendly
+                </SectionHeading>
                 <Grid
                   columns="repeat(3, 1fr)"
                   columnGap={spacing.large}
                   className="stack-columns-600 autofit-columns-1195"
                 >
                   <Grid
-                    columns="80px 1fr"
-                    columnGap={spacing.large}
-                    className="stack-columns-600"
+                    columns="1fr"
                   >
                     <Cell>
-                      <SpineText
-                        fontsize="2rem"
-                        fontweight="700"
-                      >
-                        Paper
-                      </SpineText>
-                    </Cell>
-                    <Cell>
                       <Content
-                        paragraphfontsize="1.2rem"
+                        paragraphfontsize="1.25rem"
                         margin="0 0 2rem 0"
                         h2margin="0 0 2rem 0"
                         h2fontweight="400"
                       >
-                        <h2>Fountain pen friendly paper</h2>
-                        <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
+                        <h2>Notebooks stuffed with smooth, ink-loving paper</h2>
+                        <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                       </Content>
                       <Flexbox
                         padding="1rem 0"
@@ -578,74 +636,26 @@ const IndexPage = ({ data }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
+                <SectionHeading>
+                  Early reviews
+                </SectionHeading>
                 <Grid
-                  columns="80px 1fr"
+                  columns="1fr 2fr"
                   columnGap={spacing.large}
-                  className="stack-columns-600"
                 >
-                  <Cell>
-                    <SpineText
-                      fontsize="2rem"
-                      fontweight="700"
-                    >
-                      Reviews
-                    </SpineText>
-                  </Cell>
                   <Cell>
                     <Content
                       h2margin="0 0 2rem"
                       h2fontweight="400"
-                      paragraphfontsize="1.2rem"
-                      width={widths.content.index}
+                      paragraphfontsize="1.25rem"
                       margin="0 0 2rem"
                     >
                       <h2>Feedback from our early test users</h2>
-                      <p>Read what some of our early test users had to say about their experience with Notesmith. (Users have been cartoonized for anonymity.)</p>
+                      <p>Read what some of our early test users had to say about their experience with Notesmith. Please note that users have been cartoonized for anonymity.</p>
                     </Content>
-                    <Reviews />
                   </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section>
-          <Container>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="1fr"
-                  columnGap={spacing.large}
-                  className="stack-columns-600"
-                >
-                  <Cell center middle>
-                    <Content
-                      h2fontweight="400"
-                      h2fontsize="3rem"
-                      margin="0 0 2rem"
-                    >
-                      <h2>Coming soon to Kickstarter</h2>
-                    </Content>
-                    <a
-                      href="https://www.kickstarter.com"
-                      target="_blank"
-
-                    >
-                      <Button
-                        color={colors.gray.oneHundred}
-                        backgroundcolor={colors.gray.nineHundred}
-                        padding="1rem"
-                        width="300px"
-                      >
-                        <StaticImage
-                          src="../images/ks-icon.png"
-                          width={16}
-                          quality={100}
-                          loading="eager"
-                        />
-                        <span style={{ marginLeft: "0.5rem" }}>Follow us on Kickstarter</span>
-                      </Button>
-                    </a>
+                  <Cell>
+                    <Reviews />
                   </Cell>
                 </Grid>
               </SectionContent>

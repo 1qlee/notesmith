@@ -1,16 +1,15 @@
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const Tag = styled.span`
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.primary.sixHundred};
-  border-radius: 2rem;
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.nineHundred};
+  border-radius: ${props => props.borderradius || "32px"};
   border: ${props => props.border};
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : `0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float}`};
   color: ${props => props.color ? props.color : colors.white};
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: ${props => props.fontfamily};
+  font-family: ${props => props.fontfamily || fonts.secondary};
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: ${props => props.fontweight};
   height: fit-content;

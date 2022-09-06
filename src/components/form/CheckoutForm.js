@@ -156,7 +156,7 @@ function CheckoutForm({
     setPaymentProcessing(true)
 
     // all purchase info is in the paymentIntent, so just send pid
-    const shippingLabel = await fetch("/.netlify/functions/create-shipment", {
+    await fetch("/.netlify/functions/create-shipment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"

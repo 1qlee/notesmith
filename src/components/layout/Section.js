@@ -26,8 +26,12 @@ const Section = styled.section`
 `
 
 const SectionContent = styled.div`
+  background-color: ${props => props.backgroundcolor};
   padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
   position: relative;
+  &.has-border-top {
+    border-top: 2px solid ${colors.gray.nineHundred};
+  }
   @media only screen and (max-width: ${widths.tablet}) {
     padding: 4rem 0;
   }

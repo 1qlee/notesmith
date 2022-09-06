@@ -94,6 +94,8 @@ const colors = {
   kraft: "#8a5842",
   black: "#000",
   shadow: {
+    solidTiny: "1px 1px 0 #212121",
+    solidSmall: "2px 2px 0 #212121",
     solid: "4px 4px 0 #212121",
     float: "rgba(0,0,0,0.07)",
     layeredSmall: "0 1px 1px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.03), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.07)",
@@ -104,7 +106,7 @@ const colors = {
     modal: "0 2px 12px rgba(0,0,0,0.25)",
     focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff"
   },
-  highlighter: "#ffff00"
+  highlighter: "#d8ff00"
 }
 
 const fonts = {
@@ -119,7 +121,8 @@ const widths = {
   desktop: "1440px",
   widescreen: "2560px",
   content: {
-    index: "440px"
+    index: "440px",
+    normal: "700px",
   },
   breakpoint: {
     index: "936px"

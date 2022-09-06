@@ -1,10 +1,8 @@
 import React, { useState } from "react"
-import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 
 import { Plus, Minus } from "phosphor-react"
-import { Flexbox } from "../layout/Flexbox"
 import { QuantityWrapper, QuantityButton, Counter } from "../form/FormComponents"
 import Icon from "../Icon"
 
@@ -107,51 +105,5 @@ function CartQuantityTracker(props) {
   )
 }
 
-const PriceTag = styled.div`
-  font-size: ${props => props.fontsize};
-  text-align: center;
-  border-radius: ${props => props.borderradius};
-  color: ${props => props.color};
-  display: inline-block;
-  padding: ${props => props.padding};
-  position: relative;
-  z-index: 1;
-  &::after {
-    background-color: ${props => props.backgroundcolor || colors.primary.sixHundred};
-    content: "";
-    height: 100%;
-    left: -1rem;
-    position: absolute;
-    border-radius: 50% 1rem 100% 1rem;
-    bottom: -0.25rem;
-    opacity: 0.5;
-    width: 200%;
-    z-index: -1;
-  }
-`
 
-const ProductDetails = styled.div`
-  &.fade-enter{
-     opacity: 0;
-  }
-  &.fade-exit{
-     opacity: 1;
-  }
-  &.fade-enter-active{
-     opacity: 1;
-  }
-  &.fade-exit-active{
-     opacity: 0;
-     transform: translateX(100px);
-  }
-  &.fade-enter-active,
-  &.fade-exit-active{
-     transition: opacity 0.2s, transform 0.2s;
-  }
-`
-
-export {
-  PriceTag,
-  ProductDetails,
-  CartQuantityTracker
-}
+export default CartQuantityTracker

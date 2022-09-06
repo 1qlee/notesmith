@@ -9,14 +9,14 @@ import Content from "../Content"
 
 const Orders = styled.div`
   background-color: ${colors.white};
-  border-radius: 0.5rem;
+  border-radius: 8px;
   border: 2px solid ${colors.gray.nineHundred};
   box-shadow: ${colors.shadow.solid};
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 `
 
 const OrderSection = styled.div`
-  padding: 1rem;
+  padding: 16px;
   border-bottom: 2px solid ${colors.gray.nineHundred};
 `
 
@@ -90,7 +90,7 @@ function OrderSummary({ selectedRate, taxRate }) {
                   smallfontsize="0.875rem"
                   smallmargin="0"
                 >
-                  <p>{item.name} <span style={{color:colors.gray.sixHundred}}><span style={{margin:'0 0.0675rem 0 0.25rem'}}>x</span>{item.quantity}</span></p>
+                  <p>{item.name} <span style={{color:colors.gray.sixHundred}}><span style={{margin:'0 0 0 4px'}}>x</span>{item.quantity}</span></p>
                   {item.category === "notebooks" && (
                     <small>{capitalizeText(item.coverColor)}, {capitalizeText(item.leftPageData.template)} left, {capitalizeText(item.rightPageData.template)} right</small>
                   )}
@@ -102,7 +102,7 @@ function OrderSummary({ selectedRate, taxRate }) {
         </OrderSection>
         <OrderSection>
           <Flexbox
-            margin="0 0 1rem"
+            margin="0 0 16px"
             flex="flex"
             justifycontent="space-between"
           >
@@ -110,7 +110,7 @@ function OrderSummary({ selectedRate, taxRate }) {
             <p>${convertToDecimal(totalPrice, 2)}</p>
           </Flexbox>
           <Flexbox
-            margin="0 0 1rem"
+            margin="0 0 16px"
             flex="flex"
             justifycontent="space-between"
           >
@@ -134,7 +134,7 @@ function OrderSummary({ selectedRate, taxRate }) {
           </Flexbox>
         </OrderSection>
         <Flexbox
-          padding="1rem"
+          padding="16px"
           flex="flex"
           justifycontent="space-between"
           alignitems="flex-end"
@@ -159,4 +159,4 @@ function OrderSummary({ selectedRate, taxRate }) {
   )
 }
 
-export default OrderSummary
+export { Orders, OrderSection, OrderSummary}

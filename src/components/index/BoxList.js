@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
 import Icon from "../Icon"
 import { ArrowRight } from "phosphor-react"
+import { Flexbox } from "../layout/Flexbox"
 
 const StyledBoxList = styled.div`
   padding: ${props => props.padding};
@@ -15,19 +16,21 @@ const BoxListItem = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  border-top: 2px solid ${colors.gray.nineHundred};
   z-index: 1;
+  border-bottom: 2px solid ${colors.gray.nineHundred};
   &.is-active {
-    h5, p {
+    padding: 0 32px;
+    h3, p {
       color: ${colors.gray.oneHundred};
     }
     &::after {
-      width: calc(100% - 48px);
+      width: 100%;
       opacity: 1;
       transform: translateX(4px);
     }
-    .boxlist-content {
-      transform: translateX(2rem);
+    .boxlist-arrow {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
   &::after {
@@ -54,7 +57,7 @@ const BoxListItem = styled.div`
         transform: translateX(0);
       }
       .boxlist-content {
-        transform: translateX(2rem);
+        padding-left: 2rem;
       }
     }
   }
@@ -67,19 +70,18 @@ const BoxListContent = styled.div`
   padding: 1rem 0;
   flex: 1;
   transition: transform 0.2s, padding 0.2s;
-  h5 {
-    font-family: ${fonts.secondary};
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+  h3 {
+    font-size: 2rem;
+    font-weight: 400;
   }
-  h5, p {
+  h3, p {
     color: ${colors.gray.nineHundred};
+  }
+  p {
+    line-height: 1.5;
   }
   &.is-active {
     padding: 1rem;
-  }
-  &:not(:last-child) {
-    margin-bottom: 1rem;
   }
 `
 
@@ -89,9 +91,13 @@ const BoxListIcon = styled(Icon)`
   justify-content: center;
   transition: opacity 0.2s, transform 0.2s;;
   transform: translateX(-8px);
+  z-index: 1;
   &.is-active {
     opacity: 1;
     transform: translateX(0);
+    svg {
+      fill: ${colors.gray.oneHundred};
+    }
   }
 `
 
@@ -123,30 +129,21 @@ function BoxList({
         <BoxListContent
           className="boxlist-content"
         >
-          <h5>Pages</h5>
-          <p>70 sheets total (140 pages)</p>
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+            justifycontent="space-between"
+            margin="0 0 16px"
+          >
+            <h3>Paper</h3>
+            <BoxListIcon
+              className={activeImage === 3 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+            >
+              <ArrowRight size="1.5rem" />
+            </BoxListIcon>
+          </Flexbox>
+          <p>There are 70 sheets (140 total pages) of ultra-smooth, bright white 70lb text paper.</p>
         </BoxListContent>
-        <BoxListIcon
-          className={activeImage === 0 ? "is-active boxlist-arrow" : "boxlist-arrow"}
-        >
-          <ArrowRight size="1.5rem" />
-        </BoxListIcon>
-      </BoxListItem>
-      <BoxListItem
-        onClick={() => setActiveImage(1)}
-        className={activeImage === 1 && "is-active"}
-      >
-        <BoxListContent
-          className="boxlist-content"
-        >
-          <h5>Size</h5>
-          <p>5.5" x 8.5" (A5)</p>
-        </BoxListContent>
-        <BoxListIcon
-          className={activeImage === 1 ? "is-active boxlist-arrow" : "boxlist-arrow"}
-        >
-          <ArrowRight size="1.5rem" />
-        </BoxListIcon>
       </BoxListItem>
       <BoxListItem
         onClick={() => setActiveImage(2)}
@@ -155,14 +152,21 @@ function BoxList({
         <BoxListContent
           className="boxlist-content"
         >
-          <h5>Cover</h5>
-          <p>Sand matte laminated, extra thick</p>
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+            justifycontent="space-between"
+            margin="0 0 16px"
+          >
+            <h3>Cover</h3>
+            <BoxListIcon
+              className={activeImage === 2 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+            >
+              <ArrowRight size="1.5rem" />
+            </BoxListIcon>
+          </Flexbox>
+          <p>130lb cover stock that has been double mounted for extra thickness and durability.</p>
         </BoxListContent>
-        <BoxListIcon
-          className={activeImage === 2 ? "is-active boxlist-arrow" : "boxlist-arrow"}
-        >
-          <ArrowRight size="1.5rem" />
-        </BoxListIcon>
       </BoxListItem>
       <BoxListItem
         onClick={() => setActiveImage(3)}
@@ -171,14 +175,21 @@ function BoxList({
         <BoxListContent
           className="boxlist-content"
         >
-          <h5>Paper</h5>
-          <p>70lb ultra-smooth, bright white</p>
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+            justifycontent="space-between"
+            margin="0 0 16px"
+          >
+            <h3>Lamination</h3>
+            <BoxListIcon
+              className={activeImage === 3 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+            >
+              <ArrowRight size="1.5rem" />
+            </BoxListIcon>
+          </Flexbox>
+          <p>Sand-matte textured lamination film (water-resistant) on the outside of both covers.</p>
         </BoxListContent>
-        <BoxListIcon
-          className={activeImage === 3 ? "is-active boxlist-arrow" : "boxlist-arrow"}
-        >
-          <ArrowRight size="1.5rem" />
-        </BoxListIcon>
       </BoxListItem>
       <BoxListItem
         onClick={() => setActiveImage(4)}
@@ -187,14 +198,21 @@ function BoxList({
         <BoxListContent
           className="boxlist-content"
         >
-          <h5>Binding</h5>
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+            justifycontent="space-between"
+            margin="0 0 16px"
+          >
+            <h3>Binding</h3>
+            <BoxListIcon
+              className={activeImage === 4 ? "is-active boxlist-arrow" : "boxlist-arrow"}
+            >
+              <ArrowRight size="1.5rem" />
+            </BoxListIcon>
+          </Flexbox>
           <p>Gold colored wire-o</p>
         </BoxListContent>
-        <BoxListIcon
-          className={activeImage === 4 ? "is-active boxlist-arrow" : "boxlist-arrow"}
-        >
-          <ArrowRight size="1.5rem" />
-        </BoxListIcon>
       </BoxListItem>
     </StyledBoxList>
   )

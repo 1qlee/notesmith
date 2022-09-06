@@ -5,12 +5,12 @@ import { useShoppingCart } from "use-shopping-cart"
 import { CaretDown, CaretUp } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
-import { CartQuantityTracker } from "./ShopComponents"
+import CartQuantityTracker from "./CartQuantityTracker"
 import { Flexbox } from "../layout/Flexbox"
 import { StyledTable } from "../form/FormComponents"
+import TextLink from "../TextLink"
 import Button from "../Button"
 import Content from "../Content"
-import TextLink from "../TextLink"
 import Icon from "../Icon"
 
 function ShoppingCart() {
@@ -299,11 +299,24 @@ function ShoppingCart() {
           </Flexbox>
         </>
       ) : (
-        <Content
-          margin="1rem 0"
-        >
-          <p>You have no items in your cart. <Link to="/products">Browse all products.</Link></p>
-        </Content>
+        <>
+          <Content
+            margin="1rem 0"
+          >
+            <p>You have no items in your cart.</p>
+          </Content>
+          <Link
+            to="/products/notebooks/wired-notebook-a5"
+          >
+            <Button
+              to="/products"
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
+            >
+              Check out our notebook
+            </Button>
+          </Link>
+        </>
       )}
     </div>
   )

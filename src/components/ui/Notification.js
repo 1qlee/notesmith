@@ -27,8 +27,8 @@ const StyledNotification = styled.div`
   align-items: ${props => props.alignitems || "center"};
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border: 1px solid ${props => props.bordercolor || colors.gray.threeHundred};
-  border-radius: ${props => props.borderradius || "0.25rem"};
+  border: 2px solid ${props => props.bordercolor || colors.gray.nineHundred};
+  border-radius: ${props => props.borderradius || "8px"};
   box-shadow: ${props => props.boxshadow || colors.shadow.solid};
   color: ${props => props.color};
   display: flex;
