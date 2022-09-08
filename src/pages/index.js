@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
+import { graphql, Link } from "gatsby"
 import { Star, ArrowUpRight, WarningCircle, ArrowRight } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
@@ -31,8 +31,11 @@ import TextLink from "../components/TextLink"
 import Tabs from "../components/ui/Tabs"
 import Tag from "../components/ui/Tag"
 import SectionHeading from "../components/index/SectionHeading"
+import TabContent from "../components/index/TabContent"
+import PageDemo from "../components/index/PageDemo"
 
 const IndexPage = ({ data }) => {
+  const { tabImages } = data
   const [activeTab, setActiveTab] = useState(0)
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
@@ -172,7 +175,7 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                   </Cell>
                   <Cell>
-                    <PageCarousel />
+                    <PageDemo />
                   </Cell>
                 </Grid>
               </SectionContent>
@@ -204,27 +207,31 @@ const IndexPage = ({ data }) => {
                         paragraphfontsize="1.25rem"
                         paragraphmarginbottom="1rem"
                         maxwidth={widths.content.index}
-                        margin="0 0 2rem"
+                        margin="0 0 32px"
                       >
                         <h2>Notebooks with your custom layouts on <b>every single page</b></h2>
-                        <p>With Notesmithm, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                        <p>With Notesmith, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                       </Content>
-                      <Button
-                        backgroundcolor={colors.gray.nineHundred}
-                        color={colors.gray.oneHundred}
-                        border={`1px solid ${colors.gray.nineHundred}`}
-                        padding="1rem"
-                        as={Link}
-                        to="/products/notebooks/wired-notebook-a5/white"
-                        width="100%"
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
                       >
-                        <span>Learn more</span>
+                        <TextLink
+                          color={colors.gray.nineHundred}
+                          fontweight="700"
+                          as={Link}
+                          to="/products/notebooks/wired-notebook-a5/white"
+                          fontfamily={fonts.secondary}
+                          texttransform="uppercase"
+                        >
+                          Learn More
+                        </TextLink>
                         <Icon
                           margin="0 0 0 0.25rem"
                         >
-                          <ArrowUpRight size="1.25rem" color={colors.gray.oneHundred} weight="bold" />
+                          <ArrowRight size="1rem" color={colors.gray.nineHundred} weight="bold" />
                         </Icon>
-                      </Button>
+                      </Flexbox>
                     </Cell>
                   </Grid>
                   <Cell>
@@ -338,7 +345,7 @@ const IndexPage = ({ data }) => {
                         margin="0 0 32px"
                       >
                         <h2>Notebooks created with carefully curated components</h2>
-                        <p>From the beginning, our only goal was to create a high quality notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
+                        <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                       </Content>
                       <Grid
                         columns="repeat(auto-fit, minmax(120px, 1fr))"
@@ -364,24 +371,12 @@ const IndexPage = ({ data }) => {
                       tabList={["Paper", "Cover", "Lamination", "Binding"]}
                       activeTab={activeTab}
                       setActiveTab={setActiveTab}
-                      fontsize="2rem"
+                      fontsize="1rem"
                     />
-                    <hr />
-                    <Flexbox
-                      flex="flex"
-                      margin="1rem 0 0"
-                      alignitems="flex-start"
-                    >
-                      <Icon>
-                        <WarningCircle />
-                      </Icon>
-                      <Content
-                        margin="0 0 0 0.25rem"
-                        smallmargin="0"
-                      >
-                        <small>Since we are still in the early stages of development, all specifications may be subject to change.</small>
-                      </Content>
-                    </Flexbox>
+                    <TabContent
+                      activeTab={activeTab}
+                      tabImages={tabImages.nodes}
+                    />
                   </Cell>
                   <Cell>
                     <BoxListImages />
@@ -666,5 +661,25 @@ const IndexPage = ({ data }) => {
     </Layout>
   )
 }
+
+export const pageQuery = graphql`
+  query IndexPageQuery {
+    tabImages: allFile(filter: { relativeDirectory: { eq: "index-tab-images" }}) {
+      nodes {
+        childImageSharp {
+          fluid {
+            src
+            originalName
+          }
+          gatsbyImageData(
+            width: 928
+            placeholder: BLURRED
+            quality: 100
+          )
+        }
+      }
+    }
+  }
+`
 
 export default IndexPage
