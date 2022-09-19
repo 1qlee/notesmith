@@ -58,25 +58,6 @@ function Reviews() {
       >
         <ReviewBox>
           <ReviewContent>
-            <p>Very high quality. Better than a lot of other notebooks I've used.</p>
-          </ReviewContent>
-          <ReviewProfile>
-            <Content
-              headingfontfamily={fonts.secondary}
-              h3margin="0 0 0.25rem"
-              h3fontsize="1rem"
-              paragraphmarginbottom="0"
-              paragraphcolor={colors.gray.sevenHundred}
-              margin="0 0.5rem 0 0"
-            >
-              <h3>Esther</h3>
-              <p>Student</p>
-            </Content>
-            <Review3 height="64" width="64" />
-          </ReviewProfile>
-        </ReviewBox>
-        <ReviewBox>
-          <ReviewContent>
             <p>Literally the best writing experience I have ever experienced.</p>
           </ReviewContent>
           <ReviewProfile>
@@ -108,7 +89,7 @@ function Reviews() {
               margin="0 0.5rem 0 0"
             >
               <h3>Joanne</h3>
-              <p>Writer</p>
+              <p>Enthusiast</p>
             </Content>
             <Review2 height="64" width="64" />
           </ReviewProfile>

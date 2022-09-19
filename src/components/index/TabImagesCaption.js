@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { fonts } from "../../styles/variables"
 
 import Content from "../Content"
 
@@ -13,7 +14,8 @@ const StyledCaption = styled.article`
   p {
     line-height: 1.5;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.75rem;
+    font-family: ${fonts.secondary};
   }
 `
 

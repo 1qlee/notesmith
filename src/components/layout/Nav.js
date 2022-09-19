@@ -55,7 +55,7 @@ const HorizontalNav = styled.div`
 `
 
 const NavLogo = styled.div`
-  width: 160px;
+  width: ${widths.logo};
   padding: 1rem 0;
   transition: background-color 0.1s;
 `
@@ -71,11 +71,13 @@ function Nav(props) {
   return (
     <StyledNav>
       <HorizontalNav hideNavbar={props.hideNavbar}>
-        <Link to="/">
-          <NavLogo>
-            <Logo width="100%" height="100%" color={colors.gray.nineHundred} />
-          </NavLogo>
-        </Link>
+        <NavSection>
+          <Link to="/">
+            <NavLogo>
+              <Logo width="100%" height="100%" color={colors.gray.nineHundred} />
+            </NavLogo>
+          </Link>
+        </NavSection>
         {!loading && (
           <>
             <NavSection justifycontent="center">
@@ -133,20 +135,24 @@ function Nav(props) {
                 </>
               )}
             </NavSection>
-            <NavItem>
-              <TextLink
-                as={Link}
-                to="/cart"
-                color={colors.gray.nineHundred}
-              >
-                Cart
-                {cartCount > 0 && (
-                  <CartCounter>
-                    ({cartCount})
-                  </CartCounter>
-                )}
-              </TextLink>
-            </NavItem>
+            <NavSection
+              justifycontent="flex-end"
+            >
+              <NavItem>
+                <TextLink
+                  as={Link}
+                  to="/cart"
+                  color={colors.gray.nineHundred}
+                >
+                  Cart
+                  {cartCount > 0 && (
+                    <CartCounter>
+                      ({cartCount})
+                    </CartCounter>
+                  )}
+                </TextLink>
+              </NavItem>
+            </NavSection>
           </>
         )}
       </HorizontalNav>

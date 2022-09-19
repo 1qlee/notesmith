@@ -12,9 +12,6 @@ const Content = styled.div`
   padding: ${props => props.padding ? props.padding : "0"};
   position: relative;
   width: ${props => props.width};
-  @media only screen and (max-width: ${widths.breakpoint.index}) {
-    max-width: none;
-  }
   &.has-border-bottom {
     border-bottom: 2px solid ${props => props.bordercolor};
   }
@@ -105,6 +102,7 @@ const Content = styled.div`
     color: ${props => props.linkcolor};
     font-size: ${props => props.linkfontsize};
     font-family: ${props => props.linkfontfamily};
+    text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;
       color: ${props => props.linkcolorhover};

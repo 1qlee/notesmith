@@ -26,13 +26,12 @@ import Pattern from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
 import Seo from "../components/layout/Seo"
-import PageCarousel from "../components/index/PageCarousel"
 import TextLink from "../components/TextLink"
-import Tabs from "../components/ui/Tabs"
+import { Tabs } from "../components/ui/Tabs"
 import Tag from "../components/ui/Tag"
 import SectionHeading from "../components/index/SectionHeading"
 import TabContent from "../components/index/TabContent"
-import PageDemo from "../components/index/PageDemo"
+import PageDemoCarousel from "../components/index/PageDemoCarousel"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -96,7 +95,7 @@ const IndexPage = ({ data }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  className="stack-columns-600"
+                  className="stack-columns-950"
                   columns="1fr 2fr"
                   columnGap={spacing.large}
                   rowGap={spacing.large}
@@ -119,12 +118,14 @@ const IndexPage = ({ data }) => {
                         style={{ position: 'relative', zIndex: "3" }}
                         margin="0 0 2rem"
                         h1margin="0 0 2rem"
+                        maxwidth={widths.content.index}
                       >
                         <h1>Design <CircledText text="custom" /> notebooks</h1>
                         <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                       </Content>
                       <Notification
                         padding="16px"
+                        maxwidth={widths.notification}
                       >
                         <Content
                           paragraphmarginbottom="1rem"
@@ -139,32 +140,22 @@ const IndexPage = ({ data }) => {
                             borderradius="16px"
                             color={colors.yellow.nineHundred}
                           >
-                            Promotion
+                            Announcement
                           </Tag>
-                          <h3>Chance to win a free notebook</h3>
-                          <p>Follow our Kickstarter to enter the raffle for a free notebook! Simply click the button below and then sign up to be notified of our launch.</p>
+                          <h3>Join the open beta</h3>
+                          <p>Create an account to participate in the open beta. During this time, you will have full access to all Notesmith features and <i>all notebooks you purchase are discounted</i>.</p>
                           <a
                             href="https://www.kickstarter.com"
                             target="_blank"
                             rel="noreferrer noopener"
                           >
                             <Button
-                              color={colors.gray.nineHundred}
-                              backgroundcolor="#05ce78"
+                              backgroundcolor={colors.gray.nineHundred}
+                              color={colors.gray.oneHundred}
                               padding="1rem"
                               width="100%"
                             >
-                              <Icon
-                                margin="0 8px 0 0"
-                              >
-                                <StaticImage
-                                  src="../images/ks-icon.png"
-                                  width={16}
-                                  quality={100}
-                                  loading="eager"
-                                />
-                              </Icon>
-                              <span>Follow us on Kickstarter</span>
+                              <span>Create an account</span>
                               <Icon>
                                 <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
                               </Icon>
@@ -175,7 +166,7 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                   </Cell>
                   <Cell>
-                    <PageDemo />
+                    <PageDemoCarousel />
                   </Cell>
                 </Grid>
               </SectionContent>
@@ -333,39 +324,36 @@ const IndexPage = ({ data }) => {
                   columnGap={spacing.large}
                   className="stack-columns-600 autofit-columns-1195"
                 >
-                  <Grid
-                    columns="1fr"
-                  >
-                    <Cell>
-                      <Content
-                        h2fontweight="400"
-                        h2margin="0 0 2rem"
-                        paragraphfontsize="1.25rem"
-                        paragraphmarginbottom="1rem"
-                        margin="0 0 32px"
-                      >
-                        <h2>Notebooks created with carefully curated components</h2>
-                        <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
-                      </Content>
-                      <Grid
-                        columns="repeat(auto-fit, minmax(120px, 1fr))"
-                        columnGap={spacing.normal}
-                      >
-                        <Cell>
-                          <BoxText>
-                            <h3>Made-to-order</h3>
-                            <p>Every notebook is custom made upon receiving an order.</p>
-                          </BoxText>
-                        </Cell>
-                        <Cell>
-                          <BoxText>
-                            <h3>American-made</h3>
-                            <p>All products are manufactured in our New York factory.</p>
-                          </BoxText>
-                        </Cell>
-                      </Grid>
-                    </Cell>
-                  </Grid>
+                  <Cell>
+                    <Content
+                      h2fontweight="400"
+                      h2margin="0 0 2rem"
+                      paragraphfontsize="1.25rem"
+                      paragraphmarginbottom="1rem"
+                      margin="0 0 32px"
+                      maxwidth={widths.content.index}
+                    >
+                      <h2>Notebooks created with carefully curated components</h2>
+                      <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
+                    </Content>
+                    <Grid
+                      columns="repeat(auto-fit, minmax(120px, 1fr))"
+                      columnGap={spacing.normal}
+                    >
+                      <Cell>
+                        <BoxText>
+                          <h3>Made-to-order</h3>
+                          <p>Every notebook is custom made upon receiving an order.</p>
+                        </BoxText>
+                      </Cell>
+                      <Cell>
+                        <BoxText>
+                          <h3>American-made</h3>
+                          <p>All products are manufactured in our New York factory.</p>
+                        </BoxText>
+                      </Cell>
+                    </Grid>
+                  </Cell>
                   <Cell>
                     <Tabs 
                       tabList={["Paper", "Cover", "Lamination", "Binding"]}
@@ -377,9 +365,6 @@ const IndexPage = ({ data }) => {
                       activeTab={activeTab}
                       tabImages={tabImages.nodes}
                     />
-                  </Cell>
-                  <Cell>
-                    <BoxListImages />
                   </Cell>
                 </Grid>
               </SectionContent>
@@ -470,6 +455,7 @@ const IndexPage = ({ data }) => {
                         margin="0 0 2rem 0"
                         h2margin="0 0 2rem 0"
                         h2fontweight="400"
+                        maxwidth={widths.content.index}
                       >
                         <h2>Notebooks stuffed with smooth, ink-loving paper</h2>
                         <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
@@ -637,6 +623,7 @@ const IndexPage = ({ data }) => {
                 <Grid
                   columns="1fr 2fr"
                   columnGap={spacing.large}
+                  className="stack-columns-600 autofit-columns-1195"
                 >
                   <Cell>
                     <Content
@@ -644,6 +631,7 @@ const IndexPage = ({ data }) => {
                       h2fontweight="400"
                       paragraphfontsize="1.25rem"
                       margin="0 0 2rem"
+                      maxwidth={widths.content.index}
                     >
                       <h2>Feedback from our early test users</h2>
                       <p>Read what some of our early test users had to say about their experience with Notesmith. Please note that users have been cartoonized for anonymity.</p>

@@ -7,26 +7,30 @@ const StyledTabs = styled.ul`
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
-  border-radius: 4px 4px 0 0;
 `
 
 const StyledTab = styled.li`
   font-family: ${fonts.secondary};
   font-size: ${props => props.fontsize};
   font-weight: 700;
-  flex: 1;
-  padding: 16px;
-  transition: padding 0.2s, background-color 0.2s;
-  border-radius: 4px 4px 0 0;
+  transition: padding 0.2s, border-color 0.2s;
+  border-bottom: 2px solid transparent;
+  padding: 8px 0;
+  margin: 0 16px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.gray.threeHundred};
+      border-bottom-color: ${colors.gray.threeHundred};
     }
   }
   &.is-active {
-    background-color: ${colors.gray.nineHundred};
-    color: ${colors.gray.oneHundred};
+    border-bottom-color: ${colors.gray.nineHundred};
   }
 `
 
@@ -51,4 +55,4 @@ function Tabs({
   )
 }
 
-export default Tabs
+export { StyledTabs, StyledTab, Tabs }

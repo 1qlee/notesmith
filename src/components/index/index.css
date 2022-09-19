@@ -6,11 +6,18 @@
   @media only screen and (max-width: 600px) {
     .stack-columns-600 {
       grid-template-columns: 1fr !important;
-      row-gap: 2rem;
+      row-gap: 2rem !important;
+    }
+  }
+  @media only screen and (max-width: 950px) {
+    .stack-columns-950 {
+      grid-template-columns: 1fr !important;
+      row-gap: 2rem !important;
     }
   }
   @media only screen and (max-width: 1195px) {
     .autofit-columns-1195 {
       grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)) !important;
+      row-gap: 2rem !important;
     }
   }

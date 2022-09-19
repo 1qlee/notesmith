@@ -68,7 +68,7 @@ exports.handler = async ({ body, headers }) => {
       body: JSON.stringify({ received: true }),
     };
   } catch(error) {
-    console.log(`Stripe webhook failed with ${error}`);
+    console.log(`[Netlify] Stripe webhook failed with ${error}`);
 
     return {
       statusCode: 400,

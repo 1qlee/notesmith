@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import styled from "styled-components"
-import { colors, fonts, convertFloatFixed } from "../../styles/variables"
+import { colors, fonts, convertFloatFixed, widths } from "../../styles/variables"
 import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
 
 import Icon from "../Icon"
@@ -382,9 +382,12 @@ const Counter = styled.input`
 `
 
 const AuthFormWrapper = styled.div`
-  box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
-  padding: 2rem;
-  width: 100%;
+  box-shadow: ${colors.shadow.solid};
+  border-radius: 8px;
+  border: 2px solid ${colors.gray.nineHundred};
+  padding: 64px;
+  margin: 0 auto;
+  max-width: ${widths.form};
 `
 
 const StyledFieldset = styled.fieldset`

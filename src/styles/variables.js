@@ -115,8 +115,12 @@ const fonts = {
 }
 
 const widths = {
+  logo: "160px",
   sidebar: "300px",
+  caption: "300px",
+  notification: "450px",
   modal: "480px",
+  form: "600px",
   tablet: "800px",
   desktop: "1440px",
   widescreen: "2560px",
@@ -134,7 +138,7 @@ const spacing = {
   medium: "2rem",
   large: "3rem",
   xlarge: "6rem",
-  section: "8rem"
+  section: "8rem",
 }
 
 const regex = {

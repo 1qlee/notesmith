@@ -1,17 +1,14 @@
 import React from "react"
-import { colors, spacing } from "../styles/variables"
-import { navigate, Link } from "gatsby"
-import { CheckCircle } from "phosphor-react"
+import { spacing } from "../styles/variables"
+import { navigate } from "gatsby"
 import { useFirebaseContext } from "../utils/auth"
 
-import { Grid, Cell } from "styled-css-grid"
-import { SectionMain } from "../components/layout/Section"
-import Content from "../components/Content"
-import SignUpForm from "../components/form/SignUpForm"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import { Container, LayoutContainer } from "../components/layout/Container"
+import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
-import Logo from "../components/Logo"
-import Icon from "../components/Icon"
 import Loader from "../components/Loader"
+import Nav from "../components/layout/Nav"
 
 const SignUp = () => {
   const { user, loading } = useFirebaseContext()
@@ -26,71 +23,21 @@ const SignUp = () => {
 
   return (
     <Layout className="is-full-height">
-      <SectionMain className="has-no-padding">
-        <Grid
-          columns="1fr 1fr"
-          height="100%"
-        >
-          <Grid
-            height="100%"
-            flow="row"
-            rowGap={spacing.normal}
-            justifycontent="end"
-            columns="2fr 1fr"
-            columnGap="1rem"
-            rows="40px"
-            style={{
-              backgroundcolor: colors.primary.sixHundred
-            }}
-          >
-            <Cell left={2}>
-              <Grid
-                columns="40px 3fr"
-                columnGap="1rem"
-                alignContent="center"
+      <Nav />
+      <SectionMain
+        className="has-max-height"
+      >
+        <Section>
+          <Container>
+            <LayoutContainer>
+              <SectionContent
+                padding={spacing.normal}
               >
-                <Icon>
-                  <CheckCircle weight="duotone" size={32} color={colors.white} />
-                </Icon>
-                <p style={{color: colors.white}}>Lorem Ipsum</p>
-              </Grid>
-            </Cell>
-            <Cell left={2}>
-              <Grid
-                columns="40px 3fr"
-                columnGap="1rem"
-                alignContent="center"
-              >
-                <Icon>
-                  <CheckCircle weight="duotone" size={32} color={colors.white} />
-                </Icon>
-                <p style={{color: colors.white}}>Lorem Ipsum</p>
-              </Grid>
-            </Cell>
-          </Grid>
-          <Grid
-            flow="row"
-            rowGap={spacing.medium}
-            columns="420px"
-            rows="auto"
-            justifycontent="center"
-            alignContent="center"
-          >
-            <Cell center>
-              <Link to="/">
-                <Logo padded={true} color={colors.primary.sixHundred} />
-              </Link>
-            </Cell>
-            <Cell>
-              <SignUpForm />
-            </Cell>
-            <Cell>
-              <Content textAlign="center">
-                <p>Already have an account? <Link to="/signin">Log in</Link></p>
-              </Content>
-            </Cell>
-          </Grid>
-        </Grid>
+                <SignupForm />
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
       </SectionMain>
     </Layout>
   )

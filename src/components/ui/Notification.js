@@ -36,6 +36,7 @@ const StyledNotification = styled.div`
   margin: ${props => props.margin || "1rem 0"};
   padding: ${props => props.padding};
   transition: background-color 0.2s, color 0.2s;
+  max-width: ${props => props.maxwidth};
   z-index: 8000;
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);

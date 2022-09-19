@@ -5,12 +5,12 @@ import { useFirebaseContext } from "../utils/auth"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import SigninForm from "../components/form/SigninForm"
+import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import Loader from "../components/Loader"
 
-const Signin = () => {
+const Forgot = () => {
   const { user, loading } = useFirebaseContext()
 
   if (loading) {
@@ -33,7 +33,7 @@ const Signin = () => {
               <SectionContent
                 padding={spacing.normal}
               >
-                <SigninForm />
+                <ForgotForm />
               </SectionContent>
             </LayoutContainer>
           </Container>
@@ -43,4 +43,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default Forgot

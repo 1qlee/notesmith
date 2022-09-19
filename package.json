@@ -17,6 +17,7 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "firebase": "^8.9.1",
+    "firebase-admin": "^11.0.1",
     "gatsby": "^3.11.1",
     "gatsby-image": "^3.11.0",
     "gatsby-plugin-firebase": "^0.2.0-beta.4",

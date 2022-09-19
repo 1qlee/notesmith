@@ -1,5 +1,6 @@
 import React from "react"
-import { colors } from "../../../styles/variables"
+import { Link } from "gatsby"
+import { colors, widths } from "../../../styles/variables"
 import { User } from "phosphor-react"
 
 import { Container, LayoutContainer } from "../../layout/Container"
@@ -24,9 +25,14 @@ function AuthLayout({
               justifycontent="space-between"
               width="100%"
             >
-              <Logo 
-                color={colors.gray.nineHundred}
-              />
+              <Link
+                to="/"
+              >
+                <Logo
+                  color={colors.gray.nineHundred}
+                  width={widths.logo}
+                />
+              </Link>
               <Icon>
                 <User size="1.5rem" />
               </Icon>

@@ -1,18 +1,18 @@
 import React, { useState } from "react"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { navigate, Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
+import { WarningCircle } from "phosphor-react"
 
-import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
+import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../Content"
 import Button from "../Button"
 import Icon from "../Icon"
 import Seo from "../layout/Seo"
 
-const LoginForm = (props) => {
-  const { login, user } = useFirebaseContext()
+const SigninForm = () => {
+  const { login } = useFirebaseContext()
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [authError, setAuthError] = useState({
@@ -73,13 +73,19 @@ const LoginForm = (props) => {
   return (
     <AuthFormWrapper>
       <Seo title="Sign In" />
-      <Content>
-        <h4>Sign into your account</h4>
+      <Content
+        h1fontsize="2rem"
+        margin="0 0 32px"
+      >
+        <h1>Sign into your account</h1>
       </Content>
-      <form id="login-form" onSubmit={handleSubmit} style={{maxwidth:"500px"}}>
+      <form 
+        id="signin-form" 
+        onSubmit={e => handleSubmit(e)} 
+      >
         <StyledFieldset
           className="is-vertical"
-          margin="1rem 0"
+          margin="16px 0"
         >
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <StyledInput
@@ -87,45 +93,44 @@ const LoginForm = (props) => {
             onFocus={() => setAuthError({
               msg: ""
             })}
-            borderradius="0"
             id="email"
             type="email"
             name="email"
-            padding="0.75rem"
           />
         </StyledFieldset>
         <StyledFieldset
           className="is-vertical"
-          margin="1rem 0 2rem"
+          margin="16px 0 32px"
         >
-          <StyledLabel htmlFor="password">
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="space-between"
-              width="100%"
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+            justifycontent="space-between"
+            width="100%"
+          >
+            <StyledLabel htmlFor="password">Password</StyledLabel>
+            <Content
+              linktextdecoration="underline"
+              margin="0 0 8px"
+              linkfontsize="0.75rem"
+              linkfontfamily={fonts.secondary}
             >
-              Password
-              <Content>
-                <Link to="/forgot">Forgot your password?</Link>
-              </Content>
-            </Flexbox>
-          </StyledLabel>
+              <Link to="/forgot">Forgot your password?</Link>
+            </Content>
+          </Flexbox>
           <StyledInput
             onChange={(e) => setPassword(e.currentTarget.value)}
             onFocus={() => setAuthError({
               msg: ""
             })}
-            borderradius="0"
             id="password"
             type="password"
             name="password"
-            padding="0.75rem"
           />
           {authError.msg && (
             <ErrorLine color={authError.color}>
               <Icon>
-                <Warning weight="fill" color={authError.color} size={18} />
+                <WarningCircle weight="fill" color={authError.color} size={18} />
               </Icon>
               <span>{authError.msg}</span>
               {authError.link && (
@@ -136,20 +141,26 @@ const LoginForm = (props) => {
         </StyledFieldset>
         <StyledFieldset>
           <Button
-            color={colors.white}
-            backgroundcolor={colors.primary.sixHundred}
-            borderradius="0"
+            color={colors.gray.oneHundred}
+            backgroundcolor={colors.gray.nineHundred}
             type="submit"
-            form="login-form"
+            form="signin-form"
             width="100%"
             padding="1rem"
           >
-            Sign In
+            Sign in
           </Button>
         </StyledFieldset>
       </form>
+      <Content
+        paragraphtextalign="center"
+        linktextdecoration="underline"
+        margin="16px 0 0"
+      >
+        <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+      </Content>
     </AuthFormWrapper>
   )
 }
 
-export default LoginForm
+export default SigninForm

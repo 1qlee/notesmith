@@ -14,9 +14,6 @@ const SectionMain = styled.main`
   &.has-max-height {
     min-height: 100vh;
   }
-  @media only screen and (max-width: ${widths.tablet}) {
-    padding: 6rem 0 0;
-  }
 `
 
 const Section = styled.section`

@@ -9,8 +9,6 @@ const defaultContext = {
   signUp: () => {},
   signOut: () => {},
   signUpWithEmail: () => {},
-  sendEmailVerification: () => {},
-  sendEmailVerificationOnSignUp: () => {},
 }
 
 export const FirebaseContext = React.createContext(defaultContext)
@@ -37,15 +35,6 @@ export const FirebaseProvider = ({
 
     initFirebase()
   }, [user])
-  
-  // function sendEmailVerification(cb) {
-  //   user.sendEmailVerification().then(() => {
-  //     console.log("Sending verification email...")
-  //     cb(true)
-  //   }).catch(error => {
-  //     cb(error)
-  //   })
-  // }
 
   return (
     <FirebaseContext.Provider
@@ -57,7 +46,6 @@ export const FirebaseProvider = ({
         signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
         signOut: (...p) => firebaseAuth.signOut(...p),
         signUpWithEmail: (...p) => firebaseAuth.sendSignInLinkToEmail(...p),
-        sendEmailVerification: (...p) => firebaseAuth.sendEmailVerification(...p),
         getAuthCredential: (...p) => firebase.auth.EmailAuthProvider.credential(...p)
       }}
     >

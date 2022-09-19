@@ -167,10 +167,11 @@ const ProductInfo = ({
           Add to cart
         </Button>
       </Flexbox>
-      {bookData.infoBoxes.map(box => (
+      {bookData.infoBoxes.map((box, index) => (
         <ProductInfoBox 
           heading={box.heading}
           text={box.text}
+          key={index}
         />
       ))}
     </>
