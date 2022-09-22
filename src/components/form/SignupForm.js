@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import { colors, regex } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { WarningCircle } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "phosphor-react"
 import sendEmailVerification from "../../functions/sendEmailVerification"
+import validatePassword from "../../functions/validatePassword"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
@@ -13,20 +14,17 @@ import Seo from "../layout/Seo"
 
 const SignupForm = () => {
   const { signUp, firebaseDb } = useFirebaseContext()
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [emailError, setEmailError] = useState({
-    msg: "",
-    color: colors.red.sixHundred
-  })
-  const [passwordError, setPasswordError] = useState({
-    msg: "",
-    color: colors.gray.nineHundred
-  })
+  const [emailError, setEmailError] = useState(null)
+  const [passwordError, setPasswordError] = useState(null)
   const [passwordValidated, setPasswordValidated] = useState()
 
   function handleSubmit(e) {
     e.preventDefault()
+    setLoading(true)
+
     signUp(email, password).then(userObject => {
       const { user } = userObject
       // Record new user in the db
@@ -37,72 +35,46 @@ const SignupForm = () => {
         sendEmailVerification(user.email)
       })
     })
+    .then(() => {
+      setLoading(false)
+    })
     .catch(error => {
+      setLoading(false)
+
       switch(error.code) {
         case "auth/email-already-in-use":
-          setEmailError({
-            msg: "This email is already in use.",
-            color: colors.red.sixHundred
-          })
+          setEmailError("This email is already in use.")
           break
         case "auth/invalid-email":
-          setEmailError({
-            msg: "Email was in an invalid format.",
-            color: colors.red.sixHundred
-          })
+          setEmailError("Email was in an invalid format.")
           break
         case "auth/operation-not-allowed":
-          setEmailError({
-            msg: "Sorry, our server is busy.",
-            color: colors.red.sixHundred
-          })
+          setEmailError("Sorry, our server is busy.")
           break
         default:
-          setEmailError({
-            msg: "Something went wrong.",
-            color: colors.red.sixHundred
-          })
+          setEmailError("Something went wrong.")
       }
     })
   }
 
-  function validatePassword(password) {
-    let additionalCharsReq = 8 - password.length
+  function handlePasswordOnChange(password) {
+    const { isValid, error } = validatePassword(password)
 
-    if (regex.password.test(password)) {
-      setPasswordError({
-        msg: "",
-        color: colors.gray.nineHundred
-      })
+    if (isValid) {
       setPasswordValidated(true)
+      setPasswordError(null)
       setPassword(password)
     }
     else {
-      if (password.length > 0) {
-        setPasswordError({
-          msg: additionalCharsReq === 1 ? `You need ${additionalCharsReq} more character.` : `You need ${additionalCharsReq} more characters.`,
-          color: colors.gray.nineHundred
-        })
-      }
-      else if (password.length === 0) {
-        setPasswordError({
-          msg: "",
-          color: colors.gray.nineHundred
-        })
-      }
+      setPasswordError(error)
       setPasswordValidated(false)
     }
   }
 
-  function validatePasswordOnBlur(password) {
-    let currentNumOfChars = password.length
-
-    if (currentNumOfChars !== 0 && currentNumOfChars < 8) {
+  function handlePasswordOnBlur(password) {
+    if (password.length === 0) {
+      setPasswordError(null)
       setPasswordValidated(false)
-      return setPasswordError({
-        msg: "Password must be at least 8 characters.",
-        color: colors.red.sixHundred
-      })
     }
   }
 
@@ -122,38 +94,35 @@ const SignupForm = () => {
         onSubmit={e => handleSubmit(e)}
       >
         <StyledFieldset
-          className="is-vertical"
           margin="0 0 16px"
         >
           <StyledLabel>Email</StyledLabel>
           <StyledInput
             onChange={e => setEmail(e.currentTarget.value)}
-            onFocus={() => setEmailError({...emailError, msg: ""})}
-            className={emailError.msg && "is-error"}
+            onFocus={() => setEmailError(null)}
+            className={emailError && "is-error"}
             id="email"
             type="email"
             name="email"
             autocomplete="email"
           />
-          {emailError.msg && (
-            <ErrorLine color={emailError.color}>
+          {emailError && (
+            <ErrorLine color={colors.red.sixHundred}>
               <Icon>
-                <WarningCircle weight="fill" color={emailError.color} size={16} />
+                <WarningCircle weight="fill" color={colors.red.sixHundred} size={16} />
               </Icon>
-              <span>{emailError.msg}</span>
+              <span>{emailError}</span>
             </ErrorLine>
           )}
         </StyledFieldset>
         <StyledFieldset
-          className="is-vertical"
           margin="0 0 32px"
         >
-          <StyledLabel>Password</StyledLabel>
+          <StyledLabel>Password (min. 8 characters)</StyledLabel>
           <StyledInput
-            onFocus={(e) => validatePassword(e.currentTarget.value)}
-            onChange={(e) => validatePassword(e.currentTarget.value)}
-            onBlur={(e) => validatePasswordOnBlur(e.currentTarget.value)}
-            className={passwordError.msg && "is-error"}
+            onChange={(e) => handlePasswordOnChange(e.currentTarget.value)}
+            onBlur={(e) => handlePasswordOnBlur(e.currentTarget.value)}
+            className={passwordError && "is-error"}
             id="password"
             type="password"
             name="password"
@@ -169,26 +138,33 @@ const SignupForm = () => {
               />
             </div>
           )}
-          {passwordError.msg && (
-            <ErrorLine color={passwordError.color}>
+          {passwordError && (
+            <ErrorLine color={colors.red.sixHundred}>
               <Icon>
-                <WarningCircle weight="fill" color={passwordError.color} size={16} />
+                <WarningCircle weight="fill" color={colors.red.sixHundred} size={16} />
               </Icon>
-              <span>{passwordError.msg}</span>
+              <span>{passwordError}</span>
             </ErrorLine>
           )}
         </StyledFieldset>
         <StyledFieldset>
           <Button
-            color={colors.gray.oneHundred}
             backgroundcolor={colors.gray.nineHundred}
-            padding="16px"
-            disabled={passwordValidated && email.length > 0 ? false : true}
-            type="submit"
+            className={loading && "is-loading"}
+            color={colors.gray.oneHundred}
+            disabled={!passwordValidated || !email || loading}
             form="signup-form"
+            padding="16px"
+            type="submit"
             width="100%"
           >
-            Create account
+            {loading ? (
+              <Icon>
+                <CircleNotch size="1rem" />
+              </Icon>
+            ) : (
+              <span>Create account</span>
+            )}
           </Button>
         </StyledFieldset>
       </form>

@@ -7,11 +7,11 @@ const StyledTabs = styled.ul`
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
+  font-size: ${props => props.fontsize};
 `
 
 const StyledTab = styled.li`
   font-family: ${fonts.secondary};
-  font-size: ${props => props.fontsize};
   font-weight: 700;
   transition: padding 0.2s, border-color 0.2s;
   border-bottom: 2px solid transparent;

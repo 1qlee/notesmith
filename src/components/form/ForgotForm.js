@@ -43,6 +43,7 @@ const ForgotForm = () => {
       setLoading(false)
     }).catch(error => {
       setAuthError(error)
+      setEmailSent(false)
       setLoading(false)
     })
   }
@@ -106,6 +107,7 @@ const ForgotForm = () => {
                 color={colors.gray.oneHundred}
                 backgroundcolor={colors.gray.nineHundred}
                 className={loading && "is-loading"}
+                disabled={loading && true}
                 type="submit"
                 form="forgot-form"
                 width="100%"

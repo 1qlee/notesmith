@@ -12,7 +12,7 @@ const SectionMain = styled.main`
     padding: 0;
   }
   &.has-max-height {
-    min-height: 100vh;
+    min-height: calc(100vh - 70px);
   }
 `
 
@@ -48,7 +48,7 @@ const SectionAppContent = styled.section`
 
 const SectionAppWorkspace = styled.div`
   height: ${props => props.heightmargin ? `calc(100vh - ${props.heightmargin})` : "100vh"};
-  padding: ${props => props.padding || "2rem"};
+  padding: ${props => props.padding || "2rem 0"};
   width: 100%;
 `
 

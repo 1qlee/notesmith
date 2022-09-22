@@ -9,6 +9,7 @@ import Content from "../Content"
 import Seo from "../layout/Seo"
 import AuthLayout from "./components/AuthLayout"
 import sendEmailVerification from "../../functions/sendEmailVerification"
+import { widths } from "../../styles/variables"
 
 const UserDashboard = () => {
   const { user } = useFirebaseContext()
@@ -28,16 +29,16 @@ const UserDashboard = () => {
     <Layout>
       <Seo title="Dashboard" />
       <AuthLayout page="Dashboard">
-        {!user.emailVerified && (
-          <Content
-            margin="32px 0"
-            linktextdecoration="underline"
-          >
-            <h3>Verify your email</h3>
-            <p>We sent a verification link to your email address. If you didn't receive it, <a onClick={() => handleSendEmail(user.email)}>click here to resend the email</a> or <Link to="/account/settings">change your email address</Link>.
-            </p>
-          </Content>
-        )}
+        <Content
+          margin="32px 0"
+          linktextdecoration="underline"
+          maxwidth={widths.content.normal}
+        >
+          <h3>Welcome to Notesmith!</h3>
+          <p>
+            Thanks for signing up to participate in Notesmith's open beta. We are currently actively building new features for the website. Please excuse the barren state of your dashboard at this time.
+          </p>
+        </Content>
       </AuthLayout>
       <Toastify />
     </Layout>

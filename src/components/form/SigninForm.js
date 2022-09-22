@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { colors, fonts } from "../../styles/variables"
 import { navigate, Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { WarningCircle } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "phosphor-react"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"
@@ -13,6 +13,7 @@ import Seo from "../layout/Seo"
 
 const SigninForm = () => {
   const { login } = useFirebaseContext()
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [authError, setAuthError] = useState({
@@ -23,13 +24,14 @@ const SigninForm = () => {
 
   function handleSubmit(e) {
     e.preventDefault()
+    setLoading(true)
     // Sign in using Firebase auth function
     login(email, password)
     .then(() => {
-      // Redirect user to the dashboard app page
-      navigate("/app/dashboard")
+      setLoading(false)
     })
     .catch(error => {
+      setLoading(false)
       // Handle various error codes from Firebase
       switch(error.code) {
         case "auth/user-disabled":
@@ -62,7 +64,7 @@ const SigninForm = () => {
           break
         default:
           setAuthError({
-            msg: "Something went wrong.",
+            msg: "Something went wrong. Please try again.",
             color: colors.red.sixHundred,
             link: false
           })
@@ -142,13 +144,23 @@ const SigninForm = () => {
         <StyledFieldset>
           <Button
             color={colors.gray.oneHundred}
+            className={loading && "is-loading"}
             backgroundcolor={colors.gray.nineHundred}
+            disabled={loading}
             type="submit"
             form="signin-form"
             width="100%"
             padding="1rem"
           >
-            Sign in
+            {loading ? (
+              <Icon>
+                <CircleNotch size="1rem" />
+              </Icon>
+            ) : (
+              <span>
+                Sign in
+              </span>
+            )}
           </Button>
         </StyledFieldset>
       </form>

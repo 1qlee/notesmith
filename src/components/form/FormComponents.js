@@ -392,43 +392,9 @@ const AuthFormWrapper = styled.div`
 
 const StyledFieldset = styled.fieldset`
   border: none;
-  display: flex;
-  flex-direction: ${props => props.flexdirection};
-  justify-content: ${props => props.justifycontent};
-  align-items: ${props => props.alignitems};
   margin: ${props => props.margin};
   position: relative;
   width: ${props => props.width};
-  &.is-flex {
-    fieldset {
-      flex: 1;
-      & + fieldset {
-        margin-left: 1rem;
-      }
-    }
-  }
-  &.is-horizontal {
-    div {
-      flex: 1;
-      &:not(:last-child) {
-        margin-right: 1rem;
-      }
-    }
-  }
-  &.is-vertical {
-    flex-direction: column;
-    align-items: flex-start;
-    label {
-      margin-right: 0;
-    }
-  }
-  &.has-buttons {
-    button {
-      &:not(:last-child) {
-        margin-right: 1rem;
-      }
-    }
-  }
 `
 
 const StyledRange = styled.div`
