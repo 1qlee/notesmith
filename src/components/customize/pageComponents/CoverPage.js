@@ -5,7 +5,8 @@ import Holes from "./Holes"
 
 function CoverPage({
   bookData,
-  canvasPageSize,
+  pageHeight,
+  pageWidth,
   selectedPage,
 }) {
 
@@ -13,30 +14,31 @@ function CoverPage({
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageSize.height}
-        width={canvasPageSize.width}
-        viewBox={`0 0 ${canvasPageSize.width} ${canvasPageSize.height}`}
+        height={pageHeight}
+        width={pageWidth}
+        viewBox={`0 0 ${pageWidth} ${pageHeight}`}
         x="0"
         y="0"
       >
         <rect
-          width={canvasPageSize.width}
-          height={canvasPageSize.height}
+          width={pageWidth}
+          height={pageHeight}
           fill={colors.white}
           stroke={colors.gray.threeHundred}
         >
         </rect>
         <text
-          x={(canvasPageSize.width / 2) - 80}
-          y={canvasPageSize.height / 2}
-          width={canvasPageSize.width}
+          x={(pageWidth / 2) - 80}
+          y={pageHeight / 2}
+          width={pageWidth}
           fill={colors.gray.nineHundred}
         >
           THIS IS THE COVER PAGE
         </text>
         <Holes
           currentPageSide="left"
-          canvasPageSize={canvasPageSize}
+          pageWidth={pageWidth}
+          pageHeight={pageHeight}
         />
       </svg>
     )
@@ -45,30 +47,31 @@ function CoverPage({
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageSize.height}
-        width={canvasPageSize.width}
-        viewBox={`0 0 ${canvasPageSize.width} ${canvasPageSize.height}`}
+        height={pageHeight}
+        width={pageWidth}
+        viewBox={`0 0 ${pageWidth} ${pageHeight}`}
         x="0"
         y="0"
       >
         <rect
-          width={canvasPageSize.width}
-          height={canvasPageSize.height}
+          width={pageWidth}
+          height={pageHeight}
           fill={colors.white}
           stroke={colors.gray.threeHundred}
         >
         </rect>
         <text
-          x={(canvasPageSize.width / 2) - 80}
-          y={canvasPageSize.height / 2}
-          width={canvasPageSize.width}
+          x={(pageWidth / 2) - 80}
+          y={pageHeight / 2}
+          width={pageWidth}
           fill={colors.gray.nineHundred}
         >
           THIS IS THE COVER PAGE
         </text>
         <Holes
           currentPageSide="right"
-          canvasPageSize={canvasPageSize}
+          pageWidth={pageWidth}
+          pageHeight={pageHeight}
         />
       </svg>
     )

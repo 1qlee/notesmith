@@ -6,13 +6,14 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'svg2pdf.js'
 
 import { Flexbox } from "../layout/Flexbox"
+import AuthLayout from "./components/AuthLayout"
 import BooksContainer from "./books/BooksContainer"
 import Button from "../Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
+import Loader from "../Loader"
 import NewBookModal from "./modals/AppNewBookModal"
 import Seo from "../layout/Seo"
-import AuthLayout from "./components/AuthLayout"
 
 const UserBooks = () => {
   const isBrowser = typeof window !== "undefined"
@@ -21,7 +22,7 @@ const UserBooks = () => {
   const booksRef = firebaseDb.ref("books/")
   const userBooksRef = firebaseDb.ref(`users/${uid}/books`)
   const pagesRef = firebaseDb.ref("pages/")
-  const [processing, setProcessing] = useState(false)
+  const [processing, setProcessing] = useState(true)
   const [bookData, setBookData] = useState({
     size: "",
     numOfPages: 140,
@@ -309,71 +310,65 @@ const UserBooks = () => {
     })
   }
 
-  return (
-    <Layout>
-      <Seo title="My Books" />
-      <AuthLayout page="Books">
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-          justifycontent="flex-start"
-        >
-          <Button
-            onClick={() => downloadBookPdf()}
-          >
-            Download book
-          </Button>
-        </Flexbox>
-        <BooksContainer
-          duplicateBook={duplicateBook}
-          getLocalStorage={getLocalStorage}
-          handleBookDelete={handleBookDelete}
-          processing={processing}
-          renameBook={renameBook}
-          userBooks={userBooks}
-          setShowModal={setShowModal}
-          sortBooks={sortBooks}
+  if (processing || loading) {
+    return <Loader />
+  }
+  else {
+    return (
+      <Layout>
+        <Seo title="My Books" />
+        <AuthLayout page="Books">
+          <BooksContainer
+            duplicateBook={duplicateBook}
+            getLocalStorage={getLocalStorage}
+            handleBookDelete={handleBookDelete}
+            processing={processing}
+            renameBook={renameBook}
+            userBooks={userBooks}
+            setShowModal={setShowModal}
+            sortBooks={sortBooks}
+          />
+          {showModal.show && (
+            <>
+              {showModal.type === "createbook" && (
+                <NewBookModal
+                  bookData={bookData}
+                  setBookData={setBookData}
+                  setShowModal={setShowModal}
+                  toast={toast}
+                />
+              )}
+              {showModal.type === "deletebook" && (
+                <DeleteBookModal
+                  bookToBeDeleted={bookToBeDeleted}
+                  deleteBook={deleteBook}
+                  setShowModal={setShowModal}
+                />
+              )}
+            </>
+          )}
+        </AuthLayout>
+        <ToastContainer
+          autoClose={3000}
+          closeOnClick
+          draggable
+          draggablePercent={50}
+          hideProgressBar={false}
+          limit={3}
+          newestOnTop={false}
+          pauseOnFocusLoss
+          pauseOnHover
+          position="bottom-center"
+          rtl={false}
+          theme="colored"
+          style={{
+            fontFamily: fonts.secondary,
+            fontSize: "0.75rem",
+          }}
         />
-        {showModal.show && (
-          <>
-            {showModal.type === "createbook" && (
-              <NewBookModal
-                bookData={bookData}
-                setBookData={setBookData}
-                setShowModal={setShowModal}
-                toast={toast}
-              />
-            )}
-            {showModal.type === "deletebook" && (
-              <DeleteBookModal
-                bookToBeDeleted={bookToBeDeleted}
-                deleteBook={deleteBook}
-                setShowModal={setShowModal}
-              />
-            )}
-          </>
-        )}
-      </AuthLayout>
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick
-        draggable
-        draggablePercent={50}
-        hideProgressBar={false}
-        limit={3}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="bottom-center"
-        rtl={false}
-        theme="colored"
-        style={{
-          fontFamily: fonts.secondary,
-          fontSize: "0.75rem",
-        }}
-      />
-    </Layout>
-  )
+      </Layout>
+    )
+  }
 }
 
 export default UserBooks

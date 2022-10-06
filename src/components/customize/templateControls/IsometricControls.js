@@ -8,15 +8,12 @@ import Icon from "../../Icon"
 import AlignmentControls from "./AlignmentControls"
 
 function IsometricControls({
-  borderData,
   maximumMarginHeight,
   maximumMarginWidth,
-  pageContentSize,
   pageData,
-  setBorderData,
   setPageData,
 }) {
-  const { contentWidth, contentHeight } = pageData
+  const { contentWidth, contentHeight, borderData } = pageData
   const pageWidth = convertToMM(pageData.pageWidth)
   const pageHeight = convertToMM(pageData.pageHeight)
   const totalHorizontalMargin = convertFloatFixed(pageWidth - contentWidth, 3)
@@ -26,17 +23,23 @@ function IsometricControls({
 
   function handleBorderSync() {
     if (!borderData.sync) {
-      setBorderData({
-        ...borderData,
-        sync: true,
-        opacity: 1,
-        thickness: 0.088,
+      setPageData({
+        ...pageData,
+        borderData: {
+          ...borderData,
+          sync: true,
+          opacity: 1,
+          thickness: 0.088,
+        }
       })
     }
     else {
-      setBorderData({
-        ...borderData,
-        sync: false,
+      setPageData({
+        ...pageData,
+        borderData: {
+          ...borderData,
+          sync: false,
+        }
       })
     }
   }
@@ -149,9 +152,12 @@ function IsometricControls({
         >
           <StyledCheckbox
             margin="0 0.5rem 0 0"
-            onClick={() => setBorderData({
-              ...borderData,
-              toggle: !borderData.toggle,
+            onClick={() => setPageData({
+              ...pageData,
+              borderData: {
+                ...borderData,
+                toggle: !borderData.toggle,
+              }
             })}
           >
             <Icon
@@ -197,9 +203,12 @@ function IsometricControls({
                   value={borderData.opacity}
                   min={0.5}
                   max={1}
-                  onChange={value => setBorderData({
-                    ...borderData,
-                    opacity: value,
+                  onChange={value => setPageData({
+                    ...pageData,
+                    borderData: {
+                      ...borderData,
+                      opacity: value,
+                    }
                   })}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   step={0.01}
@@ -212,9 +221,12 @@ function IsometricControls({
                   step={0.01}
                   max={1}
                   value={borderData.opacity}
-                  onChange={e => setBorderData({
-                    ...borderData,
-                    opacity: e.target.value,
+                  onChange={e => setPageData({
+                    ...pageData,
+                    borderData: {
+                      ...borderData,
+                      opacity: e.target.value,
+                    }
                   })}
                 />
               </Flexbox>
@@ -234,10 +246,12 @@ function IsometricControls({
                   value={borderData.thickness}
                   min={0.088}
                   max={3}
-                  onChange={value => setBorderData({
-                    ...borderData,
-                    alignmentHorizontal: "",
-                    thickness: value,
+                  onChange={value => setPageData({
+                    ...pageData,
+                    borderData: {
+                      ...borderData,
+                      thickness: value,
+                    }
                   })}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   step={0.001}
@@ -250,7 +264,13 @@ function IsometricControls({
                   step="0.001"
                   max="3"
                   value={borderData.thickness}
-                  onChange={e => setBorderData({...borderData, thickness: parseFloat(e.target.value)})}
+                  onChange={e => setPageData({
+                    ...pageData,
+                    borderData: {
+                      ...borderData,
+                      thickness: parseFloat(e.target.value),
+                    }
+                  })}
                 />
               </Flexbox>
             </Flexbox>

@@ -30,11 +30,12 @@ const UserDashboard = () => {
       <Seo title="Dashboard" />
       <AuthLayout page="Dashboard">
         <Content
+          h1fontsize="2rem"
           margin="32px 0"
           linktextdecoration="underline"
           maxwidth={widths.content.normal}
         >
-          <h3>Welcome to Notesmith!</h3>
+          <h1>Welcome to Notesmith!</h1>
           <p>
             Thanks for signing up to participate in Notesmith's open beta. We are currently actively building new features for the website. Please excuse the barren state of your dashboard at this time.
           </p>

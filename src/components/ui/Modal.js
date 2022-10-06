@@ -5,7 +5,7 @@ import { colors, widths, fonts } from "../../styles/variables"
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
-  border: 1px solid ${colors.gray.nineHundred};
+  border-radius: 8px;
   left: 50%;
   min-width: ${widths.modal};
   position: absolute;
@@ -27,10 +27,10 @@ const ModalBackground = styled.div`
 
 const ModalHeader = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-bottom: ${props => props.border || `1px solid ${colors.gray.nineHundred}`};
+  border-bottom: ${props => props.border || `1px solid ${colors.gray.threeHundred}`};
+  border-radius: 8px 8px 0 0;
   color: ${props => props.color || colors.primary.nineHundred};
-  font-size: 0.875rem;
-  font-family: ${fonts.secondary};
+  font-size: 1.25rem;
   font-weight: 700;
   padding: 1rem;
 `
@@ -43,7 +43,8 @@ const ModalContent = styled.div`
 const ModalFooter = styled.div`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.nineHundred}`};
+  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.threeHundred}`};
+  border-radius: 0 0 8px 8px;
   display: flex;
   justify-content: ${props => props.justifycontent};
   padding: 1rem;

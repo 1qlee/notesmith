@@ -23,6 +23,7 @@ function AuthLayout({
               flex="flex"
               alignitems="center"
               justifycontent="space-between"
+              padding="1rem 0"
               width="100%"
             >
               <Link
@@ -31,6 +32,7 @@ function AuthLayout({
                 <Logo
                   color={colors.gray.nineHundred}
                   width={widths.logo}
+                  height="100%"
                 />
               </Link>
               <Icon>

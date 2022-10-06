@@ -7,6 +7,12 @@ import { Flexbox } from "../../layout/Flexbox"
 import TitleBox from "../barComponents/TitleBox"
 import Toolbox from "../barComponents/Toolbox"
 
+const StyledFunctionsBar = styled.div`
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid ${colors.gray.threeHundred};
+`
+
 function Functionsbar({
   selectedPage,
   setSelectedPage,
@@ -17,12 +23,7 @@ function Functionsbar({
 }) {
 
   return (
-    <Flexbox
-      flex="flex"
-      width="100%"
-      className="has-border-bottom"
-      bordercolor={colors.gray.threeHundred}
-    >
+    <StyledFunctionsBar>
       <Toolbox
         toast={toast}
       />
@@ -58,7 +59,7 @@ function Functionsbar({
           fontSize: "0.75rem",
         }}
       />
-    </Flexbox>
+    </StyledFunctionsBar>
   )
 }
 

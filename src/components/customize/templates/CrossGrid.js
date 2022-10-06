@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { colors, convertToPx, convertFloatFixed } from "../../../styles/variables"
 
-function CrossGrid({ pageData, setPageData }) {
+function CrossGrid({ 
+  pageData, 
+  setPageData 
+}) {
   const [crosses, setCrosses] = useState([])
   const crossSize = convertToPx(pageData.size)
   const spacing = convertToPx(pageData.spacing)

@@ -16,6 +16,7 @@ const AlignmentButtonWrapper = styled.div`
 
 const AlignmentButton = styled(Button)`
   background-color: ${colors.white};
+  color: ${colors.gray.nineHundred};
   font-size: 0.75rem;
   padding: 0.25rem;
   flex: 1;

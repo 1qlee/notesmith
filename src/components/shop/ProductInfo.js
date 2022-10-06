@@ -16,10 +16,10 @@ const ProductInfo = ({
   bookData,
   cartThumbnail,
   leftPageData,
+  pageData,
   rightPageData,
   setBookData,
-  selectedTemplate,
-  setSelectedTemplate,
+  setPageData,
   toast,
 }) => {
   const { addItem } = useShoppingCart()
@@ -125,13 +125,13 @@ const ProductInfo = ({
         margin="0 0 16px"
       >
         <PageIcons
-          checkActiveVar={selectedTemplate.template}
-          data={selectedTemplate}
+          checkActiveVar={pageData.template}
+          data={pageData}
           iconMargin="0 1rem 1rem 0"
           isProductPage={true}
           leftPageData={leftPageData}
           rightPageData={rightPageData}
-          setData={setSelectedTemplate}
+          setData={setPageData}
           showLabels={false}
         />
       </Flexbox>

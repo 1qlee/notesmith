@@ -1,24 +1,18 @@
 import React from "react"
 import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
-import { Square, CheckSquare, Question } from "phosphor-react"
-import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel, RangeInput, StyledCheckbox, NumberInput } from "../../form/FormComponents"
+import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
 import AlignmentControls from "./AlignmentControls"
-import Icon from "../../Icon"
 
 function CalligraphyControls({
-  canvasPageSize,
-  dashedLineData,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
   pageData,
-  setDashedLineData,
   setPageData,
 }) {
-  const { marginLeft, marginRight, thickness } = pageData
+  const { marginLeft, marginRight, thickness, dashedLineData } = pageData
   const pageHeight = convertToMM(pageData.pageHeight)
   const pageWidth = convertToMM(pageData.pageWidth)
   const contentHeight = convertToMM(pageContentSize.height)
@@ -83,17 +77,23 @@ function CalligraphyControls({
 
   function handleDashedLineSync() {
     if (!dashedLineData.sync) {
-      setDashedLineData({
-        ...dashedLineData,
-        sync: true,
-        opacity: 1,
-        thickness: 0.088,
+      setPageData({
+        ...pageData,
+        dashedLineData: {
+          ...dashedLineData,
+          sync: true,
+          opacity: 1,
+          thickness: 0.088,
+        }
       })
     }
     else {
-      setDashedLineData({
-        ...dashedLineData,
-        sync: false,
+      setPageData({
+        ...pageData,
+        dashedLineData: {
+          ...dashedLineData,
+          sync: false,
+        }
       })
     }
   }

@@ -12,10 +12,10 @@ const rotate = keyframes`
 
 const Button = styled.button`
   align-items: center;
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.nineHundred};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: ${props => props.border ? props.border : "none"};
-  color: ${props => props.color || colors.gray.nineHundred};
+  color: ${props => props.color || colors.gray.oneHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
   font-size: ${props => props.fontsize || "0.825rem"};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;

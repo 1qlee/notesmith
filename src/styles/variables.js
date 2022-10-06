@@ -163,4 +163,21 @@ const convertFloatFixed = (number, places) => {
   return parseFloat(number.toFixed(places))
 }
 
-export { colors, widths, spacing, regex, convertToMM, convertToPx, convertToDecimal, convertFloatFixed, fonts }
+const pageMargins = {
+  vertical: convertToPx(6.35),
+  horizontal: convertToPx(13.335),
+  minimum: convertToPx(3.175),
+}
+
+export { 
+  colors, 
+  convertFloatFixed, 
+  convertToDecimal, 
+  convertToMM, 
+  convertToPx, 
+  fonts,
+  pageMargins,
+  regex, 
+  spacing, 
+  widths, 
+}

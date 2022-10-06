@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Isometric({
-  borderData,
   pageData,
   setPageData,
 }) {
   const [linesTop, setLinesTop] = useState([])
   const [linesSides, setLinesSides] = useState([])
-  const { pageWidth } = pageData
+  const { pageWidth, borderData } = pageData
   const lineThickness = convertToPx(pageData.thickness)
   const borderThickness = convertToPx(borderData.thickness)
   const lineSpacing = convertToPx(pageData.spacing) + convertToPx(pageData.thickness)
@@ -138,7 +137,7 @@ function Isometric({
 
     createLinesTop()
     createLinesSides()
-  }, [pageData, borderData])
+  }, [pageData])
 
   return (
     <svg

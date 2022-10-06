@@ -5,20 +5,9 @@ const BookRadio = styled.div`
   display: block;
   background-color: ${colors.white};
   transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
-  border-left: 1px solid ${colors.gray.threeHundred};
-  border-right: 1px solid ${colors.gray.threeHundred};
-  border-bottom: 1px solid ${colors.gray.threeHundred};
+  border-radius: 4px;
+  border: 1px solid ${colors.gray.nineHundred};
   padding: 1rem;
-  &:first-child {
-    border-radius: 0.25rem 0.25rem 0 0;
-    border-top: 1px solid ${colors.gray.threeHundred};
-  }
-  &:last-child {
-    border-radius: 0 0 0.25rem 0.25rem;
-  }
-  &.has-border-top {
-    border-top: 1px solid ${colors.gray.threeHundred};
-  }
   &:hover,
   &:focus {
     cursor: pointer;

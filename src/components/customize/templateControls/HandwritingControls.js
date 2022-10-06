@@ -9,16 +9,13 @@ import AlignmentControls from "./AlignmentControls"
 import Icon from "../../Icon"
 
 function HandwritingControls({
-  canvasPageSize,
-  dashedLineData,
   maximumMarginHeight,
   maximumMarginWidth,
   pageContentSize,
   pageData,
-  setDashedLineData,
   setPageData,
 }) {
-  const { marginLeft, marginRight, thickness } = pageData
+  const { marginLeft, marginRight, thickness, dashedLineData } = pageData
   const pageHeight = convertToMM(pageData.pageHeight)
   const pageWidth = convertToMM(pageData.pageWidth)
   const contentHeight = convertToMM(pageContentSize.height)
@@ -83,17 +80,23 @@ function HandwritingControls({
 
   function handleDashedLineSync() {
     if (!dashedLineData.sync) {
-      setDashedLineData({
-        ...dashedLineData,
-        sync: true,
-        opacity: 1,
-        thickness: 0.088,
+      setPageData({
+        ...pageData,
+        dashedLineData: {
+          ...dashedLineData,
+          sync: true,
+          opacity: 1,
+          thickness: 0.088,
+        }
       })
     }
     else {
-      setDashedLineData({
-        ...dashedLineData,
-        sync: false,
+      setPageData({
+        ...pageData,
+        dashedLineData: {
+          ...dashedLineData,
+          sync: false,
+        }
       })
     }
   }
@@ -171,9 +174,12 @@ function HandwritingControls({
                   type="text"
                   value={dashedLineData.dashArray}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                  onChange={e => setDashedLineData({
-                    ...dashedLineData,
-                    dashArray: e.target.value
+                  onChange={e => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      dashArray: e.target.value
+                    }
                   })}
                 />
               </Flexbox>
@@ -188,9 +194,12 @@ function HandwritingControls({
                   step={1}
                   value={dashedLineData.dashOffset}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                  onChange={value => setDashedLineData({
-                    ...dashedLineData,
-                    dashOffset: value,
+                  onChange={value => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      dashOffset: value,
+                    }
                   })}
                 />
               </Flexbox>
@@ -210,9 +219,12 @@ function HandwritingControls({
                   value={dashedLineData.opacity}
                   min={0.5}
                   max={1}
-                  onChange={value => setDashedLineData({
-                    ...dashedLineData,
-                    opacity: value,
+                  onChange={value => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      opacity: value,
+                    }
                   })}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   step={0.01}
@@ -225,9 +237,12 @@ function HandwritingControls({
                   step={0.01}
                   max={1}
                   value={dashedLineData.opacity}
-                  onChange={e => setDashedLineData({
-                    ...dashedLineData,
-                    opacity: parseFloat(e.target.value),
+                  onChange={e => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      opacity: parseFloat(e.target.value),
+                    }
                   })}
                 />
               </Flexbox>
@@ -247,10 +262,13 @@ function HandwritingControls({
                   value={dashedLineData.thickness}
                   min={0.088}
                   max={3}
-                  onChange={value => setDashedLineData({
-                    ...dashedLineData,
-                    alignmentHorizontal: "",
-                    thickness: value,
+                  onChange={value => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      alignmentHorizontal: "",
+                      thickness: value,
+                    }
                   })}
                   padding="0.5rem 1.5rem 0.5rem 0.5rem"
                   step={0.001}
@@ -263,9 +281,12 @@ function HandwritingControls({
                   step={0.001}
                   max={3}
                   value={dashedLineData.thickness}
-                  onChange={e => setDashedLineData({
-                    ...dashedLineData,
-                    thickness: parseFloat(e.target.value)
+                  onChange={e => setPageData({
+                    ...pageData,
+                    dashedLineData: {
+                      ...dashedLineData,
+                      thickness: parseFloat(e.target.value)
+                    }
                   })}
                 />
               </Flexbox>

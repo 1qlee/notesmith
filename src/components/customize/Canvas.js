@@ -19,30 +19,32 @@ function Canvas({
   bookData,
   canvasPages,
   canvasPageTemplates,
-  canvasPageSize,
-  canvasSize,
   pageData,
   setPageContentSize,
   selectedPage,
   setPageData,
   setSelectedPageSvg,
 }) {
+  const [canvasSize, setCanvasSize] = useState({
+    width: 1456,
+    height: 916,
+  })
 
   return (
     <Workspace>
       <StyledCanvas>
         <svg
           id="page-root"
+          xmlns="http://www.w3.org/2000/svg"
           xlinkns="http://www.w3.org/1999/xlink"
           width={canvasSize.width}
           height={canvasSize.height}
         >
           <PageSpread
             bookData={bookData}
+            canvasSize={canvasSize}
             canvasPages={canvasPages}
             canvasPageTemplates={canvasPageTemplates}
-            canvasPageSize={canvasPageSize}
-            canvasSize={canvasSize}
             pageData={pageData}
             selectedPage={selectedPage}
             setPageContentSize={setPageContentSize}

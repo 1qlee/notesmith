@@ -42,6 +42,10 @@ const StyledNotification = styled.div`
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);
     animation: ${loading} 1s infinite;
   }
+  &.has-no-style {
+    border: none;
+    box-shadow: none;
+  }
   p {
     color: ${props => props.color};
   }

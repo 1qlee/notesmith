@@ -16,9 +16,9 @@ import Content from "../../Content"
 const PageRangeWrapper = styled.div`
   display: flex;
   border: 1px solid ${colors.gray.threeHundred};
-  padding: 0.25rem;
+  padding: 4px;
   align-items: center;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   background-color: ${colors.white};
   transition: transform 0.2s, box-shadow 0.2s;
   width: 6.875rem;
@@ -29,9 +29,9 @@ const PageRangeWrapper = styled.div`
 `
 
 const PageRangeInput = styled.input`
-  padding: 0.25rem 0.5rem;
+  padding: 4px 8px;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   text-align: center;
   width: 2.5rem;
   &:hover,
@@ -57,7 +57,6 @@ function ApplyTemplateModal({
   bookId,
   canvasPages,
   canvasPageTemplates,
-  pageData,
   selectedPage,
   selectedPageSvg,
   setCanvasPages,
@@ -307,18 +306,18 @@ function ApplyTemplateModal({
       <ModalContent>
         <Notification
           alignitems="flex-start"
-          backgroundcolor={colors.gray.oneHundred}
-          bordercolor={colors.gray.oneHundred}
           margin="0 0 1rem"
           padding="1rem"
+          className="has-no-style"
+          backgroundcolor={colors.gray.oneHundred}
         >
           <Icon
             borderradius="100%"
-            margin="0.25rem 1rem 0 0"
+            margin="4px 1rem 0 0"
             className="is-pulsating"
-            pulseColor={colors.yellow.threeHundred}
+            pulseColor={colors.gray.sixHundred}
           >
-            <WarningCircle size="1.5rem" weight="fill" color={colors.yellow.sixHundred} />
+            <WarningCircle size="1.5rem" weight="fill" color={colors.gray.nineHundred} />
           </Icon>
           <Content
             paragraphcolor={colors.gray.nineHundred}
@@ -338,7 +337,7 @@ function ApplyTemplateModal({
             >
               <StyledLabel>Apply to</StyledLabel>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-current"
@@ -348,9 +347,9 @@ function ApplyTemplateModal({
                   onClick={e => handleTemplateSelect(e.target.value)}
                 />
                 <label htmlFor="apply-current">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {selectedApply === "apply-current" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                     ) : (
                       <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
@@ -359,7 +358,7 @@ function ApplyTemplateModal({
                 </label>
               </RadioInput>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-all"
@@ -369,9 +368,9 @@ function ApplyTemplateModal({
                   onClick={e => handleTemplateSelect(e.target.value)}
                 />
                 <label htmlFor="apply-all">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {selectedApply === "apply-all" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                     ) : (
                       <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
@@ -380,7 +379,7 @@ function ApplyTemplateModal({
                 </label>
               </RadioInput>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-range"
@@ -390,9 +389,9 @@ function ApplyTemplateModal({
                   onClick={e => handleTemplateSelect(e.target.value)}
                 />
                 <label htmlFor="apply-range">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {selectedApply === "apply-range" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                     ) : (
                       <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
@@ -417,7 +416,7 @@ function ApplyTemplateModal({
                     placeholder="1"
                   />
                   <Icon
-                    margin="0.125rem 0.25rem 0"
+                    margin="2px 4px 0"
                   >
                     <ArrowsHorizontal weight="regular" color={colors.gray.nineHundred} size={16} />
                   </Icon>
@@ -448,7 +447,7 @@ function ApplyTemplateModal({
             >
               <StyledLabel>Frequency (optional)</StyledLabel>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-even"
@@ -458,9 +457,9 @@ function ApplyTemplateModal({
                   onClick={e => handleFrequencySelect("even")}
                 />
                 <label htmlFor="apply-even">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {frequency === "even" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                     ) : (
                       <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
@@ -469,7 +468,7 @@ function ApplyTemplateModal({
                 </label>
               </RadioInput>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-odd"
@@ -479,9 +478,9 @@ function ApplyTemplateModal({
                   onClick={e => handleFrequencySelect("odd")}
                 />
                 <label htmlFor="apply-odd">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {frequency === "odd" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                     ) : (
                       <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                     )}
@@ -490,7 +489,7 @@ function ApplyTemplateModal({
                 </label>
               </RadioInput>
               <RadioInput
-                margin="0 0 0.5rem 0"
+                margin="0 0 8px 0"
               >
                 <input
                   id="apply-other"
@@ -500,7 +499,7 @@ function ApplyTemplateModal({
                   onClick={e => handleFrequencySelect("other")}
                 />
                 <label htmlFor="apply-other">
-                  <Icon margin="0 0.5rem 0 0">
+                  <Icon margin="0 8px 0 0">
                     {frequency === "other" ? (
                       <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
                     ) : (
@@ -510,9 +509,9 @@ function ApplyTemplateModal({
                   <span>Every</span>
                   <StyledInput
                     type="number"
-                    padding="0.25rem 0.5rem"
+                    padding="4px 8px"
                     width="3.5rem"
-                    margin="0 0.25rem"
+                    margin="0 4px"
                     textalign="center"
                     value={frequencyNum}
                     onChange={e => setFrequencyNum(parseInt(e.target.value))}
@@ -533,9 +532,9 @@ function ApplyTemplateModal({
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}
-          padding="0.5rem"
-          borderradius="0"
-          margin="0 0.5rem 0"
+          color={colors.gray.nineHundred}
+          padding="8px"
+          margin="0 8px 0"
           onClick={() => setShowModal({
             show: false,
           })}
@@ -543,10 +542,7 @@ function ApplyTemplateModal({
           Cancel
         </Button>
         <Button
-          backgroundcolor={colors.primary.sixHundred}
-          color={colors.primary.white}
-          padding="0.5rem"
-          borderradius="0"
+          padding="8px"
           onClick={() => handleTemplateApply()}
           className={loading ? "is-loading" : null}
           disabled={loading || !selectedApply}

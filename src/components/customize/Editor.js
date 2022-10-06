@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { convertToPx, fonts } from "../../styles/variables"
+import { fonts, pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { v4 as uuidv4 } from 'uuid'
 import { ToastContainer, toast } from 'react-toastify'
@@ -17,7 +17,11 @@ import Pagebar from "./bars/Pagebar"
 import Seo from "../layout/Seo"
 import Book404 from "./Book404"
 
-const Editor = ({ bookId, productData, productImageData }) => {
+const Editor = ({ 
+  bookId, 
+  productData, 
+  productImageData,
+}) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -28,47 +32,63 @@ const Editor = ({ bookId, productData, productImageData }) => {
     coverColor: "",
     title: "",
   })
-  const [canvasSize, setCanvasSize] = useState({
-    width: 1456,
-    height: 919,
-  })
-  const canvasPageSize = {
-    height: 816,
-    width: 528,
-  }
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentVertical: "top",
+    angle: 30,
+    ascSpacing: 5,
+    borderData: {
+      sync: true,
+      toggle: true,
+      thickness: 0.088,
+      opacity: 1,
+    },
     columns: 27,
-    lineWidth: bookData.widthPixel - convertToPx(13.335),
+    dashedLineData: {
+      sync: true,
+      thickness: 0.088,
+      opacity: 1,
+      dashArray: "",
+      dashOffset: 0,
+    },
+    dscSpacing: 5,
+    groupSpacing: 5,
+    hexagonRadius: 1,
+    lineWidth: 100,
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
-    opacity: 0.5,
-    pageHeight: bookData.heightPixel - convertToPx(6.35),
-    pageWidth: bookData.widthPixel - convertToPx(13.335),
-    rows: 43,
-    spacing: 5,
+    opacity: 1,
+    svgHeight: bookData.heightPixel,
+    svgWidth: bookData.widthPixel,
+    svgContentHeight: bookData.heightPixel - pageMargins.vertical,
+    svgContentWidth: bookData.widthPixel - pageMargins.horizontal,
+    radius: 0.1,
+    rows: 42,
     show: false,
+    size: 1,
+    slantAngle: 55,
+    slants: 20,
+    slantSpacing: 5,
+    spacing: 5,
     template: "",
-    templateSize: {},
-    thickness: 0.175,
-    width: 1,
+    thickness: 0.088,
+    xHeight: 5,
   })
-  const [pageContentSize, setPageContentSize] = useState({})
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [canvasPages, setCanvasPages] = useState([])
   const [canvasPageTemplates, setCanvasPageTemplates] = useState({})
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
+  const [activeTab, setActiveTab] = useState(0)
 
-  // creates blank svgs for when the user is not logged in
+  // creates blank svgs
   function createBlankSvgs() {
     // create a unique id for a blank page
     const blankPageId = uuidv4()
-    // create a page object that will be referenced by every page in the demo
+    // create a page object id:svg(string) pair
     const demoPagesObject = {
       [blankPageId]: `<svg xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
     }
@@ -76,9 +96,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
     // blank array holds the svgs
     const pagesArray = []
 
-    // we are using strings so we can use the react-inlinesvg library to render them
     for (let i = 0; i < bookData.numOfPages; i++) {
-      // blank white rectangle inside the svg is set to pageSizes' width and height
       pagesArray.push({
         pageId: blankPageId,
         pageNumber: i + 1,
@@ -171,7 +189,7 @@ const Editor = ({ bookId, productData, productImageData }) => {
         createBlankSvgs()
       }
     }
-    // else we can create blank svgs for users that are not logged in
+    // else we can create blank svgs
     else {
       if (!loading || !initializing) {
         createBlankSvgs()
@@ -185,12 +203,10 @@ const Editor = ({ bookId, productData, productImageData }) => {
 
   }, [bookId, loading])
 
-  if (loading) {
+  if (loading || initializing) {
     return <Loader />
   }
-  if (initializing) {
-    return <Loader />
-  }
+
   return (
     <>
       <Seo title={`${bookData.title}`} />
@@ -207,15 +223,17 @@ const Editor = ({ bookId, productData, productImageData }) => {
           />
           <Flexbox
             flex="flex"
-            height="calc(100% - 56px)"
+            height="calc(100vh - 56px)"
             justifycontent="space-between"
           >
             <Pagebar
+              activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
               canvasPageTemplates={canvasPageTemplates}
               pageData={pageData}
               selectedPage={selectedPage}
+              setActiveTab={setActiveTab}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}
             />
@@ -223,27 +241,24 @@ const Editor = ({ bookId, productData, productImageData }) => {
               bookData={bookData}
               canvasPages={canvasPages}
               canvasPageTemplates={canvasPageTemplates}
-              canvasPageSize={canvasPageSize}
-              canvasSize={canvasSize}
               pageData={pageData}
-              setPageContentSize={setPageContentSize}
               selectedPage={selectedPage}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
             />
             <Controls
+              activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
-              canvasPageSize={canvasPageSize}
               pageData={pageData}
               productData={productData}
               productImageData={productImageData}
-              pageContentSize={pageContentSize}
-              selectedPage={selectedPage}
+              setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}
               setShowModal={setShowModal}
               user={user}
+              toast={toast}
             />
           </Flexbox>
         </>

@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import { colors } from "../../../styles/variables"
 import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
+import AutoSizer from "react-virtualized-auto-sizer"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
 import Svg from "react-inlinesvg"
@@ -33,7 +34,6 @@ const StyledPage = styled.div`
   }
   svg {
     border: 1px solid ${colors.gray.threeHundred};
-    border-radius: 0.25rem;
     height: 64px;
     pointer-events: none;
     transition: transform 0.2s, border-color 0.2s;
@@ -59,10 +59,14 @@ const StyledPage = styled.div`
   }
 `
 
+const PageWindow = styled.div`
+  height: calc(100% - 32px);
+`
+
 const Page = memo(props => {
   const {
-    data,
     columnIndex,
+    data,
     rowIndex,
     style,
   } = props
@@ -73,6 +77,7 @@ const Page = memo(props => {
     selectedPage,
     setSelectedPage,
     setPageData,
+    setActiveTab,
   } = data
   const columnCount = 2
   // current page based on index of canvasPages calculated from WindowsGrid row and column values
@@ -85,6 +90,7 @@ const Page = memo(props => {
       ...pageData,
       template: "",
     })
+    setActiveTab(0)
     setSelectedPage(pageNumber)
   }
 
@@ -96,7 +102,7 @@ const Page = memo(props => {
     >
       <Svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
+        viewBox={`0 0 ${pageData.svgWidth} ${pageData.svgHeight}`}
         src={canvasPageTemplates[currentPage.pageId]}
         x="0"
         y="0"
@@ -106,13 +112,14 @@ const Page = memo(props => {
   )
 }, areEqual)
 
-const createItemData = memoizeOne((canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData) => ({
+const createItemData = memoizeOne((canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData, setActiveTab) => ({
   canvasPages,
   canvasPageTemplates,
   pageData,
   selectedPage,
   setPageData,
   setSelectedPage,
+  setActiveTab,
 }))
 
 function Pagebar({
@@ -123,8 +130,9 @@ function Pagebar({
   selectedPage,
   setPageData,
   setSelectedPage,
+  setActiveTab,
 }) {
-  const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData)
+  const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData, setActiveTab)
 
   return (
     <PagebarWrapper>
@@ -133,27 +141,33 @@ function Pagebar({
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}
       />
-      <WindowGrid
-        className="window-grid"
-        useIsScrolling
-        columnCount={2}
-        columnWidth={64}
-        height={871}
-        rowCount={70}
-        rowHeight={112}
-        width={163}
-        overscanColumnCount={0}
-        overscanRowCount={0}
-        style={{
-          backgroundColor: 'white',
-          borderRadius: "0 0 0.25rem 0.25rem",
-          top: "0",
-          overflowX: "hidden",
-        }}
-        itemData={itemData}
-      >
-        {Page}
-      </WindowGrid>
+      <PageWindow>
+        <AutoSizer>
+          {({ height }) => (
+            <WindowGrid
+              className="window-grid"
+              useIsScrolling
+              columnCount={2}
+              columnWidth={64}
+              height={height}
+              rowCount={70}
+              rowHeight={112}
+              width={164}
+              overscanColumnCount={0}
+              overscanRowCount={0}
+              style={{
+                backgroundColor: 'white',
+                borderRight: `1px solid ${colors.gray.threeHundred}`,
+                top: "0",
+                overflowX: "hidden",
+              }}
+              itemData={itemData}
+            >
+              {Page}
+            </WindowGrid>
+          )}
+        </AutoSizer>
+      </PageWindow>
     </PagebarWrapper>
   )
 }

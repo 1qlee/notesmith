@@ -10,8 +10,6 @@ import { Select } from "../../ui/Select"
 import Button from "../../Button"
 import Content from "../../Content"
 import ContextMenu from "../../ui/ContextMenu"
-import Loader from "../../Loader"
-import Icon from "../../Icon"
 
 // should export this function to utils
 function convertTime(time) {
@@ -25,7 +23,6 @@ function BooksContainer({
   duplicateBook,
   getLocalStorage,
   handleBookDelete,
-  processing,
   renameBook,
   userBooks,
   setShowModal,
@@ -116,104 +113,118 @@ function BooksContainer({
     }
   }, [])
 
-  if (processing) {
-    return <Loader className="is-app" />
-  }
-
   return (
     <SectionAppWorkspace
-      heightmargin="4rem"
       data-clickoutside={true}
       onClick={e => handleClickOutside(e)}
     >
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        justifycontent="space-between"
-        margin="0 0 2rem 0"
-      >
-        <Content>
-          <h2>Books</h2>
-          <p>Right-click on any row in the table below to see more options.</p>
-        </Content>
-        <Button
-          color={colors.gray.oneHundred}
-          backgroundcolor={colors.gray.nineHundred}
-          borderradius="0"
-          onClick={() => setShowModal({
-            show: true,
-            type: "createbook",
-          })}
+      {userBooks.length === 0 ? (
+        <Content
+          h1fontsize="2rem"
+          margin="2rem 0"
         >
-          <Icon margin="0 0.25rem 0 0">
-            <Plus size="1rem" weight="fill" color={colors.gray.oneHundred} />
-          </Icon>
-          <span>New book</span>
-        </Button>
-      </Flexbox>
-      <div>
-        <Select
-          initialDbValue={getLocalStorage("sortMethod")}
-          initialOption={getLocalStorage("sortValue")}
-          initialSortOrder={getLocalStorage("sortOrder")}
-          mainFunction={sortBooks}
-        />
-      </div>
-      <StyledTable>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Date created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userBooks && userBooks.map(book => (
-            <tr
-              data-title={book.title}
-              key={book.id}
-              onClick={e => handleBookSelect(e, book)}
-              onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
-              tabIndex="0"
-              onContextMenu={e => {
-                handleBookSelect(e, book)
-                handleShowContextMenu(e, book)
-              }}
+          <h1>You don't have any saved books</h1>
+          <p>Creating books is simple and easy! Get started by clicking the button below.</p>
+          <Button
+            color={colors.gray.oneHundred}
+            backgroundcolor={colors.gray.nineHundred}
+            onClick={() => setShowModal({
+              show: true,
+              type: "createbook",
+            })}
+          >
+            New book
+          </Button>
+        </Content>
+      ) : (
+        <>
+          <Content
+            h1fontsize="2rem"
+            margin="0 0 32px"
+          >
+            <h1>Books</h1>
+            <p>Right-click on any row in the table below to see more options.</p>
+          </Content>
+          <Flexbox
+            flex="flex"
+            margin="0 0 16px"
+            alignitems="center"
+          >
+            <Button
+              color={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              margin="0 16px 0 0"
+              onClick={() => setShowModal({
+                show: true,
+                type: "createbook",
+              })}
             >
-              <td>
-                {selectedBookId === book.id && showBookTitleInput ? (
-                  <form onSubmit={e => handleRenameBook(e)}>
-                    <StyledInput
-                      type="text"
-                      id="new-book-title"
-                      name="new-book-title"
-                      autocomplete="chrome-off"
-                      defaultValue={selectedBookTitle}
-                      onChange={e => setNewBookTitle(e.target.value.trim())}
-                      padding="0"
-                      borderradius="0"
-                      ref={renameBookTitleRef}
-                    />
-                  </form>
-                ) : (
-                  <p>
-                    {book.title}
-                  </p>
-                )}
-              </td>
-              <td>{convertTime(book.dateCreated)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </StyledTable>
-      <ContextMenu
-        selectedBook={selectedBook}
-        selectedBookId={selectedBookId}
-        duplicateBook={duplicateBook}
-        handleBookDelete={handleBookDelete}
-        coordinates={coordinates}
-        showContextMenu={showContextMenu}
-        setShowBookTitleInput={setShowBookTitleInput}
-      />
+              New book
+            </Button>
+            <Select
+              initialDbValue={getLocalStorage("sortMethod")}
+              initialOption={getLocalStorage("sortValue")}
+              initialSortOrder={getLocalStorage("sortOrder")}
+              mainFunction={sortBooks}
+            />
+          </Flexbox>
+          <StyledTable>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Date created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userBooks && userBooks.map(book => (
+                <tr
+                  data-title={book.title}
+                  key={book.id}
+                  onClick={e => handleBookSelect(e, book)}
+                  onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
+                  tabIndex="0"
+                  onContextMenu={e => {
+                    handleBookSelect(e, book)
+                    handleShowContextMenu(e, book)
+                  }}
+                >
+                  <td>
+                    {selectedBookId === book.id && showBookTitleInput ? (
+                      <form onSubmit={e => handleRenameBook(e)}>
+                        <StyledInput
+                          type="text"
+                          id="new-book-title"
+                          name="new-book-title"
+                          autocomplete="chrome-off"
+                          defaultValue={selectedBookTitle}
+                          onChange={e => setNewBookTitle(e.target.value.trim())}
+                          padding="0"
+                          borderradius="0"
+                          ref={renameBookTitleRef}
+                        />
+                      </form>
+                    ) : (
+                      <p>
+                        {book.title}
+                      </p>
+                    )}
+                  </td>
+                  <td>{convertTime(book.dateCreated)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </StyledTable>
+          <ContextMenu
+            selectedBook={selectedBook}
+            selectedBookId={selectedBookId}
+            duplicateBook={duplicateBook}
+            handleBookDelete={handleBookDelete}
+            coordinates={coordinates}
+            showContextMenu={showContextMenu}
+            setShowBookTitleInput={setShowBookTitleInput}
+          />
+        </>
+      )}
     </SectionAppWorkspace>
   )
 }

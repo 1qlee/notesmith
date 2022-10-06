@@ -531,7 +531,7 @@ const RadioInput = styled.div`
     &:hover,
     &:focus,
     &:active {
-      border-color: ${colors.gray.sixHundred};
+      border-color: ${colors.gray.nineHundred};
     }
   }
   input[type="radio"] {
@@ -651,7 +651,8 @@ const ErrorLine = styled.div`
 const StyledTable = styled.table`
   border: 2px solid ${colors.gray.nineHundred};
   box-shadow: ${colors.shadow.solid};
-  border-radius: 0.5rem;
+  border-radius: 8px;
+  border-spacing: 0;
   td,tr {
     border-width: 2px;
     border-color: ${colors.gray.nineHundred};
@@ -670,6 +671,16 @@ const StyledTable = styled.table`
   tr {
     &.is-selected {
       background-color: ${colors.gray.oneHundred};
+    }
+    &:last-child {
+      td {
+          &:first-child {
+            border-radius: 0 0 0 8px;
+          }
+          &:last-child {
+            border-radius: 0 0 8px 0;
+          }
+        }
     }
   }
 `

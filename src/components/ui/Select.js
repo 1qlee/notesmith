@@ -26,9 +26,9 @@ const SelectMenu = styled.div`
   padding: 0.5rem 0;
   position: absolute;
   font-size: 0.8rem;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 8px);
   left: 0;
-  width: calc(200% - 1.35rem);
+  width: 100%;
   z-index: 1000;
   &::before {
     content: "";
@@ -125,26 +125,16 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
     <StyledSelect
       ref={menuRef}
     >
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        margin="0 0 1rem 0"
+      <Button
+        backgroundcolor={colors.gray.oneHundred}
+        color={colors.gray.nineHundred}
+        onClick={() => setShowMenu(!showMenu)}
       >
-        <p>Sort:</p>
-        <Button
-          borderradius="0"
-          backgroundcolor={colors.white}
-          onClick={() => setShowMenu(!showMenu)}
-          fontsize="0.75rem"
-          padding="0.25rem"
-          border={`1px solid ${colors.gray.nineHundred}`}
-        >
-          <span>{currentOption}</span>
-          <Icon margin="0 0 0 0.125rem">
-            <CaretDown color={colors.gray.nineHundred} size="0.625rem"  />
-          </Icon>
-        </Button>
-      </Flexbox>
+        <span>Sort by: {currentOption}</span>
+        <Icon margin="0 0 0 0.125rem">
+          <CaretDown color={colors.gray.nineHundred} size="0.625rem"  />
+        </Icon>
+      </Button>
       {showMenu && (
         <SelectMenu onClick={e => handleClickOutsideMenu(e)}>
           <SelectHeading>Sort by</SelectHeading>

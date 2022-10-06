@@ -1,7 +1,6 @@
-import React, { useRef, useEffect } from "react"
-import { colors } from "../../../styles/variables"
+import React, { useEffect, useState, useCallback } from "react"
+import { convertToPx } from "../../../styles/variables"
 
-import Holes from "../pageComponents/Holes"
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
@@ -15,261 +14,125 @@ import CrossGrid from "../templates/CrossGrid"
 import Calligraphy from "../templates/Calligraphy"
 
 function Template({
-  borderData,
-  canvasPageSize,
   currentPageSide,
-  dashedLineData,
-  minimumMargin,
+  contentSize,
   pageData,
-  rightPageXPosition,
-  selectedTemplate,
+  pagePosition,
   setPageData,
-  setPageContentSize,
   setSelectedPageSvg,
-  workingPageHeight,
-  workingPageWidth,
 }) {
-  const leftPageRef = useRef()
-  const rightPageRef = useRef()
+  const [node, setNode] = useState()
+
+  const mRef = useCallback(node => {
+    if (node !== null) {
+      setNode(node)
+    }
+  }, [pageData])
 
   useEffect(() => {
-    if (currentPageSide === "left") {
-      const currentPage = leftPageRef.current
-      const currentPageSize = currentPage.getBBox()
-
-      setSelectedPageSvg(leftPageRef.current)
-      setPageContentSize({
-        height: currentPageSize.height,
-        width: currentPageSize.width,
-      })
+    if (node) {
+      setSelectedPageSvg(node)
+      
+      setTimeout(() => {
+        const dimensions = node.getBBox()
+        // setPageSize({
+        //   height: dimensions.height,
+        //   width: dimensions.width,
+        // })
+      }, 10)
     }
-    else {
-      const currentPage = new Promise((resolve,reject) => {
-        resolve(rightPageRef.current)
-      }).then(response => {
-        const currentPageSize = response.getBBox()
 
-        setSelectedPageSvg(response.current)
-        setPageContentSize({
-          height: currentPageSize.height,
-          width: currentPageSize.width,
-        })
-      })
-    }
-  }, [currentPageSide, pageData, selectedTemplate, leftPageRef, rightPageRef])
+  }, [pageData, node, pagePosition, contentSize])
 
-  if (pageData.show) {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageSize.height}
-        width={canvasPageSize.width}
-        x="0"
-        y="0"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height={canvasPageSize.height}
-          width={canvasPageSize.width}
-          x="0"
-          y="0"
-        >
-          <rect
-            height={canvasPageSize.height}
-            width={canvasPageSize.width}
-            fill="#fff"
-            stroke={colors.gray.threeHundred}
-            strokeWidth="2px"
-          >
-          </rect>
-          <Holes currentPageSide={currentPageSide} canvasPageSize={canvasPageSize} />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-          height={workingPageHeight}
-          width={workingPageWidth}
-          viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-          x={currentPageSide === "left" ? 12 : 38.4}
-          y="12"
-        >
-          {pageData.template === "blank" && (
-            <Blank
-              pageData={pageData}
-              currentPageSide={currentPageSide}
-            />
-          )}
-          {pageData.template === "ruled" && (
-            <Ruled
-              pageData={pageData}
-              setPageData={setPageData}
-              currentPageSide={currentPageSide}
-            />
-          )}
-          {pageData.template === "dot" && (
-            <Dot
-              pageData={pageData}
-              setPageData={setPageData}
-              currentPageSide={currentPageSide}
-            />
-          )}
-          {pageData.template === "graph" && (
-            <Graph
-              borderData={borderData}
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "hexagon" && (
-            <Hexagon
-              pageData={pageData}
-              setPageData={setPageData}
-              currentPageSide={currentPageSide}
-            />
-          )}
-          {pageData.template === "isometric" && (
-            <Isometric
-              borderData={borderData}
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "seyes" && (
-            <Seyes
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "music" && (
-            <Music
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "handwriting" && (
-            <Handwriting
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "cross" && (
-            <CrossGrid
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "calligraphy" && (
-            <Calligraphy
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-        </svg>
-      </svg>
-    )
-  }
-  else {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-        height={workingPageHeight}
-        width={workingPageWidth}
-        viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-        x={currentPageSide === "left" ? minimumMargin : rightPageXPosition}
-        y={minimumMargin}
-      >
-        {pageData.template === "blank" && (
-          <Blank
-            pageData={pageData}
-            currentPageSide={currentPageSide}
-          />
-        )}
-        {pageData.template === "ruled" && (
-          <Ruled
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "dot" && (
-          <Dot
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "graph" && (
-          <Graph
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "hexagon" && (
-          <Hexagon
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "isometric" && (
-          <Isometric
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "seyes" && (
-          <Seyes
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "music" && (
-          <Music
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "handwriting" && (
-          <Handwriting
-            dashedLineData={dashedLineData}
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "cross" && (
-          <CrossGrid
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "calligraphy" && (
-          <Calligraphy
-            dashedLineData={dashedLineData}
-            currentPageSide={currentPageSide}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-      </svg>
-    )
-  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      ref={mRef}
+      id={currentPageSide === "left" ? "left-page" : "right-page"}
+      x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
+      y={pagePosition.bothY}
+      width={pageData.svgContentWidth}
+      height={pageData.svgContentHeight}
+      fill="#fff"
+    >
+      {pageData.template === "blank" && (
+        <Blank
+          pageData={pageData}
+          currentPageSide={currentPageSide}
+        />
+      )}
+      {pageData.template === "ruled" && (
+        <Ruled
+          contentSize={contentSize}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "dot" && (
+        <Dot
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "graph" && (
+        <Graph
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "hexagon" && (
+        <Hexagon
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "isometric" && (
+        <Isometric
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "seyes" && (
+        <Seyes
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "music" && (
+        <Music
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "handwriting" && (
+        <Handwriting
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "cross" && (
+        <CrossGrid
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "calligraphy" && (
+        <Calligraphy
+          currentPageSide={currentPageSide}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+    </svg>
+  )
 }
 
 export default Template

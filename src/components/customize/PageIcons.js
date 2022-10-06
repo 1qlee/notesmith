@@ -131,6 +131,7 @@ const PageLabel = styled.p`
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: 0.75rem;
   margin-top: 0.5rem;
+  border-radius: 4px;
   color: ${colors.gray.sevenHundred};
 `
 

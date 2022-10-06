@@ -6,18 +6,14 @@ import { RangeInput, StyledLabel, NumberInput} from "../../form/FormComponents"
 import AlignmentControls from "./AlignmentControls"
 
 function RuledControls({
-  canvasPageSize,
   maximumMarginHeight,
   maximumMarginWidth,
-  pageContentSize,
   pageData,
   setPageData,
 }) {
-  const { marginLeft, marginRight, thickness } = pageData
-  const pageHeight = convertToMM(pageData.pageHeight)
-  const pageWidth = convertToMM(pageData.pageWidth)
-  const contentHeight = convertToMM(pageContentSize.height)
-  const contentWidth = convertToMM(pageContentSize.width)
+  const { marginLeft, marginRight, thickness, svgHeight, svgContentHeight } = pageData
+  const pageHeight = convertToMM(svgHeight)
+  const contentHeight = convertToMM(svgContentHeight)
   const totalHorizontalMargin = convertFloatFixed(marginLeft + marginRight, 3) // sum of left and right margins
   const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3) // half of total horizontal margin is center
   const totalVerticalMargin = convertFloatFixed(pageHeight - contentHeight - thickness, 3) // subtract content height from page height

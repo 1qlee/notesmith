@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Handwriting({
-  dashedLineData,
   pageData,
   setPageData,
 }) {
   const [writingRows, setWritingRows] = useState([])
-  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness} = pageData
+  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness, dashedLineData } = pageData
   const dashOffset = convertToPx(dashedLineData.dashOffset)
   const lineSpacing = convertToPx(spacing)
   const rowSpacing = convertToPx(groupSpacing)

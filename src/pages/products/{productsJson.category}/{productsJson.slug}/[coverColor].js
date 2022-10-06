@@ -13,8 +13,8 @@ import Nav from "../../../../components/layout/Nav"
 import ProductImages from "../../../../components/shop/ProductImages"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Seo from "../../../../components/layout/Seo"
-import Template from "../../../../components/customize/pageComponents/Template"
-import Templatesbar from "../../../../components/customize/bars/Templatesbar"
+import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
+import ProductControls from "../../../../components/customize/product/ProductControls"
 
 const ProductPage = ({ data, params }) => {
   const { productData, productImages, productThumbnails } = data
@@ -31,20 +31,28 @@ const ProductPage = ({ data, params }) => {
   const pageHeight = bookData.heightPixel - convertToPx(6.35)
   const pageWidth = bookData.widthPixel - convertToPx(13.335)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
-  const [selectedTemplate, setSelectedTemplate] = useState({
+  const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
-    ascSpacing: 5,
-    dscSpacing: 5,
-    xHeight: 5,
-    slantSpacing: 5,
-    slantAngle: 55,
-    slants: 20,
     angle: 30,
+    ascSpacing: 5,
+    borderData: {
+      sync: true,
+      toggle: true,
+      thickness: 0.088,
+      opacity: 1,
+    },
     columns: 27,
     contentHeight: convertToMM(pageHeight),
     contentWidth: convertToMM(pageWidth),
-    radius: 0.1,
+    dashedLineData: {
+      sync: true,
+      thickness: 0.088,
+      opacity: 1,
+      dashArray: "",
+      dashOffset: 0,
+    },
+    dscSpacing: 5,
     groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
@@ -55,25 +63,17 @@ const ProductPage = ({ data, params }) => {
     opacity: 1,
     pageHeight: pageHeight,
     pageWidth: pageWidth,
+    radius: 0.1,
     rows: 42,
     show: false,
+    size: 1,
+    slantAngle: 55,
+    slants: 20,
+    slantSpacing: 5,
     spacing: 5,
     template: "",
     thickness: 0.088,
-    size: 1,
-  })
-  const [borderData, setBorderData] = useState({
-    sync: true,
-    toggle: true,
-    thickness: 0.088,
-    opacity: 1,
-  })
-  const [dashedLineData, setDashedLineData] = useState({
-    sync: true,
-    thickness: 0.088,
-    opacity: 1,
-    dashArray: "",
-    dashOffset: 0,
+    xHeight: 5,
   })
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
@@ -112,38 +112,31 @@ const ProductPage = ({ data, params }) => {
                   columns="300px 1fr 400px"
                   columnGap={spacing.large}
                 >
-                  {selectedTemplate.show ? (
+                  {pageData.show ? (
                     <>
                       <Cell>
-                        <Templatesbar
-                          borderData={borderData}
+                        <ProductControls
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
-                          dashedLineData={dashedLineData}
                           pageContentSize={pageContentSize}
-                          pageData={selectedTemplate}
+                          pageData={pageData}
                           selectedPageSvg={selectedPageSvg}
-                          setBorderData={setBorderData}
                           setCurrentPageSide={setCurrentPageSide}
-                          setDashedLineData={setDashedLineData}
                           setLeftPageData={setLeftPageData}
-                          setPageData={setSelectedTemplate}
+                          setPageData={setPageData}
                           setRightPageData={setRightPageData}
                           toast={toast}
                         />
                       </Cell>
                       <Cell center>
-                        <Template
-                          borderData={borderData}
+                        <ProductTemplate
                           bookData={bookData}
                           canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
-                          dashedLineData={dashedLineData}
-                          pageData={selectedTemplate}
+                          pageData={pageData}
                           setPageContentSize={setPageContentSize}
-                          setPageData={setSelectedTemplate}
+                          setPageData={setPageData}
                           setSelectedPageSvg={setSelectedPageSvg}
-                          selectedTemplate={selectedTemplate}
                           workingPageHeight={workingPageHeight}
                           workingPageWidth={workingPageWidth}
                         />
@@ -165,9 +158,9 @@ const ProductPage = ({ data, params }) => {
                       cartThumbnail={cartThumbnail}
                       leftPageData={leftPageData}
                       rightPageData={rightPageData}
-                      selectedTemplate={selectedTemplate}
+                      pageData={pageData}
                       setBookData={setBookData}
-                      setSelectedTemplate={setSelectedTemplate}
+                      setPageData={setPageData}
                       toast={toast}
                     />
                   </Cell>

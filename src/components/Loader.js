@@ -69,12 +69,6 @@ const LoaderWrapper = styled.div`
     top: 70px;
     left: 0;
   }
-  &.is-app {
-    width: calc(100% - ${widths.sidebar});
-    height: calc(100vh - 6rem);
-    top: 6rem;
-    left: ${widths.sidebar};
-  }
   .mask {
     fill: none;
     stroke: #fff;

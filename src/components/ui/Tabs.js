@@ -3,7 +3,7 @@ import { colors, fonts } from "../../styles/variables"
 import styled from "styled-components"
 
 const StyledTabs = styled.ul`
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: 2px solid ${colors.gray.threeHundred};
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
@@ -13,8 +13,7 @@ const StyledTabs = styled.ul`
 const StyledTab = styled.li`
   font-family: ${fonts.secondary};
   font-weight: 700;
-  transition: padding 0.2s, border-color 0.2s;
-  border-bottom: 2px solid transparent;
+  transition: padding 0.2s, box-shadow 0.2s;
   padding: 8px 0;
   margin: 0 16px;
   &:first-child {
@@ -26,11 +25,11 @@ const StyledTab = styled.li`
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      border-bottom-color: ${colors.gray.threeHundred};
+      box-shadow: 0 2px 0 ${colors.gray.sixHundred};
     }
   }
   &.is-active {
-    border-bottom-color: ${colors.gray.nineHundred};
+    box-shadow: 0 2px 0 ${colors.gray.nineHundred};
   }
 `
 

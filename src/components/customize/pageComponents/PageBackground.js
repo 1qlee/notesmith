@@ -4,28 +4,32 @@ import { colors } from "../../../styles/variables"
 import Holes from "./Holes"
 
 function PageBackground({
-  currentPageSide,
   isSelected,
-  canvasPageSize,
+  pageHeight,
+  pageWidth,
   pageSide,
 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={canvasPageSize.width}
-      height={canvasPageSize.height}
-      x={pageSide === "left" ? "0" : canvasPageSize.width}
+      width={pageWidth}
+      height={pageHeight}
+      x={pageSide === "left" ? "0" : pageWidth}
       y="0"
     >
       <rect
-        width={canvasPageSize.width}
-        height={canvasPageSize.height}
+        width={pageWidth}
+        height={pageHeight}
         fill={colors.white}
         stroke={colors.gray.threeHundred}
         strokeWidth="2px"
         style={isSelected ? { stroke: colors.primary.sixHundred } : null}
       ></rect>
-      <Holes currentPageSide={pageSide} canvasPageSize={canvasPageSize} />
+      <Holes 
+        currentPageSide={pageSide} 
+        pageHeight={pageHeight}
+        pageWidth={pageWidth}
+      />
     </svg>
   )
 }

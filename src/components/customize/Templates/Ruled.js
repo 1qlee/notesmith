@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Ruled({
+  contentSize,
   pageData,
   setPageData,
 }) {
   const [lines, setLines] = useState([])
-  const { pageWidth, pageHeight, thickness, spacing } = pageData
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const marginRight = convertToPx(pageData.marginRight)
-  const marginTop = convertToPx(pageData.marginTop)
+  const { thickness, spacing } = pageData
+  const { width, height } = contentSize
   const lineThickness = convertToPx(thickness)
   const lineSpacing = convertToPx(spacing)
 
@@ -20,9 +19,9 @@ function Ruled({
       // calculations and conversions to px
       const halfLineThickness = lineThickness / 2
       const spaceBtwnLines = i === 0 ? halfLineThickness : lineThickness * i + halfLineThickness
-      const lineX1 = marginLeft
-      const lineX2 = pageWidth - marginRight
-      const lineY = i * lineSpacing + marginTop + spaceBtwnLines
+      const lineX1 = 0
+      const lineX2 = width
+      const lineY = i * lineSpacing + spaceBtwnLines
       // line object
       const line = {
         fill: "none",
@@ -36,7 +35,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > pageHeight) {
+      if (lineY > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
@@ -54,7 +53,7 @@ function Ruled({
 
   useEffect(() => {
     createLines()
-  }, [pageData])
+  }, [pageData, contentSize])
 
   return (
     <>

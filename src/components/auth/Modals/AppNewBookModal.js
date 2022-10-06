@@ -1,5 +1,5 @@
 import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
-import { colors, convertToPx } from "../../../styles/variables"
+import { colors, convertToPx, fonts } from "../../../styles/variables"
 import { navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import React, { useState } from "react"
@@ -160,7 +160,7 @@ function NewBookModal({
         <Content
           h3fontsize="0.75rem"
           h3margin="0"
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          headingfontfamily={fonts.secondary}
           margin="0 0 0.5rem 0"
           paragraphmarginbottom="1rem"
         >
@@ -184,7 +184,6 @@ function NewBookModal({
                   coverColor: "",
                 }, 1, index)}
                 isActive={bookData.name === product.name}
-                className={index === 0 && "has-border-top"}
                 key={product.name}
               >
                 <Flexbox
@@ -196,8 +195,8 @@ function NewBookModal({
                     fontsize="0.75rem"
                     fontfamily="Inter, Helvetica, Tahoma, sans-serif"
                     fontweight="700"
-                    backgroundcolor={colors.primary.oneHundred}
-                    color={colors.primary.nineHundred}
+                    backgroundcolor={colors.gray.nineHundred}
+                    color={colors.gray.oneHundred}
                     boxshadow="none"
                     padding="0.25rem 0.5rem"
                     margin="0 0 0.25rem"
@@ -228,8 +227,7 @@ function NewBookModal({
             <Flexbox
               flex="flex"
               alignitems="center"
-              margin="0.25rem 0 0"
-              justifycontent="space-between"
+              padding="4px 0 0 4px"
               width="100%"
             >
               <ColorPicker

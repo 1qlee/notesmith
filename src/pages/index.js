@@ -144,23 +144,19 @@ const IndexPage = ({ data }) => {
                           </Tag>
                           <h3>Join the open beta</h3>
                           <p>Create an account to participate in the open beta. During this time, you will have full access to all Notesmith features and <i>all notebooks you purchase are discounted</i>.</p>
-                          <a
-                            href="https://www.kickstarter.com"
-                            target="_blank"
-                            rel="noreferrer noopener"
+                          <Button
+                            backgroundcolor={colors.gray.nineHundred}
+                            color={colors.gray.oneHundred}
+                            padding="1rem"
+                            width="100%"
+                            as={Link}
+                            to="/signup"
                           >
-                            <Button
-                              backgroundcolor={colors.gray.nineHundred}
-                              color={colors.gray.oneHundred}
-                              padding="1rem"
-                              width="100%"
-                            >
-                              <span>Create an account</span>
-                              <Icon>
-                                <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
-                              </Icon>
-                            </Button>
-                          </a>
+                            <span>Create an account</span>
+                            <Icon>
+                              <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
+                            </Icon>
+                          </Button>
                         </Content>
                       </Notification>
                     </Flexbox>
@@ -200,7 +196,7 @@ const IndexPage = ({ data }) => {
                         maxwidth={widths.content.index}
                         margin="0 0 32px"
                       >
-                        <h2>Notebooks with your custom layouts on <b>every single page</b></h2>
+                        <h2>Your custom layouts on <b>every single page</b></h2>
                         <p>With Notesmith, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                       </Content>
                       <Flexbox
@@ -333,7 +329,7 @@ const IndexPage = ({ data }) => {
                       margin="0 0 32px"
                       maxwidth={widths.content.index}
                     >
-                      <h2>Notebooks created with carefully curated components</h2>
+                      <h2>We use only the best stuff, guaranteed</h2>
                       <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                     </Content>
                     <Grid
@@ -390,7 +386,7 @@ const IndexPage = ({ data }) => {
                       h2fontsize="2rem"
                       h2color={colors.gray.oneHundred}
                     >
-                      <h2>Notesmith is launching exclusively on Kickstarter this fall.</h2>
+                      <h2>Notesmith is currently operating in an open beta.</h2>
                     </Content>
                   </Cell>
                   <Cell>
@@ -399,7 +395,7 @@ const IndexPage = ({ data }) => {
                       paragraphfontsize="1.25rem"
                     >
                       <p>
-                        Please follow our Kickstarter campaign to be notified of our launch. You will be subscribed to updates, news, and more information regarding Notesmith and our products.
+                        During this time, only users who sign up will have access to Notesmith's features. Please sign up to participate and enjoy discounts on all purchases you make during this time.
                       </p>
                     </Content>
                     <Flexbox
@@ -408,15 +404,14 @@ const IndexPage = ({ data }) => {
                       margin="16px 0 0"
                     >
                       <TextLink
-                        href="https://www.kickstarter.com"
                         color={colors.gray.oneHundred}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         texttransform="uppercase"
                         fontweight="700"
                         underlinecolor={colors.gray.oneHundred}
+                        as={Link}
+                        to="/signup"
                       >
-                        Follow us on Kickstarter
+                        Create an account now
                       </TextLink>
                       <Icon
                         margin="0 0 0 8px"
@@ -457,7 +452,7 @@ const IndexPage = ({ data }) => {
                         h2fontweight="400"
                         maxwidth={widths.content.index}
                       >
-                        <h2>Notebooks stuffed with smooth, ink-loving paper</h2>
+                        <h2>Smooth, ink-loving paper</h2>
                         <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                       </Content>
                       <Flexbox

@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from "react"
-import { colors, convertToPx } from "../../styles/variables"
+import { pageMargins, convertToPx } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 
 import Template from "./pageComponents/Template"
-import Holes from "./pageComponents/Holes"
 import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
 
@@ -11,25 +10,21 @@ function PageSpread({
   bookData,
   canvasPages,
   canvasPageTemplates,
-  canvasPageSize,
   canvasSize,
   pageData,
   selectedPage,
-  setPageContentSize,
   setPageData,
   setSelectedPageSvg,
 }) {
+  const { svgWidth, svgHeight, svgContentWidth, svgContentHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  const minimumMargin = pageMargins.minimum
   const [currentPageSide, setCurrentPageSide] = useState("")
   const [leftPage, setLeftPage] = useState([])
   const [rightPage, setRightPage] = useState([])
+  const [pagePosition, setPagePosition] = useState({})
+  const [contentSize, setContentSize] = useState({})
   const leftPageRef = useRef()
   const rightPageRef = useRef()
-  const minimumMargin = convertToPx(3.175)
-  const rightPageXPosition = canvasPageSize.width + convertToPx(10.16)
-  const pageSpreadWidth = canvasPageSize.width * 2 // converted page spread width
-  // the working area of the page (the part that accepts user input)
-  const workingPageHeight = canvasPageSize.height - convertToPx(6.35) // minus top and bottom margins
-  const workingPageWidth = canvasPageSize.width - convertToPx(13.335) // minus left and right margins
 
   useEffect(() => {
     // even pages
@@ -64,59 +59,73 @@ function PageSpread({
         setRightPage(canvasPages[selectedPage - 1].pageId)
       }
     }
-  }, [selectedPage, canvasPages, canvasPageTemplates])
+
+    const margin = {
+      top: convertToPx(marginTop),
+      right: convertToPx(marginRight),
+      bottom: convertToPx(marginBottom),
+      left: convertToPx(marginLeft),
+    }
+
+    setPagePosition({
+      rightX: svgWidth + convertToPx(10.16) + margin.left,
+      leftX: minimumMargin + margin.left,
+      bothY: minimumMargin + margin.top,
+      spreadX: (canvasSize.width - svgWidth * 2) / 2,
+      spreadY: (canvasSize.height - svgHeight) / 2,
+    })
+    // svgContentWidth and height have margins calculated into them
+    // we have to calculate the maximum allowed content size including user inputted margins
+    setContentSize({
+      height: svgContentHeight - convertToPx(marginTop) - convertToPx(marginBottom),
+      width: svgContentWidth - convertToPx(marginLeft) - convertToPx(marginRight),
+    })
+  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates])
 
   return (
     <svg
       id="page-spread"
       xmlns="http://www.w3.org/2000/svg"
-      height={canvasPageSize.height + 2}
-      width={canvasPageSize.width * 2 + 3}
-      x={(canvasSize.width - pageSpreadWidth) / 2}
-      y={(canvasSize.height - canvasPageSize.height) / 2}
+      height={svgHeight + 2}
+      width={svgWidth * 2 + 3}
+      x={pagePosition.spreadX}
+      y={pagePosition.spreadY}
     >
       <CoverPage
         bookData={bookData}
-        canvasPageSize={canvasPageSize}
         selectedPage={selectedPage}
+        pageHeight={svgHeight}
+        pageWidth={svgWidth}
       />
       <Page
         bookData={bookData}
-        canvasPageSize={canvasPageSize}
         canvasPageTemplates={canvasPageTemplates}
+        contentSize={contentSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
-        minimumMargin={minimumMargin}
         pageData={pageData}
         pageRef={leftPageRef}
         pageSide="left"
         pageSvg={leftPage}
-        rightPageXPosition={rightPageXPosition}
+        pagePosition={pagePosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
-        setPageContentSize={setPageContentSize}
         setSelectedPageSvg={setSelectedPageSvg}
-        workingPageHeight={workingPageHeight}
-        workingPageWidth={workingPageWidth}
       />
       <Page
         bookData={bookData}
-        canvasPageSize={canvasPageSize}
         canvasPageTemplates={canvasPageTemplates}
+        contentSize={contentSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
-        minimumMargin={minimumMargin}
         pageData={pageData}
         pageRef={rightPageRef}
         pageSide="right"
         pageSvg={rightPage}
-        rightPageXPosition={rightPageXPosition}
+        pagePosition={pagePosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
-        setPageContentSize={setPageContentSize}
         setSelectedPageSvg={setSelectedPageSvg}
-        workingPageHeight={workingPageHeight}
-        workingPageWidth={workingPageWidth}
       />
     </svg>
   )
@@ -124,22 +133,18 @@ function PageSpread({
 
 function Page({
   bookData,
-  canvasPageSize,
   canvasPageTemplates,
+  contentSize,
   currentPageSide,
   isSelected,
-  minimumMargin,
   pageData,
   pageRef,
+  pagePosition,
   pageSide,
   pageSvg,
-  rightPageXPosition,
   selectedPage,
   setPageData,
-  setPageContentSize,
   setSelectedPageSvg,
-  workingPageHeight,
-  workingPageWidth,
 }) {
 
   if (selectedPage === 1 && pageSide === "left") {
@@ -154,32 +159,28 @@ function Page({
         <PageBackground
           currentPageSide={currentPageSide}
           isSelected={isSelected}
-          canvasPageSize={canvasPageSize}
+          pageHeight={pageData.svgHeight}
+          pageWidth={pageData.svgWidth}
           pageSide={pageSide}
         />
         {pageData.template && currentPageSide === pageSide ? (
           <Template
             bookData={bookData}
-            canvasPageSize={canvasPageSize}
+            contentSize={contentSize}
             currentPageSide={currentPageSide}
-            minimumMargin={minimumMargin}
             pageData={pageData}
-            rightPageXPosition={rightPageXPosition}
+            pagePosition={pagePosition}
             setPageData={setPageData}
-            setPageContentSize={setPageContentSize}
             setSelectedPageSvg={setSelectedPageSvg}
-            workingPageHeight={workingPageHeight}
-            workingPageWidth={workingPageWidth}
           />
         ) : (
           <SVG
             xmlns="http://www.w3.org/2000/svg"
             ref={pageRef}
-            height={workingPageHeight}
-            width={workingPageWidth}
-            viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-            x={pageSide === "left" ? minimumMargin : rightPageXPosition}
-            y={minimumMargin}
+            x={pageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
+            y={pagePosition.bothY}
+            width={pageData.svgContentWidth}
+            height={pageData.svgContentHeight}
             src={canvasPageTemplates[pageSvg]}
           />
         )}
