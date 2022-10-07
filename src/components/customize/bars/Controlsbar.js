@@ -22,6 +22,7 @@ function Controlsbar({
   canvasPageSize,
   pageData,
   setPageData,
+  svgSize,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.thickness, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
@@ -32,10 +33,11 @@ function Controlsbar({
         <>
           {pageData.template === "ruled" && (
             <RuledControls
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
               setPageData={setPageData}
+              maximumMarginHeight={maximumMarginHeight}
+              maximumMarginWidth={maximumMarginWidth}
+              svgSize={svgSize}
             />
           )}
           {pageData.template === "dot" && (

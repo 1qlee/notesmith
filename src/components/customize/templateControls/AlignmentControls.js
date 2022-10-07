@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
+import { colors, convertFloatFixed, convertToMM } from "../../../styles/variables"
 
 import { StyledLabel } from "../../form/FormComponents"
 import Button from "../../Button"
@@ -35,7 +35,73 @@ const AlignmentButton = styled(Button)`
   }
 `
 
-function AlignmentControls({ pageData, setPageData, changeAlignment }) {
+function AlignmentControls({ 
+  pageData, 
+  setPageData,
+  svgSize,
+}) {
+  const { maxContentHeight, maxContentWidth, marginLeft, marginTop, marginBottom, marginRight } = pageData
+  const contentHeight = svgSize.height
+  const contentWidth = svgSize.width
+  console.log(maxContentHeight, maxContentWidth)
+  console.log(contentHeight, contentWidth)
+  const horizontalSpace = convertToMM(maxContentWidth - contentWidth)
+  const verticalSpace = convertToMM(maxContentHeight - contentHeight)
+  const horizontalCenter = convertFloatFixed(horizontalSpace / 2, 3)
+  const verticalCenter = convertFloatFixed(verticalSpace / 2, 3)
+
+  function changeAlignment(value) {
+    switch (value) {
+      case "left":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginRight: horizontalSpace,
+          marginLeft: 0,
+        })
+        break
+      case "center":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: horizontalCenter,
+          marginRight: horizontalCenter,
+        })
+        break
+      case "right":
+        setPageData({
+          ...pageData,
+          alignmentHorizontal: value,
+          marginLeft: horizontalSpace,
+          marginRight: 0,
+        })
+        break
+      case "top":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: 0,
+        })
+        break
+      case "middle":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: verticalCenter,
+        })
+        break
+      case "bottom":
+        setPageData({
+          ...pageData,
+          alignmentVertical: value,
+          marginTop: verticalSpace,
+        })
+        break
+      default:
+        break
+    }
+  }
+
   return (
     <>
       <StyledLabel>Horizontal alignment</StyledLabel>

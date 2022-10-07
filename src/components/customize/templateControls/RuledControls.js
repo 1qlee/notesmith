@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { convertToMM, convertToPx, convertFloatFixed } from "../../../styles/variables"
+import React from "react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { RangeInput, StyledLabel, NumberInput} from "../../form/FormComponents"
@@ -10,74 +9,14 @@ function RuledControls({
   maximumMarginWidth,
   pageData,
   setPageData,
+  svgSize,
 }) {
-  const { marginLeft, marginRight, thickness, svgHeight, svgContentHeight } = pageData
-  const pageHeight = convertToMM(svgHeight)
-  const contentHeight = convertToMM(svgContentHeight)
-  const totalHorizontalMargin = convertFloatFixed(marginLeft + marginRight, 3) // sum of left and right margins
-  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3) // half of total horizontal margin is center
-  const totalVerticalMargin = convertFloatFixed(pageHeight - contentHeight - thickness, 3) // subtract content height from page height
-  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3) // half of total vertical margin is center
-  const bottomMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
-
-  function changeAlignment(value) {
-    switch(value) {
-      case "left":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginRight: totalHorizontalMargin,
-          marginLeft: 0,
-        })
-        break
-      case "center":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: centeredHorizontalMargin,
-          marginRight: centeredHorizontalMargin,
-        })
-        break
-      case "right":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: totalHorizontalMargin,
-          marginRight: 0,
-        })
-        break
-      case "top":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: 0,
-        })
-        break
-      case "middle":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: centeredVerticalMargin,
-        })
-        break
-      case "bottom":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: bottomMargin,
-        })
-        break
-      default:
-        break
-    }
-  }
-
   return (
     <>
       <AlignmentControls
         pageData={pageData}
         setPageData={setPageData}
-        changeAlignment={changeAlignment}
+        svgSize={svgSize}
       />
       <Flexbox
         flex="flex"

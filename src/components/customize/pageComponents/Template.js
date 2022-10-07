@@ -20,6 +20,7 @@ function Template({
   pagePosition,
   setPageData,
   setSelectedPageSvg,
+  setSvgSize,
 }) {
   const [node, setNode] = useState()
 
@@ -27,7 +28,7 @@ function Template({
     if (node !== null) {
       setNode(node)
     }
-  }, [pageData])
+  }, [])
 
   useEffect(() => {
     if (node) {
@@ -35,14 +36,14 @@ function Template({
       
       setTimeout(() => {
         const dimensions = node.getBBox()
-        // setPageSize({
-        //   height: dimensions.height,
-        //   width: dimensions.width,
-        // })
+        setSvgSize({
+          height: dimensions.height,
+          width: dimensions.width,
+        })
       }, 10)
     }
 
-  }, [pageData, node, pagePosition, contentSize])
+  }, [pageData, pagePosition, node, contentSize])
 
   return (
     <svg
@@ -51,8 +52,8 @@ function Template({
       id={currentPageSide === "left" ? "left-page" : "right-page"}
       x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
       y={pagePosition.bothY}
-      width={pageData.svgContentWidth}
-      height={pageData.svgContentHeight}
+      width={pageData.maxContentWidth}
+      height={pageData.maxContentHeight}
       fill="#fff"
     >
       {pageData.template === "blank" && (

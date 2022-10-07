@@ -20,10 +20,11 @@ function Canvas({
   canvasPages,
   canvasPageTemplates,
   pageData,
-  setPageContentSize,
   selectedPage,
+  setPageContentSize,
   setPageData,
   setSelectedPageSvg,
+  setSvgSize,
 }) {
   const [canvasSize, setCanvasSize] = useState({
     width: 1456,
@@ -50,6 +51,7 @@ function Canvas({
             setPageContentSize={setPageContentSize}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
+            setSvgSize={setSvgSize}
           />
         </svg>
       </StyledCanvas>

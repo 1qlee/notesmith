@@ -79,6 +79,7 @@ function Controls({
   setPageData,
   setShowModal,
   setActiveTab,
+  svgSize,
   toast,
   user,
 }) {
@@ -151,6 +152,7 @@ function Controls({
               pageData={pageData}
               setPageData={setPageData}
               setShowModal={setShowModal}
+              svgSize={svgSize}
             />
           </ControlsContent>
           <ControlsFooter>

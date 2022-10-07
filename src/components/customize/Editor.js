@@ -62,8 +62,8 @@ const Editor = ({
     opacity: 1,
     svgHeight: bookData.heightPixel,
     svgWidth: bookData.widthPixel,
-    svgContentHeight: bookData.heightPixel - pageMargins.vertical,
-    svgContentWidth: bookData.widthPixel - pageMargins.horizontal,
+    maxContentHeight: bookData.heightPixel - pageMargins.vertical,
+    maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
     radius: 0.1,
     rows: 42,
     show: false,
@@ -75,6 +75,10 @@ const Editor = ({
     template: "",
     thickness: 0.088,
     xHeight: 5,
+  })
+  const [svgSize, setSvgSize] = useState({
+    height: bookData.heightPixel - pageMargins.vertical,
+    width: bookData.widthPixel - pageMargins.horizontal,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -242,6 +246,7 @@ const Editor = ({
               canvasPages={canvasPages}
               canvasPageTemplates={canvasPageTemplates}
               pageData={pageData}
+              setSvgSize={setSvgSize}
               selectedPage={selectedPage}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
@@ -257,6 +262,7 @@ const Editor = ({
               setBookData={setBookData}
               setPageData={setPageData}
               setShowModal={setShowModal}
+              svgSize={svgSize}
               user={user}
               toast={toast}
             />

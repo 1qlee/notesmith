@@ -15,8 +15,9 @@ function PageSpread({
   selectedPage,
   setPageData,
   setSelectedPageSvg,
+  setSvgSize,
 }) {
-  const { svgWidth, svgHeight, svgContentWidth, svgContentHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  const { svgWidth, svgHeight, maxContentWidth, maxContentHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const minimumMargin = pageMargins.minimum
   const [currentPageSide, setCurrentPageSide] = useState("")
   const [leftPage, setLeftPage] = useState([])
@@ -77,8 +78,8 @@ function PageSpread({
     // svgContentWidth and height have margins calculated into them
     // we have to calculate the maximum allowed content size including user inputted margins
     setContentSize({
-      height: svgContentHeight - convertToPx(marginTop) - convertToPx(marginBottom),
-      width: svgContentWidth - convertToPx(marginLeft) - convertToPx(marginRight),
+      height: maxContentHeight - convertToPx(marginTop) - convertToPx(marginBottom),
+      width: maxContentWidth - convertToPx(marginLeft) - convertToPx(marginRight),
     })
   }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates])
 
@@ -111,6 +112,7 @@ function PageSpread({
         selectedPage={selectedPage}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
+        setSvgSize={setSvgSize}
       />
       <Page
         bookData={bookData}
@@ -126,6 +128,7 @@ function PageSpread({
         selectedPage={selectedPage}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
+        setSvgSize={setSvgSize}
       />
     </svg>
   )
@@ -145,6 +148,7 @@ function Page({
   selectedPage,
   setPageData,
   setSelectedPageSvg,
+  setSvgSize,
 }) {
 
   if (selectedPage === 1 && pageSide === "left") {
@@ -172,6 +176,7 @@ function Page({
             pagePosition={pagePosition}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
+            setSvgSize={setSvgSize}
           />
         ) : (
           <SVG
@@ -179,8 +184,8 @@ function Page({
             ref={pageRef}
             x={pageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
             y={pagePosition.bothY}
-            width={pageData.svgContentWidth}
-            height={pageData.svgContentHeight}
+            width={pageData.maxContentWidth}
+            height={pageData.maxContentHeight}
             src={canvasPageTemplates[pageSvg]}
           />
         )}

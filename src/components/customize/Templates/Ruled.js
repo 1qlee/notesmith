@@ -53,6 +53,7 @@ function Ruled({
 
   useEffect(() => {
     createLines()
+    console.log('making lines')
   }, [pageData, contentSize])
 
   return (
