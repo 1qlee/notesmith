@@ -59,7 +59,7 @@ function Template({
       {pageData.template === "blank" && (
         <Blank
           pageData={pageData}
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
         />
       )}
       {pageData.template === "ruled" && (
@@ -71,63 +71,63 @@ function Template({
       )}
       {pageData.template === "dot" && (
         <Dot
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "graph" && (
         <Graph
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "hexagon" && (
         <Hexagon
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "isometric" && (
         <Isometric
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "seyes" && (
         <Seyes
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "music" && (
         <Music
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "handwriting" && (
         <Handwriting
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "cross" && (
         <CrossGrid
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "calligraphy" && (
         <Calligraphy
-          currentPageSide={currentPageSide}
+          contentSize={contentSize}
           pageData={pageData}
           setPageData={setPageData}
         />

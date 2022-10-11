@@ -3,7 +3,8 @@ import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { RangeInput, StyledLabel, NumberInput } from "../../form/FormComponents"
-import AlignmentControls from "./AlignmentControls"
+import AlignmentControls from "./components/AlignmentControls"
+import MarginControls from "./components/MarginControls"
 
 function SeyesControls({
   maximumMarginHeight,

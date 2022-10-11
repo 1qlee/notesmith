@@ -5,7 +5,8 @@ import { Square, CheckSquare } from "phosphor-react"
 import { StyledLabel, StyledCheckbox, NumberInput, RangeInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../Icon"
-import AlignmentControls from "./AlignmentControls"
+import AlignmentControls from "./components/AlignmentControls"
+import MarginControls from "./components/MarginControls"
 
 function IsometricControls({
   maximumMarginHeight,

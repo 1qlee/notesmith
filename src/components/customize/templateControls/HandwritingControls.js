@@ -5,7 +5,8 @@ import ReactTooltip from "react-tooltip"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput, StyledLabel, RangeInput, StyledCheckbox, NumberInput } from "../../form/FormComponents"
-import AlignmentControls from "./AlignmentControls"
+import AlignmentControls from "./components/AlignmentControls"
+import MarginControls from "./components/MarginControls"
 import Icon from "../../Icon"
 
 function HandwritingControls({

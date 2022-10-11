@@ -1,9 +1,9 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, convertFloatFixed, convertToMM } from "../../../styles/variables"
+import { colors, convertFloatFixed, convertToMM } from "../../../../styles/variables"
 
-import { StyledLabel } from "../../form/FormComponents"
-import Button from "../../Button"
+import { StyledLabel } from "../../../form/FormComponents"
+import Button from "../../../Button"
 
 const AlignmentButtonWrapper = styled.div`
   display: flex;
@@ -40,13 +40,12 @@ function AlignmentControls({
   setPageData,
   svgSize,
 }) {
-  const { maxContentHeight, maxContentWidth, marginLeft, marginTop, marginBottom, marginRight } = pageData
+  const { maxContentHeight, maxContentWidth, thickness } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
-  console.log(maxContentHeight, maxContentWidth)
-  console.log(contentHeight, contentWidth)
-  const horizontalSpace = convertToMM(maxContentWidth - contentWidth)
-  const verticalSpace = convertToMM(maxContentHeight - contentHeight)
+  const trim = pageData.template === "dot" ? 0 : thickness
+  const horizontalSpace = convertFloatFixed(convertToMM(maxContentWidth - contentWidth), 3)
+  const verticalSpace = convertFloatFixed(convertToMM(maxContentHeight - contentHeight) - trim, 3)
   const horizontalCenter = convertFloatFixed(horizontalSpace / 2, 3)
   const verticalCenter = convertFloatFixed(verticalSpace / 2, 3)
 
@@ -88,6 +87,7 @@ function AlignmentControls({
           ...pageData,
           alignmentVertical: value,
           marginTop: verticalCenter,
+          marginBottom: 0,
         })
         break
       case "bottom":

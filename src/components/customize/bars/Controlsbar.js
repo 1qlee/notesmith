@@ -19,7 +19,6 @@ const StyledControlsBar = styled.div`
 `
 
 function Controlsbar({
-  canvasPageSize,
   pageData,
   setPageData,
   svgSize,
@@ -33,34 +32,34 @@ function Controlsbar({
         <>
           {pageData.template === "ruled" && (
             <RuledControls
-              pageData={pageData}
-              setPageData={setPageData}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
+              pageData={pageData}
+              setPageData={setPageData}
               svgSize={svgSize}
             />
           )}
           {pageData.template === "dot" && (
             <DotControls
-              canvasPageSize={canvasPageSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
               setPageData={setPageData}
+              svgSize={svgSize}
             />
           )}
           {pageData.template === "graph" && (
             <GraphControls
-              canvasPageSize={canvasPageSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
               setPageData={setPageData}
+              svgSize={svgSize}
             />
           )}
           {pageData.template === "hexagon" && (
             <HexagonControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -69,7 +68,7 @@ function Controlsbar({
           )}
           {pageData.template === "isometric" && (
             <IsometricControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -78,7 +77,7 @@ function Controlsbar({
           )}
           {pageData.template === "seyes" && (
             <SeyesControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -87,7 +86,7 @@ function Controlsbar({
           )}
           {pageData.template === "music" && (
             <MusicControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -96,7 +95,7 @@ function Controlsbar({
           )}
           {pageData.template === "handwriting" && (
             <HandwritingControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -105,7 +104,7 @@ function Controlsbar({
           )}
           {pageData.template === "cross" && (
             <CrossGridControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}
@@ -114,7 +113,7 @@ function Controlsbar({
           )}
           {pageData.template === "calligraphy" && (
             <CalligraphyControls
-              canvasPageSize={canvasPageSize}
+              svgSize={svgSize}
               maximumMarginHeight={maximumMarginHeight}
               maximumMarginWidth={maximumMarginWidth}
               pageData={pageData}

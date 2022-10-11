@@ -7,7 +7,7 @@ function Ruled({
   setPageData,
 }) {
   const [lines, setLines] = useState([])
-  const { thickness, spacing } = pageData
+  const { thickness, spacing, opacity, rows } = pageData
   const { width, height } = contentSize
   const lineThickness = convertToPx(thickness)
   const lineSpacing = convertToPx(spacing)
@@ -15,7 +15,7 @@ function Ruled({
   function createLines() {
     const linesArray = []
 
-    for (let i = 0; i < pageData.rows; i++) {
+    for (let i = 0; i < rows; i++) {
       // calculations and conversions to px
       const halfLineThickness = lineThickness / 2
       const spaceBtwnLines = i === 0 ? halfLineThickness : lineThickness * i + halfLineThickness
@@ -27,7 +27,7 @@ function Ruled({
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
-        opacity: pageData.opacity,
+        opacity: opacity,
         x1: convertFloatFixed(lineX1, 3),
         x2: convertFloatFixed(lineX2, 3),
         y1: convertFloatFixed(lineY, 3),
@@ -53,7 +53,6 @@ function Ruled({
 
   useEffect(() => {
     createLines()
-    console.log('making lines')
   }, [pageData, contentSize])
 
   return (

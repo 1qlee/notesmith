@@ -245,29 +245,27 @@ function NumberInput({
       />
       <NumberInputIcon
         pos="top"
-        right="0"
-        top="0"
-        width="1rem"
+        top="4px"
+        width="16px"
         onClick={() => validateClick("up")}
         onMouseDown={() => start("up")}
         onMouseUp={() => stop()}
         onTouchStart={() => start("up")}
         onTouchEnd={() => stop()}
       >
-        <CaretUp color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
+        <CaretUp color={colors.gray.nineHundred} fill="bold" size="0.75rem" />
       </NumberInputIcon>
       <NumberInputIcon
         pos="bottom"
-        right="0"
-        bottom="0"
-        width="1rem"
+        bottom="4px"
+        width="16px"
         onClick={() => validateClick("down")}
         onMouseDown={() => start("down")}
         onMouseUp={() => stop()}
         onTouchStart={() => start("down")}
         onTouchEnd={() => stop()}
       >
-        <CaretDown color={colors.gray.oneHundred} fill="bold" size="0.75rem" />
+        <CaretDown color={colors.gray.nineHundred} fill="bold" size="0.75rem" />
       </NumberInputIcon>
     </NumberInputWrapper>
   )
@@ -314,21 +312,18 @@ const NumberInputWrapper = styled.div`
 
 const NumberInputIcon = styled.div`
   align-items: center;
-  background-color: ${colors.gray.nineHundred};
   bottom: ${props => props.bottom};
   border-radius: ${props => props.pos === "top" ? "0 0.25rem 0 0" : "0 0 0.25rem 0" };
   display: flex;
-  height: ${props => props.height || "50%"};
   justify-content: center;
-  left: ${props => props.left};
   position: absolute;
-  right: ${props => props.right};
+  right: 4px;
   top: ${props => props.top};
   user-select: none;
   width: ${props => props.width};
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray.sixHundred};
+    background-color: ${colors.gray.oneHundred};
   }
 `
 

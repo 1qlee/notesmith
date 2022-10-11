@@ -3,7 +3,8 @@ import { convertToMM, convertFloatFixed, colors } from "../../../styles/variable
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
-import AlignmentControls from "./AlignmentControls"
+import AlignmentControls from "./components/AlignmentControls"
+import MarginControls from "./components/MarginControls"
 
 function CalligraphyControls({
   maximumMarginHeight,

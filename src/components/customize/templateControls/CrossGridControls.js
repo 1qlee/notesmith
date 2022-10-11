@@ -3,7 +3,8 @@ import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
-import AlignmentControls from "./AlignmentControls"
+import AlignmentControls from "./components/AlignmentControls"
+import MarginControls from "./components/MarginControls"
 
 function CrossGridControls({
   maximumMarginHeight,
