@@ -7,10 +7,11 @@ function Dot({
   setPageData 
 }) {
   const [dots, setDots] = useState([])
-  const { radius, spacing, columns, rows, opacity } = pageData
+  const { radius, columns, rows, opacity, rowSpacing, columnSpacing } = pageData
   const { height, width } = contentSize
   const dotRadius = convertToPx(radius)
-  const dotSpacing = convertToPx(spacing)
+  const dotColumnSpacing = convertToPx(columnSpacing)
+  const dotRowSpacing = convertToPx(rowSpacing)
 
   function createDots() {
     // placeholder array for dots
@@ -20,7 +21,7 @@ function Dot({
     for (let i = 0; i < rows; i++) {
       // object to hold dot position coordinates
       const dotPos = {
-        y: (i * dotSpacing) + dotRadius * (i + 1),
+        y: (i * dotRowSpacing) + dotRadius * (i + 1),
         x: 0,
       }
       // loop will exit if the dots have passed the height of the page
@@ -35,7 +36,7 @@ function Dot({
       // loop to create each individual dot (aka columns) in a row
       for (let ii = 0; ii < columns; ii++) {
         // update dot's X position
-        dotPos.x = (ii * dotSpacing) + dotRadius * (ii + 1)
+        dotPos.x = (ii * dotColumnSpacing) + dotRadius * (ii + 1)
         // create dot object with appropriate properties
         const dot = {
           fill: "#000",
@@ -66,7 +67,7 @@ function Dot({
 
   useEffect(() => {
     createDots()
-  }, [pageData])
+  }, [pageData, contentSize])
 
   return (
     <>

@@ -3,42 +3,49 @@ import React from "react"
 import { NumberInput, StyledLabel, RangeInput } from "../../../form/FormComponents"
 import { ControlFlexWrapper, ControlFlexChild } from "./TemplateComponents"
 
-function SpacingControls({
+function RangeControls({
+  property,
+  propertyName,
+  propertyObj,
+  inputProps,
   pageData,
   setPageData,
 }) {
+  const { min, max, step } = inputProps
+
   return (
     <>
-      <StyledLabel>Spacing</StyledLabel>
+      <StyledLabel htmlFor={property}>{propertyName}</StyledLabel>
       <ControlFlexWrapper>
         <ControlFlexChild
           flex={1}
           margin="0 8px 0 0"
         >
           <NumberInput
-            value={pageData.spacing}
-            min={1}
+            id={property}
+            value={pageData[property]}
+            min={min}
             onChange={value => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              spacing: value,
+              ...propertyObj,
+              [property]: value,
             })}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
+            step={step}
           />
         </ControlFlexChild>
         <ControlFlexChild
           flex={3}
         >
           <RangeInput
-            min={1}
-            step={1}
-            max={255}
-            value={pageData.spacing}
+            min={min}
+            step={step}
+            max={max}
+            value={pageData[property]}
             onChange={e => setPageData({
               ...pageData,
-              alignmentVertical: "",
-              spacing: parseFloat(e.target.value)
+              ...propertyObj,
+              [property]: parseFloat(e.target.value)
             })}
           />
         </ControlFlexChild>
@@ -47,4 +54,4 @@ function SpacingControls({
   )
 }
 
-export default SpacingControls
+export default RangeControls

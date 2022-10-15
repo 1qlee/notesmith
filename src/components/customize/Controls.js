@@ -133,9 +133,8 @@ function Controls({
           <ControlsFooter>
             <Button
               backgroundcolor={colors.gray.nineHundred}
-              borderradius="0"
               color={colors.gray.oneHundred}
-              padding="1rem"
+              padding="16px"
               width="100%"
               disabled={!pageData.template}
               onClick={() => handleApplyTemplateButton()}

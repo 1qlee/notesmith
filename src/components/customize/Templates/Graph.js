@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
-function Graph({ pageData, setPageData }) {
+function Graph({ 
+  contentSize,
+  pageData, 
+  setPageData,
+}) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
-  const lineThickness = convertToPx(pageData.thickness)
+  const { thickness, opacity, columns, rows, columnSpacing, rowSpacing } = pageData
+  const { width, height } = contentSize
+  const lineColumnSpacing = convertToPx(columnSpacing)
+  const lineRowSpacing = convertToPx(rowSpacing)
+  const lineThickness = convertToPx(thickness)
   const lineOffset = lineThickness / 2
-  const spacing = convertToPx(pageData.spacing)
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const marginTop = convertToPx(pageData.marginTop)
 
   function createColumns() {
     // placeholder array
     const lineColumnsArray = []
     // grid column lines
-    for (let column = 0; column < pageData.columns; column++) {
-      const lineY1 = marginTop
-      const lineY2 = pageData.rows * (spacing + lineThickness) + lineY1 + lineThickness
-      const lineXFirst = marginLeft + lineOffset
-      const lineX = lineXFirst + (column + 1) * (spacing + lineThickness)
+    for (let column = 0; column < columns; column++) {
+      const lineY1 = 0
+      const lineY2 = rows * (lineRowSpacing + lineThickness) + lineY1 + lineThickness
+      const lineXFirst = lineOffset
+      const lineX = lineXFirst + (column + 1) * (lineColumnSpacing + lineThickness)
       // first  column
       const firstColumnLine = {
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
-        opacity: pageData.opacity,
+        opacity: opacity,
         x1: convertFloatFixed(lineXFirst, 3),
         x2: convertFloatFixed(lineXFirst, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -35,7 +40,7 @@ function Graph({ pageData, setPageData }) {
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
-        opacity: pageData.opacity,
+        opacity: opacity,
         x1: convertFloatFixed(lineX, 3),
         x2: convertFloatFixed(lineX, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -47,7 +52,7 @@ function Graph({ pageData, setPageData }) {
       }
 
       // break the loop if columns break past the right side margin
-      if (lineX + lineOffset > pageData.pageWidth) {
+      if (lineX + lineOffset > width) {
         setPageData({
           ...pageData,
           columns: column,
@@ -66,18 +71,18 @@ function Graph({ pageData, setPageData }) {
     // placeholder array
     const lineRowsArray = []
     // grid row lines
-    for (let row = 0; row < pageData.rows; row++) {
+    for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
-      const lineX1 = marginLeft + lineOffset
-      const lineX2 = pageData.columns * (spacing + lineThickness) + lineX1
-      const lineYFirst = marginTop + lineOffset
-      const lineY = lineYFirst + (row + 1) * (spacing + lineThickness)
+      const lineX1 = lineOffset
+      const lineX2 = columns * (lineColumnSpacing + lineThickness) + lineX1
+      const lineYFirst = lineOffset
+      const lineY = lineYFirst + (row + 1) * (lineRowSpacing + lineThickness)
       // first row line
       const firstRowLine = {
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
-        opacity: pageData.opacity,
+        opacity: opacity,
         x1: lineX1,
         x2: lineX2,
         y1: lineYFirst,
@@ -88,7 +93,7 @@ function Graph({ pageData, setPageData }) {
         fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
-        opacity: pageData.opacity,
+        opacity: opacity,
         x1: lineX1,
         x2: lineX2,
         y1: lineY,
@@ -100,7 +105,7 @@ function Graph({ pageData, setPageData }) {
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY + lineOffset > pageData.pageHeight) {
+      if (lineY + lineOffset > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
@@ -119,7 +124,7 @@ function Graph({ pageData, setPageData }) {
   useEffect(() => {
     createRows()
     createColumns()
-  }, [pageData])
+  }, [pageData, contentSize])
 
   return (
     <>

@@ -2,15 +2,14 @@ import React from "react"
 import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel } from "../../../form/FormComponents"
-import { ControlWrapper, ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
-import Button from "../../../Button"
+import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function RowControls({
   pageData,
   setPageData,
 }) {
   return (
-    <ControlWrapper>
+    <>
       <StyledLabel htmlFor="rows-input">Rows</StyledLabel>
       <ControlInputGroup>
         <NumberInput
@@ -39,7 +38,7 @@ function RowControls({
           Fill
         </ControlInnerButton>
       </ControlInputGroup>
-    </ControlWrapper>
+    </>
   )
 }
 

@@ -1,9 +1,10 @@
 import React from "react"
 
+import { ControlWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
 import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
-import SpacingControls from "./components/SpacingControls"
+import RangeControls from "./components/RangeControls"
 import OpacityControls from "./components/OpacityControls"
 import ThicknessControls from "./components/ThicknessControls"
 
@@ -27,19 +28,29 @@ function RuledControls({
         maximumMarginHeight={maximumMarginHeight}
         maximumMarginWidth={maximumMarginWidth}
       />
-      <RowControls 
+      <ControlWrapper>
+        <RowControls
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      </ControlWrapper>
+      <RangeControls 
+        property="spacing"
+        propertyName="Spacing"
+        propertyObj={{}}
+        inputProps={{
+          min: 1,
+          max: 255,
+          step: 1,
+        }}
         pageData={pageData}
         setPageData={setPageData}
       />
-      <SpacingControls 
+      <OpacityControls 
         pageData={pageData}
         setPageData={setPageData}
       />
-      <OpacityControls
-        pageData={pageData}
-        setPageData={setPageData}
-      />
-      <ThicknessControls
+      <ThicknessControls 
         pageData={pageData}
         setPageData={setPageData}
       />

@@ -2,19 +2,19 @@ import React from "react"
 
 import RangeControls from "./RangeControls"
 
-function ThicknessControls({
+function ColumnSpacingControls({
   pageData,
   setPageData,
 }) {
   return (
     <RangeControls
-      property="thickness"
-      propertyName="Thickness"
-      propertyObj={{}}
+      property="columnSpacing"
+      propertyName="Column spacing"
+      propertyObj={{ alignmentHorizontal: "" }}
       inputProps={{
-        min: 0.088,
-        max: 5,
-        step: 0.001,
+        min: 1,
+        max: 255,
+        step: 1,
       }}
       pageData={pageData}
       setPageData={setPageData}
@@ -22,4 +22,4 @@ function ThicknessControls({
   )
 }
 
-export default ThicknessControls
+export default ColumnSpacingControls

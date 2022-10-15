@@ -3,10 +3,8 @@ import Button from "../../../Button"
 
 const ControlWrapper = styled.div`
   position: relative;
+  margin-bottom: 16px;
   width: 100%;
-  &:not(:last-child) {
-    margin-right: 4px;
-  }
 `
 
 const ControlFlexWrapper = styled.div`
@@ -29,7 +27,7 @@ const ControlInputGroup = styled.div`
 const ControlInnerButton = styled(Button)`
   position: absolute;
   right: 24px;
-  top: 5px;
+  top: 6px;
 `
 
 export { ControlWrapper, ControlFlexWrapper, ControlFlexChild, ControlInputGroup, ControlInnerButton }

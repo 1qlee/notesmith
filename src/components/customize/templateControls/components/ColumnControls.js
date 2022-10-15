@@ -2,15 +2,14 @@ import React from "react"
 import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel } from "../../../form/FormComponents"
-import { ControlWrapper, ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
-import Button from "../../../Button"
+import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function ColumnControls({
   pageData,
   setPageData,
 }) {
   return (
-    <ControlWrapper>
+    <>
       <StyledLabel htmlFor="column-input">Columns</StyledLabel>
       <ControlInputGroup>
         <NumberInput
@@ -39,7 +38,7 @@ function ColumnControls({
           Fill
         </ControlInnerButton>
       </ControlInputGroup>
-    </ControlWrapper>
+    </>
   )
 }
 

@@ -468,8 +468,8 @@ function HexagonPageIcon({
     hexagonRadius: 5,
     rows: 30,
     columns: 16,
-    marginTop: -7.902,
-    marginLeft: -8.442,
+    marginTop: 0,
+    marginLeft: 0,
   }
 
   return (

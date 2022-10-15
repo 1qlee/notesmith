@@ -44,6 +44,7 @@ const Editor = ({
       opacity: 1,
     },
     columns: 27,
+    columnSpacing: 5,
     dashedLineData: {
       sync: true,
       thickness: 0.088,
@@ -66,6 +67,7 @@ const Editor = ({
     maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
     radius: 0.1,
     rows: 42,
+    rowSpacing: 5,
     show: false,
     size: 1,
     slantAngle: 55,

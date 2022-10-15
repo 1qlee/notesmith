@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Hexagon({
+  contentSize,
   pageData,
   setPageData,
 }) {
+  const { hexagonRadius, thickness, rows, opacity } = pageData
+  const { width, height } = contentSize
+  const hexRadius = convertToPx(hexagonRadius)
+  const hexThickness = convertToPx(thickness)
+  const hexWidth = Math.sqrt(3) * hexRadius
   const [hexagons, setHexagons] = useState([])
 
   useEffect(() => {
     function createHexagons() {
       // creates the shape of the hexagon by generating its points
-      function createPoints(x, y, radius, col, row) {
+      function createPoints(x, y, radius, row) {
         const pointsArray = []
 
         for (let theta = 0; theta < Math.PI * 2; theta += Math.PI / 3) {
@@ -18,11 +24,10 @@ function Hexagon({
           const pointX = convertFloatFixed(x + radius * Math.sin(theta), 2)
           const pointY = convertFloatFixed(y + radius * Math.cos(theta), 2)
 
-          // dont let rows or columns pass the length of the page plus a hexagon (length) and a half
-          if (pointX > pageData.pageWidth + radius * 2.5) {
-            return { col: col }
+          if (pointX > width) {
+            return { }
           }
-          else if (pointY > pageData.pageHeight + radius * 2.5) {
+          if (pointY > height) {
             return { row: row }
           }
           else {
@@ -34,30 +39,25 @@ function Hexagon({
       }
 
       const hexagonsArray = []
-      const radius = convertToPx(pageData.hexagonRadius)
-      const strokeWidth = convertToPx(pageData.thickness)
-      const marginLeft = convertToPx(pageData.marginLeft)
-      const marginTop = convertToPx(pageData.marginTop)
 
-      for (let col = 0; col < pageData.columns; col++) {
-        for (let row = 0; row < pageData.rows; row++) {
-          const offset = (Math.sqrt(3) * radius) / 2
-          let x = marginLeft + offset * col * 2 + strokeWidth
-          let y = marginTop + offset * row * Math.sqrt(3) + strokeWidth
+      for (let row = 0; row < rows; row++) {
+        console.log(width)
+        const numOfCols = Math.floor(width / hexWidth)
+        console.log(numOfCols)
+        const halfHexThickness = hexThickness / 2
+
+        for (let col = 0; col < numOfCols; col++) {
+          const offset = hexWidth / 2
+          let x = offset + offset * col * 2 + halfHexThickness
+          let y = hexRadius + offset * row * Math.sqrt(3) + halfHexThickness
 
           if (row % 2 !== 0) {
             x += offset
           }
 
-          const points = createPoints(x, y, radius, col, row)
+          const points = createPoints(x, y, hexRadius, row)
 
-          if (points.col) {
-            return setPageData({
-              ...pageData,
-              columns: col,
-            })
-          }
-          else if (points.row) {
+          if (points.row) {
             return setPageData({
               ...pageData,
               rows: row,
@@ -65,11 +65,10 @@ function Hexagon({
           }
           else {
             const hexagon = {
-              fill: "none",
               stroke: "#000",
-              strokeWidth: strokeWidth,
+              strokeWidth: hexThickness,
               points: points,
-              opacity: pageData.opacity,
+              opacity: opacity,
             }
 
             hexagonsArray.push(hexagon)
@@ -81,7 +80,7 @@ function Hexagon({
     }
 
     createHexagons()
-  }, [pageData])
+  }, [pageData, contentSize])
 
   return (
     <>

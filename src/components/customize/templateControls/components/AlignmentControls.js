@@ -43,10 +43,35 @@ function AlignmentControls({
   const { maxContentHeight, maxContentWidth, thickness } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
-  const trim = pageData.template === "dot" ? 0 : thickness
-  const horizontalSpace = convertFloatFixed(convertToMM(maxContentWidth - contentWidth), 3)
-  const verticalSpace = convertFloatFixed(convertToMM(maxContentHeight - contentHeight) - trim, 3)
+  let verticalTrim, horizontalTrim = 0
+
+  switch(pageData.template) {
+    case "ruled":
+      verticalTrim = thickness
+      break
+    case "graph":
+      verticalTrim = thickness
+      horizontalTrim = thickness * 2
+      break
+    case "hexagon":
+      horizontalTrim = thickness
+      verticalTrim = thickness
+      break
+    default:
+      verticalTrim = 0
+      horizontalTrim = 0
+      break
+  }
+
+  let horizontalSpace = convertFloatFixed(convertToMM(maxContentWidth - contentWidth) - horizontalTrim, 3)
+  if (horizontalSpace < 0) {
+    horizontalSpace = 0
+  }
   const horizontalCenter = convertFloatFixed(horizontalSpace / 2, 3)
+  let verticalSpace = convertFloatFixed(convertToMM(maxContentHeight - contentHeight) - verticalTrim, 3)
+  if (verticalSpace < 0) {
+    verticalSpace = 0
+  }
   const verticalCenter = convertFloatFixed(verticalSpace / 2, 3)
 
   function changeAlignment(value) {

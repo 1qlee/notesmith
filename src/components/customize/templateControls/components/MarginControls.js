@@ -1,11 +1,13 @@
 import React from "react"
 import styled from "styled-components"
-import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft } from "phosphor-react"
+import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, ArrowsClockwise } from "phosphor-react"
+import { colors } from "../../../../styles/variables"
 
 import { StyledLabel, NumberInput } from "../../../form/FormComponents"
+import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 import Icon from "../../../Icon"
 
-const numberInputPadding = "8px 24px"
+const numberInputPadding = "8px 44px 8px 24px"
 
 const MarginContainer = styled.div`
   display: flex;
@@ -56,6 +58,21 @@ function MarginControls({
             padding={numberInputPadding}
             step={1}
           />
+          <ControlInnerButton
+            backgroundcolor={colors.gray.oneHundred}
+            color={colors.gray.nineHundred}
+            padding="4px"
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginTop: 0,
+            })}
+          >
+            <Icon>
+              <ArrowsClockwise size={12} weight="bold" />
+            </Icon>
+          </ControlInnerButton>
         </MarginInput>
         <MarginInput>
           <Icon className="icon">
@@ -73,6 +90,21 @@ function MarginControls({
             padding={numberInputPadding}
             step={1}
           />
+          <ControlInnerButton
+            backgroundcolor={colors.gray.oneHundred}
+            color={colors.gray.nineHundred}
+            padding="4px"
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              marginRight: 0,
+            })}
+          >
+            <Icon>
+              <ArrowsClockwise size={12} />
+            </Icon>
+          </ControlInnerButton>
         </MarginInput>
       </MarginContainer>
       <MarginContainer>
@@ -92,6 +124,21 @@ function MarginControls({
             padding={numberInputPadding}
             step={1}
           />
+          <ControlInnerButton
+            backgroundcolor={colors.gray.oneHundred}
+            color={colors.gray.nineHundred}
+            padding="4px"
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              alignmentVertical: "",
+              marginBottom: 0,
+            })}
+          >
+            <Icon>
+              <ArrowsClockwise size={12} />
+            </Icon>
+          </ControlInnerButton>
         </MarginInput>
         <MarginInput>
           <Icon className="icon">
@@ -109,6 +156,21 @@ function MarginControls({
             padding={numberInputPadding}
             step={1}
           />
+          <ControlInnerButton
+            backgroundcolor={colors.gray.oneHundred}
+            color={colors.gray.nineHundred}
+            padding="4px"
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              marginLeft: 0,
+            })}
+          >
+            <Icon>
+              <ArrowsClockwise size={12} />
+            </Icon>
+          </ControlInnerButton>
         </MarginInput>
       </MarginContainer>
     </>
