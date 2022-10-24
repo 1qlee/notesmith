@@ -2,22 +2,23 @@ import React, { useState, useEffect } from "react"
 import { colors, convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function CrossGrid({ 
+  maxSvgSize,
   pageData, 
   setPageData 
 }) {
   const [crosses, setCrosses] = useState([])
-  const crossSize = convertToPx(pageData.size)
-  const spacing = convertToPx(pageData.spacing)
-  const marginTop = convertToPx(pageData.marginTop)
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const thickness = convertToPx(pageData.thickness)
+  const { spacing, opacity, rows, columns, columnSpacing, rowSpacing } = pageData
+  const { width, height } = maxSvgSize
+  const crossSize = convertToPx(pageData.crossSize)
+  const crossColumnSpacing = convertToPx(columnSpacing)
+  const crossRowSpacing = convertToPx(rowSpacing)
 
   function createCrosses() {
     // placeholder array for crosses
     const crossesArray = []
     const crossRadius = crossSize / 2
     // loop to create rows of crosses
-    for (let row = 0; row < pageData.rows; row++) {
+    for (let row = 0; row < rows; row++) {
       // placeholder array for rows of crosses
       const crossesRow = []
       // object to hold cross position coordinates
@@ -26,7 +27,7 @@ function CrossGrid({
         x2: 0,
         x3: 0,
         x4: 0,
-        y1: (row * spacing) + (crossSize * row + 1) + marginTop,
+        y1: (row * crossRowSpacing) + (crossSize * row + 1),
         y2: 0,
         y3: 0,
         y4: 0,
@@ -35,36 +36,34 @@ function CrossGrid({
       crossPos.y3 = crossPos.y1 + crossRadius
       crossPos.y4 = crossPos.y3
       // loop will exit if the crosses have passed the height of the page
-      if (crossPos.y2 > pageData.pageHeight) {
+      if (crossPos.y2 > height) {
         // this essentially caps the number of total rows at the "exceeding" value
-        setPageData({
+        return setPageData({
           ...pageData,
           rows: row,
         })
-        break
       }
       // loop to create each individual cross (aka columns) in a row
-      for (let column = 0; column < pageData.columns; column++) {
+      for (let column = 0; column < columns; column++) {
         // update cross's X position
-        crossPos.x1 = (column * spacing) + crossRadius * (column + 1) + (crossRadius * column) + marginLeft
+        crossPos.x1 = (column * crossColumnSpacing) + crossRadius * (column + 1) + (crossRadius * column)
         crossPos.x2 = crossPos.x1
-        crossPos.x3 = (column * spacing) + (crossSize * column) + marginLeft
+        crossPos.x3 = (column * crossColumnSpacing) + (crossSize * column)
         crossPos.x4 = crossPos.x3 + crossSize
         // create cross object with appropriate properties
         const cross = {
           stroke: "#000",
-          opacity: pageData.opacity,
+          opacity: opacity,
           ...crossPos,
         }
 
         // loop will exit if the crosses have passed the width of the page
-        if (crossPos.x4 > pageData.pageWidth) {
+        if (crossPos.x4 > width) {
           // this essentially caps the number of crosses in a column at the "exceeding" value
-          setPageData({
+          return setPageData({
             ...pageData,
             columns: column,
           })
-          break
         }
         else {
           crossesRow.push(cross)
@@ -80,7 +79,7 @@ function CrossGrid({
 
   useEffect(() => {
     createCrosses()
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

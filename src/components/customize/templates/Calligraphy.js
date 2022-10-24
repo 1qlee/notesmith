@@ -2,24 +2,22 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Calligraphy({
+  maxSvgSize,
   pageData,
   setPageData,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [slantRows, setSlantRows] = useState([])
-  const { pageWidth, pageHeight, opacity, rows, groupSpacing, thickness, slantAngle, slants } = pageData
+  const { opacity, rows, staffSpacing, thickness, slantAngle, slants } = pageData
+  const { height, width } = maxSvgSize
   const ascSpacing = convertToPx(pageData.ascSpacing)
   const dscSpacing = convertToPx(pageData.dscSpacing)
   const xHeight = convertToPx(pageData.xHeight)
   const slantSpacing = convertToPx(pageData.slantSpacing)
-  const rowSpacing = convertToPx(groupSpacing)
+  const rowSpacing = convertToPx(staffSpacing)
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
-  const marginTop = convertToPx(pageData.marginTop)
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const marginRight = convertToPx(pageData.marginRight)
   const rowHeight = ascSpacing + dscSpacing + xHeight + lineThickness * 3
-  const rowWidth = pageWidth - marginLeft - marginRight
 
   useEffect(() => {
     function getTan(angle) {
@@ -27,43 +25,40 @@ function Calligraphy({
     }
 
     function createSlants(slantsArray, spaceBtwnRows, row) {
-      const maxPosX = pageWidth - marginRight
+      const maxPosX = width
       const compSlantAngle = 90 - slantAngle
 
       for (let slant = 0; slant < slants; slant++) {
         const slantOffset = slant * slantSpacing
-        let posX1 = marginLeft + slantOffset
-        let posX2 = slant * slantSpacing - getTan(compSlantAngle) * rowHeight + marginLeft
-        let posY1 = marginTop + spaceBtwnRows + thickness
+        let posX1 = slantOffset
+        let posX2 = slant * slantSpacing - getTan(compSlantAngle) * rowHeight
+        let posY1 = spaceBtwnRows + thickness
         let posY2 = posY1 + rowHeight
 
         // if the bottom of the lines exceed the maximum X position, restrict num of slants
         // this will cause the loop to exit
         if (posX2 > maxPosX) {
-          return setPageData({
-            ...pageData,
-            slants: slant,
-          })
+          return slant
         }
         // if the top of the lines exceed the width of the row on its right side
         if (posX1 > maxPosX) {
           const newOffset = maxPosX - posX2
-          const newPosY1 = rowHeight - (newOffset * getTan(slantAngle)) + marginTop + spaceBtwnRows + thickness
+          const newPosY1 = rowHeight - (newOffset * getTan(slantAngle)) + spaceBtwnRows + thickness
           posX1 = maxPosX
           posY1 = newPosY1
         }
         // if the bottom of the lines exceed the width of the row on its right side
         if (posX2 > maxPosX) {
           const newAngle = 180 - slantAngle
-          const newOffset = rowWidth - slantOffset
+          const newOffset = width - slantOffset
           const newPosY2 = newOffset * getTan(newAngle)
-          posX2 = rowWidth
+          posX2 = width
           posY2 = newPosY2 + posY1
         }
         // if the bottom of the lines exceed the width of the row on its left side
-        if (posX2 < marginLeft) {
+        if (posX2 < 0) {
           const newPosY2 = slantOffset * getTan(slantAngle)
-          posX2 = marginLeft
+          posX2 = 0
           posY2 = newPosY2 + posY1
         }
 
@@ -86,9 +81,9 @@ function Calligraphy({
       for (let line = 0; line < 4; line++) {
         const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness
         const offset = spaceBtwnRows + spaceBtwnLines
-        const posX1 = marginLeft
-        const posX2 = pageWidth - marginRight
-        let posY1 = marginTop + offset
+        const posX1 = 0
+        const posX2 = width
+        let posY1 = offset
 
         if (line === 1) {
           posY1 += ascSpacing
@@ -113,11 +108,8 @@ function Calligraphy({
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 > pageHeight) {
-          return setPageData({
-            ...pageData,
-            rows: row,
-          })
+        if (posY1 > height) {
+          return row
         }
         else {
           linesArray.push(lineProps)
@@ -132,8 +124,21 @@ function Calligraphy({
       for (let row = 0; row < rows; row++) {
         const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
 
-        createSlants(dummySlantsArray, spaceBtwnRows, row)
-        createLines(dummyLinesArray, spaceBtwnRows, row)
+        const slants = createSlants(dummySlantsArray, spaceBtwnRows, row)
+        const lines = createLines(dummyLinesArray, spaceBtwnRows, row)
+
+        if (slants) {
+          return setPageData({
+            ...pageData,
+            slants: slants
+          })
+        }
+        if (lines) {
+          return setPageData({
+            ...pageData,
+            rows: lines
+          })
+        }
       }
 
       setLineRows(dummyLinesArray)
@@ -141,7 +146,7 @@ function Calligraphy({
     }
 
     createRows()
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

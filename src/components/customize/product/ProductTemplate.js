@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react"
-import { colors } from "../../../styles/variables"
+import React, { useState, useEffect, useCallback } from "react"
+import { pageMargins, convertToPx, colors } from "../../../styles/variables"
 
 import Holes from "../pageComponents/Holes"
 import Ruled from "../templates/Ruled"
@@ -15,158 +15,161 @@ import CrossGrid from "../templates/CrossGrid"
 import Calligraphy from "../templates/Calligraphy"
 
 function ProductTemplate({
-  borderData,
-  canvasPageSize,
   currentPageSide,
-  dashedLineData,
   pageData,
+  maxSvgSize,
   setPageData,
-  setPageContentSize,
   setSelectedPageSvg,
-  workingPageHeight,
-  workingPageWidth,
+  setSvgSize,
 }) {
-  const leftPageRef = useRef()
-  const rightPageRef = useRef()
+  const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  const minimumMargin = pageMargins.minimum
+  const [node, setNode] = useState()
+  const [pagePosition, setPagePosition] = useState({})
+
+  const templateRef = useCallback(node => {
+    if (node !== null) {
+      setNode(node)
+      setSelectedPageSvg(node)
+    }
+  }, [])
 
   useEffect(() => {
-    if (currentPageSide === "left") {
-      const currentPage = leftPageRef.current
-      const currentPageSize = currentPage.getBBox()
+    if (node) {
+      setSelectedPageSvg(node)
 
-      setSelectedPageSvg(leftPageRef.current)
-      setPageContentSize({
-        height: currentPageSize.height,
-        width: currentPageSize.width,
-      })
-    }
-    else {
-      new Promise((resolve, reject) => {
-        resolve(rightPageRef.current)
-      }).then(response => {
-        const currentPageSize = response.getBBox()
-
-        setSelectedPageSvg(response.current)
-        setPageContentSize({
-          height: currentPageSize.height,
-          width: currentPageSize.width,
+      setTimeout(() => {
+        const dimensions = node.getBBox()
+        setSvgSize({
+          height: dimensions.height,
+          width: dimensions.width,
         })
-      })
+      }, 10)
     }
-  }, [currentPageSide, pageData, leftPageRef, rightPageRef])
+
+    const margin = {
+      top: convertToPx(marginTop),
+      right: convertToPx(marginRight),
+      bottom: convertToPx(marginBottom),
+      left: convertToPx(marginLeft),
+    }
+
+    setPagePosition({
+      rightX: convertToPx(10.16) + margin.left,
+      leftX: minimumMargin + margin.left,
+      bothY: minimumMargin + margin.top,
+    })
+  }, [currentPageSide, pageData, node, maxSvgSize])
 
   if (pageData.show) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={canvasPageSize.height}
-        width={canvasPageSize.width}
-        x="0"
-        y="0"
+        height={svgHeight}
+        width={svgWidth}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          height={canvasPageSize.height}
-          width={canvasPageSize.width}
+          width={svgWidth}
+          height={svgHeight}
           x="0"
           y="0"
         >
           <rect
-            height={canvasPageSize.height}
-            width={canvasPageSize.width}
-            fill="#fff"
+            width={svgWidth}
+            height={svgHeight}
+            fill={colors.white}
             stroke={colors.gray.threeHundred}
             strokeWidth="2px"
-          >
-          </rect>
-          <Holes currentPageSide={currentPageSide} canvasPageSize={canvasPageSize} />
+          ></rect>
+          <Holes
+            currentPageSide={currentPageSide}
+            pageHeight={svgHeight}
+            pageWidth={svgWidth}
+          />
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          ref={currentPageSide === "left" ? leftPageRef : rightPageRef}
-          height={workingPageHeight}
-          width={workingPageWidth}
-          viewBox={`0 0 ${pageData.pageWidth} ${pageData.pageHeight}`}
-          x={currentPageSide === "left" ? 12 : 38.4}
-          y="12"
+          ref={templateRef}
+          id={currentPageSide === "left" ? "left-page" : "right-page"}
+          x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
+          y={pagePosition.bothY}
+          width={pageData.maxContentWidth}
+          height={pageData.maxContentHeight}
+          fill="#fff"
         >
           {pageData.template === "blank" && (
             <Blank
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
-              currentPageSide={currentPageSide}
             />
           )}
           {pageData.template === "ruled" && (
             <Ruled
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
-              currentPageSide={currentPageSide}
             />
           )}
           {pageData.template === "dot" && (
             <Dot
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
-              currentPageSide={currentPageSide}
             />
           )}
           {pageData.template === "graph" && (
             <Graph
-              borderData={borderData}
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "hexagon" && (
             <Hexagon
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
-              currentPageSide={currentPageSide}
             />
           )}
           {pageData.template === "isometric" && (
             <Isometric
-              borderData={borderData}
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "seyes" && (
             <Seyes
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "music" && (
             <Music
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "handwriting" && (
             <Handwriting
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "cross" && (
             <CrossGrid
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />
           )}
           {pageData.template === "calligraphy" && (
             <Calligraphy
-              dashedLineData={dashedLineData}
-              currentPageSide={currentPageSide}
+              maxSvgSize={maxSvgSize}
               pageData={pageData}
               setPageData={setPageData}
             />

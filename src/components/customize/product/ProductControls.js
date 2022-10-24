@@ -1,8 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, fonts, convertFloatFixed, convertToMM } from "../../../styles/variables"
-import { CircleNotch, ArrowRight } from "phosphor-react"
-import { GatsbyImage } from "gatsby-plugin-image"
+import { CircleNotch, ArrowLeft } from "phosphor-react"
 
 import Icon from "../../Icon"
 import Content from "../../Content"
@@ -43,15 +42,12 @@ const TemplatesContent = styled.div`
 const TemplatesHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   padding: 1rem;
   border-bottom: 1px solid ${colors.gray.threeHundred};
   border-radius: 0.5rem 0.5rem 0 0;
-  font-family: ${fonts.secondary};
-  font-size: 0.875rem;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.twoHundred};
   }
 `
 
@@ -72,9 +68,9 @@ const PageButtonWrapper = styled.div`
 
 const PageButton = styled(Button)`
   background-color: ${colors.white};
+  color: ${colors.gray.nineHundred};
   font-size: 0.75rem;
   padding: 0.25rem;
-  border-radius: 0.25rem;
   flex: 1;
   position: relative;
   &:not(:last-child) {
@@ -83,7 +79,7 @@ const PageButton = styled(Button)`
   &:hover,
   &:focus {
     box-shadow: none;
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.twoHundred};
   }
   &.is-active {
     color: ${colors.gray.oneHundred};
@@ -92,14 +88,13 @@ const PageButton = styled(Button)`
 `
 
 function ProductControls({
-  canvasPageSize,
   currentPageSide,
-  pageContentSize,
   pageData,
   setCurrentPageSide,
   setLeftPageData,
   setPageData,
   setRightPageData,
+  svgSize,
   toast,
 }) {
   const [loading, setLoading] = useState(false)
@@ -133,10 +128,10 @@ function ProductControls({
           template: "",
         })}
       >
-        <span>Back to images</span>
-        <Icon margin="0 0 0 0.125rem">
-          <ArrowRight size="1rem" />
+        <Icon margin="0 4px 0 0">
+          <ArrowLeft size="1rem" />
         </Icon>
+        <span>Back to images</span>
       </TemplatesHeader>
       <TemplatesContent>
         <Content
@@ -171,100 +166,90 @@ function ProductControls({
           <>
             {pageData.template === "ruled" && (
               <RuledControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "dot" && (
               <DotControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "graph" && (
               <GraphControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "hexagon" && (
               <HexagonControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "isometric" && (
               <IsometricControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "seyes" && (
               <SeyesControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "music" && (
               <MusicControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "handwriting" && (
               <HandwritingControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "cross" && (
               <CrossGridControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "calligraphy" && (
               <CalligraphyControls
-                canvasPageSize={canvasPageSize}
+                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
-                pageContentSize={pageContentSize}
                 pageData={pageData}
                 setPageData={setPageData}
               />

@@ -27,8 +27,6 @@ function ProductInfoBox({
           headingfontfamily={fonts.secondary}
           h3margin="0"
           h3fontsize="0.75rem"
-          h3color={colors.gray.sixHundred}
-          h3fontweight="400"
           margin="4px 16px 0 0"
         >
           <h3>{heading}</h3>

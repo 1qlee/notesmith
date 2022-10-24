@@ -73,21 +73,14 @@ const ProductInfo = ({
     <>
       <Content
         margin="0 0 1rem 0"
-        h1fontsize="2rem"
+        h1fontsize="3rem"
         h1margin="0"
         h2fontsize="2rem"
         h2fontweight="400"
         h2margin="0"
       >
-        <Flexbox
-          flex="flex"
-          wrap="flex-wrap"
-          alignitems="center"
-          justifycontent="space-between"
-        >
-          <h1>{bookData.name}</h1>
-          <h2>${bookData.price / 100}</h2>
-        </Flexbox>
+        <h1>{bookData.name}</h1>
+        <h2>${bookData.price / 100}</h2>
       </Content>
       <Content
         paragraphfontsize="1.2rem"

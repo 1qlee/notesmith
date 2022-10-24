@@ -2,32 +2,31 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Music({
+  maxSvgSize,
   pageData,
   setPageData,
 }) {
   const [staves, setStaves] = useState([])
-  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness} = pageData
+  const { opacity, spacing, staffSpacing, thickness} = pageData
+  const { height, width } = maxSvgSize
   const lineSpacing = convertToPx(spacing)
-  const staffSpacing = convertToPx(groupSpacing)
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
-  const marginTop = convertToPx(pageData.marginTop)
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const marginRight = convertToPx(pageData.marginRight)
+  const stavesSpacing = convertToPx(staffSpacing)
 
   function createStaves() {
     const stavesArray = []
 
-    for (let row = 0; row < rows; row++) {
+    for (let staff = 0; staff < pageData.staves; staff++) {
       const linesArray = []
 
       for (let line = 0; line < 5; line++) {
         const staffHeight = lineSpacing * 4 + lineThickness * 4 // staff always has 5 lines, but multiply by 4 since first line doesn't really count
-        const spaceBtwnStaves = row * (staffSpacing + staffHeight + lineThickness) // have to add lineThickness to escape the previous staff's last line
-        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness // the first line of the page needs to escape deadspace at the top
-        const posX1 = marginLeft
-        const posX2 = pageWidth - marginRight
-        const posY1 = marginTop + line * lineSpacing + spaceBtwnStaves + spaceBtwnLines
+        const spaceBtwnStaves = staff * (stavesSpacing + staffHeight + lineThickness) // have to add lineThickness to escape the previous staff's last line
+        const spaceBtwnLines = (line === 0 && staff === 0) ? halfLineThickness : lineThickness * line + halfLineThickness // the first line of the page needs to escape deadspace at the top
+        const posX1 = 0
+        const posX2 = width
+        const posY1 = line * lineSpacing + spaceBtwnStaves + spaceBtwnLines
         const posY2 = posY1
         const lineProps = {
           fill: "none",
@@ -41,12 +40,11 @@ function Music({
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 > pageHeight) {
-          setPageData({
+        if (posY1 > height) {
+          return setPageData({
             ...pageData,
-            rows: row,
+            staves: staff,
           })
-          break
         }
 
         linesArray.push(lineProps)
@@ -60,7 +58,7 @@ function Music({
 
   useEffect(() => {
     createStaves()
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

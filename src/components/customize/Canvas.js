@@ -21,7 +21,6 @@ function Canvas({
   canvasPageTemplates,
   pageData,
   selectedPage,
-  setPageContentSize,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
@@ -48,7 +47,6 @@ function Canvas({
             canvasPageTemplates={canvasPageTemplates}
             pageData={pageData}
             selectedPage={selectedPage}
-            setPageContentSize={setPageContentSize}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}

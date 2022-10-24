@@ -1,266 +1,71 @@
 import React from "react"
-import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
-import { StyledLabel, RangeInput, NumberInput } from "../../form/FormComponents"
-import { Flexbox } from "../../layout/Flexbox"
+import { ControlFlexWrapper, ControlFlexChild } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
 import MarginControls from "./components/MarginControls"
+import RowControls from "./components/RowControls"
+import ColumnControls from "./components/ColumnControls"
+import OpacityControls from "./components/OpacityControls"
+import ThicknessControls from "./components/ThicknessControls"
+import RowSpacingControls from "./components/RowSpacingControls"
+import ColumnSpacingControls from "./components/ColumnSpacingControls"
+import CrossControls from "./components/CrossControls"
 
 function CrossGridControls({
   maximumMarginHeight,
   maximumMarginWidth,
-  pageContentSize,
   pageData,
   setPageData,
-}) {
-  const totalHorizontalMargin = convertToMM(pageData.pageWidth - pageContentSize.width)
-  const centeredHorizontalMargin = convertFloatFixed(totalHorizontalMargin / 2, 3)
-  const totalVerticalMargin = convertToMM(pageData.pageHeight - pageContentSize.height)
-  const centeredVerticalMargin = convertFloatFixed(totalVerticalMargin / 2, 3)
-  const bottomAlignedMargin = convertFloatFixed(centeredVerticalMargin * 2, 3)
-
-  function changeAlignment(value) {
-    switch(value) {
-      case "left":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: 0,
-        })
-        break
-      case "center":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: centeredHorizontalMargin,
-        })
-        break
-      case "right":
-        setPageData({
-          ...pageData,
-          alignmentHorizontal: value,
-          marginLeft: totalHorizontalMargin,
-        })
-        break
-      case "top":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: 0,
-        })
-        break
-      case "middle":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: centeredVerticalMargin,
-        })
-        break
-      case "bottom":
-        setPageData({
-          ...pageData,
-          alignmentVertical: value,
-          marginTop: bottomAlignedMargin,
-        })
-        break
-      default:
-        break
-    }
-  }
-
+  svgSize,
+}) { 
   return (
     <>
       <AlignmentControls
         pageData={pageData}
         setPageData={setPageData}
-        changeAlignment={changeAlignment}
+        svgSize={svgSize}
       />
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        margin="0 0 1rem"
-      >
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          margin="0 0.5rem 0 0"
-          width="33%"
+      <MarginControls
+        pageData={pageData}
+        setPageData={setPageData}
+        maximumMarginHeight={maximumMarginHeight}
+        maximumMarginWidth={maximumMarginWidth}
+      />
+      <ControlFlexWrapper>
+        <ControlFlexChild
+          margin="0 8px 0 0"
+          flex={1}
         >
-          <StyledLabel>Rows</StyledLabel>
-          <NumberInput
-            value={pageData.rows}
-            min={1}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              rows: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
+          <RowControls
+            pageData={pageData}
+            setPageData={setPageData}
           />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          margin="0 0.5rem 0 0"
-          width="33%"
+        </ControlFlexChild>
+        <ControlFlexChild
+          flex={1}
         >
-          <StyledLabel>Columns</StyledLabel>
-          <NumberInput
-            value={pageData.columns}
-            min={1}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              columns: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
+          <ColumnControls
+            pageData={pageData}
+            setPageData={setPageData}
           />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          width="33%"
-        >
-          <StyledLabel>Spacing</StyledLabel>
-          <NumberInput
-            value={pageData.spacing}
-            min={0}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              alignmentVertical: "",
-              spacing: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
-          />
-        </Flexbox>
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        alignitems="center"
-        margin="0 0 1rem"
-      >
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          margin="0 0.5rem 0 0"
-          width="50%"
-        >
-          <StyledLabel>Top margin</StyledLabel>
-          <NumberInput
-            value={pageData.marginTop}
-            min={0}
-            max={maximumMarginHeight}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              marginTop: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
-          />
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexdirection="column"
-          width="50%"
-        >
-          <StyledLabel>Left margin</StyledLabel>
-          <NumberInput
-            value={pageData.marginLeft}
-            min={0}
-            max={maximumMarginWidth}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginLeft: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={1}
-          />
-        </Flexbox>
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        flexdirection="column"
-        margin="0 0 1rem 0"
-      >
-        <StyledLabel>Opacity</StyledLabel>
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-          width="100%"
-        >
-          <NumberInput
-            value={pageData.opacity}
-            min={0.5}
-            max={1}
-            onChange={value => setPageData({
-              ...pageData,
-              opacity: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={0.01}
-            width="4.25rem"
-          />
-          <RangeInput
-            margin="0 0 0 0.5rem"
-            width="100%"
-            min={0.5}
-            step={0.01}
-            max={1}
-            value={pageData.opacity}
-            onChange={e => setPageData({
-              ...pageData,
-              opacity: e.target.value,
-            })}
-          />
-        </Flexbox>
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        flexdirection="column"
-        margin="0 0 1rem 0"
-      >
-        <StyledLabel>Cross size</StyledLabel>
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-          width="100%"
-        >
-          <NumberInput
-            value={pageData.size}
-            min={1}
-            max={5}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              alignmentHorizontal: "",
-              size: value,
-            })}
-            padding="0.5rem 1.5rem 0.5rem 0.5rem"
-            step={0.01}
-            width="4.25rem"
-          />
-          <RangeInput
-            margin="0 0 0 0.5rem"
-            width="100%"
-            min={1}
-            step={0.01}
-            max={5}
-            value={pageData.size}
-            onChange={e => setPageData({
-              ...pageData,
-              size: e.target.value,
-              alignmentVertical: "",
-              alignmentHorizontal: "",
-            })}
-          />
-        </Flexbox>
-      </Flexbox>
+        </ControlFlexChild>
+      </ControlFlexWrapper>
+      <RowSpacingControls 
+        pageData={pageData}
+        setPageData={setPageData}
+      />
+      <ColumnSpacingControls 
+        pageData={pageData}
+        setPageData={setPageData}
+      />
+      <CrossControls 
+        pageData={pageData}
+        setPageData={setPageData}
+      />
+      <OpacityControls
+        pageData={pageData}
+        setPageData={setPageData}
+      />
     </>
   )
 }

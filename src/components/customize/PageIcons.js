@@ -591,8 +591,12 @@ function SeyesPageIcon({
     spacing: 2,
     rows: 91,
     columns: 12,
-    marginTop: 15,
-    marginLeft: 30,
+    columnSpacing: 30,
+    rowSpacing: 15,
+    marginTop: 0,
+    marginLeft: 0,
+    marginBottom: 0,
+    marginRight: 0,
   }
 
   return (
@@ -648,11 +652,8 @@ function MusicPageIcon({
     opacity: 1,
     thickness: 0.088,
     spacing: 2,
-    groupSpacing: 7,
-    rows: 14,
-    marginTop: 0.147,
-    marginLeft: 0,
-    marginRight: 0,
+    staffSpacing: 7,
+    staves: 14,
   }
 
   return (
@@ -885,12 +886,16 @@ function CrossGridPageIcon({
     alignmentVertical: "middle",
     show: isProductPage ? true : false,
     template: "cross",
+    crossSize: 1,
     opacity: 1,
-    spacing: 5,
+    rowSpacing: 5,
+    columnSpacing: 5,
     rows: 35,
     columns: 21,
-    marginTop: 2.271,
-    marginLeft: 2.68,
+    marginTop: 2.104,
+    marginBottom: 2.104,
+    marginLeft: 2.592,
+    marginRight: 2.592,
   }
 
   return (

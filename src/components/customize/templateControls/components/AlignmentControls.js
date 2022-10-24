@@ -27,7 +27,7 @@ const AlignmentButton = styled(Button)`
   &:hover,
   &:focus {
     box-shadow: none;
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.twoHundred};
   }
   &.is-active {
     color: ${colors.gray.oneHundred};
@@ -40,7 +40,7 @@ function AlignmentControls({
   setPageData,
   svgSize,
 }) {
-  const { maxContentHeight, maxContentWidth, thickness } = pageData
+  const { maxContentHeight, maxContentWidth, thickness, crossSize } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
   let verticalTrim, horizontalTrim = 0
@@ -54,8 +54,22 @@ function AlignmentControls({
       horizontalTrim = thickness * 2
       break
     case "hexagon":
-      horizontalTrim = thickness
       verticalTrim = thickness
+      horizontalTrim = thickness
+      break
+    case "music":
+      verticalTrim = thickness
+      break
+    case "handwriting":
+      verticalTrim = thickness
+      break
+    case "cross":
+      verticalTrim = 0.333
+      horizontalTrim = thickness * 2
+      break
+    case "calligraphy":
+      verticalTrim = 0.333
+      horizontalTrim = 0
       break
     default:
       verticalTrim = 0
@@ -105,6 +119,7 @@ function AlignmentControls({
           ...pageData,
           alignmentVertical: value,
           marginTop: 0,
+          marginBottom: verticalSpace,
         })
         break
       case "middle":
@@ -112,7 +127,7 @@ function AlignmentControls({
           ...pageData,
           alignmentVertical: value,
           marginTop: verticalCenter,
-          marginBottom: 0,
+          marginBottom: verticalCenter,
         })
         break
       case "bottom":
@@ -120,6 +135,7 @@ function AlignmentControls({
           ...pageData,
           alignmentVertical: value,
           marginTop: verticalSpace,
+          marginBottom: 0,
         })
         break
       default:

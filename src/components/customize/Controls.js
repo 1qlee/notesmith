@@ -21,7 +21,7 @@ const ControlsContent = styled.div`
   background-color: ${colors.white};
   height: 100%;
   overflow-y: auto;
-  overflow: hidden;
+  overflow-x: hidden;
   padding: 1rem;
   width: 100%;
   &::-webkit-scrollbar {
@@ -157,7 +157,6 @@ function Controls({
           <ControlsFooter>
             <Button
               backgroundcolor={colors.gray.nineHundred}
-              borderradius="0"
               color={colors.gray.oneHundred}
               padding="1rem"
               width="100%"

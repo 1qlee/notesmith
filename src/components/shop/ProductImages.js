@@ -11,8 +11,9 @@ const StyledProductImages = styled.div`
 `
 
 const ThumbnailRow = styled.div`
-  display: flex;
-  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 `
 
 const Thumbnail = styled.figure`
@@ -20,6 +21,7 @@ const Thumbnail = styled.figure`
   height: 80px;
   padding: 0.3rem;
   border: 2px solid ${colors.gray.threeHundred};
+  border-radius: 8px;
   transition: border 0.3s ease;
   margin: 0.5rem;
   &.is-active {
@@ -85,6 +87,7 @@ function ProductImages({
     }
 
     parseImages(productImages, coverColor, productThumbnails)
+    console.log(allImages)
   }, [productImages, coverColor])
 
   function handleSelectImage(img, index) {

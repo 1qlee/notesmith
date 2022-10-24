@@ -150,8 +150,6 @@ const StyledBook3d = styled.div`
 `
 
 function Book3d({
-  borderData,
-  dashedLineData,
   pageData,
   setPageData,
 }) {
@@ -188,8 +186,6 @@ function Book3d({
             {pageData.template ? (
               <>
                 <DemoTemplate
-                  borderData={borderData}
-                  dashedLineData={dashedLineData}
                   pageData={pageData}
                   setPageData={setPageData}
                 />
@@ -197,7 +193,7 @@ function Book3d({
                   className="image"
                   src="../../images/index/blank-page.jpg"
                   alt="Notesmith logo image"
-                  placeholder="tracedSVG"
+                  placeholder="blurred"
                   quality={100}
                 />
               </>
@@ -208,7 +204,7 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-white.jpg"
                     alt="Notesmith logo image"
-                    placeholder="tracedSVG"
+                    placeholder="blurred"
                     quality={100}
                   />
                 )}
@@ -217,7 +213,7 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-black.jpg"
                     alt="Notesmith logo image"
-                    placeholder="tracedSVG"
+                    placeholder="blurred"
                     quality={100}
                   />
                 )}
@@ -234,7 +230,7 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-white.jpg"
                 alt="Notesmith logo image"
-                placeholder="tracedSVG"
+                placeholder="blurred"
                 quality={100}
               />
             )}
@@ -243,7 +239,7 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-black.jpg"
                 alt="Notesmith logo image"
-                placeholder="tracedSVG"
+                placeholder="blurred"
                 quality={100}
               />
             )}

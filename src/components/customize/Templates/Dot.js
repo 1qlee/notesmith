@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Dot({ 
-  contentSize,
+  maxSvgSize,
   pageData, 
   setPageData 
 }) {
   const [dots, setDots] = useState([])
   const { radius, columns, rows, opacity, rowSpacing, columnSpacing } = pageData
-  const { height, width } = contentSize
+  const { height, width } = maxSvgSize
   const dotRadius = convertToPx(radius)
   const dotColumnSpacing = convertToPx(columnSpacing)
   const dotRowSpacing = convertToPx(rowSpacing)
@@ -67,7 +67,7 @@ function Dot({
 
   useEffect(() => {
     createDots()
-  }, [pageData, contentSize])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

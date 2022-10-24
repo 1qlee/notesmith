@@ -437,19 +437,19 @@ const StyledRange = styled.div`
 
 const StyledCheckbox = styled.div`
   align-items: center;
-  border-radius: 0.25rem;
+  border-radius: 4px;
+  border: 1px solid ${colors.gray.nineHundred};
   display: flex;
   flex: ${props => props.flex || "1"};
   margin: ${props => props.margin};
-  padding: ${props => props.padding || "0.25rem 0.5rem"};
+  padding: ${props => props.padding || "8px"};
   transition: background-color 0.2s;
-  justify-content: center;
   span {
     font-family: ${fonts.secondary};
     font-size: ${props => props.fontsize || "0.75rem"}
   }
   &:hover {
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.twoHundred};
     cursor: pointer;
   }
 `

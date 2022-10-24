@@ -1,4 +1,6 @@
 import styled from "styled-components"
+import { colors } from "../../../../styles/variables"
+
 import Button from "../../../Button"
 
 const ControlWrapper = styled.div`
@@ -9,9 +11,11 @@ const ControlWrapper = styled.div`
 
 const ControlFlexWrapper = styled.div`
   display: flex;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: ${props => props.alignitems || "center"};
   position: relative;
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
 `
 
 const ControlFlexChild = styled.div`
@@ -30,4 +34,11 @@ const ControlInnerButton = styled(Button)`
   top: 6px;
 `
 
-export { ControlWrapper, ControlFlexWrapper, ControlFlexChild, ControlInputGroup, ControlInnerButton }
+const BorderOptions = styled.div`
+  border: 1px solid ${colors.gray.nineHundred};
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+`
+
+export { BorderOptions, ControlWrapper, ControlFlexWrapper, ControlFlexChild, ControlInputGroup, ControlInnerButton }

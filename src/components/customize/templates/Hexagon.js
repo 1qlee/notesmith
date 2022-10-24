@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Hexagon({
-  contentSize,
+  maxSvgSize,
   pageData,
   setPageData,
 }) {
   const { hexagonRadius, thickness, rows, opacity } = pageData
-  const { width, height } = contentSize
+  const { width, height } = maxSvgSize
   const hexRadius = convertToPx(hexagonRadius)
   const hexThickness = convertToPx(thickness)
   const hexWidth = Math.sqrt(3) * hexRadius
@@ -41,9 +41,7 @@ function Hexagon({
       const hexagonsArray = []
 
       for (let row = 0; row < rows; row++) {
-        console.log(width)
         const numOfCols = Math.floor(width / hexWidth)
-        console.log(numOfCols)
         const halfHexThickness = hexThickness / 2
 
         for (let col = 0; col < numOfCols; col++) {
@@ -80,7 +78,7 @@ function Hexagon({
     }
 
     createHexagons()
-  }, [pageData, contentSize])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

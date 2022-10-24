@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { spacing, convertToPx, fonts, convertToMM, widths } from "../../../../styles/variables"
+import { spacing, convertToPx, fonts, pageMargins, widths } from "../../../../styles/variables"
 import { ToastContainer, toast } from 'react-toastify'
-import "../../../../styles/gallery.css"
 
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
@@ -19,18 +18,10 @@ import ProductControls from "../../../../components/customize/product/ProductCon
 const ProductPage = ({ data, params }) => {
   const { productData, productImages, productThumbnails } = data
   const { coverColor } = params
-  const [currentPageSide, setCurrentPageSide] = useState("right")
-  const canvasPageSize = {
-    height: 816,
-    width: 528,
-  }
   const [bookData, setBookData] = useState({
     ...productData,
     coverColor: coverColor,
   })
-  const pageHeight = bookData.heightPixel - convertToPx(6.35)
-  const pageWidth = bookData.widthPixel - convertToPx(13.335)
-  const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
@@ -43,44 +34,51 @@ const ProductPage = ({ data, params }) => {
       opacity: 1,
     },
     columns: 27,
-    contentHeight: convertToMM(pageHeight),
-    contentWidth: convertToMM(pageWidth),
+    columnSpacing: 5,
     dashedLineData: {
       sync: true,
       thickness: 0.088,
       opacity: 1,
-      dashArray: "",
+      dashArray: "2 4 4 2",
       dashOffset: 0,
     },
     dscSpacing: 5,
-    groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
+    maxContentHeight: bookData.heightPixel - pageMargins.vertical,
+    maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
     opacity: 1,
-    pageHeight: pageHeight,
-    pageWidth: pageWidth,
     radius: 0.1,
     rows: 42,
+    rowSpacing: 5,
     show: false,
-    size: 1,
+    crossSize: 1,
     slantAngle: 55,
     slants: 20,
     slantSpacing: 5,
     spacing: 5,
+    staffSpacing: 5,
+    staves: 9,
+    svgHeight: bookData.heightPixel,
+    svgWidth: bookData.widthPixel,
     template: "",
     thickness: 0.088,
     xHeight: 5,
   })
+  const [svgSize, setSvgSize] = useState({
+    height: bookData.heightPixel - pageMargins.vertical,
+    width: bookData.widthPixel - pageMargins.horizontal,
+  })
+  const [maxSvgSize, setMaxSvgSize] = useState({})
+  const [currentPageSide, setCurrentPageSide] = useState("right")
+  const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
-  const [pageContentSize, setPageContentSize] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
-  const workingPageHeight = canvasPageSize.height - convertToPx(6.35)
-  const workingPageWidth = canvasPageSize.width - convertToPx(13.335)
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -97,7 +95,12 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
-  }, [bookData.coverColor, coverColor])
+
+    setMaxSvgSize({
+      height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
+      width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
+    })
+  }, [bookData, coverColor, pageData])
 
   return (
     <Layout>
@@ -109,36 +112,45 @@ const ProductPage = ({ data, params }) => {
             <LayoutContainer>
               <SectionContent>
                 <Grid
-                  columns="300px 1fr 400px"
+                  columns="400px 1fr 300px"
                   columnGap={spacing.large}
                 >
+                  <Cell>
+                    <ProductInfo
+                      bookData={bookData}
+                      cartThumbnail={cartThumbnail}
+                      leftPageData={leftPageData}
+                      rightPageData={rightPageData}
+                      pageData={pageData}
+                      setBookData={setBookData}
+                      setPageData={setPageData}
+                      toast={toast}
+                    />
+                  </Cell>
                   {pageData.show ? (
                     <>
+                      <Cell center>
+                        <ProductTemplate
+                          bookData={bookData}
+                          maxSvgSize={maxSvgSize}
+                          currentPageSide={currentPageSide}
+                          pageData={pageData}
+                          setPageData={setPageData}
+                          setSelectedPageSvg={setSelectedPageSvg}
+                          setSvgSize={setSvgSize}
+                        />
+                      </Cell>
                       <Cell>
                         <ProductControls
-                          canvasPageSize={canvasPageSize}
                           currentPageSide={currentPageSide}
-                          pageContentSize={pageContentSize}
                           pageData={pageData}
                           selectedPageSvg={selectedPageSvg}
                           setCurrentPageSide={setCurrentPageSide}
                           setLeftPageData={setLeftPageData}
                           setPageData={setPageData}
                           setRightPageData={setRightPageData}
+                          svgSize={svgSize}
                           toast={toast}
-                        />
-                      </Cell>
-                      <Cell center>
-                        <ProductTemplate
-                          bookData={bookData}
-                          canvasPageSize={canvasPageSize}
-                          currentPageSide={currentPageSide}
-                          pageData={pageData}
-                          setPageContentSize={setPageContentSize}
-                          setPageData={setPageData}
-                          setSelectedPageSvg={setSelectedPageSvg}
-                          workingPageHeight={workingPageHeight}
-                          workingPageWidth={workingPageWidth}
                         />
                       </Cell>
                     </>
@@ -152,18 +164,6 @@ const ProductPage = ({ data, params }) => {
                       />
                     </Cell>
                   )}
-                  <Cell>
-                    <ProductInfo
-                      bookData={bookData}
-                      cartThumbnail={cartThumbnail}
-                      leftPageData={leftPageData}
-                      rightPageData={rightPageData}
-                      pageData={pageData}
-                      setBookData={setBookData}
-                      setPageData={setPageData}
-                      toast={toast}
-                    />
-                  </Cell>
                 </Grid>
               </SectionContent>
             </LayoutContainer>

@@ -2,19 +2,18 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
 
 function Handwriting({
+  maxSvgSize,
   pageData,
   setPageData,
 }) {
   const [writingRows, setWritingRows] = useState([])
-  const { pageWidth, pageHeight, opacity, rows, spacing, groupSpacing, thickness, dashedLineData } = pageData
+  const { opacity, rows, spacing, staffSpacing, thickness, dashedLineData } = pageData
+  const { width, height } = maxSvgSize
   const dashOffset = convertToPx(dashedLineData.dashOffset)
   const lineSpacing = convertToPx(spacing)
-  const rowSpacing = convertToPx(groupSpacing)
+  const rowSpacing = convertToPx(staffSpacing)
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
-  const marginTop = convertToPx(pageData.marginTop)
-  const marginLeft = convertToPx(pageData.marginLeft)
-  const marginRight = convertToPx(pageData.marginRight)
 
   function parseDashArray(value) {
     if (value.length > 0) {
@@ -40,9 +39,9 @@ function Handwriting({
         const rowHeight = lineSpacing * 2 + lineThickness * 2 // row always has 3 lines, but multiply by 2 because first line doesn't really count
         const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
         const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness
-        const posX1 = marginLeft
-        const posX2 = pageWidth - marginRight
-        const posY1 = marginTop + line * lineSpacing + spaceBtwnRows + spaceBtwnLines
+        const posX1 = 0
+        const posX2 = width
+        const posY1 = line * lineSpacing + spaceBtwnRows + spaceBtwnLines
         const posY2 = posY1
         let lineProps
 
@@ -76,12 +75,11 @@ function Handwriting({
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 > pageHeight) {
-          setPageData({
+        if (posY1 > height) {
+          return setPageData({
             ...pageData,
             rows: row,
           })
-          break
         }
 
         linesArray.push(lineProps)
@@ -95,7 +93,7 @@ function Handwriting({
 
   useEffect(() => {
     createWritingRows()
-  }, [pageData, dashedLineData])
+  }, [pageData, dashedLineData, maxSvgSize])
 
   return (
     <>

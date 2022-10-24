@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import { pageMargins, convertToPx } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 
@@ -17,15 +17,13 @@ function PageSpread({
   setSelectedPageSvg,
   setSvgSize,
 }) {
-  const { svgWidth, svgHeight, maxContentWidth, maxContentHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const minimumMargin = pageMargins.minimum
+  const [maxSvgSize, setMaxSvgSize] = useState()
   const [currentPageSide, setCurrentPageSide] = useState("")
   const [leftPage, setLeftPage] = useState([])
   const [rightPage, setRightPage] = useState([])
   const [pagePosition, setPagePosition] = useState({})
-  const [contentSize, setContentSize] = useState({})
-  const leftPageRef = useRef()
-  const rightPageRef = useRef()
 
   useEffect(() => {
     // even pages
@@ -75,11 +73,10 @@ function PageSpread({
       spreadX: (canvasSize.width - svgWidth * 2) / 2,
       spreadY: (canvasSize.height - svgHeight) / 2,
     })
-    // svgContentWidth and height have margins calculated into them
-    // we have to calculate the maximum allowed content size including user inputted margins
-    setContentSize({
-      height: maxContentHeight - convertToPx(marginTop) - convertToPx(marginBottom),
-      width: maxContentWidth - convertToPx(marginLeft) - convertToPx(marginRight),
+
+    setMaxSvgSize({
+      height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
+      width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
     })
   }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates])
 
@@ -101,11 +98,10 @@ function PageSpread({
       <Page
         bookData={bookData}
         canvasPageTemplates={canvasPageTemplates}
-        contentSize={contentSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
+        maxSvgSize={maxSvgSize}
         pageData={pageData}
-        pageRef={leftPageRef}
         pageSide="left"
         pageSvg={leftPage}
         pagePosition={pagePosition}
@@ -117,11 +113,10 @@ function PageSpread({
       <Page
         bookData={bookData}
         canvasPageTemplates={canvasPageTemplates}
-        contentSize={contentSize}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
+        maxSvgSize={maxSvgSize}
         pageData={pageData}
-        pageRef={rightPageRef}
         pageSide="right"
         pageSvg={rightPage}
         pagePosition={pagePosition}
@@ -137,11 +132,10 @@ function PageSpread({
 function Page({
   bookData,
   canvasPageTemplates,
-  contentSize,
   currentPageSide,
   isSelected,
+  maxSvgSize,
   pageData,
-  pageRef,
   pagePosition,
   pageSide,
   pageSvg,
@@ -170,7 +164,7 @@ function Page({
         {pageData.template && currentPageSide === pageSide ? (
           <Template
             bookData={bookData}
-            contentSize={contentSize}
+            maxSvgSize={maxSvgSize}
             currentPageSide={currentPageSide}
             pageData={pageData}
             pagePosition={pagePosition}
@@ -181,7 +175,6 @@ function Page({
         ) : (
           <SVG
             xmlns="http://www.w3.org/2000/svg"
-            ref={pageRef}
             x={pageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
             y={pagePosition.bothY}
             width={pageData.maxContentWidth}

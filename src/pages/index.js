@@ -41,9 +41,22 @@ const IndexPage = ({ data }) => {
     alignmentVertical: "top",
     angle: 30,
     ascSpacing: 5,
+    borderData: {
+      sync: true,
+      toggle: true,
+      thickness: 0.088,
+      opacity: 1,
+    },
     columns: 27,
+    columnSpacing: 5,
+    dashedLineData: {
+      sync: true,
+      thickness: 0.088,
+      opacity: 1,
+      dashArray: "2 4 4 2",
+      dashOffset: 0,
+    },
     dscSpacing: 5,
-    groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
     marginBottom: 0,
@@ -51,16 +64,19 @@ const IndexPage = ({ data }) => {
     marginRight: 0,
     marginTop: 0,
     opacity: 1,
-    pageHeight: 607,
-    pageWidth: 366,
     radius: 0.1,
     rows: 42,
+    rowSpacing: 5,
     show: false,
-    size: 1,
+    crossSize: 1,
     slantAngle: 55,
-    slants: 21,
+    slants: 20,
     slantSpacing: 5,
-    spacing: 3,
+    spacing: 5,
+    staffSpacing: 5,
+    staves: 9,
+    svgHeight: 607,
+    svgWidth: 366,
     template: "",
     thickness: 0.088,
     xHeight: 5,
@@ -70,19 +86,6 @@ const IndexPage = ({ data }) => {
   }
   const rightPageData = {
     template: ""
-  }
-  const borderData = {
-    sync: true,
-    toggle: false,
-    thickness: 0.088,
-    opacity: 1,
-  }
-  const dashedLineData = {
-    sync: true,
-    thickness: 0.088,
-    opacity: 1,
-    dashArray: "",
-    dashOffset: 0,
   }
 
   return (
@@ -211,7 +214,7 @@ const IndexPage = ({ data }) => {
                           fontfamily={fonts.secondary}
                           texttransform="uppercase"
                         >
-                          Learn More
+                          Shop notebooks
                         </TextLink>
                         <Icon
                           margin="0 0 0 0.25rem"
@@ -223,8 +226,6 @@ const IndexPage = ({ data }) => {
                   </Grid>
                   <Cell>
                     <Book3d 
-                      borderData={borderData}
-                      dashedLineData={dashedLineData}
                       pageData={pageData}
                       setPageData={setPageData}
                     />

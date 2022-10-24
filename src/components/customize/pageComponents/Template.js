@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react"
-import { convertToPx } from "../../../styles/variables"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -15,7 +14,7 @@ import Calligraphy from "../templates/Calligraphy"
 
 function Template({
   currentPageSide,
-  contentSize,
+  maxSvgSize,
   pageData,
   pagePosition,
   setPageData,
@@ -24,7 +23,7 @@ function Template({
 }) {
   const [node, setNode] = useState()
 
-  const mRef = useCallback(node => {
+  const templateRef = useCallback(node => {
     if (node !== null) {
       setNode(node)
     }
@@ -43,12 +42,12 @@ function Template({
       }, 10)
     }
 
-  }, [pageData, pagePosition, node, contentSize])
+  }, [pageData, pagePosition, node, maxSvgSize])
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      ref={mRef}
+      ref={templateRef}
       id={currentPageSide === "left" ? "left-page" : "right-page"}
       x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
       y={pagePosition.bothY}
@@ -59,75 +58,75 @@ function Template({
       {pageData.template === "blank" && (
         <Blank
           pageData={pageData}
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
         />
       )}
       {pageData.template === "ruled" && (
         <Ruled
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "dot" && (
         <Dot
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "graph" && (
         <Graph
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "hexagon" && (
         <Hexagon
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "isometric" && (
         <Isometric
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "seyes" && (
         <Seyes
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "music" && (
         <Music
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "handwriting" && (
         <Handwriting
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "cross" && (
         <CrossGrid
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />
       )}
       {pageData.template === "calligraphy" && (
         <Calligraphy
-          contentSize={contentSize}
+          maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
         />

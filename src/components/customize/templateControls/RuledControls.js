@@ -4,7 +4,7 @@ import { ControlWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
 import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
-import RangeControls from "./components/RangeControls"
+import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
 import ThicknessControls from "./components/ThicknessControls"
 
@@ -34,15 +34,7 @@ function RuledControls({
           setPageData={setPageData}
         />
       </ControlWrapper>
-      <RangeControls 
-        property="spacing"
-        propertyName="Spacing"
-        propertyObj={{}}
-        inputProps={{
-          min: 1,
-          max: 255,
-          step: 1,
-        }}
+      <SpacingControls 
         pageData={pageData}
         setPageData={setPageData}
       />

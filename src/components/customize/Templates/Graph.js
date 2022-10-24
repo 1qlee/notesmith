@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Graph({ 
-  contentSize,
+  maxSvgSize,
   pageData, 
   setPageData,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
   const { thickness, opacity, columns, rows, columnSpacing, rowSpacing } = pageData
-  const { width, height } = contentSize
+  const { width, height } = maxSvgSize
   const lineColumnSpacing = convertToPx(columnSpacing)
   const lineRowSpacing = convertToPx(rowSpacing)
   const lineThickness = convertToPx(thickness)
@@ -53,11 +53,10 @@ function Graph({
 
       // break the loop if columns break past the right side margin
       if (lineX + lineOffset > width) {
-        setPageData({
+        return setPageData({
           ...pageData,
           columns: column,
         })
-        break
       }
       else {
         lineColumnsArray.push(line)
@@ -107,11 +106,10 @@ function Graph({
       // loop will exit if the last line has passed the height of the page
       if (lineY + lineOffset > height) {
         // change the number of rows displayed
-        setPageData({
+        return setPageData({
           ...pageData,
           rows: row,
         })
-        break
       }
       else {
         lineRowsArray.push(line)
@@ -124,7 +122,7 @@ function Graph({
   useEffect(() => {
     createRows()
     createColumns()
-  }, [pageData, contentSize])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

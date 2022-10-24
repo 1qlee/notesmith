@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react"
 import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Ruled({
-  contentSize,
+  maxSvgSize,
   pageData,
   setPageData,
 }) {
   const [lines, setLines] = useState([])
   const { thickness, spacing, opacity, rows } = pageData
-  const { width, height } = contentSize
+  const { width, height } = maxSvgSize
   const lineThickness = convertToPx(thickness)
   const lineSpacing = convertToPx(spacing)
 
@@ -53,7 +53,7 @@ function Ruled({
 
   useEffect(() => {
     createLines()
-  }, [pageData, contentSize])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

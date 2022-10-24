@@ -30,6 +30,7 @@ function RangeControls({
               ...propertyObj,
               [property]: value,
             })}
+            max={max}
             padding="0.5rem 1.5rem 0.5rem 0.5rem"
             step={step}
           />

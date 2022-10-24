@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { fonts, pageMargins } from "../../styles/variables"
+import { fonts, pageMargins, convertToPx } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { v4 as uuidv4 } from 'uuid'
 import { ToastContainer, toast } from 'react-toastify'
@@ -49,31 +49,32 @@ const Editor = ({
       sync: true,
       thickness: 0.088,
       opacity: 1,
-      dashArray: "",
+      dashArray: "2 4 4 2",
       dashOffset: 0,
     },
     dscSpacing: 5,
-    groupSpacing: 5,
     hexagonRadius: 1,
     lineWidth: 100,
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
-    opacity: 1,
-    svgHeight: bookData.heightPixel,
-    svgWidth: bookData.widthPixel,
     maxContentHeight: bookData.heightPixel - pageMargins.vertical,
     maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
+    opacity: 1,
     radius: 0.1,
     rows: 42,
     rowSpacing: 5,
     show: false,
-    size: 1,
+    crossSize: 1,
     slantAngle: 55,
     slants: 20,
     slantSpacing: 5,
     spacing: 5,
+    staffSpacing: 5,
+    staves: 9,
+    svgHeight: bookData.heightPixel,
+    svgWidth: bookData.widthPixel,
     template: "",
     thickness: 0.088,
     xHeight: 5,
@@ -115,7 +116,6 @@ const Editor = ({
   }
 
   useEffect(() => {
-    console.log("editor rendered")
     // queries db for the book by bookId
     async function getBook() {
       // ref for the book using bookId in the URL

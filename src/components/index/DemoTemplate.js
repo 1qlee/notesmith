@@ -22,11 +22,14 @@ const StyledDemoTemplate = styled.div`
 `
 
 function DemoTemplate({
-  borderData,
-  dashedLineData,
   pageData,
   setPageData,
 }) {
+  const maxSvgSize = {
+    height: pageData.svgHeight,
+    width: pageData.svgWidth,
+  }
+
   return (
     <StyledDemoTemplate>
       <svg
@@ -41,64 +44,70 @@ function DemoTemplate({
         )}
         {pageData.template === "ruled" && (
           <Ruled
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "dot" && (
           <Dot
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "graph" && (
           <Graph
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "hexagon" && (
           <Hexagon
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "isometric" && (
           <Isometric
-            borderData={borderData}
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "seyes" && (
           <Seyes
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "music" && (
           <Music
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "handwriting" && (
           <Handwriting
-            dashedLineData={dashedLineData}
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "cross" && (
           <CrossGrid
-            dashedLineData={dashedLineData}
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
         )}
         {pageData.template === "calligraphy" && (
           <Calligraphy
-            dashedLineData={dashedLineData}
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             setPageData={setPageData}
           />
