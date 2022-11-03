@@ -1,7 +1,8 @@
 import React from "react"
-import styled from "styled-components"
-import { convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
 
+import { ControlsContent, ControlsFooter } from "../Controls"
+import Button from "../../Button"
 import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
@@ -13,116 +14,126 @@ import HandwritingControls from "../templateControls/HandwritingControls"
 import CrossGridControls from "../templateControls/CrossGridControls"
 import CalligraphyControls from "../templateControls/CalligraphyControls"
 
-const StyledControlsBar = styled.div`
-  height: 100%;
-  width: 100%;
-`
-
 function Controlsbar({
   pageData,
   setPageData,
   svgSize,
+  handleApplyTemplateButton,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.thickness, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
  
   return (
-    <StyledControlsBar>
-      {pageData.template !== "blank" && pageData.template !== "none" && (
-        <>
-          {pageData.template === "ruled" && (
-            <RuledControls
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-              svgSize={svgSize}
-            />
-          )}
-          {pageData.template === "dot" && (
-            <DotControls
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-              svgSize={svgSize}
-            />
-          )}
-          {pageData.template === "graph" && (
-            <GraphControls
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-              svgSize={svgSize}
-            />
-          )}
-          {pageData.template === "hexagon" && (
-            <HexagonControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "isometric" && (
-            <IsometricControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "seyes" && (
-            <SeyesControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "music" && (
-            <MusicControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "handwriting" && (
-            <HandwritingControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "cross" && (
-            <CrossGridControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-          {pageData.template === "calligraphy" && (
-            <CalligraphyControls
-              svgSize={svgSize}
-              maximumMarginHeight={maximumMarginHeight}
-              maximumMarginWidth={maximumMarginWidth}
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          )}
-        </>
-      )}
-    </StyledControlsBar>
+    <>
+      <ControlsContent>
+        {pageData.template !== "blank" && pageData.template !== "none" && (
+          <>
+            {pageData.template === "ruled" && (
+              <RuledControls
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+                svgSize={svgSize}
+              />
+            )}
+            {pageData.template === "dot" && (
+              <DotControls
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+                svgSize={svgSize}
+              />
+            )}
+            {pageData.template === "graph" && (
+              <GraphControls
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+                svgSize={svgSize}
+              />
+            )}
+            {pageData.template === "hexagon" && (
+              <HexagonControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "isometric" && (
+              <IsometricControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "seyes" && (
+              <SeyesControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "music" && (
+              <MusicControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "handwriting" && (
+              <HandwritingControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "cross" && (
+              <CrossGridControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+            {pageData.template === "calligraphy" && (
+              <CalligraphyControls
+                svgSize={svgSize}
+                maximumMarginHeight={maximumMarginHeight}
+                maximumMarginWidth={maximumMarginWidth}
+                pageData={pageData}
+                setPageData={setPageData}
+              />
+            )}
+          </>
+        )}
+      </ControlsContent>
+      <ControlsFooter>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          padding="1rem"
+          width="100%"
+          disabled={!pageData.template}
+          onClick={() => handleApplyTemplateButton()}
+        >
+          Apply template
+        </Button>
+      </ControlsFooter>
+    </>
   )
 }
 

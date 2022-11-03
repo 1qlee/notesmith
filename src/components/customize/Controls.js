@@ -1,8 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
-import Button from "../Button"
 import Controlsbar from "./bars/Controlsbar"
 import Checkoutbar from "./bars/Checkoutbar"
 import Templatesbar from "./bars/Templatesbar"
@@ -33,7 +32,7 @@ const ControlsContent = styled.div`
   }
 `
 
-const ControlTabs = styled.ul`
+const ControlsTabs = styled.ul`
   background-color: ${colors.white};
   border-bottom: 1px solid ${colors.gray.threeHundred};
   display: inline-flex;
@@ -42,7 +41,7 @@ const ControlTabs = styled.ul`
   width: 100%;
 `
 
-const ControlTab = styled.li`
+const ControlsTab = styled.li`
   background-color: ${colors.white};
   color: ${colors.gray.sixHundred};
   font-family: "Inter", Helvetica, sans-serif;
@@ -83,6 +82,7 @@ function Controls({
   toast,
   user,
 }) {
+
   function handleApplyTemplateButton() {
     // don't show the modal if no template is selected
     if (!pageData.template) {
@@ -98,88 +98,58 @@ function Controls({
 
   return (
     <StyledControls>
-      <ControlTabs>
-        <ControlTab
+      <ControlsTabs>
+        <ControlsTab
           className={activeTab === 0 && "is-active"}
           onClick={() => setActiveTab(0)}
         >
           Templates
-        </ControlTab>
+        </ControlsTab>
         {pageData.template && (
-          <ControlTab
+          <ControlsTab
             className={activeTab === 1 && "is-active"}
             onClick={() => setActiveTab(1)}
           >
             Design
-          </ControlTab>
+          </ControlsTab>
         )}
         {user && (
-          <ControlTab
+          <ControlsTab
             className={activeTab === 2 && "is-active"}
             onClick={() => setActiveTab(2)}
           >
             Checkout
-          </ControlTab>
+          </ControlsTab>
         )}
-      </ControlTabs>
+      </ControlsTabs>
       {activeTab === 0 && (
-        <>
-          <ControlsContent>
-            <Templatesbar
-              pageData={pageData}
-              setPageData={setPageData}
-            />
-          </ControlsContent>
-          <ControlsFooter>
-            <Button
-              backgroundcolor={colors.gray.nineHundred}
-              color={colors.gray.oneHundred}
-              padding="16px"
-              width="100%"
-              disabled={!pageData.template}
-              onClick={() => handleApplyTemplateButton()}
-            >
-              Apply template
-            </Button>
-          </ControlsFooter>
-        </>
+        <Templatesbar
+          pageData={pageData}
+          setPageData={setPageData}
+          handleApplyTemplateButton={handleApplyTemplateButton}
+        />
       )}
       {activeTab === 1 && (
-        <>
-          <ControlsContent>
-            <Controlsbar
-              pageData={pageData}
-              setPageData={setPageData}
-              setShowModal={setShowModal}
-              svgSize={svgSize}
-            />
-          </ControlsContent>
-          <ControlsFooter>
-            <Button
-              backgroundcolor={colors.gray.nineHundred}
-              color={colors.gray.oneHundred}
-              padding="1rem"
-              width="100%"
-              disabled={!pageData.template}
-              onClick={() => handleApplyTemplateButton()}
-            >
-              Apply template
-            </Button>
-          </ControlsFooter>
-        </>
+        <Controlsbar
+          pageData={pageData}
+          setPageData={setPageData}
+          setShowModal={setShowModal}
+          svgSize={svgSize}
+          handleApplyTemplateButton={handleApplyTemplateButton}
+        />
       )}
       {activeTab === 2 && (
-        <ControlsContent>
-          <Checkoutbar
-            bookData={bookData}
-            productData={productData}
-            productImageData={productImageData}
-            setBookData={setBookData}
-          />
-        </ControlsContent>
+        <Checkoutbar
+          bookData={bookData}
+          pageData={pageData}
+          productData={productData}
+          productImageData={productImageData}
+          setBookData={setBookData}
+          toast={toast}
+        />
       )}
     </StyledControls>
   )
 }
 
-export default Controls
+export { Controls, ControlsContent, ControlsTabs, ControlsTab, ControlsFooter }

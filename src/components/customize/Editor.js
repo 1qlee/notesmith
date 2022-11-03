@@ -6,10 +6,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../layout/Flexbox"
+import { Controls } from "./Controls"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./modals/CheckLoginModal"
-import Controls from "./Controls"
 import CreateBookModal from "./modals/CreateBookModal"
 import Functionsbar from "./bars/Functionsbar"
 import Loader from "../Loader"
@@ -147,27 +147,35 @@ const Editor = ({
 
     // query the db for pages using bookId
     async function getPages(bookPages) {
-      const pagesObject = {} // dummy object to hold pages
-      const pagesArray = [] // dummy array to hold all book pages
+      const allTemplates = {} // dummy object to hold pages
+      const allPages = [] // dummy array to hold all book pages
 
       // first, query db for all pages that have the same bookId
       await firebaseDb.ref(`pages/`).orderByChild("bookId").equalTo(bookId).once("value").then(snapshot => {
         // loop through each page
         snapshot.forEach(page => {
           const pageValue = page.val()
+          const pageObject = {
+            id: pageValue.id,
+            svg: pageValue.svg,
+            marginTop: pageValue.marginTop,
+            marginRight: pageValue.marginRight,
+            marginBottom: pageValue.marginBottom,
+            marginLeft: pageValue.marginLeft,
+          }
 
-          // insert into pagesObject with id:svg pair
-          pagesObject[pageValue.id] = pageValue.svg
+          // insert into pageTemplates with id:svg pair
+          allTemplates[pageValue.id] = pageObject
         })
       })
 
       // loop through bookPages argument which is an object of all pages
       for (const page in bookPages) {
-        pagesArray.push(bookPages[page])
+        allPages.push(bookPages[page])
       }
 
-      setCanvasPageTemplates(pagesObject) // canvasPageTemplates holds all page svg "templates"
-      setCanvasPages(pagesArray) // all canvasPages have a reference to a template
+      setCanvasPageTemplates(allTemplates) // canvasPageTemplates holds all page templates
+      setCanvasPages(allPages) // all canvasPages have a reference to a template page id
       setInitializing(false)
     }
 
@@ -310,13 +318,13 @@ const Editor = ({
         draggable
         draggablePercent={50}
         hideProgressBar={false}
+        icon={false}
         limit={3}
         newestOnTop={false}
         pauseOnFocusLoss
         pauseOnHover
         position="bottom-center"
         rtl={false}
-        theme="colored"
         style={{
           fontFamily: fonts.secondary,
           fontSize: "0.75rem",

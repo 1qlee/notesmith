@@ -2,13 +2,13 @@ import React from "react"
 
 function Blank({
   pageData,
-  currentPageSide
+  maxSvgSize
 }) {
 
   return (
     <rect
-      width={pageData.pageWidth}
-      height={pageData.pageHeight}
+      width={maxSvgSize.width}
+      height={maxSvgSize.height}
       fill="#FFF"
     >
     </rect>

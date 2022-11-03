@@ -1,5 +1,5 @@
 import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
-import { colors, convertToPx, fonts } from "../../../styles/variables"
+import { colors, convertToPx, fonts, pageMargins } from "../../../styles/variables"
 import { navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import React, { useState } from "react"
@@ -67,6 +67,9 @@ function NewBookModal({
       }
     }
   `)
+  const minimumMargin = pageMargins.minimum
+  const pageWidth = bookData.widthPixel - pageMargins.horizontal
+  const pageHeight = bookData.heightPixel - pageMargins.vertical
 
   // creating a new book in the db
   async function createNewBook() {
@@ -92,8 +95,12 @@ function NewBookModal({
       await newPageRef.set({
         bookId: newBookKey,
         id: newPageKey,
-        svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
+        svg: `<svg><rect width="${pageWidth}" height="${pageHeight}" fill="#fff"></rect></svg>`,
         uid: user.uid,
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: 0,
+        marginLeft: 0,
       })
       const pagesArray = []
 

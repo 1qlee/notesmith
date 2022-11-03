@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { pageMargins, convertToPx } from "../../styles/variables"
+import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
+
+const minimumMargin = pageMargins.minimum
 
 function PageSpread({
   bookData,
@@ -18,11 +20,10 @@ function PageSpread({
   setSvgSize,
 }) {
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
-  const minimumMargin = pageMargins.minimum
   const [maxSvgSize, setMaxSvgSize] = useState()
   const [currentPageSide, setCurrentPageSide] = useState("")
-  const [leftPage, setLeftPage] = useState([])
-  const [rightPage, setRightPage] = useState([])
+  const [leftPage, setLeftPage] = useState("")
+  const [rightPage, setRightPage] = useState("")
   const [pagePosition, setPagePosition] = useState({})
 
   useEffect(() => {
@@ -67,7 +68,7 @@ function PageSpread({
     }
 
     setPagePosition({
-      rightX: svgWidth + convertToPx(10.16) + margin.left,
+      rightX: svgWidth + pageMargins.holes + margin.left,
       leftX: minimumMargin + margin.left,
       bothY: minimumMargin + margin.top,
       spreadX: (canvasSize.width - svgWidth * 2) / 2,
@@ -103,7 +104,7 @@ function PageSpread({
         maxSvgSize={maxSvgSize}
         pageData={pageData}
         pageSide="left"
-        pageSvg={leftPage}
+        pageId={leftPage}
         pagePosition={pagePosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
@@ -118,7 +119,7 @@ function PageSpread({
         maxSvgSize={maxSvgSize}
         pageData={pageData}
         pageSide="right"
-        pageSvg={rightPage}
+        pageId={rightPage}
         pagePosition={pagePosition}
         selectedPage={selectedPage}
         setPageData={setPageData}
@@ -138,12 +139,33 @@ function Page({
   pageData,
   pagePosition,
   pageSide,
-  pageSvg,
+  pageId,
   selectedPage,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
 }) {
+  const [pageSvg, setPageSvg] = useState({
+    svg: `<svg><rect width="477.6" height="792" fill="red"></rect></svg>`,
+    marginTop: 12,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 12,
+  })
+  const isLeftPage = pageSide === "left"
+  const margins = {
+    top: convertFloatFixed(convertToPx(pageSvg.marginTop), 3),
+    right: convertFloatFixed(convertToPx(pageSvg.marginRight), 3),
+    bottom: convertFloatFixed(convertToPx(pageSvg.marginBottom), 3),
+    left: convertFloatFixed(convertToPx(pageSvg.marginLeft), 3),
+  }
+
+  useEffect(() => {
+    if (canvasPageTemplates && pageId) {
+      const template = canvasPageTemplates[pageId]
+      setPageSvg(template)
+    }
+  }, [pageId, canvasPageTemplates])
 
   if (selectedPage === 1 && pageSide === "left") {
     return null
@@ -174,12 +196,13 @@ function Page({
           />
         ) : (
           <SVG
+            id={isLeftPage ? "left-template" : "right-template"}
             xmlns="http://www.w3.org/2000/svg"
-            x={pageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
-            y={pagePosition.bothY}
+            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + pageMargins.holes + margins.left}
+            y={minimumMargin + margins.top}
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
-            src={canvasPageTemplates[pageSvg]}
+            src={pageSvg.svg}
           />
         )}
       </>

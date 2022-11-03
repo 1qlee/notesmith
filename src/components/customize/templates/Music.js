@@ -7,12 +7,12 @@ function Music({
   setPageData,
 }) {
   const [staves, setStaves] = useState([])
-  const { opacity, spacing, staffSpacing, thickness} = pageData
+  const { opacity, spacing, thickness} = pageData
   const { height, width } = maxSvgSize
   const lineSpacing = convertToPx(spacing)
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
-  const stavesSpacing = convertToPx(staffSpacing)
+  const staffSpacing = convertToPx(pageData.staffSpacing)
 
   function createStaves() {
     const stavesArray = []
@@ -22,7 +22,7 @@ function Music({
 
       for (let line = 0; line < 5; line++) {
         const staffHeight = lineSpacing * 4 + lineThickness * 4 // staff always has 5 lines, but multiply by 4 since first line doesn't really count
-        const spaceBtwnStaves = staff * (stavesSpacing + staffHeight + lineThickness) // have to add lineThickness to escape the previous staff's last line
+        const spaceBtwnStaves = staff * (staffSpacing + staffHeight + lineThickness) // have to add lineThickness to escape the previous staff's last line
         const spaceBtwnLines = (line === 0 && staff === 0) ? halfLineThickness : lineThickness * line + halfLineThickness // the first line of the page needs to escape deadspace at the top
         const posX1 = 0
         const posX2 = width

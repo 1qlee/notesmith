@@ -57,6 +57,7 @@ function ApplyTemplateModal({
   bookId,
   canvasPages,
   canvasPageTemplates,
+  pageData,
   selectedPage,
   selectedPageSvg,
   setCanvasPages,
@@ -120,12 +121,23 @@ function ApplyTemplateModal({
         id: newPageKey,
         svg: newPageSvg,
         uid: user.uid,
+        marginTop: pageData.marginTop,
+        marginRight: pageData.marginRight,
+        marginBottom: pageData.marginBottom,
+        marginLeft: pageData.marginLeft,
       })
 
       // set the new template to state
       setCanvasPageTemplates({
         ...canvasPageTemplates,
-        [newPageKey]: newPageSvg,
+        [newPageKey]: {
+          id: newPageKey,
+          svg: newPageSvg,
+          marginTop: pageData.marginTop,
+          marginRight: pageData.marginRight,
+          marginBottom: pageData.marginBottom,
+          marginLeft: pageData.marginLeft,
+        },
       })
 
       // save the page id to variable
@@ -233,7 +245,6 @@ function ApplyTemplateModal({
       default:
         break
     }
-
 
     // update canvasPages with the updated array clone
     updatePagesDb(canvasPagesClone)
@@ -438,93 +449,95 @@ function ApplyTemplateModal({
               )}
             </StyledFieldset>
           </Cell>
-          <Cell
-            width={1}
-          >
-            <StyledFieldset
-              flexdirection="column"
-              margin="0 0 2rem 0"
+          {(selectedApply === "apply-all" || selectedApply === "apply-range") && (
+            <Cell
+              width={1}
             >
-              <StyledLabel>Frequency (optional)</StyledLabel>
-              <RadioInput
-                margin="0 0 8px 0"
+              <StyledFieldset
+                flexdirection="column"
+                margin="0 0 2rem 0"
               >
-                <input
-                  id="apply-even"
-                  name="apply-even"
-                  type="radio"
-                  value="apply-even"
-                  onClick={e => handleFrequencySelect("even")}
-                />
-                <label htmlFor="apply-even">
-                  <Icon margin="0 8px 0 0">
-                    {frequency === "even" ? (
-                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
-                    ) : (
-                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
-                    )}
-                  </Icon>
-                  <span>Even pages</span>
-                </label>
-              </RadioInput>
-              <RadioInput
-                margin="0 0 8px 0"
-              >
-                <input
-                  id="apply-odd"
-                  name="apply-odd"
-                  type="radio"
-                  value="apply-odd"
-                  onClick={e => handleFrequencySelect("odd")}
-                />
-                <label htmlFor="apply-odd">
-                  <Icon margin="0 8px 0 0">
-                    {frequency === "odd" ? (
-                      <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
-                    ) : (
-                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
-                    )}
-                  </Icon>
-                  <span>Odd pages</span>
-                </label>
-              </RadioInput>
-              <RadioInput
-                margin="0 0 8px 0"
-              >
-                <input
-                  id="apply-other"
-                  name="apply-other"
-                  type="radio"
-                  value="apply-other"
-                  onClick={e => handleFrequencySelect("other")}
-                />
-                <label htmlFor="apply-other">
-                  <Icon margin="0 8px 0 0">
-                    {frequency === "other" ? (
-                      <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
-                    ) : (
-                      <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
-                    )}
-                  </Icon>
-                  <span>Every</span>
-                  <StyledInput
-                    type="number"
-                    padding="4px 8px"
-                    width="3.5rem"
-                    margin="0 4px"
-                    textalign="center"
-                    value={frequencyNum}
-                    onChange={e => setFrequencyNum(parseInt(e.target.value))}
-                    onFocus={e => setFrequency("other")}
-                    onClick={e => e.target.select()}
-                    min="1"
-                    max={totalPages}
+                <StyledLabel>Frequency (optional)</StyledLabel>
+                <RadioInput
+                  margin="0 0 8px 0"
+                >
+                  <input
+                    id="apply-even"
+                    name="apply-even"
+                    type="radio"
+                    value="apply-even"
+                    onClick={e => handleFrequencySelect("even")}
                   />
-                  <span>pages</span>
-                </label>
-              </RadioInput>
-            </StyledFieldset>
-          </Cell>
+                  <label htmlFor="apply-even">
+                    <Icon margin="0 8px 0 0">
+                      {frequency === "even" ? (
+                        <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
+                      ) : (
+                        <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
+                      )}
+                    </Icon>
+                    <span>Even pages</span>
+                  </label>
+                </RadioInput>
+                <RadioInput
+                  margin="0 0 8px 0"
+                >
+                  <input
+                    id="apply-odd"
+                    name="apply-odd"
+                    type="radio"
+                    value="apply-odd"
+                    onClick={e => handleFrequencySelect("odd")}
+                  />
+                  <label htmlFor="apply-odd">
+                    <Icon margin="0 8px 0 0">
+                      {frequency === "odd" ? (
+                        <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
+                      ) : (
+                        <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
+                      )}
+                    </Icon>
+                    <span>Odd pages</span>
+                  </label>
+                </RadioInput>
+                <RadioInput
+                  margin="0 0 8px 0"
+                >
+                  <input
+                    id="apply-other"
+                    name="apply-other"
+                    type="radio"
+                    value="apply-other"
+                    onClick={e => handleFrequencySelect("other")}
+                  />
+                  <label htmlFor="apply-other">
+                    <Icon margin="0 8px 0 0">
+                      {frequency === "other" ? (
+                        <RadioButton weight="fill" color={colors.primary.sixHundred} size={18} />
+                      ) : (
+                        <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
+                      )}
+                    </Icon>
+                    <span>Every</span>
+                    <StyledInput
+                      type="number"
+                      padding="4px 8px"
+                      width="3.5rem"
+                      margin="0 4px"
+                      textalign="center"
+                      value={frequencyNum}
+                      onChange={e => setFrequencyNum(parseInt(e.target.value))}
+                      onFocus={e => setFrequency("other")}
+                      onClick={e => e.target.select()}
+                      min="1"
+                      max={totalPages}
+                    />
+                    <span>pages</span>
+                  </label>
+                </RadioInput>
+              </StyledFieldset>
+            </Cell>
+          )}
         </Grid>
       </ModalContent>
       <ModalFooter

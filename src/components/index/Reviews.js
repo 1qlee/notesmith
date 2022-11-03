@@ -6,7 +6,6 @@ import { Grid } from "styled-css-grid"
 import LinesBkgd from "../../images/index/lines-bkgd.png"
 import Review1 from "../../assets/peeps/review-1.svg"
 import Review2 from "../../assets/peeps/review-2.svg"
-import Review3 from "../../assets/peeps/review-3.svg"
 import Review4 from "../../assets/peeps/review-4.svg"
 import Review5 from "../../assets/peeps/review-5.svg"
 
@@ -19,8 +18,8 @@ const StyledReviews = styled.div`
 `
 
 const ReviewContent = styled.div`
-  border: 2px solid ${colors.gray.nineHundred};
-  box-shadow: 4px 4px 0 ${colors.gray.nineHundred};
+  border: 1px solid ${colors.gray.nineHundred};
+  box-shadow: ${colors.shadow.solid};
   border-radius: 0.5rem;
   padding: 1rem;
   min-height: 106px;
@@ -37,8 +36,6 @@ const ReviewProfile = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-top: 2px solid ${colors.gray.nineHundred};
-  margin-top: 1rem;
   padding: 1rem 0;
   width: 100%;
 `
@@ -46,16 +43,22 @@ const ReviewProfile = styled.div`
 const ReviewBox = styled.div`
   display: flex;
   flex-direction: column;
+  width: 50%;
+  max-width: 300px;
   margin-right: 2rem;
+`
+
+const ReviewsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `
 
 function Reviews() {
   return (
     <StyledReviews>
-      <Grid
-        columns="repeat(auto-fill, minmax(250px, 1fr))"
-        columnGap={spacing.normal}
-      >
+      <ReviewsWrapper>
         <ReviewBox>
           <ReviewContent>
             <p>Literally the best writing experience I have ever experienced.</p>
@@ -94,6 +97,8 @@ function Reviews() {
             <Review2 height="64" width="64" />
           </ReviewProfile>
         </ReviewBox>
+      </ReviewsWrapper>
+      <ReviewsWrapper>
         <ReviewBox>
           <ReviewContent>
             <p>The paper is smooth and very pleasant to write on! I am super impressed!</p>
@@ -132,7 +137,7 @@ function Reviews() {
             <Review5 height="64" width="64" />
           </ReviewProfile>
         </ReviewBox>
-      </Grid>
+      </ReviewsWrapper>
     </StyledReviews>
   )
 }

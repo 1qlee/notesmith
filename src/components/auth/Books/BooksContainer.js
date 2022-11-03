@@ -119,12 +119,14 @@ function BooksContainer({
       onClick={e => handleClickOutside(e)}
     >
       {userBooks.length === 0 ? (
-        <Content
-          h1fontsize="2rem"
-          margin="2rem 0"
-        >
-          <h1>You don't have any saved books</h1>
-          <p>Creating books is simple and easy! Get started by clicking the button below.</p>
+        <>
+          <Content
+            h1fontsize="2rem"
+            margin="0 0 2rem"
+          >
+            <h1>You don't have any saved books</h1>
+            <p>Creating books is simple and easy! Get started by clicking the button below.</p>
+          </Content>
           <Button
             color={colors.gray.oneHundred}
             backgroundcolor={colors.gray.nineHundred}
@@ -135,7 +137,7 @@ function BooksContainer({
           >
             New book
           </Button>
-        </Content>
+        </>
       ) : (
         <>
           <Content

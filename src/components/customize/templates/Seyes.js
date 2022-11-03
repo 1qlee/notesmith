@@ -20,8 +20,8 @@ function Seyes({
 
     for (let row = 0; row < rows; row++) {
       const posX1 = 0
-      const posX2 = width
-      const posY1 = convertFloatFixed((row * lineSpacing) + lineThickness * (row + 1), 3) + headerSpacing
+      const posX2 = convertFloatFixed(width, 3)
+      const posY1 = convertFloatFixed((row * lineSpacing) + lineThickness * (row + 1) + headerSpacing, 3)
       const posY2 = posY1
       const line = {
         fill: "none",
@@ -54,10 +54,10 @@ function Seyes({
     const linesArray = []
 
     for (let col = 0; col < columns; col++) {
-      const posX1 = (col * lineSpacing * 4) + lineThickness * (col + 1) + sideMarginSpacing
+      const posX1 = convertFloatFixed((col * lineSpacing * 4) + lineThickness * (col + 1) + sideMarginSpacing, 3)
       const posX2 = posX1
       const posY1 = 0
-      const posY2 = height
+      const posY2 = convertFloatFixed(height, 3)
       const line = {
         fill: "none",
         stroke: "#000",

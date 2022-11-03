@@ -1,4 +1,4 @@
-import React from "react"
+import React, { forwardRef } from "react"
 import styled from "styled-components"
 
 import Ruled from "../customize/templates/Ruled"
@@ -22,98 +22,94 @@ const StyledDemoTemplate = styled.div`
 `
 
 function DemoTemplate({
+  pageDimensions,
   pageData,
   setPageData,
 }) {
-  const maxSvgSize = {
-    height: pageData.svgHeight,
-    width: pageData.svgWidth,
-  }
 
   return (
-    <StyledDemoTemplate>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="100%"
-        width="100%"
-        x="0"
-        y="0"
-      >
-        {pageData.template === "blank" && (
-          null
-        )}
-        {pageData.template === "ruled" && (
-          <Ruled
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "dot" && (
-          <Dot
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "graph" && (
-          <Graph
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "hexagon" && (
-          <Hexagon
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "isometric" && (
-          <Isometric
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "seyes" && (
-          <Seyes
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "music" && (
-          <Music
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "handwriting" && (
-          <Handwriting
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "cross" && (
-          <CrossGrid
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-        {pageData.template === "calligraphy" && (
-          <Calligraphy
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
-        )}
-      </svg>
-    </StyledDemoTemplate>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height={pageDimensions.height}
+      width={pageDimensions.width}
+      fill="#fff"
+      x="0"
+      y="0"
+    >
+      {pageData.template === "blank" && (
+        null
+      )}
+      {pageData.template === "ruled" && (
+        <Ruled
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "dot" && (
+        <Dot
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "graph" && (
+        <Graph
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "hexagon" && (
+        <Hexagon
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "isometric" && (
+        <Isometric
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "seyes" && (
+        <Seyes
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "music" && (
+        <Music
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "handwriting" && (
+        <Handwriting
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "cross" && (
+        <CrossGrid
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+      {pageData.template === "calligraphy" && (
+        <Calligraphy
+          maxSvgSize={pageDimensions}
+          pageData={pageData}
+          setPageData={setPageData}
+        />
+      )}
+    </svg>
   )
 }
 

@@ -30,7 +30,6 @@ function Handwriting({
 
   function createWritingRows() {
     const rowsArray = []
-    const dashArray = parseDashArray(dashedLineData.dashArray)
 
     for (let row = 0; row < rows; row++) {
       const linesArray = []

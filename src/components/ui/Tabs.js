@@ -3,7 +3,7 @@ import { colors, fonts } from "../../styles/variables"
 import styled from "styled-components"
 
 const StyledTabs = styled.ul`
-  border-bottom: 2px solid ${colors.gray.threeHundred};
+  border-bottom: 1px solid ${colors.gray.nineHundred};
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
@@ -11,6 +11,7 @@ const StyledTabs = styled.ul`
 `
 
 const StyledTab = styled.li`
+  color: ${colors.gray.sixHundred};
   font-family: ${fonts.secondary};
   font-weight: 700;
   transition: padding 0.2s, box-shadow 0.2s;
@@ -25,11 +26,12 @@ const StyledTab = styled.li`
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      box-shadow: 0 2px 0 ${colors.gray.sixHundred};
+      box-shadow: inset 0 -1px 0 ${colors.gray.nineHundred};
     }
   }
   &.is-active {
-    box-shadow: 0 2px 0 ${colors.gray.nineHundred};
+    box-shadow: inset 0 -1px 0 ${colors.gray.nineHundred};
+    color: ${colors.gray.nineHundred};
   }
 `
 
@@ -43,6 +45,7 @@ function Tabs({
     <StyledTabs>
       {tabList.map((tab, index) => (
         <StyledTab
+          key={index}
           onClick={() => setActiveTab(index)}
           className={activeTab === index && "is-active"}
           fontsize={fontsize}

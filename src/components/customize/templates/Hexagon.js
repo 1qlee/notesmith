@@ -25,7 +25,7 @@ function Hexagon({
           const pointY = convertFloatFixed(y + radius * Math.cos(theta), 2)
 
           if (pointX > width) {
-            return { }
+            return { row: null }
           }
           if (pointY > height) {
             return { row: row }

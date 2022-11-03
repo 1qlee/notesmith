@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useCallback } from "react"
+import Measure from "react-measure"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
 import { colors } from "../../styles/variables"
@@ -8,28 +9,37 @@ import ColorPicker from "../shop/ColorPicker"
 import DemoTemplate from "./DemoTemplate"
 
 const gradient = `linear-gradient(90deg,
-    ${colors.gray.oneHundred} 0%,
-    ${colors.gray.threeHundred} 5%,
-    ${colors.gray.oneHundred} 10%,
-    ${colors.gray.threeHundred} 15%,
-    ${colors.gray.oneHundred} 20%,
-    ${colors.gray.threeHundred} 25%,
-    ${colors.gray.oneHundred} 30%,
-    ${colors.gray.threeHundred} 35%,
-    ${colors.gray.oneHundred} 40%,
-    ${colors.gray.threeHundred} 45%,
-    ${colors.gray.threeHundred} 50%,
-    ${colors.gray.oneHundred} 55%,
-    ${colors.gray.threeHundred} 60%,
-    ${colors.gray.threeHundred} 65%,
-    ${colors.gray.oneHundred} 70%,
-    ${colors.gray.threeHundred} 75%,
-    ${colors.gray.oneHundred} 80%,
-    ${colors.gray.threeHundred} 85%,
-    ${colors.gray.oneHundred} 90%,
-    ${colors.gray.threeHundred} 95%,
-    ${colors.gray.oneHundred} 100%
-  )`
+  ${colors.gray.oneHundred} 0%,
+  ${colors.gray.threeHundred} 5%,
+  ${colors.gray.oneHundred} 10%,
+  ${colors.gray.threeHundred} 15%,
+  ${colors.gray.oneHundred} 20%,
+  ${colors.gray.threeHundred} 25%,
+  ${colors.gray.oneHundred} 30%,
+  ${colors.gray.threeHundred} 35%,
+  ${colors.gray.oneHundred} 40%,
+  ${colors.gray.threeHundred} 45%,
+  ${colors.gray.threeHundred} 50%,
+  ${colors.gray.oneHundred} 55%,
+  ${colors.gray.threeHundred} 60%,
+  ${colors.gray.threeHundred} 65%,
+  ${colors.gray.oneHundred} 70%,
+  ${colors.gray.threeHundred} 75%,
+  ${colors.gray.oneHundred} 80%,
+  ${colors.gray.threeHundred} 85%,
+  ${colors.gray.oneHundred} 90%,
+  ${colors.gray.threeHundred} 95%,
+  ${colors.gray.oneHundred} 100%
+)`
+
+const StyledDemoTemplate = styled.div`
+  position: absolute;
+  top: 1.9%;
+  left: 13.2%;
+  z-index: 5;
+  width: 84%;
+  height: 96%;
+`
 
 const initAnimation = keyframes`
   to {
@@ -153,10 +163,14 @@ function Book3d({
   pageData,
   setPageData,
 }) {
-  const book3dRef = useRef(null)
+  const [node, setNode] = useState()
   const [hovered, setHovered] = useState(false)
   const [showBackCover, setShowBackCover] = useState(false)
   const [coverColor, setCoverColor] = useState("white")
+  const [pageDimensions, setPageDimensions] = useState({
+    width: 596.98,
+    height: 361.03,
+  })
   const covers = [
     {
       "slug": "white",
@@ -176,7 +190,6 @@ function Book3d({
         onMouseOver={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={() => setShowBackCover(!showBackCover)}
-        ref={book3dRef}
       >
         <StyledBook3d
           hovered={hovered}
@@ -185,15 +198,26 @@ function Book3d({
           <FrontCover>
             {pageData.template ? (
               <>
-                <DemoTemplate
-                  pageData={pageData}
-                  setPageData={setPageData}
-                />
+                <Measure
+                  bounds
+                  onResize={contentRect => setPageDimensions(contentRect.bounds)}
+                >
+                  {({ measureRef }) => (
+                    <StyledDemoTemplate
+                      ref={measureRef} 
+                    >
+                      <DemoTemplate
+                        pageDimensions={pageDimensions}
+                        pageData={pageData}
+                        setPageData={setPageData}
+                      />
+                    </StyledDemoTemplate>
+                  )}
+                </Measure>
                 <StaticImage
                   className="image"
                   src="../../images/index/blank-page.jpg"
                   alt="Notesmith logo image"
-                  placeholder="blurred"
                   quality={100}
                 />
               </>
@@ -204,7 +228,6 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-white.jpg"
                     alt="Notesmith logo image"
-                    placeholder="blurred"
                     quality={100}
                   />
                 )}
@@ -213,7 +236,6 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-black.jpg"
                     alt="Notesmith logo image"
-                    placeholder="blurred"
                     quality={100}
                   />
                 )}
@@ -230,7 +252,6 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-white.jpg"
                 alt="Notesmith logo image"
-                placeholder="blurred"
                 quality={100}
               />
             )}
@@ -239,7 +260,6 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-black.jpg"
                 alt="Notesmith logo image"
-                placeholder="blurred"
                 quality={100}
               />
             )}

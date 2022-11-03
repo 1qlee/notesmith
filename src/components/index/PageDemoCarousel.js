@@ -36,8 +36,7 @@ const DemoImageCaption = styled.article`
   width: ${widths.caption};
   p {
     line-height: 1.5;
-    font-size: 0.75rem;
-    font-family: ${fonts.secondary};
+    font-size: 0.875rem;
   }
 `
 
@@ -81,7 +80,6 @@ function PageDemoCarousel() {
         <StaticImage
           src="../../images/index/splash-image-blank.jpg"
           alt="Ink on paper"
-          placeholder="blurred"
           loading="eager"
           quality={100}
         />

@@ -1,24 +1,51 @@
 import React, { useState } from "react"
 import { colors } from "../../../styles/variables"
-import { navigate } from "gatsby"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
+import { navigate } from "gatsby"
+import { CircleNotch } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
+import { ControlsContent, ControlsFooter } from "../Controls"
+import Icon from "../../Icon"
 import Button from "../../Button"
 import Content from "../../Content"
 import ColorPicker from "../../shop/ColorPicker"
 
 function Checkoutbar({
   bookData,
+  pageData,
   productData,
   productImageData,
   setBookData,
+  toast,
 }) {
   const { firebaseDb } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [loading, setLoading] = useState(false)
+
+  async function handleCheckoutButton(book, coverColor) {
+    setLoading(true)
+    // create a promise to add items to cart then redirect user to cart
+    await addItem({
+      name: book.name,
+      description: book.description,
+      id: book.stripePriceId,
+      price: book.price,
+      currency: "USD",
+      coverColor: coverColor,
+      images: productImageData,
+    }, { count: itemQuantity })
+    .then(async () => {
+      await updateBookCoverColor(coverColor)
+      setLoading(false)
+      return navigate("/cart")
+    }).catch(error => {
+      toast.error("Something went wrong! Please try again.")
+    })
+  }
 
   const calculateTotalPrice = (price, dash) => {
     const totalPrice = (itemQuantity * price) / 100
@@ -35,39 +62,13 @@ function Checkoutbar({
     }
   }
 
-  function handleCheckoutButton(book, coverColor) {
-    // create a promise to add items to cart then redirect user to cart
-    const addItemsToCart = new Promise((resolve, reject) => {
-      // use-shopping-cart function to add items to cart
-      resolve(
-        addItem({
-          name: book.name,
-          description: book.description,
-          id: book.stripePriceId,
-          price: book.price,
-          currency: "USD",
-          coverColor: coverColor,
-          images: productImageData
-        }, {count: itemQuantity})
-      )
-    })
-
-    addItemsToCart.then(() => {
-      updateBookCoverColor(coverColor)
-    }).then(res => {
-      return navigate("/cart")
-    }).catch(error => {
-      console.log(error)
-    })
-  }
-
-  function updateBookCoverColor(color) {
+  async function updateBookCoverColor(color) {
     const updates = {}
     // update the specified book by its bookId
     // only updates the title field
     updates[`/books/${bookData.id}/coverColor`] = color
 
-    firebaseDb.ref().update(updates, error => {
+    await firebaseDb.ref().update(updates, error => {
       if (error) {
         console.log("Error occurred when updating book title.")
       }
@@ -75,25 +76,8 @@ function Checkoutbar({
   }
 
   return (
-    <Flexbox
-      flex="flex"
-      flexdirection="column"
-      justifycontent="space-between"
-      height="100%"
-    >
-      <Flexbox
-        flex="flex"
-        flexdirection="column"
-        padding="1rem"
-      >
-        <Content
-          margin="0 0 2rem 0"
-          paragraphcolor={colors.primary.threeHundred}
-          paragraphfontweight="500"
-        >
-          <h3>Summary</h3>
-          <p>Below is a summary of your notebook's configurations.</p>
-        </Content>
+    <>
+      <ControlsContent>
         <Flexbox
           flex="flex"
           flexwrap="wrap"
@@ -104,12 +88,10 @@ function Checkoutbar({
           <Content
             padding="0"
             margin="0"
-            h5fontsize="0.625rem"
-            h5margin="0 0 0.25rem"
-            paragraphcolor={colors.primary.threeHundred}
-            paragraphfontweight="500"
+            h3fontsize="1rem"
+            h3margin="0 0 0.25rem"
           >
-            <h5>Type</h5>
+            <h3>Type</h3>
             <p>{bookData.name}</p>
           </Content>
           <Content
@@ -220,25 +202,27 @@ function Checkoutbar({
             <h3>{calculateTotalPrice(productData.price)}</h3>
           </Content>
         </Flexbox>
-      </Flexbox>
-      <Flexbox
-        padding="1rem"
-        backgroundcolor={colors.white}
-        className="has-border-top"
-        bordercolor={colors.gray.threeHundred}
-      >
+      </ControlsContent>
+      <ControlsFooter>
         <Button
-          backgroundcolor={colors.primary.sixHundred}
-          borderradius="0"
-          color={colors.primary.white}
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
           padding="1rem"
           width="100%"
+          disabled={loading}
+          className={loading ? "is-loading" : null}
           onClick={() => handleCheckoutButton(productData, bookData.coverColor)}
         >
-          <span>Add to cart</span>
+          {loading ? (
+            <Icon width="3rem">
+              <CircleNotch size="1rem" />
+            </Icon>
+          ) : (
+            "Add to cart"
+          )}
         </Button>
-      </Flexbox>
-    </Flexbox>
+      </ControlsFooter>
+    </>
   )
 }
 

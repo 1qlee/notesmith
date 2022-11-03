@@ -5,10 +5,10 @@ import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import "../components/index/index.css"
 
-import { BoxList, BoxListImages } from "../components/index/BoxList"
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Grid, Cell } from "styled-css-grid"
+import { Patterns, Pattern } from "../components/misc/Patterns"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { StyledLabel } from "../components/form/FormComponents"
 import Book3d from "../components/index/Book3d"
@@ -22,7 +22,6 @@ import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import Notification from "../components/ui/Notification"
 import PageIcons from "../components/customize/PageIcons"
-import Pattern from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
 import Seo from "../components/layout/Seo"
@@ -65,7 +64,7 @@ const IndexPage = ({ data }) => {
     marginTop: 0,
     opacity: 1,
     radius: 0.1,
-    rows: 42,
+    rows: 20,
     rowSpacing: 5,
     show: false,
     crossSize: 1,
@@ -269,7 +268,7 @@ const IndexPage = ({ data }) => {
                         width="50%"
                         onClick={() => setPageData({
                           ...pageData,
-                          template: "",
+                          template: null,
                         })}
                       >
                         Hide layout
@@ -333,23 +332,6 @@ const IndexPage = ({ data }) => {
                       <h2>We use only the best stuff, guaranteed</h2>
                       <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                     </Content>
-                    <Grid
-                      columns="repeat(auto-fit, minmax(120px, 1fr))"
-                      columnGap={spacing.normal}
-                    >
-                      <Cell>
-                        <BoxText>
-                          <h3>Made-to-order</h3>
-                          <p>Every notebook is custom made upon receiving an order.</p>
-                        </BoxText>
-                      </Cell>
-                      <Cell>
-                        <BoxText>
-                          <h3>American-made</h3>
-                          <p>All products are manufactured in our New York factory.</p>
-                        </BoxText>
-                      </Cell>
-                    </Grid>
                   </Cell>
                   <Cell>
                     <Tabs 
@@ -479,7 +461,7 @@ const IndexPage = ({ data }) => {
                         <Tag
                           backgroundcolor={colors.gray.nineHundred}
                           color={colors.gray.oneHundred}
-                          padding="0.25rem"
+                          padding="4px"
                           fontfamily={fonts.secondary}
                           margin="0 0 0 0.5rem"
                         >
@@ -514,7 +496,7 @@ const IndexPage = ({ data }) => {
                         <Tag
                           backgroundcolor={colors.gray.nineHundred}
                           color={colors.gray.oneHundred}
-                          padding="0.25rem"
+                          padding="4px"
                           fontfamily={fonts.secondary}
                           margin="0 0 0 0.5rem"
                         >
@@ -549,7 +531,7 @@ const IndexPage = ({ data }) => {
                         <Tag
                           backgroundcolor={colors.gray.nineHundred}
                           color={colors.gray.oneHundred}
-                          padding="0.25rem"
+                          padding="4px"
                           fontfamily={fonts.secondary}
                           margin="0 0 0 0.5rem"
                         >
@@ -642,6 +624,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
       </SectionMain>
+      <Patterns color={colors.gray.threeHundred} />
     </Layout>
   )
 }

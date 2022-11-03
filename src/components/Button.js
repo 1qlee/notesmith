@@ -13,7 +13,7 @@ const rotate = keyframes`
 const Button = styled.button`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.nineHundred};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "4px"};
   border: ${props => props.border ? props.border : "none"};
   color: ${props => props.color || colors.gray.oneHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};

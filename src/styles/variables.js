@@ -96,7 +96,7 @@ const colors = {
   shadow: {
     solidTiny: "1px 1px 0 #212121",
     solidSmall: "2px 2px 0 #212121",
-    solid: "4px 4px 0 #212121",
+    solid: "2px 2px 0 #212121",
     float: "rgba(0,0,0,0.07)",
     layeredSmall: "0 1px 1px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.03), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.07)",
     layered: "0 2px 2px rgba(0,0,0,0.02), 0 4px 4px rgba(0,0,0,0.03), 0 8px 8px rgba(0,0,0,0.06), 0 16px 16px rgba(0,0,0,0.07)",
@@ -166,6 +166,7 @@ const convertFloatFixed = (number, places) => {
 const pageMargins = {
   vertical: convertToPx(6.35),
   horizontal: convertToPx(13.335),
+  holes: convertToPx(10.16),
   minimum: convertToPx(3.175),
 }
 

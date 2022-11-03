@@ -31,6 +31,7 @@ function DeleteBookModal({
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}
+          color={colors.gray.nineHundred}
           onClick={() => setShowModal({
             show: false,
             type: "deletebook"

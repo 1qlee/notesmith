@@ -103,7 +103,7 @@ const Page = memo(props => {
       <Svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${pageData.svgWidth} ${pageData.svgHeight}`}
-        src={canvasPageTemplates[currentPage.pageId]}
+        src={canvasPageTemplates[currentPage.pageId].svg}
         x="0"
         y="0"
       />

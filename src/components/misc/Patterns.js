@@ -140,29 +140,24 @@ function Pattern({
   zindex,
 }) {
   return (
-    <>
-      <Patterns 
-        color={color}
-      />
-      <svg 
-        class="pattern_svg" 
-        width={width}
+    <svg 
+      class="pattern_svg" 
+      width={width}
+      height={height}
+      style={{
+        position: "absolute",
+        top: top,
+        left: left,
+        zIndex: zindex,
+      }}
+    >
+      <rect 
         height={height}
-        style={{
-          position: "absolute",
-          top: top,
-          left: left,
-          zIndex: zindex,
-        }}
-      >
-        <rect 
-          height={height}
-          width={width}
-          fill={`url(#${pattern})`}
-        />
-      </svg>
-    </>
+        width={width}
+        fill={`url(#${pattern})`}
+      />
+    </svg>
   )
 }
 
-export default Pattern
+export { Patterns, Pattern }

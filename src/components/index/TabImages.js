@@ -18,7 +18,7 @@ function TabImages({
       tabImages.sort((a, b) => parseInt(a.childImageSharp.fluid.originalName.slice(4)) - parseInt(b.childImageSharp.fluid.originalName.slice(4)))
       setCurrentImage(tabImages[activeTab])
     }
-  })
+  }, [activeTab, tabImages])
 
   return (
     <StyledTabImages>

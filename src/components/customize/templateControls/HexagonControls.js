@@ -36,7 +36,7 @@ function HexagonControls({
       </ControlWrapper>
       <RangeControls 
         property="hexagonRadius"
-        propertyName="Hexagon Radius"
+        propertyName="Hexagon radius"
         propertyObj={{}}
         inputProps={{
           min: 1,

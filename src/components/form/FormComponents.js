@@ -285,7 +285,7 @@ function RangeInput({
   useEffect(() => {
     const currentPercent = Math.abs((value - min) * 100 / (max - min)) + "% 100%"
     inputRef.current.style.backgroundSize = currentPercent
-  }, [value])
+  }, [value, min, max, step, margin, width])
 
   return (
     <StyledRange
@@ -644,12 +644,12 @@ const ErrorLine = styled.div`
 `
 
 const StyledTable = styled.table`
-  border: 2px solid ${colors.gray.nineHundred};
-  box-shadow: ${colors.shadow.solid};
+  border: 1px solid ${colors.gray.nineHundred};
   border-radius: 8px;
+  box-shadow: ${colors.shadow.solid};
   border-spacing: 0;
   td,tr {
-    border-width: 2px;
+    border-width: 1px;
     border-color: ${colors.gray.nineHundred};
     border-bottom-width: 0;
   }
@@ -658,9 +658,8 @@ const StyledTable = styled.table`
   }
   th {
     border-color: ${colors.gray.nineHundred};
-    border-width: 2px;
-    font-family: ${fonts.secondary};
-    font-size: 0.825rem;
+    border-width: 1px;
+    font-size: 1rem;
     font-weight: 700;
   }
   tr {

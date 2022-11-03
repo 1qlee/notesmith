@@ -7,7 +7,7 @@ function CrossGrid({
   setPageData 
 }) {
   const [crosses, setCrosses] = useState([])
-  const { spacing, opacity, rows, columns, columnSpacing, rowSpacing } = pageData
+  const { opacity, rows, columns, columnSpacing, rowSpacing } = pageData
   const { width, height } = maxSvgSize
   const crossSize = convertToPx(pageData.crossSize)
   const crossColumnSpacing = convertToPx(columnSpacing)
