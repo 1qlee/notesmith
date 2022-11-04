@@ -40,10 +40,14 @@ export const pageQuery = graphql`
     images: allFile(filter: { relativeDirectory: { eq: $slug}}) {
       nodes {
         childImageSharp {
+          fluid {
+            src
+            originalName
+          }
           gatsbyImageData(
-            width: 100
-            placeholder: BLURRED
-            formats: [AUTO, WEBP, AVIF]
+            width: 80
+            height: 80
+            quality: 100
           )
         }
       }

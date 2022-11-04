@@ -48,6 +48,7 @@ const ProductInfo = ({
             category: bookData.category,
             coverColor: bookData.coverColor,
             currency: "USD",
+            custom: false,
             id: uuidv4(), // unique cart item id
             image: cartThumbnail,
             leftPageData: leftPageData,

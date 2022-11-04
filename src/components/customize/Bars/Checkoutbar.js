@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import { colors } from "../../../styles/variables"
+import { colors, fonts } from "../../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
 import { navigate } from "gatsby"
 import { CircleNotch } from "phosphor-react"
+import { v4 as uuidv4 } from 'uuid'
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
@@ -26,17 +27,32 @@ function Checkoutbar({
   const [itemQuantity, setItemQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
 
+  function getImageThumbnail() {
+    // this is an exact match for "color-0.jpg"
+    const filteredImage = productImageData.nodes.filter(img => img.childImageSharp.fluid.originalName === `${bookData.coverColor}-0.jpg`)
+
+    return filteredImage[0]
+  }
+
   async function handleCheckoutButton(book, coverColor) {
     setLoading(true)
     // create a promise to add items to cart then redirect user to cart
     await addItem({
-      name: book.name,
-      description: book.description,
-      id: book.stripePriceId,
-      price: book.price,
-      currency: "USD",
+      category: book.category,
       coverColor: coverColor,
-      images: productImageData,
+      currency: "USD",
+      custom: true,
+      bookId: bookData.id,
+      description: book.description,
+      id: uuidv4(),
+      image: getImageThumbnail(),
+      leftPageData: "",
+      name: book.name,
+      price_id: book.stripePriceId,
+      price: book.price,
+      rightPageData: "",
+      slug: book.slug,
+      weight: book.weight,
     }, { count: itemQuantity })
     .then(async () => {
       await updateBookCoverColor(coverColor)
@@ -70,7 +86,7 @@ function Checkoutbar({
 
     await firebaseDb.ref().update(updates, error => {
       if (error) {
-        console.log("Error occurred when updating book title.")
+        throw error
       }
     })
   }
@@ -78,106 +94,51 @@ function Checkoutbar({
   return (
     <>
       <ControlsContent>
-        <Flexbox
-          flex="flex"
-          flexwrap="wrap"
-          justifycontent="space-between"
-          alignitems="center"
-          margin="0 0 1rem"
+        <Content
+          padding="0"
+          margin="0 0 16px"
+          headingfontfamily={fonts.secondary}
+          h3fontsize="0.75rem"
+          h3margin="0 0 0.25rem"
         >
-          <Content
-            padding="0"
-            margin="0"
-            h3fontsize="1rem"
-            h3margin="0 0 0.25rem"
-          >
-            <h3>Type</h3>
-            <p>{bookData.name}</p>
-          </Content>
-          <Content
-            padding="0"
-            margin="0"
-            h5fontsize="0.625rem"
-            h5margin="0 0 0.25rem"
-            paragraphcolor={colors.primary.threeHundred}
-            paragraphfontweight="500"
-          >
-            <h5>Size</h5>
-            <p>{`${bookData.widthInch}" x ${bookData.heightInch}" (${bookData.size})`}</p>
-          </Content>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexwrap="wrap"
-          justifycontent="space-between"
-          alignitems="center"
-          margin="0 0 1rem"
+          <h3>Product</h3>
+          <p>{bookData.name}</p>
+        </Content>
+        <Content
+          padding="0"
+          margin="0 0 16px"
+          headingfontfamily={fonts.secondary}
+          h3fontsize="0.75rem"
+          h3margin="0 0 0.5rem"
         >
-          <Content
-            padding="0"
-            margin="0"
-            h5fontsize="0.625rem"
-            h5margin="0 0 0.5rem"
-          >
-            <h5>Cover</h5>
-            <ColorPicker
-              data={productData.colors}
-              selectedColor={bookData.coverColor}
-              cbFunction={color => setBookData({
-                ...bookData,
-                coverColor: color,
-              })}
-            />
-          </Content>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          flexwrap="wrap"
-          justifycontent="space-between"
-          alignitems="center"
-          margin="0 0 1rem"
+          <h3>Cover color</h3>
+          <ColorPicker
+            data={productData.colors}
+            selectedColor={bookData.coverColor}
+            cbFunction={color => setBookData({
+              ...bookData,
+              coverColor: color,
+            })}
+          />
+        </Content>
+        <Content
+          padding="0"
+          margin="0"
+          headingfontfamily={fonts.secondary}
+          h3fontsize="0.75rem"
+          h3margin="0 0 0.5rem"
         >
-          <Content
-            padding="0"
-            margin="0"
-            h5fontsize="0.625rem"
-            h5margin="0 0 0.25rem"
-            paragraphcolor={colors.primary.threeHundred}
-            paragraphfontweight="500"
-          >
-            <h5>Pages</h5>
-            <p>{bookData.numOfPages} total</p>
-          </Content>
-        </Flexbox>
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-          justifycontent="space-between"
-          margin="0.5rem 0"
-          padding="0 0 2rem 0"
-          className="has-border-bottom"
-          bordercolor={colors.gray.threeHundred}
-        >
-          <Content
-            padding="0"
-            margin="0"
-            h5fontsize="0.625rem"
-            h5margin="0 0 0.5rem"
-            paragraphcolor={colors.primary.threeHundred}
-            paragraphfontweight="500"
-          >
-            <h5>Quantity</h5>
-            <QuantityTracker
-              buttonwidth="1rem"
-              buttonheight="1rem"
-              counterwidth="6rem"
-              counterfontsize="0.825rem"
-              iconsize="0.625rem"
-              setItemQuantity={setItemQuantity}
-              counterpadding="0.5rem"
-            />
-          </Content>
-        </Flexbox>
+          <h3>Quantity</h3>
+          <QuantityTracker
+            buttonwidth="1rem"
+            buttonheight="1rem"
+            counterwidth="6rem"
+            counterfontsize="0.825rem"
+            iconsize="0.625rem"
+            setItemQuantity={setItemQuantity}
+            counterpadding="0.5rem"
+          />
+        </Content>
         <Flexbox
           flex="flex"
           alignitems="flex-end"

@@ -329,6 +329,7 @@ const NumberInputIcon = styled.div`
 
 const QuantityWrapper = styled.div`
   position: relative;
+  display: inline-block;
   width: ${props => props.width};
 `
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { colors, convertToDecimal } from "../../styles/variables"
+import { colors, convertToDecimal, fonts } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { CaretDown, CaretUp } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
@@ -137,7 +137,7 @@ function ShoppingCart() {
                           <Flexbox
                             margin="1rem 0 0"
                           >
-                            {item.category === "notebooks" && (
+                            {item.custom ? (
                               <>
                                 <Flexbox
                                   flex="flex"
@@ -146,7 +146,7 @@ function ShoppingCart() {
                                   margin="0 0 0.25rem 0"
                                 >
                                   <Content
-                                    headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+                                    headingfontfamily={fonts.secondary}
                                     h3fontsize="0.75rem"
                                     h3margin="0"
                                     margin="0"
@@ -168,43 +168,96 @@ function ShoppingCart() {
                                   margin="0 0 0.25rem 0"
                                 >
                                   <Content
-                                    headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+                                    headingfontfamily={fonts.secondary}
                                     h3fontsize="0.75rem"
                                     h3margin="0"
                                     margin="0"
                                   >
-                                    <h3>Left pages</h3>
+                                    <h3>Pages</h3>
                                   </Content>
                                   <Content
                                     paragraphfontsize="0.875rem"
                                     paragraphmarginbottom="0"
                                     paragraphtexttransform="capitalize"
                                   >
-                                    <p>{item.leftPageData.template}</p>
+                                    <Link to={`/customize/${item.slug}/${item.bookId}`}>
+                                      <p>View</p>
+                                    </Link>
                                   </Content>
                                 </Flexbox>
-                                <Flexbox
-                                  flex="flex"
-                                  alignitems="center"
-                                  justifycontent="space-between"
-                                  margin="0 0 0.25rem 0"
-                                >
-                                  <Content
-                                    headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-                                    h3fontsize="0.75rem"
-                                    h3margin="0"
-                                    margin="0"
-                                  >
-                                    <h3>Right pages</h3>
-                                  </Content>
-                                  <Content
-                                    paragraphfontsize="0.875rem"
-                                    paragraphmarginbottom="0"
-                                    paragraphtexttransform="capitalize"
-                                  >
-                                    <p>{item.rightPageData.template}</p>
-                                  </Content>
-                                </Flexbox>
+                              </>
+                            ) : (
+                              <>
+                                {item.category === "notebooks" && (
+                                  <>
+                                    <Flexbox
+                                      flex="flex"
+                                      alignitems="center"
+                                      justifycontent="space-between"
+                                      margin="0 0 0.25rem 0"
+                                    >
+                                      <Content
+                                        headingfontfamily={fonts.secondary}
+                                        h3fontsize="0.75rem"
+                                        h3margin="0"
+                                        margin="0"
+                                      >
+                                        <h3>Cover</h3>
+                                      </Content>
+                                      <Content
+                                        paragraphfontsize="0.875rem"
+                                        paragraphmarginbottom="0"
+                                        paragraphtexttransform="capitalize"
+                                      >
+                                        <p>{item.coverColor}</p>
+                                      </Content>
+                                    </Flexbox>
+                                    <Flexbox
+                                      flex="flex"
+                                      alignitems="center"
+                                      justifycontent="space-between"
+                                      margin="0 0 0.25rem 0"
+                                    >
+                                      <Content
+                                        headingfontfamily={fonts.secondary}
+                                        h3fontsize="0.75rem"
+                                        h3margin="0"
+                                        margin="0"
+                                      >
+                                        <h3>Left pages</h3>
+                                      </Content>
+                                      <Content
+                                        paragraphfontsize="0.875rem"
+                                        paragraphmarginbottom="0"
+                                        paragraphtexttransform="capitalize"
+                                      >
+                                        <p>{item.leftPageData.template}</p>
+                                      </Content>
+                                    </Flexbox>
+                                    <Flexbox
+                                      flex="flex"
+                                      alignitems="center"
+                                      justifycontent="space-between"
+                                      margin="0 0 0.25rem 0"
+                                    >
+                                      <Content
+                                        headingfontfamily={fonts.secondary}
+                                        h3fontsize="0.75rem"
+                                        h3margin="0"
+                                        margin="0"
+                                      >
+                                        <h3>Right pages</h3>
+                                      </Content>
+                                      <Content
+                                        paragraphfontsize="0.875rem"
+                                        paragraphmarginbottom="0"
+                                        paragraphtexttransform="capitalize"
+                                      >
+                                        <p>{item.rightPageData.template}</p>
+                                      </Content>
+                                    </Flexbox>
+                                  </>
+                                )}
                               </>
                             )}
                           </Flexbox>

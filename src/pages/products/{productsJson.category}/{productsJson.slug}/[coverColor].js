@@ -264,7 +264,6 @@ export const pageQuery = graphql`
           }
           gatsbyImageData(
             width: 800
-            placeholder: TRACED_SVG
             quality: 100
           )
         }
@@ -280,7 +279,6 @@ export const pageQuery = graphql`
           gatsbyImageData(
             width: 80
             height: 80
-            placeholder: TRACED_SVG
             quality: 100
           )
         }
