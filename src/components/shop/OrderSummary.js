@@ -10,14 +10,14 @@ import Content from "../Content"
 const Orders = styled.div`
   background-color: ${colors.white};
   border-radius: 8px;
-  border: 2px solid ${colors.gray.nineHundred};
+  border: 1px solid ${colors.gray.nineHundred};
   box-shadow: ${colors.shadow.solid};
   margin-bottom: 16px;
 `
 
 const OrderSection = styled.div`
   padding: 16px;
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: 1px solid ${colors.gray.nineHundred};
 `
 
 function OrderSummary({ selectedRate, taxRate }) {

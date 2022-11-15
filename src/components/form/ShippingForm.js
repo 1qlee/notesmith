@@ -30,7 +30,7 @@ const ShippingItemsContainer = styled.div`
 `
 
 const ShippingItem = styled(Flexbox)`
-  border: 2px solid ${colors.gray.nineHundred}; 
+  border: 1px solid ${colors.gray.nineHundred}; 
   border-radius: 0.5rem;
   box-shadow: ${colors.shadow.solid};
   transition: box-shadow 0.2s, transform 0.2s;

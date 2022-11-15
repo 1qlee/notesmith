@@ -1,21 +1,26 @@
 import React from "react"
+import styled from "styled-components"
 import { fonts } from "../../styles/variables"
-import Content from "../Content"
-import Highlight from "../misc/Highlight"
+import RandomLine from "../misc/Lines"
+
+const StyledSectionHeading = styled.div`
+  margin-bottom: 32px;
+  display: inline-block;
+  position: relative;
+  h2 {
+    font-size: 1rem;
+    font-family: ${fonts.secondary};
+  }
+`
 
 function SectionHeading({
   children
 }) {
   return (
-    <Content
-      h2fontsize="1rem"
-      h2margin="0"
-      headingfontfamily={fonts.secondary}
-      padding="0 0 8px 0"
-      margin="0 0 32px"
-    >
-      <h2><Highlight>{children}</Highlight></h2>
-    </Content>
+    <StyledSectionHeading>
+      <h2>{children}</h2>
+      <RandomLine />
+    </StyledSectionHeading>
   )
 }
 

@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { colors, widths } from "../styles/variables"
 
 const Content = styled.div`
-  background: ${props => props.background};
+  background-color: ${props => props.backgroundcolor};
   border: ${props => props.border};
   border-bottom: ${props => props.borderbottom};
   box-shadow: ${props => props.boxshadow};
@@ -11,6 +11,7 @@ const Content = styled.div`
   max-width: ${props => props.maxwidth};
   padding: ${props => props.padding ? props.padding : "0"};
   position: relative;
+  text-align: ${props => props.textalign};
   width: ${props => props.width};
   &.has-border-bottom {
     border-bottom: 2px solid ${props => props.bordercolor};
@@ -107,6 +108,9 @@ const Content = styled.div`
       cursor: pointer;
       color: ${props => props.linkcolorhover};
     }
+  }
+  blockquote {
+    font-size: ${props => props.blockquotefontsize};
   }
 `
 

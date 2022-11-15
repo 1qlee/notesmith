@@ -87,8 +87,7 @@ function ProductImages({
     }
 
     parseImages(productImages, coverColor, productThumbnails)
-    console.log(allImages)
-  }, [productImages, coverColor])
+  }, [productImages, productThumbnails, coverColor])
 
   function handleSelectImage(img, index) {
     setActiveImage(index)

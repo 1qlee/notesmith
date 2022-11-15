@@ -4,11 +4,11 @@ import { navigate } from "gatsby"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { ArrowLeft, CheckSquare, Square, CircleNotch } from "phosphor-react"
+import { ArrowLeft, CircleNotch } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 
 import { Flexbox } from "../layout/Flexbox"
-import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
+import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
 import ShippingInfo from "./ShippingInfo"
 import Button from "../Button"
 import Icon from "../Icon"
@@ -64,21 +64,17 @@ function CheckoutForm({
   customer,
   pid,
   processing,
-  selectedRate,
   setActiveTab,
-  setLoading,
   setPaymentProcessing,
   setProcessing,
   setShippingMethod,
   setShowShippingMethod,
-  shipmentId,
   shippingMethod,
-  taxRate,
 }) {
   const [error, setError] = useState(null)
   const [focused, setFocused] = useState(false)
   const { clearCart, cartDetails } = useShoppingCart()
-  const { user, firebaseDb } = useFirebaseContext()
+  const { firebaseDb } = useFirebaseContext()
   const elements = useElements()
   const stripe = useStripe()
 

@@ -75,7 +75,8 @@ const ProductInfo = ({
       <Content
         margin="0 0 1rem 0"
         h1fontsize="3rem"
-        h1margin="0"
+        h1margin="0 0 1rem"
+        h1fontweight="400"
         h2fontsize="2rem"
         h2fontweight="400"
         h2margin="0"

@@ -10,7 +10,7 @@ const Infobox = styled.div`
   background-color: ${colors.white};
   padding: ${props => props.padding ? props.padding : "0 1rem"};
   border-radius: 0.5rem;
-  border: 2px solid ${colors.gray.nineHundred};
+  border: 1px solid ${colors.gray.nineHundred};
   box-shadow: ${colors.shadow.solid};
   margin-bottom: 2rem;
 `

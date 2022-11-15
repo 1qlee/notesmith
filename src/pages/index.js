@@ -13,7 +13,6 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import { StyledLabel } from "../components/form/FormComponents"
 import Book3d from "../components/index/Book3d"
 import Button from "../components/Button"
-import BoxText from "../components/index/BoxText"
 import CircledText from "../components/CircledText"
 import Content from "../components/Content"
 import DemoControls from "../components/index/DemoControls"
@@ -31,6 +30,7 @@ import Tag from "../components/ui/Tag"
 import SectionHeading from "../components/index/SectionHeading"
 import TabContent from "../components/index/TabContent"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
+import Philosophies from "../components/index/Philosophies"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -86,6 +86,7 @@ const IndexPage = ({ data }) => {
   const rightPageData = {
     template: ""
   }
+  const patternStyle = { position: 'relative', zIndex: "3" }
 
   return (
     <Layout>
@@ -114,10 +115,10 @@ const IndexPage = ({ data }) => {
                         zindex="1"
                       />
                       <Content
-                        background={colors.white}
+                        backgroundcolor={colors.white}
                         paragraphfontsize="1.25rem"
                         smallfontsize="0.8rem"
-                        style={{ position: 'relative', zIndex: "3" }}
+                        style={patternStyle}
                         margin="0 0 2rem"
                         h1margin="0 0 2rem"
                         maxwidth={widths.content.index}
@@ -167,6 +168,27 @@ const IndexPage = ({ data }) => {
                     <PageDemoCarousel />
                   </Cell>
                 </Grid>
+              </SectionContent>
+            </LayoutContainer>
+          </Container>
+        </Section>
+        <Section
+        >
+          <Pattern
+            width="100%"
+            height="100%"
+            top="0"
+            left="0"
+            pattern="pattern-25"
+            color={colors.gray.threeHundred}
+            zindex="1"
+          />
+          <Container>
+            <LayoutContainer>
+              <SectionContent>
+                <Philosophies 
+                  patternStyle={patternStyle}
+                />
               </SectionContent>
             </LayoutContainer>
           </Container>
@@ -439,11 +461,11 @@ const IndexPage = ({ data }) => {
                         <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                       </Content>
                       <Flexbox
-                        padding="1rem 0"
+                        padding="16px 0"
                         flex="flex"
                         alignitems="center"
                         justifycontent="space-between"
-                        className="has-border-bottom"
+                        className="has-border-top"
                         bordercolor={colors.gray.nineHundred}
                       >
                         <StyledLabel
@@ -474,11 +496,11 @@ const IndexPage = ({ data }) => {
                         </Tag>
                       </Flexbox>
                       <Flexbox
-                        padding="1rem 0"
+                        padding="16px 0"
                         flex="flex"
                         alignitems="center"
                         justifycontent="space-between"
-                        className="has-border-bottom"
+                        className="has-border-top"
                         bordercolor={colors.gray.nineHundred}
                       >
                         <StyledLabel
@@ -509,12 +531,11 @@ const IndexPage = ({ data }) => {
                         </Tag>
                       </Flexbox>
                       <Flexbox
-                        padding="1rem 0"
+                        padding="16px 0"
                         flex="flex"
                         alignitems="center"
                         justifycontent="space-between"
-                        className="has-border-bottom"
-                        margin="0 0 1rem"
+                        className="has-border-top"
                       >
                         <StyledLabel
                           margin="0"
@@ -547,7 +568,7 @@ const IndexPage = ({ data }) => {
                       <Flexbox
                         flex="flex"
                         alignitems="center"
-                        margin="1rem 0 0"
+                        padding="16px 0"
                       >
                         <Icon>
                           <WarningCircle />

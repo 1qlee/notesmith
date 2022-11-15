@@ -388,8 +388,9 @@ const AuthFormWrapper = styled.div`
 
 const StyledFieldset = styled.fieldset`
   border: none;
-  margin: ${props => props.margin};
+  margin: ${props => props.margin || "0 0 16px"};
   position: relative;
+  flex: 1;
   width: ${props => props.width};
 `
 

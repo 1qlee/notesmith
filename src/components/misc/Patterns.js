@@ -140,8 +140,7 @@ function Pattern({
   zindex,
 }) {
   return (
-    <svg 
-      class="pattern_svg" 
+    <svg
       width={width}
       height={height}
       style={{
@@ -151,7 +150,7 @@ function Pattern({
         zIndex: zindex,
       }}
     >
-      <rect 
+      <rect
         height={height}
         width={width}
         fill={`url(#${pattern})`}

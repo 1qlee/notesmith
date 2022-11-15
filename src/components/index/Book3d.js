@@ -168,8 +168,8 @@ function Book3d({
   const [showBackCover, setShowBackCover] = useState(false)
   const [coverColor, setCoverColor] = useState("white")
   const [pageDimensions, setPageDimensions] = useState({
-    width: 596.98,
-    height: 361.03,
+    height: 594.67,
+    width: 361.25,
   })
   const covers = [
     {
@@ -200,7 +200,10 @@ function Book3d({
               <>
                 <Measure
                   bounds
-                  onResize={contentRect => setPageDimensions(contentRect.bounds)}
+                  onResize={contentRect => setPageDimensions({
+                    height: contentRect.bounds.height,
+                    width: contentRect.bounds.width,
+                  })}
                 >
                   {({ measureRef }) => (
                     <StyledDemoTemplate

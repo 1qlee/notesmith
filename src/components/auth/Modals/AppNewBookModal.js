@@ -1,5 +1,5 @@
 import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
-import { colors, convertToPx, fonts, pageMargins } from "../../../styles/variables"
+import { colors, fonts, pageMargins } from "../../../styles/variables"
 import { navigate, graphql, useStaticQuery } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import React, { useState } from "react"
@@ -67,12 +67,11 @@ function NewBookModal({
       }
     }
   `)
-  const minimumMargin = pageMargins.minimum
   const pageWidth = bookData.widthPixel - pageMargins.horizontal
   const pageHeight = bookData.heightPixel - pageMargins.vertical
 
   // creating a new book in the db
-  async function createNewBook() {
+  async function createNewBook(e) {
     setProcessing(true)
     // check to see if title is empty
     if (!bookData.title || bookData.title.trim().length === 0) {
@@ -250,29 +249,34 @@ function NewBookModal({
         )}
         {step === 2 && (
           <StepContent>
-            <StyledInput
-              type="text"
-              id="new-book-title"
-              name="new-book-title"
-              autocomplete="false"
-              placeholder="Name your new book"
-              onChange={e => setBookData({
-                ...bookData,
-                title: e.target.value.trim(),
-              })}
-              onFocus={() => setBookTitleError({
-                show: false,
-                msg: "",
-              })}
-            />
-            {bookTitleError.show && (
-              <ErrorLine color={colors.red.sixHundred}>
-                <Icon>
-                  <Warning weight="fill" color={colors.red.sixHundred} size={18} />
-                </Icon>
-                <span>{bookTitleError.msg}</span>
-              </ErrorLine>
-            )}
+            <form 
+              id="create-book-form"
+              onSubmit={createNewBook}
+            >
+              <StyledInput
+                type="text"
+                id="new-book-title"
+                name="new-book-title"
+                autocomplete="false"
+                placeholder="Name your new book"
+                onChange={e => setBookData({
+                  ...bookData,
+                  title: e.target.value.trim(),
+                })}
+                onFocus={() => setBookTitleError({
+                  show: false,
+                  msg: "",
+                })}
+              />
+              {bookTitleError.show && (
+                <ErrorLine color={colors.red.sixHundred}>
+                  <Icon>
+                    <Warning weight="fill" color={colors.red.sixHundred} size={18} />
+                  </Icon>
+                  <span>{bookTitleError.msg}</span>
+                </ErrorLine>
+              )}
+            </form>
           </StepContent>
         )}
         <Flexbox
@@ -307,6 +311,9 @@ function NewBookModal({
           disabled={processing || !bookData.title || bookData.title.trim().length === 0 || step < 2}
           onClick={e => createNewBook()}
           padding="1rem"
+          type="submit"
+          value="Submit"
+          form="create-book-form"
           width="100%"
         >
           {processing ? (

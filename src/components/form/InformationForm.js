@@ -215,12 +215,11 @@ function InformationForm({
       onSubmit={submitInformationForm}
       id="checkout-shipping-form"
     >
-      <StyledFieldset
-        className="is-flex"
-        margin="0 0 1rem 0"
+      <Flexbox
+        flex="flex"
       >
         <StyledFieldset
-          className="is-vertical"
+          margin="0 16px 16px 0"
         >
           <StyledLabel htmlFor="checkout-name">Full Name</StyledLabel>
           <StyledInput
@@ -228,7 +227,7 @@ function InformationForm({
             className={nameError && "is-error"}
             name="name"
             onBlur={e => validateInput(e)}
-            onChange={e => setCustomer({...customer, name: e.target.value})}
+            onChange={e => setCustomer({ ...customer, name: e.target.value })}
             onFocus={e => onInputFocus(e)}
             placeholder="John Doe"
             required
@@ -251,7 +250,7 @@ function InformationForm({
             id="checkout-email"
             className={emailError && "is-error"}
             name="email"
-            onChange={e => setCustomer({...customer, email: e.target.value})}
+            onChange={e => setCustomer({ ...customer, email: e.target.value })}
             onBlur={e => validateInput(e)}
             onFocus={e => onInputFocus(e)}
             placeholder="name@email.com"
@@ -267,7 +266,7 @@ function InformationForm({
             </ErrorLine>
           )}
         </StyledFieldset>
-      </StyledFieldset>
+      </Flexbox>
       <StyledFieldset
         className="is-vertical"
         margin="0 0 1rem 0"
@@ -332,12 +331,11 @@ function InformationForm({
           </ErrorLine>
         )}
       </StyledFieldset>
-      <StyledFieldset
-        className="is-flex"
-        margin="0 0 1rem 0"
+      <Flexbox
+        flex="flex"
       >
         <StyledFieldset
-          className="is-vertical"
+          margin="0 16px 16px 0"
         >
           <SelectWrapper>
             <StyledLabel htmlFor="checkout-country">Country</StyledLabel>
@@ -357,7 +355,7 @@ function InformationForm({
           </SelectWrapper>
         </StyledFieldset>
         <StyledFieldset
-          className="is-vertical"
+          margin="0 16px 16px 0"
         >
           <SelectWrapper>
             <StyledLabel htmlFor="checkout-state">State / Region</StyledLabel>
@@ -386,9 +384,7 @@ function InformationForm({
             </ErrorLine>
           )}
         </StyledFieldset>
-        <StyledFieldset
-          className="is-vertical"
-        >
+        <StyledFieldset>
           <StyledLabel htmlFor="checkout-postal">Postal Code</StyledLabel>
           <StyledInput
             id="checkout-postal"
@@ -409,7 +405,7 @@ function InformationForm({
             </ErrorLine>
           )}
         </StyledFieldset>
-      </StyledFieldset>
+      </Flexbox>
       <Flexbox
         flex="flex"
         justifycontent="space-between"

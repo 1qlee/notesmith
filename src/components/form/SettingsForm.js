@@ -207,14 +207,15 @@ function SettingsForm() {
         flex="flex"
         alignitems="center"
         justifycontent="space-between"
-        margin="2rem 0"
+        margin="16px 0"
       >
-        <h2>Settings</h2>
+        <h2>Account Information</h2>
         <FlexboxButtons>
           {showSettingsForm ? (
             <>
               <Button
                 backgroundcolor={colors.gray.oneHundred}
+                color={colors.gray.nineHundred}
                 onClick={() => {
                   setShowSettingsForm(false)
                   clearError("email")
@@ -225,8 +226,8 @@ function SettingsForm() {
                 Cancel
               </Button>
               <Button
-                backgroundcolor={colors.primary.sixHundred}
-                color={colors.primary.oneHundred}
+                backgroundcolor={colors.gray.nineHundred}
+                color={colors.gray.oneHundred}
                 form="settings-form"
                 type="submit"
                 disabled={!emailValidated}
@@ -236,13 +237,14 @@ function SettingsForm() {
             </>
           ) : (
             <Button
-              backgroundcolor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
               onClick={() => {
                 setShowSettingsForm(true)
                 setNewEmail("")
               }}
             >
-              Edit settings
+              Change
             </Button>
           )}
         </FlexboxButtons>
@@ -254,15 +256,14 @@ function SettingsForm() {
           justifycontent="space-between"
           margin="2rem 0"
         >
-          <div>
-            <h4>Email</h4>
-            <p>You'll use this email for all communications.</p>
-          </div>
+          <Content>
+            <StyledLabel>Email address</StyledLabel>
+            <p>This email is used for communication and for logging into your account.</p>
+          </Content>
           {showSettingsForm ? (
             <StyledFieldset className="is-vertical">
               <StyledInput
                 className="has-width-auto"
-                borderradius="0"
                 placeholder={user.email}
                 onChange={e => validateEmail(e.currentTarget.value)}
               />
@@ -285,13 +286,14 @@ function SettingsForm() {
           justifycontent="space-between"
           margin="2rem 0"
         >
-          <div>
-            <h4>Password</h4>
-            <p>Minimum eight characters.</p>
-          </div>
+          <Content>
+            <StyledLabel>Email address</StyledLabel>
+            <p>Must be a minimum of eight characters.</p>
+          </Content>
           {showSettingsForm ? (
             <Button
-              backgroundcolor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
               onClick={e => {
                 e.preventDefault()
                 setShowModal({
@@ -360,7 +362,7 @@ function SettingsForm() {
           ) : (
             <>
               <ModalHeader>
-                <h5>Change your password</h5>
+                <h3>Change your password</h3>
               </ModalHeader>
               <ModalContent>
                 <Content>
@@ -371,7 +373,6 @@ function SettingsForm() {
                     >
                       <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
                       <StyledInput
-                        borderradius="0"
                         id="new-password"
                         type="password"
                         name="new-password"
@@ -384,13 +385,13 @@ function SettingsForm() {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundcolor={colors.primary.sixHundred}
-                  color={colors.white}
+                  backgroundcolor={colors.gray.nineHundred}
+                  color={colors.gray.oneHundred}
                   width="100%"
                   form="change-password"
                   type="submit"
+                  padding="16px"
                   disabled={!passwordValidated || loading}
-                  className="is-medium"
                 >
                   Change password
                 </Button>
