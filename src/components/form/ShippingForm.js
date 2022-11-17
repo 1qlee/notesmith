@@ -5,11 +5,11 @@ import { useShoppingCart } from "use-shopping-cart"
 import { CheckCircle, Circle, CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
+import Content from "../ui/Content"
 import ShippingInfo from "./ShippingInfo"
-import Icon from "../Icon"
-import TextLink from "../TextLink"
-import Button from "../Button"
+import Icon from "../ui/Icon"
+import TextLink from "../ui/TextLink"
+import Button from "../ui/Button"
 import Tag from "../ui/Tag"
 
 const rotate = keyframes`

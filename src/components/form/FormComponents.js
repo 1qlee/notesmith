@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors, fonts, convertFloatFixed, widths } from "../../styles/variables"
 import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
 
-import Icon from "../Icon"
+import Icon from "../ui/Icon"
 
 function QuantityTracker(props) {
   const { setItemQuantity, initialQuantity } = props

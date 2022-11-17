@@ -2,8 +2,8 @@ import React from "react"
 import { colors } from "../../../styles/variables"
 
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
-import Button from "../../Button"
-import Content from "../../Content"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 
 function DeleteBookModal({
   bookToBeDeleted,

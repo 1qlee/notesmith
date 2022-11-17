@@ -1,5 +1,5 @@
 import React from "react"
-import NotesmithLogo from "../assets/notesmith-logo.svg"
+import NotesmithLogo from "../../assets/notesmith-logo.svg"
 
 function Logo(props) {
   return (

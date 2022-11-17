@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { CaretDown, CaretUp } from "phosphor-react"
 
-import Icon from "../../Icon"
+import Icon from "../../ui/Icon"
 
 const StyledPageBox = styled.div`
   border-bottom: 1px solid ${colors.gray.threeHundred};

@@ -7,9 +7,9 @@ import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
-import Button from "../Button"
-import Content from "../Content"
-import Icon from "../Icon"
+import Button from "../ui/Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
 import Seo from "../layout/Seo"
 
 const SignupForm = () => {

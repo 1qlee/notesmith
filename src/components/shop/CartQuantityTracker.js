@@ -4,7 +4,7 @@ import { useShoppingCart } from 'use-shopping-cart'
 
 import { Plus, Minus } from "phosphor-react"
 import { QuantityWrapper, QuantityButton, Counter } from "../form/FormComponents"
-import Icon from "../Icon"
+import Icon from "../ui/Icon"
 
 function CartQuantityTracker(props) {
   const {

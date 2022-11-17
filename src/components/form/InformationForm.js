@@ -7,10 +7,10 @@ import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-countr
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"
-import Button from "../Button"
-import Icon from "../Icon"
+import Button from "../ui/Button"
+import Icon from "../ui/Icon"
 import Loading from "../../assets/loading.svg"
-import TextLink from "../TextLink"
+import TextLink from "../ui/TextLink"
 
 function InformationForm({
   address,

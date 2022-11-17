@@ -10,9 +10,9 @@ import { useFirebaseContext } from "../../utils/auth"
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
 import ShippingInfo from "./ShippingInfo"
-import Button from "../Button"
-import Icon from "../Icon"
-import TextLink from "../TextLink"
+import Button from "../ui/Button"
+import Icon from "../ui/Icon"
+import TextLink from "../ui/TextLink"
 
 const cardOptions = {
   style: {

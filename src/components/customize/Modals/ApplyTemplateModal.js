@@ -9,9 +9,9 @@ import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import { Grid, Cell } from "styled-css-grid"
 import Notification from "../../ui/Notification"
-import Icon from "../../Icon"
-import Button from "../../Button"
-import Content from "../../Content"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 
 const PageRangeWrapper = styled.div`
   display: flex;

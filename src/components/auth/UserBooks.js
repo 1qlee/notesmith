@@ -8,10 +8,10 @@ import 'svg2pdf.js'
 import { Flexbox } from "../layout/Flexbox"
 import AuthLayout from "./components/AuthLayout"
 import BooksContainer from "./books/BooksContainer"
-import Button from "../Button"
+import Button from "../ui/Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
-import Loader from "../Loader"
+import Loader from "../misc/Loader"
 import NewBookModal from "./modals/AppNewBookModal"
 import Seo from "../layout/Seo"
 

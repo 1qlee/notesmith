@@ -8,9 +8,9 @@ import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import { Flexbox } from "../../layout/Flexbox"
 import Notification from "../../ui/Notification"
-import Icon from "../../Icon"
-import Button from "../../Button"
-import Content from "../../Content"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 
 function ValidateAddressModal({
   address,

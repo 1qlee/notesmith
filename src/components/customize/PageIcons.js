@@ -9,7 +9,7 @@ import SeyesIcon from "../../assets/seyes.svg"
 import CalligraphyIcon from "../../assets/calligraphy.svg"
 
 import { Flexbox } from "../layout/Flexbox"
-import Icon from "../Icon"
+import Icon from "../ui/Icon"
 
 const StyledPage = styled.a`
   align-items: center;

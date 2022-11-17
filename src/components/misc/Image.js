@@ -1,7 +1,7 @@
 import React from "react"
 import Img from "gatsby-image"
 import styled from "styled-components"
-import { colors } from "../styles/variables"
+import { colors } from "../../styles/variables"
 
 const ImageWrapper = styled.figure`
   background-color: ${props => props.caption ? colors.black : null};

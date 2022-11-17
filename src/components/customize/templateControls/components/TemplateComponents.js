@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { colors } from "../../../../styles/variables"
 
-import Button from "../../../Button"
+import Button from "../../../ui/Button"
 
 const ControlWrapper = styled.div`
   position: relative;

@@ -2,8 +2,8 @@ import React from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
 
-import TextLink from "../TextLink"
-import Content from "../Content"
+import TextLink from "../ui/TextLink"
+import Content from "../ui/Content"
 import { Flexbox } from "../layout/Flexbox"
 
 const Infobox = styled.div`

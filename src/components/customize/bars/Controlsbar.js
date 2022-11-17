@@ -2,7 +2,7 @@ import React from "react"
 import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
 
 import { ControlsContent, ControlsFooter } from "../Controls"
-import Button from "../../Button"
+import Button from "../../ui/Button"
 import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"

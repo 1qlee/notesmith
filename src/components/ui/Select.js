@@ -4,8 +4,8 @@ import PropTypes from "prop-types"
 import { colors, fonts } from "../../styles/variables"
 import { Check, CaretDown } from "phosphor-react"
 
-import Icon from "../Icon"
-import Button from "../Button"
+import Icon from "../ui/Icon"
+import Button from "../ui/Button"
 import { Flexbox } from "../layout/Flexbox"
 
 const StyledSelect = styled.div`

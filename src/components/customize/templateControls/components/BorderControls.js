@@ -4,7 +4,7 @@ import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel, StyledCheckbox, RangeInput } from "../../../form/FormComponents"
 import { BorderOptions, ControlFlexWrapper, ControlFlexChild } from "./TemplateComponents"
-import Icon from "../../../Icon"
+import Icon from "../../../ui/Icon"
 
 function BorderControls({
   pageData,

@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
-import Content from "../Content"
+import Content from "../ui/Content"
 
 const StyledContent = styled(Content)`
   position: relative;

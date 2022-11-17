@@ -6,9 +6,9 @@ import { WarningCircle, CircleNotch } from "phosphor-react"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
-import Button from "../Button"
-import Icon from "../Icon"
+import Content from "../ui/Content"
+import Button from "../ui/Button"
+import Icon from "../ui/Icon"
 import Seo from "../layout/Seo"
 
 const SigninForm = () => {

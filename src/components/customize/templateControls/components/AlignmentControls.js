@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors, convertFloatFixed, convertToMM } from "../../../../styles/variables"
 
 import { StyledLabel } from "../../../form/FormComponents"
-import Button from "../../../Button"
+import Button from "../../../ui/Button"
 
 const AlignmentButtonWrapper = styled.div`
   display: flex;

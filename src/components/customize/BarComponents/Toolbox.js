@@ -4,8 +4,8 @@ import { colors } from "../../../styles/variables"
 import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
-import Icon from "../../Icon"
-import Button from "../../Button"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
 
 const ToolItem = styled.div`
   padding: 1rem;

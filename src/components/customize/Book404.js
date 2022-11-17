@@ -3,7 +3,7 @@ import React from "react"
 import Layout from "../layout/Layout"
 import Seo from "../layout/Seo"
 import Nav from "../layout/Nav"
-import Content from "../Content"
+import Content from "../ui/Content"
 import { Container, LayoutContainer } from "../layout/Container"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 

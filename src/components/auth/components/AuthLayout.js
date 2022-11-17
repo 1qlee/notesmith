@@ -7,8 +7,8 @@ import { Container, LayoutContainer } from "../../layout/Container"
 import { Flexbox } from "../../layout/Flexbox"
 import { SectionMain, Section } from "../../layout/Section"
 import AuthNav from "./AuthNav"
-import Logo from "../../Logo"
-import Icon from "../../Icon"
+import Logo from "../../misc/Logo"
+import Icon from "../../ui/Icon"
 
 function AuthLayout({
   children,

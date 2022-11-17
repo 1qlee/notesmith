@@ -2,8 +2,8 @@ import React from "react"
 
 import { StyledFieldset, StyledSelect, StyledLabel } from "../form/FormComponents"
 import { ProductDetails } from "../shop/ShopComponents"
-import Content from "../Content"
-import Button from "../Button"
+import Content from "../ui/Content"
+import Button from "../ui/Button"
 
 const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
   return (

@@ -8,7 +8,7 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import Loader from "../components/Loader"
+import Loader from "../components/misc/Loader"
 
 const Forgot = () => {
   const { user, loading } = useFirebaseContext()

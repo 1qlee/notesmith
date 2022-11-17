@@ -6,8 +6,8 @@ import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
 
-import TextLink from "../TextLink"
-import Logo from "../Logo"
+import TextLink from "../ui/TextLink"
+import Logo from "../misc/Logo"
 
 const StyledNav = styled.nav`
   background-color: ${colors.white};

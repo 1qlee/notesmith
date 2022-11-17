@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { Container, LayoutContainer } from "../../../../components/layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
-import Content from "../../../../components/Content"
+import Content from "../../../../components/ui/Content"
 import Layout from "../../../../components/layout/Layout"
 import Nav from "../../../../components/layout/Nav"
 import ProductImages from "../../../../components/shop/ProductImages"

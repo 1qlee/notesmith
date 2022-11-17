@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import Button from "../Button"
+import Button from "../ui/Button"
 import { colors, regex } from "../../styles/variables"
 import { CircleNotch } from "phosphor-react"
 
 import { StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import Icon from "../Icon"
+import Icon from "../ui/Icon"
 
 function RegisterForm({
   color,

@@ -4,8 +4,8 @@ import { colors } from "../../styles/variables"
 import { Files, Book, Stamp } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
-import Icon from "../Icon"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
 
 const FactSheet = styled.article`
   margin: ${props => props.margin};

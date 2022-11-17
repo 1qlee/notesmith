@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import Toastify from "../ui/Toastify"
 import Layout from "../layout/Layout"
-import Content from "../Content"
+import Content from "../ui/Content"
 import Seo from "../layout/Seo"
 import AuthLayout from "./components/AuthLayout"
 import sendEmailVerification from "../../functions/sendEmailVerification"

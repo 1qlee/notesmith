@@ -11,26 +11,27 @@ import { Grid, Cell } from "styled-css-grid"
 import { Patterns, Pattern } from "../components/misc/Patterns"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { StyledLabel } from "../components/form/FormComponents"
+import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
-import Button from "../components/Button"
-import CircledText from "../components/CircledText"
-import Content from "../components/Content"
+import Button from "../components/ui/Button"
+import CircledText from "../components/misc/CircledText"
+import Content from "../components/ui/Content"
 import DemoControls from "../components/index/DemoControls"
-import Icon from "../components/Icon"
+import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
+import Note from "../components/ui/Note"
 import Notification from "../components/ui/Notification"
+import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
+import Philosophies from "../components/index/Philosophies"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
-import Seo from "../components/layout/Seo"
-import TextLink from "../components/TextLink"
-import { Tabs } from "../components/ui/Tabs"
-import Tag from "../components/ui/Tag"
 import SectionHeading from "../components/index/SectionHeading"
+import Seo from "../components/layout/Seo"
 import TabContent from "../components/index/TabContent"
-import PageDemoCarousel from "../components/index/PageDemoCarousel"
-import Philosophies from "../components/index/Philosophies"
+import Tag from "../components/ui/Tag"
+import TextLink from "../components/ui/TextLink"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -126,10 +127,7 @@ const IndexPage = ({ data }) => {
                         <h1>Design <CircledText text="custom" /> notebooks</h1>
                         <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                       </Content>
-                      <Notification
-                        padding="16px"
-                        maxwidth={widths.notification}
-                      >
+                      <Note>
                         <Content
                           paragraphmarginbottom="1rem"
                           h3fontsize="1rem"
@@ -161,7 +159,7 @@ const IndexPage = ({ data }) => {
                             </Icon>
                           </Button>
                         </Content>
-                      </Notification>
+                      </Note>
                     </Flexbox>
                   </Cell>
                   <Cell>

@@ -4,9 +4,9 @@ import { colors } from "../../../styles/variables"
 import { Info } from "phosphor-react"
 
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
-import Icon from "../../Icon"
-import Button from "../../Button"
-import Content from "../../Content"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 import Notification from "../../ui/Notification"
 
 function CheckLoginModal({ setShowModal }) {

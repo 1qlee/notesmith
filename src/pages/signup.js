@@ -7,7 +7,7 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import { Container, LayoutContainer } from "../components/layout/Container"
 import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
-import Loader from "../components/Loader"
+import Loader from "../components/misc/Loader"
 import Nav from "../components/layout/Nav"
 
 const SignUp = () => {

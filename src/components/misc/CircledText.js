@@ -1,6 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import Circle from "../assets/handwriting-circle.svg"
+import Circle from "../../assets/handwriting-circle.svg"
 
 const draw = keyframes`
   to {

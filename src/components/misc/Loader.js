@@ -1,8 +1,8 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import { colors, widths } from "../styles/variables"
+import { colors } from "../../styles/variables"
 
-import Logo from "../assets/logo-animated.svg"
+import Logo from "../../assets/logo-animated.svg"
 
 const loading = keyframes`
   20%,

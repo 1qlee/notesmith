@@ -9,7 +9,7 @@ import Review2 from "../../assets/peeps/review-2.svg"
 import Review4 from "../../assets/peeps/review-4.svg"
 import Review5 from "../../assets/peeps/review-5.svg"
 
-import Content from "../Content"
+import Content from "../ui/Content"
 
 const StyledReviews = styled.div`
   background-image: url(${LinesBkgd});

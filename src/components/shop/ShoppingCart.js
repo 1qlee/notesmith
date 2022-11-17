@@ -8,10 +8,10 @@ import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import CartQuantityTracker from "./CartQuantityTracker"
 import { Flexbox } from "../layout/Flexbox"
 import { StyledTable } from "../form/FormComponents"
-import TextLink from "../TextLink"
-import Button from "../Button"
-import Content from "../Content"
-import Icon from "../Icon"
+import TextLink from "../ui/TextLink"
+import Button from "../ui/Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
 
 function ShoppingCart() {
   const {

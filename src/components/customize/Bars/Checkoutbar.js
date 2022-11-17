@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
 import { ControlsContent, ControlsFooter } from "../Controls"
-import Icon from "../../Icon"
-import Button from "../../Button"
-import Content from "../../Content"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 import ColorPicker from "../../shop/ColorPicker"
 
 function Checkoutbar({

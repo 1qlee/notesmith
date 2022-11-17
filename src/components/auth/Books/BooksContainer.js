@@ -7,8 +7,8 @@ import { Flexbox } from "../../layout/Flexbox"
 import { SectionAppWorkspace } from "../../layout/Section"
 import { StyledInput, StyledTable } from "../../form/FormComponents"
 import { Select } from "../../ui/Select"
-import Button from "../../Button"
-import Content from "../../Content"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 import ContextMenu from "../../ui/ContextMenu"
 
 // should export this function to utils

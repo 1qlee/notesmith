@@ -6,7 +6,7 @@ import ReactTooltip from "react-tooltip"
 import { NumberInput, StyledLabel, StyledCheckbox, StyledInput, RangeInput } from "../../../form/FormComponents"
 import { BorderOptions, ControlFlexWrapper, ControlFlexChild, ControlWrapper } from "./TemplateComponents"
 import { Flexbox } from "../../../layout/Flexbox"
-import Icon from "../../../Icon"
+import Icon from "../../../ui/Icon"
 
 function DashedLineControls({
   pageData,

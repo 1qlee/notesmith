@@ -4,7 +4,7 @@ import { Grid } from "styled-css-grid"
 import PageIcons from "../PageIcons"
 
 import { ControlsContent, ControlsFooter } from "../Controls"
-import Button from "../../Button"
+import Button from "../../ui/Button"
 
 function Templatesbar({
   pageData,

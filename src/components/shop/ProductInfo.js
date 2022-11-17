@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Flexbox } from "../layout/Flexbox"
 import { QuantityTracker, StyledLabel } from "../form/FormComponents"
-import Button from "../Button"
+import Button from "../ui/Button"
 import ColorPicker from "./ColorPicker"
-import Content from "../Content"
+import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import ProductInfoBox from "./ProductInfoBox"
 

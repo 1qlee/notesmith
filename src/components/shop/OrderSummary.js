@@ -5,7 +5,7 @@ import { useShoppingCart } from "use-shopping-cart"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"
-import Content from "../Content"
+import Content from "../ui/Content"
 
 const Orders = styled.div`
   background-color: ${colors.white};

@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import Icon from "./Icon"
-import { colors } from "../styles/variables"
+import { colors } from "../../styles/variables"
 
 const ListWrapper = styled.ul`
   list-style: none;

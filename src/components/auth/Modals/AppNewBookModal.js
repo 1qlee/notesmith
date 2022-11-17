@@ -12,9 +12,9 @@ import { Flexbox } from "../../layout/Flexbox"
 import ColorPicker from "../../shop/ColorPicker"
 import Tag from "../../ui/Tag"
 import Progress from "../../ui/Progress"
-import Icon from "../../Icon"
-import Button from "../../Button"
-import Content from "../../Content"
+import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 
 const StepContent = styled.div`
   min-height: 36px;

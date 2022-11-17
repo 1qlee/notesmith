@@ -8,7 +8,7 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import SigninForm from "../components/form/SigninForm"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import Loader from "../components/Loader"
+import Loader from "../components/misc/Loader"
 
 const Signin = () => {
   const { user, loading } = useFirebaseContext()

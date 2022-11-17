@@ -6,9 +6,9 @@ import { Warning } from "phosphor-react"
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
 import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "./FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
-import Content from "../Content"
-import Icon from "../Icon"
-import Button from "../Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
+import Button from "../ui/Button"
 
 function SettingsForm() {
   const { user, getAuthCredential } = useFirebaseContext()

@@ -10,7 +10,7 @@ import { Container, LayoutContainer } from "../layout/Container"
 import { Section, SectionMain, SectionContent } from "../layout/Section"
 import Layout from "../layout/Layout"
 import Nav from "../layout/Nav"
-import Content from "../Content"
+import Content from "../ui/Content"
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
   const isBrowser = typeof window !== "undefined"

@@ -6,10 +6,10 @@ import { AuthFormWrapper } from "../../components/form/FormComponents"
 import { Container, LayoutContainer } from "../../components/layout/Container"
 import { Section, SectionMain, SectionContent } from "../../components/layout/Section"
 import ResetPwForm from "../../components/form/ResetPwForm"
-import Content from "../../components/Content"
+import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
 import Nav from "../../components/layout/Nav"
-import Loader from "../../components/Loader"
+import Loader from "../../components/misc/Loader"
 import { Link } from "gatsby"
 
 function Auth({ location }) {

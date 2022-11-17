@@ -1,6 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import Loader from "../components/Loader"
+import Loader from "../components/misc/Loader"
 import TestLogo from "../assets/logo-animated.svg"
 import "../components/layout/master.css"
 

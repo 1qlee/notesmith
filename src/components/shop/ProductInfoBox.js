@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import Content from "../Content"
+import Content from "../ui/Content"
 
 const StyledProductInfoBox = styled.div`
   align-items: flex-start;

@@ -4,8 +4,8 @@ import { WarningCircle, CircleNotch } from "phosphor-react"
 import validatePassword from "../../functions/validatePassword"
 
 import { StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
-import Icon from "../Icon"
-import Button from "../Button"
+import Icon from "../ui/Icon"
+import Button from "../ui/Button"
 
 function ResetPwForm({ handleSubmit, processing, actionCode }) {
   const [password, setPassword] = useState("")

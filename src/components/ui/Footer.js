@@ -7,8 +7,8 @@ import { Section, SectionContent } from "../layout/Section"
 import { Container, LayoutContainer } from "../layout/Container"
 import { Grid, Cell } from "styled-css-grid"
 import RegisterForm from "../form/RegisterForm"
-import Content from "../Content"
-import Logo from "../Logo"
+import Content from "../ui/Content"
+import Logo from "../misc/Logo"
 
 const StyledFooter = styled.footer`
   width: 100%;
