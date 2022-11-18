@@ -171,13 +171,14 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
         <Section
+          backgroundcolor={colors.paper.cream}
         >
           <Pattern
             width="100%"
             height="100%"
             top="0"
             left="0"
-            pattern="pattern-25"
+            pattern="pattern-4"
             color={colors.gray.threeHundred}
             zindex="1"
           />

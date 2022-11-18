@@ -6,7 +6,7 @@ const StyledNote = styled.div`
   padding: 16px 16px 16px 48px;
   position: relative;
   border-radius: 8px;
-  border: 1px solid ${colors.gray.nineHundred};
+  border: 1px solid ${colors.gray.threeHundred};
 `
 
 const NoteHoles = styled.div`
