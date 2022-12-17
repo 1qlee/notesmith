@@ -70,7 +70,7 @@ const Content = styled.div`
     color: ${props => props.h5color || colors.gray.nineHundred};
     display: block;
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
-    font-size: ${props => props.h5fontsize || "1rem"};
+    font-size: ${props => props.h5fontsize || "0.75rem"};
     font-weight: ${props => props.h5fontweight || "700"};
     margin: ${props => props.h5margin};
   }

@@ -3,77 +3,32 @@ import styled from "styled-components"
 import { Quotes } from "phosphor-react"
 import { spacing, widths, colors, fonts } from "../../styles/variables"
 
-import { Grid, Cell } from "styled-css-grid"
+import { Grid } from "styled-css-grid"
 import Highlight from "../misc/Highlight"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
-import RandomLine from "../misc/Lines"
 
 const QuoteBox = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 32px 16px;
-  flex: 1;
-  z-index: ${props => props.zindex};
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 16px;
   position: relative;
-  transition: transform 0.2s;
-  border: 1px solid ${colors.gray.nineHundred};
-  margin-right: -1px;
-  small {
-    opacity: 0;
-    transition: opacity 0.2s;
-    position: relative;
-    display: inline-block;
-    &::before {
-      content: "";
-      background-color: ${colors.highlighter};
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 100%;
-      position: absolute;
-      transition: width 0.2s;
-      z-index: -1;
-    }
-  }
-  &::before {
-    content: "";
-    position: absolute;
-    transition: transform 0.2s, opacity 0.2s;
-    background-color: ${colors.gray.nineHundred};
-    border-radius: 8px;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    opacity: 0;
-    left: 0;
-    top: 0;
-  }
-  &:first-child {
-    border-radius: 8px 0 0 8px;
-  }
-  &:last-child {
-    border-radius: 0 8px 8px 0;
-  }
-  &:hover {
-    p {
-      color: ${colors.gray.oneHundred};
-    }
-    small {
-      opacity: 1;
-      &::before {
-        width: 100%;
-      }
-    }
-    svg {
-      fill: ${colors.gray.oneHundred};
-    }
-    &::before {
-      opacity: 1;
-      transform: scale3d(1.1,1.1,1.1);
-    }
-  }
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid ${colors.gray.nineHundred};
+  z-index: 99;
+`
+
+const QuoteHeading = styled.h3`
+  font-family: ${fonts.secondary};
+  font-size: 0.875rem;
+  border-bottom: 2px solid ${colors.gray.nineHundred};
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+`
+
+const QuoteBlurb = styled.p`
+  line-height: 1.5;
+  font-size: 1.125rem;
 `
 
 function Philosophies({ patternStyle }) {
@@ -89,67 +44,31 @@ function Philosophies({ patternStyle }) {
         textalign="center"
         margin="0 auto 32px"
       > 
-        <h2>At Notesmith, we believe in the following <span style={{position: 'relative'}}><i>notebook philosophies</i><RandomLine /></span></h2>
+        <h2>At Notesmith, we believe in the following <Highlight><i>notebook philosophies</i></Highlight></h2>
       </Content>
       <Grid
         columns="repeat(3, 1fr)"
-        columnGap={0}
+        columnGap={spacing.normal}
         gap={0}
         className="stack-columns-600"
       >
-        <QuoteBox
-          zindex="5"
-        >
-          <Icon
-            margin="0 8px 0 0"
-          >
-            <Quotes size="2rem" weight="fill" color={colors.gray.nineHundred} />
-          </Icon>
-          <Content
-            paragraphfontsize="1.25rem"
-            smallfontfamily={fonts.secondary}
-            smallcolor={colors.gray.nineHundred}
-            smallfontsize="0.75rem"
-          >
-            <p>Notebooks don't have to be tools for productivity, creativity, or any kind of -tivity. They can be whatever you want them to be.</p>
-            <small>The notebook is your oyster.</small>
-          </Content>
+        <QuoteBox>
+          <QuoteHeading>01. Your notebook is your oyster</QuoteHeading>
+          <QuoteBlurb>
+            Only you can decide what purpose your notebook will serve. Notebooks don't <i>have</i> to be tools for productivity, creativity, or any other kind of -tivity. They can be secret diaries, frivolous doodle holders, or even makeshift coasters.
+          </QuoteBlurb>
         </QuoteBox>
-        <QuoteBox
-          zindex="4"
-        >
-          <Icon
-            margin="0 8px 0 0"
-          >
-            <Quotes size="2rem" weight="fill" color={colors.gray.nineHundred} />
-          </Icon>
-          <Content
-            paragraphfontsize="1.25rem"
-            smallfontfamily={fonts.secondary}
-            smallcolor={colors.gray.nineHundred}
-            smallfontsize="0.75rem"
-          >
-            <p>You can never have too many notebooks. Therefore, it's okay to add another notebook to the stack. We won't judge.</p>
-            <small>You'll find a use for them someday.</small>
-          </Content>
+        <QuoteBox>
+          <QuoteHeading>02. There is no such thing as "too many notebooks"</QuoteHeading>
+          <QuoteBlurb>
+            Therefore, it's okay to add another notebook to the stack. We won't judge.
+          </QuoteBlurb>
         </QuoteBox>
-        <QuoteBox
-          zindex="3"
-        >
-          <Icon
-            margin="0 8px 0 0"
-          >
-            <Quotes size="2rem" weight="fill" color={colors.gray.nineHundred} />
-          </Icon>
-          <Content
-            paragraphfontsize="1.25rem"
-            smallfontfamily={fonts.secondary}
-            smallcolor={colors.gray.nineHundred}
-            smallfontsize="0.75rem"
-          >
-            <p>Your words, drawings, or handwriting don't have to be perfect. It's okay to make mistakes, too. We're only human.</p>
-            <small>That's what all those other pages are for.</small>
-          </Content>
+        <QuoteBox>
+          <QuoteHeading>03. Your notebook doesn't have to be perfect</QuoteHeading>
+          <QuoteBlurb>
+            Your words, drawings, or handwriting don't have to be perfect. It's okay to make mistakes, too. We're only human.
+          </QuoteBlurb>
         </QuoteBox>
       </Grid>
     </Grid>

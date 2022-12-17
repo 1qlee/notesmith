@@ -170,15 +170,13 @@ const IndexPage = ({ data }) => {
             </LayoutContainer>
           </Container>
         </Section>
-        <Section
-          backgroundcolor={colors.paper.cream}
-        >
+        <Section>
           <Pattern
             width="100%"
             height="100%"
             top="0"
             left="0"
-            pattern="pattern-4"
+            pattern="pattern-26"
             color={colors.gray.threeHundred}
             zindex="1"
           />
@@ -232,7 +230,6 @@ const IndexPage = ({ data }) => {
                           as={Link}
                           to="/products/notebooks/wired-notebook-a5/white"
                           fontfamily={fonts.secondary}
-                          texttransform="uppercase"
                         >
                           Shop notebooks
                         </TextLink>
@@ -409,7 +406,6 @@ const IndexPage = ({ data }) => {
                     >
                       <TextLink
                         color={colors.gray.oneHundred}
-                        texttransform="uppercase"
                         fontweight="700"
                         underlinecolor={colors.gray.oneHundred}
                         as={Link}
@@ -644,7 +640,7 @@ const IndexPage = ({ data }) => {
           </Container>
         </Section>
       </SectionMain>
-      <Patterns color={colors.gray.threeHundred} />
+      <Patterns color={colors.gray.twoHundred} />
     </Layout>
   )
 }

@@ -30,37 +30,6 @@ const ImageWrapper = styled.figure`
   }
 `
 
-const Tape = styled.div`
-  background-color: ${colors.shadow.inset};
-  box-shadow: 4px 4px 4px ${colors.shadow.float};
-  height: 2rem;
-  left: 50%;
-  position: absolute;
-  top: -0.8rem;
-  transform: translateX(-50%) rotate(2deg);
-  width: 6rem;
-  z-index: 8;
-  &::before,
-  &::after {
-    background-size: 4px 4px;
-    bottom: 0;
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 3px;
-  }
-  &::before {
-    background-image: linear-gradient(135deg, transparent 40%, ${colors.shadow.inset} 40%);
-    background-position: 100% 100%;
-    left: -3px;
-  }
-  &::after {
-    background-image: linear-gradient(-135deg, transparent 40%, ${colors.shadow.inset} 40%);
-    background-position: 0 100%;
-    right: -3px;
-  }
-`
-
 const Image = (props) => {
   if (props.fluid) {
     return (

@@ -18,6 +18,7 @@ const SectionMain = styled.main`
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
+  background-image: url(${props => props.backgroundimage});
   position: relative;
   width: 100%;
 `

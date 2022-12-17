@@ -7,6 +7,7 @@ const StyledNote = styled.div`
   position: relative;
   border-radius: 8px;
   border: 1px solid ${colors.gray.threeHundred};
+  background-color: ${colors.white};
 `
 
 const NoteHoles = styled.div`
@@ -26,7 +27,9 @@ const NoteHole = styled.div`
   display: block;
   height: 12px;
   width: 12px;
-  background-color: ${colors.gray.twoHundred};
+  border: 1px solid ${colors.gray.threeHundred};
+  background-color: ${colors.white};
+  box-shadow: inset 1px 1px 2px ${colors.shadow.float};
   &:not(:last-child) {
     margin-bottom: 24px;
   }

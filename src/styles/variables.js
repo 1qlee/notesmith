@@ -106,7 +106,7 @@ const colors = {
     modal: "0 2px 12px rgba(0,0,0,0.25)",
     focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff"
   },
-  highlighter: "#d8ff00"
+  highlighter: "#fbff00"
 }
 
 const fonts = {

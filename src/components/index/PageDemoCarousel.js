@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors, fonts, widths } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
 import PageDemo1 from "../../assets/index/page-demo-1.svg"
@@ -78,7 +78,7 @@ function PageDemoCarousel() {
         onMouseLeave={() => setPause(false)}
       >
         <StaticImage
-          src="../../images/index/splash-image-blank.jpg"
+          src="../../images/index/splash-image-blank.png"
           alt="Ink on paper"
           loading="eager"
           quality={100}
