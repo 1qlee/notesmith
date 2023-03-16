@@ -3,7 +3,7 @@ import { colors, fonts } from "../../styles/variables"
 
 const Tag = styled.span`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.nineHundred};
-  border-radius: ${props => props.borderradius || "32px"};
+  border-radius: ${props => props.borderradius || "32px 16px / 16px 32px"};
   border: ${props => props.border};
   color: ${props => props.color ? props.color : colors.white};
   display: inline-flex;

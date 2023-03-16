@@ -21,7 +21,6 @@ import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import Note from "../components/ui/Note"
-import Notification from "../components/ui/Notification"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
 import Philosophies from "../components/index/Philosophies"
@@ -138,7 +137,6 @@ const IndexPage = ({ data }) => {
                             fontsize="0.625rem"
                             fontweight="700"
                             backgroundcolor={colors.yellow.threeHundred}
-                            borderradius="16px"
                             color={colors.yellow.nineHundred}
                           >
                             Announcement
