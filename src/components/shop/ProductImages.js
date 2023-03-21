@@ -47,7 +47,7 @@ function ProductImages({
   coverColor,
   productImages,
   productThumbnails,
-  setCartThumbnail
+  setCartThumbnail,
 }) {
   const [allImages, setAllImages] = useState([])
   const [activeImage, setActiveImage] = useState(0)
@@ -87,7 +87,7 @@ function ProductImages({
     }
 
     parseImages(productImages, coverColor, productThumbnails)
-  }, [productImages, productThumbnails, coverColor])
+  }, [productImages, productThumbnails, coverColor, setCartThumbnail])
 
   function handleSelectImage(img, index) {
     setActiveImage(index)

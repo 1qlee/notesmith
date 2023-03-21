@@ -113,7 +113,7 @@ const ShippingForm = ({
     }
 
     createRates()
-  }, [address, customer, cartDetails])
+  }, [pid, address, customer, cartDetails])
 
   const setShippingInfo = async () => {
     setFormError("")

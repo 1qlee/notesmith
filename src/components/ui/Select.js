@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import PropTypes from "prop-types"
 import { colors, fonts } from "../../styles/variables"
 import { Check, CaretDown } from "phosphor-react"
 
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
-import { Flexbox } from "../layout/Flexbox"
 
 const StyledSelect = styled.div`
   position: relative;
@@ -198,19 +196,6 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
       )}
     </StyledSelect>
   )
-}
-
-Select.propTypes = {
-  initialSortOrder: PropTypes.string.isRequired,
-  initialOption: PropTypes.string.isRequired,
-  initialDbValue: PropTypes.string.isRequired,
-  mainFunction: PropTypes.func.isRequired
-}
-
-SelectOption.propTypes = {
-  'data-primaryoption': PropTypes.string,
-  'data-secondaryoption': PropTypes.string,
-  'data-optionname': PropTypes.string
 }
 
 export {

@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import styled from "styled-components"
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -26,11 +25,6 @@ const Layout = ({ children, className, backgroundcolor }) => {
       <Footer />
     </StyledLayout>
   )
-}
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string
 }
 
 export default Layout

@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
@@ -160,11 +159,5 @@ function Nav(props) {
   )
 }
 
-
-Nav.propTypes = {
-  chapterNumber: PropTypes.string,
-  title: PropTypes.string,
-  hideNavbar: PropTypes.bool,
-}
 
 export default Nav

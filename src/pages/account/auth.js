@@ -26,7 +26,45 @@ function Auth({ location }) {
 
   useEffect(() => {
     verifyActionCode(mode, actionCode)
-  }, [location])
+
+    function verifyActionCode(mode, actionCode) {
+      setLoading(true)
+
+      switch (mode) {
+        case 'resetPassword':
+          auth.verifyPasswordResetCode(actionCode)
+            .then(() => {
+              setAuthModeVerified(true)
+              setAuthMode(mode)
+              setLoading(false)
+            })
+            .catch(() => {
+              setAuthModeVerified(false)
+              setAuthMode(mode)
+              setLoading(false)
+            })
+          break;
+        // case 'recoverEmail':
+        //   handleRecoverEmail(mode, actionCode)
+        //   break;
+        case 'verifyEmail':
+          auth.applyActionCode(actionCode).then(res => {
+            setAuthModeVerified(true)
+            setAuthMode(mode)
+            setLoading(false)
+          })
+            .catch(error => {
+              console.log(error)
+              setAuthModeVerified(false)
+              setAuthMode(mode)
+              setLoading(false)
+            })
+          break;
+        default:
+          setAuthMode(null)
+      }
+    }
+  }, [location, actionCode, mode, auth])
 
   async function handleResetPassword(e, actionCode, password) {
     e.preventDefault()
@@ -51,51 +89,13 @@ function Auth({ location }) {
     })
   }
 
-  function handleRecoverEmail() {
+  // function handleRecoverEmail() {
 
-  }
+  // }
 
-  function handleVerifyEmail() {
+  // function handleVerifyEmail() {
 
-  }
-
-  function verifyActionCode(mode, actionCode) {
-    setLoading(true)
-
-    switch (mode) {
-      case 'resetPassword':
-        auth.verifyPasswordResetCode(actionCode)
-        .then(() => {
-          setAuthModeVerified(true)
-          setAuthMode(mode)
-          setLoading(false)
-        })
-        .catch(() => {
-          setAuthModeVerified(false)
-          setAuthMode(mode)
-          setLoading(false)
-        })
-        break;
-      case 'recoverEmail':
-        handleRecoverEmail(mode, actionCode)
-        break;
-      case 'verifyEmail':
-        auth.applyActionCode(actionCode).then(res => {
-          setAuthModeVerified(true)
-          setAuthMode(mode)
-          setLoading(false)
-        })
-        .catch(error => {
-          console.log(error)
-          setAuthModeVerified(false)
-          setAuthMode(mode)
-          setLoading(false)
-        })
-        break;
-      default:
-        setAuthMode(null)
-    }
-  }
+  // }
 
   return (
     <Layout>

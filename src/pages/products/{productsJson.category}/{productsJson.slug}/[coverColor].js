@@ -100,7 +100,7 @@ const ProductPage = ({ data, params }) => {
       height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
       width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
     })
-  }, [bookData, coverColor, pageData])
+  }, [productData, bookData, coverColor, pageData])
 
   return (
     <Layout>

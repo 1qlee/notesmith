@@ -1,5 +1,4 @@
 import React from "react"
-import { spacing } from "../styles/variables"
 
 import { Container, LayoutContainer } from "../components/layout/Container"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"

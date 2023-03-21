@@ -22,7 +22,6 @@ const OrderSection = styled.div`
 
 function OrderSummary({ selectedRate, taxRate }) {
   const { cartDetails, totalPrice } = useShoppingCart()
-  const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
   const [cartItems, setCartItems] = useState([])
 
   useEffect(() => {

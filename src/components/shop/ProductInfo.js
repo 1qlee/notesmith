@@ -23,7 +23,6 @@ const ProductInfo = ({
   toast,
 }) => {
   const { addItem } = useShoppingCart()
-  const [loading, setLoading] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
 
   function handleAddCartButton(bookData) {
@@ -151,7 +150,6 @@ const ProductInfo = ({
         <Button
           backgroundcolor={colors.gray.nineHundred}
           border={`1px solid ${colors.gray.nineHundred}`}
-          className={loading ? "is-loading" : null}
           color={colors.gray.oneHundred}
           disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
           margin="0 0 0 1rem"

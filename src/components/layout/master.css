@@ -529,11 +529,6 @@ pre tt:before,
 pre tt:after {
   content: "";
 }
-@media only screen and (max-width: 480px) {
-  html {
-    font-size: 100%;
-  }
-}
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -546,11 +541,6 @@ select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #FEF3C7 inset;
   transition: background-color 5000s;
-}
-/* Make css-grid cells on the index page to stretch fullwidth in smaller viewport */
-@media only screen and (max-width: 960px) {
-  .is-responsive-960 {
-  }
 }
 .window-grid::-webkit-scrollbar {
   width: 0.5rem;

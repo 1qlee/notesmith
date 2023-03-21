@@ -45,7 +45,7 @@ function Philosophies({ patternStyle }) {
         textalign="center"
         margin="0 auto 32px"
       > 
-        <h2>Here are a few of our favorite <i>notebook philosophies</i></h2>
+        <h2>At Notesmith, we practice the following <i>notebook philosophies</i></h2>
       </Content>
       <Grid
         columns="repeat(3, 1fr)"
@@ -92,7 +92,7 @@ function Philosophies({ patternStyle }) {
             <Highlight>You can't actually have "too many notebooks"</Highlight>
           </QuoteHeading>
           <QuoteBlurb>
-            <s>This is actually a marketing ploy from Big Digital to force us away from...</s> Moderation and balance are keys to maintaining a healthy relationship with the things we love.
+            <s>This is actually a marketing ploy from Big Digital to force us away from-</s> Moderation and balance are keys to maintaining a healthy relationship with the things we love.
           </QuoteBlurb>
         </QuoteBox>
       </Grid>

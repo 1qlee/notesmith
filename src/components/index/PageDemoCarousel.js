@@ -69,7 +69,7 @@ function PageDemoCarousel() {
     }
 
     return () => clearInterval(timer)
-  })
+  }, [setCurrentPage, currentProgress, currentPage, pause])
 
   return (
     <StyledPageDemo>

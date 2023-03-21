@@ -4,25 +4,25 @@ import { colors } from "../../styles/variables"
 
 import Logo from "../../assets/logo-animated.svg"
 
-const loading = keyframes`
-  20%,
-  100% {
-    transform: translate(0, 2px); /* stay on the baseline for most of the animation duration */
-  }
-  0% {
-    transform: translate(0, 0px); /* hop up */
-    opacity: 0;
-  }
-  10% {
-    transform: translate(0, 2px); /* return to baseline */
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-`
+// const loading = keyframes`
+//   20%,
+//   100% {
+//     transform: translate(0, 2px); /* stay on the baseline for most of the animation duration */
+//   }
+//   0% {
+//     transform: translate(0, 0px); /* hop up */
+//     opacity: 0;
+//   }
+//   10% {
+//     transform: translate(0, 2px); /* return to baseline */
+//   }
+//   20% {
+//     opacity: 1;
+//   }
+//   100% {
+//     opacity: 0;
+//   }
+// `
 
 const strokeOffset = keyframes`
   0% {
@@ -35,18 +35,6 @@ const strokeOffset = keyframes`
   100% {
     stroke-dashoffset: 0;
     opacity: 0;
-  }
-`
-
-const moving = keyframes`
-  0% {
-    transform: translateX(0) skew(-25deg,0);
-  }
-  50% {
-    transform: translateX(100%) skew(-25deg,0);
-  }
-  100% {
-    transform: translateX(0) skew(-25deg,0);
   }
 `
 
@@ -105,22 +93,34 @@ const LoaderWrapper = styled.div`
   }
 `
 
-const StyledLoader = styled.div`
-  animation-name: ${moving};
-  animation-duration: 2s;
-  animation-timing-function: ease-in;
-  animation-iteration-count: infinite;
-  animation-direction: reverse;
-  background-color: ${colors.white};
-  margin: 0 auto;
-  text-align: center;
-  height: 100%;
-  width: calc(100% + 100px);
-  top: 0;
-  left: 0;
-  position: absolute;
-  will-change: transform;
-`
+// const StyledLoader = styled.div`
+//   animation-name: ${moving};
+//   animation-duration: 2s;
+//   animation-timing-function: ease-in;
+//   animation-iteration-count: infinite;
+//   animation-direction: reverse;
+//   background-color: ${colors.white};
+//   margin: 0 auto;
+//   text-align: center;
+//   height: 100%;
+//   width: calc(100% + 100px);
+//   top: 0;
+//   left: 0;
+//   position: absolute;
+//   will-change: transform;
+// `
+
+// const moving = keyframes`
+//   0% {
+//     transform: translateX(0) skew(-25deg,0);
+//   }
+//   50% {
+//     transform: translateX(100%) skew(-25deg,0);
+//   }
+//   100% {
+//     transform: translateX(0) skew(-25deg,0);
+//   }
+// `
 
 function Loader({ className, msg }) {
   return (

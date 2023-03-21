@@ -1,5 +1,4 @@
-import React, { forwardRef } from "react"
-import styled from "styled-components"
+import React from "react"
 
 import Ruled from "../customize/templates/Ruled"
 import Dot from "../customize/templates/Dot"
@@ -11,15 +10,6 @@ import Music from "../customize/templates/Music"
 import Handwriting from "../customize/templates/Handwriting"
 import CrossGrid from "../customize/templates/CrossGrid"
 import Calligraphy from "../customize/templates/Calligraphy"
-
-const StyledDemoTemplate = styled.div`
-  position: absolute;
-  top: 1.9%;
-  left: 13.2%;
-  z-index: 5;
-  width: 84%;
-  height: 96%;
-`
 
 function DemoTemplate({
   pageDimensions,

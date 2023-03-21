@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react"
-import { convertToPx } from "../../styles/variables"
+import React from "react"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledLabel, RangeInput } from "../form/FormComponents"

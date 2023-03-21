@@ -2,8 +2,6 @@ import React from "react"
 import styled from "styled-components"
 import { fonts } from "../../styles/variables"
 
-import Content from "../ui/Content"
-
 const StyledCaption = styled.article`
   padding: 16px;
   position: absolute;

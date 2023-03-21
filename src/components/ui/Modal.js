@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
-import { colors, widths, fonts } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};

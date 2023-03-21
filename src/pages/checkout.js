@@ -26,7 +26,7 @@ import ValidateAddressModal from "../components/checkout/modals/ValidateAddressM
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
-const Checkout = ({ location }) => {
+const Checkout = () => {
   const { cartDetails } = useShoppingCart()
   const [activeTab, setActiveTab] = useState(1)
   const [clientSecret, setClientSecret] = useState("")
@@ -44,7 +44,6 @@ const Checkout = ({ location }) => {
   const [shipmentId, setShipmentId] = useState()
   const [showShippingMethod, setShowShippingMethod] = useState(false)
   const [shippingMethod, setShippingMethod] = useState("")
-  const [authKey, setAuthKey] = useState()
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -169,7 +168,7 @@ const Checkout = ({ location }) => {
     else {
       createPaymentIntent()
     }
-  }, [])
+  }, [cartDetails, pid])
 
   // copy of the function in InformationForm to create a paymentIntent w user's information
   async function forceShippingSubmit() {
@@ -179,7 +178,7 @@ const Checkout = ({ location }) => {
       show: false
     })
     // update the paymentIntent with shipping form data
-    const payment = await fetch("/.netlify/functions/create-payment", {
+    await fetch("/.netlify/functions/create-payment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -329,7 +328,6 @@ const Checkout = ({ location }) => {
                                 selectedRate={selectedRate}
                                 setActiveTab={setActiveTab}
                                 setAddress={setAddress}
-                                setAuthKey={setAuthKey}
                                 setFormError={setFormError}
                                 setProcessing={setProcessing}
                                 setSelectedRate={setSelectedRate}

@@ -1,96 +1,33 @@
 import React from "react"
-import PropTypes from "prop-types"
-import Helmet from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import { useSiteMetadata } from "../../hooks/use-site-metadata"
 
-function Seo({ description, lang, meta, title }) {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            description
-            author
-            url
-            image
-          }
-        }
-      }
-    `
-  )
+function Seo({ title, description, pathname, children }) {
+  const { title: defaultTitle, description: defaultDescription, image, url, username } = useSiteMetadata()
 
-  const metaDescription = description || site.siteMetadata.description
-  const { url, image } = site.siteMetadata
+  const seo = {
+    title: title || defaultTitle,
+    description: description || defaultDescription,
+    image: `${url}${image}`,
+    url: `${url}${pathname || ``}`,
+    username,
+  }
 
   return (
-    <Helmet
-      htmlAttributes={{
-        lang,
-      }}
-      title={title}
-      titleTemplate={`%s - ${site.siteMetadata.title}`}
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:title`,
-          content: title,
-        },
-        {
-          property: `og:url`,
-          content: `${url}`,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-        {
-          property: `og:image`,
-          content: `${url}${image}`,
-        },
-        {
-          name: `twitter:card`,
-          content: `summary`,
-        },
-        {
-          name: `twitter:url`,
-          content: `${url}`,
-        },
-        {
-          name: `twitter:image`,
-          content: `${url}${image}`,
-        },
-        {
-          name: `twitter:title`,
-          content: title,
-        },
-        {
-          name: `twitter:description`,
-          content: metaDescription,
-        },
-      ].concat(meta)}
-    />
+    <>
+      <title>{seo.title} | Notesmith</title>
+      <meta name="description" content={description}></meta>
+      <meta name="og:title" content={title}></meta>
+      <meta name="og:url" content={url}></meta>
+      <meta name="og:description" content={description}></meta>
+      <meta name="og:image" content={`${url}${image}`}></meta>
+      <meta name="twitter:card" content="summary"></meta>
+      <meta name="twitter:url" content={url}></meta>
+      <meta name="twitter:image" content={`${url}${image}`}></meta>
+      <meta name="twitter:title" content={title}></meta>
+      <meta name="twitter:description" content={description}></meta>
+      {children}
+    </>
   )
-}
-
-Seo.defaultProps = {
-  lang: `en`,
-  meta: [],
-  description: ``,
-}
-
-Seo.propTypes = {
-  description: PropTypes.string,
-  lang: PropTypes.string,
-  meta: PropTypes.arrayOf(PropTypes.object),
-  title: PropTypes.string.isRequired,
 }
 
 export default Seo

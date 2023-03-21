@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState } from "react"
 import Measure from "react-measure"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
@@ -163,7 +163,6 @@ function Book3d({
   pageData,
   setPageData,
 }) {
-  const [node, setNode] = useState()
   const [hovered, setHovered] = useState(false)
   const [showBackCover, setShowBackCover] = useState(false)
   const [coverColor, setCoverColor] = useState("white")

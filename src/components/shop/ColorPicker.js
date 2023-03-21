@@ -3,8 +3,6 @@ import { colors } from "../../styles/variables"
 import ReactTooltip from "react-tooltip"
 import styled from "styled-components"
 
-import { Flexbox } from "../layout/Flexbox"
-
 const ColorOption = styled.button`
   background-color: ${props => props.color};
   border-radius: 100%;
