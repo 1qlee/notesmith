@@ -2,9 +2,6 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
-import { Flexbox } from "../layout/Flexbox"
-import Button from "../ui/Button"
-import Icon from "../ui/Icon"
 import PageSpread from "./PageSpread"
 import Workspace from "./Workspace"
 

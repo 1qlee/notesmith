@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx } from "../../../styles/variables"
 
 function Handwriting({
   maxSvgSize,
@@ -17,11 +17,10 @@ function Handwriting({
 
   function parseDashArray(value) {
     if (value.length > 0) {
-      let dummyArray = []
       // create an array from the dash array prop by splitting btwn spaces
       let newDashArray = value.split(" ")
-      newDashArray.map(elem => {
-        dummyArray.push(convertToPx(parseFloat(elem)))
+      const dummyArray = newDashArray.map(elem => {
+        return dummyArray.push(convertToPx(parseFloat(elem)))
       })
 
       return dummyArray

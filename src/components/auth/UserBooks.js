@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { colors, fonts } from "../../styles/variables"
+import { fonts } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
+import { ref, query, orderByChild, equalTo, update, remove, onValue, get, set, push } from "firebase/database"
 import { jsPDF as createPdf } from 'jspdf'
 import { ToastContainer, toast } from 'react-toastify'
 import 'svg2pdf.js'
 
-import { Flexbox } from "../layout/Flexbox"
 import AuthLayout from "./components/AuthLayout"
 import BooksContainer from "./books/BooksContainer"
-import Button from "../ui/Button"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
 import Loader from "../misc/Loader"
@@ -19,9 +18,9 @@ const UserBooks = () => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
   const { uid } = user
-  const booksRef = firebaseDb.ref("books/")
-  const userBooksRef = firebaseDb.ref(`users/${uid}/books`)
-  const pagesRef = firebaseDb.ref("pages/")
+  const booksRef = ref(firebaseDb, "books/")
+  const userBooksRef = ref(firebaseDb, `users/${uid}/books`)
+  const pagesRef = ref(firebaseDb, "pages/")
   const [processing, setProcessing] = useState(true)
   const [bookData, setBookData] = useState({
     size: "",
@@ -51,11 +50,11 @@ const UserBooks = () => {
       }
 
       // get all books that match the user's uid
-      await booksRef.orderByChild('uid').equalTo(uid).on("value", snapshot => {
+      onValue(query(booksRef, orderByChild('uid'), equalTo(uid)), (snapshot) => {
         const booksArray = []
         // push them into an array const
-        snapshot.forEach(child => {
-          booksArray.push(child.val())
+        snapshot.forEach(book => {
+          booksArray.push(book.val())
         })
 
         // make sure the books get rendered in the correct sorting preference (set by user)
@@ -180,25 +179,30 @@ const UserBooks = () => {
     // only updates the title field
     updates[`/books/${bookId}/title`] = newBookTitle
 
-    firebaseDb.ref().update(updates, error => {
+    update(ref(firebaseDb), error => {
       if (error) {
+        console.log(error)
         toast.error("Failed to update book title.")
+      }
+      else {
+        toast.success("Book title updated.")
       }
     })
   }
 
   function deleteBook(book) {
-    // remove the book from 'books'
-    booksRef.child(book.id).remove().then(() => {
+    // remove the book from the books collection
+    remove(ref(firebaseDb, `books/${book.id}`)).then(() => {
       // remove the book from user's 'books'
-      userBooksRef.child(book.id).remove()
+      remove(ref(firebaseDb, `users/${uid}/books/${book.id}`))
       // delete all pages that belong to this bookId
-      pagesRef.orderByChild('bookId').equalTo(book.id).once("value").then(snapshot => {
+      get(query(pagesRef, orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
         snapshot.forEach(child => {
-          pagesRef.child(child.key).remove()
+          remove(ref(firebaseDb, `pages/${child.key}`))
         })
       })
     }).catch(error => {
+      console.log(error)
       toast.error("Failed to delete book.")
     })
     // hide modal
@@ -208,25 +212,23 @@ const UserBooks = () => {
     })
   }
 
-  async function duplicateBook(book) {
+  function duplicateBook(book) {
     // create a new key
-    const newBookRef = booksRef.push()
-    const newBookKey = newBookRef.key
+    const newBookKey = push(booksRef).key
     // keep track of each page within this object
     const pagesObject = {}
 
     // get all pages for this bookId
-    await pagesRef.orderByChild("bookId").equalTo(book.id).once("value").then(snapshot => {
+    get(query(pagesRef, orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
       snapshot.forEach(child => {
         const page = child.val()
         // create a new page key (id)
-        const newPageRef = pagesRef.push()
-        const newPageKey = newPageRef.key
+        const newPageKey = push(pagesRef).key
         // creating key:value pairs for old page id to new page id
         pagesObject[page.id] = newPageKey
 
         // write the new page into the db
-        newPageRef.set({
+        set(ref(firebaseDb, `pages/${newPageKey}`), {
           "bookId": newBookKey,
           "svg": page.svg,
           "id": newPageKey,
@@ -244,7 +246,7 @@ const UserBooks = () => {
       }
 
       // write the duplicated book into the db
-      newBookRef.set({
+      set(ref(firebaseDb, `books/${newBookKey}`), {
         "coverColor": book.coverColor,
         "dateCreated": new Date().valueOf(),
         "heightInch": book.heightInch,
@@ -261,8 +263,11 @@ const UserBooks = () => {
         "widthPixel": book.widthPixel,
       }).then(() => {
         // afterwards, log that book id into 'users/userId/books/bookId'
-        userBooksRef.child(newBookKey).set(true)
+        set(ref(firebaseDb, `users/${uid}/books/${newBookKey}`), true)
       })
+    }).catch(error => {
+      console.log(error)
+      toast.error("Failed to duplicate book.")
     })
   }
 
@@ -271,7 +276,7 @@ const UserBooks = () => {
       format: [139.7, 215.9],
       compress: true,
     })
-    const downloadBookRef = firebaseDb.ref('books/-Mo-pISGlvG2AxeVFsXz')
+    const downloadBookRef = ref('books/-Mo-pISGlvG2AxeVFsXz')
     let pageNum = 1
 
     downloadBookRef.once("value").then(snapshot => {
@@ -283,7 +288,7 @@ const UserBooks = () => {
       for (const page in pages) {
         const numOfPages = Object.keys(pages).length
 
-        firebaseDb.ref(`pages/${page}`).orderByChild('pageNumber').once("value").then(snapshot => {
+        ref(`pages/${page}`).orderByChild('pageNumber').once("value").then(snapshot => {
           const pageSvg = snapshot.val().svg
           const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
 

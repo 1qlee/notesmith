@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { fonts, pageMargins, convertToPx } from "../../styles/variables"
+import { fonts, pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { v4 as uuidv4 } from 'uuid'
 import { ToastContainer, toast } from 'react-toastify'

@@ -1,5 +1,20 @@
 import React, { useState, useEffect, useContext } from "react"
-import firebase from "gatsby-plugin-firebase"
+import firebase from "gatsby-plugin-firebase-v9.0"
+import { 
+  applyActionCode,
+  confirmPasswordReset, 
+  createUserWithEmailAndPassword, 
+  EmailAuthProvider, 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  verifyPasswordResetCode, 
+} from "firebase/auth"
+import { 
+  enableLogging,
+  getDatabase, 
+} from "firebase/database"
 
 export const isBrowser = () => typeof window !== "undefined"
 
@@ -8,7 +23,6 @@ const defaultContext = {
   login: () => {},
   signUp: () => {},
   signOut: () => {},
-  signUpWithEmail: () => {},
 }
 
 export const FirebaseContext = React.createContext(defaultContext)
@@ -23,11 +37,13 @@ export const FirebaseProvider = ({
 
   useEffect(() => {
     const initFirebase = () => {
-      setFirebaseAuth(firebase.auth())
-      setFirebaseDb(firebase.database())
-      firebase.database.enableLogging(false, false)
+      const auth = getAuth(firebase)
+      const db = getDatabase(firebase)
+      setFirebaseAuth(auth)
+      setFirebaseDb(db)
+      enableLogging(false, false)
 
-      firebase.auth().onAuthStateChanged(user => {
+      onAuthStateChanged(auth, user => {
         setUser(user)
         setLoading(false)
       })
@@ -42,11 +58,13 @@ export const FirebaseProvider = ({
         user,
         loading,
         firebaseDb,
-        login: (...p) => firebaseAuth.signInWithEmailAndPassword(...p),
-        signUp: (...p) => firebaseAuth.createUserWithEmailAndPassword(...p),
-        signOut: (...p) => firebaseAuth.signOut(...p),
-        signUpWithEmail: (...p) => firebaseAuth.sendSignInLinkToEmail(...p),
-        getAuthCredential: (...p) => firebase.auth.EmailAuthProvider.credential(...p)
+        applyActionCode: (...p) => applyActionCode(firebaseAuth, ...p),
+        confirmPasswordReset: (...p) => confirmPasswordReset(firebaseAuth, ...p),
+        getAuthCredential: (...p) => EmailAuthProvider.credential(...p),
+        login: (...p) => signInWithEmailAndPassword(firebaseAuth, ...p),
+        signOut: (...p) => signOut(firebaseAuth, ...p),
+        signUp: (...p) => createUserWithEmailAndPassword(firebaseAuth, ...p),
+        verifyPasswordResetCode: (...p) => verifyPasswordResetCode(firebaseAuth, ...p),
       }}
     >
       {children}

@@ -58,7 +58,6 @@ const ShippingForm = ({
   customer,
   processing,
   selectedRate,
-  setAddress,
   setActiveTab,
   setAuthKey,
   setFormError,
@@ -74,7 +73,6 @@ const ShippingForm = ({
   const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [cheapestRate, setCheapestRate] = useState()
-  const [allRates, setAllRates] = useState()
   const pid = localStorage.getItem("pid")
 
   useEffect(() => {
@@ -101,8 +99,6 @@ const ShippingForm = ({
         }
         // save the cheapest rate to state
         setCheapestRate(data.cheapestRate)
-        // save all rates to state
-        setAllRates(data.allRates)
         // save the shipment id to state
         setShipmentId(data.shipmentId)
         setLoading(false)

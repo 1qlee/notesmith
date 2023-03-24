@@ -40,7 +40,7 @@ function AlignmentControls({
   setPageData,
   svgSize,
 }) {
-  const { maxContentHeight, maxContentWidth, thickness, crossSize } = pageData
+  const { maxContentHeight, maxContentWidth, thickness } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
   let verticalTrim, horizontalTrim = 0

@@ -1,5 +1,4 @@
 import React from "react"
-import { StyledLabel } from "../../../form/FormComponents"
 import RangeControls from "./RangeControls"
 
 function CrossControls({

@@ -5,7 +5,6 @@ import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "phosphor-
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"
-import Button from "../../ui/Button"
 
 const ToolItem = styled.div`
   padding: 1rem;

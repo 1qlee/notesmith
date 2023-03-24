@@ -3,9 +3,6 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
 
-import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput } from "../../form/FormComponents"
-
 const StyledTitleBox = styled.div`
   background-color: ${colors.white};
   flex: 1 1 33%;

@@ -46,7 +46,6 @@ function Isometric({
         const posX2 = convertFloatFixed(adjacentSide * getTan(angle), 3) - halfLineThickness
         const invertedPosX1 = convertFloatFixed(contentWidth - posX1, 3)
         let adjustedPosY2
-        let adjustedPosX2
 
         // if the ending point of the line exceeds the width of the page, triangulate a new ending point
         // based on an adjacent triangle sharing a complementary angle

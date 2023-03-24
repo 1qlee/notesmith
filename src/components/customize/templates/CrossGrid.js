@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { colors, convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx } from "../../../styles/variables"
 
 function CrossGrid({ 
   maxSvgSize,

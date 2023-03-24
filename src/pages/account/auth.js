@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
-import firebase from "gatsby-plugin-firebase"
+import { useFirebaseContext } from "../../utils/auth"
 import { spacing } from "../../styles/variables"
 
+import { Link } from "gatsby"
 import { AuthFormWrapper } from "../../components/form/FormComponents"
 import { Container, LayoutContainer } from "../../components/layout/Container"
 import { Section, SectionMain, SectionContent } from "../../components/layout/Section"
@@ -10,10 +11,9 @@ import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
 import Nav from "../../components/layout/Nav"
 import Loader from "../../components/misc/Loader"
-import { Link } from "gatsby"
 
 function Auth({ location }) {
-  const auth = firebase.auth()
+  const { applyActionCode, verifyPasswordResetCode, confirmPasswordReset, auth } = useFirebaseContext()
   const params = new URLSearchParams(location.search)
   const mode = params.get("mode")
   const actionCode = params.get("oobCode")
@@ -32,7 +32,7 @@ function Auth({ location }) {
 
       switch (mode) {
         case 'resetPassword':
-          auth.verifyPasswordResetCode(actionCode)
+          verifyPasswordResetCode(actionCode)
             .then(() => {
               setAuthModeVerified(true)
               setAuthMode(mode)
@@ -48,7 +48,7 @@ function Auth({ location }) {
         //   handleRecoverEmail(mode, actionCode)
         //   break;
         case 'verifyEmail':
-          auth.applyActionCode(actionCode).then(res => {
+          applyActionCode(actionCode).then(res => {
             setAuthModeVerified(true)
             setAuthMode(mode)
             setLoading(false)
@@ -70,8 +70,8 @@ function Auth({ location }) {
     e.preventDefault()
     setProcessing(true)
 
-    auth.verifyPasswordResetCode(actionCode).then(email => {
-      auth.confirmPasswordReset(actionCode, password).then((res) => {
+    verifyPasswordResetCode(actionCode).then(email => {
+      confirmPasswordReset(actionCode, password).then(() => {
         setProcessing(false)
         setSuccess(true)
       })

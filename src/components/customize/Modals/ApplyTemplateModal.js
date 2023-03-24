@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
-import { WarningCircle, CheckCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
+import { WarningCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid'
 
 import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form/FormComponents"

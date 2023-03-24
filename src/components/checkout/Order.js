@@ -115,7 +115,7 @@ const Order = ({ location, orderId }) => {
   async function resendOrderEmail() {
     setProcessing(true)
 
-    const response = await fetch("/.netlify/functions/resend-order-email", {
+    await fetch("/.netlify/functions/resend-order-email", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -385,7 +385,6 @@ const Order = ({ location, orderId }) => {
                                           borderradius="0"
                                           padding="16px"
                                           margin="0 0 0 8px"
-                                          form="email-resend"
                                           type="submit"
                                           disabled={processing}
                                           className={processing ? "is-loading" : null}

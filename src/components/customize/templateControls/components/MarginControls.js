@@ -4,7 +4,7 @@ import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, ArrowsClockw
 import { colors } from "../../../../styles/variables"
 
 import { StyledLabel, NumberInput } from "../../../form/FormComponents"
-import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
+import { ControlInnerButton } from "./TemplateComponents"
 import Icon from "../../../ui/Icon"
 
 const numberInputPadding = "8px 44px 8px 24px"

@@ -37,7 +37,7 @@ function QuantityTracker(props) {
   const handleBlur = e => {
     const { value } = e.target
 
-    if (!value || value == 0) {
+    if (!value || value === 0) {
       if (props.item) {
         setQuantity(1)
         setItemQuantity(props.item.id, 1)

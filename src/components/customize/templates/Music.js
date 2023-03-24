@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx } from "../../../styles/variables"
 
 function Music({
   maxSvgSize,

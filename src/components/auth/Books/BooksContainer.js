@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
-import { Plus } from "phosphor-react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { SectionAppWorkspace } from "../../layout/Section"

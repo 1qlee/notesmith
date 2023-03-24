@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { Link } from "gatsby"
+import React from "react"
 import { useFirebaseContext } from "../../utils/auth"
 import { toast } from 'react-toastify'
 
@@ -12,7 +11,6 @@ import sendEmailVerification from "../../functions/sendEmailVerification"
 import { widths } from "../../styles/variables"
 
 const UserDashboard = () => {
-  const { user } = useFirebaseContext()
 
   async function handleSendEmail(email) {
     const emailFailed = await sendEmailVerification(email)
