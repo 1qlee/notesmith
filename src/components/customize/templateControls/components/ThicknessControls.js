@@ -10,7 +10,7 @@ function ThicknessControls({
     <RangeControls
       property="thickness"
       propertyName="Thickness"
-      propertyObj={{}}
+      propertyObj={{ alignmentVertical: "", alignmentHorizontal: "" }}
       inputProps={{
         min: 0.088,
         max: 5,

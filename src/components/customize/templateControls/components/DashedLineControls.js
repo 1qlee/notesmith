@@ -1,7 +1,7 @@
 import React from "react"
 import { colors } from "../../../../styles/variables"
 import { Question, CheckSquare, Square } from "phosphor-react"
-import ReactTooltip from "react-tooltip"
+import { Tooltip } from "react-tooltip"
 
 import { NumberInput, StyledLabel, StyledCheckbox, StyledInput, RangeInput } from "../../../form/FormComponents"
 import { BorderOptions, ControlFlexWrapper, ControlFlexChild, ControlWrapper } from "./TemplateComponents"
@@ -77,7 +77,7 @@ function DashedLineControls({
                     weight="fill"
                   />
                 </Icon>
-                <ReactTooltip
+                <Tooltip
                   effect="solid"
                   data-multiline={true}
                 />

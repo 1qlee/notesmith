@@ -9,7 +9,7 @@ const Tape = styled.div`
   left: 50%;
   position: absolute;
   top: -0.8rem;
-  transform: translateX(-50%) rotate(2deg);
+  transform: translateX(-50%) rotate(${props => props.num}deg);
   width: 6rem;
   z-index: 8;
   &::before,

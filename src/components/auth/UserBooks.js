@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react"
-import { fonts } from "../../styles/variables"
+import { fonts, widths, colors } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, update, remove, onValue, get, set, push } from "firebase/database"
 import { jsPDF as createPdf } from 'jspdf'
 import { ToastContainer, toast } from 'react-toastify'
 import 'svg2pdf.js'
 
+import { Flexbox } from "../layout/Flexbox"
+import Button from "../ui/Button"
+import Content from "../ui/Content"
 import AuthLayout from "./components/AuthLayout"
 import BooksContainer from "./books/BooksContainer"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
 import Loader from "../misc/Loader"
 import NewBookModal from "./modals/AppNewBookModal"
-import Seo from "../layout/Seo"
 
-const UserBooks = () => {
+const UserBooks = ({ allProducts }) => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
   const { uid } = user
   const booksRef = ref(firebaseDb, "books/")
-  const userBooksRef = ref(firebaseDb, `users/${uid}/books`)
   const pagesRef = ref(firebaseDb, "pages/")
   const [processing, setProcessing] = useState(true)
   const [bookData, setBookData] = useState({
@@ -179,9 +180,8 @@ const UserBooks = () => {
     // only updates the title field
     updates[`/books/${bookId}/title`] = newBookTitle
 
-    update(ref(firebaseDb), error => {
+    update(ref(firebaseDb), updates).catch(error => {
       if (error) {
-        console.log(error)
         toast.error("Failed to update book title.")
       }
       else {
@@ -202,7 +202,6 @@ const UserBooks = () => {
         })
       })
     }).catch(error => {
-      console.log(error)
       toast.error("Failed to delete book.")
     })
     // hide modal
@@ -266,7 +265,6 @@ const UserBooks = () => {
         set(ref(firebaseDb, `users/${uid}/books/${newBookKey}`), true)
       })
     }).catch(error => {
-      console.log(error)
       toast.error("Failed to duplicate book.")
     })
   }
@@ -321,23 +319,52 @@ const UserBooks = () => {
   else {
     return (
       <Layout>
-        <Seo title="My Books" />
         <AuthLayout page="Books">
-          <BooksContainer
-            duplicateBook={duplicateBook}
-            getLocalStorage={getLocalStorage}
-            handleBookDelete={handleBookDelete}
-            processing={processing}
-            renameBook={renameBook}
-            userBooks={userBooks}
-            setShowModal={setShowModal}
-            sortBooks={sortBooks}
-          />
+          {userBooks.length > 0 ? (
+            <BooksContainer
+              duplicateBook={duplicateBook}
+              getLocalStorage={getLocalStorage}
+              handleBookDelete={handleBookDelete}
+              processing={processing}
+              renameBook={renameBook}
+              userBooks={userBooks}
+              setShowModal={setShowModal}
+              sortBooks={sortBooks}
+            />
+          ) : (
+            <Flexbox
+              alignitems="center"
+              justifycontent="center"
+              width="100%"
+              height="500px"
+            >
+              <Content
+                textalign="center"
+                h1fontsize="2rem"
+                maxwidth={widths.content.index}
+              >
+                <h1>Create your own notebook now</h1>
+                <p>It's easy to get started with creating your own notebook. Simply press the button below to begin!</p>
+                <Button
+                  color={colors.gray.oneHundred}
+                  backgroundcolor={colors.gray.nineHundred}
+                  margin="16px 0 0 0"
+                  onClick={() => setShowModal({
+                    show: true,
+                    type: "createbook",
+                  })}
+                >
+                  New book
+                </Button>
+              </Content>
+            </Flexbox>
+          )}
           {showModal.show && (
             <>
               {showModal.type === "createbook" && (
                 <NewBookModal
                   bookData={bookData}
+                  allProducts={allProducts}
                   setBookData={setBookData}
                   setShowModal={setShowModal}
                   toast={toast}

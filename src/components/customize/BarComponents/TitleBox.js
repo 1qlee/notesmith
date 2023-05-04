@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
+import { ref, get, update } from "firebase/database"
 
 const StyledTitleBox = styled.div`
   background-color: ${colors.white};
@@ -9,11 +10,12 @@ const StyledTitleBox = styled.div`
   padding: 1rem;
   position: relative;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
   p {
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 1rem;
     font-weight: 700;
-    height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
@@ -22,7 +24,7 @@ const StyledTitleBox = styled.div`
     word-break: break-all;
   }
   &:hover {
-    background-color: ${colors.primary.hover};
+    background-color: ${colors.gray.oneHundred};
     cursor: pointer;
   }
   &.is-active {
@@ -36,6 +38,7 @@ const TitleInput = styled.input`
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0;
   text-align: center;
+  height: 100%;
   width: 100%;
   &:focus {
     outline: none;
@@ -60,7 +63,7 @@ function TitleBox({
       toast.error("Please enter a title.")
     }
     else if (trimmedTitle.length > 255) {
-      toast.error("Title is too long (255+ characters).")
+      toast.error("Title is too long!")
     }
     else {
       return trimmedTitle
@@ -82,7 +85,7 @@ function TitleBox({
         title: title,
       })
 
-      firebaseDb.ref(`/books/${bookId}/title`).once("value").then(snapshot => {
+      get(ref(firebaseDb, `/books/${bookId}/title`)).then(snapshot => {
         if (snapshot.val() === title) {
           setLoading(false)
         }
@@ -90,13 +93,13 @@ function TitleBox({
           const updates = {}
           updates[`/books/${bookId}/title`] = title
 
-          firebaseDb.ref().update(updates, error => {
-            if (error) {
-              console.log("Error occurred when updating book title.")
-            }
+          update(ref(firebaseDb), updates).then(() => {
           }).then(() => {
             toast.success("Title successfully updated.")
             setLoading(false)
+          }).catch(error => {
+            console.log(error)
+            toast.error("Something went wrong. Please try again.")
           })
         }
       })

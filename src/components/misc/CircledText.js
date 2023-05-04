@@ -29,6 +29,10 @@ const CircleWrapper = styled.div`
       animation: ${draw} 3s linear 390ms forwards;
     }
   }
+  span {
+    position: relative;
+    z-index: 2;
+  }
 `
 
 function CircledText({ text }) {

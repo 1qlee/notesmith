@@ -12,20 +12,19 @@ const calcOrderAmount = async (cartItems) => {
     totalAmount += stripeProduct.unit_amount * quantity;
   }
 
-  console.log(`The total amount for this order is: ${totalAmount}.`)
+  console.log(`[Stripe] The total amount for this order is: ${totalAmount}.`)
   return totalAmount;
 };
 
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { cartItems, paymentId, email, customer } = body;
+  const { cartItems, paymentId, email } = body;
   const shipping = body.address;
-  let paymentIntent, newCustomer;
-  let cartItemsArray = [];
+  let paymentIntent;
 
   // if there are no items, return an error
-  if (!cartItems) {
+  if (!cartItems.length) {
     console.error("[Netlify] There are no cart items.");
 
     return {
@@ -36,20 +35,13 @@ exports.handler = async (event) => {
       })
     }
   }
-  else {
-    // productData is a tree of objects
-    for (const cartItem in cartItems) {
-      // push each cart item into
-      cartItemsArray.push(cartItems[cartItem]);
-    }
-  }
 
   try {
     // save subtotal
-    const subtotal = await calcOrderAmount(cartItemsArray);
+    const subtotal = await calcOrderAmount(cartItems);
     // if a pid already exists
     if (paymentId) {
-      console.log(`[Netlify] Updating existing paymentIntent: ${paymentId}`);
+      console.log(`[Stripe] Updating existing paymentIntent: ${paymentId}`);
       // update the existing paymentIntent
       paymentIntent = await stripe.paymentIntents.update(
         paymentId,
@@ -65,13 +57,14 @@ exports.handler = async (event) => {
       )
     }
     // this will only fire when cart items are new AKA when there is no stripe paymentIntent already created
-    // therefore this will only be called from checkout.js, not from InformationForm
+    // therefore this will only be called from checkout.js
     else {
-      console.log(`[Netlify] Creating new paymentIntent...`)
+      console.log(`[Stripe] Creating new paymentIntent...`)
       // else create a new paymentIntent
       paymentIntent = await stripe.paymentIntents.create({
         amount: subtotal,
-        currency: "USD",
+        currency: "usd",
+        automatic_payment_methods: { enabled: true },
         metadata: {
           subtotal: subtotal
         }
@@ -86,7 +79,7 @@ exports.handler = async (event) => {
       })
     }
   } catch(error) {
-    console.log(error)
+    console.error(`[Stripe] Could not create paymentIntent: ${error}`)
 
     return {
       statusCode: 400,

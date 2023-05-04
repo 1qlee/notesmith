@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, breakpoints } from "../../styles/variables"
 
 const Content = styled.div`
   background-color: ${props => props.backgroundcolor};
@@ -12,6 +12,7 @@ const Content = styled.div`
   padding: ${props => props.padding ? props.padding : "0"};
   position: relative;
   text-align: ${props => props.textalign};
+  word-wrap: normal;
   width: ${props => props.width};
   &.has-border-bottom {
     border-bottom: 2px solid ${props => props.bordercolor};
@@ -28,7 +29,7 @@ const Content = styled.div`
     font-family: ${props => props.headingfontfamily};
   }
   h1 {
-    font-size: ${props => props.h1fontsize || "4rem"};
+    font-size: ${props => props.h1fontsize || "3rem"};
     color: ${props => props.h1color || colors.gray.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
@@ -78,7 +79,7 @@ const Content = styled.div`
     padding-left: 1.125rem;
   }
   li {
-    margin: 0.5rem 0;
+    margin: ${props => props.limargin || "4px 0"};
     font-size: ${props => props.lifontsize || "1rem"};
     color: ${props => props.licolor};
   }
@@ -93,9 +94,10 @@ const Content = styled.div`
     margin-bottom: ${props => props.paragraphmarginbottom};
   }
   small {
-    color: ${props => props.smallcolor || colors.gray.eightHundred};
+    color: ${props => props.smallcolor || colors.gray.sixHundred};
     font-size: ${props => props.smallfontsize};
     font-family: ${props => props.smallfontfamily};
+    line-height: 1.5;
     display: block;
     margin: ${props => props.smallmargin || "0.5rem 0"};
   }
@@ -106,7 +108,7 @@ const Content = styled.div`
     text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;
-      color: ${props => props.linkcolorhover};
+      color: ${props => props.linkhovercolor};
     }
   }
   blockquote {

@@ -5,6 +5,7 @@ import RandomLine from "../misc/Lines"
 
 const StyledSectionHeading = styled.div`
   margin-bottom: 32px;
+  margin-left: 16px;
   display: inline-block;
   position: relative;
   h2 {

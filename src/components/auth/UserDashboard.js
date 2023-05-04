@@ -1,14 +1,12 @@
 import React from "react"
-import { useFirebaseContext } from "../../utils/auth"
 import { toast } from 'react-toastify'
+import { widths } from "../../styles/variables"
 
 import Toastify from "../ui/Toastify"
 import Layout from "../layout/Layout"
 import Content from "../ui/Content"
-import Seo from "../layout/Seo"
 import AuthLayout from "./components/AuthLayout"
 import sendEmailVerification from "../../functions/sendEmailVerification"
-import { widths } from "../../styles/variables"
 
 const UserDashboard = () => {
 
@@ -25,7 +23,6 @@ const UserDashboard = () => {
 
   return (
     <Layout>
-      <Seo title="Dashboard" />
       <AuthLayout page="Dashboard">
         <Content
           h1fontsize="2rem"
@@ -35,7 +32,7 @@ const UserDashboard = () => {
         >
           <h1>Welcome to Notesmith!</h1>
           <p>
-            Thanks for signing up to participate in Notesmith's open beta. We are currently actively building new features for the website. Please excuse the barren state of your dashboard at this time.
+            Thanks for signing up for Notesmith! We are currently actively building new features for the website. Please excuse the barren state of your dashboard at this time.
           </p>
         </Content>
       </AuthLayout>

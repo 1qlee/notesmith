@@ -1,12 +1,10 @@
 import React, { useState } from "react"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { spacing } from "../../styles/variables"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 
 import { AuthFormWrapper } from "../form/FormComponents"
-import { Container, LayoutContainer } from "../layout/Container"
-import { Section, SectionMain, SectionContent } from "../layout/Section"
+import { Section, SectionMain } from "../layout/Section"
 import Layout from "../layout/Layout"
 import Nav from "../layout/Nav"
 import Content from "../ui/Content"
@@ -56,42 +54,34 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
           className="has-max-height"
         >
           <Section>
-            <Container>
-              <LayoutContainer>
-                <SectionContent
-                  padding={spacing.normal}
+            <AuthFormWrapper>
+              {verification.success ? (
+                <Content
+                  h1fontsize="2rem"
+                  linktextdecoration="underline"
                 >
-                  <AuthFormWrapper>
-                    {verification.success ? (
-                      <Content
-                        h1fontsize="2rem"
-                        linktextdecoration="underline"
-                      >
-                        <h1>Email was successfully sent</h1>
-                        <p>{verification.msg}</p>
-                      </Content>
-                    ) : (
-                      <Content
-                        h1fontsize="2rem"
-                        linktextdecoration="underline"
-                      >
-                        {processing ? (
-                          <>
-                            <h1>Sending email...</h1>
-                            <p>Please do not refresh this page.</p>
-                          </>
-                        ) : (
-                          <>
-                            <h1>Your email has not been verified yet</h1>
-                            <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, please <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
-                          </>
-                        )}
-                      </Content>
-                    )}
-                  </AuthFormWrapper>
-                </SectionContent>
-              </LayoutContainer>
-            </Container>
+                  <h1>Email was successfully sent</h1>
+                  <p>{verification.msg}</p>
+                </Content>
+              ) : (
+                <Content
+                  h1fontsize="2rem"
+                  linktextdecoration="underline"
+                >
+                  {processing ? (
+                    <>
+                      <h1>Sending email...</h1>
+                      <p>Please do not refresh this page.</p>
+                    </>
+                  ) : (
+                    <>
+                      <h1>Please validate your email address</h1>
+                      <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
+                    </>
+                  )}
+                </Content>
+              )}
+            </AuthFormWrapper>
           </Section>
         </SectionMain>
       </Layout>

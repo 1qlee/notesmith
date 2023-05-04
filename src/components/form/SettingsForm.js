@@ -1,17 +1,18 @@
 import React, { useState } from "react"
-import { colors, regex } from "../../styles/variables"
+import { colors, regex, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
+import { Warning, CircleNotch } from "phosphor-react"
+import { reauthenticateWithCredential, updateEmail as fbUpdateEmail, updatePassword as fbUpdatePassword } from "firebase/auth"
 
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "./FormComponents"
+import { StyledInput, StyledFieldset, StyledLabel, ErrorLine } from "./FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 
 function SettingsForm() {
-  const { user, getAuthCredential } = useFirebaseContext()
+  const { user, firebaseAuth, getAuthCredential } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [newPassword, setNewPassword] = useState("")
   const [newEmail, setNewEmail] = useState("")
@@ -99,8 +100,11 @@ function SettingsForm() {
 
   // update email and present errors
   function updateEmail() {
-    user.updateEmail(newEmail).then(() => {
+    setLoading(true)
+
+    fbUpdateEmail(user, newEmail).then(() => {
       saveChanges()
+      setLoading(false)
     }).catch(error => {
       // handle various error-codes and show their respective error messages
       switch(error.code) {
@@ -132,13 +136,17 @@ function SettingsForm() {
         default:
           setShowSettingsForm(true)
       }
+
+      setLoading(false)
     })
   }
 
   // function to update password
   function updatePassword() {
-    user.updatePassword(newPassword).then(res => {
+    setLoading(true)
+    fbUpdatePassword(user, newPassword).then(() => {
       saveChanges()
+      setLoading(false)
     }).catch(error => {
       if (error.code === "auth/requires-recent-login") {
         setShowModal({
@@ -150,6 +158,7 @@ function SettingsForm() {
       else {
         console.log(error.message)
       }
+      setLoading(false)
     })
   }
 
@@ -167,8 +176,7 @@ function SettingsForm() {
     e.preventDefault()
     setLoading(true)
     if (showModal.process === "reauthentication") {
-      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
-      .then(res => {
+      reauthenticateWithCredential(user, getAuthCredential(user.email, reauthenticatedPassword)).then(res => {
         updateEmail()
         clearError("email")
         clearError("password")
@@ -179,8 +187,7 @@ function SettingsForm() {
       })
     }
     if (showModal.process === "changePassword") {
-      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
-      .then(res => {
+      reauthenticateWithCredential(user, getAuthCredential(user.email, reauthenticatedPassword)).then(res => {
         updatePassword()
         setLoading(false)
         clearError("password")
@@ -194,7 +201,7 @@ function SettingsForm() {
   function handleChangePasswordSubmit(e) {
     e.preventDefault()
     if (regex.password.test(newPassword)) {
-      updatePassword(newPassword)
+      updatePassword()
     }
     else {
       console.log("bad password")
@@ -207,9 +214,15 @@ function SettingsForm() {
         flex="flex"
         alignitems="center"
         justifycontent="space-between"
-        margin="16px 0"
+        className="has-border-bottom"
+        padding="0 0 16px"
       >
-        <h2>Account Information</h2>
+        <Content
+          h1fontsize="1.5rem"
+          h1margin="0"
+        >
+          <h1>Profile</h1>
+        </Content>
         <FlexboxButtons>
           {showSettingsForm ? (
             <>
@@ -244,7 +257,7 @@ function SettingsForm() {
                 setNewEmail("")
               }}
             >
-              Change
+              Edit
             </Button>
           )}
         </FlexboxButtons>
@@ -255,17 +268,24 @@ function SettingsForm() {
           alignitems="flex-start"
           justifycontent="space-between"
           margin="2rem 0"
+          width="100%"
         >
-          <Content>
-            <StyledLabel>Email address</StyledLabel>
+          <Content
+            h5fontsize="0.875rem"
+          >
+            <h5>Email address</h5>
             <p>This email is used for communication and for logging into your account.</p>
           </Content>
           {showSettingsForm ? (
-            <StyledFieldset className="is-vertical">
+            <StyledFieldset 
+              className="is-vertical"
+              flex="0"
+            >
               <StyledInput
-                className="has-width-auto"
+                padding="8px"
                 placeholder={user.email}
                 onChange={e => validateEmail(e.currentTarget.value)}
+                width={widths.input}
               />
               {emailError.msg && (
                 <ErrorLine color={emailError.color}>
@@ -286,8 +306,10 @@ function SettingsForm() {
           justifycontent="space-between"
           margin="2rem 0"
         >
-          <Content>
-            <StyledLabel>Email address</StyledLabel>
+          <Content
+            h5fontsize="0.875rem"
+          >
+            <h5>Password</h5>
             <p>Must be a minimum of eight characters.</p>
           </Content>
           {showSettingsForm ? (
@@ -318,6 +340,7 @@ function SettingsForm() {
               </ModalHeader>
               <ModalContent>
                 <Content>
+                  <p>It's been a while since you've logged into this account. Please confirm your original password below.</p>
                   <form id="reauthentication" noValidate
                     onSubmit={e => handleReauthenticationSubmit(e)}
                   >
@@ -327,7 +350,6 @@ function SettingsForm() {
                     >
                       <StyledLabel htmlFor="current-password">Password</StyledLabel>
                       <StyledInput
-                        borderradius="0"
                         id="current-password"
                         type="password"
                         name="current-password"
@@ -347,15 +369,24 @@ function SettingsForm() {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundcolor={colors.primary.sixHundred}
+                  backgroundcolor={colors.gray.nineHundred}
                   color={colors.white}
                   width="100%"
                   form="reauthentication"
                   type="submit"
+                  padding="16px"
                   disabled={loading}
-                  className="is-medium"
+                  className={loading && "is-loading"}
                 >
-                  Continue
+                  {loading ? (
+                    <Icon>
+                      <CircleNotch size="1rem" />
+                    </Icon>
+                  ) : (
+                    <span>
+                      Continue
+                    </span>
+                  )}
                 </Button>
               </ModalFooter>
             </>
@@ -392,8 +423,17 @@ function SettingsForm() {
                   type="submit"
                   padding="16px"
                   disabled={!passwordValidated || loading}
+                  className={loading && "is-loading"}
                 >
-                  Change password
+                  {loading ? (
+                    <Icon>
+                      <CircleNotch size="1rem" />
+                    </Icon>
+                  ) : (
+                    <span>
+                      Change password
+                    </span>
+                  )}
                 </Button>
               </ModalFooter>
             </>

@@ -10,7 +10,7 @@ import Icon from "../ui/Icon"
 const FactSheet = styled.article`
   margin: ${props => props.margin};
   box-shadow: ${colors.shadow.solid};
-  border: 2px solid ${colors.gray.nineHundred};
+  border: ${colors.borders.black};
   border-radius: 8px;
 `
 

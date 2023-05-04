@@ -1,17 +1,18 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
+import { colors, fonts } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
+import { set, ref, push, query, remove, get, orderByChild, equalTo } from "firebase/database"
 import { WarningCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
 import { v4 as uuidv4 } from 'uuid'
 
 import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
-import { Grid, Cell } from "styled-css-grid"
 import Notification from "../../ui/Notification"
 import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
 import Content from "../../ui/Content"
+import { Col, Row } from "react-grid-system"
 
 const PageRangeWrapper = styled.div`
   display: flex;
@@ -33,6 +34,8 @@ const PageRangeInput = styled.input`
   border: none;
   border-radius: 4px;
   text-align: center;
+  font-family: ${fonts.secondary};
+  font-size: 0.75rem;
   width: 2.5rem;
   &:hover,
   &:focus {
@@ -113,10 +116,10 @@ function ApplyTemplateModal({
     }
     else {
       // create a new ref for the new page
-      const newPageKey = firebaseDb.ref("pages/").push().key
+      const newPageKey = push(ref(firebaseDb, "pages")).key
 
       // insert new page into pages table
-      await firebaseDb.ref(`pages/${newPageKey}`).set({
+      set(ref(firebaseDb, `pages/${newPageKey}`), {
         bookId: bookId,
         id: newPageKey,
         svg: newPageSvg,
@@ -148,7 +151,7 @@ function ApplyTemplateModal({
     async function updatePagesDb(pages) {
       // if user is signed, update pages in db
       if (user) {
-        await firebaseDb.ref(`books/${bookId}/pages`).set(pages).then(() => {
+        await set(ref(firebaseDb, `books/${bookId}/pages`), pages).then(() => {
           cleanupPagesDb(pages)
         })
       }
@@ -160,7 +163,7 @@ function ApplyTemplateModal({
     // cleans up non-used pre-existing pages associated with the book
     async function cleanupPagesDb(pages) {
       // get all pages associated with the book
-      await firebaseDb.ref(`pages/`).orderByChild("bookId").equalTo(bookId).once("value").then(snapshot => {
+      await get(query(ref(firebaseDb, "pages"), orderByChild("bookId"), equalTo(bookId))).then(snapshot => {
         const allExistingPages = snapshot.val()
 
         // loop through all pages
@@ -170,7 +173,7 @@ function ApplyTemplateModal({
 
           // if there is no match, delete the page from the db
           if (!pageExists) {
-            firebaseDb.ref("pages").child(allExistingPages[existingPage].id).remove()
+            remove(ref(firebaseDb, `pages/${allExistingPages[existingPage].id}`))
           }
         }
       })
@@ -311,16 +314,15 @@ function ApplyTemplateModal({
   return (
     <Modal
       setShowModal={setShowModal}
-      width="300px"
     >
       <ModalHeader>Apply template to pages</ModalHeader>
       <ModalContent>
         <Notification
           alignitems="flex-start"
           margin="0 0 1rem"
-          padding="1rem"
           className="has-no-style"
           backgroundcolor={colors.gray.oneHundred}
+          padding="16px"
         >
           <Icon
             borderradius="100%"
@@ -330,18 +332,10 @@ function ApplyTemplateModal({
           >
             <WarningCircle size="1.5rem" weight="fill" color={colors.gray.nineHundred} />
           </Icon>
-          <Content
-            paragraphcolor={colors.gray.nineHundred}
-          >
-            <p>Applying a template will remove all existing layouts and styles from these pages.</p>
-          </Content>
+          <p>Applying a template will remove all existing layouts and styles from these pages.</p>
         </Notification>
-        <Grid
-          columns={2}
-        >
-          <Cell
-            width={1}
-          >
+        <Row>
+          <Col>
             <StyledFieldset
               flexdirection="column"
               margin="0 0 2rem 0"
@@ -448,11 +442,9 @@ function ApplyTemplateModal({
                 </PageRangeWrapper>
               )}
             </StyledFieldset>
-          </Cell>
+          </Col>
           {(selectedApply === "apply-all" || selectedApply === "apply-range") && (
-            <Cell
-              width={1}
-            >
+            <Col>
               <StyledFieldset
                 flexdirection="column"
                 margin="0 0 2rem 0"
@@ -536,9 +528,9 @@ function ApplyTemplateModal({
                   </label>
                 </RadioInput>
               </StyledFieldset>
-            </Cell>
+            </Col>
           )}
-        </Grid>
+        </Row>
       </ModalContent>
       <ModalFooter
         justifycontent="flex-end"

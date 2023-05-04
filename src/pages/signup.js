@@ -1,10 +1,8 @@
 import React from "react"
-import { spacing } from "../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../utils/auth"
 
-import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import { Container, LayoutContainer } from "../components/layout/Container"
+import { SectionMain, Section } from "../components/layout/Section"
 import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
@@ -28,15 +26,7 @@ const SignUp = () => {
         className="has-max-height"
       >
         <Section>
-          <Container>
-            <LayoutContainer>
-              <SectionContent
-                padding={spacing.normal}
-              >
-                <SignupForm />
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
+          <SignupForm />
         </Section>
       </SectionMain>
     </Layout>

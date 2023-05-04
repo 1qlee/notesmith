@@ -20,7 +20,7 @@ const ToolItem = styled.div`
   }
 `
 
-function Toolbar({ children }) {
+function Toolbar() {
   const [selectedTool, setSelectedTool] = useState("cursor")
 
   const selectTool = e => {

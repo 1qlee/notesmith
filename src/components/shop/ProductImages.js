@@ -11,8 +11,6 @@ const StyledProductImages = styled.div`
 `
 
 const ThumbnailRow = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 `
 
@@ -55,7 +53,7 @@ function ProductImages({
 
   useEffect(() => {
     function sortImages(a, b) {
-      if (a.childImageSharp.fluid.originalName.split("-")[1] < b.childImageSharp.fluid.originalName.split("-")[1]) {
+      if (a.name.split("-")[1] < b.name.split("-")[1]) {
         return -1
       }
       else {
@@ -65,8 +63,8 @@ function ProductImages({
     // filter images by the specified color
     function parseImages(images, color, thumbnails) {
       const imagesDummyArray = []
-      const filteredImages = images.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
-      const filteredThumbnails = thumbnails.nodes.filter(img => img.childImageSharp.fluid.originalName.split("-")[0] === color)
+      const filteredImages = images.nodes.filter(img => img.name.split("-")[0] === color)
+      const filteredThumbnails = thumbnails.nodes.filter(img => img.name.split("-")[0] === color)
       // sort images into ascending order
       filteredImages.sort(sortImages)
       filteredThumbnails.sort(sortImages)

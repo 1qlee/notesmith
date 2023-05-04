@@ -1,40 +1,48 @@
 import React, { useEffect, useState } from "react"
-import { Link, navigate } from "gatsby"
-import { colors, spacing } from "../styles/variables"
+import { navigate } from "gatsby"
+import { colors, fonts, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
-import { Elements } from "@stripe/react-stripe-js"
+import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "use-shopping-cart"
-import { WarningCircle } from "phosphor-react"
+import { Container, Row, Col } from "react-grid-system"
+import { toast } from 'react-toastify'
 
-import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
-import { Grid, Cell } from "styled-css-grid"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Breadcrumb from "../components/ui/Breadcrumb"
+import { OrderSummary } from "../components/shop/OrderSummary"
+import Box from "../components/ui/Box"
 import CheckoutForm from "../components/form/CheckoutForm"
-import Content from "../components/ui/Content"
-import Icon from "../components/ui/Icon"
-import InformationForm from "../components/form/InformationForm"
+import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
 import Nav from "../components/layout/Nav"
-import Notification from "../components/ui/Notification"
-import { OrderSummary } from "../components/shop/OrderSummary"
 import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
+import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
+import Content from "../components/ui/Content"
 
-const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
 const Checkout = () => {
-  const { cartDetails } = useShoppingCart()
-  const [activeTab, setActiveTab] = useState(1)
+  const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
+  const { cartDetails, totalPrice, clearCart } = useShoppingCart()
+  // array to store cartItems
+  const cartItems = []
+  // push all product objects in cartDetails to an array
+  for (const cartItem in cartDetails) {
+    cartItems.push(cartDetails[cartItem])
+  }
+  const [activeTab, setActiveTab] = useState({
+    index: 1,
+    heading: "Shipping Address",
+    text: "Please enter your shipping information below to continue."
+  })
   const [clientSecret, setClientSecret] = useState("")
-  const [loading, setLoading] = useState(false)
   const [processing, setProcessing] = useState(false)
-  const [formError, setFormError] = useState("")
+  const [loading, setLoading] = useState(false)
   const [addressError, setAddressError] = useState("")
   const [paymentProcessing, setPaymentProcessing] = useState(false)
+  const [authKey, setAuthKey] = useState(null)
   const [serverError, setServerError] = useState({
     msg: "",
     show: false,
@@ -42,7 +50,6 @@ const Checkout = () => {
   const [selectedRate, setSelectedRate] = useState()
   const [taxRate, setTaxRate] = useState()
   const [shipmentId, setShipmentId] = useState()
-  const [showShippingMethod, setShowShippingMethod] = useState(false)
   const [shippingMethod, setShippingMethod] = useState("")
   const [showModal, setShowModal] = useState({
     show: false
@@ -61,6 +68,56 @@ const Checkout = () => {
   })
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
   const pid = localStorage.getItem("pid")
+  const elementsOptions = {
+    mode: "payment",
+    currency: "usd",
+    captureMethod: "manual",
+    amount: totalPrice,
+    fonts: [
+      {
+        cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,700"
+      }
+    ],
+    appearance: {
+      theme: "minimal",
+      variables: {
+        fontFamily: fonts.secondary,
+        fontWeightNormal: "400",
+        fontSizeBase: "16px",
+        colorPrimary: colors.gray.nineHundred,
+        colorText: colors.gray.nineHundred,
+        colorDanger: colors.red.sixHundred,
+        borderRadius: "4px",
+      },
+      rules: {
+        ".Input": {
+          padding: "16px",
+          boxShadow: "none",
+          border: `1px solid ${colors.gray.nineHundred}`,
+          fontSize: "0.875rem",
+        },
+        ".Input:focus": {
+          boxShadow: colors.shadow.focus,
+          borderColor: "transparent",
+        },
+        ".Input:hover": {
+          backgroundColor: colors.gray.oneHundred,
+        },
+        ".Input--invalid": {
+          boxShadow: "none"
+        },
+        ".Error": {
+          fontSize: "0.75rem",
+          marginTop: "8px",
+        },
+        ".Label": {
+          marginBottom: "8px",
+          fontWeight: "700",
+          fontSize: "0.75rem",
+        }
+      }
+    }
+  }
 
   // if the cart is empty, redirect the user to cart
   if (isCartEmpty) {
@@ -69,12 +126,12 @@ const Checkout = () => {
 
   useEffect(() => {
     // to get an existing paymentIntent from Stripe
-    async function retrievePaymentIntent() {
+    function retrievePaymentIntent() {
       // show loading screen
       setLoading(true)
 
       // call on the retrieve-payment function defined in Netlify
-      await fetch("/.netlify/functions/retrieve-payment", {
+      fetch("/.netlify/functions/retrieve-payment", {
         method: "post",
         headers: {
           "Content-Type": "application/json"
@@ -82,9 +139,8 @@ const Checkout = () => {
         body: JSON.stringify({
           pid: pid
         })
-      }).then(res => {
-        return res.json()
-      }).then(data => {
+      }).then(res => res.json()
+      ).then(data => {
         // throw any errors!
         if (data.error) {
           throw data.error
@@ -109,37 +165,32 @@ const Checkout = () => {
             const { receipt_email } = data.paymentIntent
 
             setAddress(shipping.address)
-            setCustomer({...customer, name: shipping.name, email: receipt_email})
+            setCustomer({ ...customer, name: shipping.name, email: receipt_email })
           }
         }
       }).catch(error => {
         setLoading(false)
-        setServerError({
-          show: true,
-          msg: error
-        })
+        toast.error(error)
       })
     }
 
     // to create a new paymentIntent in Stripe
-    async function createPaymentIntent() {
+    function createPaymentIntent() {
       // show loading screen
       setLoading(true)
-      localStorage.removeItem("pid")
 
       // call on the create-payment function defined in Netlify
-      await fetch("/.netlify/functions/create-payment", {
+      fetch("/.netlify/functions/create-payment", {
         method: "post",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           // send all cart items
-          cartItems: {...cartDetails}
+          cartItems: cartItems
         })
-      }).then(res => {
-        return res.json()
-      }).then(data => {
+      }).then(res => res.json()
+      ).then(data => {
         // throw any errors!
         if (data.error) {
           throw data.error
@@ -147,16 +198,11 @@ const Checkout = () => {
 
         const pid = data.paymentId
         setClientSecret(data.clientSecret)
-        setLoading(false)
-
-        // set a pid value in localStorage based on newly created paymentIntent
         localStorage.setItem('pid', pid)
+        setLoading(false)
       }).catch(error => {
         setLoading(false)
-        setServerError({
-          show: true,
-          msg: error
-        })
+        toast.error(error)
       })
     }
 
@@ -170,52 +216,56 @@ const Checkout = () => {
     }
   }, [cartDetails, pid])
 
-  // copy of the function in InformationForm to create a paymentIntent w user's information
-  async function forceShippingSubmit() {
+  // copy of the function in AddressForm to create a paymentIntent w user's information
+  function forceShippingSubmit() {
     // hide the error modal
     setProcessing(true)
-    setShowModal({
-      show: false
-    })
     // update the paymentIntent with shipping form data
-    await fetch("/.netlify/functions/create-payment", {
+    fetch("/.netlify/functions/create-payment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        cartItems: {...cartDetails}, // always send current cart items
+        cartItems: cartItems, // always send current cart items
         paymentId: pid, // need pid from localStorage to update the corresponding paymentIntent
         email: customer.email,
         address: {address: {...address}, name: customer.name}, // always send shipping information
         customer: customer,
       })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
+    }).then(res => res.json()
+    ).then(data => {
       // throw any errors!
       if (data.error) {
         throw data.error
       }
 
+      setActiveTab({
+        ...activeTab,
+        index: 2,
+      })
       setProcessing(false)
-      setShowShippingMethod(true)
+      setShowModal({ show: false })
     }).catch(error => {
       setProcessing(false)
-      setFormError(error)
+      setShowModal({ show: false })
+      toast.error(error)
     })
   }
 
   return (
-    <Layout>
-      <Seo title="Checkout" />
-      <Nav />
-      {!paymentProcessing ? (
-        <SectionMain className="has-max-height">
-          <Section>
-            <Container>
-              <LayoutContainer>
-                <SectionContent>
+    <Elements
+      stripe={stripePromise}
+      options={elementsOptions}
+    >
+      <Layout>
+        <Seo title="Checkout" />
+        <Nav />
+        {!paymentProcessing ? (
+          <SectionMain className="has-max-height">
+            <Section>
+              <SectionContent padding={`${spacing.large} 0`}>
+                <Container xs sm md lg xl>
                   {serverError.show ? (
                     <Flexbox
                       flex="flex"
@@ -227,182 +277,100 @@ const Checkout = () => {
                       {serverError.msg}
                     </Flexbox>
                   ) : (
-                    <Grid
-                      rowGap={spacing.normal}
-                      columnGap={spacing.medium}
-                      columns="repeat(auto-fit,minmax(360px,1fr))"
-                      rows="auto"
-                      justifycontent="center"
-                    >
-                      <Cell width={2}>
-                        <Breadcrumb>
-                          <ul>
-                            <li>
-                              <Link to="/cart" className="first">Cart</Link>
-                            </li>
-                            <li onClick={() => setActiveTab(1)}>
-                              <a className={activeTab === 1 ? "is-active" : null}>Shipping</a>
-                            </li>
-                            {activeTab === 1 ? (
-                              <li
-                                className="is-disabled"
-                              >
-                                <a>Payment</a>
-                              </li>
-                            ) : (
-                              <li
-                                onClick={() => setActiveTab(2)}
-                              >
-                                <a className={activeTab === 2 ? "is-active" : null}>Payment</a>
-                              </li>
-                            )}
-                          </ul>
-                        </Breadcrumb>
-                        <Flexbox
+                    <Row>
+                      <Col sm={8}>
+                        <Box
                           width="600px"
                         >
-                          {formError && (
-                            <Notification
-                              backgroundcolor={colors.red.twoHundred}
-                              bordercolor={colors.red.twoHundred}
-                              justifycontent="flex-start"
-                              margin="0 0 2rem"
-                              padding="1rem"
-                            >
-                              <Icon
-                                backgroundcolor={colors.red.twoHundred}
-                                borderradius="100%"
-                                margin="0 1rem 0 0"
-                                className="is-pulsating"
-                                pulseColor={colors.red.threeHundred}
-                              >
-                                <WarningCircle size="1.5rem" weight="fill" color={colors.red.sixHundred} />
-                              </Icon>
-                              <Content
-                                paragraphcolor={colors.red.nineHundred}
-                              >
-                                <p>{formError}</p>
-                              </Content>
-                            </Notification>
+                          <Content
+                            margin="0 0 32px"
+                          >
+                            <h3>{activeTab.heading}</h3>
+                            <p>{activeTab.text}</p>
+                          </Content>
+                          {activeTab.index === 1 && (
+                            <AddressForm
+                              activeTab={activeTab}
+                              address={address}
+                              customer={customer}
+                              setActiveTab={setActiveTab}
+                              setAddress={setAddress}
+                              setAddressError={setAddressError}
+                              setCustomer={setCustomer}
+                              setShowModal={setShowModal}
+                            />
                           )}
-                          {activeTab === 1 && !showShippingMethod && (
-                            <>
-                              <Content
-                                margin="0 0 2rem 0"
-                                h3fontweight="400"
-                              >
-                                <h3>Shipping Address</h3>
-                                <p>Please enter the shipping information for this order.</p>
-                              </Content>
-                              <InformationForm
-                                activeTab={activeTab}
-                                address={address}
-                                customer={customer}
-                                loading={loading}
-                                processing={processing}
-                                setAddress={setAddress}
-                                setAddressError={setAddressError}
-                                setCustomer={setCustomer}
-                                setFormError={setFormError}
-                                setLoading={setLoading}
-                                setProcessing={setProcessing}
-                                setShowModal={setShowModal}
-                                setShowShippingMethod={setShowShippingMethod}
-                                showShippingMethod={showShippingMethod}
-                              />
-                            </>
+                          {activeTab.index === 2 && (
+                            <ShippingForm
+                              activeTab={activeTab}
+                              address={address}
+                              customer={customer}
+                              selectedRate={selectedRate}
+                              setActiveTab={setActiveTab}
+                              setAddress={setAddress}
+                              setAuthKey={setAuthKey}
+                              setSelectedRate={setSelectedRate}
+                              setShipmentId={setShipmentId}
+                              setShippingMethod={setShippingMethod}
+                              setTaxRate={setTaxRate}
+                              shipmentId={shipmentId}
+                              shippingMethod={shippingMethod}
+                              toast={toast}
+                            />
                           )}
-                          {activeTab === 1 && showShippingMethod && (
-                            <>
-                              <Content
-                                margin="0 0 2rem 0"
-                                h3fontweight="400"
-                              >
-                                <h3>Shipping Method</h3>
-                                <p>Confirm your shipping address and then select a shipping method.</p>
-                              </Content>
-                              <ShippingForm
-                                address={address}
-                                customer={customer}
-                                processing={processing}
-                                selectedRate={selectedRate}
-                                setActiveTab={setActiveTab}
-                                setAddress={setAddress}
-                                setFormError={setFormError}
-                                setProcessing={setProcessing}
-                                setSelectedRate={setSelectedRate}
-                                setShipmentId={setShipmentId}
-                                setShippingMethod={setShippingMethod}
-                                setShowShippingMethod={setShowShippingMethod}
-                                setTaxRate={setTaxRate}
-                                shipmentId={shipmentId}
-                                shippingMethod={shippingMethod}
-                                showShippingMethod={showShippingMethod}
-                              />
-                            </>
+                          {activeTab.index === 3 && (
+                            <CheckoutForm
+                              activeTab={activeTab}
+                              address={address}
+                              customer={customer}
+                              clearCart={clearCart}
+                              cartItems={cartItems}
+                              pid={pid}
+                              selectedRate={selectedRate}
+                              setActiveTab={setActiveTab}
+                              setLoading={setLoading}
+                              setPaymentProcessing={setPaymentProcessing}
+                              setShippingMethod={setShippingMethod}
+                              shipmentId={shipmentId}
+                              shippingMethod={shippingMethod}
+                              taxRate={taxRate}
+                            />
                           )}
-                          {activeTab === 2 && (
-                            <Elements
-                              stripe={stripePromise}
-                            >
-                              <Content
-                                margin="0 0 2rem 0"
-                                h3fontweight="400"
-                              >
-                                <h3>Payment Information</h3>
-                                <p>Please make sure your information is correct, then click the pay now button to process your order.</p>
-                              </Content>
-                              <CheckoutForm
-                                activeTab={activeTab}
-                                address={address}
-                                clientSecret={clientSecret}
-                                customer={customer}
-                                pid={pid}
-                                processing={processing}
-                                selectedRate={selectedRate}
-                                setActiveTab={setActiveTab}
-                                setLoading={setLoading}
-                                setPaymentProcessing={setPaymentProcessing}
-                                setProcessing={setProcessing}
-                                setShippingMethod={setShippingMethod}
-                                setShowShippingMethod={setShowShippingMethod}
-                                shipmentId={shipmentId}
-                                shippingMethod={shippingMethod}
-                                taxRate={taxRate}
-                              />
-                            </Elements>
-                          )}
-                        </Flexbox>
-                      </Cell>
-                      <Cell width={1}>
+                        </Box>
+                      </Col>
+                      <Col sm={4}>
                         <OrderSummary
+                          cartItems={cartItems}
                           hideButton={true}
                           selectedRate={selectedRate}
                           taxRate={taxRate}
+                          totalPrice={totalPrice}
                         />
-                      </Cell>
-                    </Grid>
+                      </Col>
+                    </Row>
                   )}
                   {loading && (
-                    <Loader className="has-nav" msg="Do not refresh the page!" />
+                    <Loader msg="Do not refresh the page!" />
                   )}
-                </SectionContent>
-              </LayoutContainer>
-            </Container>
-          </Section>
-        </SectionMain>
-      ) : (
-        <Loader className="has-nav" msg="Processing payment... Do not refresh or close this page!" />
-      )}
-      {showModal.show && (
-        <ValidateAddressModal
-          address={address}
-          addressError={addressError}
-          forceShippingSubmit={forceShippingSubmit}
-          setShowModal={setShowModal}
-        />
-      )}
-    </Layout>
+                </Container>
+              </SectionContent>
+            </Section>
+          </SectionMain>
+        ) : (
+          <Loader msg="Processing payment... Do not refresh or close this page!" />
+        )}
+        <Toastify />
+        {showModal.show && (
+          <ValidateAddressModal
+            address={address}
+            addressError={addressError}
+            forceShippingSubmit={forceShippingSubmit}
+            processing={processing}
+            setShowModal={setShowModal}
+          />
+        )}
+      </Layout>
+    </Elements>
   )
 }
 

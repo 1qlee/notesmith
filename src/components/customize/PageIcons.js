@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { colors, fonts, convertToMM } from "../../styles/variables"
 import { Plus } from "phosphor-react"
-import ReactTooltip from "react-tooltip"
+import { Tooltip } from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
 import HexPageIcon from "../../assets/hexagon-grid.svg"
 import SeyesIcon from "../../assets/seyes.svg"
@@ -31,8 +31,8 @@ const StyledPage = styled.a`
     }
     .page-outline {
       border-color: ${colors.gray.nineHundred};
-      box-shadow: 2px 2px 0 ${colors.gray.nineHundred};
-      transform: translate(-2px,-2px);
+      box-shadow: 0 0 0 2px ${colors.gray.nineHundred};
+      transform: translateY(-2px);
     }
   }
   &:hover {
@@ -137,8 +137,8 @@ const PageLabel = styled.p`
 
 function Page({
   children,
+  className,
   data,
-  dataTip,
   isActive,
   isProductPage,
   leftPageData,
@@ -149,9 +149,8 @@ function Page({
   return (
     <StyledPage
       onClick={() => setData(data)}
-      className={isActive ? "is-active" : null}
+      className={isActive ? `is-active ${className}` : className}
       margin={margin}
-      data-tip={dataTip}
     >
       {(isProductPage && leftPageData.template === data.template) && (
         <PageBadge
@@ -203,7 +202,7 @@ function RuledPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="ruled-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -230,8 +229,10 @@ function RuledPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Ruled</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".ruled-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -270,7 +271,7 @@ function DotPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="dot-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -323,8 +324,10 @@ function DotPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".dot-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -360,7 +363,7 @@ function GraphPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="graph-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -386,8 +389,10 @@ function GraphPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Graph</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".graph-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -425,7 +430,7 @@ function BlankPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="blank-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -438,8 +443,10 @@ function BlankPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Blank</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".blank-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -474,7 +481,7 @@ function HexagonPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="hex-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -499,8 +506,10 @@ function HexagonPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Hexagon</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".hex-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -536,7 +545,7 @@ function IsometricPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="iso-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -561,8 +570,10 @@ function IsometricPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Isometric</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".iso-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -601,7 +612,7 @@ function SeyesPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="seyes-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -624,8 +635,10 @@ function SeyesPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Seyes</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".seyes-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -658,7 +671,7 @@ function MusicPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="music-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -699,8 +712,10 @@ function MusicPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Music</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".music-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -736,7 +751,7 @@ function HandwritingPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="hand-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -800,8 +815,10 @@ function HandwritingPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Handwriting</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".hand-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -838,7 +855,7 @@ function CalligraphyPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="calligraphy-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -861,8 +878,10 @@ function CalligraphyPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Calligraphy</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".calligraphy-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>
@@ -900,7 +919,7 @@ function CrossGridPageIcon({
 
   return (
     <Page
-      dataTip={dataTip}
+      className="cross-tooltip"
       data={newData}
       isActive={isActive}
       isProductPage={isProductPage}
@@ -966,8 +985,10 @@ function CrossGridPageIcon({
       {showLabels ? (
         <PageLabel margin="0.5rem 0 0 0">Cross grid</PageLabel>
       ) : (
-        <ReactTooltip
-          effect="solid"
+        <Tooltip
+          anchorSelect=".cross-tooltip"
+          content={dataTip}
+          place="top"
         />
       )}
     </Page>

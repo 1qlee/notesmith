@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const BreadcrumbContainer = styled.nav`
   display: block;
@@ -33,6 +33,8 @@ const BreadcrumbContainer = styled.nav`
     color: ${colors.gray.sixHundred};
     position: relative;
     padding: 0 0.75rem 0 1rem;
+    font-family: ${fonts.secondary};
+    font-size: 0.875rem;
     &.is-active {
       color: ${colors.gray.nineHundred};
     }

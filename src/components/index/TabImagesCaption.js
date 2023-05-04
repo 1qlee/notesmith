@@ -5,7 +5,7 @@ import { fonts } from "../../styles/variables"
 const StyledCaption = styled.article`
   padding: 16px;
   position: absolute;
-  background-image  : linear-gradient(180deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.75) 50%, #fff 100%);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.75) 50%, #fff 100%);
   bottom: 16px;
   left: 0;
   width: 100%;

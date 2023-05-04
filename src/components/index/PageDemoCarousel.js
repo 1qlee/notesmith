@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { breakpoints, colors, widths } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
 import PageDemo1 from "../../assets/index/page-demo-1.svg"
@@ -12,6 +12,9 @@ import Progress from "../ui/Progress"
 
 const StyledPageDemo = styled.div`
   position: relative;
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    margin-top: 32px;
+  }
 `
 
 const DemoImageWrapper = styled.div`
@@ -30,7 +33,7 @@ const DemoImage = styled.div`
 const DemoImageCaption = styled.article`
   bottom: 0;
   padding: 16px;
-  background-color: ${colors.white};
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.75) 50%, #fff 100%);
   position: absolute;
   right: 0;
   width: ${widths.caption};

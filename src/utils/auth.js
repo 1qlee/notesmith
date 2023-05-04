@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useContext } from "react"
 import firebase from "gatsby-plugin-firebase-v9.0"
 import { 
-  applyActionCode,
-  confirmPasswordReset, 
   createUserWithEmailAndPassword, 
   EmailAuthProvider, 
   getAuth, 
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
   signOut, 
-  verifyPasswordResetCode, 
 } from "firebase/auth"
 import { 
   enableLogging,
@@ -58,13 +55,11 @@ export const FirebaseProvider = ({
         user,
         loading,
         firebaseDb,
-        applyActionCode: (...p) => applyActionCode(firebaseAuth, ...p),
-        confirmPasswordReset: (...p) => confirmPasswordReset(firebaseAuth, ...p),
+        firebaseAuth,
         getAuthCredential: (...p) => EmailAuthProvider.credential(...p),
         login: (...p) => signInWithEmailAndPassword(firebaseAuth, ...p),
         signOut: (...p) => signOut(firebaseAuth, ...p),
         signUp: (...p) => createUserWithEmailAndPassword(firebaseAuth, ...p),
-        verifyPasswordResetCode: (...p) => verifyPasswordResetCode(firebaseAuth, ...p),
       }}
     >
       {children}

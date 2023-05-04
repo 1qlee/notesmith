@@ -26,22 +26,30 @@ const ShippingInfoContainer = styled.div`
 `
 
 const ShippingItemsContainer = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
+  padding: 16px;
+  border: ${colors.borders.black};
 `
 
 const ShippingItem = styled(Flexbox)`
-  border: 1px solid ${colors.gray.nineHundred}; 
-  border-radius: 0.5rem;
-  box-shadow: ${colors.shadow.solid};
-  transition: box-shadow 0.2s, transform 0.2s;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  background-color: ${colors.gray.twoHundred};
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
   &:hover {
-    background-color: ${colors.gray.oneHundred};
+    background-color: ${colors.gray.threeHundred};
     cursor: pointer;
   }
   &.is-selected {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0 ${colors.gray.nineHundred};
-    background-color: ${colors.yellow.threeHundred};
+    background-color: ${colors.gray.nineHundred};
+    p {
+      color: ${colors.gray.oneHundred};
+    }
+    small {
+      colors: ${colors.gray.twoHundred};
+    }
   }
   &.is-loading {
     background-color: ${colors.gray.oneHundred};
@@ -54,31 +62,30 @@ const ShippingItem = styled(Flexbox)`
 `
 
 const ShippingForm = ({
+  activeTab,
   address,
   customer,
   processing,
   selectedRate,
   setActiveTab,
   setAuthKey,
-  setFormError,
   setProcessing,
   setSelectedRate,
   setShipmentId,
-  setShowShippingMethod,
   shippingMethod,
   setShippingMethod,
   setTaxRate,
   shipmentId,
+  toast,
 }) => {
   const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
-  const [cheapestRate, setCheapestRate] = useState()
+  const [shippingRate, setShippingRate] = useState({})
   const pid = localStorage.getItem("pid")
 
   useEffect(() => {
-    // fetch the cheapest shipping rate based on the user's address
+    // fetch the shipping rate based on the user's address
     const createRates = async () => {
-      setFormError("")
       setLoading(true)
 
       // fetch shipping rates for the user's cart items
@@ -97,14 +104,14 @@ const ShippingForm = ({
         if (data.error) {
           throw data.error
         }
-        // save the cheapest rate to state
-        setCheapestRate(data.cheapestRate)
+        // save the rate to state
+        setShippingRate(data.rate)
         // save the shipment id to state
         setShipmentId(data.shipmentId)
         setLoading(false)
       }).catch(error => {
         setLoading(false)
-        setFormError(error)
+        toast.error(error)
       })
     }
 
@@ -112,7 +119,6 @@ const ShippingForm = ({
   }, [pid, address, customer, cartDetails])
 
   const setShippingInfo = async () => {
-    setFormError("")
 
     await fetch("/.netlify/functions/set-shipping-info", {
       method: "post",
@@ -135,13 +141,12 @@ const ShippingForm = ({
       calculateTaxes()
     }).catch(error => {
       setProcessing(false)
-      setFormError(error)
+      toast.error(error)
     })
   }
 
   // calculate taxes for customers in New York
   const calculateTaxes = async () => {
-    setFormError("")
     // check if customer's shipping address' state is New York
     if (address.state === "New York") {
       await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address.line1} ${address.line2} ${address.city} ${address.state} ${address.postal_code}.json?country=${address.country}&proximity=ip&types=address&access_token=${process.env.GATSBY_MAPBOX_ACCESS_API}`)
@@ -155,7 +160,6 @@ const ShippingForm = ({
         fetchTax(countyName)
       }).then(() => {
         setProcessing(false)
-        setShowShippingMethod(false)
         setActiveTab(2)
       }).catch(err => {
         console.log(err)
@@ -165,7 +169,6 @@ const ShippingForm = ({
       // set tax to zero
       setZeroTax()
       setProcessing(false)
-      setShowShippingMethod(false)
       setActiveTab(2)
     }
   }
@@ -190,7 +193,7 @@ const ShippingForm = ({
       setTaxRate(data.tax)
     }).catch(error => {
       setProcessing(false)
-      setFormError(error)
+      toast.error(error)
     })
   }
 
@@ -213,7 +216,7 @@ const ShippingForm = ({
       setTaxRate(0)
     }).catch(error => {
       setProcessing(false)
-      setFormError(error)
+      toast.error(error)
     })
   }
 
@@ -222,9 +225,7 @@ const ShippingForm = ({
     setProcessing(true)
 
     if (!shippingMethod) {
-      setFormError({
-        msg: "Please select a shipping method."
-      })
+      toast.error("Please select a shipping method")
       setProcessing(false)
     }
     else {
@@ -235,11 +236,11 @@ const ShippingForm = ({
   return (
     <ShippingInfoContainer>
       <ShippingInfo
+        activeTab={activeTab}
         address={address}
         customer={customer}
         setActiveTab={setActiveTab}
         shippingMethod={shippingMethod}
-        setShowShippingMethod={setShowShippingMethod}
       />
       <Content
         headingfontfamily={fonts.secondary}
@@ -247,7 +248,7 @@ const ShippingForm = ({
         h3margin="0"
         margin="0 0 1rem 0"
       >
-        <h3>Shipping method</h3>
+        <h3>Shipping method (select one)</h3>
       </Content>
       <ShippingItemsContainer>
         {loading && (
@@ -264,13 +265,13 @@ const ShippingForm = ({
             <p>Calculating shipping rates...</p>
           </ShippingItem>
         )}
-        {cheapestRate && !loading && (
+        {shippingRate && !loading && (
           <ShippingItem
             onClick={() => {
-              setShippingMethod(cheapestRate.id)
-              setSelectedRate(cheapestRate)
+              setShippingMethod(shippingRate.id)
+              setSelectedRate(shippingRate)
             }}
-            className={shippingMethod === cheapestRate.id ? "is-selected" : null}
+            className={shippingMethod === shippingRate.id ? "is-selected" : null}
             justifycontent="flex-start"
             alignitems="flex-start"
             padding="1rem"
@@ -286,28 +287,42 @@ const ShippingForm = ({
                 flex="flex"
                 alignitems="center"
               >
-                {shippingMethod === cheapestRate.id ? (
-                  <Icon margin="0 0.5rem 0 0">
-                    <CheckCircle color={colors.gray.nineHundred} size="1rem" weight="fill" />
+                {shippingMethod === shippingRate.id ? (
+                  <Icon margin="0 8px 0 0">
+                    <CheckCircle color={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred} size={16} weight="fill" />
                   </Icon>
                 ) : (
-                  <Icon margin="0 0.5rem 0 0">
-                    <Circle size="1rem" />
+                  <Icon margin="0 8px 0 0">
+                    <Circle size={16} />
                   </Icon>
                 )}
-                <div>
-                  <p>Ground shipping</p>
-                  {cheapestRate.delivery_days && (
-                    <small>{cheapestRate.delivery_days} to {cheapestRate.delivery_days + 3} business days</small>
+                <Content
+                  paragraphfontfamily={fonts.secondary}
+                  paragraphfontsize="0.875rem"
+                  paragraphmarginbottom="0"
+                  paragraphfontweight="700"
+                  smallfontfamily={fonts.secondary}
+                  smallfontsize="0.75rem"
+                  smallmargin="0"
+                >
+                  <p>
+                    {shippingRate.service === "Priority" ? (
+                      "Ground shipping"
+                    ) : (
+                      "International shipping"
+                    )}
+                  </p>
+                  {shippingRate.delivery_days && (
+                    <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
                   )}
-                </div>
+                </Content>
               </Flexbox>
               <Tag
-                color={colors.gray.oneHundred}
-                backgroundcolor={colors.gray.nineHundred}
+                color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
+                backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
                 fontfamily={fonts.secondary}
               >
-                ${cheapestRate.rate}
+                ${shippingRate.rate}
               </Tag>
             </Flexbox>
           </ShippingItem>
@@ -323,13 +338,19 @@ const ShippingForm = ({
           alignitems="flex-end"
           onClick={() => {
             setProcessing(false)
-            setShowShippingMethod(false)
+            setActiveTab({
+              ...activeTab,
+              index: 1,
+            })
+            setShippingMethod("")
+            setSelectedRate(null)
+            setAuthKey("")
           }}
         >
           <Icon>
             <ArrowLeft size="1rem" />
           </Icon>
-          <span>Back to info</span>
+          <span>Back to address</span>
         </TextLink>
         <Button
           disabled={!shippingMethod || processing}

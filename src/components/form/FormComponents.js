@@ -378,9 +378,8 @@ const Counter = styled.input`
 `
 
 const AuthFormWrapper = styled.div`
-  box-shadow: ${colors.shadow.solid};
-  border-radius: 8px;
-  border: 2px solid ${colors.gray.nineHundred};
+  border: ${colors.borders.black};
+  border-top-width: 0;
   padding: 64px;
   margin: 0 auto;
   max-width: ${widths.form};
@@ -390,7 +389,7 @@ const StyledFieldset = styled.fieldset`
   border: none;
   margin: ${props => props.margin || "0 0 16px"};
   position: relative;
-  flex: 1;
+  flex: ${props => props.flex || "1"};
   width: ${props => props.width};
 `
 
@@ -515,6 +514,8 @@ const StyledRadio = styled.div`
 const RadioInput = styled.div`
   display: block;
   border: none;
+  font-family: ${fonts.secondary};
+  font-size: 0.75rem;
   margin: ${props => props.margin};
   label {
     box-sizing: border-box;
@@ -552,7 +553,7 @@ const StyledLabel = styled.label`
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: 700;
-  margin: ${props => props.margin || "0 0 0.5rem 0"};
+  margin: ${props => props.margin || "0 0 8px 0"};
   width: ${props => props.width};
 `
 
@@ -564,14 +565,14 @@ const StyledFloatingLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "4px"};
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   color: ${colors.gray.nineHundred};
   display: block;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.8rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
   margin: ${props => props.margin ? props.margin : "0"};
-  padding: ${props => props.padding ? props.padding : "1rem"};
+  padding: ${props => props.padding ? props.padding : "16px"};
   text-align: ${props => props.textalign};
   transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
   width: ${props => props.width ? props.width : "100%"};
@@ -583,12 +584,12 @@ const StyledInput = styled.input`
   }
   &:focus {
     box-shadow: ${colors.shadow.focus};
-    border-color: ${colors.white};
+    border-color: transparent;
     outline: none;
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.gray.twoHundred};
+      background-color: ${colors.gray.oneHundred};
     }
   }
   &::placeholder {
@@ -634,50 +635,15 @@ const StyledSelect = styled.select`
 
 const ErrorLine = styled.div`
   position: relative;
-  margin-top: 0.5rem;
+  margin-top: 8px;
   margin: ${props => props.margin};
   color: ${props => props.color};
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  font-family: ${fonts.secondary};
   display: flex;
   align-items: center;
   span + span {
-    margin-left: 0.25rem;
-  }
-`
-
-const StyledTable = styled.table`
-  border: 1px solid ${colors.gray.nineHundred};
-  border-radius: 8px;
-  box-shadow: ${colors.shadow.solid};
-  border-spacing: 0;
-  td,tr {
-    border-width: 1px;
-    border-color: ${colors.gray.nineHundred};
-    border-bottom-width: 0;
-  }
-  th,td {
-    padding: 1rem;
-  }
-  th {
-    border-color: ${colors.gray.nineHundred};
-    border-width: 1px;
-    font-size: 1rem;
-    font-weight: 700;
-  }
-  tr {
-    &.is-selected {
-      background-color: ${colors.gray.oneHundred};
-    }
-    &:last-child {
-      td {
-          &:first-child {
-            border-radius: 0 0 0 8px;
-          }
-          &:last-child {
-            border-radius: 0 0 8px 0;
-          }
-        }
-    }
+    margin-left: 4px;
   }
 `
 
@@ -701,5 +667,4 @@ export {
   StyledRadio,
   StyledRange,
   StyledSelect,
-  StyledTable,
 }

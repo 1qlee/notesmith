@@ -17,11 +17,12 @@ const Button = styled.button`
   border: ${props => props.border ? props.border : "none"};
   color: ${props => props.color || colors.gray.oneHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
-  font-size: ${props => props.fontsize || "0.825rem"};
+  font-size: ${props => props.fontsize || "0.875rem"};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  line-height: 1;
   height: ${props => props.height};
   justify-content: center;
-  padding: ${props => props.padding || "0.5rem 1rem"};
+  padding: ${props => props.padding || "8px 16px"};
   margin: ${props => props.margin || "0"};
   text-decoration: none;
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;

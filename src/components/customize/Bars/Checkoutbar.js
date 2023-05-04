@@ -4,6 +4,7 @@ import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
 import { navigate } from "gatsby"
 import { CircleNotch } from "phosphor-react"
+import { update, ref } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
 
 import { Flexbox } from "../../layout/Flexbox"
@@ -16,9 +17,8 @@ import ColorPicker from "../../shop/ColorPicker"
 
 function Checkoutbar({
   bookData,
-  pageData,
   productData,
-  productImageData,
+  productImages,
   setBookData,
   toast,
 }) {
@@ -28,14 +28,14 @@ function Checkoutbar({
   const [loading, setLoading] = useState(false)
 
   function getImageThumbnail() {
-    // this is an exact match for "color-0.jpg"
-    const filteredImage = productImageData.nodes.filter(img => img.childImageSharp.fluid.originalName === `${bookData.coverColor}-0.jpg`)
-
+    // this is an exact match for "color-0"
+    const filteredImage = productImages.nodes.filter(img => img.name === `${bookData.coverColor}-0`)
     return filteredImage[0]
   }
 
   async function handleCheckoutButton(book, coverColor) {
     setLoading(true)
+    console.log(book)
     // create a promise to add items to cart then redirect user to cart
     await addItem({
       category: book.category,
@@ -46,11 +46,9 @@ function Checkoutbar({
       description: book.description,
       id: uuidv4(),
       image: getImageThumbnail(),
-      leftPageData: "",
       name: book.name,
       price_id: book.stripePriceId,
       price: book.price,
-      rightPageData: "",
       slug: book.slug,
       weight: book.weight,
     }, { count: itemQuantity })
@@ -58,7 +56,7 @@ function Checkoutbar({
       await updateBookCoverColor(coverColor)
       setLoading(false)
       return navigate("/cart")
-    }).catch(error => {
+    }).catch(() => {
       toast.error("Something went wrong! Please try again.")
     })
   }
@@ -84,10 +82,13 @@ function Checkoutbar({
     // only updates the title field
     updates[`/books/${bookData.id}/coverColor`] = color
 
-    await firebaseDb.ref().update(updates, error => {
+    await update(ref(firebaseDb), updates).then(error => {
       if (error) {
         throw error
       }
+    }).catch(error => {
+      console.log(error)
+      toast.error("Something went wrong! Please try again.")
     })
   }
 
@@ -100,6 +101,8 @@ function Checkoutbar({
           headingfontfamily={fonts.secondary}
           h3fontsize="0.75rem"
           h3margin="0 0 0.25rem"
+          paragraphfontfamily={fonts.secondary}
+          paragraphfontsize="0.875rem"
         >
           <h3>Product</h3>
           <p>{bookData.name}</p>

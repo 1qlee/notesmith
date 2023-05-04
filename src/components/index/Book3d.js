@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Measure from "react-measure"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
-import { colors } from "../../styles/variables"
+import { breakpoints, colors } from "../../styles/variables"
 
 import { Flexbox } from "../layout/Flexbox"
 import ColorPicker from "../shop/ColorPicker"
@@ -135,6 +135,9 @@ const Book3dWrapper = styled.div`
   @media only screen and (max-width: 1548px) {
     height: 471px;
     width: 327px;
+  }
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    margin: 32px auto 16px;
   }
 `
 
@@ -272,7 +275,7 @@ function Book3d({
         flex="flex"
         alignitems="center"
         justifycontent="center"
-        margin="1.25rem 0 0"
+        margin="16px 0"
         flexwrap="wrap"
       >
         <ColorPicker 

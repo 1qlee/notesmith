@@ -1,6 +1,6 @@
 import React from "react"
 import { colors } from "../../styles/variables"
-import ReactTooltip from "react-tooltip"
+import { Tooltip } from "react-tooltip"
 import styled from "styled-components"
 
 const ColorOption = styled.button`
@@ -64,7 +64,7 @@ function ColorPicker({
           onClick={() => cbFunction(color.slug)}
         />
       ))}
-      <ReactTooltip
+      <Tooltip
         effect="solid"
       />
     </>

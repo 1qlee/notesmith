@@ -1,6 +1,5 @@
 import React from "react"
 import { colors } from "../../../styles/variables"
-import { Grid } from "styled-css-grid"
 import PageIcons from "../PageIcons"
 
 import { ControlsContent, ControlsFooter } from "../Controls"
@@ -14,10 +13,12 @@ function Templatesbar({
   return (
     <>
       <ControlsContent>
-        <Grid
-          columns="repeat(auto-fit, minmax(60px, 1fr))"
-          columnGap="16px"
-          rowGap="16px"
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:"repeat(auto-fit, minmax(60px, 1fr))",
+            gap:"16px",
+          }}
         >
           <PageIcons
             checkActiveVar={pageData.template}
@@ -26,7 +27,7 @@ function Templatesbar({
             data={pageData}
             showLabels={true}
           />
-        </Grid>
+        </div>
       </ControlsContent>
       <ControlsFooter>
         <Button

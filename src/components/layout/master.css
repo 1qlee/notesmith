@@ -30,14 +30,6 @@
   --toastify-spinner-color: #616161;
   --toastify-spinner-color-empty-area: #e0e0e0;
 }
-.__react_component_tooltip {
-  font-size: 0.75rem;
-  font-weight: 400;
-  font-family: "Crimson Pro", Georgia, serif;
-  background-color: #212121;
-  max-width: 200px;
-  padding: 0.25rem;
-}
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -417,8 +409,8 @@ hr {
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 0;
-  border-top: 1px dotted #E0E0E0;
-  border-width: 1px 0 0 0;
+  border-top: 2px dotted #E0E0E0;
+  border-width: 2px 0 0 0;
   background: transparent;
   box-sizing: content-box;
   overflow: visible;

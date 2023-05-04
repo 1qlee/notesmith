@@ -7,7 +7,7 @@ import Checkoutbar from "./bars/Checkoutbar"
 import Templatesbar from "./bars/Templatesbar"
 
 const StyledControls = styled.div`
-  border-left: 1px solid ${colors.gray.threeHundred};
+  border-left: 2px solid ${colors.gray.nineHundred};
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -34,7 +34,7 @@ const ControlsContent = styled.div`
 
 const ControlsTabs = styled.ul`
   background-color: ${colors.white};
-  border-bottom: 1px solid ${colors.gray.threeHundred};
+  border-bottom: 2px solid ${colors.gray.nineHundred};
   display: inline-flex;
   justify-content: flex-start;
   list-style-type: none;
@@ -47,19 +47,19 @@ const ControlsTab = styled.li`
   font-family: "Inter", Helvetica, sans-serif;
   font-size: 0.825rem;
   padding: 1rem 0;
-  margin: 0 1rem;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
   font-weight: 700;
   text-align: center;
+  flex: 1;
   &.is-active {
-    box-shadow: 0 2px 0 ${colors.gray.nineHundred};
-    color: ${colors.gray.nineHundred};
+    background-color: ${colors.gray.nineHundred};
+    color: ${colors.gray.oneHundred};
   }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      box-shadow: 0 2px 0 ${colors.gray.sixHundred};
+      background-color: ${colors.gray.twoHundred};
     }
   }
 `
@@ -73,7 +73,7 @@ function Controls({
   bookData,
   pageData,
   productData,
-  productImageData,
+  productImages,
   setBookData,
   setPageData,
   setShowModal,
@@ -82,7 +82,6 @@ function Controls({
   toast,
   user,
 }) {
-
   function handleApplyTemplateButton() {
     // don't show the modal if no template is selected
     if (!pageData.template) {
@@ -143,7 +142,7 @@ function Controls({
           bookData={bookData}
           pageData={pageData}
           productData={productData}
-          productImageData={productImageData}
+          productImages={productImages}
           setBookData={setBookData}
           toast={toast}
         />

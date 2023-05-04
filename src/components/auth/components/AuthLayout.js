@@ -1,52 +1,47 @@
 import React from "react"
 import { Link } from "gatsby"
 import { colors, widths } from "../../../styles/variables"
-import { User } from "phosphor-react"
 
-import { Container, LayoutContainer } from "../../layout/Container"
+import { Container } from 'react-grid-system'
 import { Flexbox } from "../../layout/Flexbox"
-import { SectionMain, Section } from "../../layout/Section"
+import { AuthContentBox, AuthSection } from "./AuthSections"
 import AuthNav from "./AuthNav"
 import Logo from "../../misc/Logo"
-import Icon from "../../ui/Icon"
+import Seo from "../../layout/Seo"
 
 function AuthLayout({
   children,
   page
 }) {
   return (
-    <SectionMain className="has-no-padding has-max-height">
-      <Section>
-        <Container>
-          <LayoutContainer>
-            <Flexbox
-              flex="flex"
-              alignitems="center"
-              justifycontent="space-between"
-              padding="1rem 0"
-              width="100%"
-            >
-              <Link
-                to="/"
-              >
-                <Logo
-                  color={colors.gray.nineHundred}
-                  width={widths.logo}
-                  height="100%"
-                />
-              </Link>
-              <Icon>
-                <User size="1.5rem" />
-              </Icon>
-            </Flexbox>
-            <AuthNav 
-              page={page}
+    <AuthSection>
+      <Container xs sm md lg xl>
+        <Seo title={page} />
+        <Flexbox
+          flex="flex"
+          alignitems="center"
+          justifycontent="space-between"
+          padding="1rem 0"
+          width="100%"
+        >
+          <Link
+            to="/"
+          >
+            <Logo
+              color={colors.gray.nineHundred}
+              width={widths.logo}
+              height="100%"
             />
-            {children}
-          </LayoutContainer>
-        </Container>
-      </Section>
-    </SectionMain>
+          </Link>
+        </Flexbox>
+        <AuthNav
+          page={page}
+        />
+        <AuthContentBox>
+          {children}
+        </AuthContentBox>
+      </Container>
+    </AuthSection>
   )
 }
 

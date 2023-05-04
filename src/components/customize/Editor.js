@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react"
+import styled from "styled-components"
 import { navigate } from "gatsby"
 import { fonts, pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
+import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
-import { Flexbox } from "../layout/Flexbox"
 import { Controls } from "./Controls"
+import Toastify from "../ui/Toastify"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./modals/CheckLoginModal"
@@ -17,11 +19,21 @@ import Pagebar from "./bars/Pagebar"
 import Seo from "../layout/Seo"
 import Book404 from "./Book404"
 
+const StyledEditor = styled.div`
+  display: flex;
+  height: calc(100% - 58px);
+  justify-content: space-between;
+  width: 100%;
+  overflow-y: hidden;
+  position: relative;
+`
+
 const Editor = ({ 
   bookId, 
   productData, 
-  productImageData,
+  productImages,
 }) => {
+  console.log(productData)
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -119,7 +131,7 @@ const Editor = ({
     // queries db for the book by bookId
     async function getBook() {
       // ref for the book using bookId in the URL
-      await firebaseDb.ref(`books/${bookId}`).once("value").then(snapshot => {
+      onValue(ref(firebaseDb, `books/${bookId}`), snapshot => {
         // if the book exists in the database
         if (snapshot.exists()) {
           const bookValues = snapshot.val()
@@ -142,7 +154,7 @@ const Editor = ({
           setNoExistingBook(true)
           setInitializing(false)
         }
-      })
+      }, { onlyOnce: true })
     }
 
     // query the db for pages using bookId
@@ -151,7 +163,7 @@ const Editor = ({
       const allPages = [] // dummy array to hold all book pages
 
       // first, query db for all pages that have the same bookId
-      await firebaseDb.ref(`pages/`).orderByChild("bookId").equalTo(bookId).once("value").then(snapshot => {
+      await get(query(ref(firebaseDb, `pages/`), orderByChild("bookId"), equalTo(bookId))).then((snapshot) => {
         // loop through each page
         snapshot.forEach(page => {
           const pageValue = page.val()
@@ -234,12 +246,9 @@ const Editor = ({
             bookData={bookData}
             setBookData={setBookData}
             bookId={bookId}
+            toast={toast}
           />
-          <Flexbox
-            flex="flex"
-            height="calc(100vh - 56px)"
-            justifycontent="space-between"
-          >
+          <StyledEditor>
             <Pagebar
               activeTab={activeTab}
               bookData={bookData}
@@ -267,7 +276,7 @@ const Editor = ({
               canvasPages={canvasPages}
               pageData={pageData}
               productData={productData}
-              productImageData={productImageData}
+              productImages={productImages}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}
@@ -276,7 +285,7 @@ const Editor = ({
               user={user}
               toast={toast}
             />
-          </Flexbox>
+          </StyledEditor>
         </>
       )}
       {showModal.show && (
@@ -312,24 +321,7 @@ const Editor = ({
           )}
         </>
       )}
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick
-        draggable
-        draggablePercent={50}
-        hideProgressBar={false}
-        icon={false}
-        limit={3}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="bottom-center"
-        rtl={false}
-        style={{
-          fontFamily: fonts.secondary,
-          fontSize: "0.75rem",
-        }}
-      />
+      <Toastify />
     </>
   )
 }

@@ -1,5 +1,8 @@
+import React from "react"
 import styled from "styled-components"
-import { colors, spacing, widths } from "../../styles/variables"
+import { colors, spacing, widths, fonts } from "../../styles/variables"
+import RandomLine from "../misc/Lines"
+
 
 const SectionMain = styled.main`
   background-color: ${colors.white};
@@ -12,7 +15,7 @@ const SectionMain = styled.main`
     padding: 0;
   }
   &.has-max-height {
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 105px);
   }
 `
 
@@ -30,33 +33,37 @@ const SectionContent = styled.div`
   &.has-border-top {
     border-top: 2px solid ${colors.gray.nineHundred};
   }
-  @media only screen and (max-width: ${widths.tablet}) {
-    padding: 4rem 0;
+`
+
+const StyledSectionHeading = styled.div`
+  margin: ${props => props.margin || "0 0 32px 16px"};
+  display: inline-block;
+  position: relative;
+  h2 {
+    font-size: ${props => props.fontsize || "1rem"};
+    font-family: ${fonts.secondary};
   }
 `
 
-const SectionApp = styled.div`
-  height: 100%;
-  width: 100%;
-`
-
-const SectionAppContent = styled.section`
-  max-width: ${widths.desktop};
-  margin: 0 auto;
-  height: 100%;
-  width: 100%;
-`
-
-const SectionAppWorkspace = styled.div`
-  padding: 32px 0;
-  width: 100%;
-`
+function SectionHeading({
+  children,
+  margin,
+  fontsize,
+}) {
+  return (
+    <StyledSectionHeading
+      margin={margin}
+      fontsize={fontsize}
+    >
+      <h2>{children}</h2>
+      <RandomLine />
+    </StyledSectionHeading>
+  )
+}
 
 export {
   SectionMain,
   Section,
   SectionContent,
-  SectionApp,
-  SectionAppContent,
-  SectionAppWorkspace,
+  SectionHeading,
 }

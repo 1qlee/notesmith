@@ -8,6 +8,7 @@ import MarginControls from "./components/MarginControls"
 import OpacityControls from "./components/OpacityControls"
 import RowControls from "./components/RowControls"
 import RowSpacingControls from "./components/RowSpacingControls"
+import RadiusControls from "./components/RadiusControls"
 
 function DotControls({
   maximumMarginHeight,
@@ -53,6 +54,10 @@ function DotControls({
         setPageData={setPageData}
       />
       <ColumnSpacingControls 
+        pageData={pageData}
+        setPageData={setPageData}
+      />
+      <RadiusControls 
         pageData={pageData}
         setPageData={setPageData}
       />

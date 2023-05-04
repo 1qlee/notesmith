@@ -1,9 +1,10 @@
-import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
-import { colors, fonts, pageMargins } from "../../../styles/variables"
-import { navigate, graphql, useStaticQuery } from "gatsby"
-import { useFirebaseContext } from "../../../utils/auth"
 import React, { useState } from "react"
 import styled from "styled-components"
+import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
+import { colors, fonts, pageMargins } from "../../../styles/variables"
+import { navigate } from "gatsby"
+import { useFirebaseContext } from "../../../utils/auth"
+import { ref, set, push } from "firebase/database"
 
 import { StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -25,12 +26,15 @@ const StepContent = styled.div`
 `
 
 function NewBookModal({
+  allProducts,
   bookData,
   setShowModal,
   setBookData,
   toast,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
+  const booksRef = ref(firebaseDb, "books/")
+  const pagesRef = ref(firebaseDb, "pages/")
   const [step, setStep] = useState(0)
   const [bookTitleError, setBookTitleError] = useState({
     show: false,
@@ -38,35 +42,6 @@ function NewBookModal({
   })
   const [processing, setProcessing] = useState(false)
   const [selectedBook, setSelectedBook] = useState(0)
-  const productsData = useStaticQuery(graphql`
-    query NewBookProductQuery {
-      allProductsJson {
-        nodes {
-          camelName
-          category
-          description
-          heightInch
-          heightPixel
-          name
-          numOfPages
-          paperColor
-          paperTooth
-          paperWeight
-          price
-          size
-          slug
-          stripePriceId
-          widthInch
-          widthPixel
-          colors {
-            name
-            hex
-            slug
-          }
-        }
-      }
-    }
-  `)
   const pageWidth = bookData.widthPixel - pageMargins.horizontal
   const pageHeight = bookData.heightPixel - pageMargins.vertical
 
@@ -83,15 +58,13 @@ function NewBookModal({
     }
     else {
       // create a new book key (id)
-      const newBookRef = firebaseDb.ref("books/").push()
-      const newBookKey = newBookRef.key
+      const newBookKey = push(booksRef).key
       // create a new page to point the new book's pages to
       // it will just be a blank svg rect
-      const newPageRef = firebaseDb.ref("pages/").push()
-      const newPageKey = newPageRef.key
+      const newPageKey = push(pagesRef).key
 
       // set data into the newly created page
-      await newPageRef.set({
+      await set(ref(firebaseDb, `pages/${newPageKey}`), {
         bookId: newBookKey,
         id: newPageKey,
         svg: `<svg><rect width="${pageWidth}" height="${pageHeight}" fill="#fff"></rect></svg>`,
@@ -113,28 +86,28 @@ function NewBookModal({
         })
       }
       // write the new book into the db
-      await newBookRef.set({
-        "coverColor": bookData.coverColor,
-        "dateCreated": new Date().valueOf(),
-        "heightPixel": bookData.heightPixel,
-        "heightInch": bookData.heightInch,
-        "id": newBookKey,
-        "name": bookData.name,
-        "numOfPages": bookData.numOfPages,
-        "pages": pagesArray,
-        "size": bookData.size,
-        "title": bookData.title,
-        "uid": user.uid,
-        "slug": bookData.slug,
-        "widthPixel": bookData.widthPixel,
-        "widthInch": bookData.widthInch,
-      }).then(() => {
+      await set(ref(firebaseDb, `books/${newBookKey}`), { 
+        coverColor: bookData.coverColor,
+        dateCreated: new Date().valueOf(),
+        heightPixel: bookData.heightPixel,
+        heightInch: bookData.heightInch,
+        id: newBookKey,
+        name: bookData.name,
+        numOfPages: bookData.numOfPages,
+        pages: pagesArray,
+        size: bookData.size,
+        title: bookData.title,
+        uid: user.uid,
+        slug: bookData.slug,
+        widthPixel: bookData.widthPixel,
+        widthInch: bookData.widthInch,
+      }).then(async () => {
         // afterwards, log that book id into 'users/userId/books/bookId'
-        firebaseDb.ref(`users/${user.uid}/books`).child(newBookKey).set(true)
+        await set(ref(firebaseDb, `users/${user.uid}/books/${newBookKey}`), true)
         setProcessing(false)
         // redirect the user to the book creation page
         navigate(`/customize/${bookData.slug}/${newBookKey}`)
-      }).catch(error => {
+      }).catch(() => {
         toast.error("Error creating book. Please try again.")
         setShowModal({
           show: false,
@@ -156,7 +129,6 @@ function NewBookModal({
 
   return (
     <Modal
-      width="300px"
       setShowModal={setShowModal}
     >
       <ModalHeader>Create a new book</ModalHeader>
@@ -183,7 +155,7 @@ function NewBookModal({
         </Content>
         {step === 0 && (
           <StepContent>
-            {productsData.allProductsJson.nodes.map((product, index) => (
+            {allProducts.nodes.map((product, index) => (
               <BookRadio
                 onClick={() => handleClick({
                   ...product,
@@ -237,7 +209,7 @@ function NewBookModal({
               width="100%"
             >
               <ColorPicker
-                data={productsData.allProductsJson.nodes[selectedBook].colors}
+                data={allProducts.nodes[selectedBook].colors}
                 selectedColor={bookData.coverColor}
                 cbFunction={color => handleClick({
                   ...bookData,

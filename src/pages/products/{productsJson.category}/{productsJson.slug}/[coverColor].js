@@ -1,28 +1,37 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { spacing, convertToPx, fonts, pageMargins, widths } from "../../../../styles/variables"
-import { ToastContainer, toast } from 'react-toastify'
+import { colors, convertToPx, fonts, spacing, pageMargins } from "../../../../styles/variables"
+import { toast } from 'react-toastify'
 
-import { Container, LayoutContainer } from "../../../../components/layout/Container"
-import { Grid, Cell } from "styled-css-grid"
+import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
-import Content from "../../../../components/ui/Content"
 import Layout from "../../../../components/layout/Layout"
+import Toastify from "../../../../components/ui/Toastify"
 import Nav from "../../../../components/layout/Nav"
 import ProductImages from "../../../../components/shop/ProductImages"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import Seo from "../../../../components/layout/Seo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
+import ProductDescription from "../../../../components/shop/ProductDescription"
+import ProductSplash from "../../../../components/shop/ProductSplash"
+import ProductHalfandHalf from "../../../../components/shop/ProductHalfandHalf"
+import ProductHero from "../../../../components/shop/ProductHero"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, productThumbnails } = data
+  const { productData, productImages, productThumbnails, splashImage, halfandhalfImages } = data
+  const sortedHalfandhalfImages = halfandhalfImages.nodes.sort((a, b) => {
+    return a.name > b.name ? 1 : -1
+  })
   const { coverColor } = params
+  const { heightPixel, widthPixel } = productData
+  const svgHeight = heightPixel
+  const svgWidth = widthPixel
   const [bookData, setBookData] = useState({
     ...productData,
     coverColor: coverColor,
   })
-  const [pageData, setPageData] = useState({
+  const defaultPageData = {
     alignmentHorizontal: "center",
     alignmentVertical: "top",
     angle: 30,
@@ -49,8 +58,8 @@ const ProductPage = ({ data, params }) => {
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
-    maxContentHeight: bookData.heightPixel - pageMargins.vertical,
-    maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
+    maxContentHeight: svgHeight - pageMargins.vertical,
+    maxContentWidth: svgWidth - pageMargins.horizontal,
     opacity: 1,
     radius: 0.1,
     rows: 42,
@@ -63,12 +72,13 @@ const ProductPage = ({ data, params }) => {
     spacing: 5,
     staffSpacing: 5,
     staves: 9,
-    svgHeight: bookData.heightPixel,
-    svgWidth: bookData.widthPixel,
+    svgHeight: svgHeight,
+    svgWidth: svgWidth,
     template: "",
     thickness: 0.088,
     xHeight: 5,
-  })
+  }
+  const [pageData, setPageData] = useState(defaultPageData)
   const [svgSize, setSvgSize] = useState({
     height: bookData.heightPixel - pageMargins.vertical,
     width: bookData.widthPixel - pageMargins.horizontal,
@@ -79,6 +89,7 @@ const ProductPage = ({ data, params }) => {
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
+  const [showControls, setShowControls] = useState(false)
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -108,118 +119,87 @@ const ProductPage = ({ data, params }) => {
       <Nav />
       <SectionMain>
         <Section>
-          <Container>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="400px 1fr 300px"
-                  columnGap={spacing.large}
-                >
-                  <Cell>
-                    <ProductInfo
-                      bookData={bookData}
-                      cartThumbnail={cartThumbnail}
-                      leftPageData={leftPageData}
-                      rightPageData={rightPageData}
-                      pageData={pageData}
-                      setBookData={setBookData}
-                      setPageData={setPageData}
-                      toast={toast}
-                    />
-                  </Cell>
-                  {pageData.show ? (
-                    <>
-                      <Cell center>
-                        <ProductTemplate
-                          bookData={bookData}
-                          maxSvgSize={maxSvgSize}
-                          currentPageSide={currentPageSide}
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          setSelectedPageSvg={setSelectedPageSvg}
-                          setSvgSize={setSvgSize}
-                        />
-                      </Cell>
-                      <Cell>
-                        <ProductControls
-                          currentPageSide={currentPageSide}
-                          pageData={pageData}
-                          selectedPageSvg={selectedPageSvg}
-                          setCurrentPageSide={setCurrentPageSide}
-                          setLeftPageData={setLeftPageData}
-                          setPageData={setPageData}
-                          setRightPageData={setRightPageData}
-                          svgSize={svgSize}
-                          toast={toast}
-                        />
-                      </Cell>
-                    </>
-                  ) : (
-                    <Cell width={2}>
-                      <ProductImages
-                        coverColor={coverColor}
-                        productImages={productImages}
-                        productThumbnails={productThumbnails}
-                        setCartThumbnail={setCartThumbnail}
+          <SectionContent padding={`${spacing.large} 0`}>
+            <Container xs sm md lg xl>
+              <Row>
+                {pageData.show ? (
+                  <>
+                    <Col sm="content" md="content" lg="content" xl="content" xxl="content">
+                      <ProductControls
+                        currentPageSide={currentPageSide}
+                        pageData={pageData}
+                        showControls={showControls}
+                        selectedPageSvg={selectedPageSvg}
+                        setShowControls={setShowControls}
+                        setCurrentPageSide={setCurrentPageSide}
+                        setLeftPageData={setLeftPageData}
+                        setPageData={setPageData}
+                        setRightPageData={setRightPageData}
+                        svgSize={svgSize}
+                        toast={toast}
                       />
-                    </Cell>
-                  )}
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
+                    </Col>
+                    <Col sm="content" md="content" lg="content" xl="content" xxl="content">
+                      <ProductTemplate
+                        bookData={bookData}
+                        maxSvgSize={maxSvgSize}
+                        currentPageSide={currentPageSide}
+                        pageData={pageData}
+                        setPageData={setPageData}
+                        setSelectedPageSvg={setSelectedPageSvg}
+                        setSvgSize={setSvgSize}
+                      />
+                    </Col>
+                  </>
+                ) : (
+                  <Col xl={8} lg={8} xxl={8} md={8}>
+                    <ProductImages
+                      coverColor={coverColor}
+                      productImages={productImages}
+                      productThumbnails={productThumbnails}
+                      setCartThumbnail={setCartThumbnail}
+                    />
+                  </Col>
+                )}
+                <Col>
+                  <ProductInfo
+                    bookData={bookData}
+                    cartThumbnail={cartThumbnail}
+                    leftPageData={leftPageData}
+                    rightPageData={rightPageData}
+                    defaultPageData={defaultPageData}
+                    pageData={pageData}
+                    setLeftPageData={setLeftPageData}
+                    setRightPageData={setRightPageData}
+                    setBookData={setBookData}
+                    setPageData={setPageData}
+                    toast={toast}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
         </Section>
-        <Section>
-          <Container>
-            <LayoutContainer>
-              <SectionContent
-                padding={`${spacing.large} 0`}
-                className="has-border-top"
-              >
-                <Grid
-                  columns="1fr 3fr"
-                  columnGap={spacing.large}
-                >
-                  <Cell>
-                    <Content
-                      headingfontfamily={fonts.secondary}
-                      h3fontsize="1rem"
-                    >
-                      <h3>Product Description</h3>
-                    </Content>
-                  </Cell>
-                  <Cell>
-                    <Content
-                      paragraphfontsize="1.2rem"
-                      width={widths.content.normal}
-                    >
-                      <p>{bookData.longDescription}</p>
-                    </Content>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
+        <ProductDescription 
+          bookData={bookData}
+          headingText="High quality materials"
+        />
+        {sortedHalfandhalfImages.map((image, index) => (
+          <ProductHalfandHalf
+            image={image}
+            bookData={bookData}
+            direction={index % 2 === 0 ? "left" : "right"}
+          />
+        ))}
+        <ProductSplash 
+          image={splashImage}
+          backgroundcolor={colors.gray.oneHundred}
+        />
+        <ProductHero 
+          bookData={bookData}
+        />
       </SectionMain>
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick
-        draggable
-        draggablePercent={50}
-        hideProgressBar={false}
-        icon={false}
-        limit={3}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="bottom-center"
-        rtl={false}
-        style={{
-          fontFamily: fonts.secondary,
-          fontSize: "0.75rem",
-        }}
-      />
+      <Toastify />
     </Layout>
   )
 }
@@ -231,6 +211,10 @@ export const pageQuery = graphql`
       category
       description
       longDescription
+      halfandhalf {
+        heading
+        text
+      }
       heightInch
       heightPixel
       name
@@ -238,6 +222,7 @@ export const pageQuery = graphql`
       paperColor
       paperTooth
       paperWeight
+      infoList
       price
       size
       slug
@@ -245,6 +230,10 @@ export const pageQuery = graphql`
       weight
       widthInch
       widthPixel
+      hero {
+        heading
+        text
+      }
       infoBoxes {
         heading
         text
@@ -257,11 +246,8 @@ export const pageQuery = graphql`
     }
     productImages: allFile(filter: { relativeDirectory: { eq: $slug }}) {
       nodes {
+        name
         childImageSharp {
-          fluid {
-            src
-            originalName
-          }
           gatsbyImageData(
             width: 800
             quality: 100
@@ -269,13 +255,32 @@ export const pageQuery = graphql`
         }
       }
     }
+    splashImage: allFile(filter: { relativeDirectory: { eq: $slug } name: { eq: "splash" }}) {
+      nodes {
+        name
+        childImageSharp {
+          gatsbyImageData(
+            width: 1200
+            quality: 100
+          )
+        }
+      }
+    }
+    halfandhalfImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "halfandhalf*" }}) {
+      nodes {
+        name
+        childImageSharp {
+          gatsbyImageData(
+            width: 500
+            quality: 100
+          )
+        }
+      }
+    }
     productThumbnails: allFile(filter: { relativeDirectory: { eq: $slug }}) {
       nodes {
+        name
         childImageSharp {
-          fluid {
-            src
-            originalName
-          }
           gatsbyImageData(
             width: 80
             height: 80

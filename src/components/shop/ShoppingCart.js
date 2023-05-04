@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { colors, convertToDecimal, fonts } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { CaretDown, CaretUp } from "phosphor-react"
+import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
-import CartQuantityTracker from "./CartQuantityTracker"
 import { Flexbox } from "../layout/Flexbox"
-import { StyledTable } from "../form/FormComponents"
-import TextLink from "../ui/TextLink"
+import CartQuantityTracker from "./CartQuantityTracker"
+import Box from "../ui/Box"
+import Table from "../ui/Table"
 import Button from "../ui/Button"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
@@ -52,17 +52,17 @@ function ShoppingCart() {
   }
 
   return (
-    <div>
-      <Content
-        margin="0 0 2rem 0"
-        h1fontweight="400"
-        h1fontsize="3rem"
-      >
-        <h1>Cart</h1>
-      </Content>
+    <>
       {cartItems.length > 0 ? (
         <>
-          <StyledTable>
+          <Content
+            margin="0 0 2rem 0"
+            h1fontweight="400"
+            h1fontsize="3rem"
+          >
+            <h1>Cart</h1>
+          </Content>
+          <Table>
             <thead>
               <tr>
                 <th>Product</th>
@@ -88,12 +88,11 @@ function ShoppingCart() {
                           alt="product thumbnail"
                         />
                       </Link>
-                      <Flexbox margin="0 0 0 1rem">
+                      <Box margin="0 0 0 16px">
                         <Content
                           paragraphmargin="0"
-                          paragraphfontsize="1.2rem"
-                          smallfontsize="0.875rem"
-                          smallmargin="0"
+                          paragraphfontsize="1rem"
+                          margin="0 0 4px"
                         >
                           <Link
                             to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
@@ -107,35 +106,40 @@ function ShoppingCart() {
                           justifycontent="space-between"
                         >
                           {item.category === "notebooks" && (
-                            <TextLink
-                              fontsize="0.625rem"
-                              flex="inline-flex"
-                              alignitems="center"
-                              margin="0 0.5rem 0 0"
+                            <Button
+                              fontsize="0.75rem"
+                              margin="0 8px 0 0"
+                              padding="2px 4px"
                               onClick={() => handleViewDetails(item.id)}
+                              backgroundcolor={colors.gray.twoHundred}
                               color={colors.gray.nineHundred}
                             >
-                              View details
-                              <Icon margin="0 0 0 0.125rem">
+                              <span>View details</span>
+                              <Icon margin="0 0 0 2px">
                                 {activeItemIds[item.id] ? (
-                                  <CaretUp size="0.625rem" />
+                                  <CaretUp size="0.75rem" />
                                 ) : (
-                                  <CaretDown size="0.625rem" />
+                                  <CaretDown size="0.75rem" />
                                 )}
                               </Icon>
-                            </TextLink>
+                            </Button>
                           )}
-                          <TextLink
-                            fontsize="0.625rem"
+                          <Button
+                            fontsize="0.75rem"
+                            padding="2px 4px"
                             onClick={() => removeItem(item.id)}
+                            backgroundcolor={colors.gray.twoHundred}
                             color={colors.gray.nineHundred}
                           >
-                            Remove
-                          </TextLink>
+                            <span>Remove</span>
+                            <Icon margin="0 0 0 2px">
+                              <Trash size="0.75rem" />
+                            </Icon>
+                          </Button>
                         </Flexbox>
                         {activeItemIds[item.id] && (
-                          <Flexbox
-                            margin="1rem 0 0"
+                          <Box
+                            margin="8px 0 0"
                           >
                             {item.custom ? (
                               <>
@@ -143,7 +147,7 @@ function ShoppingCart() {
                                   flex="flex"
                                   alignitems="center"
                                   justifycontent="space-between"
-                                  margin="0 0 0.25rem 0"
+                                  margin="0 0 4px 0"
                                 >
                                   <Content
                                     headingfontfamily={fonts.secondary}
@@ -154,7 +158,7 @@ function ShoppingCart() {
                                     <h3>Cover</h3>
                                   </Content>
                                   <Content
-                                    paragraphfontsize="0.875rem"
+                                    paragraphfontsize="0.75rem"
                                     paragraphmarginbottom="0"
                                     paragraphtexttransform="capitalize"
                                   >
@@ -176,13 +180,26 @@ function ShoppingCart() {
                                     <h3>Pages</h3>
                                   </Content>
                                   <Content
-                                    paragraphfontsize="0.875rem"
+                                    paragraphfontsize="0.75rem"
                                     paragraphmarginbottom="0"
                                     paragraphtexttransform="capitalize"
                                   >
-                                    <Link to={`/customize/${item.slug}/${item.bookId}`}>
-                                      <p>View</p>
-                                    </Link>
+                                    <Button
+                                      fontsize="0.75rem"
+                                      padding="2px 4px"
+                                      onClick={() => handleViewDetails(item.id)}
+                                      backgroundcolor={colors.gray.twoHundred}
+                                      color={colors.gray.nineHundred}
+                                      as={Link}
+                                      to={`/customize/${item.slug}/${item.bookId}`}
+                                    >
+                                      <span>View</span>
+                                      <Icon
+                                        margin="0 0 0 2px"
+                                      >
+                                        <ArrowSquareOut size="0.75rem" />
+                                      </Icon>
+                                    </Button>
                                   </Content>
                                 </Flexbox>
                               </>
@@ -260,9 +277,9 @@ function ShoppingCart() {
                                 )}
                               </>
                             )}
-                          </Flexbox>
+                          </Box>
                         )}
-                      </Flexbox>
+                      </Box>
                     </Flexbox>
                   </td>
                   <td>
@@ -273,7 +290,6 @@ function ShoppingCart() {
                     >
                       <Content
                         paragraphmargin="0"
-                        paragraphfontsize="1.25rem"
                       >
                         <p>
                           ${convertToDecimal(item.price, 2)}
@@ -303,7 +319,6 @@ function ShoppingCart() {
                     >
                       <Content
                         paragraphmargin="0"
-                        paragraphfontsize="1.25rem"
                       >
                         <p>${convertToDecimal(item.value, 2)}</p>
                       </Content>
@@ -312,13 +327,14 @@ function ShoppingCart() {
                 </tr>
               ))}
             </tbody>
-          </StyledTable>
+          </Table>
           <Flexbox
             flex="flex"
             justifycontent="flex-end"
           >
             <Content
-              paragraphfontsize="1.25rem"
+              paragraphfontsize="1rem"
+              paragraphfontfamily={fonts.secondary}
             >
               <Flexbox
                 width="12rem"
@@ -352,26 +368,34 @@ function ShoppingCart() {
           </Flexbox>
         </>
       ) : (
-        <>
+        <Flexbox
+          flex="flex"
+          justifycontent="center"
+          alignitems="center"
+          flexdirection="column"
+        >
           <Content
             margin="1rem 0"
+            textalign="center"
           >
-            <p>You have no items in your cart.</p>
+            <h1>Looks like your cart is empty</h1>
+            <p>Press the button below to take a look at our pre-order sale.</p>
           </Content>
           <Link
-            to="/products/notebooks/wired-notebook-a5"
+            to="/products/notebooks/wired-notebook-a5-custom"
           >
             <Button
               to="/products"
               backgroundcolor={colors.gray.nineHundred}
               color={colors.gray.oneHundred}
+              padding="16px 32px"
             >
-              Check out our notebook
+              Shop notebooks
             </Button>
           </Link>
-        </>
+        </Flexbox>
       )}
-    </div>
+    </>
   )
 }
 

@@ -3,6 +3,7 @@ import { Link, navigate } from "gatsby"
 import { Warning, CircleNotch } from "phosphor-react"
 import { colors, convertToPx } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
+import { ref, set, push } from "firebase/database"
 
 import { StyledLabel, StyledInput, ErrorLine } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
@@ -13,14 +14,14 @@ import Content from "../../ui/Content"
 
 function CreateBookModal({
   bookData,
-  coverColor,
-  pageData,
   productData,
   setBookData,
   setShowModal,
   toast,
 }) {
   const { user, firebaseDb } = useFirebaseContext()
+  const booksRef = ref(firebaseDb, "books/")
+  const pagesRef = ref(firebaseDb, "pages/")
   const [processing, setProcessing] = useState(false)
   const [bookTitleError, setBookTitleError] = useState({
     show: false,
@@ -39,50 +40,48 @@ function CreateBookModal({
     }
     else {
       // create a new book key (id)
-      const newBookRef = firebaseDb.ref("books/").push()
-      const newBookKey = newBookRef.key
+      const newBookKey = push(booksRef).key
       // create a new page to point the new book's pages to
       // it will just be a blank svg rect
-      const newPageRef = firebaseDb.ref("pages/").push()
-      const newPageKey = newPageRef.key
+      const newPageKey = push(pagesRef).key
 
       // set data into the newly created page
-      await newPageRef.set({
+      await set(ref(firebaseDb, `pages/${newPageKey}`), {
         bookId: newBookKey,
         id: newPageKey,
         svg: `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${bookData.widthPixel - convertToPx(13.335)}" height="${bookData.heightPixel - convertToPx(6.35)}" fill="#fff"></rect></svg>`,
         uid: user.uid,
       })
-      const pagesObject = {}
+      const pagesArray = []
 
       // loop that sets page data into the new book
       // each page will refer to the newly created page
-      for (let i = 1; i <= bookData.numOfPages; i++) {
+      for (let i = 0; i < bookData.numOfPages; i++) {
         // save page to the dummy object along with page number and a reference to the page created earlier
-        pagesObject[i] = {
-          pageNumber: i,
+        pagesArray.push({
+          pageNumber: i + 1,
           pageId: newPageKey,
-        }
+        })
       }
       // write the new book into the db
-      await newBookRef.set({
-        "coverColor": bookData.coverColor,
-        "dateCreated": new Date().valueOf(),
-        "heightPixel": bookData.heightPixel,
-        "heightInch": bookData.heightInch,
-        "id": newBookKey,
-        "name": bookData.name,
-        "numOfPages": bookData.numOfPages,
-        "pages": pagesObject,
-        "size": bookData.size,
-        "title": bookData.title,
-        "uid": user.uid,
-        "slug": bookData.slug,
-        "widthPixel": bookData.widthPixel,
-        "widthInch": bookData.widthInch,
-      }).then(() => {
+      await set(ref(firebaseDb, `books/${newBookKey}`), {
+        coverColor: bookData.coverColor,
+        dateCreated: new Date().valueOf(),
+        heightPixel: bookData.heightPixel,
+        heightInch: bookData.heightInch,
+        id: newBookKey,
+        name: bookData.name,
+        numOfPages: bookData.numOfPages,
+        pages: pagesArray,
+        size: bookData.size,
+        title: bookData.title,
+        uid: user.uid,
+        slug: bookData.slug,
+        widthPixel: bookData.widthPixel,
+        widthInch: bookData.widthInch,
+      }).then(async () => {
         // afterwards, log that book id into 'users/userId/books/bookId'
-        firebaseDb.ref(`users/${user.uid}/books`).child(newBookKey).set(true)
+        await set(ref(firebaseDb, `users/${user.uid}/books/${newBookKey}`), true)
         // close modal
         setShowModal({
           show: false,

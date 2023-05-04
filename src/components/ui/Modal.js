@@ -1,17 +1,18 @@
 import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { colors, fonts, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
-  border-radius: 8px;
+  border: ${colors.borders.black};
   left: 50%;
-  min-width: ${widths.modal};
+  width: ${widths.modal};
   position: absolute;
   top: 25%;
   transform: translate(-50%, -25%);
   width: ${props => props.width};
+  padding: 0 16px;
   z-index: 9001;
 `
 
@@ -19,7 +20,7 @@ const ModalBackground = styled.div`
   background-color: ${colors.primary.shadow};
   height: 100vh;
   left: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100vw;
   z-index: 9000;
@@ -27,27 +28,29 @@ const ModalBackground = styled.div`
 
 const ModalHeader = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-bottom: ${props => props.border || `1px solid ${colors.gray.threeHundred}`};
-  border-radius: 8px 8px 0 0;
+  border-bottom: ${props => props.border || `2px solid ${colors.gray.nineHundred}`};
   color: ${props => props.color || colors.primary.nineHundred};
-  font-size: 1.25rem;
+  font-size: 1rem;
+  font-family: ${fonts.secondary};
   font-weight: 700;
-  padding: 1rem;
+  padding: 16px 0;
 `
 
 const ModalContent = styled.div`
-  padding: 1rem;
+  padding: 16px 0;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  font-family: ${fonts.secondary};
+  font-size: 0.875rem;
 `
 
 const ModalFooter = styled.div`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  border-top: ${props => props.border ? props.border : `1px solid ${colors.gray.threeHundred}`};
+  border-top: ${props => props.border ? props.border : `2px solid ${colors.gray.nineHundred}`};
   border-radius: 0 0 8px 8px;
   display: flex;
   justify-content: ${props => props.justifycontent};
-  padding: 1rem;
+  padding: 16px 0;
 `
 
 function Modal({ children, setShowModal, width, boxshadow, backgroundcolor, unclickable }) {

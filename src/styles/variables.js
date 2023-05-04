@@ -104,9 +104,22 @@ const colors = {
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
     modal: "0 2px 12px rgba(0,0,0,0.25)",
-    focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff"
+    focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff",
+    drawer: "4px 0 12px rgba(0,0,0,0.12)"
   },
-  highlighter: "#fbff00"
+  highlighter: "#fbff00",
+  borders: {
+    black: "2px solid #212121",
+  }
+}
+
+const breakpoints = {
+  xs: "575px", 
+  sm: "767px", 
+  md: "991px", 
+  lg: "1199px", 
+  xl: "1599px", 
+  xxl: "1919px",
 }
 
 const fonts = {
@@ -118,6 +131,7 @@ const widths = {
   logo: "160px",
   sidebar: "300px",
   caption: "300px",
+  input: "300px",
   notification: "450px",
   modal: "480px",
   form: "600px",
@@ -171,6 +185,7 @@ const pageMargins = {
 }
 
 export { 
+  breakpoints,
   colors, 
   convertFloatFixed, 
   convertToDecimal, 

@@ -3,7 +3,11 @@ import { navigate } from "gatsby"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { v4 as uuidv4 } from 'uuid'
+import 'react-tooltip/dist/react-tooltip.css';
+import { WarningCircle } from "phosphor-react"
+import Notification from "../ui/Notification"
 
+import Icon from "../ui/Icon"
 import { Flexbox } from "../layout/Flexbox"
 import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import Button from "../ui/Button"
@@ -11,6 +15,7 @@ import ColorPicker from "./ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import ProductInfoBox from "./ProductInfoBox"
+import TextLink from "../ui/TextLink"
 
 const ProductInfo = ({
   bookData,
@@ -19,11 +24,15 @@ const ProductInfo = ({
   pageData,
   rightPageData,
   setBookData,
+  setLeftPageData,
   setPageData,
+  setRightPageData,
   toast,
 }) => {
+  const showWarningMsg = !rightPageData.template || !leftPageData.template
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [warningMsg, setWarningMsg] = useState(showWarningMsg && "You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.")
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -84,7 +93,7 @@ const ProductInfo = ({
         <h2>${bookData.price / 100}</h2>
       </Content>
       <Content
-        paragraphfontsize="1.2rem"
+        paragraphfontsize="1.25rem"
         margin="0 0 32px"
       >
         <p>{bookData.description}</p>
@@ -104,13 +113,31 @@ const ProductInfo = ({
           })}
         />
       </Content>
-      <Content
-        headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-        h3fontsize="0.75rem"
-        margin="32px 0 0"
+      <Flexbox
+        justifycontent="space-between"
+        margin="0 0 16px"
       >
-        <h3>Page layout</h3>
-      </Content>
+        <Content
+          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
+          h3fontsize="0.75rem"
+          h3margin="0"
+        >
+          <h3>Page layout</h3>
+        </Content>
+        <TextLink
+          fontsize="0.75rem"
+          onClick={() => setPageData({
+            ...pageData,
+            show: !pageData.show,
+          })}
+        >
+          {pageData.show ? (
+            "Back to images"
+          ) : (
+            "Back to editing"
+          )}
+        </TextLink>
+      </Flexbox>
       <Flexbox
         flex="flex"
         flexwrap="wrap"
@@ -131,8 +158,8 @@ const ProductInfo = ({
       </Flexbox>
       <Flexbox
         flex="flex"
-        margin="0 0 2rem"
         alignitems="flex-end"
+        margin="0 0 16px"
       >
         <div>
           <StyledLabel htmlFor="quantity-tracker" margin="0 0 1rem">Quantity</StyledLabel>
@@ -160,6 +187,24 @@ const ProductInfo = ({
           Add to cart
         </Button>
       </Flexbox>
+      {showWarningMsg && (
+        <Notification
+          backgroundcolor={colors.gray.twoHundred}
+          bordercolor={colors.gray.twoHundred}
+          padding="8px"
+        >
+          <Icon>
+            <WarningCircle size={16} color={colors.gray.nineHundred} weight="bold" />
+          </Icon>
+          <Content
+            margin="0 0 0 0.25rem"
+            smallmargin="0"
+            smallcolor={colors.gray.nineHundred}
+          >
+            <small>{warningMsg}</small>
+          </Content>
+        </Notification>
+      )}
       {bookData.infoBoxes.map((box, index) => (
         <ProductInfoBox 
           heading={box.heading}

@@ -7,7 +7,7 @@ const EditorPage = ({ data, params }) => {
     <Editor
       bookId={params.bookId}
       productData={data.productData}
-      productImageData={data.images}
+      productImages={data.productImages}
     />
   )
 }
@@ -31,19 +31,17 @@ export const pageQuery = graphql`
       stripePriceId
       widthInch
       widthPixel
+      weight
       colors {
         name
         hex
         slug
       }
     }
-    images: allFile(filter: { relativeDirectory: { eq: $slug}}) {
+    productImages: allFile(filter: { relativeDirectory: { eq: $slug}}) {
       nodes {
+        name
         childImageSharp {
-          fluid {
-            src
-            originalName
-          }
           gatsbyImageData(
             width: 80
             height: 80
@@ -52,6 +50,7 @@ export const pageQuery = graphql`
         }
       }
     }
+    
   }
 `
 

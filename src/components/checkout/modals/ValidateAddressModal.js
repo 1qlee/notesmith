@@ -1,8 +1,8 @@
 import React from "react"
 import { WarningCircle } from "phosphor-react"
 import { colors } from "../../../styles/variables"
+import { CircleNotch } from "phosphor-react"
 
-import { StyledLabel } from "../../form/FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import Notification from "../../ui/Notification"
 import Icon from "../../ui/Icon"
@@ -12,13 +12,13 @@ import Content from "../../ui/Content"
 function ValidateAddressModal({
   address,
   addressError,
+  processing,
   forceShippingSubmit,
   setShowModal,
 }) {
   return (
     <Modal
       setShowModal={setShowModal}
-      width="300px"
     >
       <ModalHeader>
         Confirm your address
@@ -27,7 +27,7 @@ function ValidateAddressModal({
         <Notification
           backgroundcolor={colors.red.twoHundred}
           bordercolor={colors.red.twoHundred}
-          margin="0 0 2rem"
+          margin="0 0 16px"
           padding="1rem"
           justifycontent="flex-start"
           alignitems="flex-start"
@@ -43,8 +43,10 @@ function ValidateAddressModal({
           </Icon>
           <Content
             licolor={colors.red.nineHundred}
+            lifontsize="0.75rem"
+            h5margin="0 0 4px"
           >
-            <StyledLabel color={colors.red.nineHundred}>Errors</StyledLabel>
+            <h5>Errors</h5>
             <ul>
               {addressError.map(error => (
                 <li key={error.message}>{error.message}</li>
@@ -55,27 +57,41 @@ function ValidateAddressModal({
         <Content
           paragraphlineheight="1.5"
           paragraphmarginbottom="0"
+          paragraphfontsize="0.875rem"
+          h5margin="0 0 4px"
         >
-          <StyledLabel>Your address</StyledLabel>
+          <h5>Address</h5>
           <p>{address.line1}, {address.line2}</p>
           <p>{address.city}, {address.state} {address.postal_code}</p>
         </Content>
       </ModalContent>
       <ModalFooter
-        justifycontent="space-between"
+        justifycontent="flex-end"
       >
+        {!processing && (
+          <Button
+            backgroundcolor={colors.gray.twoHundred}
+            className={processing ? "is-loading" : null}
+            color={colors.gray.nineHundred}
+            disabled={processing}
+            onClick={() => setShowModal({ show: false })}
+            margin="0 8px 0 0"
+          >
+            Edit address
+          </Button>
+        )}
         <Button
-          backgroundcolor={colors.gray.oneHundred}
-          onClick={() => setShowModal({ show: false })}
-        >
-          Edit address
-        </Button>
-        <Button
-          backgroundcolor={colors.red.sixHundred}
-          color={colors.white}
+          className={processing ? "is-loading" : null}
+          disabled={processing}
           onClick={forceShippingSubmit}
         >
-          Proceed with address as is
+          {processing ? (
+            <Icon>
+              <CircleNotch size={16} />
+            </Icon>
+          ) : (
+            "Proceed with address as is"
+          )}
         </Button>
       </ModalFooter>
     </Modal>

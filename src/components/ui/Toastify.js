@@ -10,12 +10,11 @@ export default function Toastify() {
       draggable
       draggablePercent={50}
       hideProgressBar={false}
-      icon={false}
       limit={3}
       newestOnTop={false}
       pauseOnFocusLoss
       pauseOnHover
-      position="bottom-center"
+      position="top-center"
       rtl={false}
       theme="dark"
       style={{

@@ -6,8 +6,13 @@ function calculateTotalWeight(cartItems) {
   let totalWeight = 0;
 
   for (let i = 0; i < cartItems.length; i++) {
-    const totalItemWeight = cartItems[i].weight * cartItems[i].quantity
-    totalWeight += totalItemWeight
+    if (cartItems[i].weight) {
+      const totalItemWeight = +cartItems[i].weight * +cartItems[i].quantity
+      totalWeight += totalItemWeight
+    }
+    else {
+      totalWeight += (9.6 * +cartItems[i].quantity)
+    }
   };
 
   return totalWeight;
@@ -23,27 +28,8 @@ exports.handler = async (event) => {
     cartItemsArray.push(cartItems[cartItem])
   };
 
-  // always sending from our business address
-  const fromAddress = new easypost.Address({
-    company: 'Notesmith',
-    street1: '39 Knollwood Road',
-    city: 'Roslyn',
-    state: 'NY',
-    zip: '11576',
-    email: "general@notesmithbooks.com",
-  });
-
-  const toAddress = new easypost.Address({
-    street1: paymentIntent.shipping.address.line1,
-    street2: paymentIntent.shipping.address.line2,
-    city: paymentIntent.shipping.address.city,
-    state: paymentIntent.shipping.address.state,
-    country: paymentIntent.shipping.address.country,
-    zip: paymentIntent.shipping.address.postal_code,
-  });
-
   // physical package size
-  const parcel = new easypost.Parcel({
+  const parcel = await easypost.Parcel.create({
     width: 9,
     length: 6,
     height: 2,
@@ -51,39 +37,46 @@ exports.handler = async (event) => {
   });
 
   // create a new easypost Shipment object
-  const newShipment = new easypost.Shipment({
-    to_address: toAddress,
-    from_address: fromAddress,
+  const newShipment = await easypost.Shipment.create({
+    to_address: {
+      street1: paymentIntent.shipping.address.line1,
+      street2: paymentIntent.shipping.address.line2,
+      city: paymentIntent.shipping.address.city,
+      state: paymentIntent.shipping.address.state,
+      country: paymentIntent.shipping.address.country,
+      zip: paymentIntent.shipping.address.postal_code,
+    },
+    from_address: {
+      company: 'Notesmith LLC',
+      street1: '971 Stewart Ave',
+      city: 'Garden City',
+      state: 'NY',
+      zip: '11530',
+      email: "general@notesmithbooks.com",
+    },
     parcel: parcel,
     carrier_accounts: [
       "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
-      "ca_113990b2b7b94d4b9280cbe4fc0f4433", // UPS
-      "ca_c1a5ccb5ccca4344b654fb98612fa8a9", // DHL
-      "ca_6f9cf63ed25945f098109d60bdc34358", // FedEx
     ]
   });
 
   try {
-    // just have to wait to receive these values
-    await fromAddress.save();
-    await parcel.save();
     // shipment is the new easypost shipment object we created earlier
-    const shipment = await newShipment.save();
-    const shipmentId = shipment.id;
-    // all rates sorted by descending shipping rate price
-    const ratesSortedDescending = shipment.rates.sort((a,b) => {
-      return a.rate - b.rate
-    });
-    // the cheapest rate will naturally be the first element of the array
-    // this variable is an object containing info relevant to the rate
-    const cheapestRate = ratesSortedDescending[0];
+    const shipmentId = newShipment.id;
+    const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
+    const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
+    const formattedRate = roundedRate.toFixed(2)
+
+    const priorityRateRounded = {
+      ...priorityRate[0],
+      rate: formattedRate
+    }
 
     console.log("[Netlify] Successfully created and returned shipping rates to the user.");
     return {
       statusCode: 200,
       body: JSON.stringify({
-        cheapestRate: cheapestRate,
-        allRates: ratesSortedDescending,
+        rate: priorityRateRounded,
         shipmentId: shipmentId,
       })
     };

@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../../layout/Flexbox"
 import TitleBox from "../barComponents/TitleBox"
@@ -10,23 +9,19 @@ import Toolbox from "../barComponents/Toolbox"
 const StyledFunctionsBar = styled.div`
   display: flex;
   width: 100%;
-  border-bottom: 1px solid ${colors.gray.threeHundred};
+  border-bottom: 2px solid ${colors.gray.nineHundred};
 `
 
 function Functionsbar({
-  selectedPage,
-  setSelectedPage,
   bookData,
   setBookData,
   bookId,
-  children
+  toast,
 }) {
 
   return (
     <StyledFunctionsBar>
-      <Toolbox
-        toast={toast}
-      />
+      <Toolbox />
       <TitleBox
         bookData={bookData}
         setBookData={setBookData}
@@ -39,26 +34,7 @@ function Functionsbar({
         justifycontent="flex-end"
         alignitems="center"
       >
-        <p>Filler</p>
       </Flexbox>
-      <ToastContainer
-        autoClose={3000}
-        closeOnClick
-        draggable
-        draggablePercent={50}
-        hideProgressBar={false}
-        limit={3}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="bottom-center"
-        rtl={false}
-        theme="colored"
-        style={{
-          fontFamily: "Inter, Helvetica, Tahoma, sans-serif",
-          fontSize: "0.75rem",
-        }}
-      />
     </StyledFunctionsBar>
   )
 }

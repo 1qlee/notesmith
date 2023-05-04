@@ -21,6 +21,8 @@ exports.handler = async ({ body }) => {
     const actionLink = await getAuth()
       .generateEmailVerificationLink(userEmail, actionCodeSettings)
 
+      console.log(actionLink)
+
     const templateData = {
       template_id: "d-c4a7c6e190f14f1b8fcb19564b276f23",
       from: {

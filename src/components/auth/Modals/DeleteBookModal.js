@@ -12,7 +12,6 @@ function DeleteBookModal({
 }) {
   return (
     <Modal
-      width="300px"
       setShowModal={setShowModal}
     >
       <ModalHeader>Delete this book</ModalHeader>
@@ -36,7 +35,7 @@ function DeleteBookModal({
             show: false,
             type: "deletebook"
           })}
-          margin="0 0.5rem 0 0"
+          margin="0 8px 0 0"
         >
           Cancel
         </Button>

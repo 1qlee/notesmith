@@ -52,7 +52,7 @@ const LoaderWrapper = styled.div`
   overflow: hidden;
   z-index: 999;
   &.has-nav {
-    height: calc(100vh - 70px);
+    height: calc(100vh - 105px);
     width: calc(100% + 4px);
     top: 70px;
     left: 0;

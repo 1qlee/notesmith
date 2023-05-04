@@ -8,17 +8,15 @@ import { Flexbox } from "../layout/Flexbox"
 
 const Infobox = styled.div`
   background-color: ${colors.white};
-  padding: ${props => props.padding ? props.padding : "0 1rem"};
-  border-radius: 0.5rem;
-  border: 1px solid ${colors.gray.nineHundred};
-  box-shadow: ${colors.shadow.solid};
+  padding: ${props => props.padding ? props.padding : "0 16px"};
+  border: ${colors.borders.black};
   margin-bottom: 2rem;
 `
 
 const InfoItem = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${colors.gray.threeHundred};
+  border-bottom: ${colors.borders.black};
   padding: 1rem 0;
   &:last-child {
     border-bottom: none;
@@ -39,10 +37,10 @@ const InfoItemText = styled.p`
 `
 
 function ShippingInfo({
+  activeTab,
   address,
   customer,
   setActiveTab,
-  setShowShippingMethod,
   shippingMethod,
 }) {
   return (
@@ -62,11 +60,11 @@ function ShippingInfo({
         </Content>
         <TextLink
           color={colors.gray.nineHundred}
-          onClick={() => {
-            setActiveTab(1)
-            setShowShippingMethod(false)
-          }}
-          margin="0 0 0.5rem 0"
+          onClick={() => setActiveTab({
+            ...activeTab,
+            index: 1,
+          })}
+          margin="0 0 8px"
         >
           Edit
         </TextLink>

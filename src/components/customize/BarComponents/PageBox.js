@@ -6,11 +6,12 @@ import { CaretDown, CaretUp } from "phosphor-react"
 import Icon from "../../ui/Icon"
 
 const StyledPageBox = styled.div`
-  border-bottom: 1px solid ${colors.gray.threeHundred};
+  border-bottom: 2px solid ${colors.gray.nineHundred};
   display: flex;
   align-items: center;
   width: 100%;
   position: relative;
+  padding: 8px;
   label, input {
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 0.75rem;
@@ -24,7 +25,7 @@ const StyledPageBox = styled.div`
   }
   input {
     border: none;
-    padding: 0.5rem 1rem 0.5rem;
+    padding: 8px;
     text-align: center;
     -moz-appearance: textfield;
     &::-webkit-outer-spin-button,
@@ -37,7 +38,7 @@ const StyledPageBox = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  top: 0.5rem;
+  top: 16px;
   left: ${props => props.left || null};
   right: ${props => props.right || null};
   &:hover {
@@ -47,6 +48,7 @@ const IconWrapper = styled.div`
 
 function PageBox({
   bookData,
+  handleScrollToItem,
   setSelectedPage,
   selectedPage,
 }) {
@@ -76,6 +78,17 @@ function PageBox({
 
   function changePage(pageNumber) {
     pageSelectorInput.current.value = pageNumber
+
+    const rowIndex = Math.ceil(pageNumber / 2)
+    const columnIndex = pageNumber % 2 === 0 ? 2 : 1
+
+    console.log(rowIndex, columnIndex)
+
+    handleScrollToItem({
+      align: "smart",
+      rowIndex: rowIndex,
+      columnIndex: columnIndex,
+    })
     setSelectedPage(pageNumber)
   }
 

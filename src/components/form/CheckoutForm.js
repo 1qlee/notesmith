@@ -1,9 +1,7 @@
-import React, { useState } from "react"
-import styled from "styled-components"
+import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
-import { useShoppingCart } from "use-shopping-cart"
 import { ArrowLeft, CircleNotch } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 
@@ -14,69 +12,27 @@ import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 import TextLink from "../ui/TextLink"
 
-const cardOptions = {
-  style: {
-    base: {
-      color: colors.gray.nineHundred,
-      fontFamily: "Crimson Pro",
-      fontSmoothing: "antialiased",
-      fontSize: "16px",
-      "::placeholder": {
-        color: colors.gray.fiveHundred,
-        fontFamily: "Crimson Pro"
-      },
-    },
-    invalid: {
-      color: colors.red.sixHundred,
-      iconColor: colors.red.sixHundred
-    }
-  }
-}
-
-const cardElementStyle = {
-  backgroundColor: `${colors.white}`,
-  border: `1px solid ${colors.gray.nineHundred}`,
-  borderRadius: "0.25rem",
-  marginBottom: "0.5rem",
-  padding: "1rem",
-}
-
-const cardElementErrorStyle = {
-  backgroundColor: `${colors.white}`,
-  border: `1px solid ${colors.red.sixHundred}`,
-  borderRadius: "0.25rem",
-  marginBottom: "0.5rem",
-  padding: "1rem",
-}
-
-const CardDetailsWrapper = styled.div`
-  transition: box-shadow 0.2s, border-color 0.2s;
-  &.is-focused {
-    box-shadow: ${colors.shadow.focus};
-    border-color: ${colors.white};
-    outline: none;
-  }
-`
-
 function CheckoutForm({
   address,
-  clientSecret,
   customer,
+  clearCart,
+  cartItems,
   pid,
   processing,
   setActiveTab,
+  setClientSecret,
   setPaymentProcessing,
   setProcessing,
   setShippingMethod,
   setShowShippingMethod,
   shippingMethod,
 }) {
+  const stripe = useStripe()
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [focused, setFocused] = useState(false)
-  const { clearCart, cartDetails } = useShoppingCart()
   const { firebaseDb } = useFirebaseContext()
   const elements = useElements()
-  const stripe = useStripe()
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -88,16 +44,16 @@ function CheckoutForm({
   // save the entire order to the database
   const saveOrderItems = async (cartItems, orderData) => {
     let cartItemsObject = {}
-    // loop through all items in the cart
-    for (const cartItem in cartItems) {
-      const cartItemId = cartItems[cartItem].id
-      // save each cart item's ID to our dummy object so we can save it to the order later
+    const cartItemsLength = cartItems.length
+
+    for (let i = 0; i < cartItemsLength; i++) {
+      const cartItemId = cartItems[i].id
       cartItemsObject[cartItemId] = true
-      // save each item into the database by its id
+
       await firebaseDb.ref(`/orderItems/${cartItemId}`).set({
-        ...cartItems[cartItem],
-        pid: pid, // need pid to link the item to the order
-      }).catch(error => {
+        ...cartItems[i],
+        pid: pid,
+      }).catch(() => {
         console.error("Error writing order items to the database.")
       })
     }
@@ -117,9 +73,9 @@ function CheckoutForm({
     setProcessing(true)
 
     // send the payment details to Stripe
-    await stripe.confirmCardPayment(clientSecret, {
+    await stripe.confirmPayment({
       payment_method: {
-        card: elements.getElement(CardElement),
+        // card: elements.getElement(CardElement),
         billing_details: {
           name: customer.name,
           email: customer.email
@@ -184,7 +140,7 @@ function CheckoutForm({
         },
       }
 
-      await saveOrderItems(cartDetails, orderData)
+      await saveOrderItems(cartItems, orderData)
 
       // remove items from cart and clear pid from localStorage
       setError(null)
@@ -213,18 +169,12 @@ function CheckoutForm({
       <StyledFieldset>
         <StyledLabel htmlFor="card-element">Card Information</StyledLabel>
       </StyledFieldset>
-      <CardDetailsWrapper
-        className={focused && "is-focused"}
-        style={error ? cardElementErrorStyle : cardElementStyle}
-      >
-        <CardElement
-          id="card-element"
-          options={cardOptions}
-          onChange={handleChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-      </CardDetailsWrapper>
+      <PaymentElement
+        id="card-element"
+        onChange={handleChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
       {error && (
         <ErrorLine
           role="alert"

@@ -1,6 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {
@@ -24,17 +24,17 @@ const loading = keyframes`
 `
 
 const StyledNotification = styled.div`
-  align-items: ${props => props.alignitems || "center"};
+  align-items: ${props => props.alignitems || "flex-start"};
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
-  border-radius: ${props => props.borderradius || "8px"};
-  box-shadow: ${props => props.boxshadow || colors.shadow.solid};
+  border: ${props => props.border};
+  border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
   display: flex;
+  font-family: ${fonts.secondary};
   justify-content: ${props => props.justifycontent || "space-between"};
   margin: ${props => props.margin || "1rem 0"};
-  padding: ${props => props.padding};
+  padding: ${props => props.padding || "16px"};
   transition: background-color 0.2s, color 0.2s;
   max-width: ${props => props.maxwidth};
   z-index: 8000;
@@ -48,6 +48,9 @@ const StyledNotification = styled.div`
   }
   p {
     color: ${props => props.color};
+    font-size: ${props => props.fontsize || "0.75rem"};
+    margin-bottom: 0;
+    line-height: 1.5;
   }
 `
 

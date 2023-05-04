@@ -1,31 +1,54 @@
 [
   {
-    "camelName": "wiredNotebookA5",
+    "camelName": "wiredNotebookA5Custom",
     "category": "notebooks",
     "description": "One signature, custom-printed Notesmith wired notebook with your fully custom layouts on every page.",
     "longDescription": "All of our Wired Notebooks are produced and manufactured in our factory in New York. They are made only with materials sourced from American vendors and are made-to-order according to your custom specifications.",
     "heightInch": "8.5",
     "heightPixel": 816,
-    "name": "Wired Notebook A5",
+    "name": "Wired Notebook A5 (Custom)",
     "numOfPages": 140,
     "paperColor": "Bright white",
     "paperTooth": "Ultra smooth",
     "paperWeight": "70lb",
-    "price": 2000,
+    "price": 2400,
     "size": "A5",
-    "slug": "wired-notebook-a5",
+    "slug": "wired-notebook-a5-custom",
     "stripePriceId": "price_1IbAlnIN24Fw2SWdOVRXdimr",
-    "weight": 9.58,
+    "weight": 9.6,
     "widthInch": "5.5",
     "widthPixel": 528,
+    "infoList": [
+      "Made in U.S.A. only",
+      "High quality, bright white and ultra smooth writing paper",
+      "Extra thick, laminated covers for durability"
+    ],
+    "halfandhalf": [
+      {
+        "heading": "Fountain pen friendly",
+        "text": "Our carefully selected writing paper is fountain pen friendly. Bright white and ultra smooth, our paper is a pleasure to write on. We use a 70lb paper weight, which is not too thick or thin - perfect for writing!"
+      },
+      {
+        "heading": "A layout for everyone",
+        "text": "Choose from any of our premade templates to create a custom notebook that fits your needs. Or, utilize our online page editor to create your very own custom layout!"
+      }
+    ],
+    "hero": {
+      "heading": "Carefully selected, expertly crafted",
+      "text": "With our notebooks, you can expect a high quality product that was crafted with a focus on delivering an excellent writing experience. If you're not satisfied with your purchase, we offer free returns within 14 days of purchase."
+    },
     "infoBoxes": [
       {
         "heading": "Materials",
-        "text": "70lb text paper, 130lb coated cover stock double-mounted, gold Wire-O, sand-matte textured lamination"
+        "text": "70lb text paper, double-mounted 130lb coated cover stock, gold wire, sand-matte textured lamination"
       },
       {
         "heading": "Size",
         "text": "5.5in x 8.5in (page size)"
+      },
+      {
+        "heading": "Pages",
+        "text": "70 sheets (140 pages total)"
       },
       {
         "heading": "Returns",

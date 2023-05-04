@@ -6,8 +6,6 @@ import Line4 from "../../assets/underlines/underline-4.svg"
 import Line5 from "../../assets/underlines/underline-5.svg"
 import Line6 from "../../assets/underlines/underline-6.svg"
 import Line7 from "../../assets/underlines/underline-7.svg"
-import Line8 from "../../assets/underlines/underline-8.svg"
-import Line9 from "../../assets/underlines/underline-9.svg"
 
 function RandomLine() {
   const [randomLine, setRandomLine] = useState(0)
@@ -26,12 +24,10 @@ function RandomLine() {
     <Line5 style={lineStyle} />,
     <Line6 style={lineStyle} />,
     <Line7 style={lineStyle} />,
-    <Line8 style={lineStyle} />,
-    <Line9 style={lineStyle} />,
   ]
 
   useEffect(() => {
-    const randomNum = Math.floor(Math.random() * 10)
+    const randomNum = Math.floor(Math.random() * lines.length)
     setRandomLine(randomNum)
   }, [])
 

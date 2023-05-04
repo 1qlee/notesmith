@@ -1,5 +1,5 @@
 import React from "react"
-import { useSiteMetadata } from "../../hooks/use-site-metadata"
+import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 
 function Seo({ title, description, pathname, children }) {
   const { title: defaultTitle, description: defaultDescription, image, url, username } = useSiteMetadata()

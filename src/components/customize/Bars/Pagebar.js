@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, useRef } from "react"
 import { colors } from "../../../styles/variables"
 import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer"
@@ -10,7 +10,7 @@ import PageBox from "../barComponents/PageBox"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
-  border-right: 1px solid ${colors.gray.threeHundred};
+  border-right: 2px solid ${colors.gray.nineHundred};
   height: 100%;
   width: 164px;
   z-index: 8;
@@ -133,11 +133,17 @@ function Pagebar({
   setActiveTab,
 }) {
   const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData, setActiveTab)
+  const pagebarRef = useRef(null)
+
+  function handleScrollToItem(values) {
+    pagebarRef.current.scrollToItem(values);
+  }
 
   return (
     <PagebarWrapper>
       <PageBox
         bookData={bookData}
+        handleScrollToItem={handleScrollToItem}
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}
       />
@@ -145,6 +151,7 @@ function Pagebar({
         <AutoSizer>
           {({ height }) => (
             <WindowGrid
+              ref={pagebarRef}
               className="window-grid"
               useIsScrolling
               columnCount={2}
@@ -157,7 +164,7 @@ function Pagebar({
               overscanRowCount={0}
               style={{
                 backgroundColor: 'white',
-                borderRight: `1px solid ${colors.gray.threeHundred}`,
+                borderRight: `2px solid ${colors.gray.nineHundred}`,
                 top: "0",
                 overflowX: "hidden",
               }}

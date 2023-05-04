@@ -3,6 +3,7 @@ import { colors } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { WarningCircle, CircleNotch } from "phosphor-react"
+import { ref, set } from "firebase/database"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
 
@@ -25,17 +26,20 @@ const SignupForm = () => {
     e.preventDefault()
     setLoading(true)
 
-    signUp(email, password).then(userObject => {
+    signUp(email, password).then(async userObject => {
       const { user } = userObject
+      console.log(userObject)
       // Record new user in the db
-      firebaseDb.ref('users/' + user.uid).set({
+      await set(ref(firebaseDb, 'users/' + user.uid), {
         email: user.email
-      }).then(() => {
-        // Send the user a verification email
-        sendEmailVerification(user.email)
       })
+
+      return user
     })
-    .then(() => {
+    .then(async user => {
+      console.log("sending verification email")
+      // Send the user a verification email
+      await sendEmailVerification(user.email)
       setLoading(false)
     })
     .catch(error => {
@@ -87,7 +91,7 @@ const SignupForm = () => {
         linktextdecoration="underline"
       >
         <h1>Create your Notesmith account</h1>
-        <p>Notesmith is currently in an open beta. All notebooks you purchase during this time are discounted. Feedback will be greatly appreciated.</p>
+        <p>Notesmith is currently taking pre-orders. All notebooks you purchase during this time are discounted. Feedback will be greatly appreciated.</p>
       </Content>
       <form
         id="signup-form"
