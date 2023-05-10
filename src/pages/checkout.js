@@ -157,7 +157,6 @@ const Checkout = () => {
           createPaymentIntent()
         }
         else {
-          setLoading(false)
           setClientSecret(client_secret)
 
           // if shipping information exists, fill the form
@@ -166,6 +165,7 @@ const Checkout = () => {
 
             setAddress(shipping.address)
             setCustomer({ ...customer, name: shipping.name, email: receipt_email })
+            setLoading(false)
           }
         }
       }).catch(error => {
@@ -230,7 +230,7 @@ const Checkout = () => {
         cartItems: cartItems, // always send current cart items
         paymentId: pid, // need pid from localStorage to update the corresponding paymentIntent
         email: customer.email,
-        address: {address: {...address}, name: customer.name}, // always send shipping information
+        address: { address: {...address}, name: customer.name }, // always send shipping information
         customer: customer,
       })
     }).then(res => res.json()
@@ -258,7 +258,7 @@ const Checkout = () => {
       stripe={stripePromise}
       options={elementsOptions}
     >
-      <Layout>
+      <Layout loading={loading}>
         <Seo title="Checkout" />
         <Nav />
         {!paymentProcessing ? (
@@ -293,11 +293,13 @@ const Checkout = () => {
                               activeTab={activeTab}
                               address={address}
                               customer={customer}
+                              pid={pid}
                               setActiveTab={setActiveTab}
                               setAddress={setAddress}
                               setAddressError={setAddressError}
                               setCustomer={setCustomer}
                               setShowModal={setShowModal}
+                              toast={toast}
                             />
                           )}
                           {activeTab.index === 2 && (
@@ -309,6 +311,7 @@ const Checkout = () => {
                               setActiveTab={setActiveTab}
                               setAddress={setAddress}
                               setAuthKey={setAuthKey}
+                              setProcessing={setProcessing}
                               setSelectedRate={setSelectedRate}
                               setShipmentId={setShipmentId}
                               setShippingMethod={setShippingMethod}
@@ -348,9 +351,6 @@ const Checkout = () => {
                         />
                       </Col>
                     </Row>
-                  )}
-                  {loading && (
-                    <Loader msg="Do not refresh the page!" />
                   )}
                 </Container>
               </SectionContent>

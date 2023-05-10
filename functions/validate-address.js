@@ -16,6 +16,8 @@ exports.handler = async (event) => {
       zip: address.postal_code
     });
 
+    console.log("[EASYPOST] Address verification was successful.");
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -24,7 +26,7 @@ exports.handler = async (event) => {
     }
   }
   catch(error) {
-    console.error("[EASYPOST] Address verification error: ", error.code)
+    console.error("[EASYPOST] Address verification error: ", error.code);
 
     if (error.errors) {
       return {

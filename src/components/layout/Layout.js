@@ -1,10 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-
-import 'react-toastify/dist/ReactToastify.css'
-import "./master.css"
-import Footer from "../ui/Footer"
 import { colors } from "../../styles/variables"
+import "./master.css"
+import 'react-toastify/dist/ReactToastify.css'
+
+import Loader from "../misc/Loader"
+import Footer from "../ui/Footer"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
@@ -17,11 +18,14 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ children, className, backgroundcolor }) => {
+const Layout = ({ loading, children, className, backgroundcolor }) => {
 
   return (
     <StyledLayout className={className} backgroundcolor={backgroundcolor}>
       {children}
+      {loading && (
+        <Loader />
+      )}
       <Footer />
     </StyledLayout>
   )

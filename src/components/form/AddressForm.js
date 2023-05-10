@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { colors, regex } from "../../styles/variables"
 import { ArrowLeft, CircleNotch } from "phosphor-react"
@@ -14,107 +14,131 @@ function AddressForm({
   activeTab,
   address,
   customer,
+  pid,
   setActiveTab,
   setAddress,
   setAddressError,
   setCustomer,
   setShowModal,
+  toast,
 }) {
   const elements = useElements()
+  const [addressElementLoaded, setAddressElementLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
-  const addressOptions = {
+  const [addressOptions, setAddressOptions] = useState({
     mode: "shipping",
     autocomplete: {
       mode: "automatic",
     },
-    defaultValues: {
-      name: customer.name,
-      address: {
-        line1: address.line1,
-        line2: address.line2,
-        city: address.city,
-        state: address.state,
-        postal_code: address.postal_code,
-        country: address.country || 'US',
-      },
-    },
-  }
+  })
+  
+  useEffect(() => {
+    if (addressElementLoaded) {
+      console.log(address)
+      setAddressOptions({
+        ...addressOptions,
+        defaultValues: {
+          name: customer.name,
+          address: {
+            line1: address.line1,
+            line2: address.line2,
+            city: address.city,
+            state: address.state,
+            postal_code: address.postal_code,
+            country: address.country || 'US',
+          },
+        },
+      })
+      console.log(addressOptions)
+    }
 
-  async function validateAddress() {
+    console.log(addressOptions)
+  }, [address, addressElementLoaded, customer])
+
+  async function validateAddress(address) {
     // validate the user's inputted address using easypost's API
-    fetch("/.netlify/functions/validate-address", {
-      method: "post",
+    const response = await fetch("/.netlify/functions/validate-address", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        address: address // send address from props
+        address: address,
       })
-    }).then(res => res.json()
-    ).then(data => {
-      setLoading(false)
-      // data.errors is an array of error message strings
-      if (data.errors) {
-        throw {
-          errors: data.errors,
-          isValid: false,
-        }
-      }
-      else {
-        return {
-          errors: null,
-          isValid: true,
-        }
-      }
-    }).catch(errors => {
-      setAddressError(errors.errors)
-      // modal will handle the error message(s)
+    })
+    const data = await response.json()
+
+    if (data.errors) {
+      setAddressError(data.errors)
       setShowModal({
         show: true
       })
-      return errors
-    })
+      return {
+        errors: data.errors,
+        isValid: false,
+      }
+    }
+    else {
+      return {
+        errors: null,
+        isValid: true,
+      }
+    }
   }
 
   async function updateAddress() {
+    const response = await fetch("/.netlify/functions/update-address", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        paymentId: pid,
+        address: address,
+        name: customer.name,
+        email: customer.email,
+      })
+    })
+    const data = await response.json()
 
+    if (data.errors) {
+      toast.error(data.errors)
+    }
   }
 
-  function handleSubmitAddress() {
+  async function handleSubmitAddress() {
     setLoading(true)
     const addressElement = elements.getElement('address')
+    const stripeAddress = await addressElement.getValue()
+    const inputtedAddress = stripeAddress.value
+    const isEmailVerified = regex.email.test(customer.email)
 
-    addressElement.getValue().then(async res => {
-      const isEmailVerified = regex.email.test(customer.email)
-      // regex check emailValue
-      if (!isEmailVerified) {
-        setEmailError("Please enter a valid email address.")
-      }
-      else {
-        setCustomer({
-          ...customer,
-          name: res.value.name,
+    setAddress(inputtedAddress.address)
+    setCustomer({
+      ...customer,
+      name: inputtedAddress.name,
+    })
+
+    if (!isEmailVerified) {
+      setEmailError("Please enter a valid email address.")
+    }
+
+    if (stripeAddress.complete && isEmailVerified) {
+      const isAddressValid = await validateAddress(stripeAddress.value.address)
+
+      if (isAddressValid.isValid) {
+        const isAddressUpdated = await updateAddress()
+        setActiveTab({
+          ...activeTab,
+          index: 2,
         })
       }
-
-      if (res.complete && isEmailVerified) {
-        // validate the user's inputted address using easypost's API
-        const isAddressValid = validateAddress().isValid
-
-        if (isAddressValid) {
-          setAddress(res.value.address)
-          setLoading(false)
-          setActiveTab({
-            ...activeTab,
-            index: 2,
-          })
-        }
-      }
-      else {
-        setLoading(false)
-      }
-    })
+      setLoading(false)
+    }
+    else {
+      setLoading(false)
+    }
   }
 
   function handleEmailChange(value) {
@@ -152,6 +176,7 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement 
         options={addressOptions}
+        onReady={e => setAddressElementLoaded(true)}
       />
       <Flexbox
         flex="flex"
@@ -177,7 +202,7 @@ function AddressForm({
           color={colors.gray.oneHundred}
           disabled={loading || Object.keys(address).length === 0}
           onClick={() => handleSubmitAddress()}
-          padding="16px"
+          padding="1rem"
           width="200px"
         >
           {loading ? (

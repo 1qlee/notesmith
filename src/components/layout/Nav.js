@@ -11,10 +11,6 @@ import TextLink from "../ui/TextLink"
 import Logo from "../misc/Logo"
 
 const StyledNav = styled.nav`
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 999;
   width: 100%;
   border-bottom: 2px solid ${colors.gray.nineHundred};
   background-color: ${colors.white};

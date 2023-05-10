@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors, fonts } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
-import { CheckCircle, Circle, CircleNotch, ArrowLeft } from "phosphor-react"
+import { CheckSquare, Square, CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
@@ -27,8 +27,6 @@ const ShippingInfoContainer = styled.div`
 
 const ShippingItemsContainer = styled.div`
   margin-bottom: 32px;
-  padding: 16px;
-  border: ${colors.borders.black};
 `
 
 const ShippingItem = styled(Flexbox)`
@@ -44,12 +42,6 @@ const ShippingItem = styled(Flexbox)`
   }
   &.is-selected {
     background-color: ${colors.gray.nineHundred};
-    p {
-      color: ${colors.gray.oneHundred};
-    }
-    small {
-      colors: ${colors.gray.twoHundred};
-    }
   }
   &.is-loading {
     background-color: ${colors.gray.oneHundred};
@@ -97,6 +89,7 @@ const ShippingForm = ({
         body: JSON.stringify({
           pid: pid,
           cartItems: cartDetails,
+          address: address,
         })
       }).then(res => {
         return res.json()
@@ -271,7 +264,7 @@ const ShippingForm = ({
               setShippingMethod(shippingRate.id)
               setSelectedRate(shippingRate)
             }}
-            className={shippingMethod === shippingRate.id ? "is-selected" : null}
+            className={shippingMethod === shippingRate.id && "is-selected"}
             justifycontent="flex-start"
             alignitems="flex-start"
             padding="1rem"
@@ -289,11 +282,11 @@ const ShippingForm = ({
               >
                 {shippingMethod === shippingRate.id ? (
                   <Icon margin="0 8px 0 0">
-                    <CheckCircle color={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred} size={16} weight="fill" />
+                    <CheckSquare color={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred} size={20} weight="fill" />
                   </Icon>
                 ) : (
                   <Icon margin="0 8px 0 0">
-                    <Circle size={16} />
+                    <Square size={20} />
                   </Icon>
                 )}
                 <Content
@@ -301,6 +294,8 @@ const ShippingForm = ({
                   paragraphfontsize="0.875rem"
                   paragraphmarginbottom="0"
                   paragraphfontweight="700"
+                  paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                  smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
                   smallfontfamily={fonts.secondary}
                   smallfontsize="0.75rem"
                   smallmargin="0"

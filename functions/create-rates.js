@@ -20,8 +20,7 @@ function calculateTotalWeight(cartItems) {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, cartItems } = body;
-  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
+  const { pid, cartItems, address } = body;
   let cartItemsArray = [];
 
   for (const cartItem in cartItems) {
@@ -39,12 +38,12 @@ exports.handler = async (event) => {
   // create a new easypost Shipment object
   const newShipment = await easypost.Shipment.create({
     to_address: {
-      street1: paymentIntent.shipping.address.line1,
-      street2: paymentIntent.shipping.address.line2,
-      city: paymentIntent.shipping.address.city,
-      state: paymentIntent.shipping.address.state,
-      country: paymentIntent.shipping.address.country,
-      zip: paymentIntent.shipping.address.postal_code,
+      street1: address.line1,
+      street2: address.line2,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      zip: address.postal_code,
     },
     from_address: {
       company: 'Notesmith LLC',
