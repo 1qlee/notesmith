@@ -128,10 +128,11 @@ function AddressForm({
       const isAddressValid = await validateAddress(stripeAddress.value.address)
 
       if (isAddressValid.isValid) {
-        const isAddressUpdated = await updateAddress()
+        await updateAddress()
         setActiveTab({
-          ...activeTab,
           index: 2,
+          text: "Please choose a shipping method below.",
+          heading: "Shipping method"
         })
       }
       setLoading(false)

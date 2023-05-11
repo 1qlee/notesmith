@@ -241,8 +241,9 @@ const Checkout = () => {
       }
 
       setActiveTab({
-        ...activeTab,
         index: 2,
+        text: "Please choose a shipping method below.",
+        heading: "Shipping Method"
       })
       setProcessing(false)
       setShowModal({ show: false })

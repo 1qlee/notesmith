@@ -276,42 +276,28 @@ const ShippingForm = ({
               alignitems="center"
               width="100%"
             >
-              <Flexbox
-                flex="flex"
-                alignitems="center"
+              <Content
+                paragraphfontfamily={fonts.secondary}
+                paragraphfontsize="0.875rem"
+                paragraphmarginbottom="0"
+                paragraphfontweight="700"
+                paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                smallfontfamily={fonts.secondary}
+                smallfontsize="0.75rem"
+                smallmargin="0"
               >
-                {shippingMethod === shippingRate.id ? (
-                  <Icon margin="0 8px 0 0">
-                    <CheckSquare color={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred} size={20} weight="fill" />
-                  </Icon>
-                ) : (
-                  <Icon margin="0 8px 0 0">
-                    <Square size={20} />
-                  </Icon>
-                )}
-                <Content
-                  paragraphfontfamily={fonts.secondary}
-                  paragraphfontsize="0.875rem"
-                  paragraphmarginbottom="0"
-                  paragraphfontweight="700"
-                  paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
-                  smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
-                  smallfontfamily={fonts.secondary}
-                  smallfontsize="0.75rem"
-                  smallmargin="0"
-                >
-                  <p>
-                    {shippingRate.service === "Priority" ? (
-                      "Ground shipping"
-                    ) : (
-                      "International shipping"
-                    )}
-                  </p>
-                  {shippingRate.delivery_days && (
-                    <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
+                <p>
+                  {shippingRate.service === "Priority" ? (
+                    "Ground shipping"
+                  ) : (
+                    "International shipping"
                   )}
-                </Content>
-              </Flexbox>
+                </p>
+                {shippingRate.delivery_days && (
+                  <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
+                )}
+              </Content>
               <Tag
                 color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
                 backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
@@ -334,8 +320,9 @@ const ShippingForm = ({
           onClick={() => {
             setProcessing(false)
             setActiveTab({
-              ...activeTab,
               index: 1,
+              heading: "Shipping address",
+              text: "Please enter your shipping information below to continue."
             })
             setShippingMethod("")
             setSelectedRate(null)
@@ -363,7 +350,7 @@ const ShippingForm = ({
             <CircleNotch size="1rem" color={colors.white} />
           </Icon>
         ) : (
-          "Continue"
+          "Continue to checkout"
         )}
         </Button>
       </Flexbox>
