@@ -15,7 +15,6 @@ const ProgressBar = styled.div`
   background-color: ${props => props.barcolor};
   border-radius: 0.25rem;
   z-index: 99;
-  transition: width 0.2s ease-in-out;
 `
 
 function Progress({

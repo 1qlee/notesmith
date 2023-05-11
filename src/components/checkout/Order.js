@@ -145,10 +145,10 @@ const Order = ({ location, orderId }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
-                <Grid
+                <div
                   columns="600px 1fr"
                 >
-                  <Cell>
+                  <div>
                     {orderNotFound ? (
                       <>
                         <Content>
@@ -411,8 +411,8 @@ const Order = ({ location, orderId }) => {
                         )}
                       </>
                     )}
-                  </Cell>
-                </Grid>
+                  </div>
+                </div>
               </SectionContent>
             </LayoutContainer>
           </Container>

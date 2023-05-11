@@ -157,6 +157,7 @@ const Checkout = () => {
           createPaymentIntent()
         }
         else {
+          setLoading(false)
           setClientSecret(client_secret)
 
           // if shipping information exists, fill the form
@@ -165,7 +166,6 @@ const Checkout = () => {
 
             setAddress(shipping.address)
             setCustomer({ ...customer, name: shipping.name, email: receipt_email })
-            setLoading(false)
           }
         }
       }).catch(error => {

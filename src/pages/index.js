@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { graphql, Link } from "gatsby"
-import { Star, ArrowUpRight, ArrowRight, Note as NoteIcon } from "phosphor-react"
+import { Star, ArrowUpRight, ArrowRight, WarningCircle } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
@@ -99,8 +99,8 @@ const IndexPage = ({ data }) => {
                   <Pattern
                     width={400}
                     height={300}
-                    top="-100px"
-                    left="-120px"
+                    top="-80px"
+                    left="-75px"
                     pattern="pattern-34"
                     color={colors.gray.threeHundred}
                     zindex="1"
@@ -310,11 +310,11 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="flex-start"
-                    margin="16px 0 0" 
+                    alignitems="center"
+                    margin="8px 0 0" 
                   >
                     <Icon>
-                      <NoteIcon />
+                      <WarningCircle size={16} />
                     </Icon>
                     <Content
                       margin="0 0 0 0.25rem"
@@ -549,13 +549,13 @@ const IndexPage = ({ data }) => {
                   <Flexbox
                     flex="flex"
                     alignitems="center"
-                    padding="16px 0"
+                    margin="8px 0 0"
                   >
                     <Icon>
-                      <NoteIcon />
+                      <WarningCircle size={16} />
                     </Icon>
                     <Content
-                      margin="0 0 0 0.25rem"
+                      margin="0 0 0 4px"
                       smallmargin="0"
                     >
                       <small>Results are from a survey conducted on early test users.</small>
@@ -601,14 +601,14 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="flex-start"
-                    margin="16px 0 0"
+                    alignitems="center"
+                    margin="8px 0 0"
                   >
                     <Icon>
-                      <NoteIcon />
+                      <WarningCircle size={16} />
                     </Icon>
                     <Content
-                      margin="0 0 0 0.25rem"
+                      margin="0 0 0 4px"
                       smallmargin="0"
                     >
                       <small>Users have been cartoonized for anonymity. Quotes represent real reviews from actual users.</small>
@@ -638,7 +638,7 @@ export const pageQuery = graphql`
             originalName
           }
           gatsbyImageData(
-            width: 928
+            width: 996
             placeholder: BLURRED
             quality: 100
           )

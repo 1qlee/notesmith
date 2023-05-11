@@ -26,7 +26,6 @@ const DemoImage = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100%;
 `
 
@@ -63,7 +62,7 @@ function PageDemoCarousel() {
       else {
         setCurrentProgress((prev) => prev + 1)
       }
-    }, 15)
+    }, 20)
 
     if (currentProgress === 101) {
       clearInterval(timer)
@@ -72,7 +71,7 @@ function PageDemoCarousel() {
     }
 
     return () => clearInterval(timer)
-  }, [setCurrentPage, currentProgress, currentPage, pause])
+  }, [currentProgress, currentPage, pause])
 
   return (
     <StyledPageDemo>
@@ -119,65 +118,27 @@ function PageDemoCarousel() {
           )}
         </DemoImage>
         <DemoImageCaption>
+          <Progress
+            height="2px"
+            width="100%"
+            completion={currentProgress}
+            barcolor={colors.gray.nineHundred}
+            wrappercolor={colors.gray.threeHundred}
+          />
           {currentPage === 0 && (
-            <>
-              <Progress
-                height="2px"
-                width="100%"
-                completion={currentProgress}
-                barcolor={colors.gray.nineHundred}
-                wrappercolor={colors.gray.threeHundred}
-              />
-              <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
-            </>
+            <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
           )}
           {currentPage === 1 && (
-            <>
-              <Progress
-                height="2px"
-                width="100%"
-                completion={currentProgress}
-                barcolor={colors.gray.nineHundred}
-                wrappercolor={colors.gray.threeHundred}
-              />
-              <p>0.25mm wide light gray dot grid, spaced 5mm apart and centrally positioned with margins on all four sides.</p>
-            </>
+            <p>0.25mm wide light gray dot grid, spaced 5mm apart and centrally positioned with margins on all four sides.</p>
           )}
           {currentPage === 2 && (
-            <>
-              <Progress
-                height="2px"
-                width="100%"
-                completion={currentProgress}
-                barcolor={colors.gray.nineHundred}
-                wrappercolor={colors.gray.threeHundred}
-              />
-              <p>Calligraphy practice rows spaced 10mm apart with adjustable spacing on slants, descenders, and ascenders.</p>
-            </>
+            <p>Calligraphy practice rows spaced 10mm apart with adjustable spacing on slants, descenders, and ascenders.</p>
           )}
           {currentPage === 3 && (
-            <>
-              <Progress
-                height="2px"
-                width="100%"
-                completion={currentProgress}
-                barcolor={colors.gray.nineHundred}
-                wrappercolor={colors.gray.threeHundred}
-              />
-              <p>Seyes ruled grid with adjustable margins, spacing, and number of rows and columns. </p>
-            </>
+            <p>Seyes ruled grid with adjustable margins, spacing, and number of rows and columns. </p>
           )}
           {currentPage === 4 && (
-            <>
-              <Progress
-                height="2px"
-                width="100%"
-                completion={currentProgress}
-                barcolor={colors.gray.nineHundred}
-                wrappercolor={colors.gray.threeHundred}
-              />
-              <p>Lined grid or graph paper with lines evenly spaced 10mm apart and no borders.</p>
-            </>
+            <p>Lined grid or graph paper with lines evenly spaced 10mm apart and no borders.</p>
           )}
         </DemoImageCaption>
       </DemoImageWrapper>

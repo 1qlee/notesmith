@@ -29,7 +29,7 @@ const Content = styled.div`
     font-family: ${props => props.headingfontfamily};
   }
   h1 {
-    font-size: ${props => props.h1fontsize || "3rem"};
+    font-size: ${props => props.h1fontsize || "4rem"};
     color: ${props => props.h1color || colors.gray.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
