@@ -1,69 +1,40 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
-const data =  require('./data/ny-tax-codes.json');
 
-const calcTaxAmount = (subtotal, county) => {
-  let taxRate = 0;
-  const countyMatch = data.find(location => location.name === county);
+// calculate total order amount using inventory data
+const calcOrderAmount = async (cartItems) => {
+  let totalAmount = 0;
+  // iterate through all cart items in cart
+  for (let i = 0; i < cartItems.length; i++) {
+    const { quantity, price_id } = cartItems[i];
+    // retrieve product from stripe by using id
+    const stripeProduct = await stripe.prices.retrieve(price_id);
 
-  // check if county name exists in the dataset
-  if (countyMatch) {
-    taxRate = parseFloat(countyMatch.rate / 100);
-  }
-  // otherwise, just set tax to 7% which is the lowest tax rate out of all counties
-  else {
-    taxRate = 0.07;
+    totalAmount += stripeProduct.unit_amount * quantity;
   }
 
-  console.log(`[Netlify] The tax rate is: ${taxRate}.`);
-  const totalTaxAmount = Math.round(subtotal * taxRate);
+  console.log(`[Stripe] The total taxable amount for this order is: ${totalAmount}.`);
 
-  console.log(`[Netlify] The total tax amount is: ${totalTaxAmount}`);;
-  return totalTaxAmount;
-}
+  return totalAmount;
+};
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, county } = body;
-  // retrieve paymentIntent using pid
-  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const { metadata } = paymentIntent;
-  const { shippingRate, subtotal } = metadata;
+  const { cartItems, address, shippingRate } = body;
 
-  try {
-    // subtotal is equal to the order amount plus the shipping cost
-    const taxableAmount = parseFloat(subtotal) + parseFloat(shippingRate);
-    // caculate the tax amount using subtotal (NYC tax laws include shipping cost)
-    const tax = calcTaxAmount(taxableAmount, county);
-    // add tax to the subtotal for the total amount to be paid
-    const totalAmount = taxableAmount + tax;
-    console.log(`[Netlify] Total amount to be paid is: ${totalAmount}.`);
-
-    // update the payment intent with the new amount
-    console.log(`[Netlify] Updating payment intent: ${pid}`)
-    await stripe.paymentIntents.update(
-      pid,
+  const calculateTax = await stripe.tax.calculations.create({
+    currency: 'usd',
+    line_items: [
       {
-        amount: totalAmount,
-        metadata: {
-          tax: tax,
-        }
+        amount: await calcOrderAmount(cartItems),
+        reference: "L1",
       }
-    )
+    ],
+    customer_details: {
+      address: address,
+      address_source: 'shipping',
+    },
+    expand: ['line_items.data.tax_breakdown'],
+  })
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        tax: tax
-      })
-    }
-  }
-  catch(error) {
-    console.error(error)
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        error: "Could not process your request."
-      })
-    }
-  }
+  console.log(calculateTax)
 }

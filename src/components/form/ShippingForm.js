@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { useShoppingCart } from "use-shopping-cart"
-import { CheckSquare, Square, CircleNotch, ArrowLeft } from "phosphor-react"
+import { CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
@@ -56,6 +55,7 @@ const ShippingItem = styled(Flexbox)`
 const ShippingForm = ({
   activeTab,
   address,
+  cartItems,
   customer,
   processing,
   selectedRate,
@@ -70,7 +70,6 @@ const ShippingForm = ({
   shipmentId,
   toast,
 }) => {
-  const { cartDetails } = useShoppingCart()
   const [loading, setLoading] = useState(false)
   const [shippingRate, setShippingRate] = useState({})
   const pid = localStorage.getItem("pid")
@@ -87,8 +86,7 @@ const ShippingForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          pid: pid,
-          cartItems: cartDetails,
+          cartItems: cartItems,
           address: address,
         })
       }).then(res => {
@@ -109,7 +107,7 @@ const ShippingForm = ({
     }
 
     createRates()
-  }, [pid, address, customer, cartDetails])
+  }, [address, customer])
 
   const setShippingInfo = async () => {
 
@@ -131,12 +129,36 @@ const ShippingForm = ({
       }
 
       setAuthKey(data.authKey)
-      calculateTaxes()
+      createTax()
     }).catch(error => {
       setProcessing(false)
       toast.error(error)
     })
   }
+
+  const createTax = async () => {
+    await fetch("/.netlify/functions/create-tax", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartItems: cartItems,
+        address: address,
+        shippingRate: selectedRate.rate,
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+    }).catch(error => {
+      setProcessing(false)
+      toast.error(error)
+    })
+  }
+
 
   // calculate taxes for customers in New York
   const calculateTaxes = async () => {

@@ -22,7 +22,6 @@ import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 import Content from "../components/ui/Content"
 
-
 const Checkout = () => {
   const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
   const { cartDetails, totalPrice, clearCart } = useShoppingCart()
@@ -307,6 +306,7 @@ const Checkout = () => {
                             <ShippingForm
                               activeTab={activeTab}
                               address={address}
+                              cartItems={cartItems}
                               customer={customer}
                               selectedRate={selectedRate}
                               setActiveTab={setActiveTab}

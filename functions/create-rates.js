@@ -1,4 +1,3 @@
-const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 const easypostApi = require('@easypost/api');
 const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
@@ -20,19 +19,14 @@ function calculateTotalWeight(cartItems) {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, cartItems, address } = body;
-  let cartItemsArray = [];
-
-  for (const cartItem in cartItems) {
-    cartItemsArray.push(cartItems[cartItem])
-  };
+  const { cartItems, address } = body;
 
   // physical package size
   const parcel = await easypost.Parcel.create({
     width: 9,
     length: 6,
     height: 2,
-    weight: calculateTotalWeight(cartItemsArray),  // assumption that there is only one product
+    weight: calculateTotalWeight(cartItems),  // assumption that there is only one product
   });
 
   // create a new easypost Shipment object
