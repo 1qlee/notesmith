@@ -17,24 +17,51 @@ const calcOrderAmount = async (cartItems) => {
   return totalAmount;
 };
 
+const parseCartItems = (cartItems) => {
+  const parsedCartItems = cartItems.map(item => {
+    return {
+      amount: item.value,
+      reference: item.id,
+    }
+  })
+
+  return parsedCartItems
+}
+
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { cartItems, address, shippingRate } = body;
 
-  const calculateTax = await stripe.tax.calculations.create({
-    currency: 'usd',
-    line_items: [
-      {
-        amount: await calcOrderAmount(cartItems),
-        reference: "L1",
-      }
-    ],
-    customer_details: {
-      address: address,
-      address_source: 'shipping',
-    },
-    expand: ['line_items.data.tax_breakdown'],
-  })
+  try {
+    const calculateTax = await stripe.tax.calculations.create({
+      currency: 'usd',
+      line_items: parseCartItems(cartItems),
+      customer_details: {
+        address: address,
+        address_source: 'shipping',
+      },
+      shipping_cost: {
+        amount: shippingRate.rate,
+      },
+      expand: ['line_items.data.tax_breakdown'],
+    })
 
-  console.log(calculateTax)
+    const totalTax = calculateTax.tax_breakdown[0]
+    console.log("[Stripe] Tax calculated successfully. Tax breakdown: ", totalTax)
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        totalTax: totalTax,
+      }),
+    }
+  } catch(error) {
+    console.error("[Stripe] Error calculating tax: ", error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        totalTax: 0,
+      })
+    }
+  }
 }

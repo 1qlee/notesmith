@@ -31,6 +31,7 @@ const Checkout = () => {
   for (const cartItem in cartDetails) {
     cartItems.push(cartDetails[cartItem])
   }
+  console.log(cartItems)
   const [activeTab, setActiveTab] = useState({
     index: 1,
     heading: "Shipping Address",
@@ -78,7 +79,7 @@ const Checkout = () => {
       }
     ],
     appearance: {
-      theme: "minimal",
+      theme: "stripe",
       variables: {
         fontFamily: fonts.secondary,
         fontWeightNormal: "400",

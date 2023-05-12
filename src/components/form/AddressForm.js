@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Link } from "gatsby"
 import { colors, regex } from "../../styles/variables"
 import { ArrowLeft, CircleNotch } from "phosphor-react"
@@ -26,35 +26,23 @@ function AddressForm({
   const [addressElementLoaded, setAddressElementLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
-  const [addressOptions, setAddressOptions] = useState({
+  const addressOptions = {
     mode: "shipping",
     autocomplete: {
       mode: "automatic",
     },
-  })
-  
-  useEffect(() => {
-    if (addressElementLoaded) {
-      console.log(address)
-      setAddressOptions({
-        ...addressOptions,
-        defaultValues: {
-          name: customer.name,
-          address: {
-            line1: address.line1,
-            line2: address.line2,
-            city: address.city,
-            state: address.state,
-            postal_code: address.postal_code,
-            country: address.country || 'US',
-          },
-        },
-      })
-      console.log(addressOptions)
-    }
-
-    console.log(addressOptions)
-  }, [address, addressElementLoaded, customer])
+    defaultValues: {
+      name: customer.name,
+      address: {
+        line1: address.line1,
+        line2: address.line2,
+        city: address.city,
+        state: address.state,
+        postal_code: address.postal_code,
+        country: address.country || 'US',
+      },
+    },
+  }
 
   async function validateAddress(address) {
     // validate the user's inputted address using easypost's API

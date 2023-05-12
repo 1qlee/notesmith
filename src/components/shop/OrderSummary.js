@@ -52,8 +52,7 @@ function OrderSummary({
     let calculatedPrice = totalPrice
 
     if (selectedRate) {
-      const formattedRate = parseFloat(selectedRate.rate * 100)
-      calculatedPrice += formattedRate
+      calculatedPrice += parseFloat(selectedRate.rate)
     }
     if (taxRate) {
       calculatedPrice += parseFloat(taxRate)
@@ -125,7 +124,7 @@ function OrderSummary({
           >
             <p>Shipping</p>
             {selectedRate ? (
-              <p>${selectedRate.rate}</p>
+              <p>${convertToDecimal(selectedRate.rate, 2)}</p>
             ) : (
               <p>---</p>
             )}

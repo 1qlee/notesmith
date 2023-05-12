@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
-import { colors, fonts } from "../../styles/variables"
+import { colors, convertToDecimal, fonts } from "../../styles/variables"
 import { CircleNotch, ArrowLeft } from "phosphor-react"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -137,6 +137,8 @@ const ShippingForm = ({
   }
 
   const createTax = async () => {
+    console.log(selectedRate)
+    setLoading(true)
     await fetch("/.netlify/functions/create-tax", {
       method: "POST",
       headers: {
@@ -145,7 +147,7 @@ const ShippingForm = ({
       body: JSON.stringify({
         cartItems: cartItems,
         address: address,
-        shippingRate: selectedRate.rate,
+        shippingRate: selectedRate,
       })
     }).then(res => {
       return res.json()
@@ -153,6 +155,9 @@ const ShippingForm = ({
       if (data.error) {
         throw data.error
       }
+
+      setTaxRate(data.totalTax.amount)
+      setLoading(false)
     }).catch(error => {
       setProcessing(false)
       toast.error(error)
@@ -324,8 +329,9 @@ const ShippingForm = ({
                 color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
                 backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
                 fontfamily={fonts.secondary}
+                fontsize="0.875rem"
               >
-                ${shippingRate.rate}
+                ${convertToDecimal(shippingRate.rate, 2)}
               </Tag>
             </Flexbox>
           </ShippingItem>

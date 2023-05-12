@@ -58,18 +58,18 @@ exports.handler = async (event) => {
     const shipmentId = newShipment.id;
     const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
     const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
-    const formattedRate = roundedRate.toFixed(2)
+    const formattedRate = roundedRate * 100
 
-    const priorityRateRounded = {
+    const formattedPriorityRate = {
       ...priorityRate[0],
-      rate: formattedRate
+      rate: formattedRate,
     }
 
     console.log("[Netlify] Successfully created and returned shipping rates to the user.");
     return {
       statusCode: 200,
       body: JSON.stringify({
-        rate: priorityRateRounded,
+        rate: formattedPriorityRate,
         shipmentId: shipmentId,
       })
     };
