@@ -121,7 +121,7 @@ function BooksContainer({
       <Flexbox
         flex="flex"
         alignitems="center"
-        margin="0 0 16px"
+        margin="16px 0"
       >
         <Button
           color={colors.gray.oneHundred}
@@ -148,7 +148,7 @@ function BooksContainer({
             <th>Date created</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{position: 'relative'}}>
           {userBooks && userBooks.map(book => (
             <tr
               data-title={book.title}

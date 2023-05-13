@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
@@ -14,25 +14,30 @@ import TextLink from "../ui/TextLink"
 
 function CheckoutForm({
   address,
-  customer,
   clearCart,
   cartItems,
+  customer,
   pid,
-  processing,
+  loading,
   setActiveTab,
-  setClientSecret,
   setPaymentProcessing,
-  setProcessing,
+  setLoading,
   setShippingMethod,
   setShowShippingMethod,
   shippingMethod,
 }) {
   const stripe = useStripe()
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [focused, setFocused] = useState(false)
   const { firebaseDb } = useFirebaseContext()
-  const elements = useElements()
+  const paymentOptions = {
+    defaultValues: {
+      billingDetails: {
+        email: customer.email,
+        name: customer.name,
+      }
+    }
+  }
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -69,8 +74,8 @@ function CheckoutForm({
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
     e.preventDefault()
-    // show processing UI state
-    setProcessing(true)
+    // show loading UI state
+    setLoading(true)
 
     // send the payment details to Stripe
     await stripe.confirmPayment({
@@ -97,7 +102,7 @@ function CheckoutForm({
       purchaseShippingLabel(paymentInfo)
     }).catch(error => {
       setError(error.message)
-      setProcessing(false)
+      setLoading(false)
     })
   }
 
@@ -172,6 +177,7 @@ function CheckoutForm({
       <PaymentElement
         id="card-element"
         onChange={handleChange}
+        options={paymentOptions}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
@@ -195,7 +201,7 @@ function CheckoutForm({
           alignitems="flex-end"
           onClick={() => {
             setActiveTab(1)
-            setProcessing(false)
+            setLoading(false)
             setShowShippingMethod(true)
             setShippingMethod(null)
           }}
@@ -207,15 +213,15 @@ function CheckoutForm({
         </TextLink>
         <Button
           backgroundcolor={colors.gray.nineHundred}
-          className={processing ? "is-loading" : null}
+          className={loading ? "is-loading" : null}
           color={colors.white}
-          disabled={error || processing}
+          disabled={error || loading}
           form="checkout-payment-form"
           id="submit"
           padding="1rem"
           width="200px"
         >
-          {processing ? (
+          {loading ? (
             <Icon>
               <CircleNotch size="1rem" color={colors.white} />
             </Icon>

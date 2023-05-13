@@ -3,12 +3,11 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { paymentId, address, name, email } = body;
-  console.log(paymentId)
+  const { pid, address, name, email } = body;
 
   try {
     await stripe.paymentIntents.update(
-      paymentId,
+      pid,
       {
         shipping: {
           name: name,
@@ -17,6 +16,8 @@ exports.handler = async (event) => {
         receipt_email: email,
       }
     )
+
+    console.log("[Stripe] Address updated successfully.")
 
     return {
       statusCode: 200,

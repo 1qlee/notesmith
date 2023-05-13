@@ -19,7 +19,7 @@ const calcOrderAmount = async (cartItems) => {
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { cartItems, paymentId, email } = body;
+  const { cartItems, pid, email } = body;
   const shipping = body.address;
   let paymentIntent;
 
@@ -40,11 +40,11 @@ exports.handler = async (event) => {
     // save subtotal
     const subtotal = await calcOrderAmount(cartItems);
     // if a pid already exists
-    if (paymentId) {
-      console.log(`[Stripe] Updating existing paymentIntent: ${paymentId}`);
+    if (pid) {
+      console.log(`[Stripe] Updating existing paymentIntent: ${pid}`);
       // update the existing paymentIntent
       paymentIntent = await stripe.paymentIntents.update(
-        paymentId,
+        pid,
         {
           amount: subtotal,
           shipping: shipping,
@@ -74,7 +74,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        paymentId: paymentIntent.id,
+        pid: paymentIntent.id,
         clientSecret: paymentIntent.client_secret
       })
     }

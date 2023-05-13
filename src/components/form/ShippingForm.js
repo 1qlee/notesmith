@@ -57,7 +57,7 @@ const ShippingForm = ({
   address,
   cartItems,
   customer,
-  processing,
+  pid,
   selectedRate,
   setActiveTab,
   setAuthKey,
@@ -72,7 +72,6 @@ const ShippingForm = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [shippingRate, setShippingRate] = useState({})
-  const pid = localStorage.getItem("pid")
 
   useEffect(() => {
     // fetch the shipping rate based on the user's address
@@ -110,7 +109,6 @@ const ShippingForm = ({
   }, [address, customer])
 
   const setShippingInfo = async () => {
-
     await fetch("/.netlify/functions/set-shipping-info", {
       method: "post",
       headers: {
@@ -138,13 +136,13 @@ const ShippingForm = ({
 
   const createTax = async () => {
     console.log(selectedRate)
-    setLoading(true)
     await fetch("/.netlify/functions/create-tax", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        pid: pid,
         cartItems: cartItems,
         address: address,
         shippingRate: selectedRate,
@@ -157,96 +155,101 @@ const ShippingForm = ({
       }
 
       setTaxRate(data.totalTax.amount)
+      setActiveTab({
+        index: 3,
+        text: "Please enter your payment information below.",
+        heading: "Payment information"
+      })
       setLoading(false)
     }).catch(error => {
-      setProcessing(false)
+      setLoading(false)
       toast.error(error)
     })
   }
 
 
   // calculate taxes for customers in New York
-  const calculateTaxes = async () => {
-    // check if customer's shipping address' state is New York
-    if (address.state === "New York") {
-      await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address.line1} ${address.line2} ${address.city} ${address.state} ${address.postal_code}.json?country=${address.country}&proximity=ip&types=address&access_token=${process.env.GATSBY_MAPBOX_ACCESS_API}`)
-      .then(res => {
-        return res.json()
-      }).then(data => {
-        // find the array that holds county level info
-        const countyInfo = data.features[0].context.find(elem => elem.id.slice(0,8) === "district")
-        const countyName = countyInfo.text
+  // const calculateTaxes = async () => {
+  //   // check if customer's shipping address' state is New York
+  //   if (address.state === "New York") {
+  //     await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address.line1} ${address.line2} ${address.city} ${address.state} ${address.postal_code}.json?country=${address.country}&proximity=ip&types=address&access_token=${process.env.GATSBY_MAPBOX_ACCESS_API}`)
+  //     .then(res => {
+  //       return res.json()
+  //     }).then(data => {
+  //       // find the array that holds county level info
+  //       const countyInfo = data.features[0].context.find(elem => elem.id.slice(0,8) === "district")
+  //       const countyName = countyInfo.text
 
-        fetchTax(countyName)
-      }).then(() => {
-        setProcessing(false)
-        setActiveTab(2)
-      }).catch(err => {
-        console.log(err)
-      })
-    }
-    else {
-      // set tax to zero
-      setZeroTax()
-      setProcessing(false)
-      setActiveTab(2)
-    }
-  }
+  //       fetchTax(countyName)
+  //     }).then(() => {
+  //       setProcessing(false)
+  //       setActiveTab(2)
+  //     }).catch(err => {
+  //       console.log(err)
+  //     })
+  //   }
+  //   else {
+  //     // set tax to zero
+  //     setZeroTax()
+  //     setProcessing(false)
+  //     setActiveTab(2)
+  //   }
+  // }
 
-  const fetchTax = async (countyName) => {
-    await fetch("/.netlify/functions/create-tax", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        county: countyName,
-      })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
-      if (data.error) {
-        throw data.error
-      }
+  // const fetchTax = async (countyName) => {
+  //   await fetch("/.netlify/functions/create-tax", {
+  //     method: "post",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       pid: pid, // need pid from localStorage to update the corresponding paymentIntent
+  //       county: countyName,
+  //     })
+  //   }).then(res => {
+  //     return res.json()
+  //   }).then(data => {
+  //     if (data.error) {
+  //       throw data.error
+  //     }
 
-      setTaxRate(data.tax)
-    }).catch(error => {
-      setProcessing(false)
-      toast.error(error)
-    })
-  }
+  //     setTaxRate(data.tax)
+  //   }).catch(error => {
+  //     setProcessing(false)
+  //     toast.error(error)
+  //   })
+  // }
 
-  const setZeroTax = async () => {
-    await fetch("/.netlify/functions/set-zero-tax", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-      })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
-      if (data.error) {
-        throw data.error
-      }
+  // const setZeroTax = async () => {
+  //   await fetch("/.netlify/functions/set-zero-tax", {
+  //     method: "post",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       pid: pid, // need pid from localStorage to update the corresponding paymentIntent
+  //     })
+  //   }).then(res => {
+  //     return res.json()
+  //   }).then(data => {
+  //     if (data.error) {
+  //       throw data.error
+  //     }
 
-      setTaxRate(0)
-    }).catch(error => {
-      setProcessing(false)
-      toast.error(error)
-    })
-  }
+  //     setTaxRate(0)
+  //   }).catch(error => {
+  //     setProcessing(false)
+  //     toast.error(error)
+  //   })
+  // }
 
   // handles the submit of shipping rate
   const submitShippingInfo = () => {
-    setProcessing(true)
+    setLoading(true)
 
     if (!shippingMethod) {
       toast.error("Please select a shipping method")
-      setProcessing(false)
+      setLoading(false)
     }
     else {
       setShippingInfo()
@@ -363,19 +366,19 @@ const ShippingForm = ({
           <span>Back to address</span>
         </TextLink>
         <Button
-          disabled={!shippingMethod || processing}
+          disabled={!shippingMethod || loading}
           id="submit"
           backgroundcolor={colors.gray.nineHundred}
           color={colors.white}
-          className={processing ? "is-loading" : null}
-          padding="1rem"
+          className={loading ? "is-loading" : null}
+          padding="16px"
           form="checkout-shipping-form"
           onClick={() => submitShippingInfo()}
           width="200px"
         >
-        {processing ? (
+        {loading ? (
           <Icon>
-            <CircleNotch size="1rem" color={colors.white} />
+            <CircleNotch size={16} color={colors.white} />
           </Icon>
         ) : (
           "Continue to checkout"

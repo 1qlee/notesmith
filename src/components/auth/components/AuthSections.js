@@ -10,9 +10,6 @@ const AuthSection = styled.div`
 const AuthContentBox = styled.div`
   width: 100%;
   min-height: calc(100vh - 120px);
-  border: ${colors.borders.black};
-  border-top-width: 0;
-  padding: 16px;
   margin-bottom: 16px;
 `
 

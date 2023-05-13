@@ -1,22 +1,5 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
-// calculate total order amount using inventory data
-const calcOrderAmount = async (cartItems) => {
-  let totalAmount = 0;
-  // iterate through all cart items in cart
-  for (let i = 0; i < cartItems.length; i++) {
-    const { quantity, price_id } = cartItems[i];
-    // retrieve product from stripe by using id
-    const stripeProduct = await stripe.prices.retrieve(price_id);
-
-    totalAmount += stripeProduct.unit_amount * quantity;
-  }
-
-  console.log(`[Stripe] The total taxable amount for this order is: ${totalAmount}.`);
-
-  return totalAmount;
-};
-
 const parseCartItems = (cartItems) => {
   const parsedCartItems = cartItems.map(item => {
     return {
@@ -30,7 +13,7 @@ const parseCartItems = (cartItems) => {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { cartItems, address, shippingRate } = body;
+  const { pid, cartItems, address, shippingRate } = body;
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
@@ -47,7 +30,18 @@ exports.handler = async (event) => {
     })
 
     const totalTax = calculateTax.tax_breakdown[0]
-    console.log("[Stripe] Tax calculated successfully. Tax breakdown: ", totalTax)
+
+    await stripe.paymentIntents.update(
+      pid,
+      {
+        metadata: {
+          tax: totalTax.amount,
+          taxId: calculateTax.id,
+        }
+      }
+    )
+
+    console.log("[Stripe] Tax calculated successfully.", calculateTax)
 
     return {
       statusCode: 200,

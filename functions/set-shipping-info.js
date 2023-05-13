@@ -14,7 +14,7 @@ exports.handler = async (event) => {
   // usershipment.rates is an array containing all rate objects
   console.log(`[Netlify] Finding user's selected rate from all shipment's rates: ${rateId}`);
   const userRate = userShipment.rates.find(rate => rate.id === rateId);
-  const shippingRate = Math.round(userRate.rate * 100);
+  const shippingCost = ((Math.ceil(userRate.rate) * 100) / 100) * 100;
   const shippingRateId = userRate.id;
   const shippingRateCarrier = userRate.carrier;
   // get subtotal from paymentIntent
@@ -26,11 +26,11 @@ exports.handler = async (event) => {
      await stripe.paymentIntents.update(
        pid,
        {
-         amount: subtotal + shippingRate,
+         amount: subtotal + shippingCost,
          metadata: {
            shipmentId: shipmentId,
            rateId: shippingRateId,
-           shippingRate: shippingRate,
+           shipping: shippingCost,
            carrier: shippingRateCarrier,
            authKey: `${authKey}`
          }

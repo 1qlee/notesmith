@@ -82,7 +82,7 @@ function AddressForm({
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        paymentId: pid,
+        pid: pid,
         address: address,
         name: customer.name,
         email: customer.email,

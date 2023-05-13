@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { navigate } from "gatsby"
 import { colors, fonts, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
@@ -31,15 +31,14 @@ const Checkout = () => {
   for (const cartItem in cartDetails) {
     cartItems.push(cartDetails[cartItem])
   }
-  console.log(cartItems)
   const [activeTab, setActiveTab] = useState({
     index: 1,
     heading: "Shipping Address",
     text: "Please enter your shipping information below to continue."
   })
-  const [clientSecret, setClientSecret] = useState("")
   const [processing, setProcessing] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [clientSecret, setClientSecret] = useState("")
   const [addressError, setAddressError] = useState("")
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [authKey, setAuthKey] = useState(null)
@@ -69,10 +68,7 @@ const Checkout = () => {
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
   const pid = localStorage.getItem("pid")
   const elementsOptions = {
-    mode: "payment",
-    currency: "usd",
-    captureMethod: "manual",
-    amount: totalPrice,
+    clientSecret: clientSecret,
     fonts: [
       {
         cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,700"
@@ -149,6 +145,8 @@ const Checkout = () => {
         const { isPaymentPaid } = data
         const { shipping, client_secret } = data.paymentIntent
 
+        setClientSecret(client_secret)
+
         // if this pid is old (aka paid already), remove it from localStorage
         if (isPaymentPaid) {
           localStorage.removeItem("pid")
@@ -158,7 +156,6 @@ const Checkout = () => {
         }
         else {
           setLoading(false)
-          setClientSecret(client_secret)
 
           // if shipping information exists, fill the form
           if (shipping) {
@@ -196,7 +193,7 @@ const Checkout = () => {
           throw data.error
         }
 
-        const pid = data.paymentId
+        const pid = data.pid
         setClientSecret(data.clientSecret)
         localStorage.setItem('pid', pid)
         setLoading(false)
@@ -255,124 +252,129 @@ const Checkout = () => {
   }
 
   return (
-    <Elements
-      stripe={stripePromise}
-      options={elementsOptions}
-    >
-      <Layout loading={loading}>
-        <Seo title="Checkout" />
-        <Nav />
-        {!paymentProcessing ? (
-          <SectionMain className="has-max-height">
-            <Section>
-              <SectionContent padding={`${spacing.large} 0`}>
-                <Container xs sm md lg xl>
-                  {serverError.show ? (
-                    <Flexbox
-                      flex="flex"
-                      alignitems="center"
-                      justifycontent="center"
-                      width="100%"
-                      height="100%"
-                    >
-                      {serverError.msg}
-                    </Flexbox>
-                  ) : (
-                    <Row>
-                      <Col sm={8}>
-                        <Box
-                          width="600px"
+    <>
+      {clientSecret && (
+        <Elements
+          stripe={stripePromise}
+          options={elementsOptions}
+        >
+          <Layout loading={loading}>
+            <Seo title="Checkout" />
+            <Nav />
+            {!paymentProcessing ? (
+              <SectionMain className="has-max-height">
+                <Section>
+                  <SectionContent padding={`${spacing.large} 0`}>
+                    <Container xs sm md lg xl>
+                      {serverError.show ? (
+                        <Flexbox
+                          flex="flex"
+                          alignitems="center"
+                          justifycontent="center"
+                          width="100%"
+                          height="100%"
                         >
-                          <Content
-                            margin="0 0 32px"
-                          >
-                            <h3>{activeTab.heading}</h3>
-                            <p>{activeTab.text}</p>
-                          </Content>
-                          {activeTab.index === 1 && (
-                            <AddressForm
-                              activeTab={activeTab}
-                              address={address}
-                              customer={customer}
-                              pid={pid}
-                              setActiveTab={setActiveTab}
-                              setAddress={setAddress}
-                              setAddressError={setAddressError}
-                              setCustomer={setCustomer}
-                              setShowModal={setShowModal}
-                              toast={toast}
-                            />
-                          )}
-                          {activeTab.index === 2 && (
-                            <ShippingForm
-                              activeTab={activeTab}
-                              address={address}
+                          {serverError.msg}
+                        </Flexbox>
+                      ) : (
+                        <Row>
+                          <Col sm={8}>
+                            <Box
+                              width="600px"
+                            >
+                              <Content
+                                margin="0 0 32px"
+                              >
+                                <h3>{activeTab.heading}</h3>
+                                <p>{activeTab.text}</p>
+                              </Content>
+                              {activeTab.index === 1 && (
+                                <AddressForm
+                                  activeTab={activeTab}
+                                  address={address}
+                                  customer={customer}
+                                  pid={pid}
+                                  setActiveTab={setActiveTab}
+                                  setAddress={setAddress}
+                                  setAddressError={setAddressError}
+                                  setCustomer={setCustomer}
+                                  setShowModal={setShowModal}
+                                  toast={toast}
+                                />
+                              )}
+                              {activeTab.index === 2 && (
+                                <ShippingForm
+                                  activeTab={activeTab}
+                                  address={address}
+                                  cartItems={cartItems}
+                                  customer={customer}
+                                  pid={pid}
+                                  selectedRate={selectedRate}
+                                  setActiveTab={setActiveTab}
+                                  setAddress={setAddress}
+                                  setAuthKey={setAuthKey}
+                                  setProcessing={setProcessing}
+                                  setSelectedRate={setSelectedRate}
+                                  setShipmentId={setShipmentId}
+                                  setShippingMethod={setShippingMethod}
+                                  setTaxRate={setTaxRate}
+                                  shipmentId={shipmentId}
+                                  shippingMethod={shippingMethod}
+                                  toast={toast}
+                                />
+                              )}
+                              {activeTab.index === 3 && (
+                                <CheckoutForm
+                                  activeTab={activeTab}
+                                  address={address}
+                                  customer={customer}
+                                  clearCart={clearCart}
+                                  cartItems={cartItems}
+                                  pid={pid}
+                                  selectedRate={selectedRate}
+                                  setActiveTab={setActiveTab}
+                                  setLoading={setLoading}
+                                  setPaymentProcessing={setPaymentProcessing}
+                                  setShippingMethod={setShippingMethod}
+                                  shipmentId={shipmentId}
+                                  shippingMethod={shippingMethod}
+                                  taxRate={taxRate}
+                                />
+                              )}
+                            </Box>
+                          </Col>
+                          <Col sm={4}>
+                            <OrderSummary
                               cartItems={cartItems}
-                              customer={customer}
+                              hideButton={true}
                               selectedRate={selectedRate}
-                              setActiveTab={setActiveTab}
-                              setAddress={setAddress}
-                              setAuthKey={setAuthKey}
-                              setProcessing={setProcessing}
-                              setSelectedRate={setSelectedRate}
-                              setShipmentId={setShipmentId}
-                              setShippingMethod={setShippingMethod}
-                              setTaxRate={setTaxRate}
-                              shipmentId={shipmentId}
-                              shippingMethod={shippingMethod}
-                              toast={toast}
-                            />
-                          )}
-                          {activeTab.index === 3 && (
-                            <CheckoutForm
-                              activeTab={activeTab}
-                              address={address}
-                              customer={customer}
-                              clearCart={clearCart}
-                              cartItems={cartItems}
-                              pid={pid}
-                              selectedRate={selectedRate}
-                              setActiveTab={setActiveTab}
-                              setLoading={setLoading}
-                              setPaymentProcessing={setPaymentProcessing}
-                              setShippingMethod={setShippingMethod}
-                              shipmentId={shipmentId}
-                              shippingMethod={shippingMethod}
                               taxRate={taxRate}
+                              totalPrice={totalPrice}
                             />
-                          )}
-                        </Box>
-                      </Col>
-                      <Col sm={4}>
-                        <OrderSummary
-                          cartItems={cartItems}
-                          hideButton={true}
-                          selectedRate={selectedRate}
-                          taxRate={taxRate}
-                          totalPrice={totalPrice}
-                        />
-                      </Col>
-                    </Row>
-                  )}
-                </Container>
-              </SectionContent>
-            </Section>
-          </SectionMain>
-        ) : (
-          <Loader msg="Processing payment... Do not refresh or close this page!" />
-        )}
-        <Toastify />
-        {showModal.show && (
-          <ValidateAddressModal
-            address={address}
-            addressError={addressError}
-            forceShippingSubmit={forceShippingSubmit}
-            processing={processing}
-            setShowModal={setShowModal}
-          />
-        )}
-      </Layout>
-    </Elements>
+                          </Col>
+                        </Row>
+                      )}
+                    </Container>
+                  </SectionContent>
+                </Section>
+              </SectionMain>
+            ) : (
+              <Loader msg="Processing payment... Do not refresh or close this page!" />
+            )}
+            <Toastify />
+            {showModal.show && (
+              <ValidateAddressModal
+                address={address}
+                addressError={addressError}
+                forceShippingSubmit={forceShippingSubmit}
+                processing={processing}
+                setShowModal={setShowModal}
+              />
+            )}
+          </Layout>
+        </Elements>
+      )}
+    </>
   )
 }
 
