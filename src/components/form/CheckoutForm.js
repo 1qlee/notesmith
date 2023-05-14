@@ -19,12 +19,8 @@ function CheckoutForm({
   customer,
   pid,
   loading,
-  setActiveTab,
   setPaymentProcessing,
   setLoading,
-  setShippingMethod,
-  setShowShippingMethod,
-  shippingMethod,
 }) {
   const stripe = useStripe()
   const [error, setError] = useState(null)
@@ -164,16 +160,6 @@ function CheckoutForm({
       onSubmit={submitPaymentForm}
       id="checkout-payment-form"
     >
-      <ShippingInfo
-        address={address}
-        customer={customer}
-        setActiveTab={setActiveTab}
-        shippingMethod={shippingMethod}
-        setShowShippingMethod={setShowShippingMethod}
-      />
-      <StyledFieldset>
-        <StyledLabel htmlFor="card-element">Card Information</StyledLabel>
-      </StyledFieldset>
       <PaymentElement
         id="card-element"
         onChange={handleChange}
@@ -192,25 +178,10 @@ function CheckoutForm({
       )}
       <Flexbox
         flex="flex"
-        justifycontent="space-between"
+        justifycontent="flex-end"
         alignitems="center"
         margin="2rem 0 0"
       >
-        <TextLink
-          className="has-icon"
-          alignitems="flex-end"
-          onClick={() => {
-            setActiveTab(1)
-            setLoading(false)
-            setShowShippingMethod(true)
-            setShippingMethod(null)
-          }}
-        >
-          <Icon>
-            <ArrowLeft size="1rem" />
-          </Icon>
-          <span>Edit shipping</span>
-        </TextLink>
         <Button
           backgroundcolor={colors.gray.nineHundred}
           className={loading ? "is-loading" : null}

@@ -1,16 +1,19 @@
 import React, { useEffect, useState, useMemo } from "react"
 import { navigate } from "gatsby"
-import { colors, fonts, spacing } from "../styles/variables"
+import { colors, fonts, spacing, convertToDecimal } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "use-shopping-cart"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
+import { useCollapse } from "react-collapsed"
 
+import { AccordionTab } from "../components/checkout/Accordion"
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { OrderSummary } from "../components/shop/OrderSummary"
 import Box from "../components/ui/Box"
+import Breadcrumb from "../components/ui/Breadcrumb"
 import CheckoutForm from "../components/form/CheckoutForm"
 import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
@@ -20,10 +23,10 @@ import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
-import Content from "../components/ui/Content"
+
+const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
 const Checkout = () => {
-  const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
   const { cartDetails, totalPrice, clearCart } = useShoppingCart()
   // array to store cartItems
   const cartItems = []
@@ -31,6 +34,23 @@ const Checkout = () => {
   for (const cartItem in cartDetails) {
     cartItems.push(cartDetails[cartItem])
   }
+  const breadcrumbItems = [
+    {
+      text: "Cart",
+      path: "/cart",
+      index: 0,
+    },
+    {
+      text: "Checkout",
+      path: "/checkout",
+      index: 1,
+    }
+  ]
+  const [activeAccordionTab, setActiveAccordionTab] = useState("shipping")
+  const [shippingValidated, setShippingValidated] = useState(false)
+  const [methodValidated, setMethodValidated] = useState(false)
+  const [isExpanded, setExpanded] = useState(false)
+  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
   const [activeTab, setActiveTab] = useState({
     index: 1,
     heading: "Shipping Address",
@@ -115,7 +135,7 @@ const Checkout = () => {
     }
   }
 
-  // if the cart is empty, redirect the user to cart
+  // if the cart is empty, redirect the user to /cart
   if (isCartEmpty) {
     navigate("/cart", { replace: true })
   }
@@ -282,37 +302,56 @@ const Checkout = () => {
                             <Box
                               width="600px"
                             >
-                              <Content
-                                margin="0 0 32px"
+                              <Breadcrumb 
+                                items={breadcrumbItems}
+                              />
+                              <AccordionTab
+                                activeAccordionTab={activeAccordionTab}
+                                onClick={setActiveAccordionTab}
+                                prereq={true}
+                                summaries={[
+                                  customer.email,
+                                  customer.name,
+                                  `${address.line1 || ""} ${address.line2 || ""}, ${address.city || ""}, ${address.state || ""} ${address.postal_code || ""}, ${address.country || ""}`
+                                ]}
+                                tabName="shipping"
+                                text="Shipping information"
                               >
-                                <h3>{activeTab.heading}</h3>
-                                <p>{activeTab.text}</p>
-                              </Content>
-                              {activeTab.index === 1 && (
                                 <AddressForm
-                                  activeTab={activeTab}
                                   address={address}
                                   customer={customer}
                                   pid={pid}
-                                  setActiveTab={setActiveTab}
+                                  setShippingValidated={setShippingValidated}
+                                  setActiveAccordionTab={setActiveAccordionTab}
                                   setAddress={setAddress}
                                   setAddressError={setAddressError}
                                   setCustomer={setCustomer}
                                   setShowModal={setShowModal}
                                   toast={toast}
                                 />
-                              )}
-                              {activeTab.index === 2 && (
+                              </AccordionTab>
+                              <AccordionTab
+                                activeAccordionTab={activeAccordionTab}
+                                onClick={setActiveAccordionTab}
+                                prereq={shippingValidated}
+                                summaries={[
+                                  `${selectedRate && selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
+                                  `$${selectedRate && convertToDecimal(selectedRate.rate, 2)}`
+                                ]}
+                                tabName="method"
+                                text="Shipping method"
+                              >
                                 <ShippingForm
-                                  activeTab={activeTab}
+                                  activeAccordionTab={activeAccordionTab}
                                   address={address}
                                   cartItems={cartItems}
                                   customer={customer}
                                   pid={pid}
                                   selectedRate={selectedRate}
-                                  setActiveTab={setActiveTab}
+                                  setActiveAccordionTab={setActiveAccordionTab}
                                   setAddress={setAddress}
                                   setAuthKey={setAuthKey}
+                                  setMethodValidated={setMethodValidated}
                                   setProcessing={setProcessing}
                                   setSelectedRate={setSelectedRate}
                                   setShipmentId={setShipmentId}
@@ -322,15 +361,21 @@ const Checkout = () => {
                                   shippingMethod={shippingMethod}
                                   toast={toast}
                                 />
-                              )}
-                              {activeTab.index === 3 && (
+                              </AccordionTab>
+                              <AccordionTab
+                                tabName="payment"
+                                text="Payment information"
+                                prereq={methodValidated}
+                                onClick={setActiveAccordionTab}
+                                activeAccordionTab={activeAccordionTab}
+                              >
                                 <CheckoutForm
-                                  activeTab={activeTab}
                                   address={address}
                                   customer={customer}
                                   clearCart={clearCart}
                                   cartItems={cartItems}
                                   pid={pid}
+                                  setActiveAccordionTab={setActiveAccordionTab}
                                   selectedRate={selectedRate}
                                   setActiveTab={setActiveTab}
                                   setLoading={setLoading}
@@ -340,7 +385,7 @@ const Checkout = () => {
                                   shippingMethod={shippingMethod}
                                   taxRate={taxRate}
                                 />
-                              )}
+                              </AccordionTab>
                             </Box>
                           </Col>
                           <Col sm={4}>

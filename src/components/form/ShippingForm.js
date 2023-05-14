@@ -53,21 +53,22 @@ const ShippingItem = styled(Flexbox)`
 `
 
 const ShippingForm = ({
-  activeTab,
+  activeAccordionTab,
   address,
   cartItems,
   customer,
   pid,
   selectedRate,
-  setActiveTab,
+  setActiveAccordionTab,
   setAuthKey,
+  setMethodValidated,
   setProcessing,
   setSelectedRate,
   setShipmentId,
-  shippingMethod,
   setShippingMethod,
   setTaxRate,
   shipmentId,
+  shippingMethod,
   toast,
 }) => {
   const [loading, setLoading] = useState(false)
@@ -105,8 +106,10 @@ const ShippingForm = ({
       })
     }
 
-    createRates()
-  }, [address, customer])
+    if (activeAccordionTab === "method") {
+      createRates()
+    }
+  }, [address, customer, activeAccordionTab])
 
   const setShippingInfo = async () => {
     await fetch("/.netlify/functions/set-shipping-info", {
@@ -155,11 +158,8 @@ const ShippingForm = ({
       }
 
       setTaxRate(data.totalTax.amount)
-      setActiveTab({
-        index: 3,
-        text: "Please enter your payment information below.",
-        heading: "Payment information"
-      })
+      setActiveAccordionTab("payment")
+      setMethodValidated(true)
       setLoading(false)
     }).catch(error => {
       setLoading(false)
@@ -257,135 +257,104 @@ const ShippingForm = ({
   }
 
   return (
-    <ShippingInfoContainer>
-      <ShippingInfo
-        activeTab={activeTab}
-        address={address}
-        customer={customer}
-        setActiveTab={setActiveTab}
-        shippingMethod={shippingMethod}
-      />
-      <Content
-        headingfontfamily={fonts.secondary}
-        h3fontsize="0.875rem"
-        h3margin="0"
-        margin="0 0 1rem 0"
-      >
-        <h3>Shipping method (select one)</h3>
-      </Content>
-      <ShippingItemsContainer>
-        {loading && (
-          <ShippingItem
-            className="is-loading"
-            justifycontent="flex-start"
+    <>
+      {activeAccordionTab === "method" && (
+        <ShippingInfoContainer>
+          <ShippingItemsContainer>
+            {loading && (
+              <ShippingItem
+                className="is-loading"
+                justifycontent="flex-start"
+                alignitems="center"
+                padding="1rem"
+                flex="flex"
+              >
+                <Icon margin="0 0.5rem 0 0">
+                  <CircleNotch className="is-loading" size="1.25rem" color={colors.gray.sixHundred} />
+                </Icon>
+                <p>Calculating shipping rates...</p>
+              </ShippingItem>
+            )}
+            {shippingRate && !loading && (
+              <ShippingItem
+                onClick={() => {
+                  setShippingMethod(shippingRate.id)
+                  setSelectedRate(shippingRate)
+                }}
+                className={shippingMethod === shippingRate.id && "is-selected"}
+                justifycontent="flex-start"
+                alignitems="flex-start"
+                padding="1rem"
+                flex="flex"
+              >
+                <Flexbox
+                  flex="flex"
+                  justifycontent="space-between"
+                  alignitems="center"
+                  width="100%"
+                >
+                  <Content
+                    paragraphfontfamily={fonts.secondary}
+                    paragraphfontsize="0.875rem"
+                    paragraphmarginbottom="0"
+                    paragraphfontweight="700"
+                    paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                    smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                    smallfontfamily={fonts.secondary}
+                    smallfontsize="0.75rem"
+                    smallmargin="0"
+                  >
+                    <p>
+                      {shippingRate.service === "Priority" ? (
+                        "Ground shipping"
+                      ) : (
+                        "International shipping"
+                      )}
+                    </p>
+                    {shippingRate.delivery_days && (
+                      <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
+                    )}
+                  </Content>
+                  <Tag
+                    color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
+                    backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
+                    fontfamily={fonts.secondary}
+                    fontsize="0.875rem"
+                  >
+                    ${convertToDecimal(shippingRate.rate, 2)}
+                  </Tag>
+                </Flexbox>
+              </ShippingItem>
+            )}
+          </ShippingItemsContainer>
+          <Flexbox
+            flex="flex"
+            justifycontent="flex-end"
             alignitems="center"
-            padding="1rem"
-            flex="flex"
           >
-            <Icon margin="0 0.5rem 0 0">
-              <CircleNotch className="is-loading" size="1.25rem" color={colors.gray.sixHundred} />
-            </Icon>
-            <p>Calculating shipping rates...</p>
-          </ShippingItem>
-        )}
-        {shippingRate && !loading && (
-          <ShippingItem
-            onClick={() => {
-              setShippingMethod(shippingRate.id)
-              setSelectedRate(shippingRate)
-            }}
-            className={shippingMethod === shippingRate.id && "is-selected"}
-            justifycontent="flex-start"
-            alignitems="flex-start"
-            padding="1rem"
-            flex="flex"
-          >
-            <Flexbox
-              flex="flex"
-              justifycontent="space-between"
-              alignitems="center"
-              width="100%"
+            <Button
+              disabled={!shippingMethod || loading}
+              id="submit"
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.white}
+              className={loading ? "is-loading" : null}
+              padding="16px"
+              form="checkout-shipping-form"
+              onClick={() => submitShippingInfo()}
+              width="200px"
             >
-              <Content
-                paragraphfontfamily={fonts.secondary}
-                paragraphfontsize="0.875rem"
-                paragraphmarginbottom="0"
-                paragraphfontweight="700"
-                paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
-                smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
-                smallfontfamily={fonts.secondary}
-                smallfontsize="0.75rem"
-                smallmargin="0"
-              >
-                <p>
-                  {shippingRate.service === "Priority" ? (
-                    "Ground shipping"
-                  ) : (
-                    "International shipping"
-                  )}
-                </p>
-                {shippingRate.delivery_days && (
-                  <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
-                )}
-              </Content>
-              <Tag
-                color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
-                backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
-                fontfamily={fonts.secondary}
-                fontsize="0.875rem"
-              >
-                ${convertToDecimal(shippingRate.rate, 2)}
-              </Tag>
-            </Flexbox>
-          </ShippingItem>
-        )}
-      </ShippingItemsContainer>
-      <Flexbox
-        flex="flex"
-        justifycontent="space-between"
-        alignitems="center"
-      >
-        <TextLink
-          className="has-icon"
-          alignitems="flex-end"
-          onClick={() => {
-            setProcessing(false)
-            setActiveTab({
-              index: 1,
-              heading: "Shipping address",
-              text: "Please enter your shipping information below to continue."
-            })
-            setShippingMethod("")
-            setSelectedRate(null)
-            setAuthKey("")
-          }}
-        >
-          <Icon>
-            <ArrowLeft size="1rem" />
-          </Icon>
-          <span>Back to address</span>
-        </TextLink>
-        <Button
-          disabled={!shippingMethod || loading}
-          id="submit"
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.white}
-          className={loading ? "is-loading" : null}
-          padding="16px"
-          form="checkout-shipping-form"
-          onClick={() => submitShippingInfo()}
-          width="200px"
-        >
-        {loading ? (
-          <Icon>
-            <CircleNotch size={16} color={colors.white} />
-          </Icon>
-        ) : (
-          "Continue to checkout"
-        )}
-        </Button>
-      </Flexbox>
-    </ShippingInfoContainer>
+              {loading ? (
+                <Icon>
+                  <CircleNotch size={16} color={colors.white} />
+                </Icon>
+              ) : (
+                "Continue to checkout"
+              )}
+            </Button>
+          </Flexbox>
+        </ShippingInfoContainer>
+      )}
+    </>
   )
 }
 

@@ -1,29 +1,26 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import { colors, regex } from "../../styles/variables"
-import { ArrowLeft, CircleNotch } from "phosphor-react"
+import { CircleNotch } from "phosphor-react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "./FormComponents"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import TextLink from "../ui/TextLink"
 
 function AddressForm({
-  activeTab,
   address,
   customer,
   pid,
-  setActiveTab,
+  setActiveAccordionTab,
   setAddress,
   setAddressError,
+  setShippingValidated,
   setCustomer,
   setShowModal,
   toast,
 }) {
   const elements = useElements()
-  const [addressElementLoaded, setAddressElementLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
   const addressOptions = {
@@ -117,11 +114,8 @@ function AddressForm({
 
       if (isAddressValid.isValid) {
         await updateAddress()
-        setActiveTab({
-          index: 2,
-          text: "Please choose a shipping method below.",
-          heading: "Shipping method"
-        })
+        setActiveAccordionTab("method")
+        setShippingValidated(true)
       }
       setLoading(false)
     }
@@ -165,26 +159,13 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement 
         options={addressOptions}
-        onReady={e => setAddressElementLoaded(true)}
       />
       <Flexbox
         flex="flex"
-        justifycontent="space-between"
+        justifycontent="flex-end"
         alignitems="center"
         margin="32px 0 0"
       >
-        <TextLink
-          color={colors.gray.nineHundred}
-          className="has-icon"
-          alignitems="flex-end"
-          as={Link}
-          to="/cart"
-        >
-          <Icon>
-            <ArrowLeft size="1rem" />
-          </Icon>
-          <span>Back to cart</span>
-        </TextLink>
         <Button
           backgroundcolor={colors.gray.nineHundred}
           className={loading ? "is-loading" : null}

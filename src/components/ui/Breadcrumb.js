@@ -1,15 +1,15 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
+import { ArrowRight } from "phosphor-react"
+import { Link } from "gatsby"
 
-const BreadcrumbContainer = styled.nav`
-  display: block;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
-  ul {
-    display: flex;
-    list-style-type: none;
-  }
+import Icon from "./Icon"
+
+const BreadcrumbContainer = styled.ul`
+  margin-bottom: 32px;
+  display: flex;
+  list-style-type: none;
   li {
     position: relative;
     &.is-disabled {
@@ -20,37 +20,58 @@ const BreadcrumbContainer = styled.nav`
         }
       }
     }
-    &:not(:last-child) {
-      &::before {
-        content: "/";
-        position: absolute;
-        color: ${colors.gray.sixHundred};
-        right: -0.35rem;
-      }
-    }
   }
-  a {
-    color: ${colors.gray.sixHundred};
-    position: relative;
-    padding: 0 0.75rem 0 1rem;
-    font-family: ${fonts.secondary};
-    font-size: 0.875rem;
-    &.is-active {
+`
+
+const BreadcrumbItem = styled.li`
+  display: flex;
+  align-items: center;
+  &.is-active {
+    p {
+      font-weight: 700;
       color: ${colors.gray.nineHundred};
     }
-    &.first {
-      padding-left: 0;
-    }
-    &:hover {
-      color: ${colors.gray.sixHundred};
+  }
+  &.first {
+    padding-left: 0;
+  }
+  &:hover {
+    p {
+      color: ${colors.gray.nineHundred};
     }
   }
 `
 
-function Breadcrumb(props) {
+const BreadcrumbText = styled.p`
+  color: ${colors.gray.sixHundred};
+  font-family: ${fonts.secondary};
+  font-size: 0.875rem;
+`
+
+function Breadcrumb({
+  items,
+}) {
+  const [activeItem, setActiveItem] = useState(1)
+
   return (
     <BreadcrumbContainer>
-      {props.children}
+      {items.map((item, index) => (
+        <Link 
+          key={item.index}
+          to={item.path}
+        >
+          <BreadcrumbItem
+            className={index === activeItem ? "is-active" : null}
+          >
+            <BreadcrumbText>{item.text}</BreadcrumbText>
+            {index !== items.length - 1 && (
+              <Icon margin="0 4px">
+                <ArrowRight size={12} color={colors.gray.sixHundred} weight="bold" />
+              </Icon>
+            )}
+          </BreadcrumbItem>
+        </Link>
+      ))}
     </BreadcrumbContainer>
   )
 }
