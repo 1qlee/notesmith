@@ -63,9 +63,7 @@ const ShippingForm = ({
   setMethodStatus,
   setProcessing,
   setSelectedRate,
-  setShippingMethod,
   setTaxRate,
-  shippingMethod,
   toast,
 }) => {
   const [loading, setLoading] = useState(false)
@@ -104,7 +102,7 @@ const ShippingForm = ({
       })
     }
 
-    if (activeAccordionTab === "method" && Object.keys(shippingMethod).length === 0) {
+    if (activeAccordionTab === "method" && !selectedRate) {
       createRates()
     }
   }, [address, customer, activeAccordionTab])
@@ -169,16 +167,11 @@ const ShippingForm = ({
     })
   }
 
-  const handleRateSelect = () => {
-    setShippingMethod(shippingRate.id)
-    setSelectedRate(shippingRate)
-  }
-
   // handles the submit of shipping rate
   const submitShippingInfo = () => {
     setLoading(true)
 
-    if (!shippingMethod) {
+    if (!selectedRate) {
       toast.error("Please select a shipping method")
       setLoading(false)
     }
@@ -206,8 +199,8 @@ const ShippingForm = ({
         )}
         {shippingRate && !loading && (
           <ShippingItem
-            onClick={() => handleRateSelect()}
-            className={shippingMethod === shippingRate.id && "is-selected"}
+            onClick={() => setSelectedRate(shippingRate)}
+            className={selectedRate && "is-selected"}
             justifycontent="flex-start"
             alignitems="flex-start"
             padding="1rem"
@@ -224,8 +217,8 @@ const ShippingForm = ({
                 paragraphfontsize="0.875rem"
                 paragraphmarginbottom="0"
                 paragraphfontweight="700"
-                paragraphcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
-                smallcolor={shippingMethod === shippingRate.id ? colors.gray.twoHundred : colors.gray.nineHundred}
+                paragraphcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
+                smallcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
                 smallfontfamily={fonts.secondary}
                 smallfontsize="0.75rem"
                 smallmargin="0"
@@ -242,8 +235,8 @@ const ShippingForm = ({
                 )}
               </Content>
               <Tag
-                color={shippingMethod === shippingRate.id ? colors.gray.nineHundred : colors.gray.oneHundred}
-                backgroundcolor={shippingMethod === shippingRate.id ? colors.gray.oneHundred : colors.gray.nineHundred}
+                color={selectedRate ? colors.gray.nineHundred : colors.gray.oneHundred}
+                backgroundcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
                 fontfamily={fonts.secondary}
                 fontsize="0.875rem"
               >
@@ -259,7 +252,7 @@ const ShippingForm = ({
         alignitems="center"
       >
         <Button
-          disabled={!shippingMethod || loading}
+          disabled={!selectedRate || loading}
           id="submit"
           backgroundcolor={colors.gray.nineHundred}
           color={colors.white}

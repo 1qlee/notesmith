@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
@@ -11,6 +11,7 @@ import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 
 function CheckoutForm({
+  activeAccordionTab,
   address,
   clearCart,
   cartItems,
@@ -19,11 +20,13 @@ function CheckoutForm({
   loading,
   setPaymentProcessing,
   setLoading,
+  toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
   const [error, setError] = useState("")
   const [focused, setFocused] = useState(false)
+  const [amountToPay, setAmountToPay] = useState(null)
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
     defaultValues: {
@@ -33,6 +36,34 @@ function CheckoutForm({
       }
     }
   }
+
+  
+  useEffect(() => {
+    async function finalizePayment() {
+      const response = await fetch("/.netlify/functions/finalize-payment", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          pid: pid,
+        })
+      })
+      const data = response.json()
+
+      if (data.error) {
+        toast.error(data.error)
+        setLoading(false)
+      }
+      else {
+        console.log(data)
+      }
+    }
+    
+    if (activeAccordionTab === "payment") {
+      finalizePayment()
+    }
+  }, [pid])
 
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {

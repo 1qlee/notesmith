@@ -75,7 +75,6 @@ const Checkout = () => {
   })
   const [selectedRate, setSelectedRate] = useState()
   const [taxRate, setTaxRate] = useState()
-  const [shippingMethod, setShippingMethod] = useState("")
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -161,6 +160,7 @@ const Checkout = () => {
         body: JSON.stringify({
           pid: pid,
           cartItems: cartItems,
+          updatePaymentIntent: true,
         })
       }).then(res => res.json()
       ).then(data => {
@@ -338,7 +338,6 @@ const Checkout = () => {
                                   setMethodValidated={setMethodValidated}
                                   setMethodStatus={setMethodStatus}
                                   setSelectedRate={setSelectedRate}
-                                  setShippingMethod={setShippingMethod}
                                   setShippingValidated={setShippingValidated}
                                   setShowModal={setShowModal}
                                   shippingValidated={shippingValidated}
@@ -371,9 +370,7 @@ const Checkout = () => {
                                   setMethodStatus={setMethodStatus}
                                   setProcessing={setProcessing}
                                   setSelectedRate={setSelectedRate}
-                                  setShippingMethod={setShippingMethod}
                                   setTaxRate={setTaxRate}
-                                  shippingMethod={shippingMethod}
                                   toast={toast}
                                 />
                               </AccordionTab>
@@ -385,6 +382,7 @@ const Checkout = () => {
                                 activeAccordionTab={activeAccordionTab}
                               >
                                 <CheckoutForm
+                                  activeAccordionTab={activeAccordionTab}
                                   address={address}
                                   customer={customer}
                                   clearCart={clearCart}
@@ -394,9 +392,8 @@ const Checkout = () => {
                                   selectedRate={selectedRate}
                                   setLoading={setLoading}
                                   setPaymentProcessing={setPaymentProcessing}
-                                  setShippingMethod={setShippingMethod}
-                                  shippingMethod={shippingMethod}
                                   taxRate={taxRate}
+                                  toast={toast}
                                 />
                               </AccordionTab>
                             </Box>

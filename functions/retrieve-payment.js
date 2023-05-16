@@ -19,7 +19,7 @@ const calcOrderAmount = async (cartItems) => {
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { pid, cartItems } = body;
+  const { pid, cartItems, updatePaymentIntent } = body;
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
@@ -27,7 +27,7 @@ exports.handler = async (event) => {
     // the client will then create a new paymentIntent instead
     const isPaymentPaid = paymentIntent.charges ? paymentIntent.charges.data[0].paid : null;
 
-    if (!isPaymentPaid) {
+    if (!isPaymentPaid && updatePaymentIntent) {
       const totalAmount = await calcOrderAmount(cartItems);
 
       await stripe.paymentIntents.update(pid, {

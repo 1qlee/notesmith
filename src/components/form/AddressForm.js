@@ -20,7 +20,6 @@ function AddressForm({
   setMethodValidated,
   setMethodStatus,
   setSelectedRate,
-  setShippingMethod,
   setShippingValidated,
   setShowModal,
   shippingValidated,
@@ -107,7 +106,6 @@ function AddressForm({
 
     // reset any existing shipping methods
     setSelectedRate(null)
-    setShippingMethod(null)
     setMethodValidated(false)
     setMethodStatus({
       msg: "Submit required",
