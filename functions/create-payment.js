@@ -19,8 +19,7 @@ const calcOrderAmount = async (cartItems) => {
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { cartItems, pid, email } = body;
-  const shipping = body.address;
+  const { cartItems } = body;
   let paymentIntent;
 
   // if there are no items, return an error
@@ -39,37 +38,16 @@ exports.handler = async (event) => {
   try {
     // save subtotal
     const subtotal = await calcOrderAmount(cartItems);
-    // if a pid already exists
-    if (pid) {
-      console.log(`[Stripe] Updating existing paymentIntent: ${pid}`);
-      // update the existing paymentIntent
-      paymentIntent = await stripe.paymentIntents.update(
-        pid,
-        {
-          amount: subtotal,
-          shipping: shipping,
-          receipt_email: email,
-          currency: "USD",
-          metadata: {
-            subtotal: subtotal
-          }
-        }
-      )
-    }
-    // this will only fire when cart items are new AKA when there is no stripe paymentIntent already created
-    // therefore this will only be called from checkout.js
-    else {
-      console.log(`[Stripe] Creating new paymentIntent...`)
-      // else create a new paymentIntent
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: subtotal,
-        currency: "usd",
-        automatic_payment_methods: { enabled: true },
-        metadata: {
-          subtotal: subtotal
-        }
-      })
-    }
+    console.log(`[Stripe] Creating new paymentIntent...`)
+    // else create a new paymentIntent
+    paymentIntent = await stripe.paymentIntents.create({
+      amount: subtotal,
+      currency: "usd",
+      automatic_payment_methods: { enabled: true },
+      metadata: {
+        subtotal: subtotal
+      }
+    })
 
     return {
       statusCode: 200,

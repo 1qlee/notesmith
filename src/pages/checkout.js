@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { colors, fonts, spacing, convertToDecimal } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
@@ -6,7 +6,6 @@ import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "use-shopping-cart"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
-import { useCollapse } from "react-collapsed"
 
 import { AccordionTab } from "../components/checkout/Accordion"
 import { Flexbox } from "../components/layout/Flexbox"
@@ -47,15 +46,23 @@ const Checkout = () => {
     }
   ]
   const [activeAccordionTab, setActiveAccordionTab] = useState("shipping")
+  const [addressStatus, setAddressStatus] = useState({
+    msg: "",
+    color: "",
+    background: "",
+  })
+  const [methodStatus, setMethodStatus] = useState({
+    msg: "Selection required",
+    color: colors.red.oneHundred,
+    background: colors.red.sixHundred,
+  })
+  const [checkoutStatus, setCheckoutStatus] = useState({
+    msg: "",
+    color: "",
+    background: "",
+  })
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
-  const [isExpanded, setExpanded] = useState(false)
-  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
-  const [activeTab, setActiveTab] = useState({
-    index: 1,
-    heading: "Shipping Address",
-    text: "Please enter your shipping information below to continue."
-  })
   const [processing, setProcessing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [clientSecret, setClientSecret] = useState("")
@@ -153,7 +160,8 @@ const Checkout = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          pid: pid
+          pid: pid,
+          cartItems: cartItems,
         })
       }).then(res => res.json()
       ).then(data => {
@@ -233,22 +241,21 @@ const Checkout = () => {
     }
   }, [cartDetails, pid])
 
-  // copy of the function in AddressForm to create a paymentIntent w user's information
-  function forceShippingSubmit() {
+  // when user wants to use their inputted address versus Easypost api suggestion
+  function forceAddressSubmit() {
     // hide the error modal
     setProcessing(true)
     // update the paymentIntent with shipping form data
-    fetch("/.netlify/functions/create-payment", {
+    fetch("/.netlify/functions/update-address", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        cartItems: cartItems, // always send current cart items
-        paymentId: pid, // need pid from localStorage to update the corresponding paymentIntent
+        pid: pid,
+        address: address,
+        name: customer.name,
         email: customer.email,
-        address: { address: {...address}, name: customer.name }, // always send shipping information
-        customer: customer,
       })
     }).then(res => res.json()
     ).then(data => {
@@ -257,10 +264,12 @@ const Checkout = () => {
         throw data.error
       }
 
-      setActiveTab({
-        index: 2,
-        text: "Please choose a shipping method below.",
-        heading: "Shipping Method"
+      setActiveAccordionTab("method")
+      setShippingValidated(true)
+      setAddressStatus({
+        msg: "Done",
+        color: colors.green.oneHundred,
+        background: colors.green.sixHundred,
       })
       setProcessing(false)
       setShowModal({ show: false })
@@ -307,6 +316,7 @@ const Checkout = () => {
                               />
                               <AccordionTab
                                 activeAccordionTab={activeAccordionTab}
+                                status={addressStatus}
                                 onClick={setActiveAccordionTab}
                                 prereq={true}
                                 summaries={[
@@ -321,22 +331,29 @@ const Checkout = () => {
                                   address={address}
                                   customer={customer}
                                   pid={pid}
-                                  setShippingValidated={setShippingValidated}
                                   setActiveAccordionTab={setActiveAccordionTab}
                                   setAddress={setAddress}
                                   setAddressError={setAddressError}
+                                  setAddressStatus={setAddressStatus}
                                   setCustomer={setCustomer}
+                                  setMethodValidated={setMethodValidated}
+                                  setMethodStatus={setMethodStatus}
+                                  setSelectedRate={setSelectedRate}
+                                  setShippingMethod={setShippingMethod}
+                                  setShippingValidated={setShippingValidated}
                                   setShowModal={setShowModal}
+                                  shippingValidated={shippingValidated}
                                   toast={toast}
                                 />
                               </AccordionTab>
                               <AccordionTab
                                 activeAccordionTab={activeAccordionTab}
+                                status={methodStatus}
                                 onClick={setActiveAccordionTab}
                                 prereq={shippingValidated}
-                                summaries={[
-                                  `${selectedRate && selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
-                                  `$${selectedRate && convertToDecimal(selectedRate.rate, 2)}`
+                                summaries={selectedRate && [
+                                  `${selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
+                                  `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
                                 ]}
                                 tabName="method"
                                 text="Shipping method"
@@ -352,6 +369,7 @@ const Checkout = () => {
                                   setAddress={setAddress}
                                   setAuthKey={setAuthKey}
                                   setMethodValidated={setMethodValidated}
+                                  setMethodStatus={setMethodStatus}
                                   setProcessing={setProcessing}
                                   setSelectedRate={setSelectedRate}
                                   setShipmentId={setShipmentId}
@@ -377,7 +395,6 @@ const Checkout = () => {
                                   pid={pid}
                                   setActiveAccordionTab={setActiveAccordionTab}
                                   selectedRate={selectedRate}
-                                  setActiveTab={setActiveTab}
                                   setLoading={setLoading}
                                   setPaymentProcessing={setPaymentProcessing}
                                   setShippingMethod={setShippingMethod}
@@ -411,7 +428,7 @@ const Checkout = () => {
               <ValidateAddressModal
                 address={address}
                 addressError={addressError}
-                forceShippingSubmit={forceShippingSubmit}
+                forceAddressSubmit={forceAddressSubmit}
                 processing={processing}
                 setShowModal={setShowModal}
               />

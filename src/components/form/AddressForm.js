@@ -15,9 +15,15 @@ function AddressForm({
   setActiveAccordionTab,
   setAddress,
   setAddressError,
-  setShippingValidated,
+  setAddressStatus,
   setCustomer,
+  setMethodValidated,
+  setMethodStatus,
+  setSelectedRate,
+  setShippingMethod,
+  setShippingValidated,
   setShowModal,
+  shippingValidated,
   toast,
 }) {
   const elements = useElements()
@@ -99,6 +105,16 @@ function AddressForm({
     const inputtedAddress = stripeAddress.value
     const isEmailVerified = regex.email.test(customer.email)
 
+    // reset any existing shipping methods
+    setSelectedRate(null)
+    setShippingMethod(null)
+    setMethodValidated(false)
+    setMethodStatus({
+      msg: "Submit required",
+      color: colors.red.oneHundred,
+      background: colors.red.sixHundred,
+    })
+
     setAddress(inputtedAddress.address)
     setCustomer({
       ...customer,
@@ -116,10 +132,21 @@ function AddressForm({
         await updateAddress()
         setActiveAccordionTab("method")
         setShippingValidated(true)
+        setAddressStatus({
+          msg: "Done",
+          color: colors.green.oneHundred,
+          background: colors.green.sixHundred,
+        })
       }
       setLoading(false)
     }
     else {
+      setShippingValidated(false)
+      setAddressStatus({
+        msg: "Submit required",
+        color: colors.red.oneHundred,
+        background: colors.red.sixHundred,
+      })
       setLoading(false)
     }
   }
@@ -130,6 +157,37 @@ function AddressForm({
       email: value.trim()
     })
     setEmailError("")
+  }
+
+  function handleAddressChange(e) {
+    if (e.complete) {
+      const changedAddress = e.value.address
+      const addressHasChanged = JSON.stringify(changedAddress) !== JSON.stringify(address)
+      const nameHasChanged = e.value.name !== customer.name
+      // compared changedAddress to address to see if any values have changed
+      if ((addressHasChanged || nameHasChanged) && shippingValidated) {
+        setAddressStatus({
+          msg: "Submit changes",
+          color: colors.yellow.oneHundred,
+          background: colors.yellow.sixHundred,
+        })
+      }
+      else {
+        setAddressStatus({
+          msg: "Done",
+          color: colors.green.oneHundred,
+          background: colors.green.sixHundred,
+        })
+      }
+
+      if (!shippingValidated) {
+        setAddressStatus({
+          msg: "Submit required",
+          color: colors.red.oneHundred,
+          background: colors.red.sixHundred,
+        })
+      }
+    }
   }
 
   return (
@@ -159,6 +217,7 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement 
         options={addressOptions}
+        onChange={e => handleAddressChange(e)}
       />
       <Flexbox
         flex="flex"

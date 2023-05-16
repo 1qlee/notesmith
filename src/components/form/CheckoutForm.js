@@ -2,15 +2,13 @@ import React, { useState } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
-import { ArrowLeft, CircleNotch } from "phosphor-react"
+import { CircleNotch } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
+import { ref, set } from "firebase/database"
 
 import { Flexbox } from "../layout/Flexbox"
-import { StyledFieldset, StyledLabel, ErrorLine } from "../form/FormComponents"
-import ShippingInfo from "./ShippingInfo"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import TextLink from "../ui/TextLink"
 
 function CheckoutForm({
   address,
@@ -23,7 +21,8 @@ function CheckoutForm({
   setLoading,
 }) {
   const stripe = useStripe()
-  const [error, setError] = useState(null)
+  const elements = useElements()
+  const [error, setError] = useState("")
   const [focused, setFocused] = useState(false)
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
@@ -35,10 +34,63 @@ function CheckoutForm({
     }
   }
 
-  const handleChange = async (event) => {
-    // Listen for changes in the CardElement
-    // and display any errors as the customer types their card details
-    setError(event.error ? event.error.message : "")
+  // handle submitting the Stripe elements form
+  const submitPaymentForm = async e => {
+    console.log(e)
+    e.preventDefault()
+    // show loading UI state
+    setLoading(true)
+
+    if (!stripe || !elements) {
+      console.log("abort")
+      // Stripe.js hasn't yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return
+    }
+
+    const payment = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `/order/`
+      }
+    })
+
+    if (payment.error) {
+      // This point will only be reached if there is an immediate error when
+      // confirming the payment. Show error to your customer (for example, payment
+      // details incomplete)
+      setError(error.message);
+    } else {
+      console.log(payment)
+      // Your customer will be redirected to your `return_url`. For some payment
+      // methods like iDEAL, your customer will be redirected to an intermediate
+      // site first to authorize the payment, then redirected to the `return_url`.
+    }
+
+    // send the payment details to Stripe
+    // await stripe.confirmPayment({
+    //   elements,
+    //   confirmParams: {
+    //     return_url: `/order/`,
+    //   }
+    // }).then(res => {
+    //   if (res.error) {
+    //     throw res.error
+    //   }
+    //   console.log(res)
+
+    //   const createdDate = res.paymentIntent.created
+    //   const paymentInfo = {
+    //     createdDate: createdDate,
+    //   }
+
+    //   // buy the shipping label from easypost
+    //   // send it payment info to save to the order
+    //   purchaseShippingLabel(paymentInfo)
+    // }).catch(error => {
+    //   setError(error.message)
+    //   setLoading(false)
+    // })
   }
 
   // save each order item to the database
@@ -51,7 +103,7 @@ function CheckoutForm({
       const cartItemId = cartItems[i].id
       cartItemsObject[cartItemId] = true
 
-      await firebaseDb.ref(`/orderItems/${cartItemId}`).set({
+      await set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
         ...cartItems[i],
         pid: pid,
       }).catch(() => {
@@ -60,56 +112,23 @@ function CheckoutForm({
     }
 
     // save the order to the database by its pid
-    await firebaseDb.ref(`/orders/${pid}`).set({
+    await set(ref(firebaseDb, `/orders/${pid}`), {
       ...orderData,
       pid: pid,
       orderItems: cartItemsObject,
-    })
-  }
-
-  // handle submitting the Stripe elements form
-  const submitPaymentForm = async e => {
-    e.preventDefault()
-    // show loading UI state
-    setLoading(true)
-
-    // send the payment details to Stripe
-    await stripe.confirmPayment({
-      payment_method: {
-        // card: elements.getElement(CardElement),
-        billing_details: {
-          name: customer.name,
-          email: customer.email
-        }
-      },
-      receipt_email: customer.email,
-    }).then(res => {
-      if (res.error) {
-        throw res.error
-      }
-
-      const createdDate = res.paymentIntent.created
-      const paymentInfo = {
-        createdDate: createdDate,
-      }
-
-      // buy the shipping label from easypost
-      // send it payment info to save to the order
-      purchaseShippingLabel(paymentInfo)
-    }).catch(error => {
-      setError(error.message)
-      setLoading(false)
+    }).catch(() => {
+      console.error("Error writing order to the database.")
     })
   }
 
   // fetch easypost api to purchase a shipping label
   // takes options arg to save to orders (database)
-  const purchaseShippingLabel = async (options) => {
+  const purchaseShippingLabel = (options) => {
     // shows loader
     setPaymentProcessing(true)
 
     // all purchase info is in the paymentIntent, so just send pid
-    await fetch("/.netlify/functions/create-shipment", {
+    fetch("/.netlify/functions/create-shipment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -162,20 +181,10 @@ function CheckoutForm({
     >
       <PaymentElement
         id="card-element"
-        onChange={handleChange}
         options={paymentOptions}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      {error && (
-        <ErrorLine
-          role="alert"
-          color={colors.red.sixHundred}
-          margin="0 0 1rem 0"
-        >
-          <span>{error}</span>
-        </ErrorLine>
-      )}
       <Flexbox
         flex="flex"
         justifycontent="flex-end"
@@ -186,7 +195,7 @@ function CheckoutForm({
           backgroundcolor={colors.gray.nineHundred}
           className={loading ? "is-loading" : null}
           color={colors.white}
-          disabled={error || loading}
+          disabled={loading || !stripe || !elements}
           form="checkout-payment-form"
           id="submit"
           padding="1rem"

@@ -13,7 +13,7 @@ function ValidateAddressModal({
   address,
   addressError,
   processing,
-  forceShippingSubmit,
+  forceAddressSubmit,
   setShowModal,
 }) {
   return (
@@ -83,7 +83,7 @@ function ValidateAddressModal({
         <Button
           className={processing ? "is-loading" : null}
           disabled={processing}
-          onClick={forceShippingSubmit}
+          onClick={forceAddressSubmit}
         >
           {processing ? (
             <Icon>

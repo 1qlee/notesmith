@@ -14,6 +14,8 @@ const parseCartItems = (cartItems) => {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { pid, cartItems, address, shippingRate } = body;
+  const paymentIntent = await stripe.paymentIntents.retrieve(pid)
+  const amount = paymentIntent.amount
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
@@ -30,18 +32,24 @@ exports.handler = async (event) => {
     })
 
     const totalTax = calculateTax.tax_breakdown[0]
+    const taxAmount = totalTax.amount
+    console.log("Total tax: ", totalAmount)
+    console.log("Total before tax: ", amount)
+    const totalAmount = amount + taxAmount
+    console.log("total amount with tax: ", totalAmount)
 
     await stripe.paymentIntents.update(
       pid,
       {
+        amount: totalAmount,
         metadata: {
-          tax: totalTax.amount,
+          tax: taxAmount,
           taxId: calculateTax.id,
         }
       }
     )
 
-    console.log("[Stripe] Tax calculated successfully.", calculateTax)
+    console.log("[Stripe] Tax calculated successfully.")
 
     return {
       statusCode: 200,

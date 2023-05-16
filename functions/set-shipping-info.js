@@ -19,14 +19,14 @@ exports.handler = async (event) => {
   const shippingRateCarrier = userRate.carrier;
   // get subtotal from paymentIntent
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const subtotal = parseInt(paymentIntent.metadata.subtotal);
+  const newAmount = paymentIntent.amount + shippingCost;
 
    try {
      console.log("[Netlify] Updating paymentIntent with the selected shipping information.");
      await stripe.paymentIntents.update(
        pid,
        {
-         amount: subtotal + shippingCost,
+         amount: newAmount,
          metadata: {
            shipmentId: shipmentId,
            rateId: shippingRateId,
