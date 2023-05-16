@@ -75,7 +75,6 @@ const Checkout = () => {
   })
   const [selectedRate, setSelectedRate] = useState()
   const [taxRate, setTaxRate] = useState()
-  const [shipmentId, setShipmentId] = useState()
   const [shippingMethod, setShippingMethod] = useState("")
   const [showModal, setShowModal] = useState({
     show: false
@@ -372,10 +371,8 @@ const Checkout = () => {
                                   setMethodStatus={setMethodStatus}
                                   setProcessing={setProcessing}
                                   setSelectedRate={setSelectedRate}
-                                  setShipmentId={setShipmentId}
                                   setShippingMethod={setShippingMethod}
                                   setTaxRate={setTaxRate}
-                                  shipmentId={shipmentId}
                                   shippingMethod={shippingMethod}
                                   toast={toast}
                                 />
@@ -398,7 +395,6 @@ const Checkout = () => {
                                   setLoading={setLoading}
                                   setPaymentProcessing={setPaymentProcessing}
                                   setShippingMethod={setShippingMethod}
-                                  shipmentId={shipmentId}
                                   shippingMethod={shippingMethod}
                                   taxRate={taxRate}
                                 />
