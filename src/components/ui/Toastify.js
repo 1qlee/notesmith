@@ -16,7 +16,7 @@ export default function Toastify() {
       pauseOnHover
       position="top-center"
       rtl={false}
-      theme="dark"
+      theme="colored"
       style={{
         fontFamily: fonts.secondary,
         fontSize: "0.75rem",

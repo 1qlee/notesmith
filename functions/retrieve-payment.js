@@ -25,7 +25,7 @@ exports.handler = async (event) => {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
     // if a charge exists on this paymentIntent, return it to the client
     // the client will then create a new paymentIntent instead
-    const isPaymentPaid = paymentIntent.charges ? paymentIntent.charges.data[0].paid : null;
+    const isPaymentPaid = paymentIntent.status === "succeeded"
 
     if (!isPaymentPaid && updatePaymentIntent) {
       const totalAmount = await calcOrderAmount(cartItems);

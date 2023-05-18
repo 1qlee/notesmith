@@ -17,6 +17,8 @@ exports.handler = async (event) => {
       amount: totalAmount,
     });
 
+    console.log("[Stripe] Paymentintent amount finalized: ", finalPaymentIntent)
+
     return {
       statusCode: 200,
       body: JSON.stringify({

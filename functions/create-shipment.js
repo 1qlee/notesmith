@@ -4,13 +4,17 @@ const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
 // will have to update the paymentIntent metadata object with tracking information
 const updatePaymentIntent = async (pid, shippingLabel) => {
+  const { tracking_code, public_url } = shippingLabel.tracker;
   console.log("[Netlify] Updating payment intent with tracking information.")
   await stripe.paymentIntents.update(
     pid,
     {
+      shipping: {
+        tracking_number: tracking_code
+      },
       metadata: {
-        tracking: shippingLabel.tracker.tracking_code, // carrier tracking code
-        trackingUrl: shippingLabel.tracker.public_url, // easypost URL
+        tracking: tracking_code, // carrier tracking code
+        trackingUrl: public_url, // easypost URL
       }
     }
   );
@@ -21,14 +25,15 @@ exports.handler = async (event) => {
   const { pid } = body;
   // paymentIntent has all purchase info
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const { rateId, shipmentId, authKey, tax, shippingRate } = paymentIntent.metadata;
+  const { rateId, shipmentId, authKey, tax, shipping } = paymentIntent.metadata;
   const totalAmount = paymentIntent.amount;
 
   try {
     // retrieve the existing shipment by its ID
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
+    console.log(userShipment)
     // buy the shipping label from easypost
-    const shippingLabel = await userShipment.buy(rateId);
+    const shippingLabel = await easypost.Shipment.buy(userShipment);
     console.log(`[Netlify] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information
@@ -40,8 +45,8 @@ exports.handler = async (event) => {
         shippingLabel: shippingLabel,
         trackingUrl: shippingLabel.tracker.public_url,
         totalAmount: totalAmount,
-        taxRate: tax,
-        shippingRate: shippingRate,
+        tax: tax,
+        shipping: shipping,
         authKey: authKey,
       })
     }
@@ -51,7 +56,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: "Something went wrong."
+        error: "We had trouble generating your shipping label. Please contact us at general@notesmithbooks.com for assistance and reference your order number in the subject line."
       })
     }
   }

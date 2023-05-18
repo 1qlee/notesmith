@@ -64,7 +64,7 @@ const Checkout = () => {
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
   const [processing, setProcessing] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [clientSecret, setClientSecret] = useState("")
   const [addressError, setAddressError] = useState("")
   const [paymentProcessing, setPaymentProcessing] = useState(false)
@@ -267,8 +267,8 @@ const Checkout = () => {
       setShippingValidated(true)
       setAddressStatus({
         msg: "Done",
-        color: colors.green.oneHundred,
-        background: colors.green.sixHundred,
+        color: colors.gray.oneHundred,
+        background: colors.gray.nineHundred,
       })
       setProcessing(false)
       setShowModal({ show: false })
@@ -280,156 +280,156 @@ const Checkout = () => {
   }
 
   return (
-    <>
+    <Layout loading={loading}>
       {clientSecret && (
         <Elements
           stripe={stripePromise}
           options={elementsOptions}
         >
-          <Layout loading={loading}>
-            <Seo title="Checkout" />
-            <Nav />
-            {!paymentProcessing ? (
-              <SectionMain className="has-max-height">
-                <Section>
-                  <SectionContent padding={`${spacing.large} 0`}>
-                    <Container xs sm md lg xl>
-                      {serverError.show ? (
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                          justifycontent="center"
-                          width="100%"
-                          height="100%"
-                        >
-                          {serverError.msg}
-                        </Flexbox>
-                      ) : (
-                        <Row>
-                          <Col sm={8}>
-                            <Box
-                              width="600px"
-                            >
-                              <Breadcrumb 
-                                items={breadcrumbItems}
-                              />
-                              <AccordionTab
-                                activeAccordionTab={activeAccordionTab}
-                                status={addressStatus}
-                                onClick={setActiveAccordionTab}
-                                prereq={true}
-                                summaries={[
-                                  customer.email,
-                                  customer.name,
-                                  `${address.line1 || ""} ${address.line2 || ""}, ${address.city || ""}, ${address.state || ""} ${address.postal_code || ""}, ${address.country || ""}`
-                                ]}
-                                tabName="shipping"
-                                text="Shipping information"
-                              >
-                                <AddressForm
-                                  address={address}
-                                  customer={customer}
-                                  pid={pid}
-                                  setActiveAccordionTab={setActiveAccordionTab}
-                                  setAddress={setAddress}
-                                  setAddressError={setAddressError}
-                                  setAddressStatus={setAddressStatus}
-                                  setCustomer={setCustomer}
-                                  setMethodValidated={setMethodValidated}
-                                  setMethodStatus={setMethodStatus}
-                                  setSelectedRate={setSelectedRate}
-                                  setShippingValidated={setShippingValidated}
-                                  setShowModal={setShowModal}
-                                  shippingValidated={shippingValidated}
-                                  toast={toast}
-                                />
-                              </AccordionTab>
-                              <AccordionTab
-                                activeAccordionTab={activeAccordionTab}
-                                status={methodStatus}
-                                onClick={setActiveAccordionTab}
-                                prereq={shippingValidated}
-                                summaries={selectedRate && [
-                                  `${selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
-                                  `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
-                                ]}
-                                tabName="method"
-                                text="Shipping method"
-                              >
-                                <ShippingForm
-                                  activeAccordionTab={activeAccordionTab}
-                                  address={address}
-                                  cartItems={cartItems}
-                                  customer={customer}
-                                  pid={pid}
-                                  selectedRate={selectedRate}
-                                  setActiveAccordionTab={setActiveAccordionTab}
-                                  setAddress={setAddress}
-                                  setAuthKey={setAuthKey}
-                                  setMethodValidated={setMethodValidated}
-                                  setMethodStatus={setMethodStatus}
-                                  setProcessing={setProcessing}
-                                  setSelectedRate={setSelectedRate}
-                                  setTaxRate={setTaxRate}
-                                  toast={toast}
-                                />
-                              </AccordionTab>
-                              <AccordionTab
-                                tabName="payment"
-                                text="Payment information"
-                                prereq={methodValidated}
-                                onClick={setActiveAccordionTab}
-                                activeAccordionTab={activeAccordionTab}
-                              >
-                                <CheckoutForm
-                                  activeAccordionTab={activeAccordionTab}
-                                  address={address}
-                                  customer={customer}
-                                  clearCart={clearCart}
-                                  cartItems={cartItems}
-                                  pid={pid}
-                                  setActiveAccordionTab={setActiveAccordionTab}
-                                  selectedRate={selectedRate}
-                                  setLoading={setLoading}
-                                  setPaymentProcessing={setPaymentProcessing}
-                                  taxRate={taxRate}
-                                  toast={toast}
-                                />
-                              </AccordionTab>
-                            </Box>
-                          </Col>
-                          <Col sm={4}>
-                            <OrderSummary
-                              cartItems={cartItems}
-                              hideButton={true}
-                              selectedRate={selectedRate}
-                              taxRate={taxRate}
-                              totalPrice={totalPrice}
+          <Seo title="Checkout" />
+          <Nav />
+          {!paymentProcessing ? (
+            <SectionMain className="has-max-height">
+              <Section>
+                <SectionContent padding={`${spacing.large} 0`}>
+                  <Container xs sm md lg xl>
+                    {serverError.show ? (
+                      <Flexbox
+                        flex="flex"
+                        alignitems="center"
+                        justifycontent="center"
+                        width="100%"
+                        height="100%"
+                      >
+                        {serverError.msg}
+                      </Flexbox>
+                    ) : (
+                      <Row>
+                        <Col sm={8}>
+                          <Box
+                            width="600px"
+                          >
+                            <Breadcrumb
+                              items={breadcrumbItems}
                             />
-                          </Col>
-                        </Row>
-                      )}
-                    </Container>
-                  </SectionContent>
-                </Section>
-              </SectionMain>
-            ) : (
-              <Loader msg="Processing payment... Do not refresh or close this page!" />
-            )}
-            <Toastify />
-            {showModal.show && (
-              <ValidateAddressModal
-                address={address}
-                addressError={addressError}
-                forceAddressSubmit={forceAddressSubmit}
-                processing={processing}
-                setShowModal={setShowModal}
-              />
-            )}
-          </Layout>
+                            <AccordionTab
+                              activeAccordionTab={activeAccordionTab}
+                              status={addressStatus}
+                              onClick={setActiveAccordionTab}
+                              prereq={true}
+                              summaries={[
+                                customer.email,
+                                customer.name,
+                                `${address.line1 || ""} ${address.line2 || ""}, ${address.city || ""}, ${address.state || ""} ${address.postal_code || ""}, ${address.country || ""}`
+                              ]}
+                              tabName="shipping"
+                              text="Shipping information"
+                            >
+                              <AddressForm
+                                address={address}
+                                customer={customer}
+                                pid={pid}
+                                setActiveAccordionTab={setActiveAccordionTab}
+                                setAddress={setAddress}
+                                setAddressError={setAddressError}
+                                setAddressStatus={setAddressStatus}
+                                setCustomer={setCustomer}
+                                setMethodValidated={setMethodValidated}
+                                setMethodStatus={setMethodStatus}
+                                setSelectedRate={setSelectedRate}
+                                setShippingValidated={setShippingValidated}
+                                setShowModal={setShowModal}
+                                shippingValidated={shippingValidated}
+                                toast={toast}
+                              />
+                            </AccordionTab>
+                            <AccordionTab
+                              activeAccordionTab={activeAccordionTab}
+                              status={methodStatus}
+                              onClick={setActiveAccordionTab}
+                              prereq={shippingValidated}
+                              summaries={selectedRate && [
+                                `${selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
+                                `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                              ]}
+                              tabName="method"
+                              text="Shipping method"
+                            >
+                              <ShippingForm
+                                activeAccordionTab={activeAccordionTab}
+                                address={address}
+                                cartItems={cartItems}
+                                customer={customer}
+                                pid={pid}
+                                selectedRate={selectedRate}
+                                setActiveAccordionTab={setActiveAccordionTab}
+                                setAddress={setAddress}
+                                setAuthKey={setAuthKey}
+                                setMethodValidated={setMethodValidated}
+                                setMethodStatus={setMethodStatus}
+                                setProcessing={setProcessing}
+                                setSelectedRate={setSelectedRate}
+                                setTaxRate={setTaxRate}
+                                toast={toast}
+                              />
+                            </AccordionTab>
+                            <AccordionTab
+                              tabName="payment"
+                              text="Payment information"
+                              prereq={methodValidated}
+                              onClick={setActiveAccordionTab}
+                              activeAccordionTab={activeAccordionTab}
+                            >
+                              <CheckoutForm
+                                activeAccordionTab={activeAccordionTab}
+                                address={address}
+                                authKey={authKey}
+                                cartItems={cartItems}
+                                clearCart={clearCart}
+                                clientSecret={clientSecret}
+                                customer={customer}
+                                pid={pid}
+                                selectedRate={selectedRate}
+                                setActiveAccordionTab={setActiveAccordionTab}
+                                setLoading={setLoading}
+                                setPaymentProcessing={setPaymentProcessing}
+                                taxRate={taxRate}
+                                toast={toast}
+                              />
+                            </AccordionTab>
+                          </Box>
+                        </Col>
+                        <Col sm={4}>
+                          <OrderSummary
+                            cartItems={cartItems}
+                            hideButton={true}
+                            selectedRate={selectedRate}
+                            taxRate={taxRate}
+                            totalPrice={totalPrice}
+                          />
+                        </Col>
+                      </Row>
+                    )}
+                  </Container>
+                </SectionContent>
+              </Section>
+            </SectionMain>
+          ) : (
+            <Loader msg="Processing payment... Do not refresh or close this page!" />
+          )}
+          <Toastify />
+          {showModal.show && (
+            <ValidateAddressModal
+              address={address}
+              addressError={addressError}
+              forceAddressSubmit={forceAddressSubmit}
+              processing={processing}
+              setShowModal={setShowModal}
+            />
+          )}
         </Elements>
       )}
-    </>
+    </Layout>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
@@ -11,22 +11,20 @@ import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 
 function CheckoutForm({
-  activeAccordionTab,
   address,
-  clearCart,
+  authKey,
   cartItems,
+  clearCart,
+  clientSecret,
   customer,
   pid,
-  loading,
   setPaymentProcessing,
-  setLoading,
   toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
+  const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
-  const [focused, setFocused] = useState(false)
-  const [amountToPay, setAmountToPay] = useState(null)
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
     defaultValues: {
@@ -37,91 +35,54 @@ function CheckoutForm({
     }
   }
 
-  
-  useEffect(() => {
-    async function finalizePayment() {
-      const response = await fetch("/.netlify/functions/finalize-payment", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          pid: pid,
-        })
-      })
-      const data = response.json()
-
-      if (data.error) {
-        toast.error(data.error)
-        setLoading(false)
-      }
-      else {
-        console.log(data)
-      }
-    }
-    
-    if (activeAccordionTab === "payment") {
-      finalizePayment()
-    }
-  }, [pid])
-
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
-    console.log(e)
     e.preventDefault()
+    setProcessing(true)
     // show loading UI state
-    setLoading(true)
 
     if (!stripe || !elements) {
-      console.log("abort")
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return
+      return setProcessing(false)
+    }
+
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+
+    if (submitError) {
+      return setProcessing(false)
     }
 
     const payment = await stripe.confirmPayment({
       elements,
+      clientSecret,
       confirmParams: {
-        return_url: `/order/`
-      }
+        // Return URL where the customer should be redirected after the authorization
+        return_url: `https://www.notesmithbooks.com/checkout/`
+      },
+      redirect: "if_required",
     })
 
     if (payment.error) {
+      const { error } = payment
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
-      setError(error.message);
+      console.log(error)
+      setError(error)
+      toast.error(error.message)
+      setProcessing(false)
     } else {
       console.log(payment)
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
+      const createdDate = payment.created
+      const paymentInfo = {
+        createdDate: createdDate,
+      }
+
+      purchaseShippingLabel(paymentInfo)
     }
-
-    // send the payment details to Stripe
-    // await stripe.confirmPayment({
-    //   elements,
-    //   confirmParams: {
-    //     return_url: `/order/`,
-    //   }
-    // }).then(res => {
-    //   if (res.error) {
-    //     throw res.error
-    //   }
-    //   console.log(res)
-
-    //   const createdDate = res.paymentIntent.created
-    //   const paymentInfo = {
-    //     createdDate: createdDate,
-    //   }
-
-    //   // buy the shipping label from easypost
-    //   // send it payment info to save to the order
-    //   purchaseShippingLabel(paymentInfo)
-    // }).catch(error => {
-    //   setError(error.message)
-    //   setLoading(false)
-    // })
   }
 
   // save each order item to the database
@@ -201,7 +162,20 @@ function CheckoutForm({
       // redirect the user to the orders summary page
       navigate(`/orders/${pid}?key=${authKey}`)
     }).catch(error => {
-      setError(error)
+      // remove items from cart and clear pid from localStorage
+      setError(null)
+      clearCart()
+      localStorage.removeItem("pid")
+
+      // redirect the user to the orders summary page
+      navigate(
+        `/orders/${pid}?key=${authKey}`,
+        {
+          state: {
+            error: error
+          }
+        }
+      )
     })
   }
 
@@ -213,8 +187,6 @@ function CheckoutForm({
       <PaymentElement
         id="card-element"
         options={paymentOptions}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
       />
       <Flexbox
         flex="flex"
@@ -224,15 +196,15 @@ function CheckoutForm({
       >
         <Button
           backgroundcolor={colors.gray.nineHundred}
-          className={loading ? "is-loading" : null}
+          className={processing ? "is-loading" : null}
           color={colors.white}
-          disabled={loading || !stripe || !elements}
+          disabled={processing || !stripe || !elements}
           form="checkout-payment-form"
           id="submit"
           padding="1rem"
           width="200px"
         >
-          {loading ? (
+          {processing ? (
             <Icon>
               <CircleNotch size="1rem" color={colors.white} />
             </Icon>

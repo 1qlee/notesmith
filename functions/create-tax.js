@@ -14,6 +14,10 @@ const parseCartItems = (cartItems) => {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { pid, cartItems, address, shippingRate } = body;
+  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
+  const { metadata } = paymentIntent;
+  const { shipping, subtotal } = metadata;
+  const amountBeforeTax = parseInt(subtotal) + parseInt(shipping)
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
@@ -31,10 +35,12 @@ exports.handler = async (event) => {
 
     const totalTax = calculateTax.tax_breakdown[0]
     const taxAmount = totalTax.amount
+    const totalAmount = amountBeforeTax + taxAmount
 
     await stripe.paymentIntents.update(
       pid,
       {
+        amount: totalAmount,
         metadata: {
           tax: taxAmount,
           taxId: calculateTax.id,
@@ -52,6 +58,16 @@ exports.handler = async (event) => {
     }
   } catch(error) {
     console.error("[Stripe] Error calculating tax: ", error)
+    
+    await stripe.paymentIntents.update(
+      pid,
+      {
+        metadata: {
+          tax: 0
+        }
+      }
+    )
+
     return {
       statusCode: 400,
       body: JSON.stringify({

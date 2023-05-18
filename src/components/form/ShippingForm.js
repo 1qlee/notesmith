@@ -157,12 +157,13 @@ const ShippingForm = ({
       setMethodValidated(true)
       setMethodStatus({
         msg: "Done",
-        color: colors.green.oneHundred,
-        background: colors.green.sixHundred,
+        color: colors.gray.oneHundred,
+        background: colors.gray.nineHundred,
       })
       setLoading(false)
     }).catch(error => {
       setLoading(false)
+      setTaxRate(0)
       toast.error(error)
     })
   }
