@@ -19,7 +19,6 @@ function CheckoutForm({
   customer,
   pid,
   setPaymentProcessing,
-  toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
@@ -69,10 +68,8 @@ function CheckoutForm({
       // details incomplete)
       console.log(error)
       setError(error)
-      toast.error(error.message)
       setProcessing(false)
     } else {
-      console.log(payment)
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
@@ -153,6 +150,7 @@ function CheckoutForm({
       }
 
       await saveOrderItems(cartItems, orderData)
+      console.log("Success", data)
 
       // remove items from cart and clear pid from localStorage
       setError(null)
@@ -162,6 +160,7 @@ function CheckoutForm({
       // redirect the user to the orders summary page
       navigate(`/orders/${pid}?key=${authKey}`)
     }).catch(error => {
+      console.log("Error", error)
       // remove items from cart and clear pid from localStorage
       setError(null)
       clearCart()

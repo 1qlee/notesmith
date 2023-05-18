@@ -1,32 +1,44 @@
 const easypostApi = require('@easypost/api');
 const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
-function calculateTotalWeight(cartItems) {
-  let totalWeight = 0;
+function parseCartItems(cartItems) {
+  const itemDetails = {
+    weight: 0,
+    quantity: 0,
+    value: 0,
+    description: 'notebooks',
+    hs_tariff_number: '4820.10.20',
+    origin_country: "US",
+  }
 
   for (let i = 0; i < cartItems.length; i++) {
+    itemDetails.quantity += +cartItems[i].quantity;
+    itemDetails.value += +cartItems[i].price * +cartItems[i].quantity;
+
     if (cartItems[i].weight) {
-      const totalItemWeight = +cartItems[i].weight * +cartItems[i].quantity
-      totalWeight += totalItemWeight
+      const totalItemWeight = +cartItems[i].weight * +cartItems[i].quantity;
+      itemDetails.weight += totalItemWeight;
     }
     else {
-      totalWeight += (9.6 * +cartItems[i].quantity)
+      itemDetails.weight += (9.6 * +cartItems[i].quantity);
     }
   };
 
-  return totalWeight;
+  return ;
 }
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { cartItems, address } = body;
+  const cartDetails = parseCartItems(cartItems);
+  const totalWeight = cartDetails.weight;
 
   // physical package size
   const parcel = await easypost.Parcel.create({
     width: 9,
     length: 6,
     height: 2,
-    weight: calculateTotalWeight(cartItems),  // assumption that there is only one product
+    weight: totalWeight,  // assumption that there is only one product
   });
 
   // create a new easypost Shipment object
@@ -57,12 +69,25 @@ exports.handler = async (event) => {
     // shipment is the new easypost shipment object we created earlier
     const shipmentId = newShipment.id;
     const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
+    const { service } = priorityRate
     const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
     const formattedRate = roundedRate * 100
 
     const formattedPriorityRate = {
       ...priorityRate[0],
       rate: formattedRate,
+    }
+
+    if (service === "PriorityMailInternational") {
+      const customsItems = await easypost.CustomsItem.create(cartDetails)
+
+      const customsInfo = await new easypost.CustomsInfo({
+        eel_pfc: 'NOEEI 30.37(a)',
+        customs_certify: true,
+        customs_signer: 'Won Kyu Lee',
+        contents_type: 'merchandise',
+        customs_items: [customsItems],
+      });
     }
 
     console.log("[Netlify] Successfully created and returned shipping rates to the user.");

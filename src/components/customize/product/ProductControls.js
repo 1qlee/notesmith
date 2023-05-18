@@ -132,7 +132,7 @@ function ProductControls({
     }
 
     setLoading(false)
-    toast.success(`Applied template to ${currentPageSide} pages!`)
+    toast(`Applied template to ${currentPageSide} pages!`)
   }
 
   return (

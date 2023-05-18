@@ -9,9 +9,6 @@ const updatePaymentIntent = async (pid, shippingLabel) => {
   await stripe.paymentIntents.update(
     pid,
     {
-      shipping: {
-        tracking_number: tracking_code
-      },
       metadata: {
         tracking: tracking_code, // carrier tracking code
         trackingUrl: public_url, // easypost URL
@@ -31,9 +28,9 @@ exports.handler = async (event) => {
   try {
     // retrieve the existing shipment by its ID
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
-    console.log(userShipment)
+    const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);
     // buy the shipping label from easypost
-    const shippingLabel = await easypost.Shipment.buy(userShipment);
+    const shippingLabel = await easypost.Shipment.buy(userShipment.id, userShippingRate);
     console.log(`[Netlify] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information

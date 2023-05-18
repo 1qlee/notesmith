@@ -381,7 +381,6 @@ const Checkout = () => {
                               activeAccordionTab={activeAccordionTab}
                             >
                               <CheckoutForm
-                                activeAccordionTab={activeAccordionTab}
                                 address={address}
                                 authKey={authKey}
                                 cartItems={cartItems}
@@ -389,12 +388,7 @@ const Checkout = () => {
                                 clientSecret={clientSecret}
                                 customer={customer}
                                 pid={pid}
-                                selectedRate={selectedRate}
-                                setActiveAccordionTab={setActiveAccordionTab}
-                                setLoading={setLoading}
                                 setPaymentProcessing={setPaymentProcessing}
-                                taxRate={taxRate}
-                                toast={toast}
                               />
                             </AccordionTab>
                           </Box>

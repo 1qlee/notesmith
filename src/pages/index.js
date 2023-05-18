@@ -139,9 +139,9 @@ const IndexPage = ({ data }) => {
                         padding="1rem"
                         width="100%"
                         as={Link}
-                        to="/signup"
+                        to="/products/notebooks/wired-notebook-a5-custom"
                       >
-                        <span>Start pre-order</span>
+                        <span>Pre-order</span>
                         <Icon>
                           <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
                         </Icon>

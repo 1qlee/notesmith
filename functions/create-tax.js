@@ -62,6 +62,7 @@ exports.handler = async (event) => {
     await stripe.paymentIntents.update(
       pid,
       {
+        amount: amountBeforeTax,
         metadata: {
           tax: 0
         }

@@ -5,6 +5,7 @@ import { useFirebaseContext } from "../../utils/auth"
 import { CircleNotch } from "phosphor-react"
 import { convertUnix } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
+import { get, ref } from "firebase/database"
 
 import { Container, LayoutContainer } from "../layout/Container"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
@@ -50,7 +51,8 @@ const Order = ({ location, orderId }) => {
   useEffect(() => {
     async function retrieveOrder() {
       // retrieve order info from the db based on orderId
-      await firebaseDb.ref(`orders/${orderId}`).once("value").then(async snapshot => {
+      get(ref(firebaseDb, `orders/${orderId}`)).then(async snapshot => {
+        console.log(orderId)
         const value = snapshot.val()
 
         if (!value) {
@@ -65,9 +67,8 @@ const Order = ({ location, orderId }) => {
             const orderItemsArray = []
 
             for (const orderItem in value.orderItems) {
-              await firebaseDb.ref(`orderItems/${orderItem}`).once("value").then(snapshot => {
+              get(ref(firebaseDb, `orderItems/${orderItem}`)).then(snapshot => {
                 orderItemsArray.push(snapshot.val())
-
                 console.log(snapshot.val())
               })
             }
