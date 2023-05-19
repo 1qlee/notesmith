@@ -6,6 +6,7 @@ import { CircleNotch } from "phosphor-react"
 import { convertUnix } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { get, ref } from "firebase/database"
+import { useShoppingCart } from "use-shopping-cart"
 
 import { Container, LayoutContainer } from "../layout/Container"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
@@ -32,8 +33,10 @@ const PlaceholderLine = styled.div`
 `
 
 const Order = ({ location, orderId }) => {
+  const { clearCart } = useShoppingCart()
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
+  console.log(location.state.error)
   const { loading, firebaseDb } = useFirebaseContext()
   const [orderInfo, setOrderInfo] = useState(null)
   const [orderItems, setOrderItems] = useState(null)

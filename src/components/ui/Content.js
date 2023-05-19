@@ -21,33 +21,33 @@ const Content = styled.div`
     border-top: 2px solid ${props => props.bordercolor};
   }
   h1,h2,h3,h4,h5,h6 {
-    margin: 0 0 1rem;
+    margin: 0 0 16px;
     font-weight: 700;
     text-rendering: optimizeLegibility;
-    line-height: 1.2;
+    line-height: 1.3;
     text-align: ${props => props.headingtextalign};
     font-family: ${props => props.headingfontfamily};
   }
   h1 {
-    font-size: ${props => props.h1fontsize || "4rem"};
+    font-size: ${props => props.h1fontsize || "4.209rem"};
     color: ${props => props.h1color || colors.gray.nineHundred};
     font-weight: ${props => props.h1fontweight || "700"};
     margin: ${props => props.h1margin};
   }
   h2 {
-    font-size: ${props => props.h2fontsize || "3rem"};
+    font-size: ${props => props.h2fontsize || "3.157rem"};
     color: ${props => props.h2color || colors.gray.nineHundred};
     font-weight: ${props => props.h2fontweight || "700"};
     margin: ${props => props.h2margin};
   }
   h3 {
-    font-size: ${props => props.h3fontsize || "1.5rem"};
+    font-size: ${props => props.h3fontsize || "2.369rem"};
     color: ${props => props.h3color || colors.gray.nineHundred};
     font-weight: ${props => props.h3fontweight || "700"};
     margin: ${props => props.h3margin};
   }
   h4 {
-    font-size: ${props => props.h4fontsize || "1rem"};
+    font-size: ${props => props.h4fontsize || "1.777rem"};
     color: ${props => props.h4color || colors.gray.nineHundred};
     font-weight: ${props => props.h4fontweight || "700"};
     margin: ${props => props.h4margin};
@@ -88,7 +88,7 @@ const Content = styled.div`
     font-size: ${props => props.paragraphfontsize || "1rem"};
     font-family: ${props => props.paragraphfontfamily};
     font-weight: ${props => props.paragraphfontweight};
-    line-height: ${props => props.paragraphlineheight || "1.5"};
+    line-height: ${props => props.paragraphlineheight || "1.75"};
     text-align: ${props => props.paragraphtextalign};
     text-transform: ${props => props.paragraphtexttransform};
     margin-bottom: ${props => props.paragraphmarginbottom};
@@ -99,7 +99,7 @@ const Content = styled.div`
     font-family: ${props => props.smallfontfamily};
     line-height: 1.5;
     display: block;
-    margin: ${props => props.smallmargin || "0.5rem 0"};
+    margin: ${props => props.smallmargin || "8px 0"};
   }
   a {
     color: ${props => props.linkcolor};

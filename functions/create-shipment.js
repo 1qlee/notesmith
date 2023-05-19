@@ -53,7 +53,11 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: "We had trouble generating your shipping label. Please contact us at general@notesmithbooks.com for assistance and reference your order number in the subject line."
+        totalAmount: totalAmount,
+        tax: tax,
+        shipping: shipping,
+        authKey: authKey,
+        error: "shipping",
       })
     }
   }

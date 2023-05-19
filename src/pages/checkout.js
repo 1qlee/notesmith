@@ -384,7 +384,6 @@ const Checkout = () => {
                                 address={address}
                                 authKey={authKey}
                                 cartItems={cartItems}
-                                clearCart={clearCart} 
                                 clientSecret={clientSecret}
                                 customer={customer}
                                 pid={pid}
