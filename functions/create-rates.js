@@ -24,7 +24,7 @@ function parseCartItems(cartItems) {
     }
   };
 
-  return ;
+  return itemDetails;
 }
 
 exports.handler = async (event) => {
@@ -32,55 +32,20 @@ exports.handler = async (event) => {
   const { cartItems, address } = body;
   const cartDetails = parseCartItems(cartItems);
   const totalWeight = cartDetails.weight;
-
-  // physical package size
-  const parcel = await easypost.Parcel.create({
-    width: 9,
-    length: 6,
-    height: 2,
-    weight: totalWeight,  // assumption that there is only one product
-  });
-
-  // create a new easypost Shipment object
-  const newShipment = await easypost.Shipment.create({
-    to_address: {
-      street1: address.line1,
-      street2: address.line2,
-      city: address.city,
-      state: address.state,
-      country: address.country,
-      zip: address.postal_code,
-    },
-    from_address: {
-      company: 'Notesmith LLC',
-      street1: '971 Stewart Ave',
-      city: 'Garden City',
-      state: 'NY',
-      zip: '11530',
-      email: "general@notesmithbooks.com",
-    },
-    parcel: parcel,
-    carrier_accounts: [
-      "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
-    ]
-  });
+  let newShipment;
 
   try {
-    // shipment is the new easypost shipment object we created earlier
-    const shipmentId = newShipment.id;
-    const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
-    const { service } = priorityRate
-    const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
-    const formattedRate = roundedRate * 100
+    // physical package size
+    const parcel = await easypost.Parcel.create({
+      width: 9,
+      length: 6,
+      height: 2,
+      weight: totalWeight,  // assumption that there is only one product
+    });
 
-    const formattedPriorityRate = {
-      ...priorityRate[0],
-      rate: formattedRate,
-    }
-
-    if (service === "PriorityMailInternational") {
-      const customsItems = await easypost.CustomsItem.create(cartDetails)
-
+    if (address.country !== "US") {
+      console.log(`[Easypost] Creating customs info for international shipment to: ${address.country}`);
+      const customsItems = await easypost.CustomsItem.create(cartDetails);
       const customsInfo = await new easypost.CustomsInfo({
         eel_pfc: 'NOEEI 30.37(a)',
         customs_certify: true,
@@ -88,6 +53,70 @@ exports.handler = async (event) => {
         contents_type: 'merchandise',
         customs_items: [customsItems],
       });
+
+      newShipment = await easypost.Shipment.create({
+        to_address: {
+          street1: address.line1,
+          street2: address.line2,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          zip: address.postal_code,
+        },
+        from_address: {
+          company: 'Notesmith LLC',
+          street1: '971 Stewart Ave',
+          city: 'Garden City',
+          state: 'NY',
+          zip: '11530',
+          email: "general@notesmithbooks.com",
+        },
+        parcel: parcel,
+        customs_info: customsInfo,
+        carrier_accounts: [
+          "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
+        ]
+      });
+
+      console.log(`[Easypost] Successfully created customs info for international shipment to: ${address.country}`);
+    }
+    else {
+      console.log(`[Easypost] Creating shipment for domestic shipment`);
+
+      newShipment = await easypost.Shipment.create({
+        to_address: {
+          street1: address.line1,
+          street2: address.line2,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          zip: address.postal_code,
+        },
+        from_address: {
+          company: 'Notesmith LLC',
+          street1: '971 Stewart Ave',
+          city: 'Garden City',
+          state: 'NY',
+          zip: '11530',
+          email: "general@notesmithbooks.com",
+        },
+        parcel: parcel,
+        carrier_accounts: [
+          "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
+        ]
+      });
+
+      console.log(`[Easypost] Successfully created shipment for domestic shipment`)
+    }
+    // shipment is the new easypost shipment object we created earlier
+    const shipmentId = newShipment.id;
+    const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
+    const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
+    const formattedRate = roundedRate * 100
+
+    const formattedPriorityRate = {
+      ...priorityRate[0],
+      rate: formattedRate,
     }
 
     console.log("[Netlify] Successfully created and returned shipping rates to the user.");

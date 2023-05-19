@@ -9,6 +9,7 @@ import { ref, set } from "firebase/database"
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
+import Notification from "../ui/Notification"
 
 function CheckoutForm({
   address,
@@ -19,6 +20,7 @@ function CheckoutForm({
   customer,
   pid,
   setPaymentProcessing,
+  toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
@@ -41,6 +43,7 @@ function CheckoutForm({
     // show loading UI state
 
     if (!stripe || !elements) {
+      toast.error("Error occured. Please refresh and try again.")
       return setProcessing(false)
     }
 
@@ -48,6 +51,7 @@ function CheckoutForm({
     const { error: submitError } = await elements.submit();
 
     if (submitError) {
+      // form errors will be handled by PaymentElement component so we don't have to explicitly set them here
       return setProcessing(false)
     }
 
@@ -66,8 +70,7 @@ function CheckoutForm({
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
-      console.log(error)
-      setError(error)
+      setError(error.message)
       setProcessing(false)
     } else {
       // Your customer will be redirected to your `return_url`. For some payment
@@ -80,34 +83,6 @@ function CheckoutForm({
 
       purchaseShippingLabel(paymentInfo)
     }
-  }
-
-  // save each order item to the database
-  // save the entire order to the database
-  const saveOrderItems = async (cartItems, orderData) => {
-    let cartItemsObject = {}
-    const cartItemsLength = cartItems.length
-
-    for (let i = 0; i < cartItemsLength; i++) {
-      const cartItemId = cartItems[i].id
-      cartItemsObject[cartItemId] = true
-
-      await set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
-        ...cartItems[i],
-        pid: pid,
-      }).catch(() => {
-        console.error("Error writing order items to the database.")
-      })
-    }
-
-    // save the order to the database by its pid
-    await set(ref(firebaseDb, `/orders/${pid}`), {
-      ...orderData,
-      pid: pid,
-      orderItems: cartItemsObject,
-    }).catch(() => {
-      console.error("Error writing order to the database.")
-    })
   }
 
   // fetch easypost api to purchase a shipping label
@@ -158,7 +133,7 @@ function CheckoutForm({
       localStorage.removeItem("pid")
 
       // redirect the user to the orders summary page
-      navigate(`/orders/${pid}?key=${authKey}`)
+      // navigate(`/orders/${pid}?key=${authKey}`)
     }).catch(error => {
       console.log("Error", error)
       // remove items from cart and clear pid from localStorage
@@ -167,14 +142,33 @@ function CheckoutForm({
       localStorage.removeItem("pid")
 
       // redirect the user to the orders summary page
-      navigate(
-        `/orders/${pid}?key=${authKey}`,
-        {
-          state: {
-            error: error
-          }
-        }
-      )
+      // navigate(`/orders/${pid}?key=${authKey}`)
+    })
+  }
+
+  // save each order item to the database
+  // save the entire order to the database
+  const saveOrderItems = async (cartItems, orderData) => {
+    let cartItemsObject = {}
+    const cartItemsLength = cartItems.length
+
+    for (let i = 0; i < cartItemsLength; i++) {
+      const cartItemId = cartItems[i].id
+      cartItemsObject[cartItemId] = true
+
+      await set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
+        ...cartItems[i],
+        pid: pid,
+      }).catch(() => {
+        
+      })
+    }
+
+    // save the order to the database by its pid
+    await set(ref(firebaseDb, `/orders/${pid}`), {
+      ...orderData,
+      pid: pid,
+      orderItems: cartItemsObject,
     })
   }
 
@@ -183,6 +177,14 @@ function CheckoutForm({
       onSubmit={submitPaymentForm}
       id="checkout-payment-form"
     >
+      {error && (
+        <Notification 
+          backgroundcolor={colors.red.sixHundred}
+          color={colors.red.oneHundred}
+        >
+          <p>{error}</p>
+        </Notification>
+      )}
       <PaymentElement
         id="card-element"
         options={paymentOptions}
@@ -196,7 +198,7 @@ function CheckoutForm({
         <Button
           backgroundcolor={colors.gray.nineHundred}
           className={processing ? "is-loading" : null}
-          color={colors.white}
+          color={colors.gray.oneHundred}
           disabled={processing || !stripe || !elements}
           form="checkout-payment-form"
           id="submit"

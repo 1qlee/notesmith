@@ -384,11 +384,12 @@ const Checkout = () => {
                                 address={address}
                                 authKey={authKey}
                                 cartItems={cartItems}
-                                clearCart={clearCart}
+                                clearCart={clearCart} 
                                 clientSecret={clientSecret}
                                 customer={customer}
                                 pid={pid}
                                 setPaymentProcessing={setPaymentProcessing}
+                                toast={toast}
                               />
                             </AccordionTab>
                           </Box>
