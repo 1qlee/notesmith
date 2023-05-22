@@ -24,12 +24,11 @@ const Footer = () => {
             <Col sm={4} push={{ sm: 2 }}>
               <Content
                 paragraphcolor={colors.gray.oneHundred}
-                h3color={colors.gray.oneHundred}
-                h3fontweight="400"
-                h3margin="0 0 0.5rem"
-                margin="0 0 1rem"
+                h4color={colors.gray.oneHundred}
+                h4fontweight="400"
+                h4margin="0 0 0.5rem"
               >
-                <h3>Sign up to get access to promotions, special offers, news, and more</h3>
+                <h4>Sign up to get access to promotions, special offers, news, and more</h4>
               </Content>
             </Col>
             <Col sm={4} push={{ sm: 2 }}>

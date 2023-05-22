@@ -23,7 +23,7 @@ exports.handler = async (event) => {
   // paymentIntent has all purchase info
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
   const { rateId, shipmentId, authKey, tax, shipping } = paymentIntent.metadata;
-  const totalAmount = paymentIntent.amount;
+  const amount = paymentIntent.amount;
 
   try {
     // retrieve the existing shipment by its ID
@@ -41,7 +41,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         shippingLabel: shippingLabel,
         trackingUrl: shippingLabel.tracker.public_url,
-        totalAmount: totalAmount,
+        amount: amount,
         tax: tax,
         shipping: shipping,
         authKey: authKey,
@@ -53,7 +53,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        totalAmount: totalAmount,
+        amount: amount,
         tax: tax,
         shipping: shipping,
         authKey: authKey,

@@ -9,6 +9,9 @@ const Box = styled.div`
   &.has-border {
     border: ${colors.borders.black};
   }
+  &.no-border-top {
+    border-top-width: 0 !important;
+  }
 `
 
 export default Box

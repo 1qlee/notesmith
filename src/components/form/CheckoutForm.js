@@ -76,18 +76,15 @@ function CheckoutForm({
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
-      const createdDate = payment.created
-      const paymentCreatedDate = {
-        createdDate: createdDate,
-      }
+      const createdDate = payment.paymentIntent.created
 
-      purchaseShippingLabel(paymentCreatedDate)
+      purchaseShippingLabel(createdDate)
     }
   }
 
   // fetch easypost api to purchase a shipping label
   // takes options arg to save to orders (database)
-  const purchaseShippingLabel = (paymentCreatedDate) => {
+  const purchaseShippingLabel = (createdDate) => {
     // shows loader
     setPaymentProcessing(true)
 
@@ -109,15 +106,15 @@ function CheckoutForm({
 
       // extract data
       const trackingCode = data.shippingLabel.tracking_code
-      const { trackingUrl, totalAmount, authKey, tax, shipping } = data
+      const { trackingUrl, amount, authKey, tax, shipping } = data
       const orderData = {
-        ...paymentCreatedDate,
+        created: createdDate,
         address: address,
         authKey: authKey,
         customer: customer,
         shipping: shipping,
         tax: tax,
-        amount: totalAmount,
+        amount: amount,
         tracking:  {
           code: trackingCode,
           url: trackingUrl
@@ -129,7 +126,6 @@ function CheckoutForm({
       // if there is an order error, it means we could not save the order to the database
       if (orderSaved.error) {
         setError(null)
-        setProcessingError(orderSaved.error)
         setPaymentProcessing(false)
 
         // redirect the user to the orders summary page including the error
@@ -137,14 +133,18 @@ function CheckoutForm({
           `/orders/${pid}?key=${authKey}`,
           {
             state: {
+              orderData: orderData,
+              cartItems: cartItems,
               error: orderSaved.error,
               clearCart: true,
             }
           }
         )
       }
+      // otherwise, everything is good-to-go so redirect the user to the orders summary page
       else {
         setError(null)
+        setPaymentProcessing(false)
 
         // redirect the user to the orders summary page
         navigate(
@@ -160,10 +160,11 @@ function CheckoutForm({
     }).catch(async data => {
       // if we have an error here that means the order was created but the shipping label was not purchased
       // we need to have a failsafe so that we know this occured
-      const { totalAmount, authKey, tax, shipping, error } = data
+      const response = await data.json()
+      const { amount, authKey, tax, shipping, error } = response
       const orderData = {
-        ...paymentCreatedDate,
-        amount: totalAmount,
+        created: createdDate,
+        amount: amount,
         tax: tax,
         shipping: shipping,
         authKey: authKey,
@@ -174,7 +175,6 @@ function CheckoutForm({
       
       if (orderSaved.error) {
         setError(null)
-        setProcessingError(orderSaved.error)
         setPaymentProcessing(false)
 
         // redirect the user to the orders summary page including the error
@@ -182,6 +182,8 @@ function CheckoutForm({
           `/orders/${pid}?key=${authKey}`,
           {
             state: {
+              orderData: orderData,
+              cartItems: cartItems,
               error: orderSaved.error,
               clearCart: true,
             }
@@ -189,8 +191,8 @@ function CheckoutForm({
         )
       }
       else {
-        // remove items from cart
         setError(null)
+        setPaymentProcessing(false)
 
         // redirect the user to the orders summary page
         navigate(
@@ -238,6 +240,10 @@ function CheckoutForm({
         error: `There was an issue with saving your order information to our system. Please contact us at general@notesmithbooks.com for further assistance and include the following order id: ${pid}.`
       }
     })
+
+    return {
+      error: null
+    }
   }
 
   return (

@@ -3,6 +3,8 @@ import styled from "styled-components"
 import Button from "../ui/Button"
 import { colors, fonts } from "../../styles/variables"
 import { CircleNotch, PaperPlaneRight } from "phosphor-react"
+import { useFirebaseContext } from "../../utils/auth"
+import { ref, set, push, get, query, orderByChild, equalTo } from "firebase/database"
 
 import Icon from "../ui/Icon"
 import { StyledInput, ErrorLine } from "./FormComponents"
@@ -67,59 +69,80 @@ const EmailInput = styled(StyledInput)`
 `
 
 function RegisterForm() {
+  const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState({
     msg: "",
-    color: colors.red.sixHundred
+    color: colors.red.threeHundred
   })
 
-  const sendgridSignUp = async e => {
+  const registerEmail = e => {
     e.preventDefault()
     setLoading(true)
     setEmailError({
       msg: "",
-      color: colors.gray.sevenHundred
+      color: colors.gray.oneHundred
     })
-    setEmail(email)
 
-    await fetch("/.netlify/functions/register-signup", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: email
-      })
-    }).then(res => {
-      const promise = res.json()
+    get(query(ref(firebaseDb, "signups"), orderByChild("email"), equalTo(email))).then(snapshot => {
+      if (snapshot.exists()) {
+        setEmailError({
+          msg: "This email is already registered.",
+          color: colors.red.threeHundred
+        })
+        setLoading(false)
+      }
+      else {
+        const newSignupKey = push(ref(firebaseDb, "signups")).key
+        // add the email with a unique id to the database
+        // we will use the id to link the user to subscription page from an email
+        set(ref(firebaseDb, `signups/${newSignupKey}`), {
+          email: email,
+          id: newSignupKey,
+          subscribed: false,
+        }).then(async () => {
+          const response = await fetch("/.netlify/functions/register-signup", {
+            method: "put",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              email: email,
+              id: newSignupKey,
+            })
+          })
+          const data = await response.json()
 
-      promise.then(obj => {
-        // if the response contains any errors, throw an Error
-        if (obj.errors) {
-          throw obj.errors
-        }
-        else {
+          if (data.errors) {
+            setLoading(false)
+            setEmailError({
+              msg: "Please double-check your inputted email address.",
+              color: colors.red.threeHundred
+            })
+          }
+          else {
+            setLoading(false)
+            setEmailError({
+              msg: data.msg,
+              color: colors.gray.oneHundred
+            })
+          }
+        }).catch(() => {
           setLoading(false)
           setEmailError({
-            msg: obj.msg,
-            color: colors.green.sixHundred
+            msg: "An error occured. Please try again.",
+            color: colors.red.threeHundred
           })
-        }
-      })
-    }).catch(() => {
-      setLoading(false)
-      setEmailError({
-        msg: "Please double-check your inputted email address.",
-        color: colors.red.sixHundred
-      })
+        })
+      }
     })
   }
 
   return (
     <form 
       id="register-form"
-      onSubmit={e => sendgridSignUp(e)}
+      onSubmit={e => registerEmail(e)}
     >
       <InputWrapper>
         <InputLabel 
@@ -128,7 +151,7 @@ function RegisterForm() {
           <EmailInput
             onFocus={() => setEmailError({
               msg: "",
-              color: colors.red.sixHundred
+              color: colors.red.threeHundred
             })}
             onChange={e => setEmail(e.currentTarget.value)}
             className={email && "has-value"}

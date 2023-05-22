@@ -36,7 +36,7 @@ const Order = ({ location, orderId }) => {
   const { clearCart } = useShoppingCart()
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
-  console.log(location.state.error)
+  const { state } = location
   const { loading, firebaseDb } = useFirebaseContext()
   const [orderInfo, setOrderInfo] = useState(null)
   const [orderItems, setOrderItems] = useState(null)
@@ -44,6 +44,7 @@ const Order = ({ location, orderId }) => {
   const [orderNotFound, setOrderNotFound] = useState(false)
   const [resendEmail, setResendEmail] = useState()
   const [processing, setProcessing] = useState(false)
+  const [checkoutError, setCheckoutError] = useState()
   const [error, setError] = useState({
     show: false,
     msg: "",
@@ -52,11 +53,21 @@ const Order = ({ location, orderId }) => {
   })
 
   useEffect(() => {
+    if (state.clearCart) {
+      clearCart()
+    }
+
+    if (state.error) {
+      setCheckoutError(state.error)
+      setOrderInfo(state.orderData)
+    }
+
     async function retrieveOrder() {
       // retrieve order info from the db based on orderId
       get(ref(firebaseDb, `orders/${orderId}`)).then(async snapshot => {
         console.log(orderId)
         const value = snapshot.val()
+        console.log(value)
 
         if (!value) {
           setOrderNotFound(true)
@@ -89,7 +100,7 @@ const Order = ({ location, orderId }) => {
     if (!loading) {
       retrieveOrder()
     }
-  }, [orderId, loading])
+  }, [orderId, loading, location])
 
   function handleEmailResend(e) {
     e.preventDefault()
@@ -149,9 +160,7 @@ const Order = ({ location, orderId }) => {
           <Container>
             <LayoutContainer>
               <SectionContent>
-                <div
-                  columns="600px 1fr"
-                >
+                <div>
                   <div>
                     {orderNotFound ? (
                       <>
@@ -202,7 +211,7 @@ const Order = ({ location, orderId }) => {
                                 >
                                   <h3>Order date</h3>
                                   {showInfo ? (
-                                    <p>{convertUnix(orderInfo.createdDate)}</p>
+                                    <p>{convertUnix(orderInfo.created)}</p>
                                   ) : (
                                     <PlaceholderLine width="4rem" />
                                   )}
