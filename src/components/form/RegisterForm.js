@@ -77,6 +77,36 @@ function RegisterForm() {
     color: colors.red.threeHundred
   })
 
+  const sendRegisterEmail = async (newSignupKey) => {
+    const response = await fetch("/.netlify/functions/register-signup", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        id: newSignupKey,
+      })
+    })
+    const data = await response.json()
+
+    if (data.error) {
+      setLoading(false)
+      setEmailError({
+        msg: "Please double-check your inputted email address.",
+        color: colors.red.threeHundred
+      })
+    }
+    else {
+      setLoading(false)
+      setEmailError({
+        msg: data.msg,
+        color: colors.gray.oneHundred
+      })
+    }
+  }
+
+
   const registerEmail = e => {
     e.preventDefault()
     setLoading(true)
@@ -87,10 +117,24 @@ function RegisterForm() {
 
     get(query(ref(firebaseDb, "signups"), orderByChild("email"), equalTo(email))).then(snapshot => {
       if (snapshot.exists()) {
-        setEmailError({
-          msg: "This email is already registered.",
-          color: colors.red.threeHundred
-        })
+        const data = snapshot.val()
+        let signup;
+
+        // extra object
+        for (const key in data) {
+          signup = data[key]
+        }
+
+        if (signup.subscribed) {
+          setEmailError({
+            msg: "This email is already registered.",
+            color: colors.red.threeHundred
+          })
+        }
+        else {
+          sendRegisterEmail(signup.id)
+        }
+
         setLoading(false)
       }
       else {
@@ -102,32 +146,7 @@ function RegisterForm() {
           id: newSignupKey,
           subscribed: false,
         }).then(async () => {
-          const response = await fetch("/.netlify/functions/register-signup", {
-            method: "put",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              email: email,
-              id: newSignupKey,
-            })
-          })
-          const data = await response.json()
-
-          if (data.errors) {
-            setLoading(false)
-            setEmailError({
-              msg: "Please double-check your inputted email address.",
-              color: colors.red.threeHundred
-            })
-          }
-          else {
-            setLoading(false)
-            setEmailError({
-              msg: data.msg,
-              color: colors.gray.oneHundred
-            })
-          }
+          sendRegisterEmail(newSignupKey)
         }).catch(() => {
           setLoading(false)
           setEmailError({
@@ -175,6 +194,7 @@ function RegisterForm() {
               type="submit"
               form="register-form"
               className={loading ? "is-loading" : null}
+              disabled={loading}
               margin="0 0 0 2px"
             >
               <Icon>

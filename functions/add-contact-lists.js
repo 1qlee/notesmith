@@ -26,7 +26,14 @@ exports.handler = async (event) => {
             }
           ]
         }
-      ]
+      ],
+      asm: {
+        group_id: 17004,
+        groups_to_display: [
+          17004,
+          22999
+        ]
+      }
     }
 
     const request = {
