@@ -27,6 +27,7 @@ const StyledTemplatesBar = styled.div`
   &.is-collapsed {
     transform: translateY(calc(-100% - 4px));
     transition: transform 0.2s;
+    top: 62px;
   }
   @media only screen and (max-width: ${breakpoints.md}) {
     position: absolute;
@@ -41,6 +42,8 @@ const StyledTemplatesBar = styled.div`
 const TemplatesContent = styled.div`
   overflow-y: auto;
   padding: 1rem;
+  height: 600px;
+  min-height: 600px;
   max-height: 600px;
   &::-webkit-scrollbar {
     height: 0.5rem;

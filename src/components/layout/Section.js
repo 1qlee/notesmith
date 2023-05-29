@@ -1,8 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, spacing, widths, fonts } from "../../styles/variables"
+import { colors, spacing } from "../../styles/variables"
 import RandomLine from "../misc/Lines"
-
 
 const SectionMain = styled.main`
   background-color: ${colors.white};
@@ -36,12 +35,13 @@ const SectionContent = styled.div`
 `
 
 const StyledSectionHeading = styled.div`
-  margin: ${props => props.margin || "0 0 32px 16px"};
+  margin: ${props => props.margin || "0 0 32px 0"};
   display: inline-block;
   position: relative;
-  h2 {
-    font-size: ${props => props.fontsize || "1rem"};
-    font-family: ${fonts.secondary};
+  h3 {
+    font-size: 1rem;
+    padding-bottom: 4px;
+    letter-spacing: 1px;
   }
 `
 
@@ -55,7 +55,7 @@ function SectionHeading({
       margin={margin}
       fontsize={fontsize}
     >
-      <h2>{children}</h2>
+      <h3>{children}</h3>
       <RandomLine />
     </StyledSectionHeading>
   )

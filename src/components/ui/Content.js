@@ -69,9 +69,7 @@ const Content = styled.div`
   }
   h5 {
     color: ${props => props.h5color || colors.gray.nineHundred};
-    display: block;
-    font-family: "Inter", Helvetica, Tahoma, sans-serif;
-    font-size: ${props => props.h5fontsize || "0.75rem"};
+    font-size: ${props => props.h5fontsize || "1.125rem"};
     font-weight: ${props => props.h5fontweight || "700"};
     margin: ${props => props.h5margin};
   }
@@ -84,7 +82,7 @@ const Content = styled.div`
     color: ${props => props.licolor};
   }
   p {
-    color: ${props => props.paragraphcolor || colors.gray.eightHundred};
+    color: ${props => props.paragraphcolor || colors.gray.nineHundred};
     font-size: ${props => props.paragraphfontsize || "1rem"};
     font-family: ${props => props.paragraphfontfamily};
     font-weight: ${props => props.paragraphfontweight};
@@ -92,12 +90,15 @@ const Content = styled.div`
     text-align: ${props => props.paragraphtextalign};
     text-transform: ${props => props.paragraphtexttransform};
     margin-bottom: ${props => props.paragraphmarginbottom};
+    &:not(:last-child) {
+      margin-bottom: ${props => props.paragraphmarginbottom || "16px"};
+    }
   }
   small {
     color: ${props => props.smallcolor || colors.gray.sixHundred};
     font-size: ${props => props.smallfontsize};
     font-family: ${props => props.smallfontfamily};
-    line-height: 1.5;
+    line-height: 1.25;
     display: block;
     margin: ${props => props.smallmargin || "8px 0"};
   }

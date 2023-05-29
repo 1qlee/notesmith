@@ -4,6 +4,7 @@ import { colors, convertToDecimal, fonts } from "../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"
+import Content from "../ui/Content"
 import Box from "../ui/Box"
 import Tag from "../ui/Tag"
 
@@ -44,7 +45,7 @@ const CapitalizedWord = styled.span`
 function OrderSummary({ 
   cartItems,
   selectedRate, 
-  taxRate,
+  tax,
   totalPrice,
 }) {
   // calculate the total price of the user's cart incl shipping
@@ -54,8 +55,8 @@ function OrderSummary({
     if (selectedRate) {
       calculatedPrice += parseFloat(selectedRate.rate)
     }
-    if (taxRate) {
-      calculatedPrice += parseFloat(taxRate)
+    if (tax.amount) {
+      calculatedPrice += parseFloat(tax.amount)
     }
 
     return convertToDecimal(calculatedPrice, 2) // converts to a float value
@@ -92,15 +93,21 @@ function OrderSummary({
                 >
                   <Box>
                     <p>{item.name}</p>
-                    {item.category === "notebooks" && item.custom ? (
-                      <small>
-                        <CapitalizedWord>{item.coverColor}, Custom</CapitalizedWord>
-                      </small>
-                    ): (
-                      <small>
-                        <CapitalizedWord>{item.coverColor},</CapitalizedWord> <CapitalizedWord>{item.leftPageData.template} left,</CapitalizedWord> <CapitalizedWord>{item.rightPageData.template} right</CapitalizedWord>
-                      </small>
-                    )}
+                    <Content
+                      smallcolor={colors.gray.sevenHundred}
+                      margin="4px 0 0"
+                      smallmargin="0"
+                    >
+                      {item.category === "notebooks" && item.custom ? (
+                        <small>
+                          <CapitalizedWord>{item.coverColor}, Custom</CapitalizedWord>
+                        </small>
+                      ) : (
+                        <small>
+                          <CapitalizedWord>{item.coverColor},</CapitalizedWord> <CapitalizedWord>{item.leftPageData.template} left,</CapitalizedWord> <CapitalizedWord>{item.rightPageData.template} right</CapitalizedWord>
+                        </small>
+                      )}
+                    </Content>
                   </Box>
                   <p>${convertToDecimal(item.price * item.quantity, 2)}</p>
                 </Flexbox>
@@ -134,8 +141,8 @@ function OrderSummary({
             justifycontent="space-between"
           >
             <p>Taxes</p>
-            {taxRate ? (
-              <p>${convertToDecimal(taxRate, 2)}</p>
+            {tax.amount ? (
+              <p>${convertToDecimal(tax.amount, 2)}</p>
             ) : (
               <p>---</p>
             )}

@@ -24,7 +24,14 @@ exports.handler = async (event) => {
       currency: 'usd',
       line_items: parseCartItems(cartItems),
       customer_details: {
-        address: address,
+        address: {
+          line1: address.line1 || address.street1,
+          line2: address.line2 || address.street2,
+          postal_code: address.postal_code || address.zip,
+          state: address.state,
+          city: address.city,
+          country: address.country,
+        },
         address_source: 'shipping',
       },
       shipping_cost: {
@@ -53,7 +60,8 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        totalTax: totalTax,
+        amount: taxAmount,
+        id: calculateTax.id,
       }),
     }
   } catch(error) {
@@ -64,7 +72,8 @@ exports.handler = async (event) => {
       {
         amount: amountBeforeTax,
         metadata: {
-          tax: 0
+          amount: 0,
+          id: null,
         }
       }
     )
@@ -72,7 +81,8 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        totalTax: 0,
+        tax: 0,
+        taxId: null,
       })
     }
   }

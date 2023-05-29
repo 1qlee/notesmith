@@ -14,6 +14,7 @@ exports.handler = async (event) => {
   // usershipment.rates is an array containing all rate objects
   console.log(`[Netlify] Finding user's selected rate from all shipment's rates: ${rateId}`);
   const userRate = userShipment.rates.find(rate => rate.id === rateId);
+  console.log("USER RATE: " + userRate)
   const shippingCost = ((Math.ceil(userRate.rate) * 100) / 100) * 100;
   const shippingRateId = userRate.id;
   const shippingRateCarrier = userRate.carrier;

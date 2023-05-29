@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { colors, regex } from "../../styles/variables"
 import { CircleNotch } from "phosphor-react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
@@ -22,16 +22,47 @@ function AddressForm({
   setSelectedRate,
   setShippingValidated,
   setShowModal,
+  setTax,
   shippingValidated,
   toast,
 }) {
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
-  const addressOptions = {
+  const isInternational = address.country !== "US"
+  const intlAddressOptions = {
     mode: "shipping",
     autocomplete: {
       mode: "automatic",
+    },
+    fields: {
+      phone: "always",
+    },
+    validation: {
+      phone: {
+        required: "always",
+      }
+    },
+    defaultValues: {
+      name: customer.name,
+      address: {
+        line1: address.line1,
+        line2: address.line2,
+        city: address.city,
+        state: address.state,
+        postal_code: address.postal_code,
+        country: address.country || 'US',
+      },
+      phone: address.phone,
+    },
+  }
+  const domesticAddressOptions = {
+    mode: "shipping",
+    autocomplete: {
+      mode: "automatic",
+    },
+    fields: {
+      phone: "never",
     },
     defaultValues: {
       name: customer.name,
@@ -46,7 +77,7 @@ function AddressForm({
     },
   }
 
-  async function validateAddress(address) {
+  async function validateAddress(address, name, phone) {
     // validate the user's inputted address using easypost's API
     const response = await fetch("/.netlify/functions/validate-address", {
       method: "POST",
@@ -55,6 +86,8 @@ function AddressForm({
       },
       body: JSON.stringify({
         address: address,
+        name: name,
+        phone: phone,
       })
     })
     const data = await response.json()
@@ -70,6 +103,7 @@ function AddressForm({
       }
     }
     else {
+      setAddress(data.address)
       return {
         errors: null,
         isValid: true,
@@ -102,10 +136,12 @@ function AddressForm({
     const addressElement = elements.getElement('address')
     const stripeAddress = await addressElement.getValue()
     const inputtedAddress = stripeAddress.value
+    const { name, phone, address } = inputtedAddress
     const isEmailVerified = regex.email.test(customer.email)
 
     // reset any existing shipping methods
     setSelectedRate(null)
+    setTax({})
     setMethodValidated(false)
     setMethodStatus({
       msg: "Submit required",
@@ -113,10 +149,11 @@ function AddressForm({
       background: colors.red.sixHundred,
     })
 
-    setAddress(inputtedAddress.address)
+    setAddress(address)
     setCustomer({
       ...customer,
-      name: inputtedAddress.name,
+      name: name,
+      phone: phone,
     })
 
     if (!isEmailVerified) {
@@ -124,7 +161,7 @@ function AddressForm({
     }
 
     if (stripeAddress.complete && isEmailVerified) {
-      const isAddressValid = await validateAddress(stripeAddress.value.address)
+      const isAddressValid = await validateAddress(address, name, phone)
 
       if (isAddressValid.isValid) {
         await updateAddress()
@@ -158,6 +195,21 @@ function AddressForm({
   }
 
   function handleAddressChange(e) {
+    const { phone, address } = e.value
+    
+    if (phone) {
+      setAddress({
+        ...address,
+      })
+      setCustomer({
+        ...customer,
+        phone: phone,
+      })
+    }
+    else {
+      setAddress(address)
+    }
+
     if (e.complete) {
       const changedAddress = e.value.address
       const addressHasChanged = JSON.stringify(changedAddress) !== JSON.stringify(address)
@@ -202,7 +254,6 @@ function AddressForm({
           placeholder="address@email.com"
           required
           type="email"
-          autoComplete="chrome-off"
           value={customer.email}
         />
         {emailError && (
@@ -213,8 +264,8 @@ function AddressForm({
           </ErrorLine>
         )}
       </StyledFieldset>
-      <AddressElement 
-        options={addressOptions}
+      <AddressElement
+        options={isInternational ? intlAddressOptions : domesticAddressOptions}
         onChange={e => handleAddressChange(e)}
       />
       <Flexbox

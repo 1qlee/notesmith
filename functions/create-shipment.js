@@ -22,16 +22,19 @@ exports.handler = async (event) => {
   const { pid } = body;
   // paymentIntent has all purchase info
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const { rateId, shipmentId, authKey, tax, shipping } = paymentIntent.metadata;
+  const { rateId, shipmentId, authKey, tax, taxId, shipping } = paymentIntent.metadata;
   const amount = paymentIntent.amount;
 
   try {
     // retrieve the existing shipment by its ID
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
+    console.log(userShipment)
     const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);
+    console.log(userShippingRate)
     // buy the shipping label from easypost
     const shippingLabel = await easypost.Shipment.buy(userShipment.id, userShippingRate);
-    console.log(`[Netlify] Bought shipping label for: ${pid}`)
+    console.log(shippingLabel)
+    console.log(`[Easypost] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information
     updatePaymentIntent(pid, shippingLabel);
@@ -39,25 +42,31 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        shippingLabel: shippingLabel,
-        trackingUrl: shippingLabel.tracker.public_url,
         amount: amount,
-        tax: tax,
-        shipping: shipping,
         authKey: authKey,
+        rateId: rateId,
+        shipmentId: shipmentId,
+        shipping: shipping,
+        shippingLabel: shippingLabel,
+        tax: tax,
+        taxId: taxId,
+        trackingUrl: shippingLabel.tracker.public_url,
       })
     }
   } catch(error) {
-    console.log(error)
+    console.error(`[Easypost] Something went wrong when buying shipping label: ${error}`)
 
     return {
       statusCode: 400,
       body: JSON.stringify({
         amount: amount,
-        tax: tax,
-        shipping: shipping,
         authKey: authKey,
         error: "shipping",
+        rateId: rateId,
+        shipmentId: shipmentId,
+        shipping: shipping,
+        tax: tax,
+        taxId: taxId,
       })
     }
   }

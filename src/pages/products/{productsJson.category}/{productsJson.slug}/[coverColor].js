@@ -84,7 +84,7 @@ const ProductPage = ({ data, params }) => {
     width: bookData.widthPixel - pageMargins.horizontal,
   })
   const [maxSvgSize, setMaxSvgSize] = useState({})
-  const [currentPageSide, setCurrentPageSide] = useState("right")
+  const [currentPageSide, setCurrentPageSide] = useState("both")
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})

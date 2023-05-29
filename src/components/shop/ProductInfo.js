@@ -61,6 +61,8 @@ const ProductInfo = ({
             image: cartThumbnail,
             leftPageData: leftPageData,
             name: bookData.name,
+            preorderPrice: bookData.preorderPrice,
+            preorderPrice_id: bookData.stripePreorderPriceId,
             price_id: bookData.stripePriceId,
             price: bookData.price,
             rightPageData: rightPageData,
@@ -191,13 +193,12 @@ const ProductInfo = ({
         <Notification
           backgroundcolor={colors.gray.twoHundred}
           bordercolor={colors.gray.twoHundred}
-          padding="8px"
         >
           <Icon>
-            <WarningCircle size={16} color={colors.gray.nineHundred} weight="bold" />
+            <WarningCircle size={20} color={colors.gray.nineHundred} weight="fill" />
           </Icon>
           <Content
-            margin="0 0 0 0.25rem"
+            margin="0 0 0 8px"
             smallmargin="0"
             smallcolor={colors.gray.nineHundred}
           >

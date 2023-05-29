@@ -34,7 +34,6 @@ const NavItem = styled.div`
   align-items: center;
   padding: 0.5rem 1rem;
   font-size: 0.825rem;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   &:last-child {
     padding: 1rem 0 1rem 1rem;
   }

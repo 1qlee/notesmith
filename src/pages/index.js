@@ -3,10 +3,9 @@ import { graphql, Link } from "gatsby"
 import { Star, ArrowUpRight, ArrowRight, WarningCircle } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
+import { Container, Row, Col, setConfiguration } from 'react-grid-system'
 
 import { Flexbox } from "../components/layout/Flexbox"
-import { Container, Row, Col } from 'react-grid-system'
-import { Patterns, Pattern } from "../components/misc/Patterns"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { StyledLabel } from "../components/form/FormComponents"
 import { Tabs } from "../components/ui/Tabs"
@@ -18,7 +17,6 @@ import DemoControls from "../components/index/DemoControls"
 import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
-import Note from "../components/ui/Note"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
 import Philosophies from "../components/index/Philosophies"
@@ -28,9 +26,9 @@ import Seo from "../components/layout/Seo"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
-import Notification from "../components/ui/Notification"
 
 const IndexPage = ({ data }) => {
+  setConfiguration({ gutterWidth: 80 })
   const { tabImages } = data
   const [activeTab, setActiveTab] = useState(0)
   const [pageData, setPageData] = useState({
@@ -84,7 +82,6 @@ const IndexPage = ({ data }) => {
   const rightPageData = {
     template: ""
   }
-  const patternStyle = { position: 'relative', zIndex: "3" }
 
   return (
     <Layout>
@@ -92,62 +89,58 @@ const IndexPage = ({ data }) => {
       <Nav hideNavbar={false}></Nav>
       <SectionMain>
         <Section>
-          <SectionContent>
+          <SectionContent
+            padding={`${spacing.large} 0`}
+          >
             <Container xl lg md sm xs>
               <Row>
                 <Col xl={4} lg={4} md={4}>
-                  <Pattern
-                    width={400}
-                    height={300}
-                    top="-80px"
-                    left="-75px"
-                    pattern="pattern-34"
-                    color={colors.gray.threeHundred}
-                    zindex="1"
-                  />
                   <Content
                     backgroundcolor={colors.white}
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
-                    style={patternStyle}
-                    margin="0 0 2rem"
-                    h1margin="0 0 2rem"
+                    margin="0 0 32px"
+                    h1margin="0 0 32px"
+                    h1fontweight="400"
                   >
-                    <h1>Design <CircledText text="custom" /> notebooks</h1>
+                    <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
-                  <Note>
-                    <Content
-                      paragraphmarginbottom="1rem"
-                      h3fontsize="1rem"
-                      h3margin="0.5rem 0"
+                  <Content
+                    paragraphmarginbottom="0"
+                    h5margin="8px 0"
+                    className="has-border-top"
+                    padding="32px 0 0"
+                  >
+                    <Flexbox
+                      alignitems="center"
+                      justifycontent="space-between"
                     >
+                      <h5>Pre-order sale</h5>
                       <Tag
-                        padding="4px 8px"
-                        fontsize="0.625rem"
-                        fontweight="700"
+                        padding="3px 6px"
                         backgroundcolor={colors.yellow.threeHundred}
                         color={colors.yellow.nineHundred}
                       >
                         Announcement
                       </Tag>
-                      <h3>Join the pre-order sale today!</h3>
-                      <p>Pre-orders for our custom printed wired notebooks (A5) are now live! Click the button below to begin creating your very own notebook.</p>
-                      <Button
-                        backgroundcolor={colors.gray.nineHundred}
-                        color={colors.gray.oneHundred}
-                        padding="1rem"
-                        width="100%"
-                        as={Link}
-                        to="/products/notebooks/wired-notebook-a5-custom"
-                      >
-                        <span>Pre-order</span>
-                        <Icon>
-                          <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
-                        </Icon>
-                      </Button>
-                    </Content>
-                  </Note>
+                    </Flexbox>
+                    <p>You can now pre-order our custom printed wired notebooks (A5) at a discounted price.</p>
+                    <Button
+                      backgroundcolor={colors.gray.nineHundred}
+                      color={colors.gray.oneHundred}
+                      margin="32px 0 0"
+                      padding="1rem"
+                      width="100%"
+                      as={Link}
+                      to="/products/notebooks/wired-notebook-a5-custom"
+                    >
+                      <span>Pre-order</span>
+                      <Icon>
+                        <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
+                      </Icon>
+                    </Button>
+                  </Content>
                 </Col>
                 <Col xl={8} lg={8} md={8}>
                   <PageDemoCarousel />
@@ -157,28 +150,19 @@ const IndexPage = ({ data }) => {
           </SectionContent>
         </Section>
         <Section>
-          <Pattern
-            width="100%"
-            height="100%"
-            top="0"
-            left="0"
-            pattern="pattern-26"
-            color={colors.gray.threeHundred}
-            zindex="1"
-          />
           <SectionContent>
-            <Philosophies 
-              patternStyle={patternStyle}
-            />
+            <Philosophies />
           </SectionContent>
         </Section>
         <Section>
           <SectionContent>
             <Container xl lg md sm xs>
               <Row>
-                <SectionHeading>
-                  Signature custom notebook
-                </SectionHeading>
+                <Col>
+                  <SectionHeading>
+                    Signature custom notebook
+                  </SectionHeading>
+                </Col>
               </Row>
               <Row>
                 <Col md={6} lg={4}>
@@ -200,17 +184,17 @@ const IndexPage = ({ data }) => {
                     alignitems="center"
                   >
                     <TextLink
+                      className="has-icon"
                       color={colors.gray.nineHundred}
                       fontweight="700"
                       as={Link}
                       to="/products/notebooks/wired-notebook-a5-custom/white"
-                      fontfamily={fonts.secondary}
                     >
                       <span>Shop notebooks</span>
                       <Icon
-                        margin="0 0 0 0.25rem"
+                        margin="0 0 0 4px"
                       >
-                        <ArrowRight size="1rem" color={colors.gray.nineHundred} weight="bold" />
+                        <ArrowRight color={colors.gray.nineHundred} />
                       </Icon>
                     </TextLink>
                   </Flexbox>
@@ -223,37 +207,37 @@ const IndexPage = ({ data }) => {
                 </Col>
                 <Col lg={4}>
                   <Content
-                    margin="0 0 16px"
+                    margin="0 0 32px"
                     maxwidth={widths.content.index}
                     paragraphfontsize="1rem"
                     h5margin="0"
-                    headingfontfamily={fonts.secondary}
                   >
                     <Flexbox
                       margin="0 0 16px"
                       alignitems="center"
-                      className="has-border-bottom"
-                      padding="0 0 16px"
+                      justifycontent="space-between"
                     >
+                      <h5>Choose from a template below</h5>
                       <Tag
-                        padding="4px 8px"
-                        margin="0 8px 0 0"
+                        padding="3px 6px"
+                        backgroundcolor={colors.yellow.threeHundred}
+                        color={colors.yellow.nineHundred}
+                        margin="0 0 0 8px"
                       >
                         Demo
                       </Tag>
-                      <h5>Choose from a template below</h5>
                     </Flexbox>
                     <p>Just click on any of the template boxes below and the layout of the book will change automatically. Use the controls to make adjustments to the layout.</p>
                   </Content>
                   <Flexbox
                     flex="flex"
                     flexwrap="wrap"
-                    margin="0 0 1rem"
+                    margin="0 0 16px"
                   >
                     <PageIcons
                       checkActiveVar={pageData.template}
                       data={pageData}
-                      iconMargin="0 1rem 1rem 0"
+                      iconMargin="0 24px 24px 0"
                       isProductPage={true}
                       leftPageData={leftPageData}
                       rightPageData={rightPageData}
@@ -268,6 +252,7 @@ const IndexPage = ({ data }) => {
                   <Flexbox
                     flex="flex"
                     alignitems="center"
+                    margin="0 0 32px"
                   >
                     <Button
                       backgroundcolor={colors.white}
@@ -289,7 +274,6 @@ const IndexPage = ({ data }) => {
                       border={`1px solid ${colors.gray.nineHundred}`}
                       padding="1rem"
                       width="50%"
-                      margin="1rem 0"
                       onClick={() => setPageData({
                         ...pageData,
                         slants: 21,
@@ -310,14 +294,14 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
-                    margin="8px 0 0" 
+                    alignitems="flex-start"
+                    margin="16px 0 0" 
                   >
                     <Icon>
-                      <WarningCircle size={16} />
+                      <WarningCircle color={colors.gray.sixHundred} />
                     </Icon>
                     <Content
-                      margin="0 0 0 0.25rem"
+                      margin="0 0 0 4px"
                       smallmargin="0"
                     >
                       <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
@@ -332,9 +316,11 @@ const IndexPage = ({ data }) => {
           <SectionContent>
             <Container xl lg md sm xs>
               <Row>
-                <SectionHeading>
-                  High quality materials
-                </SectionHeading>
+                <Col>
+                  <SectionHeading>
+                    High quality materials
+                  </SectionHeading>
+                </Col>
               </Row>
               <Row>
                 <Col md={6} lg={4}>
@@ -376,17 +362,16 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col md={6}>
                   <Content
-                    h2fontweight="400"
-                    h2fontsize="2rem"
-                    h2color={colors.gray.oneHundred}
+                    h3fontweight="400"
+                    h3fontsize="2rem"
+                    h3color={colors.gray.oneHundred}
                   >
-                    <h2>Join the Notesmith pre-order sale now and enjoy an exclusive discounted price</h2>
+                    <h3>Join the Notesmith pre-order sale now and enjoy an exclusive discounted price.</h3>
                   </Content>
                 </Col>
                 <Col md={6}>
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
-                    paragraphfontsize="1.25rem"
                   >
                     <p>
                       During the pre-order sale, notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together!
@@ -398,9 +383,10 @@ const IndexPage = ({ data }) => {
                     margin="16px 0 0"
                   >
                     <TextLink
+                      className="has-icon"
                       color={colors.gray.oneHundred}
-                      fontweight="700"
                       underlinecolor={colors.gray.oneHundred}
+                      hovercolor={colors.gray.nineHundred}
                       as={Link}
                       to="/signup"
                     >
@@ -425,9 +411,11 @@ const IndexPage = ({ data }) => {
           <SectionContent>
             <Container xl lg md sm xs>
               <Row>
-                <SectionHeading>
-                  Fountain pen friendly
-                </SectionHeading>
+                <Col>
+                  <SectionHeading>
+                    Fountain pen friendly
+                  </SectionHeading>
+                </Col>
               </Row>
               <Row>
                 <Col lg={4} md={6}>
@@ -517,6 +505,7 @@ const IndexPage = ({ data }) => {
                     alignitems="center"
                     justifycontent="space-between"
                     className="has-border-top"
+                    margin="0 0 16px"
                   >
                     <StyledLabel
                       margin="0"
@@ -548,11 +537,11 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
-                    margin="8px 0 0"
+                    alignitems="flex-start"
+                    margin="16px 0 0"
                   >
                     <Icon>
-                      <WarningCircle size={16} />
+                      <WarningCircle color={colors.gray.sixHundred} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"
@@ -582,9 +571,11 @@ const IndexPage = ({ data }) => {
           <SectionContent>
             <Container xl lg md sm xs>
               <Row>
-                <SectionHeading>
-                  Early reviews
-                </SectionHeading>
+                <Col>
+                  <SectionHeading>
+                    Early reviews
+                  </SectionHeading>
+                </Col>
               </Row>
               <Row>
                 <Col lg={4} md={6}>
@@ -592,7 +583,7 @@ const IndexPage = ({ data }) => {
                     h2margin="0 0 2rem"
                     h2fontweight="400"
                     paragraphfontsize="1.25rem"
-                    margin="0 0 16px"
+                    margin="0 0 32px"
                     maxwidth={widths.content.index}
                   >
                     <h2>Feedback from our early test users</h2>
@@ -601,11 +592,11 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
-                    margin="8px 0 0"
+                    alignitems="flex-start"
+                    margin="16px 0 0"
                   >
                     <Icon>
-                      <WarningCircle size={16} />
+                      <WarningCircle color={colors.gray.sixHundred} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"
@@ -623,7 +614,6 @@ const IndexPage = ({ data }) => {
           </SectionContent>
         </Section>
       </SectionMain>
-      <Patterns color={colors.gray.twoHundred} />
     </Layout>
   )
 }

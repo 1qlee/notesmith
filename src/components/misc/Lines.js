@@ -6,11 +6,14 @@ import Line4 from "../../assets/underlines/underline-4.svg"
 import Line5 from "../../assets/underlines/underline-5.svg"
 import Line6 from "../../assets/underlines/underline-6.svg"
 import Line7 from "../../assets/underlines/underline-7.svg"
+import { colors } from "../../styles/variables"
 
 function RandomLine() {
   const [randomLine, setRandomLine] = useState(0)
   const lineStyle = {
     position: "absolute",
+    fill: colors.gray.twoHundred,
+    stroke: colors.gray.nineHundred,
     top: "100%",
     left: 0,
     width: "100%",

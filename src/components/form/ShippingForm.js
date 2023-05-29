@@ -28,6 +28,7 @@ const ShippingItemsContainer = styled.div`
 
 const ShippingItem = styled(Flexbox)`
   border-radius: 8px;
+  border: ${colors.borders.black};
   transition: background-color 0.2s;
   background-color: ${colors.gray.twoHundred};
   &:not(:last-child) {
@@ -61,14 +62,14 @@ const ShippingForm = ({
   setAuthKey,
   setMethodValidated,
   setMethodStatus,
-  setProcessing,
   setSelectedRate,
-  setTaxRate,
+  setTax,
   toast,
 }) => {
   const [loading, setLoading] = useState(false)
   const [shipmentId, setShipmentId] = useState("")
   const [shippingRate, setShippingRate] = useState({})
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     // fetch the shipping rate based on the user's address
@@ -84,6 +85,7 @@ const ShippingForm = ({
         body: JSON.stringify({
           cartItems: cartItems,
           address: address,
+          customer: customer,
         })
       }).then(res => {
         return res.json()
@@ -128,13 +130,13 @@ const ShippingForm = ({
       setAuthKey(data.authKey)
       createTax()
     }).catch(error => {
-      setProcessing(false)
       toast.error(error)
+      setProcessing(false)
     })
   }
 
   const createTax = async () => {
-    await fetch("/.netlify/functions/create-tax", {
+    fetch("/.netlify/functions/create-tax", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -152,7 +154,8 @@ const ShippingForm = ({
         throw data.error
       }
 
-      setTaxRate(data.totalTax.amount)
+      // we will get back tax and taxId
+      setTax(data)
       setActiveAccordionTab("payment")
       setMethodValidated(true)
       setMethodStatus({
@@ -161,20 +164,25 @@ const ShippingForm = ({
         background: colors.gray.nineHundred,
       })
       setLoading(false)
+      setProcessing(false)
     }).catch(error => {
       setLoading(false)
-      setTaxRate(0)
+      setTax({
+        amount: 0,
+        id: null,
+      })
       toast.error(error)
+      setProcessing(false)
     })
   }
 
   // handles the submit of shipping rate
   const submitShippingInfo = () => {
-    setLoading(true)
+    setProcessing(true)
 
     if (!selectedRate) {
       toast.error("Please select a shipping method")
-      setLoading(false)
+      setProcessing(false)
     }
     else {
       setShippingInfo()
@@ -225,14 +233,16 @@ const ShippingForm = ({
                 smallmargin="0"
               >
                 <p>
-                  {shippingRate.service === "Priority" ? (
-                    "Ground shipping"
-                  ) : (
+                  {shippingRate.international ? (
                     "International shipping"
+                  ) : (
+                    "Ground shipping"
                   )}
                 </p>
-                {shippingRate.delivery_days && (
+                {shippingRate.delivery_days ? (
                   <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
+                ) : (
+                  <small>Delivery time varies</small>
                 )}
               </Content>
               <Tag
@@ -253,17 +263,17 @@ const ShippingForm = ({
         alignitems="center"
       >
         <Button
-          disabled={!selectedRate || loading}
+          disabled={!selectedRate || loading || processing}
           id="submit"
           backgroundcolor={colors.gray.nineHundred}
           color={colors.white}
-          className={loading ? "is-loading" : null}
+          className={(loading || processing)? "is-loading" : null}
           padding="16px"
           form="checkout-shipping-form"
           onClick={() => submitShippingInfo()}
           width="200px"
         >
-          {loading ? (
+          {(loading || processing) ? (
             <Icon>
               <CircleNotch size={16} color={colors.white} />
             </Icon>

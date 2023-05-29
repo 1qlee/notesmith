@@ -109,7 +109,7 @@ function ShoppingCart() {
                             <Button
                               fontsize="0.75rem"
                               margin="0 8px 0 0"
-                              padding="2px 4px"
+                              padding="3px 6px"
                               onClick={() => handleViewDetails(item.id)}
                               backgroundcolor={colors.gray.twoHundred}
                               color={colors.gray.nineHundred}
@@ -117,23 +117,23 @@ function ShoppingCart() {
                               <span>View details</span>
                               <Icon margin="0 0 0 2px">
                                 {activeItemIds[item.id] ? (
-                                  <CaretUp size="0.75rem" />
+                                  <CaretUp size="0.75rem" weight="fill" />
                                 ) : (
-                                  <CaretDown size="0.75rem" />
+                                    <CaretDown size="0.75rem" weight="fill"  />
                                 )}
                               </Icon>
                             </Button>
                           )}
                           <Button
                             fontsize="0.75rem"
-                            padding="2px 4px"
+                            padding="3px 6px"
                             onClick={() => removeItem(item.id)}
                             backgroundcolor={colors.gray.twoHundred}
                             color={colors.gray.nineHundred}
                           >
                             <span>Remove</span>
                             <Icon margin="0 0 0 2px">
-                              <Trash size="0.75rem" />
+                              <Trash size="0.75rem" color={colors.gray.nineHundred} weight="fill" />
                             </Icon>
                           </Button>
                         </Flexbox>
@@ -377,6 +377,8 @@ function ShoppingCart() {
           <Content
             margin="1rem 0"
             textalign="center"
+            h1fontsize="3rem"
+            h1fontweight="400"
           >
             <h1>Looks like your cart is empty</h1>
             <p>Press the button below to take a look at our pre-order sale.</p>

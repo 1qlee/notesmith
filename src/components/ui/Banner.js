@@ -3,7 +3,8 @@ import { Link } from "gatsby"
 import styled from "styled-components"
 
 import Content from "./Content"
-import { colors, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
+import TextLink from "./TextLink"
 
 const StyledBanner = styled.div`
   background-color: ${colors.gray.nineHundred};
@@ -11,11 +12,11 @@ const StyledBanner = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 12px;
   width: 100%;
   p {
-    font-family: ${fonts.secondary};
     font-size: 0.875rem;
+    font-weight: 800;
   }
 `
 
@@ -24,18 +25,18 @@ const Banner = ({ text, link }) => {
     <StyledBanner>
       <p>{text}</p>
       <Content
-        linkcolor={colors.gray.oneHundred}
-        linkhovercolor={colors.gray.threeHundred}
-        linktextdecoration="underline"
-        linkfontfamily={fonts.secondary}
-        linkfontsize="0.875rem"
-        margin="0 4px"
-        >
-        <Link
+        margin="0 8px"
+      >
+        <TextLink
+          as={Link}
           to={link.to}
+          color={colors.gray.oneHundred}
+          hovercolor={colors.gray.nineHundred}
+          underlinecolor={colors.gray.oneHundred}
+          fontsize="0.875rem"
         >
           {link.text}
-        </Link>
+        </TextLink>
       </Content>
     </StyledBanner>
   )

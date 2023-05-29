@@ -74,7 +74,10 @@ const Checkout = () => {
     show: false,
   })
   const [selectedRate, setSelectedRate] = useState()
-  const [taxRate, setTaxRate] = useState()
+  const [tax, setTax] = useState({
+    amount: 0,
+    id: 0,
+  })
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -88,7 +91,7 @@ const Checkout = () => {
     city: "",
     state: "",
     postal_code: "",
-    country: "",
+    country: "US",
   })
   const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
   const pid = localStorage.getItem("pid")
@@ -140,12 +143,8 @@ const Checkout = () => {
     }
   }
 
-  // if the cart is empty, redirect the user to /cart
-  if (isCartEmpty) {
-    navigate("/cart", { replace: true })
-  }
-
   useEffect(() => {
+    console.log(cartItems)
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen
@@ -231,14 +230,19 @@ const Checkout = () => {
     }
 
     // if pid exists in localStorage, retrieve it from Stripe
-    if (pid && pid !== "undefined") {
-      retrievePaymentIntent()
+    if (isCartEmpty) {
+      navigate("/cart", { replace: true })
     }
-    // otherwise, create a new one
     else {
-      createPaymentIntent()
+      if (pid && pid !== "undefined") {
+        retrievePaymentIntent()
+      }
+      // otherwise, create a new one
+      else {
+        createPaymentIntent()
+      }
     }
-  }, [cartDetails, pid])
+  }, [cartDetails])
 
   // when user wants to use their inputted address versus Easypost api suggestion
   function forceAddressSubmit() {
@@ -320,7 +324,7 @@ const Checkout = () => {
                               summaries={[
                                 customer.email,
                                 customer.name,
-                                `${address.line1 || ""} ${address.line2 || ""}, ${address.city || ""}, ${address.state || ""} ${address.postal_code || ""}, ${address.country || ""}`
+                                `${address.line1 || address.street1 || ""} ${address.line2 || address.street2 ||""}, ${address.city || ""}, ${address.state || ""}, ${address.postal_code || address.zip || ""}, ${address.country || ""}`
                               ]}
                               tabName="shipping"
                               text="Shipping information"
@@ -339,6 +343,7 @@ const Checkout = () => {
                                 setSelectedRate={setSelectedRate}
                                 setShippingValidated={setShippingValidated}
                                 setShowModal={setShowModal}
+                                setTax={setTax}
                                 shippingValidated={shippingValidated}
                                 toast={toast}
                               />
@@ -349,7 +354,7 @@ const Checkout = () => {
                               onClick={setActiveAccordionTab}
                               prereq={shippingValidated}
                               summaries={selectedRate && [
-                                `${selectedRate.service === "Priority" ? "Ground shipping" : "International shipping"}`,
+                                `${selectedRate.international ? "International shipping" : "Ground shipping"}`,
                                 `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
                               ]}
                               tabName="method"
@@ -367,9 +372,8 @@ const Checkout = () => {
                                 setAuthKey={setAuthKey}
                                 setMethodValidated={setMethodValidated}
                                 setMethodStatus={setMethodStatus}
-                                setProcessing={setProcessing}
                                 setSelectedRate={setSelectedRate}
-                                setTaxRate={setTaxRate}
+                                setTax={setTax}
                                 toast={toast}
                               />
                             </AccordionTab>
@@ -388,6 +392,7 @@ const Checkout = () => {
                                 customer={customer}
                                 pid={pid}
                                 setPaymentProcessing={setPaymentProcessing}
+                                tax={tax}
                                 toast={toast}
                               />
                             </AccordionTab>
@@ -398,7 +403,7 @@ const Checkout = () => {
                             cartItems={cartItems}
                             hideButton={true}
                             selectedRate={selectedRate}
-                            taxRate={taxRate}
+                            tax={tax}
                             totalPrice={totalPrice}
                           />
                         </Col>

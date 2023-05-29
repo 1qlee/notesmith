@@ -3,7 +3,7 @@ import { colors, fonts } from "../../styles/variables"
 import styled from "styled-components"
 
 const StyledTabs = styled.ul`
-  border: ${colors.borders.black};
+  border-bottom: ${colors.borders.black};
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
@@ -11,6 +11,7 @@ const StyledTabs = styled.ul`
 `
 
 const StyledTab = styled.li`
+  border-radius: 8px 8px 0 0;
   color: ${colors.gray.sixHundred};
   font-family: ${fonts.secondary};
   font-weight: 700;

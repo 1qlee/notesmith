@@ -123,7 +123,7 @@ const breakpoints = {
 }
 
 const fonts = {
-  primary: "'Crimson Pro', Georgia, serif",
+  primary: "'Nanum Myeongjo', Georgia, serif",
   secondary: "'Inter', Helvetica, Tahoma, sans-serif"
 }
 

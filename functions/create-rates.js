@@ -29,9 +29,10 @@ function parseCartItems(cartItems) {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { cartItems, address } = body;
+  const { cartItems, address, customer } = body;
   const cartDetails = parseCartItems(cartItems);
   const totalWeight = cartDetails.weight;
+  const isInternational = address.country !== "US";
   let newShipment;
 
   try {
@@ -42,12 +43,29 @@ exports.handler = async (event) => {
       height: 2,
       weight: totalWeight,  // assumption that there is only one product
     });
+    const userAddress = {
+      name: customer.name,
+      street1: address.line1,
+      street2: address.line2,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      zip: address.postal_code,
+      phone: customer.phone,
+    }
+    const toAddress = address.id ? { id: address.id } : userAddress;
+    
+    if (address.id) {
+      const addressObj = await easypost.Address.retrieve(address.id);
+      console.log("Address to: " + addressObj);
+    }
 
-    if (address.country !== "US") {
+    if (isInternational) {
       console.log(`[Easypost] Creating customs info for international shipment to: ${address.country}`);
       const customsItems = await easypost.CustomsItem.create(cartDetails);
-      const customsInfo = await new easypost.CustomsInfo({
+      const customsInfo = await easypost.CustomsInfo.create({
         eel_pfc: 'NOEEI 30.37(a)',
+        restriction_type: 'none',
         customs_certify: true,
         customs_signer: 'Won Kyu Lee',
         contents_type: 'merchandise',
@@ -55,14 +73,7 @@ exports.handler = async (event) => {
       });
 
       newShipment = await easypost.Shipment.create({
-        to_address: {
-          street1: address.line1,
-          street2: address.line2,
-          city: address.city,
-          state: address.state,
-          country: address.country,
-          zip: address.postal_code,
-        },
+        to_address: toAddress,
         from_address: {
           company: 'Notesmith LLC',
           street1: '971 Stewart Ave',
@@ -70,11 +81,14 @@ exports.handler = async (event) => {
           state: 'NY',
           zip: '11530',
           email: "general@notesmithbooks.com",
+          phone: "9175754958",
+          name: "Won Kyu Lee",
         },
         parcel: parcel,
         customs_info: customsInfo,
         carrier_accounts: [
-          "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
+          "ca_4e24400a695c4f3dae90c0d45f465436", // UPS
+          "ca_c1a5ccb5ccca4344b654fb98612fa8a9", // DHL
         ]
       });
 
@@ -84,14 +98,7 @@ exports.handler = async (event) => {
       console.log(`[Easypost] Creating shipment for domestic shipment`);
 
       newShipment = await easypost.Shipment.create({
-        to_address: {
-          street1: address.line1,
-          street2: address.line2,
-          city: address.city,
-          state: address.state,
-          country: address.country,
-          zip: address.postal_code,
-        },
+        to_address: toAddress,
         from_address: {
           company: 'Notesmith LLC',
           street1: '971 Stewart Ave',
@@ -102,33 +109,35 @@ exports.handler = async (event) => {
         },
         parcel: parcel,
         carrier_accounts: [
-          "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
+          "ca_4e24400a695c4f3dae90c0d45f465436", // UPS
         ]
       });
 
       console.log(`[Easypost] Successfully created shipment for domestic shipment`)
     }
+    console.log(newShipment)
     // shipment is the new easypost shipment object we created earlier
     const shipmentId = newShipment.id;
-    const priorityRate = newShipment.rates.filter(rate => rate.service === "Priority" || rate.service === "PriorityMailInternational")
-    const roundedRate = (Math.ceil(priorityRate[0].rate) * 100) / 100
-    const formattedRate = roundedRate * 100
-
-    const formattedPriorityRate = {
-      ...priorityRate[0],
-      rate: formattedRate,
+    const cheapestRate = newShipment.rates.sort((a,b) => {
+      return a.rate - b.rate
+    })[0]
+    const roundedRate = ((Math.ceil(cheapestRate.rate) * 100) / 100) * 100
+    const formattedRate = {
+      ...cheapestRate,
+      rate: roundedRate,
+      international: isInternational,
     }
 
     console.log("[Netlify] Successfully created and returned shipping rates to the user.");
     return {
       statusCode: 200,
       body: JSON.stringify({
-        rate: formattedPriorityRate,
+        rate: formattedRate,
         shipmentId: shipmentId,
       })
     };
   } catch(error) {
-    console.error("[Netlify] Something went wrong when trying to create shipping rates.");
+    console.error("[Netlify] Something went wrong when trying to create shipping rates: " + error);
     return {
       statusCode: 400,
       body: JSON.stringify({

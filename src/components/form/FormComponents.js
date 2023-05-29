@@ -352,7 +352,7 @@ const QuantityButton = styled.button`
 const Counter = styled.input`
   background-color: ${colors.white};
   border: 1px solid ${colors.gray.nineHundred};
-  border-radius: 0.25rem;
+  border-radius: 4px;
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize};
   padding: ${props => props.padding || "1rem"};

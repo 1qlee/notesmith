@@ -1,41 +1,59 @@
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const TextLink = styled.a`
   align-items: ${props => props.alignitems};
+  background-color: transparent;
+  border: none;
   border-bottom: ${props => props.borderbottom};
   color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex || "inline-flex"};
-  font-family: ${props => props.fontfamily || "Inter, Helvetica, Tahoma, sans-serif"};
-  font-size: ${props => props.fontsize || "0.825rem"};
-  font-weight: ${props => props.fontweight};
+  font-family: ${props => props.fontfamily || fonts.primary};
+  font-size: ${props => props.fontsize || "1rem"};
+  font-weight: ${props => props.fontweight || "800"};
   justify-content: ${props => props.justifycontent};
   line-height: 1;
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;
-  transition: background-size 0.2s;
+  transition: color 0.2s, background-size 0.2s;
   width: ${props => props.width};
   text-transform: ${props => props.texttransform};
   z-index: 5;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: ${props => props.underlinecolor || colors.gray.nineHundred};
+  }
   &:hover {
-    color: ${props => props.hovercolor};
+    color: ${props => props.hovercolor || colors.gray.oneHundred};
+    cursor: pointer;
     &::before {
       transform-origin: left;
       transform: scaleX(1);
+    }
+    &.has-icon {
+      &::before {
+        width: calc(100% - 12px);
+      }
     }
   }
   &::before {
     background-color: ${props => props.underlinecolor || colors.gray.nineHundred};
     content: "";
-    height: 1px;
-    left: 0;
+    height: calc(100% + 8px);
+    left: -4px;
     position: absolute;
     bottom: -4px;
     transition: transform 0.4s;
     transform: scaleX(0);
     transform-origin: right;
-    width: 100%;
+    width: calc(100% + 8px);
+    z-index: -1;
   }
   &.has-icon {
     span + span {

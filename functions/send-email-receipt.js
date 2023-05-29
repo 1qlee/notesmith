@@ -1,6 +1,4 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
-const easypostApi = require('@easypost/api');
-const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 const sendgridMail = require('@sendgrid/mail');
 sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY);
 
@@ -22,8 +20,9 @@ exports.handler = async ({ body, headers }) => {
     if (stripeEvent.type === 'payment_intent.succeeded') {
       console.log("[Stripe Webhook] Payment Intent succeeded... Calling webhook...")
       const data = stripeEvent.data.object;
-      const { id, receipt_email, metadata, shipping, amount, charges } = data;
-      const { tax, shippingRate, authKey, shipmentId, rateId, subtotal } = metadata;
+      const { id, receipt_email, metadata, amount, charges } = data;
+      const { tax, authKey, shipping, subtotal } = metadata;
+      const { address } = data.shipping;
       // the date the payment was succeeded
       const date = new Date(charges.data[0].created * 1000);
       const { last4 } = charges.data[0].payment_method_details.card;
@@ -47,9 +46,10 @@ exports.handler = async ({ body, headers }) => {
             ],
             dynamic_template_data: {
               orderId: id,
+              address: address,
               date: date.toLocaleString(),
               subtotal: convertToDecimal(subtotal, 2),
-              shippingRate: convertToDecimal(shippingRate, 2),
+              shippingRate: convertToDecimal(shipping, 2),
               taxRate: tax ? convertToDecimal(tax, 2) : "0",
               totalAmount: convertToDecimal(amount, 2),
               authKey: authKey,

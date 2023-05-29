@@ -19,13 +19,13 @@ function CheckoutForm({
   customer,
   pid,
   setPaymentProcessing,
+  tax,
   toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
-  const [proccessingError, setProcessingError] = useState("")
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
     defaultValues: {
@@ -73,6 +73,9 @@ function CheckoutForm({
       setError(error.message)
       setProcessing(false)
     } else {
+      if (tax.amount) {
+        createTaxRecord()
+      }
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
@@ -80,6 +83,27 @@ function CheckoutForm({
 
       purchaseShippingLabel(createdDate)
     }
+  }
+
+  const createTaxRecord = () => {
+    fetch("/.netlify/functions/create-tax-record", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pid: pid,
+        tax: tax,
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      if (data.error) {
+        throw data.error
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   // fetch easypost api to purchase a shipping label
@@ -101,20 +125,23 @@ function CheckoutForm({
       return res.json()
     }).then(async data => {
       if (data.error) {
-        throw data.error
+        throw data
       }
 
       // extract data
       const trackingCode = data.shippingLabel.tracking_code
-      const { trackingUrl, amount, authKey, tax, shipping } = data
+      const { trackingUrl, amount, authKey, tax, shipping, shipmentId, taxId, rateId } = data
       const orderData = {
-        created: createdDate,
         address: address,
+        amount: amount,
         authKey: authKey,
+        created: createdDate,
         customer: customer,
+        rateId: rateId,
+        shipmentId: shipmentId,
         shipping: shipping,
         tax: tax,
-        amount: amount,
+        taxId: taxId,
         tracking:  {
           code: trackingCode,
           url: trackingUrl
@@ -127,6 +154,8 @@ function CheckoutForm({
       if (orderSaved.error) {
         setError(null)
         setPaymentProcessing(false)
+        // send the team an email to notify them of the error
+        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database.")
 
         // redirect the user to the orders summary page including the error
         navigate(
@@ -158,14 +187,18 @@ function CheckoutForm({
         )
       }
     }).catch(async data => {
+      await sendShippingErrorEmail("Payment was successful, but we could not purchase the shipping label.")
       // if we have an error here that means the order was created but the shipping label was not purchased
       // we need to have a failsafe so that we know this occured
-      const response = await data.json()
-      const { amount, authKey, tax, shipping, error } = response
+      const { amount, authKey, tax, shipping, error, taxId, shipmentId, rateId } = data
       const orderData = {
+        address: address,
         created: createdDate,
         amount: amount,
         tax: tax,
+        taxId: taxId,
+        shipmentId: shipmentId,
+        rateId: rateId,
         shipping: shipping,
         authKey: authKey,
         error: error,
@@ -176,6 +209,7 @@ function CheckoutForm({
       if (orderSaved.error) {
         setError(null)
         setPaymentProcessing(false)
+        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database. Additionally, the shipping label was not purchased.")
 
         // redirect the user to the orders summary page including the error
         navigate(
@@ -244,6 +278,35 @@ function CheckoutForm({
     return {
       error: null
     }
+  }
+
+  const sendOrderErrorEmail = async (error) => {
+    fetch("/.netlify/functions/send-email-order-error", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pid: pid,
+        error: error,
+        cartItems: cartItems,
+      })
+    })
+  }
+
+  const sendShippingErrorEmail = async (error) => {
+    fetch("/.netlify/functions/send-email-shipping-error", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pid: pid,
+        error: error,
+        address: address,
+        cartItems: cartItems,
+      })
+    })
   }
 
   return (

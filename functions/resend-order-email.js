@@ -17,7 +17,9 @@ exports.handler = async (event) => {
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
     const { id, receipt_email, metadata, shipping, amount, charges } = paymentIntent;
-    const { taxRate, shippingRate, quantity, price, priceId, authKey, shipmentId, rateId, tracking } = metadata;
+    const { quantity, price, priceId, authKey, shipmentId, rateId, tracking } = metadata;
+    const shippingRate = metadata.shipping
+    const taxRate = metadata.tax
     // get information regarding the product's price
     const orderItem = await stripe.prices.retrieve(priceId);
     // get information regarding the product itself

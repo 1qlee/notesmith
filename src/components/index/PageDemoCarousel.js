@@ -37,7 +37,7 @@ const DemoImageCaption = styled.article`
   right: 0;
   width: ${widths.caption};
   p {
-    line-height: 1.5;
+    line-height: 1.75;
     font-size: 0.875rem;
   }
 `

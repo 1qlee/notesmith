@@ -30,7 +30,7 @@ const StyledNotification = styled.div`
   border: ${props => props.border};
   border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
-  display: flex;
+  display: ${props => props.display || "flex"};
   font-family: ${fonts.secondary};
   justify-content: ${props => props.justifycontent || "space-between"};
   margin: ${props => props.margin || "1rem 0"};
@@ -51,6 +51,9 @@ const StyledNotification = styled.div`
     font-size: ${props => props.fontsize || "0.75rem"};
     margin-bottom: 0;
     line-height: 1.5;
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
   }
 `
 

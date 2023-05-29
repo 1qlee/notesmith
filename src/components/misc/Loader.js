@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
 
 import Logo from "../../assets/logo-animated.svg"
+import Notification from "../ui/Notification"
 
 // const loading = keyframes`
 //   20%,
@@ -126,7 +127,14 @@ function Loader({ className, msg }) {
   return (
     <LoaderWrapper className={className}>
       <Logo height="96" width="300" />
-      <p>{msg}</p>
+      {msg && (
+        <Notification
+          backgroundcolor={colors.gray.twoHundred}
+          color={colors.gray.nineHundred}
+        >
+          <p>{msg}</p>
+        </Notification>
+      )}
     </LoaderWrapper>
   )
 }

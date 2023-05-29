@@ -3,7 +3,7 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { pid, address, name, email } = body;
+  const { pid, email } = body;
 
   try {
     await stripe.paymentIntents.update(
