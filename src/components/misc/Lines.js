@@ -11,8 +11,8 @@ function RandomLine() {
   const [randomLine, setRandomLine] = useState(0)
   const lineStyle = {
     position: "absolute",
-    fill: colors.gray.sevenHundred,
-    stroke: colors.gray.nineHundred,
+    fill: colors.gray.nineHundred,
+    stroke: colors.gray.sixHundred,
     top: "100%",
     left: 0,
     width: "100%",

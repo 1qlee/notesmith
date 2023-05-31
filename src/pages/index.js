@@ -10,6 +10,7 @@ import { SectionMain, Section, SectionContent, SectionHeading } from "../compone
 import { StyledLabel } from "../components/form/FormComponents"
 import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
+import Box from "../components/ui/Box"
 import Button from "../components/ui/Button"
 import CircledText from "../components/misc/CircledText"
 import Content from "../components/ui/Content"
@@ -28,7 +29,7 @@ import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
 
 const IndexPage = ({ data }) => {
-  setConfiguration({ gutterWidth: 80 })
+  setConfiguration({ gutterWidth: 64 })
   const { tabImages } = data
   const [activeTab, setActiveTab] = useState(0)
   const [pageData, setPageData] = useState({
@@ -90,13 +91,14 @@ const IndexPage = ({ data }) => {
       <SectionMain>
         <Section>
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.xlarge} 0`}
           >
             <Container xl lg md sm xs>
               <Row>
-                <Col xl={4} lg={4} md={4}>
+                <Col xl={4} lg={4}>
                   <Content
                     backgroundcolor={colors.white}
+                    maxwidth={widths.content.index}
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
                     margin="0 0 32px"
@@ -109,8 +111,10 @@ const IndexPage = ({ data }) => {
                   <Content
                     paragraphmarginbottom="0"
                     h5margin="8px 0"
+                    h5fontweight="800"
                     className="has-border-top"
                     padding="32px 0 0"
+                    maxwidth={widths.content.index}
                   >
                     <Flexbox
                       alignitems="center"
@@ -142,7 +146,7 @@ const IndexPage = ({ data }) => {
                     </Button>
                   </Content>
                 </Col>
-                <Col xl={8} lg={8} md={8}>
+                <Col xl={8} lg={8}>
                   <PageDemoCarousel />
                 </Col>
               </Row>
@@ -211,6 +215,7 @@ const IndexPage = ({ data }) => {
                     maxwidth={widths.content.index}
                     paragraphfontsize="1rem"
                     h5margin="0"
+                    h5fontweight="800"
                   >
                     <Flexbox
                       margin="0 0 16px"
@@ -323,7 +328,7 @@ const IndexPage = ({ data }) => {
                 </Col>
               </Row>
               <Row>
-                <Col md={6} lg={4}>
+                <Col lg={4}>
                   <Content
                     h2fontweight="400"
                     h2margin="0 0 2rem"
@@ -336,7 +341,7 @@ const IndexPage = ({ data }) => {
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
                 </Col>
-                <Col md={6} lg={8}>
+                <Col lg={8}>
                   <Tabs 
                     tabList={["Paper", "Cover", "Lamination", "Binding"]}
                     activeTab={activeTab}
@@ -356,11 +361,11 @@ const IndexPage = ({ data }) => {
           backgroundcolor={colors.gray.nineHundred}
         >
           <SectionContent
-            padding={`${spacing.large} ${spacing.xlarge}`}
+            padding={`${spacing.large} 0`}
           >
-            <Container xl lg md sm xs>
+            <Container sm xs>
               <Row>
-                <Col md={6}>
+                <Col md={5} push={{md: 1}}>
                   <Content
                     h3fontweight="400"
                     h3fontsize="2rem"
@@ -369,7 +374,7 @@ const IndexPage = ({ data }) => {
                     <h3>Join the Notesmith pre-order sale now and enjoy an exclusive discounted price.</h3>
                   </Content>
                 </Col>
-                <Col md={6}>
+                <Col md={5} push={{ md: 1 }}>
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
                   >
@@ -418,7 +423,7 @@ const IndexPage = ({ data }) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4} md={6}>
+                <Col lg={4}>
                   <Content
                     paragraphfontsize="1.25rem"
                     margin="0 0 2rem 0"
@@ -429,116 +434,119 @@ const IndexPage = ({ data }) => {
                     <h2>Smooth, ink-loving paper</h2>
                     <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                   </Content>
-                  <Flexbox
-                    padding="16px 0"
-                    flex="flex"
-                    alignitems="center"
-                    justifycontent="space-between"
-                    className="has-border-top"
-                    bordercolor={colors.gray.nineHundred}
+                  <Box
+                    maxwidth={widths.content.index}
                   >
-                    <StyledLabel
-                      margin="0"
-                      width="128px"
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      bordercolor={colors.gray.nineHundred}
                     >
-                      Bleeding
-                    </StyledLabel>
-                    <Progress
-                      barcolor={colors.gray.nineHundred}
-                      completion={93}
-                      margin="0"
-                      wrappercolor={colors.gray.threeHundred}
-                    />
-                    <Tag
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      padding="4px 6px"
-                      fontfamily={fonts.secondary}
-                      margin="0 0 0 0.5rem"
-                    >
-                      <Icon
-                        margin="0 1px 1px 0"
+                      <StyledLabel
+                        margin="0"
+                        width="128px"
                       >
-                        <Star weight="fill" color={colors.gray.oneHundred} />
-                      </Icon>
-                      <span>4.7</span>
-                    </Tag>
-                  </Flexbox>
-                  <Flexbox
-                    padding="16px 0"
-                    flex="flex"
-                    alignitems="center"
-                    justifycontent="space-between"
-                    className="has-border-top"
-                    bordercolor={colors.gray.nineHundred}
-                  >
-                    <StyledLabel
-                      margin="0"
-                      width="128px"
-                    >
-                      Feathering
-                    </StyledLabel>
-                    <Progress
-                      barcolor={colors.gray.nineHundred}
-                      completion={90}
-                      margin="0"
-                      wrappercolor={colors.gray.threeHundred}
-                    />
-                    <Tag
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      padding="4px 6px"
-                      fontfamily={fonts.secondary}
-                      margin="0 0 0 0.5rem"
-                    >
-                      <Icon
-                        margin="0 1px 1px 0"
+                        Bleeding
+                      </StyledLabel>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={93}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.gray.nineHundred}
+                        color={colors.gray.oneHundred}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
                       >
-                        <Star weight="fill" color={colors.gray.oneHundred} />
-                      </Icon>
-                      <span>4.5</span>
-                    </Tag>
-                  </Flexbox>
-                  <Flexbox
-                    padding="16px 0"
-                    flex="flex"
-                    alignitems="center"
-                    justifycontent="space-between"
-                    className="has-border-top"
-                    margin="0 0 16px"
-                  >
-                    <StyledLabel
-                      margin="0"
-                      width="128px"
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.oneHundred} />
+                        </Icon>
+                        <span>4.7</span>
+                      </Tag>
+                    </Flexbox>
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      className="has-border-top"
+                      bordercolor={colors.gray.nineHundred}
                     >
-                      Ghosting
-                    </StyledLabel>
-                    <Progress
-                      barcolor={colors.gray.nineHundred}
-                      completion={75}
-                      margin="0"
-                      wrappercolor={colors.gray.threeHundred}
-                    />
-                    <Tag
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      padding="4px 6px"
-                      fontfamily={fonts.secondary}
-                      margin="0 0 0 0.5rem"
-                    >
-                      <Icon
-                        margin="0 1px 1px 0"
+                      <StyledLabel
+                        margin="0"
+                        width="128px"
                       >
-                        <Star weight="fill" color={colors.gray.oneHundred} />
-                      </Icon>
-                      <span>3.8</span>
-                    </Tag>
-                  </Flexbox>
+                        Feathering
+                      </StyledLabel>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={90}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.gray.nineHundred}
+                        color={colors.gray.oneHundred}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
+                      >
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.oneHundred} />
+                        </Icon>
+                        <span>4.5</span>
+                      </Tag>
+                    </Flexbox>
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      className="has-border-top"
+                      margin="0 0 16px"
+                    >
+                      <StyledLabel
+                        margin="0"
+                        width="128px"
+                      >
+                        Ghosting
+                      </StyledLabel>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={75}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.gray.nineHundred}
+                        color={colors.gray.oneHundred}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
+                      >
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.oneHundred} />
+                        </Icon>
+                        <span>3.8</span>
+                      </Tag>
+                    </Flexbox>
+                  </Box>
                   <hr />
                   <Flexbox
                     flex="flex"
                     alignitems="flex-start"
-                    margin="16px 0 0"
+                    margin="16px 0"
                   >
                     <Icon>
                       <WarningCircle color={colors.gray.sixHundred} />
@@ -551,7 +559,7 @@ const IndexPage = ({ data }) => {
                     </Content>
                   </Flexbox>
                 </Col>
-                <Col lg={8} md={6}>
+                <Col lg={8}>
                   <Flexbox
                     justifycontent="center"
                   >
@@ -578,7 +586,7 @@ const IndexPage = ({ data }) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4} md={6}>
+                <Col lg={4}>
                   <Content
                     h2margin="0 0 2rem"
                     h2fontweight="400"
@@ -593,7 +601,7 @@ const IndexPage = ({ data }) => {
                   <Flexbox
                     flex="flex"
                     alignitems="flex-start"
-                    margin="16px 0 0"
+                    margin="16px 0"
                   >
                     <Icon>
                       <NoteBlank color={colors.gray.sixHundred} />
@@ -606,7 +614,7 @@ const IndexPage = ({ data }) => {
                     </Content>
                   </Flexbox>
                 </Col>
-                <Col lg={8} md={6}>
+                <Col lg={8}>
                   <Reviews />
                 </Col>
               </Row>

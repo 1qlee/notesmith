@@ -7,7 +7,6 @@ import { useShoppingCart } from "use-shopping-cart"
 
 import { Container, setConfiguration } from "react-grid-system"
 import Banner from "../ui/Banner"
-import TextLink from "../ui/TextLink"
 import Logo from "../misc/Logo"
 
 const StyledNav = styled.nav`
@@ -16,6 +15,15 @@ const StyledNav = styled.nav`
   background-color: ${colors.white};
   &.has-shadow {
     box-shadow: 0 2px 0 ${colors.shadow.float};
+  }
+`
+
+const NavLink = styled(Link)`
+  opacity: 0.75;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  &:hover {
+    opacity: 1;
   }
 `
 
@@ -60,7 +68,7 @@ const CartCounter = styled.span`
 `
 
 function Nav(props) {
-  setConfiguration({ gutterWidth: 80 })
+  setConfiguration({ gutterWidth: 64 })
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount } = useShoppingCart()
 
@@ -86,55 +94,52 @@ function Nav(props) {
             <>
               <NavSection justifycontent="center">
                 <NavItem>
-                  <TextLink
-                    as={Link}
+                  <NavLink
                     to="/products/notebooks/wired-notebook-a5-custom/white"
                     color={colors.gray.nineHundred}
                   >
                     Shop
-                  </TextLink>
+                  </NavLink>
                 </NavItem>
                 {user ? (
                   <>
                     <NavItem>
-                      <TextLink
-                        as={Link}
+                      <NavLink
                         to="/account/dashboard"
                         color={colors.gray.nineHundred}
                       >
                         Dashboard
-                      </TextLink>
+                      </NavLink>
                     </NavItem>
                     <NavItem>
-                      <TextLink
+                      <NavLink
+                        tabIndex={0}
                         onClick={() => signOut()}
                         color={colors.gray.nineHundred}
                       >
                         Sign out
-                      </TextLink>
+                      </NavLink>
                     </NavItem>
                   </>
                 ) : (
                   <>
                     <NavItem>
-                      <TextLink
-                        as={Link}
+                      <NavLink
                         to="/signin"
                         color={colors.gray.nineHundred}
                       >
                         Sign in
-                      </TextLink>
+                      </NavLink>
                     </NavItem>
                     <NavItem
                       className="last-item"
                     >
-                      <TextLink
-                        as={Link}
+                      <NavLink
                         to="/signup"
                         color={colors.gray.nineHundred}
                       >
                         Sign up
-                      </TextLink>
+                      </NavLink>
                     </NavItem>
                   </>
                 )}
@@ -143,8 +148,7 @@ function Nav(props) {
                 justifycontent="flex-end"
               >
                 <NavItem>
-                  <TextLink
-                    as={Link}
+                  <NavLink
                     to="/cart"
                     color={colors.gray.nineHundred}
                   >
@@ -154,7 +158,7 @@ function Nav(props) {
                         ({cartCount})
                       </CartCounter>
                     )}
-                  </TextLink>
+                  </NavLink>
                 </NavItem>
               </NavSection>
             </>

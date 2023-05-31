@@ -31,12 +31,9 @@ const StyledTemplatesBar = styled.div`
   }
   @media only screen and (max-width: ${breakpoints.md}) {
     position: absolute;
-    left: 45px;
+    left: 32px;
     top: 0;
     box-shadow: ${colors.shadow.drawer};
-  }
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    left: 15px;
   }
 `
 const TemplatesContent = styled.div`
@@ -135,7 +132,7 @@ function ProductControls({
     }
 
     setLoading(false)
-    toast(`Applied template to ${currentPageSide} pages!`)
+    toast.success(`Applied template to ${currentPageSide} pages!`)
   }
 
   return (
@@ -155,11 +152,11 @@ function ProductControls({
               >
                 {showControls ? (
                   <Icon margin="0 4px 0 0">
-                    <ArrowSquareUp size={20} weight="fill" />
+                    <ArrowSquareUp size={20} />
                   </Icon>
                 ) : (
                   <Icon margin="0 4px 0 0">
-                    <ArrowSquareDown size={20} weight="fill" />
+                    <ArrowSquareDown size={20} />
                   </Icon>
                 )}
                 <span>

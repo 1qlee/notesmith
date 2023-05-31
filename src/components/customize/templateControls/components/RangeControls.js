@@ -18,7 +18,7 @@ function RangeControls({
       <StyledLabel htmlFor={property}>{propertyName}</StyledLabel>
       <ControlFlexWrapper>
         <ControlFlexChild
-          flex={1}
+          flex={2}
           margin="0 8px 0 0"
         >
           <NumberInput
@@ -36,7 +36,7 @@ function RangeControls({
           />
         </ControlFlexChild>
         <ControlFlexChild
-          flex={3}
+          flex={5}
         >
           <RangeInput
             min={min}

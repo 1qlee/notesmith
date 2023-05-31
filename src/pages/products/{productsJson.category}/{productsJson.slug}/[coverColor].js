@@ -121,10 +121,10 @@ const ProductPage = ({ data, params }) => {
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
             <Container xs sm md lg xl>
-              <Row>
+              <Row justify="start">
                 {pageData.show ? (
                   <>
-                    <Col sm="content" md="content" lg="content" xl="content" xxl="content">
+                    <Col md="content" >
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
@@ -139,7 +139,7 @@ const ProductPage = ({ data, params }) => {
                         toast={toast}
                       />
                     </Col>
-                    <Col sm="content" md="content" lg="content" xl="content" xxl="content">
+                    <Col md="content">
                       <ProductTemplate
                         bookData={bookData}
                         maxSvgSize={maxSvgSize}
@@ -152,7 +152,7 @@ const ProductPage = ({ data, params }) => {
                     </Col>
                   </>
                 ) : (
-                  <Col xl={8} lg={8} xxl={8} md={8}>
+                  <Col md={8}>
                     <ProductImages
                       coverColor={coverColor}
                       productImages={productImages}

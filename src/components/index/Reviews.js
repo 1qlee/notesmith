@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 
 import Content from "../ui/Content"
 import Review1 from "../../assets/peeps/review-1.svg"
@@ -26,7 +26,6 @@ const ReviewBox = styled.div`
   border: 2px solid ${colors.gray.nineHundred};
   border-radius: 8px;
   margin-bottom: 32px;
-  width: 400px;
 `
 
 const ReviewProfileImg = styled.div`
@@ -39,7 +38,7 @@ const ReviewProfileImg = styled.div`
 const NoteHoles = styled.div`
   padding: 16px 10px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   height: 100%;
   border-bottom: 2px dashed ${colors.gray.nineHundred};
@@ -53,16 +52,13 @@ const NoteHole = styled.div`
   background-color: transparent;
   box-shadow: inset 1px 1px 2px ${colors.gray.sixHundred};
   &:not(:last-child) {
-    margin-right: 24px;
+    margin-right: 4px;
   }
 `
 
 function Holes() {
   return (
     <NoteHoles>
-      <NoteHole />
-      <NoteHole />
-      <NoteHole />
       <NoteHole />
       <NoteHole />
       <NoteHole />
@@ -77,11 +73,10 @@ function Reviews() {
   return (
     <Container>
       <Row>
-        <Col sm={6}>
+        <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
             <Flexbox
-              justifycontent="flex-end"
               alignitems="flex-start"
               padding="16px"
             >
@@ -94,17 +89,17 @@ function Reviews() {
               </ReviewProfile>
               <Content
                 padding="0 16px"
+                maxwidth={widths.content.index}
               >
                 <p>"Literally the best writing experience I have ever experienced."</p>
               </Content>
             </Flexbox>
           </ReviewBox>
         </Col>
-        <Col sm={6}>
+        <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
             <Flexbox
-              justifycontent="flex-end"
               alignitems="flex-start"
               padding="16px"
             >
@@ -125,11 +120,10 @@ function Reviews() {
         </Col>
       </Row>
       <Row>
-        <Col sm={6}>
+        <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
             <Flexbox
-              justifycontent="flex-end"
               alignitems="flex-start"
               padding="16px"
             >
@@ -148,11 +142,10 @@ function Reviews() {
             </Flexbox>
           </ReviewBox>
         </Col>
-        <Col sm={6}>
+        <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
             <Flexbox
-              justifycontent="flex-end"
               alignitems="flex-start"
               padding="16px"
             >
