@@ -1,152 +1,178 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 
-import Tape from "../misc/Tape"
-import LinesBkgd from "../../images/index/lines-bkgd.png"
+import Content from "../ui/Content"
 import Review1 from "../../assets/peeps/review-1.svg"
 import Review2 from "../../assets/peeps/review-2.svg"
 import Review4 from "../../assets/peeps/review-4.svg"
 import Review5 from "../../assets/peeps/review-5.svg"
 
 import { Flexbox } from "../layout/Flexbox"
-
-const StyledReviews = styled.div`
-  background-image: url(${LinesBkgd});
-  background-size: cover;
-  background-repeat: no-repeat;
-`
-
-const ReviewContent = styled.div`
-  padding: 16px 16px 0 16px;
-  p {
-    line-height: 1.5;
-  }
-`
+import { Container, Row, Col } from "react-grid-system"
 
 const ReviewProfile = styled.div`
   margin-right: 8px;
-  h3 {
-    font-family: ${fonts.secondary};
-    margin: 0 0 4px 0;
-    font-size: 0.875rem;
-  }
-  p {
-    font-family: ${fonts.secondary};
-    font-size: 0.75rem;
+  h5 {
+    margin: 8px 0;
+    font-size: 1rem;
+    font-weight: 800;
   }
 `
 
 const ReviewBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  max-width: 300px;
-  margin: 1rem;
   position: relative;
-  background-color: ${colors.white};
-  box-shadow: 0 4px 12px ${colors.shadow.float};
-  min-height: 106px;
-  background: linear-gradient(
-    ${colors.paper.cream},
-    50%,
-    ${colors.gray.twoHundred},
-    51%,
-    ${colors.paper.cream}
-  ),
-  linear-gradient(
-    to right,
-    ${colors.paper.cream},
-    50%,
-    ${colors.gray.twoHundred},
-    51%,
-    ${colors.paper.cream}
-  );
+  background-color: transparent;
+  border: 2px solid ${colors.gray.nineHundred};
+  border-radius: 8px;
+  margin-bottom: 32px;
+  width: 400px;
 `
 
-const ReviewsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+const ReviewProfileImg = styled.div`
+  padding: 8px;
+  border: ${colors.borders.black};
+  border-radius: 8px;
+  background-color: ${colors.yellow.threeHundred};
 `
+
+const NoteHoles = styled.div`
+  padding: 16px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  border-bottom: 2px dashed ${colors.gray.nineHundred};
+`
+
+const NoteHole = styled.div`
+  display: block;
+  height: 12px;
+  width: 12px;
+  border: 2px solid ${colors.gray.nineHundred};
+  background-color: transparent;
+  box-shadow: inset 1px 1px 2px ${colors.gray.sixHundred};
+  &:not(:last-child) {
+    margin-right: 24px;
+  }
+`
+
+function Holes() {
+  return (
+    <NoteHoles>
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+      <NoteHole />
+    </NoteHoles>
+  )
+}
 
 function Reviews() {
   return (
-    <StyledReviews>
-      <ReviewsWrapper>
-        <ReviewBox>
-          <Tape num={Math.floor((Math.random() * 2 - 1) * 3)} />
-          <ReviewContent>
-            <p>"Literally the best writing experience I have ever experienced."</p>
-          </ReviewContent>
-          <Flexbox
-            justifycontent="flex-end"
-            alignitems="center"
-            padding="0 16px 16px 16px"
-          >
-            <ReviewProfile>
-              <h3>Tony</h3>
-              <p>Cowboy</p>
-            </ReviewProfile>
-            <Review1 height="64" width="64" />
-          </Flexbox>
-        </ReviewBox>
-        <ReviewBox>
-          <Tape num={Math.floor((Math.random() * 2 - 1) * 3)} />
-          <ReviewContent>
-            <p>"Everything about this notebook; the quality, craftsmanship, and customer service was totally great."</p>
-          </ReviewContent>
-          <Flexbox
-            justifycontent="flex-end"
-            alignitems="center"
-            padding="0 16px 16px 16px"
-          >
-            <ReviewProfile>
-              <h3>Joanne</h3>
-              <p>Enthusiast</p>
-            </ReviewProfile>
-            <Review2 height="64" width="64" />
-          </Flexbox>
-        </ReviewBox>
-      </ReviewsWrapper>
-      <ReviewsWrapper>
-        <ReviewBox>
-          <Tape num={Math.floor((Math.random() * 2 - 1) * 3)} />
-          <ReviewContent>
-            <p>"The paper is smooth and very pleasant to write on! I am super impressed!"</p>
-          </ReviewContent>
-          <Flexbox
-            justifycontent="flex-end"
-            alignitems="center"
-            padding="0 16px 16px 16px"
-          >
-            <ReviewProfile>
-              <h3>Gerald</h3>
-              <p>Excited guy</p>
-            </ReviewProfile>
-            <Review4 height="64" width="64" />
-          </Flexbox>
-        </ReviewBox>
-        <ReviewBox>
-          <Tape num={Math.floor((Math.random() * 2 - 1) * 3)} />
-          <ReviewContent>
-            <p>"I’m really very satisfied with the paper. It helps my writing look far more smooth and precise."</p>
-          </ReviewContent>
-          <Flexbox
-            justifycontent="flex-end"
-            alignitems="center"
-            padding="0 16px 16px 16px"
-          >
-            <ReviewProfile>
-              <h3>Chad</h3>
-              <p>Chad</p>
-            </ReviewProfile>
-            <Review5 height="64" width="64" />
-          </Flexbox>
-        </ReviewBox>
-      </ReviewsWrapper>
-    </StyledReviews>
+    <Container>
+      <Row>
+        <Col sm={6}>
+          <ReviewBox>
+            <Holes />
+            <Flexbox
+              justifycontent="flex-end"
+              alignitems="flex-start"
+              padding="16px"
+            >
+              <ReviewProfile>
+                <ReviewProfileImg>
+                  <Review1 height="64" width="64" />
+                </ReviewProfileImg>
+                <h5>Tony</h5>
+                <h5>Wrangler</h5>
+              </ReviewProfile>
+              <Content
+                padding="0 16px"
+              >
+                <p>"Literally the best writing experience I have ever experienced."</p>
+              </Content>
+            </Flexbox>
+          </ReviewBox>
+        </Col>
+        <Col sm={6}>
+          <ReviewBox>
+            <Holes />
+            <Flexbox
+              justifycontent="flex-end"
+              alignitems="flex-start"
+              padding="16px"
+            >
+              <ReviewProfile>
+                <ReviewProfileImg>
+                  <Review2 height="64" width="64" />
+                </ReviewProfileImg>
+                <h5>Margie</h5>
+                <h5>Anthophile</h5>
+              </ReviewProfile>
+              <Content
+                padding="0 16px"
+              >
+                <p>"Everything about this notebook; the quality, craftsmanship, and customer service was totally great."</p>
+              </Content>
+            </Flexbox>
+          </ReviewBox>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <ReviewBox>
+            <Holes />
+            <Flexbox
+              justifycontent="flex-end"
+              alignitems="flex-start"
+              padding="16px"
+            >
+              <ReviewProfile>
+                <ReviewProfileImg>
+                  <Review4 height="64" width="64" />
+                </ReviewProfileImg>
+                <h5>Gerald</h5>
+                <h5>Bellower</h5>
+              </ReviewProfile>
+              <Content
+                padding="0 16px"
+              >
+                <p>"The paper is smooth and very pleasant to write on! I am super impressed!"</p>
+              </Content>
+            </Flexbox>
+          </ReviewBox>
+        </Col>
+        <Col sm={6}>
+          <ReviewBox>
+            <Holes />
+            <Flexbox
+              justifycontent="flex-end"
+              alignitems="flex-start"
+              padding="16px"
+            >
+              <ReviewProfile>
+                <ReviewProfileImg>
+                  <Review5 height="64" width="64" />
+                </ReviewProfileImg>
+                <h5>Chad</h5>
+                <h5>Afficionado</h5>
+              </ReviewProfile>
+              <Content
+                padding="0 16px"
+              >
+                <p>"I’m really very satisfied with the paper. It helps my writing look far more smooth and precise."</p>
+              </Content>
+            </Flexbox>
+          </ReviewBox>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

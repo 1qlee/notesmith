@@ -550,9 +550,9 @@ const RadioInput = styled.div`
 const StyledLabel = styled.label`
   color: ${props => props.color || colors.gray.nineHundred};
   display: block;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-family: ${props => props.fontfamily || fonts.secondary};
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
-  font-weight: 700;
+  font-weight: ${props => props.fontweight || "700"};
   margin: ${props => props.margin || "0 0 8px 0"};
   width: ${props => props.width};
 `

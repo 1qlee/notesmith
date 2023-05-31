@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { colors, convertToPx, fonts, spacing, pageMargins } from "../../../../styles/variables"
+import { colors, convertToPx, spacing, pageMargins } from "../../../../styles/variables"
 import { toast } from 'react-toastify'
 
-import { Container, Row, Col } from 'react-grid-system'
+import { Container, Row, Col, setConfiguration } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
 import Toastify from "../../../../components/ui/Toastify"

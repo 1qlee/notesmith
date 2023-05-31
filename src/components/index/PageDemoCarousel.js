@@ -62,7 +62,7 @@ function PageDemoCarousel() {
       else {
         setCurrentProgress((prev) => prev + 1)
       }
-    }, 20)
+    }, 10)
 
     if (currentProgress === 101) {
       clearInterval(timer)

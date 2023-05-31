@@ -2,7 +2,7 @@ import React from "react"
 import { spacing, widths } from "../../styles/variables"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent, SectionHeading } from "../layout/Section"
+import { Section, SectionContent } from "../layout/Section"
 import Content from "../ui/Content"
 import { Flexbox } from "../layout/Flexbox"
 
@@ -30,9 +30,8 @@ const ProductDescription = ({
                   textalign="center"
                   paragraphfontsize="1.25rem"
                   maxwidth={widths.content.normal}
-                  h2fontsize="2rem"
                 >
-                  <h2>{heading}</h2>
+                  <h3>{heading}</h3>
                   <p>{text}</p>
                 </Content>
               </Flexbox>

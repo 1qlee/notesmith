@@ -17,24 +17,21 @@ const StyledAccordionTab = styled.div`
   justify-content: space-between;
   border-bottom: ${colors.borders.black};
   cursor: pointer;
-  transition: padding 0.2s ease-in-out;
+  transition: border-color 0.2s ease-in-out;
   &:hover {
-    background-color: ${colors.gray.twoHundred};
-    padding: 16px;
+    border-bottom-color: ${colors.gray.fourHundred};
   }
 `
 
 const AccordionTab = ({ 
   activeAccordionTab,
   children,
-  error,
   onClick,
   prereq,
   status,
   summaries,
   tabName,
   text,
-  warning,
 }) => {
   const isActive = activeAccordionTab === tabName
   const { getToggleProps, getCollapseProps, isExpanded, defaultExpanded } = useCollapse({ 
@@ -61,11 +58,9 @@ const AccordionTab = ({
           alignitems="center"
         >
           <Content
-            headingfontfamily={fonts.secondary}
-            h3fontsize="1rem"
-            h3margin="0"
+            h5margin="0"
           >
-            <h3>{text}</h3>
+            <h5>{text}</h5>
           </Content>
           {status && status.msg && !isExpanded && (
             <Tag
@@ -87,10 +82,7 @@ const AccordionTab = ({
           )}
         </Icon>
       </StyledAccordionTab>
-      <Content
-        paragraphfontfamily={fonts.secondary}
-        paragraphfontsize="0.875rem"
-      >
+      <Content>
         {!isExpanded && summaries && (
           <>
             {summaries.map((summary, index) => (

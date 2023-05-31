@@ -31,7 +31,6 @@ const StyledNotification = styled.div`
   border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
   display: ${props => props.display || "flex"};
-  font-family: ${fonts.secondary};
   justify-content: ${props => props.justifycontent || "space-between"};
   margin: ${props => props.margin || "1rem 0"};
   padding: ${props => props.padding || "16px"};

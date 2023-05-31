@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { navigate } from "gatsby"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { v4 as uuidv4 } from 'uuid'
 import 'react-tooltip/dist/react-tooltip.css';
@@ -101,11 +101,9 @@ const ProductInfo = ({
         <p>{bookData.description}</p>
       </Content>
       <Content
-        headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-        h3fontsize="0.75rem"
         margin="32px 0"
       >
-        <h3>Cover color</h3>
+        <p>Cover color</p>
         <ColorPicker
           data={bookData.colors}
           selectedColor={bookData.coverColor}
@@ -119,15 +117,12 @@ const ProductInfo = ({
         justifycontent="space-between"
         margin="0 0 16px"
       >
-        <Content
-          headingfontfamily="Inter, Helvetica, Tahoma, sans-serif"
-          h3fontsize="0.75rem"
-          h3margin="0"
-        >
-          <h3>Page layout</h3>
+        <Content>
+          <p>Page layout</p>
         </Content>
         <TextLink
-          fontsize="0.75rem"
+          alignitems="center"
+          fontweight="400"
           onClick={() => setPageData({
             ...pageData,
             show: !pageData.show,
@@ -150,7 +145,7 @@ const ProductInfo = ({
         <PageIcons
           checkActiveVar={pageData.template}
           data={pageData}
-          iconMargin="0 1rem 1rem 0"
+          iconMargin="0 24px 24px 0"
           isProductPage={true}
           leftPageData={leftPageData}
           rightPageData={rightPageData}
@@ -164,7 +159,15 @@ const ProductInfo = ({
         margin="0 0 16px"
       >
         <div>
-          <StyledLabel htmlFor="quantity-tracker" margin="0 0 1rem">Quantity</StyledLabel>
+          <StyledLabel 
+            htmlFor="quantity-tracker" 
+            margin="0 0 1rem"
+            fontfamily={fonts.primary}
+            fontsize="1rem"
+            fontweight="400"
+          >
+            Quantity
+          </StyledLabel>
           <QuantityTracker
             id="quantity-tracker"
             buttonwidth="1rem"
@@ -195,7 +198,7 @@ const ProductInfo = ({
           bordercolor={colors.gray.twoHundred}
         >
           <Icon>
-            <WarningCircle size={20} color={colors.gray.nineHundred} weight="fill" />
+            <WarningCircle size={16} color={colors.gray.nineHundred} />
           </Icon>
           <Content
             margin="0 0 0 8px"

@@ -44,8 +44,6 @@ const BreadcrumbItem = styled.li`
 
 const BreadcrumbText = styled.p`
   color: ${colors.gray.sixHundred};
-  font-family: ${fonts.secondary};
-  font-size: 0.875rem;
 `
 
 function Breadcrumb({
@@ -65,8 +63,8 @@ function Breadcrumb({
           >
             <BreadcrumbText>{item.text}</BreadcrumbText>
             {index !== items.length - 1 && (
-              <Icon margin="0 4px">
-                <ArrowRight size={12} color={colors.gray.sixHundred} weight="bold" />
+              <Icon margin="0 8px">
+                /
               </Icon>
             )}
           </BreadcrumbItem>

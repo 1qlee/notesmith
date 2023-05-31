@@ -10,7 +10,7 @@ const TextLink = styled.a`
   display: ${props => props.flex || "inline-flex"};
   font-family: ${props => props.fontfamily || fonts.primary};
   font-size: ${props => props.fontsize || "1rem"};
-  font-weight: ${props => props.fontweight || "800"};
+  font-weight: ${props => props.fontweight || "700"};
   justify-content: ${props => props.justifycontent};
   line-height: 1;
   margin: ${props => props.margin};

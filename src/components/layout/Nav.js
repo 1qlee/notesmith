@@ -5,7 +5,7 @@ import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "use-shopping-cart"
 
-import { Container } from "react-grid-system"
+import { Container, setConfiguration } from "react-grid-system"
 import Banner from "../ui/Banner"
 import TextLink from "../ui/TextLink"
 import Logo from "../misc/Logo"
@@ -60,6 +60,7 @@ const CartCounter = styled.span`
 `
 
 function Nav(props) {
+  setConfiguration({ gutterWidth: 80 })
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount } = useShoppingCart()
 

@@ -22,6 +22,8 @@ exports.handler = async (event) => {
       }
     )
 
+    console.log(`[Stripe] Tax transaction created successfully: ${transaction.id}`)
+
     return {
       statusCode: 200,
       body: JSON.stringify({

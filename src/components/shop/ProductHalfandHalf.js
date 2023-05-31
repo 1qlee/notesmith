@@ -3,7 +3,7 @@ import { spacing, colors, fonts } from "../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent, SectionHeading } from "../layout/Section"
+import { Section, SectionContent } from "../layout/Section"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 
@@ -28,16 +28,10 @@ const ProductHalfandHalf = ({ image, direction, bookData }) => {
               </Flexbox>
             </Col>
             <Col sm={6}>
-              <SectionHeading
-                margin="0 0 32px"
-              >
-                <h2>{bookData.halfandhalf[index].heading}</h2>
-              </SectionHeading>
               <Content
-                headingfontfamily={fonts.secondary}
-                h3fontsize="1rem"
                 paragraphfontsize="1.25rem"
               >
+                <h3>{bookData.halfandhalf[index].heading}</h3>
                 <p>{bookData.halfandhalf[index].text}</p>
               </Content>
             </Col>

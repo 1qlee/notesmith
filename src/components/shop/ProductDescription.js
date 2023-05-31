@@ -30,11 +30,11 @@ const ProductDescription = ({
           {headingText && (
             <Row>
               <Col>
-                <SectionHeading
+                <Content
                   margin="0 0 32px"
                 >
-                  <h2>{headingText}</h2>
-                </SectionHeading>
+                  <h3>{headingText}</h3>
+                </Content>
               </Col>
             </Row>
           )}

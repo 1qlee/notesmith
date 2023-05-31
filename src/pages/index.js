@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { graphql, Link } from "gatsby"
-import { Star, ArrowUpRight, ArrowRight, WarningCircle } from "phosphor-react"
+import { Star, ArrowUpRight, ArrowRight, WarningCircle, NoteBlank } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col, setConfiguration } from 'react-grid-system'
@@ -596,7 +596,7 @@ const IndexPage = ({ data }) => {
                     margin="16px 0 0"
                   >
                     <Icon>
-                      <WarningCircle color={colors.gray.sixHundred} />
+                      <NoteBlank color={colors.gray.sixHundred} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"

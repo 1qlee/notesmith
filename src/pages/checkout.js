@@ -47,9 +47,9 @@ const Checkout = () => {
   ]
   const [activeAccordionTab, setActiveAccordionTab] = useState("shipping")
   const [addressStatus, setAddressStatus] = useState({
-    msg: "",
-    color: "",
-    background: "",
+    msg: "Incomplete",
+    color: colors.red.oneHundred,
+    background: colors.red.sixHundred,
   })
   const [methodStatus, setMethodStatus] = useState({
     msg: "Selection required",
