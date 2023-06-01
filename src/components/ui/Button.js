@@ -17,7 +17,7 @@ const Button = styled.button`
   border: ${props => props.border ? props.border : "none"};
   color: ${props => props.color || colors.gray.oneHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
-  font-size: ${props => props.fontsize || "0.875rem"};
+  font-size: ${props => props.fontsize || "1rem"};
   font-family: "Inter", Helvetica, Tahoma, sans-serif;
   line-height: 1;
   height: ${props => props.height};

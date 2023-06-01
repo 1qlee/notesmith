@@ -29,10 +29,10 @@ const ReviewBox = styled.div`
 `
 
 const ReviewProfileImg = styled.div`
-  padding: 8px;
-  border: ${colors.borders.black};
-  border-radius: 8px;
-  background-color: ${colors.yellow.threeHundred};
+  height: 64px;
+  width: 64px;
+  border-radius: 24px 12px / 12px 24px;
+  background-color: ${colors.gray.twoHundred};
 `
 
 const NoteHoles = styled.div`

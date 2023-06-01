@@ -1,13 +1,15 @@
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 
-const BookRadio = styled.div`
+const BookRadio = styled.button`
   display: block;
   background-color: ${colors.white};
   transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
   border-radius: 4px;
   border: 1px solid ${colors.gray.nineHundred};
   padding: 1rem;
+  width: 100%;
+  text-align: left;
   &:hover,
   &:focus {
     cursor: pointer;

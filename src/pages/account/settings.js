@@ -1,9 +1,9 @@
 import React from "react"
 import PrivateRoute from "../../components/auth/PrivateRoute"
-import UserSettings from "../../components/auth/UserSettings"
+import AuthSettings from "../../components/auth/AuthSettings"
 
 function SettingsPage() {
-  return <PrivateRoute component={UserSettings} />
+  return <PrivateRoute component={AuthSettings} />
 }
 
 export default SettingsPage

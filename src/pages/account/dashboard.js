@@ -1,9 +1,9 @@
 import React from "react"
 import PrivateRoute from "../../components/auth/PrivateRoute"
-import UserDashboard from "../../components/auth/UserDashboard"
+import AuthDashboard from "../../components/auth/AuthDashboard"
 
 function DashboardPage() {
-  return <PrivateRoute component={UserDashboard} />
+  return <PrivateRoute component={AuthDashboard} />
 }
 
 export default DashboardPage

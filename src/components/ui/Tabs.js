@@ -7,7 +7,7 @@ const StyledTabs = styled.ul`
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
-  font-size: ${props => props.fontsize};
+  font-size: ${props => props.fontsize || "1rem"};
 `
 
 const StyledTab = styled.li`

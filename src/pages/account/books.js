@@ -1,10 +1,10 @@
 import React from "react"
 import { graphql } from "gatsby"
 import PrivateRoute from "../../components/auth/PrivateRoute"
-import UserBooks from "../../components/auth/UserBooks"
+import AuthBooks from "../../components/auth/AuthBooks"
 
 function BooksPage({ data }) {
-  return <PrivateRoute component={UserBooks} allProducts={data.allProductsJson} />
+  return <PrivateRoute component={AuthBooks} allProducts={data.allProductsJson} />
 }
 
 export default BooksPage
@@ -23,10 +23,12 @@ export const pageQuery = graphql`
         paperColor
         paperTooth
         paperWeight
+        preorderPrice
         price
         size
         slug
         stripePriceId
+        stripePreorderPriceId
         widthInch
         widthPixel
         colors {

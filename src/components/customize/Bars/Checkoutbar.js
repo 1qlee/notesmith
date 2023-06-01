@@ -14,6 +14,7 @@ import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
 import Content from "../../ui/Content"
 import ColorPicker from "../../shop/ColorPicker"
+import Box from "../../ui/Box"
 
 function Checkoutbar({
   bookData,
@@ -47,8 +48,8 @@ function Checkoutbar({
       id: uuidv4(),
       image: getImageThumbnail(),
       name: book.name,
-      price_id: book.stripePriceId,
-      price: book.price,
+      price_id: book.stripePreorderPriceId,
+      price: book.preorderPrice,
       slug: book.slug,
       weight: book.weight,
     }, { count: itemQuantity })
@@ -95,76 +96,89 @@ function Checkoutbar({
   return (
     <>
       <ControlsContent>
-        <Content
-          padding="0"
-          margin="0 0 16px"
-          headingfontfamily={fonts.secondary}
-          h3fontsize="0.75rem"
-          h3margin="0 0 0.25rem"
-          paragraphfontfamily={fonts.secondary}
-          paragraphfontsize="0.875rem"
-        >
-          <h3>Product</h3>
-          <p>{bookData.name}</p>
-        </Content>
-        <Content
-          padding="0"
-          margin="0 0 16px"
-          headingfontfamily={fonts.secondary}
-          h3fontsize="0.75rem"
-          h3margin="0 0 0.5rem"
-        >
-          <h3>Cover color</h3>
-          <ColorPicker
-            data={productData.colors}
-            selectedColor={bookData.coverColor}
-            cbFunction={color => setBookData({
-              ...bookData,
-              coverColor: color,
-            })}
-          />
-        </Content>
-        <Content
-          padding="0"
-          margin="0"
-          headingfontfamily={fonts.secondary}
-          h3fontsize="0.75rem"
-          h3margin="0 0 0.5rem"
-        >
-          <h3>Quantity</h3>
-          <QuantityTracker
-            buttonwidth="1rem"
-            buttonheight="1rem"
-            counterwidth="6rem"
-            counterfontsize="0.825rem"
-            iconsize="0.625rem"
-            setItemQuantity={setItemQuantity}
-            counterpadding="0.5rem"
-          />
-        </Content>
         <Flexbox
-          flex="flex"
-          alignitems="flex-end"
+          flexdirection="column"
           justifycontent="space-between"
-          margin="0.5rem 0"
+          height="100%"
         >
-          <Content
-            padding="0"
-            margin="0"
-            h4margin="0"
-            h4fontweight="400"
-          >
-            <h4>Subtotal</h4>
-          </Content>
-          <Content
-            padding="0"
-            margin="0"
-            h3margin="0"
-            h3fontweight="400"
-            h3color={colors.primary.sixHundred}
-          >
-            <h3>{calculateTotalPrice(productData.price)}</h3>
-          </Content>
+          <Box>
+            <Content
+              padding="0"
+              margin="0 0 16px"
+              h5fontweight="700"
+            >
+              <h5>{productData.name}</h5>
+              <p>{productData.description}</p>
+            </Content>
+            <Content
+              padding="0"
+              margin="0 0 16px"
+              h5fontweight="700"
+              h5fontsize="1rem"
+            >
+              <h5>Cover color</h5>
+              <ColorPicker
+                data={productData.colors}
+                selectedColor={bookData.coverColor}
+                cbFunction={color => setBookData({
+                  ...bookData,
+                  coverColor: color,
+                })}
+              />
+            </Content>
+          </Box>
+          <Box>
+            <Flexbox
+              alignitems="center"
+              justifycontent="space-between"
+              margin="0 0 16px"
+              padding="32px 0 0"
+              className="has-border-top"
+            >
+              <Content
+                padding="0"
+                margin="0"
+                h5margin="0 8px 0 0"
+                h5fontsize="1rem"
+                h5fontweight="700"
+              >
+                <h5>Quantity</h5>
+              </Content>
+              <QuantityTracker
+                buttonwidth="1rem"
+                buttonheight="1rem"
+                counterwidth="6rem"
+                counterfontsize="0.825rem"
+                iconsize="0.625rem"
+                setItemQuantity={setItemQuantity}
+                counterpadding="0.5rem"
+                />
+            </Flexbox>
+            <Flexbox
+              flex="flex"
+              alignitems="flex-end"
+              justifycontent="space-between"
+              margin="0.5rem 0"
+            >
+              <Content
+                padding="0"
+                margin="0"
+                h5margin="0"
+                h5fontweight="700"
+                h5fontsize="1rem"
+              >
+                <h5>Subtotal</h5>
+              </Content>
+              <Content
+                padding="0"
+                margin="0"
+                h4margin="0"
+                h4fontweight="700"
+              >
+                <h4>{calculateTotalPrice(productData.price)}</h4>
+              </Content>
+            </Flexbox>
+          </Box>
         </Flexbox>
       </ControlsContent>
       <ControlsFooter>

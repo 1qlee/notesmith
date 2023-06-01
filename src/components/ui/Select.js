@@ -21,9 +21,10 @@ const SelectMenu = styled.div`
   background-color: ${colors.white};
   box-shadow: ${colors.shadow.layeredSmall};
   border-radius: 0.25rem;
+  border: ${colors.borders.black};
   padding: 0.5rem 0;
   position: absolute;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
@@ -36,7 +37,10 @@ const SelectMenu = styled.div`
     background-color: ${colors.white};
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
-    top: -0.25rem;
+    top: -6px;
+
+  border: ${colors.borders.black};
+  border-width: 2px 0 0 2px;
   }
 `
 

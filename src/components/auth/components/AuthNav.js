@@ -8,9 +8,7 @@ function AuthNav({
 }) {
 
   return (
-    <StyledTabs
-      fontsize="0.875rem"
-    >
+    <StyledTabs>
       <StyledTab
         className={page === "Dashboard" ? "is-active" : null}
         as={Link}

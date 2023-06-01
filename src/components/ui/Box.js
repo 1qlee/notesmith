@@ -2,6 +2,7 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const Box = styled.div`
+  border-radius: ${props => props.borderradius};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   width: ${props => props.width};
@@ -12,6 +13,11 @@ const Box = styled.div`
   }
   &.no-border-top {
     border-top-width: 0 !important;
+  }
+  &.is-clickable {
+    &:hover {
+      background-color: ${colors.gray.twoHundred};
+    }
   }
 `
 

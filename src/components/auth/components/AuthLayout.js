@@ -16,8 +16,7 @@ function AuthLayout({
   return (
     <AuthSection>
       <Container
-        style={{ position: "static"}}
-        xs sm md lg xl
+        xl lg md sm xs
       >
         <Seo title={page} />
         <Flexbox

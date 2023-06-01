@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
@@ -27,6 +27,10 @@ function Canvas({
     height: 916,
   })
 
+  useEffect(() => {
+    
+  }, [])
+
   return (
     <Workspace>
       <StyledCanvas>
@@ -36,6 +40,7 @@ function Canvas({
           xlinkns="http://www.w3.org/1999/xlink"
           width={canvasSize.width}
           height={canvasSize.height}
+          viewBox={`0 0 ${canvasSize.width * 2} ${canvasSize.height * 2}`}
         >
           <PageSpread
             bookData={bookData}

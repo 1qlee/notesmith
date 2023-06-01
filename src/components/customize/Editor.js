@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate } from "gatsby"
-import { fonts, pageMargins } from "../../styles/variables"
+import { pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'

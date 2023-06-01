@@ -11,7 +11,6 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import { BookRadio } from "../books/BookComponents"
 import { Flexbox } from "../../layout/Flexbox"
 import ColorPicker from "../../shop/ColorPicker"
-import Tag from "../../ui/Tag"
 import Progress from "../../ui/Progress"
 import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
@@ -21,7 +20,7 @@ const StepContent = styled.div`
   min-height: 36px;
   max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 32px;
   padding: 2px;
 `
 
@@ -138,9 +137,10 @@ function NewBookModal({
         <Content
           h3fontsize="0.75rem"
           h3margin="0"
+          h3fontweight="700"
           headingfontfamily={fonts.secondary}
-          margin="0 0 0.5rem 0"
-          paragraphmarginbottom="1rem"
+          margin="0 0 8px 0"
+          paragraphmarginbottom="32px"
         >
           <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
           {step === 0 && (
@@ -169,18 +169,12 @@ function NewBookModal({
                   justifycontent="space-between"
                   width="100%"
                 >
-                  <Tag
-                    fontsize="0.75rem"
-                    fontfamily="Inter, Helvetica, Tahoma, sans-serif"
-                    fontweight="700"
-                    backgroundcolor={colors.gray.nineHundred}
-                    color={colors.gray.oneHundred}
-                    boxshadow="none"
-                    padding="0.25rem 0.5rem"
-                    margin="0 0 0.25rem"
+                  <Content
+                    h5margin="0 0 4px"
+                    h5fontweight="700"
                   >
-                    {product.name}
-                  </Tag>
+                    <h5>{product.name}</h5>
+                  </Content>
                   <Content
                     paragraphfontsize="1.25rem"
                     paragraphmarginbottom="0"
@@ -192,7 +186,6 @@ function NewBookModal({
                 </Flexbox>
                 <Content
                   paragraphfontsize="0.875rem"
-                  padding="0 0 0 0.5rem"
                 >
                   <p>This notebook has {product.numOfPages} total pages.</p>
                 </Content>

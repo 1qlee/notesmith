@@ -6,9 +6,10 @@ const StyledContextMenu = styled.article`
   background-color: ${colors.white};
   box-shadow: ${colors.shadow.layeredSmall};
   border-radius: 0.25rem;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   padding: 0.5rem 0;
   position: absolute;
+  border: ${colors.borders.black};
 `
 
 const ContextMenuItem = styled.div`
@@ -34,9 +35,8 @@ const ContextMenuLink = styled.a`
 `
 
 const ContextMenuDivider = styled.hr`
-  background-color: ${colors.gray.threeHundred};
-  height: 1px;
-  border: none;
+  height: 0;
+  border-top: 2px dotted #212121;
   margin: 0.5rem 0;
 `
 

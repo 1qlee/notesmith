@@ -31,7 +31,6 @@ const ModalHeader = styled.div`
   border-bottom: ${props => props.border || `2px solid ${colors.gray.nineHundred}`};
   color: ${props => props.color || colors.primary.nineHundred};
   font-size: 1rem;
-  font-family: ${fonts.secondary};
   font-weight: 700;
   padding: 16px 0;
 `
@@ -39,8 +38,7 @@ const ModalHeader = styled.div`
 const ModalContent = styled.div`
   padding: 16px 0;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  font-family: ${fonts.secondary};
-  font-size: 0.875rem;
+  font-size: 1rem;
 `
 
 const ModalFooter = styled.div`

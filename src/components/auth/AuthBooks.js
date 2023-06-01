@@ -340,7 +340,7 @@ const UserBooks = ({ allProducts }) => {
             >
               <Content
                 textalign="center"
-                h1fontsize="2rem"
+                h1fontsize="3rem"
                 maxwidth={widths.content.index}
               >
                 <h1>Create your own notebook now</h1>
@@ -349,6 +349,8 @@ const UserBooks = ({ allProducts }) => {
                   color={colors.gray.oneHundred}
                   backgroundcolor={colors.gray.nineHundred}
                   margin="16px 0 0 0"
+                  padding="16px 24px"
+                  fontsize="1rem"
                   onClick={() => setShowModal({
                     show: true,
                     type: "createbook",
