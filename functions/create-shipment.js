@@ -20,20 +20,18 @@ const updatePaymentIntent = async (pid, shippingLabel) => {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { pid } = body;
-  // paymentIntent has all purchase info
-  const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const { rateId, shipmentId, authKey, tax, taxId, shipping } = paymentIntent.metadata;
-  const amount = paymentIntent.amount;
 
   try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(pid);
+    console.log(paymentIntent)
+    const { rateId, shipmentId, authKey, tax, taxId, shipping } = paymentIntent.metadata;
+    const amount = paymentIntent.amount;
+    console.log(amount)
     // retrieve the existing shipment by its ID
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
-    console.log(userShipment)
     const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);
-    console.log(userShippingRate)
     // buy the shipping label from easypost
     const shippingLabel = await easypost.Shipment.buy(userShipment.id, userShippingRate);
-    console.log(shippingLabel)
     console.log(`[Easypost] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information

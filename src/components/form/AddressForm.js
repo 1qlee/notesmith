@@ -150,11 +150,19 @@ function AddressForm({
     })
 
     setAddress(address)
-    setCustomer({
-      ...customer,
-      name: name,
-      phone: phone,
-    })
+    if (isInternational) {
+      setCustomer({
+        ...customer,
+        name: name,
+        phone: phone,
+      })
+    }
+    else {
+      setCustomer({
+        ...customer,
+        name: name,
+      })
+    }
 
     if (!isEmailVerified) {
       setEmailError("Please enter a valid email address.")

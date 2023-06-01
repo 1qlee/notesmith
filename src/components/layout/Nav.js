@@ -113,6 +113,7 @@ function Nav(props) {
                     </NavItem>
                     <NavItem>
                       <NavLink
+                        as="a"
                         tabIndex={0}
                         onClick={() => signOut()}
                         color={colors.gray.nineHundred}

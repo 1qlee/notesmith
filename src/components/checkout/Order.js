@@ -253,9 +253,11 @@ const Order = ({ location, orderId }) => {
                       <Orders>
                         <OrderSection>
                           <Content
+                            h5fontweight="800"
+                            h5margin="0 0 8px"
                             margin="0 0 16px"
                           >
-                            <b><p>Order date</p></b>
+                            <h5>Order date</h5>
                             {showInfo ? (
                               <p>{convertUnix(orderInfo.created)}</p>
                             ) : (
@@ -263,9 +265,12 @@ const Order = ({ location, orderId }) => {
                             )}
                           </Content>
                           <Content
+                            h5fontweight="800"
+                            h5margin="0 0 8px"
                             margin="0 0 16px"
+                            paragraphmarginbottom="0"
                           >
-                            <b><p>Shipping address</p></b>
+                            <h5>Shipping address</h5>
                             {showInfo ? (
                               <>
                                 <p>{orderInfo.address.line1 || orderInfo.address.street1} {orderInfo.address.line2 || orderInfo.address.street2}</p>
@@ -280,8 +285,11 @@ const Order = ({ location, orderId }) => {
                               </>
                             )}
                           </Content>
-                          <Content>
-                            <b><p>Tracking</p></b>
+                          <Content
+                            h5fontweight="800"
+                            h5margin="0 0 8px"
+                          >
+                            <h5>Tracking</h5>
                             {showInfo ? (
                               <Button
                                 as="a"
@@ -381,11 +389,9 @@ const Order = ({ location, orderId }) => {
                             >
                               <p>Total</p>
                               <Content
-                                h3margin="0"
-                                h3fontweight="400"
-                                h3color={colors.primary.nineHundred}
+                                h4margin="0"
                               >
-                                <h3>${convertToDecimal(orderInfo.amount, 2)}</h3>
+                                <h4>${convertToDecimal(orderInfo.amount, 2)}</h4>
                               </Content>
                             </Flexbox>
                           </>

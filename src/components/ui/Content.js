@@ -96,7 +96,7 @@ const Content = styled.div`
   }
   small {
     color: ${props => props.smallcolor || colors.gray.sixHundred};
-    font-size: ${props => props.smallfontsize};
+    font-size: ${props => props.smallfontsize || "0.75rem"};
     font-family: ${props => props.smallfontfamily};
     line-height: 1.5;
     display: block;

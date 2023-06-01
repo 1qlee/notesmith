@@ -59,6 +59,7 @@ const AccordionTab = ({
         >
           <Content
             h5margin="0"
+            h5fontweight='800'
           >
             <h5>{text}</h5>
           </Content>

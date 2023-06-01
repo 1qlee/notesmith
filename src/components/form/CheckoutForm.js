@@ -148,44 +148,7 @@ function CheckoutForm({
         },
       }
 
-      const orderSaved = await saveOrderItems(cartItems, orderData)
-
-      // if there is an order error, it means we could not save the order to the database
-      if (orderSaved.error) {
-        setError(null)
-        setPaymentProcessing(false)
-        // send the team an email to notify them of the error
-        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database.")
-
-        // redirect the user to the orders summary page including the error
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              orderData: orderData,
-              cartItems: cartItems,
-              error: orderSaved.error,
-              clearCart: true,
-            }
-          }
-        )
-      }
-      // otherwise, everything is good-to-go so redirect the user to the orders summary page
-      else {
-        setError(null)
-        setPaymentProcessing(false)
-
-        // redirect the user to the orders summary page
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              error: null,
-              clearCart: true,
-            }
-          }
-        )
-      }
+      await saveOrderItems(cartItems, orderData)
     }).catch(async data => {
       await sendShippingErrorEmail("Payment was successful, but we could not purchase the shipping label.")
       // if we have an error here that means the order was created but the shipping label was not purchased
@@ -204,41 +167,7 @@ function CheckoutForm({
         error: error,
       }
 
-      const orderSaved = await saveOrderItems(cartItems, orderData)
-      
-      if (orderSaved.error) {
-        setError(null)
-        setPaymentProcessing(false)
-        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database. Additionally, the shipping label was not purchased.")
-
-        // redirect the user to the orders summary page including the error
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              orderData: orderData,
-              cartItems: cartItems,
-              error: orderSaved.error,
-              clearCart: true,
-            }
-          }
-        )
-      }
-      else {
-        setError(null)
-        setPaymentProcessing(false)
-
-        // redirect the user to the orders summary page
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              error: null,
-              clearCart: true,
-            }
-          }
-        )
-      }
+      await saveOrderItems(cartItems, orderData)
     })
   }
 
@@ -254,29 +183,48 @@ function CheckoutForm({
 
       // if this set fails, then we won't have a saved order item
       // this will make fulfillment very difficult, so we must handle the error here
-      await set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
+      set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
         ...cartItems[i],
         pid: pid,
-      }).catch(() => {
-        return {
-          error: `There was an issue with saving your order items to our system. Please contact us at general@notesmithbooks.com for further assistance and include the following order id: ${pid}.`
-        }
+      }).then(async () => {
+        await set(ref(firebaseDb, `/orders/${pid}`), {
+          ...orderData,
+          pid: pid,
+          orderItems: cartItemsObject,
+        })
+      }).then(() => {
+        setError(null)
+        setPaymentProcessing(false)
+
+        // redirect the user to the orders summary page
+        navigate(
+          `/orders/${pid}?key=${authKey}`,
+          {
+            state: {
+              error: null,
+              clearCart: true,
+            }
+          }
+        )
+      }).catch(async error => {
+        setError(null)
+        setPaymentProcessing(false)
+        // send the team an email to notify them of the error
+        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database.")
+
+        // redirect the user to the orders summary page including the error
+        navigate(
+          `/orders/${pid}?key=${authKey}`,
+          {
+            state: {
+              orderData: orderData,
+              cartItems: cartItems,
+              error: "There was an error saving your order. Please contact us at",
+              clearCart: true,
+            }
+          }
+        )
       })
-    }
-
-    // save the order to the database by its pid
-    await set(ref(firebaseDb, `/orders/${pid}`), {
-      ...orderData,
-      pid: pid,
-      orderItems: cartItemsObject,
-    }).catch(() => {
-      return {
-        error: `There was an issue with saving your order information to our system. Please contact us at general@notesmithbooks.com for further assistance and include the following order id: ${pid}.`
-      }
-    })
-
-    return {
-      error: null
     }
   }
 

@@ -16,6 +16,7 @@ import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import ProductInfoBox from "./ProductInfoBox"
 import TextLink from "../ui/TextLink"
+import Tag from "../ui/Tag"
 
 const ProductInfo = ({
   bookData,
@@ -32,7 +33,6 @@ const ProductInfo = ({
   const showWarningMsg = !rightPageData.template || !leftPageData.template
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
-  const [warningMsg, setWarningMsg] = useState(showWarningMsg && "You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.")
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -61,10 +61,8 @@ const ProductInfo = ({
             image: cartThumbnail,
             leftPageData: leftPageData,
             name: bookData.name,
-            preorderPrice: bookData.preorderPrice,
-            preorderPrice_id: bookData.stripePreorderPriceId,
-            price_id: bookData.stripePriceId,
-            price: bookData.price,
+            price_id: bookData.stripePreorderPriceId,
+            price: bookData.preorderPrice,
             rightPageData: rightPageData,
             slug: bookData.slug,
             weight: bookData.weight,
@@ -83,17 +81,31 @@ const ProductInfo = ({
   return (
     <>
       <Content
-        margin="0 0 1rem 0"
+        margin="0 0 16px 0"
         h1fontsize="3rem"
-        h1margin="0 0 1rem"
-        h1fontweight="400"
-        h2fontsize="2rem"
-        h2fontweight="400"
-        h2margin="0"
+        h1fontweight="700"
       >
         <h1>{bookData.name}</h1>
-        <h2>${bookData.price / 100}</h2>
       </Content>
+      <Flexbox
+        alignitems="center"
+        margin="0 0 32px"
+      >
+        <Content
+          h2fontsize="2rem"
+          h2fontweight="400"
+          h2margin="0"
+        >
+          <h2><s><span>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}</h2>
+        </Content>
+        <Tag
+          backgroundcolor={colors.yellow.threeHundred}
+          color={colors.yellow.nineHundred}
+          margin="0 0 0 8px"
+        >
+          Pre-order price
+        </Tag>
+      </Flexbox>
       <Content
         paragraphfontsize="1.25rem"
         margin="0 0 32px"
@@ -194,18 +206,17 @@ const ProductInfo = ({
       </Flexbox>
       {showWarningMsg && (
         <Notification
-          backgroundcolor={colors.gray.twoHundred}
-          bordercolor={colors.gray.twoHundred}
+          backgroundcolor={colors.red.twoHundred}
         >
           <Icon>
-            <WarningCircle size={16} color={colors.gray.nineHundred} />
+            <WarningCircle size={16} color={colors.red.nineHundred} />
           </Icon>
           <Content
             margin="0 0 0 8px"
             smallmargin="0"
-            smallcolor={colors.gray.nineHundred}
+            smallcolor={colors.red.nineHundred}
           >
-            <small>{warningMsg}</small>
+            <small>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</small>
           </Content>
         </Notification>
       )}

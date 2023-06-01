@@ -1,11 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import Content from "../ui/Content"
 
 const StyledProductInfoBox = styled.div`
   align-items: flex-start;
-  border-top: 1px solid ${colors.gray.threeHundred};
+  border-top: ${colors.borders.black};
   display: flex;
   padding: 16px 0;
 `
@@ -25,6 +25,7 @@ function ProductInfoBox({
       >
         <Content
           margin="0"
+          paragraphfontweight="700"
         >
           <p>{heading}</p>
         </Content>

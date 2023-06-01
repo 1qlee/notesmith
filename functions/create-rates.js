@@ -115,7 +115,6 @@ exports.handler = async (event) => {
 
       console.log(`[Easypost] Successfully created shipment for domestic shipment`)
     }
-    console.log(newShipment)
     // shipment is the new easypost shipment object we created earlier
     const shipmentId = newShipment.id;
     const cheapestRate = newShipment.rates.sort((a,b) => {

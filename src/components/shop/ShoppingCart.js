@@ -117,9 +117,9 @@ function ShoppingCart() {
                               <span>View details</span>
                               <Icon margin="0 0 0 2px">
                                 {activeItemIds[item.id] ? (
-                                  <CaretUp size="0.75rem" weight="fill" />
+                                  <CaretUp size="0.75rem" />
                                 ) : (
-                                    <CaretDown size="0.75rem" weight="fill"  />
+                                  <CaretDown size="0.75rem"  />
                                 )}
                               </Icon>
                             </Button>
@@ -133,7 +133,7 @@ function ShoppingCart() {
                           >
                             <span>Remove</span>
                             <Icon margin="0 0 0 2px">
-                              <Trash size="0.75rem" color={colors.gray.nineHundred} weight="fill" />
+                              <Trash size="0.75rem" />
                             </Icon>
                           </Button>
                         </Flexbox>
@@ -341,10 +341,11 @@ function ShoppingCart() {
                 flex="flex"
                 justifycontent="space-between"
                 margin="2rem 1rem 2rem 0"
+                h5margin="0"
                 alignitems="center"
               >
-                <p>Subtotal</p>
-                <p>${convertToDecimal(totalPrice, 2)}</p>
+                <h5>Subtotal</h5>
+                <h4>${convertToDecimal(totalPrice, 2)}</h4>
               </Flexbox>
             </Content>
           </Flexbox>

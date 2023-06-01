@@ -14,7 +14,7 @@ const Tag = styled.span`
   font-weight: ${props => props.fontweight || "800"};
   height: fit-content;
   margin: ${props => props.margin};
-  padding: ${props => props.padding ? props.padding : "0.5rem 1rem"};
+  padding: ${props => props.padding ? props.padding : "3px 6px"};
   text-align: center;
   width: ${props => props.width};
   &:not(:last-child) {

@@ -14,17 +14,10 @@ const Orders = styled.div`
   margin-bottom: 16px;
   padding: 0 16px;
   p {
-    font-family: ${fonts.secondary};
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
   small {
-    font-family: ${fonts.secondary};
-    font-size: 0.625rem;
-  }
-  h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: ${fonts.secondary};
+    font-size: 0.75rem;
   }
 `
 
@@ -66,7 +59,11 @@ function OrderSummary({
     <>
       <Orders>
         <OrderSection>
-          <h3>Order Summary</h3>
+          <Content
+            h5margin="0"
+          >
+            <h5>Order Summary</h5>
+          </Content>
         </OrderSection>
         <OrderSection>
           <OrderContent>

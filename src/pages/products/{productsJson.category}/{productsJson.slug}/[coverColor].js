@@ -222,6 +222,8 @@ export const pageQuery = graphql`
       paperColor
       paperTooth
       paperWeight
+      preorderPrice
+      stripePreorderPriceId
       infoList
       price
       size
