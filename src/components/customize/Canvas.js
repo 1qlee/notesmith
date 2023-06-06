@@ -27,10 +27,6 @@ function Canvas({
     height: 916,
   })
 
-  useEffect(() => {
-    
-  }, [])
-
   return (
     <Workspace>
       <StyledCanvas>
@@ -40,7 +36,7 @@ function Canvas({
           xlinkns="http://www.w3.org/1999/xlink"
           width={canvasSize.width}
           height={canvasSize.height}
-          viewBox={`0 0 ${canvasSize.width * 2} ${canvasSize.height * 2}`}
+          viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
         >
           <PageSpread
             bookData={bookData}
