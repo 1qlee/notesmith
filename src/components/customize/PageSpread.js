@@ -146,7 +146,7 @@ function Page({
   setSvgSize,
 }) {
   const [pageSvg, setPageSvg] = useState({
-    svg: `<svg><rect width="477.6" height="792" fill="red"></rect></svg>`,
+    svg: `<svg><rect width="477.6" height="792" fill="white"></rect></svg>`,
     marginTop: 12,
     marginRight: 0,
     marginBottom: 0,

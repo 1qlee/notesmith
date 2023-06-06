@@ -26,9 +26,11 @@ export const pageQuery = graphql`
       paperTooth
       paperWeight
       price
+      preorderPrice
       size
       slug
       stripePriceId
+      stripePreorderPriceId
       widthInch
       widthPixel
       weight

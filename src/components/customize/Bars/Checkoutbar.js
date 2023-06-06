@@ -34,24 +34,23 @@ function Checkoutbar({
     return filteredImage[0]
   }
 
-  async function handleCheckoutButton(book, coverColor) {
+  function handleCheckoutButton(coverColor) {
     setLoading(true)
-    console.log(book)
     // create a promise to add items to cart then redirect user to cart
-    await addItem({
-      category: book.category,
+    addItem({
+      category: productData.category,
       coverColor: coverColor,
       currency: "USD",
       custom: true,
       bookId: bookData.id,
-      description: book.description,
+      description: productData.description,
       id: uuidv4(),
       image: getImageThumbnail(),
-      name: book.name,
-      price_id: book.stripePreorderPriceId,
-      price: book.preorderPrice,
-      slug: book.slug,
-      weight: book.weight,
+      name: productData.name,
+      price_id: productData.stripePreorderPriceId,
+      price: productData.preorderPrice,
+      slug: productData.slug,
+      weight: productData.weight,
     }, { count: itemQuantity })
     .then(async () => {
       await updateBookCoverColor(coverColor)
@@ -189,7 +188,7 @@ function Checkoutbar({
           width="100%"
           disabled={loading}
           className={loading ? "is-loading" : null}
-          onClick={() => handleCheckoutButton(productData, bookData.coverColor)}
+          onClick={() => handleCheckoutButton(bookData.coverColor)}
         >
           {loading ? (
             <Icon width="3rem">

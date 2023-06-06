@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 
@@ -12,7 +12,11 @@ function CartQuantityTracker(props) {
     incrementItem,
     decrementItem
   } = useShoppingCart()
-  const [trackQuantity, setTrackQuantity] = useState(props.product.quantity)
+  const [trackQuantity, setTrackQuantity] = useState(1)
+
+  useEffect(() => {
+    setTrackQuantity(props.product.quantity)
+  }, [props.product.quantity])
 
   // change the quantity based on input
   function handleQuantityChange(quantity) {

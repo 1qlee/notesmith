@@ -249,6 +249,7 @@ const ShippingForm = ({
                 color={selectedRate ? colors.gray.nineHundred : colors.gray.oneHundred}
                 backgroundcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
                 fontfamily={fonts.secondary}
+                fontweight="400"
                 fontsize="0.875rem"
               >
                 ${convertToDecimal(shippingRate.rate, 2)}

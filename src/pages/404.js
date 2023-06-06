@@ -1,13 +1,24 @@
 import React from "react"
 
 import Layout from "../components/layout/Layout"
-import Seo from "../components/layout/Seo"
+import Content from "../components/ui/Content"
+import { Section, SectionMain, SectionContent } from "../components/layout/Section"
+import Nav from "../components/layout/Nav"
 
 const NotFoundPage = () => (
   <Layout>
-    <Seo title="Page Not found" />
-    <h1>NOT FOUND</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+    <Nav />
+    <SectionMain
+      className="has-max-height"
+    >
+      <Section>
+        <SectionContent>
+          <Content headingtextalign="center">
+            <h1>Page not found</h1>
+          </Content>
+        </SectionContent>
+      </Section>
+    </SectionMain>
   </Layout>
 )
 

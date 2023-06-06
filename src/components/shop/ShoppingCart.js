@@ -19,11 +19,14 @@ function ShoppingCart() {
     setItemQuantity,
     removeItem,
     totalPrice,
+    formattedTotalPrice
   } = useShoppingCart()
+  console.log(totalPrice)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
 
   useEffect(() => {
+    console.log(cartDetails)
     // array to store cartItems
     const cartItemsArray = []
     // push all product objects in cartDetails to an array
@@ -345,7 +348,7 @@ function ShoppingCart() {
                 alignitems="center"
               >
                 <h5>Subtotal</h5>
-                <h4>${convertToDecimal(totalPrice, 2)}</h4>
+                <h4>{formattedTotalPrice}</h4>
               </Flexbox>
             </Content>
           </Flexbox>

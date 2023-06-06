@@ -70,7 +70,12 @@ const CartCounter = styled.span`
 function Nav(props) {
   setConfiguration({ gutterWidth: 64 })
   const { user, signOut, loading } = useFirebaseContext()
-  const { cartCount } = useShoppingCart()
+  const { cartCount, clearCart } = useShoppingCart()
+
+  const handleSignOut = () => {
+    clearCart()
+    signOut()
+  }
 
   return (
     <StyledNav>
@@ -115,7 +120,7 @@ function Nav(props) {
                       <NavLink
                         as="a"
                         tabIndex={0}
-                        onClick={() => signOut()}
+                        onClick={() => handleSignOut()}
                         color={colors.gray.nineHundred}
                       >
                         Sign out

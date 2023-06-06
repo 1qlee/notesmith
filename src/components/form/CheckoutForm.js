@@ -142,6 +142,8 @@ function CheckoutForm({
         shipping: shipping,
         tax: tax,
         taxId: taxId,
+        printed: false,
+        shipped: false,
         tracking:  {
           code: trackingCode,
           url: trackingUrl
@@ -165,6 +167,8 @@ function CheckoutForm({
         shipping: shipping,
         authKey: authKey,
         error: error,
+        printed: false,
+        shipped: false,
       }
 
       await saveOrderItems(cartItems, orderData)
