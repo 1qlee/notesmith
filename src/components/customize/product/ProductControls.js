@@ -105,6 +105,7 @@ function ProductControls({
   currentPageSide,
   pageData,
   showControls,
+  selectedPageSvg,
   setCurrentPageSide,
   setLeftPageData,
   setPageData,
@@ -121,14 +122,26 @@ function ProductControls({
     setLoading(true)
 
     if (currentPageSide === "left") {
-      setLeftPageData(pageData)
+      setLeftPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+      })
     }
     else if (currentPageSide === "both") {
-      setLeftPageData(pageData)
-      setRightPageData(pageData)
+      setLeftPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+      })
+      setRightPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+      })
     }
     else {
-      setRightPageData(pageData)
+      setRightPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+      })
     }
 
     setLoading(false)

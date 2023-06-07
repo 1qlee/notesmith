@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react"
 import { fonts, widths, colors } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, update, remove, onValue, get, set, push } from "firebase/database"
-import { jsPDF as createPdf } from 'jspdf'
 import { ToastContainer, toast } from 'react-toastify'
-import 'svg2pdf.js'
 
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
@@ -266,50 +264,6 @@ const UserBooks = ({ allProducts }) => {
       })
     }).catch(error => {
       toast.error("Failed to duplicate book.")
-    })
-  }
-
-  function downloadBookPdf() {
-    const bookPdf = new createPdf({
-      format: [139.7, 215.9],
-      compress: true,
-    })
-    const downloadBookRef = ref('books/-Mo-pISGlvG2AxeVFsXz')
-    let pageNum = 1
-
-    downloadBookRef.once("value").then(snapshot => {
-      const pages = snapshot.val().pages
-
-      console.log("initializing pdf...")
-      bookPdf.deletePage(1)
-
-      for (const page in pages) {
-        const numOfPages = Object.keys(pages).length
-
-        ref(`pages/${page}`).orderByChild('pageNumber').once("value").then(snapshot => {
-          const pageSvg = snapshot.val().svg
-          const node = new DOMParser().parseFromString(pageSvg, 'text/html').body.firstElementChild
-
-          console.log("adding page: ", pageNum)
-          bookPdf.addPage([139.7, 215.9], "portrait")
-          bookPdf.setPage(pageNum)
-
-          bookPdf.svg(node, {
-            x: 0,
-            y: 0,
-            width: 139.7,
-            height: 215.9,
-          }).then(() => {
-
-            if (pageNum === numOfPages) {
-              console.log("saving pdf")
-              bookPdf.save()
-            }
-
-            pageNum++
-          })
-        })
-      }
     })
   }
 

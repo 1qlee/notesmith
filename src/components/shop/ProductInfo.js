@@ -60,12 +60,15 @@ const ProductInfo = ({
             id: uuidv4(), // unique cart item id
             image: cartThumbnail,
             leftPageData: leftPageData,
+            height: bookData.heightPixel,
             name: bookData.name,
+            numOfPages: bookData.numOfPages,
             price_id: bookData.stripePreorderPriceId,
             price: bookData.preorderPrice,
             rightPageData: rightPageData,
             slug: bookData.slug,
             weight: bookData.weight,
+            width: bookData.widthPixel,
           }, { count: itemQuantity })
         )
       })
