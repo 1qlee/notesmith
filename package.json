@@ -14,12 +14,13 @@
     "@stripe/react-stripe-js": "^2.0.0",
     "@stripe/stripe-js": "^1.51.0",
     "babel-plugin-styled-components": "^1.13.2",
+    "concurrent-each": "github:1qlee/concurrent-each",
     "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "file-saver": "^2.0.5",
     "firebase": "^9.18.0",
     "firebase-admin": "^11.0.1",
-    "gatsby": "^5.7.0",
+    "gatsby": "^5.10.0",
     "gatsby-plugin-firebase-v9.0": "^1.0.3",
     "gatsby-plugin-google-fonts": "^1.0.1",
     "gatsby-plugin-image": "^3.7.0",
@@ -68,7 +69,8 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing \""
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing \"",
+    "postinstall": "cd ./node_modules/concurrent-each && npm install && npm run build"
   },
   "repository": {
     "type": "git",

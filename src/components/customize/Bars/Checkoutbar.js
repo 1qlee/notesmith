@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { colors, fonts } from "../../../styles/variables"
+import { colors } from "../../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { useFirebaseContext } from "../../../utils/auth"
 import { navigate } from "gatsby"
@@ -38,19 +38,23 @@ function Checkoutbar({
     setLoading(true)
     // create a promise to add items to cart then redirect user to cart
     addItem({
+      bookId: bookData.id,
       category: productData.category,
       coverColor: coverColor,
       currency: "USD",
-      custom: true,
-      bookId: bookData.id,
-      description: productData.description,
+      custom: productData.custom,
+      height: productData.heightPixel,
       id: uuidv4(),
       image: getImageThumbnail(),
       name: productData.name,
+      numOfPages: productData.numOfPages,
       price_id: productData.stripePreorderPriceId,
       price: productData.preorderPrice,
+      printed: false,
+      size: productData.size,
       slug: productData.slug,
       weight: productData.weight,
+      width: productData.widthPixel,
     }, { count: itemQuantity })
     .then(async () => {
       await updateBookCoverColor(coverColor)

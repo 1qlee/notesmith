@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import "./master.css"
 import 'react-toastify/dist/ReactToastify.css'
+import "./master.css"
 
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"

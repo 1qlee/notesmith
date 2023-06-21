@@ -14,6 +14,7 @@ const ProgressBar = styled.div`
   height: 100%;
   background-color: ${props => props.barcolor};
   border-radius: 0.25rem;
+  transition: ${props => props.animate && "width 100ms"};
   z-index: 99;
 `
 
@@ -24,6 +25,7 @@ function Progress({
   completion,
   wrappercolor,
   barcolor,
+  animate,
 }) {
   return (
     <ProgressWrapper
@@ -37,6 +39,7 @@ function Progress({
           width: `${completion}%`
         }}
         barcolor={barcolor}
+        animate={animate}
       />
     </ProgressWrapper>
   )

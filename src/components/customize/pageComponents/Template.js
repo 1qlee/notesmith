@@ -53,6 +53,7 @@ function Template({
       y={pagePosition.bothY}
       width={pageData.maxContentWidth}
       height={pageData.maxContentHeight}
+      viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
       fill="#fff"
     >
       {pageData.template === "blank" && (

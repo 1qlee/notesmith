@@ -11,7 +11,6 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import Notification from "../../ui/Notification"
 import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
-import Content from "../../ui/Content"
 import { Col, Row } from "react-grid-system"
 
 const PageRangeWrapper = styled.div`
@@ -147,38 +146,6 @@ function ApplyTemplateModal({
       newPageId = newPageKey
     }
 
-    // update canvas pages
-    async function updatePagesDb(pages) {
-      // if user is signed, update pages in db
-      if (user) {
-        await set(ref(firebaseDb, `books/${bookId}/pages`), pages).then(() => {
-          cleanupPagesDb(pages)
-        })
-      }
-
-      // set pages in state
-      setCanvasPages(pages)
-    }
-
-    // cleans up non-used pre-existing pages associated with the book
-    async function cleanupPagesDb(pages) {
-      // get all pages associated with the book
-      await get(query(ref(firebaseDb, "pages"), orderByChild("bookId"), equalTo(bookId))).then(snapshot => {
-        const allExistingPages = snapshot.val()
-
-        // loop through all pages
-        for (const existingPage in allExistingPages) {
-          // look for matching page id's in canvasPages
-          const pageExists = pages.find(page => page.pageId === allExistingPages[existingPage].id)
-
-          // if there is no match, delete the page from the db
-          if (!pageExists) {
-            remove(ref(firebaseDb, `pages/${allExistingPages[existingPage].id}`))
-          }
-        }
-      })
-    }
-
     // switch function to apply template to the user's desired pages
     switch(value) {
       case "apply-current":
@@ -256,6 +223,59 @@ function ApplyTemplateModal({
     setLoading(false)
     setShowModal({
       show: false
+    })
+  }
+
+  // update canvas pages
+  async function updatePagesDb(pages) {
+    // if user is signed, update pages in db
+    if (user) {
+      await set(ref(firebaseDb, `books/${bookId}/pages`), pages).then(() => {
+        cleanupPagesDb(pages)
+      })
+    }
+
+    // set pages in state
+    setCanvasPages(pages)
+  }
+
+  // cleans up non-used pre-existing pages associated with the book
+  async function cleanupPagesDb(pages) {
+    // get all pages associated with the book
+    await get(query(ref(firebaseDb, "pages"), orderByChild("bookId"), equalTo(bookId))).then(async snapshot => {
+      const bookPages = snapshot.val()
+
+      // loop through all pages
+      for (const page in bookPages) {
+        const matchingPageId = bookPages[page].id
+        // look for matching page id's in canvasPages
+        const pageExists = pages.find(page => page.pageId === matchingPageId)
+
+        // if there is no match, delete the page from the db
+        if (!pageExists) {
+          // get all order items associated with the book
+          // we need to make sure we are not deleting pages from unfulfilled orders
+          const orderExists = await get(query(ref(firebaseDb, `orderItems`), orderByChild("bookId"), equalTo(bookId))).then(snapshot => {
+            const allOrderItems = snapshot.val()
+            // filter allOrderItems where printed is false
+            const unfulfilledOrderItems = Object.keys(allOrderItems).filter(orderItem => allOrderItems[orderItem].printed === false)
+
+            // loop through all order items
+            for (const orderItem in unfulfilledOrderItems) {
+              const { pages } = orderItem
+
+              // if the page exists in an unfulfilled order, do not delete it
+              if (pages.includes(matchingPageId)) {
+                return
+              }
+            }
+          })
+
+          if (!orderExists) {
+            remove(ref(firebaseDb, `pages/${matchingPageId}`))
+          }
+        }
+      }
     })
   }
 

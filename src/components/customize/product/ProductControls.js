@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, widths, fonts, convertFloatFixed, convertToMM, breakpoints } from "../../../styles/variables"
+import { colors, widths, fonts, convertFloatFixed, convertToPx, convertToMM, breakpoints, pageMargins } from "../../../styles/variables"
 import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "phosphor-react"
 import { ScreenClassRender } from "react-grid-system"
 
@@ -115,6 +115,12 @@ function ProductControls({
   toast,
 }) {
   const [loading, setLoading] = useState(false)
+  const { marginTop, marginLeft } = pageData
+  const margin = {
+    top: convertToPx(marginTop),
+    left: convertToPx(marginLeft),
+  }
+  const minimumMargin = pageMargins.minimum
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.thickness, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
@@ -128,14 +134,21 @@ function ProductControls({
       })
     }
     else if (currentPageSide === "both") {
-      setLeftPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-      })
       setRightPageData({
         template: pageData.template,
         svg: selectedPageSvg.outerHTML,
       })
+      // hack to give left pages the correct margin values
+      selectedPageSvg.setAttribute("id", "left-page")
+      selectedPageSvg.setAttribute("x", minimumMargin + margin.left)
+      setLeftPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+      })
+
+      // then hack to set it back
+      selectedPageSvg.setAttribute("id", "right-page")
+      selectedPageSvg.setAttribute("x", convertToPx(10.16) + margin.left)
     }
     else {
       setRightPageData({
@@ -184,6 +197,7 @@ function ProductControls({
                     headingfontfamily={fonts.secondary}
                     h3fontsize="0.75rem"
                     h3margin="0 0 0.5rem 0"
+                    h3fontweight="700"
                     margin="0 0 1rem 0"
                   >
                     <h3>Page side</h3>

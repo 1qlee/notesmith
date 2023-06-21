@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { colors, convertToDecimal, fonts } from "../../styles/variables"
+import { colors, convertToDecimal, fonts, widths } from "../../styles/variables"
 import { useShoppingCart } from "use-shopping-cart"
 import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
@@ -144,7 +144,7 @@ function ShoppingCart() {
                           <Box
                             margin="8px 0 0"
                           >
-                            {item.custom ? (
+                            {item.category === "notebooks" && (
                               <>
                                 <Flexbox
                                   flex="flex"
@@ -161,77 +161,54 @@ function ShoppingCart() {
                                     <h3>Cover</h3>
                                   </Content>
                                   <Content
-                                    paragraphfontsize="0.75rem"
+                                    paragraphfontsize="0.875rem"
                                     paragraphmarginbottom="0"
                                     paragraphtexttransform="capitalize"
                                   >
                                     <p>{item.coverColor}</p>
                                   </Content>
                                 </Flexbox>
-                                <Flexbox
-                                  flex="flex"
-                                  alignitems="center"
-                                  justifycontent="space-between"
-                                  margin="0 0 0.25rem 0"
-                                >
-                                  <Content
-                                    headingfontfamily={fonts.secondary}
-                                    h3fontsize="0.75rem"
-                                    h3margin="0"
-                                    margin="0"
+                                {item.bookId && (
+                                  <Flexbox
+                                    flex="flex"
+                                    alignitems="center"
+                                    justifycontent="space-between"
+                                    margin="0 0 0.25rem 0"
                                   >
-                                    <h3>Pages</h3>
-                                  </Content>
-                                  <Content
-                                    paragraphfontsize="0.75rem"
-                                    paragraphmarginbottom="0"
-                                    paragraphtexttransform="capitalize"
-                                  >
-                                    <Button
-                                      fontsize="0.75rem"
-                                      padding="2px 4px"
-                                      onClick={() => handleViewDetails(item.id)}
-                                      backgroundcolor={colors.gray.twoHundred}
-                                      color={colors.gray.nineHundred}
-                                      as={Link}
-                                      to={`/customize/${item.slug}/${item.bookId}`}
+                                    <Content
+                                      headingfontfamily={fonts.secondary}
+                                      h3fontsize="0.75rem"
+                                      h3margin="0"
+                                      margin="0"
                                     >
-                                      <span>View</span>
-                                      <Icon
-                                        margin="0 0 0 2px"
+                                      <h3>Pages</h3>
+                                    </Content>
+                                    <Content
+                                      paragraphfontsize="0.75rem"
+                                      paragraphmarginbottom="0"
+                                      paragraphtexttransform="capitalize"
+                                    >
+                                      <Button
+                                        fontsize="0.75rem"
+                                        padding="2px 4px"
+                                        onClick={() => handleViewDetails(item.id)}
+                                        backgroundcolor={colors.gray.twoHundred}
+                                        color={colors.gray.nineHundred}
+                                        as={Link}
+                                        to={`/customize/${item.slug}/${item.bookId}`}
                                       >
-                                        <ArrowSquareOut size="0.75rem" />
-                                      </Icon>
-                                    </Button>
-                                  </Content>
-                                </Flexbox>
-                              </>
-                            ) : (
-                              <>
-                                {item.category === "notebooks" && (
+                                        <span>View</span>
+                                        <Icon
+                                          margin="0 0 0 2px"
+                                        >
+                                          <ArrowSquareOut size="0.75rem" />
+                                        </Icon>
+                                      </Button>
+                                    </Content>
+                                  </Flexbox>
+                                )}
+                                {item.leftPageData && item.rightPageData && (
                                   <>
-                                    <Flexbox
-                                      flex="flex"
-                                      alignitems="center"
-                                      justifycontent="space-between"
-                                      margin="0 0 0.25rem 0"
-                                    >
-                                      <Content
-                                        headingfontfamily={fonts.secondary}
-                                        h3fontsize="0.75rem"
-                                        h3margin="0"
-                                        margin="0"
-                                      >
-                                        <h3>Cover</h3>
-                                      </Content>
-                                      <Content
-                                        paragraphfontsize="0.875rem"
-                                        paragraphmarginbottom="0"
-                                        paragraphtexttransform="capitalize"
-                                      >
-                                        <p>{item.coverColor}</p>
-                                      </Content>
-                                    </Flexbox>
                                     <Flexbox
                                       flex="flex"
                                       alignitems="center"
@@ -382,9 +359,9 @@ function ShoppingCart() {
             margin="1rem 0"
             textalign="center"
             h1fontsize="3rem"
-            h1fontweight="400"
+            maxwidth={widths.content.index}
           >
-            <h1>Looks like your cart is empty</h1>
+            <h1>Your cart is empty</h1>
             <p>Press the button below to take a look at our pre-order sale.</p>
           </Content>
           <Link

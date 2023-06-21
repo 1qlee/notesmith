@@ -55,11 +55,25 @@ function ProductTemplate({
       left: convertToPx(marginLeft),
     }
 
-    setPagePosition({
-      rightX: convertToPx(10.16) + margin.left,
-      leftX: minimumMargin + margin.left,
-      bothY: minimumMargin + margin.top,
-    })
+    switch(currentPageSide) {
+      case "left":
+        setPagePosition({
+          x: minimumMargin + margin.left,
+          y: minimumMargin + margin.top,
+        })
+        break
+      case "right":
+        setPagePosition({
+          x: convertToPx(10.16) + margin.left,
+          y: minimumMargin + margin.top,
+        })
+        break
+      default:
+        setPagePosition({
+          x: convertToPx(10.16) + margin.left,
+          y: minimumMargin + margin.top,
+        })
+    }
   }, [currentPageSide, pageData, node, maxSvgSize])
 
   function calculateSvgHeight(screenClass) {
@@ -128,10 +142,11 @@ function ProductTemplate({
               xmlns="http://www.w3.org/2000/svg"
               ref={templateRef}
               id={currentPageSide === "left" ? "left-page" : "right-page"}
-              x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
-              y={pagePosition.bothY}
+              x={pagePosition.x}
+              y={pagePosition.y}
               width={pageData.maxContentWidth}
               height={pageData.maxContentHeight}
+              viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
               fill="#fff"
             >
               {pageData.template === "blank" && (

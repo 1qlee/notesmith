@@ -25,9 +25,7 @@ const ProductInfo = ({
   pageData,
   rightPageData,
   setBookData,
-  setLeftPageData,
   setPageData,
-  setRightPageData,
   toast,
 }) => {
   const showWarningMsg = !rightPageData.template || !leftPageData.template
@@ -48,36 +46,26 @@ const ProductInfo = ({
       toast.error("Apply a template to right pages.")
     }
     else {
-      // create a promise to add items to cart then redirect user to cart
-      const addItemsToCart = new Promise((resolve, reject) => {
-        // use-shopping-cart function to add items to cart
-        resolve(
-          addItem({
-            category: bookData.category,
-            coverColor: bookData.coverColor,
-            currency: "USD",
-            custom: false,
-            id: uuidv4(), // unique cart item id
-            image: cartThumbnail,
-            leftPageData: leftPageData,
-            height: bookData.heightPixel,
-            name: bookData.name,
-            numOfPages: bookData.numOfPages,
-            price_id: bookData.stripePreorderPriceId,
-            price: bookData.preorderPrice,
-            rightPageData: rightPageData,
-            slug: bookData.slug,
-            weight: bookData.weight,
-            width: bookData.widthPixel,
-          }, { count: itemQuantity })
-        )
-      })
-
-      addItemsToCart.then(res => {
-        return navigate("/cart")
-      }).catch(error => {
-        console.log(error)
-      })
+      addItem({
+        category: bookData.category,
+        coverColor: bookData.coverColor,
+        currency: "USD",
+        custom: bookData.custom,
+        id: uuidv4(), // unique cart item id
+        image: cartThumbnail,
+        leftPageData: leftPageData,
+        height: bookData.heightPixel,
+        name: bookData.name,
+        numOfPages: bookData.numOfPages,
+        price_id: bookData.stripePreorderPriceId,
+        price: bookData.preorderPrice,
+        printed: false,
+        rightPageData: rightPageData,
+        slug: bookData.slug,
+        size: bookData.size,
+        weight: bookData.weight,
+        width: bookData.widthPixel,
+      }, { count: itemQuantity })
     }
   }
 

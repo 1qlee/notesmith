@@ -209,6 +209,7 @@ export const pageQuery = graphql`
     productData: productsJson(id: { eq: $id }) {
       camelName
       category
+      custom
       description
       longDescription
       halfandhalf {

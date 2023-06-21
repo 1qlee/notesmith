@@ -95,14 +95,18 @@ function OrderSummary({
                       margin="4px 0 0"
                       smallmargin="0"
                     >
-                      {item.category === "notebooks" && item.custom ? (
-                        <small>
-                          <CapitalizedWord>{item.coverColor}, Custom</CapitalizedWord>
-                        </small>
-                      ) : (
-                        <small>
-                          <CapitalizedWord>{item.coverColor},</CapitalizedWord> <CapitalizedWord>{item.leftPageData.template} left,</CapitalizedWord> <CapitalizedWord>{item.rightPageData.template} right</CapitalizedWord>
-                        </small>
+                      {item.category === "notebooks" && (
+                        <>
+                          {item.bookId ? (
+                            <small>
+                              <CapitalizedWord>{item.coverColor}, Custom</CapitalizedWord>
+                            </small>
+                          ) : (
+                            <small>
+                              <CapitalizedWord>{item.coverColor},</CapitalizedWord> <CapitalizedWord>{item.leftPageData.template} left,</CapitalizedWord> <CapitalizedWord>{item.rightPageData.template} right</CapitalizedWord>
+                            </small>
+                          )}
+                        </>
                       )}
                     </Content>
                   </Box>

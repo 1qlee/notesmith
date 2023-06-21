@@ -17,6 +17,7 @@ export const pageQuery = graphql`
     productData: productsJson(slug: { eq: $slug }) {
       camelName
       category
+      custom
       description
       heightInch
       heightPixel
