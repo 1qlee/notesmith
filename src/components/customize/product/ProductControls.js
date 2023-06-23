@@ -138,17 +138,15 @@ function ProductControls({
         template: pageData.template,
         svg: selectedPageSvg.outerHTML,
       })
-      // hack to give left pages the correct margin values
-      selectedPageSvg.setAttribute("id", "left-page")
-      selectedPageSvg.setAttribute("x", minimumMargin + margin.left)
-      setLeftPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-      })
+      setCurrentPageSide("left")
 
-      // then hack to set it back
-      selectedPageSvg.setAttribute("id", "right-page")
-      selectedPageSvg.setAttribute("x", convertToPx(10.16) + margin.left)
+      setTimeout(() => {
+        setLeftPageData({
+          template: pageData.template,
+          svg: selectedPageSvg.outerHTML,
+        })
+        setCurrentPageSide("both")
+      }, 100)
     }
     else {
       setRightPageData({

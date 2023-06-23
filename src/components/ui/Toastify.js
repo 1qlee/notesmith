@@ -1,5 +1,5 @@
 import React from "react"
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, Flip } from 'react-toastify'
 import { fonts } from "../../styles/variables"
 
 export default function Toastify() {
@@ -17,6 +17,7 @@ export default function Toastify() {
       position="top-center"
       rtl={false}
       theme="colored"
+      transition={Flip}
       style={{
         fontFamily: fonts.secondary,
         fontSize: "0.75rem",

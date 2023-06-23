@@ -3,8 +3,8 @@ import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
 import Controlsbar from "./bars/Controlsbar"
-import Checkoutbar from "./bars/Checkoutbar"
 import Templatesbar from "./bars/Templatesbar"
+import Checkoutbar from "./Bars/Checkoutbar"
 
 const StyledControls = styled.div`
   border-left: 2px solid ${colors.gray.nineHundred};
@@ -71,6 +71,7 @@ const ControlsFooter = styled.div`
 function Controls({
   activeTab,
   bookData,
+  canvasPages,
   pageData,
   productData,
   productImages,
@@ -141,6 +142,7 @@ function Controls({
         <Checkoutbar
           bookData={bookData}
           pageData={pageData}
+          canvasPages={canvasPages}
           productData={productData}
           productImages={productImages}
           setBookData={setBookData}

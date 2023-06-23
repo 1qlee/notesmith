@@ -58,7 +58,7 @@ const AdminDashboard = () => {
   const getBookPages = (bookId) => {
     const pages = get(ref(firebaseDb, `books/${bookId}/pages`)).then(snapshot => {
       if (snapshot.exists()) {
-        console.log("WE GOT ALL PAGES")
+        console.log("Querying for book's pages...")
         // an array of all pages {pageid: "", pagenum: ""} where pageId points to a unique page
         return snapshot.val()
       }
@@ -67,59 +67,33 @@ const AdminDashboard = () => {
     return pages
   }
 
-  const downloadCustomBooks = async (pages, values, dimension, bookNum, booksZip, bookPdf) => {
-    const { id, pid, numOfPages, width, height } = values
-    const { bookWidth, bookHeight } = dimension
+  // this function will run once per orderItem and will download all the pages for that orderItem
+  const zipCustomBook = async (pages, values, dimension, bookNum, booksZip, bookPdf) => {
+    console.log("Generating a custom book pdf...")
+    const { id, pid, numOfPages, width } = values
+    console.log(id, pid)
+    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
     const widthOffset = convertToMM(width)
-    const iterationsPerChunk = numOfPages
     let queriedPages = {}
+    let parsedPages = []
 
-    for (let i = 0; i < numOfPages; i++) {
-      if (i && i % iterationsPerChunk === 0) {
-        console.log("await")
-        await oneMoment();
-      }
-
+    console.log("Parsing custom book's pages...")
+    for (let i = 0; i < pages.length; i++) {
       const page = pages[i]
       const { pageId, pageNumber } = page
-      let queriedPage = queriedPages[pageId]
-      console.log(queriedPages)
-      bookPdf.addPage([bookWidth, bookHeight], "portrait")
-      bookPdf.setPage(page + 1)
 
-      // if the page was already queried, use the svg from the queriedPages array
-      if (queriedPage) {
-        const pageNode = parseSvgNode(queriedPage.svg)
-        const coords = {
-          x: convertToMM(pageNode.getAttribute("x")),
-          y: convertToMM(pageNode.getAttribute("y")),
-        }
-        const pagePct = convertFloatFixed((queriedPage.pageNumber / numOfPages) * 100)
-
-        await bookPdf.svg(pageNode, {
-          x: coords.x - widthOffset,
-          y: coords.y,
-          width: bookWidth,
-          height: bookHeight,
-        }).then(() => {
-          setDownloadPct(pagePct)
-          console.log("adding page ", pageNumber)
-          if (pageNumber === numOfPages) {
-            setDownloadPct(100)
-            setDownloaded(bookNum + 1)
-            console.log("zipping book")
-            booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
-            // await set(firebaseDb, `orderItems/${id}/printed`, true)
-          }
+      if (queriedPages[pageId]) {
+        parsedPages.push({
+          pageId: pageId,
+          pageNumber: pageNumber,
+          svg: queriedPages[pageId].svg,
         })
       }
       else {
-        // query the db for the page's svg
-        const svg = await get(ref(firebaseDb, `pages/${pageId}`)).then(snapshot => {
+        await get(ref(firebaseDb, `pages/${pageId}`)).then(snapshot => {
           if (snapshot.exists()) {
             const bookPage = snapshot.val()
             const { svg } = bookPage
-            console.log("querying page")
 
             queriedPages[pageId] = {
               pageId: pageId,
@@ -127,41 +101,54 @@ const AdminDashboard = () => {
               svg: svg,
             }
 
-            return svg
+            parsedPages.push({
+              pageId: pageId,
+              pageNumber: pageNumber,
+              svg: svg,
+            })
           }
         })
+      }
+    }
+
+    console.log("Adding pages to pdf...")
+    await ceach.loop(
+      parsedPages,
+      async (page) => {
+        const { pageNumber, svg } = page
+        bookPdf.addPage([bookWidth, bookHeight], "portrait")
+        bookPdf.setPage(pageNumber)
 
         const pageNode = parseSvgNode(svg)
         const coords = {
           x: convertToMM(pageNode.getAttribute("x")),
           y: convertToMM(pageNode.getAttribute("y")),
         }
-        console.log(coords)
         const pagePct = convertFloatFixed((pageNumber / numOfPages) * 100)
 
         await bookPdf.svg(pageNode, {
-          x: coords.x,
+          x: coords.x - widthOffset,
           y: coords.y,
-          width: bookWidth,
-          height: bookHeight,
-        }).then(() => {
+          width: svgWidth,
+          height: svgHeight,
+        }).then(async () => {
           setDownloadPct(pagePct)
+
           if (pageNumber === numOfPages) {
             setDownloadPct(100)
-            setDownloaded(bookNum)
-            console.log("zipping book")
-            booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
+            setDownloaded(bookNum + 1)
+            console.log("Adding book pdf to zip file...")
+            await booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
             // await set(firebaseDb, `orderItems/${id}/printed`, true)
           }
         })
       }
-    }
+    )
   }
 
-  const downloadStandardBooks = async (numOfPages, values, dimension, bookNum, booksZip, bookPdf) => {
+  const zipStandardBook = async (numOfPages, values, dimension, bookNum, booksZip, bookPdf) => {
     const { id, pid } = values
-    const { bookWidth, bookHeight } = dimension
-    const iterationsPerChunk = numOfPages
+    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
 
     const leftPage = values.leftPageData.svg
     const rightPage = values.rightPageData.svg
@@ -176,54 +163,48 @@ const AdminDashboard = () => {
       x: convertToMM(rightPageNode.getAttribute("x")),
       y: convertToMM(rightPageNode.getAttribute("y")),
     }
+    const pages = Array.from(Array(numOfPages).keys())
 
-    // turn svg strings into DOM nodes
-    for (let i = 0; i < numOfPages; i++) {
-      if (i && i % iterationsPerChunk === 0) {
-        console.log("await")
-        await oneMoment();
-      }
+    await ceach.forEach(
+      pages,
+      async (page) => {
+        console.log(page)
+        bookPdf.addPage([bookWidth, bookHeight], "portrait")
+        bookPdf.setPage(page + 1)
+        const pagePct = convertFloatFixed((page / numOfPages) * 100)
 
-      const page = i
-      bookPdf.addPage([bookWidth, bookHeight], "portrait")
-      bookPdf.setPage(page + 1)
-      const pagePct = convertFloatFixed((page / numOfPages) * 100)
-
-      if (page % 2 === 0) {
-        await bookPdf.svg(rightPageNode, {
-          x: rightCoords.x,
-          y: rightCoords.y,
-          width: bookWidth,
-          height: bookHeight,
-        }).then(() => {
-          setDownloadPct(pagePct)
-        })
-      }
-      else {
-        await bookPdf.svg(leftPageNode, {
-          x: leftCoords.x,
-          y: leftCoords.y,
-          width: bookWidth,
-          height: bookHeight,
-        }).then(async () => {
-          setDownloadPct(pagePct)
-          if (page === numOfPages - 1) {
-            try {
-              setDownloadPct(100)
-              setDownloaded(bookNum)
-              booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
-              await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
-            } catch (error) {
-              console.log(error)
+        if (page % 2 === 0) {
+          await bookPdf.svg(rightPageNode, {
+            x: rightCoords.x,
+            y: rightCoords.y,
+            width: svgWidth,
+            height: svgHeight,
+          }).then(() => {
+            setDownloadPct(pagePct)
+          })
+        }
+        else {
+          await bookPdf.svg(leftPageNode, {
+            x: leftCoords.x,
+            y: leftCoords.y,
+            width: svgWidth,
+            height: svgHeight,
+          }).then(async () => {
+            setDownloadPct(pagePct)
+            if (page === numOfPages - 1) {
+              try {
+                setDownloadPct(100)
+                setDownloaded(bookNum)
+                await booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
+                // await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
+              } catch (error) {
+                console.log(error)
+              }
             }
-          }
-        })
+          })
+        }
       }
-    }
-  }
-
-  const oneMoment = () => {
-    return new Promise(resolve => setTimeout(resolve))
+    )
   }
 
   const downloadBooks = async (size) => {
@@ -235,7 +216,6 @@ const AdminDashboard = () => {
     // query the db for all unprinted order items
     get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo(false))).then(async snapshot => { 
       if (snapshot.exists()) {
-        console.log("RETRIEVED ORDERS")
         const unprintedOrders = snapshot.val()
         // filter orders by activeBookSize
         const filteredOrders = Object.values(unprintedOrders).filter(order => order.size === size)
@@ -245,12 +225,12 @@ const AdminDashboard = () => {
         // loop through each order and create a pdf for each
         for (let i = 0; i < numOfOrders; i++) {
           const values = filteredOrders[i]
-          const { numOfPages, pid, id, height, width } = values
-          const bookWidth = convertFloatFixed(convertToMM(width) - 13.335, 2)
-          const bookHeight = convertFloatFixed(convertToMM(height) - 6.35, 2)
+          const { numOfPages, height, width } = values
           const dimension = {
-            bookWidth: bookWidth,
-            bookHeight: bookHeight,
+            svgWidth: convertFloatFixed(convertToMM(width) - 13.335, 2),
+            svgHeight: convertFloatFixed(convertToMM(height) - 6.35, 2),
+            bookWidth: convertToMM(width),
+            bookHeight: convertToMM(height),
           }
           const bookPdf = new jsPDF({
             compress: true,
@@ -259,20 +239,17 @@ const AdminDashboard = () => {
 
           // if there is a bookId, there are custom pages we have to fetch
           if (values.bookId) {
-            console.log("WE GOT A CUSTOM BOOK ID")
-            const { bookId } = values                
-            let queriedPages = {}
             // query the db for the book's page ids
-            const pages = await getBookPages(bookId)
-            await downloadCustomBooks(pages, values, dimension, i, booksZip, bookPdf)
+            const pages = await getBookPages(values.bookId)
+            await zipCustomBook(pages, values, dimension, i, booksZip, bookPdf)
           }
           else {
-            await downloadStandardBooks(numOfPages, values, dimension, i, booksZip, bookPdf)
+            // await zipStandardBook(numOfPages, values, dimension, i, booksZip, bookPdf)
           }
         }
 
-        booksZip.generateAsync({ type: 'blob' }).then(function (content) {
-          console.log("downloading zip")
+        await booksZip.generateAsync({ type: 'blob' }).then(function (content) {
+          console.log("Downloading zip file...")
           clearInterval(timerInterval)
           saveAs(content, `${new Date().toISOString().slice(0, 10)}.zip`);
         })

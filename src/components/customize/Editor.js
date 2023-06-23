@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
-import ApplyTemplateModal from "./modals/ApplyTemplateModal"
+import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./modals/CheckLoginModal"
 import CreateBookModal from "./modals/CreateBookModal"
@@ -33,7 +33,6 @@ const Editor = ({
   productData, 
   productImages,
 }) => {
-  console.log(productData)
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,

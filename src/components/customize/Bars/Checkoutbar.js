@@ -18,6 +18,7 @@ import Box from "../../ui/Box"
 
 function Checkoutbar({
   bookData,
+  canvasPages,
   productData,
   productImages,
   setBookData,
@@ -48,6 +49,7 @@ function Checkoutbar({
       image: getImageThumbnail(),
       name: productData.name,
       numOfPages: productData.numOfPages,
+      pages: [...canvasPages],
       price_id: productData.stripePreorderPriceId,
       price: productData.preorderPrice,
       printed: false,

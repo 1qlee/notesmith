@@ -17,6 +17,7 @@ const Tag = styled.span`
   padding: ${props => props.padding ? props.padding : "3px 6px"};
   text-align: center;
   width: ${props => props.width};
+  white-space: nowrap;
   &:not(:last-child) {
     margin: ${props => props.margin ? props.margin : "0 0 0.5rem 0"};
   }

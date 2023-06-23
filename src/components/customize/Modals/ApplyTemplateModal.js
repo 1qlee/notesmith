@@ -256,23 +256,31 @@ function ApplyTemplateModal({
           // get all order items associated with the book
           // we need to make sure we are not deleting pages from unfulfilled orders
           const orderExists = await get(query(ref(firebaseDb, `orderItems`), orderByChild("bookId"), equalTo(bookId))).then(snapshot => {
-            const allOrderItems = snapshot.val()
-            // filter allOrderItems where printed is false
-            const unfulfilledOrderItems = Object.keys(allOrderItems).filter(orderItem => allOrderItems[orderItem].printed === false)
+            if (snapshot.exists()) {
+              const allOrderItems = snapshot.val()
+              // filter allOrderItems where printed is false and return original object in an array
+              const unfulfilledOrderItems = Object.values(allOrderItems).filter(orderItem => orderItem["printed"] === false)
 
-            // loop through all order items
-            for (const orderItem in unfulfilledOrderItems) {
-              const { pages } = orderItem
+              // loop through all order items
+              for (let orderItem in unfulfilledOrderItems) {
+                const { pages } = unfulfilledOrderItems[orderItem]
+                // check if the page id matches any of the pages in the order item
+                const idMatches = pages.some(page => page.pageId === matchingPageId)
 
-              // if the page exists in an unfulfilled order, do not delete it
-              if (pages.includes(matchingPageId)) {
-                return
+                if (idMatches) {
+                  return true
+                }
               }
+
+              return false
+            }
+            else {
+              return false
             }
           })
 
           if (!orderExists) {
-            remove(ref(firebaseDb, `pages/${matchingPageId}`))
+            await remove(ref(firebaseDb, `pages/${matchingPageId}`))
           }
         }
       }
