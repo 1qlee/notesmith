@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
-import { colors, fonts, widths } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
@@ -36,7 +36,7 @@ const ModalHeader = styled.div`
 `
 
 const ModalContent = styled.div`
-  padding: 16px 0;
+  padding: 32px 0;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   font-size: 1rem;
 `

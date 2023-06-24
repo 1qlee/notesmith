@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { colors, convertToMM, convertFloatFixed } from "../../styles/variables"
+import React, { useState, useRef } from "react"
+import { colors, convertToMM, convertToIn, convertFloatFixed } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, get, query, orderByChild, equalTo, set, onValue } from "firebase/database"
 import { spacing } from "../../styles/variables"
@@ -21,11 +21,11 @@ const notebookSizes = [
 ]
 
 const AdminDashboard = () => {
+  const abortRef = useRef(false)
   const { firebaseDb } = useFirebaseContext()
   const [activeOrderType, setActiveOrderType] = useState("unprinted")
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [downloaded, setDownloaded] = useState(0)
-  const [cancelDownload, setCancelDownload] = useState(false)
   const [toBeDownloaded, setToBeDownloaded] = useState(0)
   const [activeBookSize, setActiveBookSize] = useState("")
   const [downloadPct, setDownloadPct] = useState(0)
@@ -55,24 +55,11 @@ const AdminDashboard = () => {
     setTimeElapsed(prevSeconds => prevSeconds + 1000);
   };
 
-  const getBookPages = (bookId) => {
-    const pages = get(ref(firebaseDb, `books/${bookId}/pages`)).then(snapshot => {
-      if (snapshot.exists()) {
-        console.log("Querying for book's pages...")
-        // an array of all pages {pageid: "", pagenum: ""} where pageId points to a unique page
-        return snapshot.val()
-      }
-    })
-
-    return pages
-  }
-
   // this function will run once per orderItem and will download all the pages for that orderItem
   const zipCustomBook = async (pages, values, dimension, bookNum, booksZip, bookPdf) => {
     console.log("Generating a custom book pdf...")
-    const { id, pid, numOfPages, width } = values
-    console.log(id, pid)
-    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
+    const { numOfPages, width, quantity } = values
+    const { bookWidth, bookHeight, svgWidth, svgHeight, bookWidthInch, bookHeightInch } = dimension
     const widthOffset = convertToMM(width)
     let queriedPages = {}
     let parsedPages = []
@@ -116,6 +103,7 @@ const AdminDashboard = () => {
       parsedPages,
       async (page) => {
         const { pageNumber, svg } = page
+
         bookPdf.addPage([bookWidth, bookHeight], "portrait")
         bookPdf.setPage(pageNumber)
 
@@ -133,12 +121,16 @@ const AdminDashboard = () => {
           height: svgHeight,
         }).then(async () => {
           setDownloadPct(pagePct)
+          if (abortRef.current) {
+            console.log("Aborting download...")
+            ceach.loop.exit()
+          }
 
           if (pageNumber === numOfPages) {
             setDownloadPct(100)
             setDownloaded(bookNum + 1)
             console.log("Adding book pdf to zip file...")
-            await booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
+            await booksZip.file(`(${quantity}) ${bookWidthInch} x ${bookHeightInch}.pdf`, bookPdf.output('blob'))
             // await set(firebaseDb, `orderItems/${id}/printed`, true)
           }
         })
@@ -225,22 +217,21 @@ const AdminDashboard = () => {
         // loop through each order and create a pdf for each
         for (let i = 0; i < numOfOrders; i++) {
           const values = filteredOrders[i]
-          const { numOfPages, height, width } = values
+          const { numOfPages, height, width, pages } = values
           const dimension = {
             svgWidth: convertFloatFixed(convertToMM(width) - 13.335, 2),
             svgHeight: convertFloatFixed(convertToMM(height) - 6.35, 2),
             bookWidth: convertToMM(width),
             bookHeight: convertToMM(height),
+            bookWidthInch: convertToIn(width),
+            bookHeightInch: convertToIn(height),
           }
-          const bookPdf = new jsPDF({
-            compress: true,
-          })
+          const bookPdf = new jsPDF()
           bookPdf.deletePage(1)
 
           // if there is a bookId, there are custom pages we have to fetch
           if (values.bookId) {
             // query the db for the book's page ids
-            const pages = await getBookPages(values.bookId)
             await zipCustomBook(pages, values, dimension, i, booksZip, bookPdf)
           }
           else {
@@ -251,6 +242,11 @@ const AdminDashboard = () => {
         await booksZip.generateAsync({ type: 'blob' }).then(function (content) {
           console.log("Downloading zip file...")
           clearInterval(timerInterval)
+          setDownloadPct(0)
+          setToBeDownloaded(0)
+          setDownloaded(0)
+          setTimeElapsed(0)
+          abortRef.current = false
           saveAs(content, `${new Date().toISOString().slice(0, 10)}.zip`);
         })
       }
@@ -296,10 +292,6 @@ const AdminDashboard = () => {
                 <Button
                   onClick={() => {
                     setShowModal({ show: true })
-                    setDownloadPct(0)
-                    setToBeDownloaded(0)
-                    setTimeElapsed(0)
-                    setCancelDownload(false)
                   }}
                   margin="0 16px 0 0"
                 >
@@ -368,7 +360,7 @@ const AdminDashboard = () => {
                 <Button
                   onClick={() => {
                     setShowModal({ show: false })
-                    setCancelDownload(true)
+                    abortRef.current = true
                   }}
                   margin="0 8px 0 0"
                   backgroundcolor={colors.gray.oneHundred}
@@ -378,7 +370,10 @@ const AdminDashboard = () => {
                 </Button>
                 <Button
                   disabled={!activeBookSize}
-                  onClick={() => downloadBooks(activeBookSize)}
+                  onClick={() => {
+                    downloadBooks(activeBookSize)
+                    abortRef.current = false
+                  }}
                 >
                   Download
                 </Button>

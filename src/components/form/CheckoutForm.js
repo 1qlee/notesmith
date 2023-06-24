@@ -4,7 +4,7 @@ import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { CircleNotch } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
-import { ref, set } from "firebase/database"
+import { ref, set, push } from "firebase/database"
 
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
@@ -180,14 +180,15 @@ function CheckoutForm({
     const cartItemsLength = cartItems.length
 
     for (let i = 0; i < cartItemsLength; i++) {
-      const cartItemId = cartItems[i].id
-      cartItemsObject[cartItemId] = true
+      const orderItemKey = push(ref(firebaseDb, 'orderItems/')).key
+      cartItemsObject[orderItemKey] = true
 
       // if this set fails, then we won't have a saved order item
       // this will make fulfillment very difficult, so we must handle the error here
-      set(ref(firebaseDb, `/orderItems/${cartItemId}`), {
+      set(ref(firebaseDb, `/orderItems/${orderItemKey}`), {
         ...cartItems[i],
         pid: pid,
+        id: orderItemKey,
       }).then(async () => {
         await set(ref(firebaseDb, `/orders/${pid}`), {
           ...orderData,

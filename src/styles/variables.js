@@ -173,6 +173,10 @@ const convertToPx = mm => {
   return parseFloat((mm * 3.7795275591).toFixed(3))
 }
 
+const convertToIn = pixels => {
+  return parseFloat((pixels * .0104166667).toFixed(2))
+}
+
 const convertFloatFixed = (number, places) => {
   return parseFloat(number.toFixed(places))
 }
@@ -190,6 +194,7 @@ export {
   convertFloatFixed, 
   convertToDecimal, 
   convertToMM, 
+  convertToIn,
   convertToPx, 
   fonts,
   pageMargins,
