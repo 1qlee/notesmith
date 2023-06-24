@@ -56,7 +56,7 @@ const AdminDashboard = () => {
   };
 
   // this function will run once per orderItem and will download all the pages for that orderItem
-  const zipCustomBook = async (pages, values, dimension, bookNum, booksZip, bookPdf) => {
+  const zipCustomBook = async (pages, values, dimension, bookNum, booksZip, bookPdf, finalPage) => {
     console.log("Generating a custom book pdf...")
     const { numOfPages, width, quantity } = values
     const { bookWidth, bookHeight, svgWidth, svgHeight, bookWidthInch, bookHeightInch } = dimension
@@ -65,7 +65,7 @@ const AdminDashboard = () => {
     let parsedPages = []
 
     console.log("Parsing custom book's pages...")
-    for (let i = 0; i < pages.length; i++) {
+    for (let i = 0; i < numOfPages; i++) {
       const page = pages[i]
       const { pageId, pageNumber } = page
 
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
         const { pageNumber, svg } = page
 
         bookPdf.addPage([bookWidth, bookHeight], "portrait")
-        bookPdf.setPage(pageNumber)
+        bookPdf.setPage(pageNumber + 2)
 
         const pageNode = parseSvgNode(svg)
         const coords = {
@@ -127,11 +127,22 @@ const AdminDashboard = () => {
           }
 
           if (pageNumber === numOfPages) {
-            setDownloadPct(100)
-            setDownloaded(bookNum + 1)
-            console.log("Adding book pdf to zip file...")
-            await booksZip.file(`(${quantity}) ${bookWidthInch} x ${bookHeightInch}.pdf`, bookPdf.output('blob'))
-            // await set(firebaseDb, `orderItems/${id}/printed`, true)
+            bookPdf.addPage([bookWidth, bookHeight], "portrait")
+            bookPdf.addPage([bookWidth, bookHeight], "portrait")
+            bookPdf.setPage(numOfPages + 4)
+
+            await bookPdf.svg(finalPage, {
+              x: 0,
+              y: 0,
+              width: bookWidth,
+              height: bookHeight,
+            }).then(async () => {
+              setDownloadPct(100)
+              setDownloaded(bookNum + 1)
+              console.log("Adding book pdf to zip file...")
+              await booksZip.file(`(${quantity}) ${bookWidthInch} x ${bookHeightInch}.pdf`, bookPdf.output('blob'))
+              // await set(firebaseDb, `orderItems/${id}/printed`, true)
+            })
           }
         })
       }
@@ -190,7 +201,7 @@ const AdminDashboard = () => {
                 await booksZip.file(`${pid}(${id}).pdf`, bookPdf.output('blob'))
                 // await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
               } catch (error) {
-                console.log(error)
+                console.log(`Could not add pdf to zip file: ${id}`)
               }
             }
           })
@@ -217,7 +228,7 @@ const AdminDashboard = () => {
         // loop through each order and create a pdf for each
         for (let i = 0; i < numOfOrders; i++) {
           const values = filteredOrders[i]
-          const { numOfPages, height, width, pages } = values
+          const { numOfPages, height, width, pages, pid } = values
           const dimension = {
             svgWidth: convertFloatFixed(convertToMM(width) - 13.335, 2),
             svgHeight: convertFloatFixed(convertToMM(height) - 6.35, 2),
@@ -227,12 +238,19 @@ const AdminDashboard = () => {
             bookHeightInch: convertToIn(height),
           }
           const bookPdf = new jsPDF()
+          const slipPage = `<svg xmlns="http://www.w3.org/2000/svg" id="slip-page" width=${width} height=${height} viewBox="0 0 ${width} ${height}"><text x="12" y=${height - 18} font-size="12">${pid}</text><rect x=${width - 12} y=${height - 12} width="12" height="12" fill="#000"></rect></svg>`
+          const slipPageNode = parseSvgNode(slipPage)
           bookPdf.deletePage(1)
+          // add a blank sheet in the beginning of the notebook
+          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
+          // need two pages to make one sheet!
+          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
+          bookPdf.setPage(1)
 
           // if there is a bookId, there are custom pages we have to fetch
           if (values.bookId) {
             // query the db for the book's page ids
-            await zipCustomBook(pages, values, dimension, i, booksZip, bookPdf)
+            await zipCustomBook(pages, values, dimension, i, booksZip, bookPdf, slipPageNode)
           }
           else {
             // await zipStandardBook(numOfPages, values, dimension, i, booksZip, bookPdf)
