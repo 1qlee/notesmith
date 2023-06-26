@@ -11,7 +11,7 @@ import Logo from "../misc/Logo"
 
 const StyledNav = styled.nav`
   width: 100%;
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
   background-color: ${colors.white};
   &.has-shadow {
     box-shadow: 0 2px 0 ${colors.shadow.float};

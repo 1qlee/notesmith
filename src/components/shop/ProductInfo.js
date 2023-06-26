@@ -74,7 +74,6 @@ const ProductInfo = ({
       <Content
         margin="0 0 16px 0"
         h1fontsize="3rem"
-        h1fontweight="700"
       >
         <h1>{bookData.name}</h1>
       </Content>
@@ -87,14 +86,15 @@ const ProductInfo = ({
           h2fontweight="400"
           h2margin="0"
         >
-          <h2><s><span>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}</h2>
+          <h2><s><span style={{color: colors.gray.sixHundred}}>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}</h2>
         </Content>
         <Tag
-          backgroundcolor={colors.yellow.threeHundred}
-          color={colors.yellow.nineHundred}
+          backgroundcolor={colors.white}
+          border={colors.borders.black}
+          color={colors.gray.nineHundred}
           margin="0 0 0 8px"
         >
-          Pre-order price
+          Pre-order price (25% off)
         </Tag>
       </Flexbox>
       <Content
@@ -105,8 +105,10 @@ const ProductInfo = ({
       </Content>
       <Content
         margin="32px 0"
+        h5fontweight="700"
+        h5margin="0 0 8px"
       >
-        <p>Cover color</p>
+        <h5>Cover color</h5>
         <ColorPicker
           data={bookData.colors}
           selectedColor={bookData.coverColor}
@@ -120,10 +122,13 @@ const ProductInfo = ({
         justifycontent="space-between"
         margin="0 0 16px"
       >
-        <Content>
-          <p>Page layout</p>
+        <Content
+          h5fontweight="700"
+          h5margin="0 0 8px"
+        >
+          <h5>Page layout</h5>
         </Content>
-        <TextLink
+        <a
           alignitems="center"
           fontweight="400"
           onClick={() => setPageData({
@@ -136,7 +141,7 @@ const ProductInfo = ({
           ) : (
             "Back to editing"
           )}
-        </TextLink>
+        </a>
       </Flexbox>
       <Flexbox
         flex="flex"
@@ -164,10 +169,9 @@ const ProductInfo = ({
         <div>
           <StyledLabel 
             htmlFor="quantity-tracker" 
-            margin="0 0 1rem"
-            fontfamily={fonts.primary}
+            margin="0 0 8px"
             fontsize="1rem"
-            fontweight="400"
+            fontweight="700"
           >
             Quantity
           </StyledLabel>
@@ -199,15 +203,13 @@ const ProductInfo = ({
         <Notification
           backgroundcolor={colors.red.twoHundred}
         >
-          <Icon>
-            <WarningCircle size={16} color={colors.red.nineHundred} />
-          </Icon>
           <Content
             margin="0 0 0 8px"
-            smallmargin="0"
-            smallcolor={colors.red.nineHundred}
+            paragraphmargin="0"
+            paragraphcolor={colors.red.nineHundred}
+            paragraphfontsize="0.875rem"
           >
-            <small>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</small>
+            <p>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</p>
           </Content>
         </Notification>
       )}

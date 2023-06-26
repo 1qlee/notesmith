@@ -7,9 +7,8 @@ import { Section, SectionContent, SectionHeading } from "../layout/Section"
 import Content from "../ui/Content"
 
 const InfoListItem = styled.li`
-  border-bottom: 1px solid ${colors.gray.nineHundred};
   padding-bottom: 8px;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
   @media only screen and (max-width: ${breakpoints.xs}) {
     margin: 16px 0 0;
     margin-left: 16px;

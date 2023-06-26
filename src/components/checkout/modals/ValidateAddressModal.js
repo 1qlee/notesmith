@@ -56,7 +56,7 @@ function ValidateAddressModal({
         </Notification>
         <Content
           paragraphlineheight="1.5"
-          paragraphmarginbottom="0"
+          paragraphmargin="0"
           paragraphfontsize="0.875rem"
           h5margin="0 0 4px"
         >

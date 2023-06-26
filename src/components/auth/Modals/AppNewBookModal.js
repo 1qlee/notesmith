@@ -140,7 +140,7 @@ function NewBookModal({
           h3fontweight="700"
           headingfontfamily={fonts.secondary}
           margin="0 0 8px 0"
-          paragraphmarginbottom="32px"
+          paragraphmargin="0 0 32px"
         >
           <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
           {step === 0 && (
@@ -177,7 +177,7 @@ function NewBookModal({
                   </Content>
                   <Content
                     paragraphfontsize="1.25rem"
-                    paragraphmarginbottom="0"
+                    paragraphmargin="0"
                     paragraphtextalign="right"
                     paragraphlineheight="1"
                   >

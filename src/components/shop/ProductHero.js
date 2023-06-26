@@ -30,6 +30,7 @@ const ProductDescription = ({
                   textalign="center"
                   paragraphfontsize="1.25rem"
                   maxwidth={widths.content.normal}
+                  h3margin="0 0 32px"
                 >
                   <h3>{heading}</h3>
                   <p>{text}</p>

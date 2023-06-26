@@ -23,7 +23,7 @@ const ReviewProfile = styled.div`
 const ReviewBox = styled.div`
   position: relative;
   background-color: transparent;
-  border: 2px solid ${colors.gray.nineHundred};
+  border: ${colors.borders.black};
   border-radius: 8px;
   margin-bottom: 32px;
 `
@@ -41,16 +41,17 @@ const NoteHoles = styled.div`
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  border-bottom: 2px dashed ${colors.gray.nineHundred};
+  border-bottom: 1px dashed ${colors.gray.nineHundred};
 `
 
 const NoteHole = styled.div`
   display: block;
   height: 12px;
   width: 12px;
-  border: 2px solid ${colors.gray.nineHundred};
+  border: ${colors.borders.black};
   background-color: transparent;
-  box-shadow: inset 1px 1px 2px ${colors.gray.sixHundred};
+  box-shadow: inset 1px 1px 2px ${colors.gray.fourHundred};
+  border-radius: 2px;
   &:not(:last-child) {
     margin-right: 4px;
   }
@@ -76,46 +77,39 @@ function Reviews() {
         <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
-            <Flexbox
-              alignitems="flex-start"
+            <Content
               padding="16px"
             >
-              <ReviewProfile>
-                <ReviewProfileImg>
-                  <Review1 height="64" width="64" />
-                </ReviewProfileImg>
-                <h5>Tony</h5>
-                <h5>Wrangler</h5>
-              </ReviewProfile>
-              <Content
-                padding="0 16px"
-                maxwidth={widths.content.index}
+              <p>"Literally the best writing experience I have ever experienced."</p>
+            </Content>
+            <Content
+              padding="0 16px 16px"
+            >
+              <Flexbox
+                justifycontent="flex-end"
               >
-                <p>"Literally the best writing experience I have ever experienced."</p>
-              </Content>
-            </Flexbox>
+                <p><i>Ruled Ryder</i></p>
+              </Flexbox>
+            </Content>
           </ReviewBox>
         </Col>
         <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
-            <Flexbox
-              alignitems="flex-start"
+            <Content
               padding="16px"
             >
-              <ReviewProfile>
-                <ReviewProfileImg>
-                  <Review2 height="64" width="64" />
-                </ReviewProfileImg>
-                <h5>Margie</h5>
-                <h5>Anthophile</h5>
-              </ReviewProfile>
-              <Content
-                padding="0 16px"
+              <p>"Everything about this notebook; the quality, craftsmanship, and customer service was totally great."</p>
+            </Content>
+            <Content
+              padding="0 16px 16px"
+            >
+              <Flexbox
+                justifycontent="flex-end"
               >
-                <p>"Everything about this notebook; the quality, craftsmanship, and customer service was totally great."</p>
-              </Content>
-            </Flexbox>
+                <p><i>Penny Paperweight</i></p>
+              </Flexbox>
+            </Content>
           </ReviewBox>
         </Col>
       </Row>
@@ -123,45 +117,39 @@ function Reviews() {
         <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
-            <Flexbox
-              alignitems="flex-start"
+            <Content
               padding="16px"
             >
-              <ReviewProfile>
-                <ReviewProfileImg>
-                  <Review4 height="64" width="64" />
-                </ReviewProfileImg>
-                <h5>Gerald</h5>
-                <h5>Bellower</h5>
-              </ReviewProfile>
-              <Content
-                padding="0 16px"
+              <p>"The paper is smooth and very pleasant to write on! I am super impressed!"</p>
+            </Content>
+            <Content
+              padding="0 16px 16px"
+            >
+              <Flexbox
+                justifycontent="flex-end"
               >
-                <p>"The paper is smooth and very pleasant to write on! I am super impressed!"</p>
-              </Content>
-            </Flexbox>
+                <p><i>Pat Papyrophiliac</i></p>
+              </Flexbox>
+            </Content>
           </ReviewBox>
         </Col>
         <Col sm={12} xl={6}>
           <ReviewBox>
             <Holes />
-            <Flexbox
-              alignitems="flex-start"
+            <Content
               padding="16px"
             >
-              <ReviewProfile>
-                <ReviewProfileImg>
-                  <Review5 height="64" width="64" />
-                </ReviewProfileImg>
-                <h5>Chad</h5>
-                <h5>Afficionado</h5>
-              </ReviewProfile>
-              <Content
-                padding="0 16px"
+              <p>"I’m really very satisfied with the paper. It helps my writing look far more smooth and precise."</p>
+            </Content>
+            <Content
+              padding="0 16px 16px"
+            >
+              <Flexbox
+                justifycontent="flex-end"
               >
-                <p>"I’m really very satisfied with the paper. It helps my writing look far more smooth and precise."</p>
-              </Content>
-            </Flexbox>
+                <p><i>Callie Grapher</i></p>
+              </Flexbox>
+            </Content>
           </ReviewBox>
         </Col>
       </Row>

@@ -12,9 +12,7 @@ import Progress from "../ui/Progress"
 
 const StyledPageDemo = styled.div`
   position: relative;
-  @media only screen and (max-width: ${breakpoints.sm}) {
-    margin-top: 32px;
-  }
+  margin-top: 32px;
 `
 
 const DemoImageWrapper = styled.div`

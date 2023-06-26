@@ -224,7 +224,7 @@ const ShippingForm = ({
               <Content
                 paragraphfontfamily={fonts.secondary}
                 paragraphfontsize="0.875rem"
-                paragraphmarginbottom="0"
+                paragraphmargin="0"
                 paragraphfontweight="700"
                 paragraphcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
                 smallcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}

@@ -23,12 +23,11 @@ const StyledPage = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  margin: 0 0.75rem;
+  margin: 0 0.875rem;
   p {
     color: ${colors.gray.sixHundred};
-    font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 0.675rem;
-    margin: 0.75rem 0 0 0;
+    margin: 0.875rem 0 0 0;
     transition: color 0.2s;
     user-select: none;
   }

@@ -109,7 +109,7 @@ const colors = {
   },
   highlighter: "#fbff00",
   borders: {
-    black: "2px solid #212121",
+    black: "1px solid #212121",
   }
 }
 
@@ -123,7 +123,7 @@ const breakpoints = {
 }
 
 const fonts = {
-  primary: "'Nanum Myeongjo', Georgia, serif",
+  primary: "'Jost', Georgia, serif",
   secondary: "'Inter', Helvetica, Tahoma, sans-serif"
 }
 

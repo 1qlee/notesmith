@@ -218,7 +218,7 @@ html {
 }
 body {
   color: #212121;
-  font-family: "Nanum Myeongjo", Georgia, serif;
+  font-family: "Jost", Georgia, serif;
   font-weight: normal;
   word-wrap: break-word;
   font-kerning: normal;
@@ -300,7 +300,7 @@ dd {
 }
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
-  font-family: "Nanum Myeongjo", Georgia, serif;
+  font-family: "Jost", Georgia, serif;
 }
 p {
   font-size: 1rem;
@@ -409,8 +409,8 @@ hr {
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 0;
-  border-top: 2px dotted #212121;
-  border-width: 2px 0 0 0;
+  border-top: 1px dotted #212121;
+  border-width: 1px 0 0 0;
   background: transparent;
   box-sizing: content-box;
   overflow: visible;

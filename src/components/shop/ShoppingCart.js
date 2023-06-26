@@ -162,7 +162,7 @@ function ShoppingCart() {
                                   </Content>
                                   <Content
                                     paragraphfontsize="0.875rem"
-                                    paragraphmarginbottom="0"
+                                    paragraphmargin="0"
                                     paragraphtexttransform="capitalize"
                                   >
                                     <p>{item.coverColor}</p>
@@ -185,7 +185,7 @@ function ShoppingCart() {
                                     </Content>
                                     <Content
                                       paragraphfontsize="0.75rem"
-                                      paragraphmarginbottom="0"
+                                      paragraphmargin="0"
                                       paragraphtexttransform="capitalize"
                                     >
                                       <Button
@@ -225,7 +225,7 @@ function ShoppingCart() {
                                       </Content>
                                       <Content
                                         paragraphfontsize="0.875rem"
-                                        paragraphmarginbottom="0"
+                                        paragraphmargin="0"
                                         paragraphtexttransform="capitalize"
                                       >
                                         <p>{item.leftPageData.template}</p>
@@ -247,7 +247,7 @@ function ShoppingCart() {
                                       </Content>
                                       <Content
                                         paragraphfontsize="0.875rem"
-                                        paragraphmarginbottom="0"
+                                        paragraphmargin="0"
                                         paragraphtexttransform="capitalize"
                                       >
                                         <p>{item.rightPageData.template}</p>

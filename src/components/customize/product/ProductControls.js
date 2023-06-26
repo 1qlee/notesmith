@@ -54,8 +54,7 @@ const TemplatesHeader = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
-  border-bottom: 2px solid ${colors.gray.nineHundred};
-  font-family: ${fonts.secondary};
+  border-bottom: ${colors.borders.black};
   font-size: 0.875rem;
   &.is-collapsed {
     border-bottom: none;
@@ -68,7 +67,7 @@ const TemplatesHeader = styled.div`
 
 const TemplatesFooter = styled.div`
   padding: 1rem;
-  border-top: 2px solid ${colors.gray.nineHundred};
+  border-top: ${colors.borders.black};
 `
 
 const PageButtonWrapper = styled.div`
@@ -83,7 +82,7 @@ const PageButtonWrapper = styled.div`
 const PageButton = styled(Button)`
   background-color: ${colors.white};
   color: ${colors.gray.nineHundred};
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   padding: 0.25rem;
   flex: 1;
   position: relative;
@@ -192,8 +191,7 @@ function ProductControls({
               <>
                 <TemplatesContent>
                   <Content
-                    headingfontfamily={fonts.secondary}
-                    h3fontsize="0.75rem"
+                    h3fontsize="0.875rem"
                     h3margin="0 0 0.5rem 0"
                     h3fontweight="700"
                     margin="0 0 1rem 0"

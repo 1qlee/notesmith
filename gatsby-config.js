@@ -53,7 +53,7 @@ module.exports = {
       options: {
         fonts: [
           `Inter\:400,700`,
-          `Nanum Myeongjo\:400,700,800`,
+          `Jost\:400,400i,700,700i`,
         ]
       },
     },

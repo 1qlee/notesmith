@@ -26,7 +26,7 @@ const MarginInput = styled.div`
   }
   .icon {
     position: absolute;
-    top: 10px;
+    top: 13px;
     left: 8px;
     z-index: 9;
   }
@@ -62,7 +62,7 @@ function MarginControls({
             backgroundcolor={colors.gray.oneHundred}
             color={colors.gray.nineHundred}
             padding="4px"
-            fontsize="0.75rem"
+            fontsize="0.875rem"
             onClick={() => setPageData({
               ...pageData,
               alignmentVertical: "",
@@ -94,7 +94,7 @@ function MarginControls({
             backgroundcolor={colors.gray.oneHundred}
             color={colors.gray.nineHundred}
             padding="4px"
-            fontsize="0.75rem"
+            fontsize="0.875rem"
             onClick={() => setPageData({
               ...pageData,
               alignmentHorizontal: "",
@@ -128,7 +128,7 @@ function MarginControls({
             backgroundcolor={colors.gray.oneHundred}
             color={colors.gray.nineHundred}
             padding="4px"
-            fontsize="0.75rem"
+            fontsize="0.875rem"
             onClick={() => setPageData({
               ...pageData,
               alignmentVertical: "",
@@ -160,7 +160,7 @@ function MarginControls({
             backgroundcolor={colors.gray.oneHundred}
             color={colors.gray.nineHundred}
             padding="4px"
-            fontsize="0.75rem"
+            fontsize="0.875rem"
             onClick={() => setPageData({
               ...pageData,
               alignmentHorizontal: "",

@@ -95,26 +95,23 @@ const IndexPage = ({ data }) => {
           >
             <Container xl lg md sm xs>
               <Row>
-                <Col xl={4} lg={4}>
+                <Col xl={4} lg={4} offset={{ sm: 2, lg: 0 }} sm={8}>
                   <Content
                     backgroundcolor={colors.white}
-                    maxwidth={widths.content.index}
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
                     margin="0 0 32px"
                     h1margin="0 0 32px"
-                    h1fontweight="400"
                   >
                     <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
                   <Content
-                    paragraphmarginbottom="0"
+                    paragraphmargin="0"
                     h5margin="8px 0"
                     h5fontweight="800"
                     className="has-border-top"
                     padding="32px 0 0"
-                    maxwidth={widths.content.index}
                   >
                     <Flexbox
                       alignitems="center"
@@ -123,8 +120,9 @@ const IndexPage = ({ data }) => {
                       <h5>Pre-order sale</h5>
                       <Tag
                         padding="3px 6px"
-                        backgroundcolor={colors.yellow.threeHundred}
-                        color={colors.yellow.nineHundred}
+                        backgroundcolor={colors.white}
+                        border={colors.borders.black}
+                        color={colors.gray.nineHundred}
                       >
                         Announcement
                       </Tag>
@@ -176,7 +174,7 @@ const IndexPage = ({ data }) => {
                     h2fontweight="400"
                     h5fontsize="0.75rem"
                     paragraphfontsize="1.25rem"
-                    paragraphmarginbottom="1rem"
+                    paragraphmargin="0 0 16px"
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
@@ -212,21 +210,21 @@ const IndexPage = ({ data }) => {
                 <Col lg={4}>
                   <Content
                     margin="0 0 32px"
-                    maxwidth={widths.content.index}
                     paragraphfontsize="1rem"
                     h5margin="0"
-                    h5fontweight="800"
+                    h5fontweight="700"
                   >
                     <Flexbox
                       margin="0 0 16px"
-                      alignitems="center"
+                      alignitems="flex-start"
                       justifycontent="space-between"
                     >
                       <h5>Choose from a template below</h5>
                       <Tag
                         padding="3px 6px"
-                        backgroundcolor={colors.yellow.threeHundred}
-                        color={colors.yellow.nineHundred}
+                        backgroundcolor={colors.white}
+                        border={colors.borders.black}
+                        color={colors.gray.nineHundred}
                         margin="0 0 0 8px"
                       >
                         Demo
@@ -333,8 +331,7 @@ const IndexPage = ({ data }) => {
                     h2fontweight="400"
                     h2margin="0 0 2rem"
                     paragraphfontsize="1.25rem"
-                    paragraphmarginbottom="1rem"
-                    maxwidth={widths.content.index}
+                    paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
                     <h2>We use only the best stuff, guaranteed</h2>
@@ -428,15 +425,11 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
-                    h2fontweight="400"
-                    maxwidth={widths.content.index}
                   >
                     <h2>Smooth, ink-loving paper</h2>
                     <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
                   </Content>
-                  <Box
-                    maxwidth={widths.content.index}
-                  >
+                  <Box>
                     <Flexbox
                       padding="16px 0"
                       flex="flex"
@@ -444,12 +437,13 @@ const IndexPage = ({ data }) => {
                       justifycontent="space-between"
                       bordercolor={colors.gray.nineHundred}
                     >
-                      <StyledLabel
-                        margin="0"
+                      <Content
                         width="128px"
                       >
-                        Bleeding
-                      </StyledLabel>
+                        <p>
+                          Bleeding
+                        </p>
+                      </Content>
                       <Progress
                         barcolor={colors.gray.nineHundred}
                         completion={93}
@@ -457,8 +451,9 @@ const IndexPage = ({ data }) => {
                         wrappercolor={colors.gray.threeHundred}
                       />
                       <Tag
-                        backgroundcolor={colors.gray.nineHundred}
-                        color={colors.gray.oneHundred}
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
                         padding="4px 6px"
                         fontfamily={fonts.secondary}
                         margin="0 0 0 0.5rem"
@@ -466,7 +461,7 @@ const IndexPage = ({ data }) => {
                         <Icon
                           margin="0 1px 1px 0"
                         >
-                          <Star weight="fill" color={colors.gray.oneHundred} />
+                          <Star weight="fill" color={colors.gray.nineHundred} />
                         </Icon>
                         <span>4.7</span>
                       </Tag>
@@ -479,12 +474,13 @@ const IndexPage = ({ data }) => {
                       className="has-border-top"
                       bordercolor={colors.gray.nineHundred}
                     >
-                      <StyledLabel
-                        margin="0"
+                      <Content
                         width="128px"
                       >
-                        Feathering
-                      </StyledLabel>
+                        <p>
+                          Feathering
+                        </p>
+                      </Content>
                       <Progress
                         barcolor={colors.gray.nineHundred}
                         completion={90}
@@ -492,8 +488,9 @@ const IndexPage = ({ data }) => {
                         wrappercolor={colors.gray.threeHundred}
                       />
                       <Tag
-                        backgroundcolor={colors.gray.nineHundred}
-                        color={colors.gray.oneHundred}
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
                         padding="4px 6px"
                         fontfamily={fonts.secondary}
                         margin="0 0 0 0.5rem"
@@ -501,7 +498,7 @@ const IndexPage = ({ data }) => {
                         <Icon
                           margin="0 1px 1px 0"
                         >
-                          <Star weight="fill" color={colors.gray.oneHundred} />
+                          <Star weight="fill" color={colors.gray.nineHundred} />
                         </Icon>
                         <span>4.5</span>
                       </Tag>
@@ -514,12 +511,13 @@ const IndexPage = ({ data }) => {
                       className="has-border-top"
                       margin="0 0 16px"
                     >
-                      <StyledLabel
-                        margin="0"
+                      <Content
                         width="128px"
                       >
-                        Ghosting
-                      </StyledLabel>
+                        <p>
+                          Ghosting
+                        </p>
+                      </Content>
                       <Progress
                         barcolor={colors.gray.nineHundred}
                         completion={75}
@@ -527,8 +525,9 @@ const IndexPage = ({ data }) => {
                         wrappercolor={colors.gray.threeHundred}
                       />
                       <Tag
-                        backgroundcolor={colors.gray.nineHundred}
-                        color={colors.gray.oneHundred}
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
                         padding="4px 6px"
                         fontfamily={fonts.secondary}
                         margin="0 0 0 0.5rem"
@@ -536,7 +535,7 @@ const IndexPage = ({ data }) => {
                         <Icon
                           margin="0 1px 1px 0"
                         >
-                          <Star weight="fill" color={colors.gray.oneHundred} />
+                          <Star weight="fill" color={colors.gray.nineHundred} />
                         </Icon>
                         <span>3.8</span>
                       </Tag>
@@ -586,13 +585,12 @@ const IndexPage = ({ data }) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4}>
+                <Col md={6} lg={6} xl={4}>
                   <Content
                     h2margin="0 0 2rem"
                     h2fontweight="400"
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
-                    maxwidth={widths.content.index}
                   >
                     <h2>Feedback from our early test users</h2>
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
@@ -614,7 +612,7 @@ const IndexPage = ({ data }) => {
                     </Content>
                   </Flexbox>
                 </Col>
-                <Col lg={8}>
+                <Col md={6} lg={6} xl={8}>
                   <Reviews />
                 </Col>
               </Row>

@@ -39,7 +39,7 @@ function CheckLoginModal({ setShowModal }) {
           </Content>
         </Notification>
         <Content
-          paragraphmarginbottom="1rem"
+          paragraphmargin="0 0 16px"
           linkcolor={colors.link.normal}
         >
           <p><Link to="/signup">Sign up</Link> for free or <Link to="/signin">sign in</Link> to an existing account to create notebooks with custom layouts.</p>

@@ -253,7 +253,7 @@ function NumberInput({
         onTouchStart={() => start("up")}
         onTouchEnd={() => stop()}
       >
-        <CaretUp color={colors.gray.nineHundred} fill="bold" size="0.75rem" />
+        <CaretUp color={colors.gray.nineHundred} fill="bold" size="0.875rem" />
       </NumberInputIcon>
       <NumberInputIcon
         pos="bottom"
@@ -265,7 +265,7 @@ function NumberInput({
         onTouchStart={() => start("down")}
         onTouchEnd={() => stop()}
       >
-        <CaretDown color={colors.gray.nineHundred} fill="bold" size="0.75rem" />
+        <CaretDown color={colors.gray.nineHundred} fill="bold" size="0.875rem" />
       </NumberInputIcon>
     </NumberInputWrapper>
   )
@@ -341,8 +341,8 @@ const QuantityButton = styled.button`
   height: ${props => props.height};
   position: absolute;
   top: ${props => props.padding};
-  left: ${props => props.left ? "0.75rem" : null};
-  right: ${props => props.right ? "0.75rem" : null};
+  left: ${props => props.left ? "0.875rem" : null};
+  right: ${props => props.right ? "0.875rem" : null};
   z-index: 99;
   &:hover {
     cursor: pointer;
@@ -446,8 +446,7 @@ const StyledCheckbox = styled.div`
   padding: ${props => props.padding || "8px"};
   transition: background-color 0.2s;
   span {
-    font-family: ${fonts.secondary};
-    font-size: ${props => props.fontsize || "0.75rem"}
+    font-size: ${props => props.fontsize || "0.875rem"}
   }
   &:hover {
     background-color: ${colors.gray.twoHundred};
@@ -514,8 +513,7 @@ const StyledRadio = styled.div`
 const RadioInput = styled.div`
   display: block;
   border: none;
-  font-family: ${fonts.secondary};
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   margin: ${props => props.margin};
   label {
     box-sizing: border-box;
@@ -550,8 +548,7 @@ const RadioInput = styled.div`
 const StyledLabel = styled.label`
   color: ${props => props.color || colors.gray.nineHundred};
   display: block;
-  font-family: ${props => props.fontfamily || fonts.secondary};
-  font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
   font-weight: ${props => props.fontweight || "700"};
   margin: ${props => props.margin || "0 0 8px 0"};
   width: ${props => props.width};
@@ -569,7 +566,6 @@ const StyledInput = styled.input`
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   color: ${colors.gray.nineHundred};
   display: block;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
   margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "16px"};
@@ -613,7 +609,6 @@ const StyledSelect = styled.select`
   background-color: ${colors.white};
   border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
   border: 1px solid ${colors.gray.nineHundred};
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   font-size: ${props => props.fontsize || "0.8rem"};
   padding: ${props => props.padding || "1rem 4rem 1rem 1rem"};
   height: ${props => props.height};
@@ -638,8 +633,7 @@ const ErrorLine = styled.div`
   margin-top: 8px;
   margin: ${props => props.margin};
   color: ${props => props.color};
-  font-size: 0.75rem;
-  font-family: ${fonts.secondary};
+  font-size: 0.875rem;
   display: flex;
   align-items: center;
   span + span {

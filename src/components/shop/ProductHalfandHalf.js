@@ -30,6 +30,7 @@ const ProductHalfandHalf = ({ image, direction, bookData }) => {
             <Col sm={6}>
               <Content
                 paragraphfontsize="1.25rem"
+                h3margin="0 0 32px"
               >
                 <h3>{bookData.halfandhalf[index].heading}</h3>
                 <p>{bookData.halfandhalf[index].text}</p>

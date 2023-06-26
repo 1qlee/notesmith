@@ -31,7 +31,7 @@ const ControlInputGroup = styled.div`
 const ControlInnerButton = styled(Button)`
   position: absolute;
   right: 24px;
-  top: 6px;
+  top: 9px;
 `
 
 const BorderOptions = styled.div`

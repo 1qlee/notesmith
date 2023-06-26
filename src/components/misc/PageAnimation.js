@@ -164,7 +164,7 @@ const PageAnimation = () => {
         paragraphfontsize="1.5rem"
         headingtextalign="center"
         paragraphcolor={colors.primary.whiteLight}
-        paragraphmarginbottom="0"
+        paragraphmargin="0"
       >
         <Flexbox
           flex="flex"

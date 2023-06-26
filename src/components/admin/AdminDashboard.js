@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import { colors, convertToMM, convertToIn, convertFloatFixed } from "../../styles/variables"
+import { colors, convertToMM, convertToIn, convertFloatFixed, pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, get, query, orderByChild, equalTo, set, onValue } from "firebase/database"
 import { spacing } from "../../styles/variables"
@@ -70,21 +70,31 @@ const AdminDashboard = () => {
       const { pageId, pageNumber } = page
 
       if (queriedPages[pageId]) {
+        const queriedpage = queriedPages[pageId]
+        const { svg, margin } = queriedpage
+
         parsedPages.push({
           pageId: pageId,
           pageNumber: pageNumber,
-          svg: queriedPages[pageId].svg,
+          svg: svg,
+          margin: {...margin},
         })
       }
       else {
         await get(ref(firebaseDb, `pages/${pageId}`)).then(snapshot => {
           if (snapshot.exists()) {
             const bookPage = snapshot.val()
-            const { svg } = bookPage
+            const { svg, marginBottom, marginLeft, marginRight, marginTop } = bookPage
 
             queriedPages[pageId] = {
               pageId: pageId,
               pageNumber: pageNumber,
+              margin: {
+                bottom: marginBottom,
+                left: marginLeft,
+                right: marginRight,
+                top: marginTop,
+              },
               svg: svg,
             }
 
@@ -102,20 +112,49 @@ const AdminDashboard = () => {
     await ceach.loop(
       parsedPages,
       async (page) => {
+        console.log(page)
         const { pageNumber, svg } = page
 
         bookPdf.addPage([bookWidth, bookHeight], "portrait")
         bookPdf.setPage(pageNumber + 2)
 
         const pageNode = parseSvgNode(svg)
-        const coords = {
+        const templateSide = pageNode.getAttribute("id").split("-")[0]
+        let coords = {
           x: convertToMM(pageNode.getAttribute("x")),
           y: convertToMM(pageNode.getAttribute("y")),
         }
+        const { minimum, holes } = pageMargins
+        const holesMargin = convertToMM(holes)
+        const minimumMargin = convertToMM(minimum)
+
+        // need to make adjustments to the x coordinates to account for left and right page differences
+        // right-side template's x coordinates have holes offset AND left margin baked in
+        // but they also have been offset by the width of the book
+        if (templateSide === "right") {
+          if (pageNumber % 2 === 0) {
+            // need to offset the x coordinate by the width of the book/page
+            // left pages should have the holes offset removed and the minimum margin added (holes contains min)
+            coords.x = convertFloatFixed(coords.x - widthOffset - holesMargin + minimumMargin, 2)
+          }
+          else {
+            // right pages just need to be offset by the width of the book/page
+            coords.x = convertFloatFixed(coords.x - widthOffset, 2)
+          }
+        }
+        // left-side template's x coordinates have user-inputted left margin and minimum left margin baked in
+        // left pages do not need any adjustments
+        else {
+          // right pages need to swap minimum left margin with holes offset
+          if (pageNumber % 2 !== 0) {
+            coords.x = convertFloatFixed(coords.x - page.margin.left + holesMargin - minimumMargin, 2)
+          }
+        }
+        
         const pagePct = convertFloatFixed((pageNumber / numOfPages) * 100)
 
         await bookPdf.svg(pageNode, {
-          x: coords.x - widthOffset,
+          x: coords.x,
           y: coords.y,
           width: svgWidth,
           height: svgHeight,

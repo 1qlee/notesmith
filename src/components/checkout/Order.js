@@ -268,7 +268,7 @@ const Order = ({ location, orderId }) => {
                             h5fontweight="800"
                             h5margin="0 0 8px"
                             margin="0 0 16px"
-                            paragraphmarginbottom="0"
+                            paragraphmargin="0"
                           >
                             <h5>Shipping address</h5>
                             {showInfo ? (
@@ -384,7 +384,7 @@ const Order = ({ location, orderId }) => {
                               flex="flex"
                               justifycontent="space-between"
                               alignitems="center"
-                              paragraphmarginbottom="0"
+                              paragraphmargin="0"
                               padding="16px 0"
                             >
                               <p>Total</p>

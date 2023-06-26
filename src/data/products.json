@@ -3,7 +3,7 @@
     "camelName": "wiredNotebookA5Custom",
     "category": "notebooks",
     "custom": true,
-    "description": "One signature, custom-printed Notesmith wired notebook in A5 (8.5 x 5.5 inches) with 140 pages, 70lb paper, and extra thick cover stock.",
+    "description": "One signature, custom-printed Notesmith wired notebook in A5 (8.5 x 5.5 inches) with 140 pages, 70lb paper, and extra thick cover stock that is laminated on both sides.",
     "longDescription": "All of our Wired Notebooks are produced and manufactured in our factory in New York. They are made only with materials sourced from American vendors and are made-to-order according to your custom specifications.",
     "heightInch": "8.5",
     "heightPixel": 816,
@@ -22,9 +22,9 @@
     "widthInch": "5.5",
     "widthPixel": 528,
     "infoList": [
-      "Made in U.S.A. only",
+      "Designed and manufactured in U.S.A. only",
       "High quality, bright white and ultra smooth writing paper",
-      "Extra thick, laminated covers for durability"
+      "Covers with extra thick cover stock and double-sided lamination"
     ],
     "halfandhalf": [
       {

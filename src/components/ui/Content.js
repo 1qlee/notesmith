@@ -15,13 +15,13 @@ const Content = styled.div`
   word-wrap: normal;
   width: ${props => props.width};
   &.has-border-bottom {
-    border-bottom: 2px solid ${props => props.bordercolor};
+    border-bottom: ${colors.borders.black}};
   }
   &.has-border-top {
-    border-top: 2px solid ${props => props.bordercolor};
+    border-top: ${colors.borders.black}};
   }
   h1,h2,h3,h4,h5,h6 {
-    margin: 0 0 16px;
+    margin: 0 0 32px;
     font-weight: 400;
     text-rendering: optimizeLegibility;
     line-height: 1.3;
@@ -69,7 +69,7 @@ const Content = styled.div`
   }
   h5 {
     color: ${props => props.h5color || colors.gray.nineHundred};
-    font-size: ${props => props.h5fontsize || "1.125rem"};
+    font-size: ${props => props.h5fontsize || "1rem"};
     font-weight: ${props => props.h5fontweight || "400"};
     margin: ${props => props.h5margin};
   }
@@ -89,7 +89,7 @@ const Content = styled.div`
     line-height: ${props => props.paragraphlineheight || "1.75"};
     text-align: ${props => props.paragraphtextalign};
     text-transform: ${props => props.paragraphtexttransform};
-    margin-bottom: ${props => props.paragraphmarginbottom};
+    margin-bottom: ${props => props.paragraphmargin};
     &:not(:last-child) {
       margin-bottom: ${props => props.paragraphmarginbottom || "16px"};
     }

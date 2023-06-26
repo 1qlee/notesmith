@@ -41,7 +41,6 @@ const StyledSectionHeading = styled.div`
   h3 {
     font-size: 1rem;
     padding-bottom: 4px;
-    letter-spacing: 1px;
   }
 `
 
@@ -56,7 +55,6 @@ function SectionHeading({
       fontsize={fontsize}
     >
       <h3>{children}</h3>
-      <RandomLine />
     </StyledSectionHeading>
   )
 }

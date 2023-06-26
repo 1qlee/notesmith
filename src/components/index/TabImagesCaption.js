@@ -3,15 +3,14 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const StyledCaption = styled.article`
-  padding: 16px;
+  padding: 8px;
   position: absolute;
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 100%);
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.85) 100%);
   bottom: 16px;
   left: 0;
   width: 100%;
   p {
     line-height: 1.75;
-    font-weight: 800;
     font-size: 0.875rem;
     color: ${colors.gray.oneHundred};
   }

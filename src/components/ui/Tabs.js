@@ -3,7 +3,6 @@ import { colors, fonts } from "../../styles/variables"
 import styled from "styled-components"
 
 const StyledTabs = styled.ul`
-  border-bottom: ${colors.borders.black};
   list-style-type: none;
   display: flex;
   justify-content: flex-start;
@@ -11,14 +10,14 @@ const StyledTabs = styled.ul`
 `
 
 const StyledTab = styled.li`
-  border-radius: 8px 8px 0 0;
+  border: ${colors.borders.black};
   color: ${colors.gray.sixHundred};
-  font-family: ${fonts.secondary};
-  font-weight: 700;
+  font-weight: 400;
   flex: 1;
   text-align: center;
   transition: background-color 0.2s, padding 0.2s, box-shadow 0.2s;
   padding: 8px;
+  margin-right: -1px;
   &:first-child {
     margin-left: 0;
   }
