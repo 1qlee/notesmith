@@ -20,7 +20,6 @@ const StepContent = styled.div`
   min-height: 36px;
   max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 32px;
   padding: 2px;
 `
 
@@ -34,7 +33,7 @@ function NewBookModal({
   const { user, firebaseDb } = useFirebaseContext()
   const booksRef = ref(firebaseDb, "books/")
   const pagesRef = ref(firebaseDb, "pages/")
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(1)
   const [bookTitleError, setBookTitleError] = useState({
     show: false,
     msg: "",
@@ -135,32 +134,60 @@ function NewBookModal({
         backgroundcolor={colors.white}
       >
         <Content
-          h3fontsize="0.75rem"
+          h3fontsize="0.875rem"
           h3margin="0"
           h3fontweight="700"
-          headingfontfamily={fonts.secondary}
-          margin="0 0 8px 0"
-          paragraphmargin="0 0 32px"
+          margin="0 0 16px"
         >
           <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
-          {step === 0 && (
-            <h3>Select type of book</h3>
-          )}
-          {step === 1 && (
-            <h3>Select cover color</h3>
-          )}
-          {step === 2 && (
-            <h3>Enter a title</h3>
-          )}
         </Content>
-        {step === 0 && (
+        <Flexbox
+          margin="0 0 8px"
+          alignitems="center"
+          justifycontent="space-between"
+        >
+          <Content
+            h5margin="0"
+          >
+            {step === 1 && (
+              <h5>Select type of book</h5>
+            )}
+            {step === 2 && (
+              <h5>Select cover color</h5>
+            )}
+            {step === 3 && (
+              <h5>Enter a title</h5>
+            )}
+          </Content>
+          <Flexbox
+            flex="flex"
+            alignitems="center"
+          >
+            <Content
+              linktextdecoration="underline"
+              margin="0 4px 0 0"
+            >
+              {step > 1 && (
+                <a
+                  onClick={() => setStep(step - 1)}
+                >
+                  Back
+                </a>
+              )}
+            </Content>
+            <Content>
+              <p>(Step {step} of 3)</p>
+            </Content>
+          </Flexbox>
+        </Flexbox>
+        {step === 1 && (
           <StepContent>
             {allProducts.nodes.map((product, index) => (
               <BookRadio
                 onClick={() => handleClick({
                   ...product,
                   coverColor: "",
-                }, 1, index)}
+                }, 2, index)}
                 isActive={bookData.name === product.name}
                 key={product.name}
               >
@@ -171,7 +198,7 @@ function NewBookModal({
                 >
                   <Content
                     h5margin="0 0 4px"
-                    h5fontweight="700"
+                    h5fontweight="400"
                   >
                     <h5>{product.name}</h5>
                   </Content>
@@ -186,14 +213,15 @@ function NewBookModal({
                 </Flexbox>
                 <Content
                   paragraphfontsize="0.875rem"
+                  paragraphcolor={colors.gray.sixHundred}
                 >
-                  <p>This notebook has {product.numOfPages} total pages.</p>
+                  <p>{product.numOfPages} pages</p>
                 </Content>
               </BookRadio>
             ))}
           </StepContent>
         )}
-        {step === 1 && (
+        {step === 2 && (
           <StepContent>
             <Flexbox
               flex="flex"
@@ -207,12 +235,12 @@ function NewBookModal({
                 cbFunction={color => handleClick({
                   ...bookData,
                   coverColor: color,
-                }, 2, )}
+                }, 3, )}
               />
             </Flexbox>
           </StepContent>
         )}
-        {step === 2 && (
+        {step === 3 && (
           <StepContent>
             <form 
               id="create-book-form"
@@ -244,29 +272,6 @@ function NewBookModal({
             </form>
           </StepContent>
         )}
-        <Flexbox
-          flex="flex"
-          alignitems="center"
-        >
-          {step > 0 && (
-            <Button
-              backgroundcolor="transparent"
-              padding="0"
-              margin="0 0.5rem 0 0"
-              onClick={() => setStep(step - 1)}
-            >
-              <Icon>
-                <ArrowLeft weight="regular" color={colors.gray.sixHundred} size={16} />
-              </Icon>
-            </Button>
-          )}
-          <Progress
-            barcolor={colors.gray.nineHundred}
-            completion={parseFloat(step / 3 * 100)}
-            margin="0"
-            wrappercolor={colors.gray.threeHundred}
-          />
-        </Flexbox>
       </ModalContent>
       <ModalFooter>
         <Button

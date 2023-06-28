@@ -90,7 +90,7 @@ const IndexPage = ({ data }) => {
       <SectionMain>
         <Section>
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.xlarge} 0`}
           >
             <Container xl lg md sm xs>
               <Row>
