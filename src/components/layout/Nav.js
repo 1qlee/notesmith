@@ -37,7 +37,7 @@ const NavSection = styled.div`
 
 const NavItem = styled.div`
   color: ${colors.gray.nineHundred};
-  font-weight: 700;
+  font-weight: 400;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
@@ -80,10 +80,10 @@ function Nav(props) {
   return (
     <StyledNav>
       <Banner 
-        text="Join our pre-order sale now at an exclusive discounted price!"
+        text="Join the waitlist to get access to our pre-order sale!"
         link={{
-          to: "/products/notebooks/wired-notebook-a5-custom/white",
-          text: "Shop now"
+          to: "/waitlist",
+          text: "Join now"
         }}
       />
       <Container xl lg md sm xs>
@@ -100,7 +100,7 @@ function Nav(props) {
               <NavSection justifycontent="center">
                 <NavItem>
                   <NavLink
-                    to="/products/notebooks/wired-notebook-a5-custom/white"
+                    to="/products/notebooks/pro-wired-notebook-a5-custom/white"
                     color={colors.gray.nineHundred}
                   >
                     Shop

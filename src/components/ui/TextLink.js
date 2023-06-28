@@ -8,7 +8,6 @@ const TextLink = styled.a`
   border-bottom: ${props => props.borderbottom};
   color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex || "inline-flex"};
-  font-family: ${props => props.fontfamily || fonts.primary};
   font-size: ${props => props.fontsize || "1rem"};
   font-weight: ${props => props.fontweight || "700"};
   justify-content: ${props => props.justifycontent};
@@ -19,16 +18,8 @@ const TextLink = styled.a`
   transition: color 0.2s, background-size 0.2s;
   width: ${props => props.width};
   text-transform: ${props => props.texttransform};
+  text-decoration: underline;
   z-index: 5;
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: ${props => props.underlinecolor || colors.gray.nineHundred};
-  }
   &:hover {
     color: ${props => props.hovercolor || colors.gray.oneHundred};
     cursor: pointer;

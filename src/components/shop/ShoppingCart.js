@@ -356,16 +356,14 @@ function ShoppingCart() {
           flexdirection="column"
         >
           <Content
-            margin="1rem 0"
             textalign="center"
             h1fontsize="3rem"
             maxwidth={widths.content.index}
           >
             <h1>Your cart is empty</h1>
-            <p>Press the button below to take a look at our pre-order sale.</p>
           </Content>
           <Link
-            to="/products/notebooks/wired-notebook-a5-custom"
+            to="/products/notebooks/pro-wired-notebook-a5-custom"
           >
             <Button
               to="/products"

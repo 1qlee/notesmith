@@ -14,9 +14,8 @@ const StyledBanner = styled.div`
   justify-content: center;
   padding: 12px;
   width: 100%;
-  p {
+  p, a {
     font-size: 0.875rem;
-    font-weight: 800;
   }
 `
 
@@ -33,6 +32,7 @@ const Banner = ({ text, link }) => {
           color={colors.gray.oneHundred}
           hovercolor={colors.gray.nineHundred}
           underlinecolor={colors.gray.oneHundred}
+          fontweight="400"
           fontsize="0.875rem"
         >
           {link.text}

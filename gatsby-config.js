@@ -52,7 +52,7 @@ module.exports = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `Inter\:400,700`,
+          `Nanum Myeongjo\:400,700`,
           `Jost\:400,400i,700,700i`,
         ]
       },

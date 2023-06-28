@@ -5,7 +5,6 @@ import { colors } from "../../styles/variables"
 const StyledContextMenu = styled.article`
   background-color: ${colors.white};
   box-shadow: ${colors.shadow.layeredSmall};
-  border-radius: 0.25rem;
   font-size: 0.875rem;
   padding: 0.5rem 0;
   position: absolute;
@@ -15,7 +14,6 @@ const StyledContextMenu = styled.article`
 const ContextMenuItem = styled.div`
   display: flex;
   align-items: center;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   position: relative;
   display: block;
   padding: 0.25rem 2rem;
@@ -36,7 +34,7 @@ const ContextMenuLink = styled.a`
 
 const ContextMenuDivider = styled.hr`
   height: 0;
-  border-top: 2px dotted #212121;
+  border-top: 1px dotted #212121;
   margin: 0.5rem 0;
 `
 

@@ -353,7 +353,7 @@ const Counter = styled.input`
   background-color: ${colors.white};
   border: 1px solid ${colors.gray.nineHundred};
   border-radius: 4px;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-family: ${fonts.secondary};
   font-size: ${props => props.fontsize};
   padding: ${props => props.padding || "1rem"};
   text-align: center;
@@ -566,7 +566,7 @@ const StyledInput = styled.input`
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   color: ${colors.gray.nineHundred};
   display: block;
-  font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "1rem"};
   margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "16px"};
   text-align: ${props => props.textalign};

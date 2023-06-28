@@ -9,7 +9,7 @@ const Tag = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: ${props => props.fontfamily || fonts.primary};
+  font-family: ${props => props.fontfamily || fonts.secondary};
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: ${props => props.fontweight || "700"};
   height: fit-content;

@@ -21,14 +21,15 @@ function Philosophies() {
             h2fontweight="400"
             h3color={colors.gray.sixHundred}
             h3fontweight="400"
+            paragraphfontsize="1.25rem"
             maxwidth={widths.content.normal}
             padding="16px"
             textalign="center"
             margin="0 0 16px"
           >
-            <h2>When it comes to notebooks, there is no such thing as <b>perfection</b>.</h2>
-            <h3>How about <b><i>near</i>-perfection</b>?</h3>
-            <p>We know that it is impossible to create a notebook that is perfect for everyone. A feature that is essential in a notebook to someone might render the same notebook unusable for another. We try to narrow this gap as much as possible by providing you with the option to customize every page of your notebook from front to back.</p>
+            <h2>There is no such thing as the perfect notebook.</h2>
+            <h3><i><b>Until you create it</b></i>.</h3>
+            <p>We know that it is impossible to create a notebook that is perfect for everyone. An essential feature in a notebook to someone might render the same notebook unusable for another. That's why we're giving you with the option to customize every page of your notebook from front to back.</p>
           </Content>
         </Row>
       </Container>

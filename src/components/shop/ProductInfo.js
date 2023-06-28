@@ -85,6 +85,7 @@ const ProductInfo = ({
           h2fontsize="2rem"
           h2fontweight="400"
           h2margin="0"
+          headingfontfamily={fonts.secondary}
         >
           <h2><s><span style={{color: colors.gray.sixHundred}}>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}</h2>
         </Content>
@@ -128,20 +129,24 @@ const ProductInfo = ({
         >
           <h5>Page layout</h5>
         </Content>
-        <a
-          alignitems="center"
-          fontweight="400"
-          onClick={() => setPageData({
-            ...pageData,
-            show: !pageData.show,
-          })}
+        <Content
+          linktextdecoration="underline"
         >
-          {pageData.show ? (
-            "Back to images"
-          ) : (
-            "Back to editing"
-          )}
-        </a>
+          <a
+            alignitems="center"
+            fontweight="400"
+            onClick={() => setPageData({
+              ...pageData,
+              show: !pageData.show,
+            })}
+          >
+            {pageData.show ? (
+              "Back to images"
+            ) : (
+              "Back to editing"
+            )}
+          </a>
+        </Content>
       </Flexbox>
       <Flexbox
         flex="flex"

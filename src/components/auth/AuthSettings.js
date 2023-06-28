@@ -14,19 +14,24 @@ import Notification from "../ui/Notification"
 const UserSettings = () => {
   const { user, sendEmailVerification } = useFirebaseContext()
   const [verificationEmailSent, setVerificationEmailSent] = useState()
-  const [notification, setNotification] = useState({
+  const notification = {
     msg: user.emailVerified ? "" : "Please verify your email address! Check your email for a verification link.",
     backgroundcolor: colors.yellow.oneHundred,
     color: colors.yellow.sevenHundred,
-  })
+  }
 
   return (
     <Layout>
       <AuthLayout page="Settings">
         {notification.msg && (
-          <Notification color={notification.color} backgroundcolor={notification.backgroundcolor}>
+          <Notification 
+            color={notification.color} 
+            backgroundcolor={notification.backgroundcolor}
+            margin="32px 0"
+            alignitems="center"
+          >
             <Icon>
-              <WarningCircle size="2rem" weight="duotone" color={notification.color} />
+              <WarningCircle size="24px" weight="duotone" color={notification.color} />
             </Icon>
             <Content>
               <p>{notification.msg}</p>

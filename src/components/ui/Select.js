@@ -10,9 +10,9 @@ const StyledSelect = styled.div`
   position: relative;
   display: inline-block;
   p {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-family: ${fonts.secondary};
-    margin-right: 0.25rem;
+    margin-right: 4px;
     color: ${colors.gray.sixHundred};
   }
 `
@@ -20,7 +20,6 @@ const StyledSelect = styled.div`
 const SelectMenu = styled.div`
   background-color: ${colors.white};
   box-shadow: ${colors.shadow.layeredSmall};
-  border-radius: 0.25rem;
   border: ${colors.borders.black};
   padding: 0.5rem 0;
   position: absolute;
@@ -37,10 +36,9 @@ const SelectMenu = styled.div`
     background-color: ${colors.white};
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
-    top: -6px;
-
-  border: ${colors.borders.black};
-  border-width: 2px 0 0 2px;
+    top: -5px;
+    border: ${colors.borders.black};
+    border-width: 1px 0 0 1px;
   }
 `
 
@@ -52,7 +50,7 @@ const SelectMenuDivider = styled.hr`
 const SelectOption = styled.div`
   align-items: center;
   display: flex;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-family: ${fonts.secondary};
   padding: 0.25rem 2rem;
   position: relative;
   &:hover {
@@ -69,7 +67,7 @@ const SelectIcon = styled.div`
 
 const SelectHeading = styled.h4`
   color: ${colors.gray.fourHundred};
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  font-family: ${fonts.secondary};
   padding: 0.25rem 2rem;
   font-weight: 400;
   &:hover {

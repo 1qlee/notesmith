@@ -5,7 +5,7 @@ const Table = styled.table`
   border: ${colors.borders.black};
   border-spacing: 0;
   td,tr {
-    border-width: 2px;
+    border-width: 1px;
     border-color: ${colors.gray.nineHundred};
     border-bottom-width: 0;
   }
@@ -14,7 +14,7 @@ const Table = styled.table`
   }
   th {
     border-color: ${colors.gray.nineHundred};
-    border-width: 2px;
+    border-width: 1px;
     font-weight: 700;
     font-size: 1rem;
   }

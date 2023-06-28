@@ -191,12 +191,12 @@ function ProductControls({
               <>
                 <TemplatesContent>
                   <Content
-                    h3fontsize="0.875rem"
-                    h3margin="0 0 0.5rem 0"
-                    h3fontweight="700"
+                    h5fontsize="0.875rem"
+                    h5margin="0 0 8px 0"
+                    h5fontweight="700"
                     margin="0 0 1rem 0"
                   >
-                    <h3>Page side</h3>
+                    <h5>Page side</h5>
                     <PageButtonWrapper>
                       <PageButton
                         onClick={() => setCurrentPageSide("left")}

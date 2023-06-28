@@ -91,7 +91,7 @@ const SignupForm = () => {
         linktextdecoration="underline"
       >
         <h1>Create your Notesmith account</h1>
-        <p>Notesmith is currently taking pre-orders. All notebooks you purchase during this time are discounted. Feedback will be greatly appreciated.</p>
+        <p>Notesmith is currently taking pre-orders. Only users who have been granted early access may create an account at this time. If you would like to get early access please <Link to="/waitlist">sign up here</Link>.</p>
       </Content>
       <form
         id="signup-form"

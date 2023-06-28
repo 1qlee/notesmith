@@ -1,13 +1,12 @@
 import React, { useState } from "react"
 import { graphql, Link } from "gatsby"
-import { Star, ArrowUpRight, ArrowRight, WarningCircle, NoteBlank } from "phosphor-react"
+import { Star, ArrowUpRight, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col, setConfiguration } from 'react-grid-system'
 
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
-import { StyledLabel } from "../components/form/FormComponents"
 import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
 import Box from "../components/ui/Box"
@@ -91,7 +90,7 @@ const IndexPage = ({ data }) => {
       <SectionMain>
         <Section>
           <SectionContent
-            padding={`${spacing.xlarge} 0`}
+            padding={`${spacing.large} 0`}
           >
             <Container xl lg md sm xs>
               <Row>
@@ -112,6 +111,7 @@ const IndexPage = ({ data }) => {
                     h5fontweight="800"
                     className="has-border-top"
                     padding="32px 0 0"
+                    margin="0"
                   >
                     <Flexbox
                       alignitems="center"
@@ -127,22 +127,22 @@ const IndexPage = ({ data }) => {
                         Announcement
                       </Tag>
                     </Flexbox>
-                    <p>You can now pre-order our custom printed wired notebooks (A5) at a discounted price.</p>
-                    <Button
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      margin="32px 0 0"
-                      padding="1rem"
-                      width="100%"
-                      as={Link}
-                      to="/products/notebooks/wired-notebook-a5-custom"
-                    >
-                      <span>Pre-order</span>
-                      <Icon>
-                        <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
-                      </Icon>
-                    </Button>
+                    <p>You can now sign up for the waitlist to join the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
                   </Content>
+                  <Button
+                    backgroundcolor={colors.gray.nineHundred}
+                    color={colors.gray.oneHundred}
+                    margin="16px 0 0"
+                    padding="1rem"
+                    width="100%"
+                    as={Link}
+                    to="/waitlist"
+                  >
+                    <span>Pre-order</span>
+                    <Icon>
+                      <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
+                    </Icon>
+                  </Button>
                 </Col>
                 <Col xl={8} lg={8}>
                   <PageDemoCarousel />
@@ -190,9 +190,9 @@ const IndexPage = ({ data }) => {
                       color={colors.gray.nineHundred}
                       fontweight="700"
                       as={Link}
-                      to="/products/notebooks/wired-notebook-a5-custom/white"
+                      to="/waitlist"
                     >
-                      <span>Shop notebooks</span>
+                      <span>Join the waitlist</span>
                       <Icon
                         margin="0 0 0 4px"
                       >
@@ -233,6 +233,19 @@ const IndexPage = ({ data }) => {
                     <p>Just click on any of the template boxes below and the layout of the book will change automatically. Use the controls to make adjustments to the layout.</p>
                   </Content>
                   <Flexbox
+                    margin="0 0 16px"
+                    alignitems="flex-end"
+                  >
+                    <Content
+                      paragraphfontweight="700"
+                    >
+                      <p>Try it out</p>
+                    </Content>
+                    <Icon margin="0 0 0 4px">
+                      <ArrowBendRightDown size="1rem" weight="bold" color={colors.gray.nineHundred} />
+                    </Icon>
+                  </Flexbox>
+                  <Flexbox
                     flex="flex"
                     flexwrap="wrap"
                     margin="0 0 16px"
@@ -240,7 +253,7 @@ const IndexPage = ({ data }) => {
                     <PageIcons
                       checkActiveVar={pageData.template}
                       data={pageData}
-                      iconMargin="0 24px 24px 0"
+                      iconMargin="0 24px 16px 0"
                       isProductPage={true}
                       leftPageData={leftPageData}
                       rightPageData={rightPageData}
@@ -592,7 +605,7 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h2>Feedback from our early test users</h2>
+                    <h2>Feedback from our early users</h2>
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />
@@ -608,7 +621,7 @@ const IndexPage = ({ data }) => {
                       margin="0 0 0 4px"
                       smallmargin="0"
                     >
-                      <small>Users have been cartoonized for anonymity. Quotes represent real reviews from actual users.</small>
+                      <small>Quotes represent real words from real users with fake names.</small>
                     </Content>
                   </Flexbox>
                 </Col>

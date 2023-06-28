@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, spacing } from "../../styles/variables"
+import { colors, fonts, spacing } from "../../styles/variables"
 import RandomLine from "../misc/Lines"
 
 const SectionMain = styled.main`
@@ -41,6 +41,7 @@ const StyledSectionHeading = styled.div`
   h3 {
     font-size: 1rem;
     padding-bottom: 4px;
+    font-family: ${fonts.secondary};
   }
 `
 

@@ -15,6 +15,7 @@ const InputWrapper = styled.div`
 
 const InputLabel = styled.label`
   background-color: ${colors.white};
+  border: ${props => props.border && colors.borders.black};
   display: block;
   font-family: ${fonts.secondary};
   font-size: 0.875rem;
@@ -52,7 +53,7 @@ const InputLabel = styled.label`
 const InputButton = styled(Button)`
   position: absolute;
   right: 8px;
-  top: 8px;
+  top: ${props => props.top || "8px"};
 `
 
 const EmailInput = styled(StyledInput)`
@@ -60,6 +61,7 @@ const EmailInput = styled(StyledInput)`
   border: none;
   box-shadow: none;
   border-radius: 4px;
+  font-size: ${props => props.fontsize};
   &.has-value {
     width: calc(100% - 36px);
   }
@@ -68,7 +70,7 @@ const EmailInput = styled(StyledInput)`
   }
 `
 
-function RegisterForm() {
+function RegisterForm({ border, fontsize, top, color }) {
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -101,7 +103,7 @@ function RegisterForm() {
       setLoading(false)
       setEmailError({
         msg: data.msg,
-        color: colors.gray.oneHundred
+        color: color || colors.gray.oneHundred
       })
     }
   }
@@ -112,7 +114,7 @@ function RegisterForm() {
     setLoading(true)
     setEmailError({
       msg: "",
-      color: colors.gray.oneHundred
+      color: color || colors.gray.oneHundred
     })
 
     get(query(ref(firebaseDb, "signups"), orderByChild("email"), equalTo(email))).then(snapshot => {
@@ -166,6 +168,7 @@ function RegisterForm() {
       <InputWrapper>
         <InputLabel 
           htmlFor="register-form-input"
+          border={border}
         >
           <EmailInput
             onFocus={() => setEmailError({
@@ -179,6 +182,7 @@ function RegisterForm() {
             name="email"
             margin="0"
             autoComplete="off"
+            fontsize={fontsize}
           />
           <label
             className={email && "has-value"}
@@ -196,6 +200,7 @@ function RegisterForm() {
               className={loading ? "is-loading" : null}
               disabled={loading}
               margin="0 0 0 2px"
+              top={top}
             >
               <Icon>
                 {loading ? (

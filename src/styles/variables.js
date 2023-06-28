@@ -123,8 +123,10 @@ const breakpoints = {
 }
 
 const fonts = {
-  primary: "'Jost', Georgia, serif",
-  secondary: "'Inter', Helvetica, Tahoma, sans-serif"
+  heading: "'Nanum Myeongjo', Georgia, serif",
+  text: "'Jost', Georgia, serif",
+  primary: "'Nanum Myeongjo', Georgia, serif",
+  secondary: "'Jost', Georgia, serif",
 }
 
 const widths = {

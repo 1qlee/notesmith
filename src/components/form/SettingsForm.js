@@ -12,7 +12,7 @@ import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 
 function SettingsForm() {
-  const { user, firebaseAuth, getAuthCredential } = useFirebaseContext()
+  const { user, getAuthCredential } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [newPassword, setNewPassword] = useState("")
   const [newEmail, setNewEmail] = useState("")
@@ -215,10 +215,11 @@ function SettingsForm() {
         alignitems="center"
         justifycontent="space-between"
         className="has-border-bottom"
+        margin="32px 0"
         padding="0 0 16px"
       >
         <Content
-          h1fontsize="1.5rem"
+          h1fontsize="2rem"
           h1margin="0"
         >
           <h1>Profile</h1>
@@ -267,11 +268,11 @@ function SettingsForm() {
           flex="flex"
           alignitems="flex-start"
           justifycontent="space-between"
-          margin="2rem 0"
+          margin="16px 0"
           width="100%"
         >
           <Content
-            h5fontsize="0.875rem"
+            h5margin="0 0 8px"
           >
             <h5>Email address</h5>
             <p>This email is used for communication and for logging into your account.</p>
@@ -304,10 +305,10 @@ function SettingsForm() {
           flex="flex"
           alignitems="flex-start"
           justifycontent="space-between"
-          margin="2rem 0"
+          margin="16px 0"
         >
           <Content
-            h5fontsize="0.875rem"
+            h5margin="0 0 8px"
           >
             <h5>Password</h5>
             <p>Must be a minimum of eight characters.</p>
@@ -336,7 +337,7 @@ function SettingsForm() {
           {showModal.type === "reauthentication" ? (
             <>
               <ModalHeader>
-                <h5>Please confirm your password to continue.</h5>
+                Please confirm your password to continue
               </ModalHeader>
               <ModalContent>
                 <Content>
@@ -344,26 +345,21 @@ function SettingsForm() {
                   <form id="reauthentication" noValidate
                     onSubmit={e => handleReauthenticationSubmit(e)}
                   >
-                    <StyledFieldset
-                      className="is-vertical"
-                      margin="1rem 0"
-                    >
-                      <StyledLabel htmlFor="current-password">Password</StyledLabel>
-                      <StyledInput
-                        id="current-password"
-                        type="password"
-                        name="current-password"
-                        onChange={e => setReauthenticatedPassword(e.currentTarget.value)}
-                      />
-                      {passwordError.msg && (
-                        <ErrorLine color={passwordError.color}>
-                          <Icon>
-                            <Warning weight="fill" color={passwordError.color} size={16} />
-                          </Icon>
-                          <span>{passwordError.msg}</span>
-                        </ErrorLine>
-                      )}
-                    </StyledFieldset>
+                    <StyledLabel htmlFor="current-password">Password</StyledLabel>
+                    <StyledInput
+                      id="current-password"
+                      type="password"
+                      name="current-password"
+                      onChange={e => setReauthenticatedPassword(e.currentTarget.value)}
+                    />
+                    {passwordError.msg && (
+                      <ErrorLine color={passwordError.color}>
+                        <Icon>
+                          <Warning weight="fill" color={passwordError.color} size={16} />
+                        </Icon>
+                        <span>{passwordError.msg}</span>
+                      </ErrorLine>
+                    )}
                   </form>
                 </Content>
               </ModalContent>
@@ -393,14 +389,14 @@ function SettingsForm() {
           ) : (
             <>
               <ModalHeader>
-                <h3>Change your password</h3>
+                Change your password
               </ModalHeader>
               <ModalContent>
                 <Content>
                   <form id="change-password" noValidate onSubmit={e => handleChangePasswordSubmit(e)}>
                     <StyledFieldset
                       className="is-vertical"
-                      margin="1rem 0"
+                      margin="0"
                     >
                       <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
                       <StyledInput

@@ -1,19 +1,17 @@
 import React from "react"
 import { Link } from "gatsby"
 import { toast } from 'react-toastify'
-import { widths } from "../../styles/variables"
-import { Article, Notebook } from "phosphor-react"
-import { colors } from "../../styles/variables"
+import { colors, widths } from "../../styles/variables"
 
 import { Row, Col } from "react-grid-system"
-import Icon from "../ui/Icon"
 import Toastify from "../ui/Toastify"
 import Layout from "../layout/Layout"
 import Content from "../ui/Content"
 import AuthLayout from "./components/AuthLayout"
 import sendEmailVerification from "../../functions/sendEmailVerification"
-import Box from "../ui/Box"
 import { Flexbox } from "../layout/Flexbox"
+import Button from "../ui/Button"
+import Notification from "../ui/Notification"
 
 const UserDashboard = () => {
 
@@ -39,13 +37,19 @@ const UserDashboard = () => {
               linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
-              <h1>Start creating custom books and templates.</h1>
+              <h1>Welcome to the pre-launch!</h1>
               <p>
                 You have full access to the custom editor and can start designing your own books right away. When you create a book you will be able to give it a name, after which it will appear in your Books table. You may edit any book an unlimited number of times.
               </p>
               <p>
-                Additionally, you can also create Templates to use in your books. Templates are reusable page designs that you can apply to any page in any book. This makes it faster to create books using your favorite pages.
+                Additionally, you can also create Templates to use in your books. Templates are reusable page designs that you can apply to any page in any book. This makes it faster to create books using your favorite layouts.
               </p>
+              <Notification
+                backgroundcolor={colors.gray.twoHundred}
+              >
+                Please note that during this time, we cannot provide an accurate estimate for shipping times. You will be updated as we get further along the production process.
+              </Notification>
+              <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
             </Content>
           </Col>
           <Col md={6}>
@@ -59,59 +63,24 @@ const UserDashboard = () => {
           </Col>
         </Row>
         <Row>
-          <Col md={3} sm={6}>
-            <Link
-              to="/account/books"
-            >
-              <Box
-                className="has-border is-clickable"
-                padding="16px"
-                borderradius="8px"
+          <Col>
+            <Flexbox>
+              <Button
+                as={Link}
+                to="/account/books"
+                padding="16px 32px"
+                margin="0 16px 0 0"
               >
-                <Flexbox
-                  alignitems="center"
-                >
-                  <Icon
-                    margin="0 8px 0 0"
-                  >
-                    <Notebook size={24} weight="duotone" color={colors.gray.nineHundred} />
-                  </Icon>
-                  <Content
-                    h5margin="0"
-                    h5fontweight="700"
-                  >
-                    <h5>Create a book</h5>
-                  </Content>
-                </Flexbox>
-              </Box>
-            </Link>
-          </Col>
-          <Col md={3} sm={6}>
-            <Link
-              to="/account/books"
-            >
-              <Box
-                className="has-border is-clickable"
-                padding="16px"
-                borderradius="8px"
+                Create a book
+              </Button>
+              <Button
+                as={Link}
+                to="/account/templates"
+                padding="16px 32px"
               >
-                <Flexbox
-                  alignitems="center"
-                >
-                  <Icon
-                    margin="0 8px 0 0"
-                  >
-                    <Article size={24} weight="duotone" color={colors.gray.nineHundred} />
-                  </Icon>
-                  <Content
-                    h5margin="0"
-                    h5fontweight="700"
-                  >
-                    <h5>Create a template</h5>
-                  </Content>
-                </Flexbox>
-              </Box>
-            </Link>
+                Create a template
+              </Button>
+            </Flexbox>
           </Col>
         </Row>
       </AuthLayout>
