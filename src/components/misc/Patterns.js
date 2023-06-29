@@ -153,7 +153,7 @@ function Pattern({
       <rect
         height={height}
         width={width}
-        fill={`url(#${pattern})`}
+        fill={`url(#pattern-${pattern})`}
       />
     </svg>
   )

@@ -19,9 +19,10 @@ import Layout from "../components/layout/Layout"
 import Nav from "../components/layout/Nav"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
-import Philosophies from "../components/index/Philosophies"
+import { Patterns, Pattern } from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
+import RegisterForm from "../components/form/RegisterForm"
 import Seo from "../components/layout/Seo"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
@@ -87,6 +88,9 @@ const IndexPage = ({ data }) => {
     <Layout>
       <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
       <Nav hideNavbar={false}></Nav>
+      <Patterns 
+        color={colors.gray.twoHundred} 
+      />
       <SectionMain>
         <Section>
           <SectionContent
@@ -95,12 +99,19 @@ const IndexPage = ({ data }) => {
             <Container xl lg md sm xs>
               <Row>
                 <Col xl={4} lg={4} offset={{ sm: 2, lg: 0 }} sm={8}>
+                  <Pattern 
+                    pattern={26}
+                    height={380}
+                    width={420}
+                    top={-48}
+                    left={-48}
+                  />
                   <Content
-                    backgroundcolor={colors.white}
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
                     margin="0 0 32px"
                     h1margin="0 0 32px"
+                    style={{ clipPath: `url(#pattern-26)` }}
                   >
                     <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
@@ -129,31 +140,19 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                     <p>You can now sign up for the waitlist to join the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
                   </Content>
-                  <Button
-                    backgroundcolor={colors.gray.nineHundred}
-                    color={colors.gray.oneHundred}
+                  <RegisterForm 
+                    border
+                    fontsize="1rem"
                     margin="16px 0 0"
-                    padding="1rem"
-                    width="100%"
-                    as={Link}
-                    to="/waitlist"
-                  >
-                    <span>Pre-order</span>
-                    <Icon>
-                      <ArrowUpRight size="1rem" color={colors.gray.nineHundred} />
-                    </Icon>
-                  </Button>
+                    top="12px"
+                    color={colors.gray.nineHundred}
+                  />
                 </Col>
                 <Col xl={8} lg={8}>
                   <PageDemoCarousel />
                 </Col>
               </Row>
             </Container>
-          </SectionContent>
-        </Section>
-        <Section>
-          <SectionContent>
-            <Philosophies />
           </SectionContent>
         </Section>
         <Section>

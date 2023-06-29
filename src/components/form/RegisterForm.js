@@ -11,6 +11,7 @@ import { StyledInput, ErrorLine } from "./FormComponents"
 
 const InputWrapper = styled.div`
   position: relative;
+  margin: ${props => props.margin};
 `
 
 const InputLabel = styled.label`
@@ -70,7 +71,7 @@ const EmailInput = styled(StyledInput)`
   }
 `
 
-function RegisterForm({ border, fontsize, top, color }) {
+function RegisterForm({ border, margin, fontsize, top, color }) {
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -165,7 +166,9 @@ function RegisterForm({ border, fontsize, top, color }) {
       id="register-form"
       onSubmit={e => registerEmail(e)}
     >
-      <InputWrapper>
+      <InputWrapper
+        margin={margin}
+      >
         <InputLabel 
           htmlFor="register-form-input"
           border={border}

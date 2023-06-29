@@ -566,7 +566,7 @@ const StyledInput = styled.input`
   border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
   color: ${colors.gray.nineHundred};
   display: block;
-  font-size: ${props => props.fontsize ? props.fontsize : "1rem"};
+  font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
   margin: ${props => props.margin ? props.margin : "0"};
   padding: ${props => props.padding ? props.padding : "16px"};
   text-align: ${props => props.textalign};
