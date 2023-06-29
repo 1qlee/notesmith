@@ -3,12 +3,10 @@ import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
 
 import { Flexbox } from "../../layout/Flexbox"
-import { SectionAppWorkspace } from "../../layout/Section"
 import { StyledInput } from "../../form/FormComponents"
 import { Select } from "../../ui/Select"
 import Table from "../../ui/Table"
 import Button from "../../ui/Button"
-import Content from "../../ui/Content"
 import ContextMenu from "../../ui/ContextMenu"
 
 // should export this function to utils
@@ -85,7 +83,7 @@ function BooksContainer({
     e.preventDefault()
     // to display the menu on cursor
     setCoordinates({
-      x: e.clientX,
+      x: e.clientX - 180,
       y: e.clientY
     })
     // show in DOM

@@ -101,30 +101,14 @@ const Editor = ({
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
-
-  // creates blank svgs
-  function createBlankSvgs() {
-    // create a unique id for a blank page
-    const blankPageId = uuidv4()
-    // create a page object id:svg(string) pair
-    const demoPagesObject = {
-      [blankPageId]: `<svg xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
-    }
-    setCanvasPageTemplates(demoPagesObject)
-    // blank array holds the svgs
-    const pagesArray = []
-
-    for (let i = 0; i < bookData.numOfPages; i++) {
-      pagesArray.push({
-        pageId: blankPageId,
-        pageNumber: i + 1,
-      })
-    }
-
-    // set canvasPages in state
-    setCanvasPages(pagesArray)
-    setInitializing(false)
-  }
+  const [config, setConfig] = useState({
+    debug: true,
+    i18n: 'fr',
+    saveHandler: null,
+    onCloseHandler: null,
+    debugPrefix: 'editor',
+  });
+  const [svgContent, setSvgContent] = useState(`<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg"></svg>`);
 
   useEffect(() => {
     // queries db for the book by bookId
@@ -228,6 +212,66 @@ const Editor = ({
 
   }, [bookId, loading])
 
+  // creates blank svgs
+  function createBlankSvgs() {
+    // create a unique id for a blank page
+    const blankPageId = uuidv4()
+    // create a page object id:svg(string) pair
+    const demoPagesObject = {
+      [blankPageId]: `<svg xmlns='http://www.w3.org/2000/svg'><rect width='${pageData.pageWidth}' height='${pageData.pageHeight}' fill='#fff'></rect></svg>`,
+    }
+    setCanvasPageTemplates(demoPagesObject)
+    // blank array holds the svgs
+    const pagesArray = []
+
+    for (let i = 0; i < bookData.numOfPages; i++) {
+      pagesArray.push({
+        pageId: blankPageId,
+        pageNumber: i + 1,
+      })
+    }
+
+    // set canvasPages in state
+    setCanvasPages(pagesArray)
+    setInitializing(false)
+  }
+
+  const svgUpdate = (content) => {
+    logDebugData('svgUpdate', config.saveHandler !== null);
+    setSvgContent(content);
+    if (config.saveHandler !== null) {
+      config.saveHandler(content);
+    }
+  }
+
+  const getSvg = () => {
+    logDebugData('getSvg');
+    return svgContent;
+  };
+
+  const configure = (name, value) => {
+    logDebugData('configure', { name, value });
+    if (typeof config[name] === 'undefined') {
+      throw new Error(`${name} is not a valid configuration`);
+    }
+    const newConfig = { ...config, [name]: value };
+    setConfig(newConfig);
+    return newConfig;
+  };
+
+  const logDebugData = (functionName, args) => {
+    if (config.debug) {
+      console.info(
+        '%c%s',
+        'color:green',
+        config.debugPrefix,
+        functionName,
+        args,
+        new Error().stack.split(/\n/)[2]
+      );
+    }
+  };
+
   if (loading || initializing) {
     return <Loader />
   }
@@ -268,6 +312,10 @@ const Editor = ({
               selectedPage={selectedPage}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
+              svgContent={svgContent}
+              locale={config.i18n}
+              svgUpdate={svgUpdate}
+              log={logDebugData}
             />
             <Controls
               activeTab={activeTab}
