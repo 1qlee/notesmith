@@ -1,12 +1,13 @@
 import React, { useState, useRef } from "react"
 import { colors, convertToMM, convertToIn, convertFloatFixed, pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { ref, get, query, orderByChild, equalTo, set, onValue } from "firebase/database"
+import { ref, get, query, orderByChild, equalTo, set, push } from "firebase/database"
 import { spacing } from "../../styles/variables"
 import { jsPDF } from 'jspdf'
 import JSZip from "jszip"
 import ceach from "concurrent-each"
 import { saveAs } from 'file-saver'
+import { toast } from 'react-toastify'
 import 'svg2pdf.js'
 
 import { Section, SectionMain, SectionContent } from "../../components/layout/Section"
@@ -15,6 +16,7 @@ import Button from "../ui/Button"
 import Progress from "../ui/Progress"
 import { Modal, ModalContent, ModalHeader, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
+import Toastify from "../ui/Toastify"
 
 const notebookSizes = [
   "A5",
@@ -334,6 +336,21 @@ const AdminDashboard = () => {
     setActiveOrderType(type)
     getOrders(child, value, type)
   }
+  
+  const addToEarlyAccess = () => {
+    const email = prompt("Enter user's email")
+    if (email) {
+      const key = push(ref(firebaseDb, 'earlyAccess')).key
+      const earlyAccessRef = ref(firebaseDb, `earlyAccess/${key}`)
+
+      set(earlyAccessRef, {
+        email: email,
+        referrals: 3,
+      }).then(() => {
+        toast.success(`${email} added to early access list!`)
+      })
+    }
+  }
 
   return (
     <SectionMain
@@ -355,20 +372,10 @@ const AdminDashboard = () => {
                   Download unprinted books
                 </Button>
                 <Button
-                  onClick={async () => {
-                    await get(query(ref(firebaseDb, `orderItems`), orderByChild("bookId"), equalTo("-NXGH-wCHBUVLT_03ImM"))).then(snapshot => {
-                      console.log(snapshot.val())
-                    })
-                  }}
+                  onClick={() => addToEarlyAccess()}
                   margin="0 16px 0 0"
                 >
-                  Shipping errors
-                </Button>
-                <Button
-                  onClick={() => handleGetOrders("shipped", false, "unprinted")}
-                  margin="0 16px 0 0"
-                >
-                  Shipped orders
+                  Add user to early access
                 </Button>
               </Col>
             </Row>
@@ -439,6 +446,7 @@ const AdminDashboard = () => {
           )}
         </SectionContent>
       </Section>
+      <Toastify />
     </SectionMain>
   )
 }

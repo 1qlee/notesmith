@@ -28,7 +28,7 @@ const Footer = () => {
                 h4fontweight="400"
                 h4margin="0 0 0.5rem"
               >
-                <h4>Sign up to get access to promotions, special offers, news, and more</h4>
+                <h4>Sign up to join the waitlist for early access to all our features and notebooks</h4>
               </Content>
             </Col>
             <Col sm={4} push={{ sm: 2 }}>

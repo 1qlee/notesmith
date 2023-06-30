@@ -37,7 +37,7 @@ const UserDashboard = () => {
               linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
-              <h1>Welcome to the pre-launch!</h1>
+              <h1>Welcome to the early access!</h1>
               <p>
                 You have full access to the custom editor and can start designing your own books right away. When you create a book you will be able to give it a name, after which it will appear in your Books table. You may edit any book an unlimited number of times.
               </p>

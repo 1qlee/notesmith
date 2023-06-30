@@ -12,14 +12,6 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-source-stripe`,
-      options: {
-        objects: ['Balance', 'BalanceTransaction', 'Product', 'Price', 'ApplicationFee', 'Sku', 'Subscription'],
-        secretKey: process.env.GATSBY_STRIPE_SECRET_KEY,
-        downloadFiles: true,
-      }
-    },
-    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `data`,

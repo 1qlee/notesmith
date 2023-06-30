@@ -3,7 +3,7 @@ import { colors } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { WarningCircle, CircleNotch } from "phosphor-react"
-import { ref, set } from "firebase/database"
+import { ref, set, onValue, query, orderByChild, equalTo } from "firebase/database"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
 
@@ -22,41 +22,63 @@ const SignupForm = () => {
   const [passwordError, setPasswordError] = useState(null)
   const [passwordValidated, setPasswordValidated] = useState()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
+    
+    const validated = await validateEmail(email)
 
-    signUp(email, password).then(async userObject => {
-      const { user } = userObject
-      console.log(userObject)
-      // Record new user in the db
-      await set(ref(firebaseDb, 'users/' + user.uid), {
-        email: user.email
+    if (validated) {
+      console.log('validated')
+      signUp(email, password).then(async userObject => {
+        const { user } = userObject
+        console.log(userObject)
+        // Record new user in the db
+        await set(ref(firebaseDb, 'users/' + user.uid), {
+          email: user.email
+        })
+
+        return user
+      }).then(async user => {
+        console.log("sending verification email")
+        // Send the user a verification email
+        await sendEmailVerification(user.email)
+        setLoading(false)
+      }).catch(error => {
+        setLoading(false)
+
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setEmailError("This email is already in use.")
+            break
+          case "auth/invalid-email":
+            setEmailError("Email was in an invalid format.")
+            break
+          case "auth/operation-not-allowed":
+            setEmailError("Sorry, our server is busy.")
+            break
+          default:
+            setEmailError("Something went wrong.")
+        }
       })
-
-      return user
-    })
-    .then(async user => {
-      console.log("sending verification email")
-      // Send the user a verification email
-      await sendEmailVerification(user.email)
+    }
+    else {
+      console.log("you aint ready!")
       setLoading(false)
-    })
-    .catch(error => {
-      setLoading(false)
+    }
+  }
 
-      switch(error.code) {
-        case "auth/email-already-in-use":
-          setEmailError("This email is already in use.")
-          break
-        case "auth/invalid-email":
-          setEmailError("Email was in an invalid format.")
-          break
-        case "auth/operation-not-allowed":
-          setEmailError("Sorry, our server is busy.")
-          break
-        default:
-          setEmailError("Something went wrong.")
+  // check the db to see if this user has an early access email
+  async function validateEmail(email) {
+    await onValue(query(ref(firebaseDb, "earlyAccess"), orderByChild('email'), equalTo(email)), (snapshot) => {
+      console.log(snapshot.val())
+      if (snapshot.exists()) {
+        setEmailError(null)
+        return true
+      }
+      else {
+        setEmailError("This email does not have early access yet!")
+        return false
       }
     })
   }

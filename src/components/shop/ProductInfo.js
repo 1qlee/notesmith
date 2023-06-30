@@ -1,13 +1,12 @@
 import React, { useState } from "react"
-import { navigate } from "gatsby"
+import { Link } from "gatsby"
 import { colors, fonts } from "../../styles/variables"
 import { useShoppingCart } from 'use-shopping-cart'
 import { v4 as uuidv4 } from 'uuid'
+import { useFirebaseContext } from "../../utils/auth"
 import 'react-tooltip/dist/react-tooltip.css';
-import { WarningCircle } from "phosphor-react"
-import Notification from "../ui/Notification"
 
-import Icon from "../ui/Icon"
+import Notification from "../ui/Notification"
 import { Flexbox } from "../layout/Flexbox"
 import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import Button from "../ui/Button"
@@ -15,7 +14,6 @@ import ColorPicker from "./ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import ProductInfoBox from "./ProductInfoBox"
-import TextLink from "../ui/TextLink"
 import Tag from "../ui/Tag"
 
 const ProductInfo = ({
@@ -28,6 +26,7 @@ const ProductInfo = ({
   setPageData,
   toast,
 }) => {
+  const { user } = useFirebaseContext()
   const showWarningMsg = !rightPageData.template || !leftPageData.template
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
@@ -166,45 +165,47 @@ const ProductInfo = ({
           showLabels={false}
         />
       </Flexbox>
-      <Flexbox
-        flex="flex"
-        alignitems="flex-end"
-        margin="0 0 16px"
-      >
-        <div>
-          <StyledLabel 
-            htmlFor="quantity-tracker" 
-            margin="0 0 8px"
-            fontsize="1rem"
-            fontweight="700"
-          >
-            Quantity
-          </StyledLabel>
-          <QuantityTracker
-            id="quantity-tracker"
-            buttonwidth="1rem"
-            buttonheight="1rem"
-            counterwidth="100%"
-            counterpadding="1rem"
-            counterfontsize="0.825rem"
-            iconsize="0.625rem"
-            setItemQuantity={setItemQuantity}
-          />
-        </div>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          border={`1px solid ${colors.gray.nineHundred}`}
-          color={colors.gray.oneHundred}
-          disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
-          margin="0 0 0 1rem"
-          padding="1rem"
-          onClick={() => handleAddCartButton(bookData)}
-          width="100%"
+      {user && (
+        <Flexbox
+          flex="flex"
+          alignitems="flex-end"
+          margin="0 0 16px"
         >
-          Add to cart
-        </Button>
-      </Flexbox>
-      {showWarningMsg && (
+          <div>
+            <StyledLabel
+              htmlFor="quantity-tracker"
+              margin="0 0 8px"
+              fontsize="1rem"
+              fontweight="700"
+            >
+              Quantity
+            </StyledLabel>
+            <QuantityTracker
+              id="quantity-tracker"
+              buttonwidth="1rem"
+              buttonheight="1rem"
+              counterwidth="100%"
+              counterpadding="1rem"
+              counterfontsize="0.825rem"
+              iconsize="0.625rem"
+              setItemQuantity={setItemQuantity}
+            />
+          </div>
+          <Button
+            backgroundcolor={colors.gray.nineHundred}
+            border={`1px solid ${colors.gray.nineHundred}`}
+            color={colors.gray.oneHundred}
+            disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
+            margin="0 0 0 1rem"
+            padding="1rem"
+            onClick={() => handleAddCartButton(bookData)}
+            width="100%"
+          >
+            Add to cart
+          </Button>
+        </Flexbox>
+      )}
+      {showWarningMsg ? (
         <Notification
           backgroundcolor={colors.red.twoHundred}
         >
@@ -215,6 +216,20 @@ const ProductInfo = ({
             paragraphfontsize="0.875rem"
           >
             <p>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</p>
+          </Content>
+        </Notification>
+      ) : (
+          <Notification
+            backgroundcolor={colors.red.twoHundred}
+          >
+            <Content
+              margin="0 0 0 8px"
+              paragraphmargin="0"
+              paragraphcolor={colors.red.nineHundred}
+              paragraphfontsize="0.875rem"
+              linktextdecoration="underline"
+            >
+              <p>Only users who have been granted early access may purchase notebooks at this time. If you would like to get early access please <Link to="/waitlist">sign up here</Link>.</p>
           </Content>
         </Notification>
       )}
