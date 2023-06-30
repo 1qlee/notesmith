@@ -96,16 +96,16 @@ const IndexPage = ({ data }) => {
           <SectionContent
             padding={`${spacing.xlarge} 0`}
           >
+            <Pattern
+              pattern={26}
+              height="100%"
+              width={200}
+              top={12}
+              left={0}
+            />
             <Container xl lg md sm xs>
               <Row>
                 <Col xl={4} lg={4} offset={{ sm: 2, lg: 0 }} sm={8}>
-                  <Pattern 
-                    pattern={26}
-                    height={380}
-                    width={420}
-                    top={-48}
-                    left={-48}
-                  />
                   <Content
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
