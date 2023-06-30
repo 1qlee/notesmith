@@ -188,8 +188,9 @@ const IndexPage = ({ data }) => {
                       className="has-icon"
                       color={colors.gray.nineHundred}
                       fontweight="700"
-                      as={Link}
-                      to="/waitlist"
+                      href="/waitlist"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       <span>Join the waitlist</span>
                       <Icon
@@ -379,8 +380,9 @@ const IndexPage = ({ data }) => {
                     h3fontweight="400"
                     h3fontsize="2rem"
                     h3color={colors.gray.oneHundred}
+                    h3margin="0"
                   >
-                    <h3>Join the Notesmith pre-order sale now and enjoy an exclusive discounted price.</h3>
+                    <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
                   </Content>
                 </Col>
                 <Col md={5} push={{ md: 1 }}>
@@ -388,7 +390,7 @@ const IndexPage = ({ data }) => {
                     paragraphcolor={colors.gray.oneHundred}
                   >
                     <p>
-                      During the pre-order sale, notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together!
+                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access on a rolling basis.
                     </p>
                   </Content>
                   <Flexbox
@@ -401,10 +403,11 @@ const IndexPage = ({ data }) => {
                       color={colors.gray.oneHundred}
                       underlinecolor={colors.gray.oneHundred}
                       hovercolor={colors.gray.nineHundred}
-                      as={Link}
-                      to="/signup"
+                      href="/waitlist"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <span>Create an account now</span>
+                      <span>Join the waitlist</span>
                       <Icon
                         margin="0 0 0 8px"
                       >
