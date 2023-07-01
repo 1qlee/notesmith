@@ -13,9 +13,7 @@ const StyledTitleBox = styled.div`
   display: flex;
   align-items: center;
   p {
-    font-family: "Inter", Helvetica, Tahoma, sans-serif;
     font-size: 1rem;
-    font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
@@ -35,7 +33,6 @@ const StyledTitleBox = styled.div`
 const TitleInput = styled.input`
   border:none;
   background-color: transparent;
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
   padding: 0;
   text-align: center;
   height: 100%;

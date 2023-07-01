@@ -108,7 +108,7 @@ const Editor = ({
     onCloseHandler: null,
     debugPrefix: 'editor',
   });
-  const [svgContent, setSvgContent] = useState(`<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg"></svg>`);
+  const [svgContent, setSvgContent] = useState(`<svg width="${pageData.svgWidth}" height="${pageData.svgHeight}" xmlns="http://www.w3.org/2000/svg"></svg>`);
 
   useEffect(() => {
     // queries db for the book by bookId

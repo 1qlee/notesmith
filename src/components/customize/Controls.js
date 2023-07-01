@@ -7,7 +7,7 @@ import Templatesbar from "./bars/Templatesbar"
 import Checkoutbar from "./Bars/Checkoutbar"
 
 const StyledControls = styled.div`
-  border-left: 2px solid ${colors.gray.nineHundred};
+  border-left: ${colors.borders.black};
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -21,7 +21,7 @@ const ControlsContent = styled.div`
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 1rem;
+  padding: 32px 16px;
   width: 100%;
   &::-webkit-scrollbar {
     height: 0.5rem;
@@ -34,7 +34,7 @@ const ControlsContent = styled.div`
 
 const ControlsTabs = styled.ul`
   background-color: ${colors.white};
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
   display: inline-flex;
   justify-content: flex-start;
   list-style-type: none;
@@ -44,11 +44,10 @@ const ControlsTabs = styled.ul`
 const ControlsTab = styled.li`
   background-color: ${colors.white};
   color: ${colors.gray.sixHundred};
-  font-family: "Inter", Helvetica, sans-serif;
-  font-size: 0.825rem;
   padding: 1rem 0;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
+  font-size: 0.875rem;
   font-weight: 700;
   text-align: center;
   flex: 1;

@@ -10,7 +10,7 @@ import PageBox from "../barComponents/PageBox"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
-  border-right: 2px solid ${colors.gray.nineHundred};
+  border-right: ${colors.borders.black};
   height: 100%;
   width: 164px;
   z-index: 8;
@@ -18,6 +18,7 @@ const PagebarWrapper = styled.div`
 
 const StyledPage = styled.div`
   text-align: center;
+  border-radius: 4px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -26,13 +27,14 @@ const StyledPage = styled.div`
   margin: 0 0.875rem;
   p {
     color: ${colors.gray.sixHundred};
-    font-size: 0.675rem;
+    font-size: 0.875rem;
     margin: 0.875rem 0 0 0;
     transition: color 0.2s;
     user-select: none;
   }
   svg {
     border: 1px solid ${colors.gray.threeHundred};
+    border-radius: 4px;
     height: 64px;
     pointer-events: none;
     transition: transform 0.2s, border-color 0.2s;
@@ -40,8 +42,7 @@ const StyledPage = styled.div`
   }
   &.is-active {
     p {
-      color: ${colors.primary.sixHundred};
-      font-weight: 700;
+      color: ${colors.gray.nineHundred};
     }
     svg {
       border-color: ${colors.gray.nineHundred};
@@ -163,7 +164,7 @@ function Pagebar({
               overscanRowCount={0}
               style={{
                 backgroundColor: 'white',
-                borderRight: `2px solid ${colors.gray.nineHundred}`,
+                borderRight: `${colors.borders.black}`,
                 top: "0",
                 overflowX: "hidden",
               }}

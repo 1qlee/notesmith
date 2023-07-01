@@ -26,7 +26,7 @@ function Canvas({
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
-  svgContent = '<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg"></svg>', 
+  svgContent, 
   locale, 
   svgUpdate, 
   log
@@ -117,8 +117,7 @@ function Canvas({
   useLayoutEffect(() => {
     const editorDom = svgcanvasRef.current
     const canvas = new SvgCanvas(editorDom, config)
-    updateCanvas(canvas, svgcanvasRef.current, config, true)
-    console.log(canvas)
+    updateCanvas(canvas, editorDom, config, true)
     canvas.textActions.setInputElem(textRef.current)
     Object.entries(eventList).forEach(([eventName, eventHandler]) => {
       canvas.bind(eventName, eventHandler)
@@ -147,34 +146,38 @@ function Canvas({
   updateContextPanel()
 
   return (
-    <Workspace>
-      <StyledCanvas>
-        <svg
-          id="page-root"
-          xmlns="http://www.w3.org/2000/svg"
-          xlinkns="http://www.w3.org/1999/xlink"
-          width={canvasSize.width}
-          height={canvasSize.height}
-          viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
-        >
-          <PageSpread
-            bookData={bookData}
-            canvasSize={canvasSize}
-            canvasPages={canvasPages}
-            canvasPageTemplates={canvasPageTemplates}
-            pageData={pageData}
-            selectedPage={selectedPage}
-            setPageData={setPageData}
-            setSelectedPageSvg={setSelectedPageSvg}
-            setSvgSize={setSvgSize}
-          />
-        </svg>
-        <div className="workarea">
-          <div ref={svgcanvasRef} className="svgcanvas" style={{ position: 'relative' }} />
-        </div>
-        <input ref={textRef} onKeyUp={onKeyUp} type="text" size="35" style={{ position: 'absolute', left: '-9999px' }} />
-      </StyledCanvas>
-    </Workspace>
+    <>
+      <Workspace>
+        <StyledCanvas>
+          <StyledCanvas>
+            <svg
+              id="page-root"
+              xmlns="http://www.w3.org/2000/svg"
+              xlinkns="http://www.w3.org/1999/xlink"
+              width={canvasSize.width}
+              height={canvasSize.height}
+              viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
+            >
+              <PageSpread
+                bookData={bookData}
+                canvasSize={canvasSize}
+                canvasPages={canvasPages}
+                canvasPageTemplates={canvasPageTemplates}
+                pageData={pageData}
+                selectedPage={selectedPage}
+                setPageData={setPageData}
+                setSelectedPageSvg={setSelectedPageSvg}
+                setSvgSize={setSvgSize}
+              />
+            </svg>
+          </StyledCanvas>
+          <div className="workarea">
+            <div ref={svgcanvasRef} className="svgcanvas" style={{ position: 'relative' }} />
+          </div>
+          <input ref={textRef} onKeyUp={onKeyUp} type="text" size="35" style={{ position: 'absolute', left: '-9999px' }} />
+        </StyledCanvas>
+      </Workspace>
+    </>
   )
 }
 

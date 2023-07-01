@@ -9,7 +9,7 @@ import Toolbox from "../barComponents/Toolbox"
 const StyledFunctionsBar = styled.div`
   display: flex;
   width: 100%;
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
 `
 
 function Functionsbar({

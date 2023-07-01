@@ -24,6 +24,7 @@ const config = {
   wireframe: false,
   showlayers: false,
   no_save_warning: false,
+  noStorageOnLoad: true,
   // PATH CONFIGURATION
   // The following path configuration items are disallowed in the URL (as should any future path configurations)
   langPath: 'locale/', // Default will be changed if this is a non-modular load

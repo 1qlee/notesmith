@@ -109,17 +109,17 @@ function Checkoutbar({
           <Box>
             <Content
               padding="0"
-              margin="0 0 16px"
-              h5fontweight="700"
+              margin="0 0 32px"
+              h5margin="0 0 16px"
             >
               <h5>{productData.name}</h5>
               <p>{productData.description}</p>
             </Content>
             <Content
               padding="0"
-              margin="0 0 16px"
               h5fontweight="700"
               h5fontsize="1rem"
+              h5margin="0 0 16px"
             >
               <h5>Cover color</h5>
               <ColorPicker
@@ -180,7 +180,7 @@ function Checkoutbar({
                 h4margin="0"
                 h4fontweight="700"
               >
-                <h4>{calculateTotalPrice(productData.price)}</h4>
+                <h4>{calculateTotalPrice(productData.preorderPrice)}</h4>
               </Content>
             </Flexbox>
           </Box>

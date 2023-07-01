@@ -6,7 +6,7 @@ import { CaretDown, CaretUp } from "phosphor-react"
 import Icon from "../../ui/Icon"
 
 const StyledPageBox = styled.div`
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
   display: flex;
   align-items: center;
   width: 100%;
@@ -14,7 +14,7 @@ const StyledPageBox = styled.div`
   padding: 8px;
   label, input {
     font-family: "Inter", Helvetica, Tahoma, sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     width: 100%;
   }
   label {

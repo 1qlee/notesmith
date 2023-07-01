@@ -17,6 +17,7 @@ const StyledPage = styled.a`
   flex-direction: column;
   margin: ${props => props.margin};
   position: relative;
+
   p {
     padding: 0.25rem;
     transition: 0.2s background-color, 0.2s color;
@@ -79,7 +80,8 @@ const PageBadge = styled.span`
 `
 
 const PageOutline = styled.div`
-  border: 1px solid ${props => props.bordercolor || colors.gray.nineHundred};
+  border: ${colors.borders.black};
+  border-radius: 4px;
   height: ${props => props.height || "40px"};
   background-color: ${colors.white};
   position: relative;
@@ -128,9 +130,8 @@ const GraphOutline = styled.div`
 `
 
 const PageLabel = styled.p`
-  font-family: "Inter", Helvetica, Tahoma, sans-serif;
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  margin-top: 8px;
   border-radius: 4px;
   color: ${colors.gray.sevenHundred};
 `
