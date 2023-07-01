@@ -21,7 +21,7 @@ const Footer = () => {
       <SectionContent padding={`${spacing.medium} 0`}>
         <Container xs sm md lg xl>
           <Row>
-            <Col sm={4} push={{ sm: 2 }}>
+            <Col md={4} push={{ md: 2 }}>
               <Content
                 paragraphcolor={colors.gray.oneHundred}
                 h4color={colors.gray.oneHundred}
@@ -31,7 +31,7 @@ const Footer = () => {
                 <h4>Sign up to join the waitlist for early access to all our features and notebooks</h4>
               </Content>
             </Col>
-            <Col sm={4} push={{ sm: 2 }}>
+            <Col md={4} push={{ md: 2 }}>
               <RegisterForm />
             </Col>
           </Row>

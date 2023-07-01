@@ -2,7 +2,7 @@ import React from "react"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../utils/auth"
 
-import { SectionMain, Section } from "../components/layout/Section"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
@@ -26,7 +26,9 @@ const SignUp = () => {
         className="has-max-height"
       >
         <Section>
-          <SignupForm />
+          <SectionContent padding="0">
+            <SignupForm />
+          </SectionContent>
         </Section>
       </SectionMain>
     </Layout>

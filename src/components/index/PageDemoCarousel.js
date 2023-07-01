@@ -28,11 +28,11 @@ const DemoImage = styled.div`
 `
 
 const DemoImageCaption = styled.article`
-  bottom: 0;
+  top: 0;
   padding: 16px;
   background-image: linear-gradient(180deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.75) 50%, #fff 100%);
   position: absolute;
-  right: 0;
+  left: 0;
   width: ${widths.caption};
   p {
     line-height: 1.75;
@@ -47,8 +47,8 @@ function PageDemoCarousel() {
 
   useEffect(() => {
     function advanceCarousel() {
-      if (currentPage === 4) {
-        return setCurrentPage(0)
+      if (currentPage === 5) {
+        return setCurrentPage(1)
       }
       return setCurrentPage(currentPage + 1)
     }
@@ -77,38 +77,47 @@ function PageDemoCarousel() {
         onMouseEnter={() => setPause(true)}
         onMouseLeave={() => setPause(false)}
       >
-        <StaticImage
-          src="../../images/index/splash-image-blank.png"
-          alt="Ink on paper"
-          loading="eager"
-          quality={100}
-        />
+        {currentPage === 0 ? (
+          <StaticImage
+            src="../../images/index/splash-image.jpg"
+            alt="Ink on paper"
+            loading="eager"
+            quality={100}
+          />
+        ) : (
+          <StaticImage
+            src="../../images/index/splash-image-blank.png"
+            alt="Ink on paper"
+            loading="eager"
+            quality={100}
+          />
+        )}
         <DemoImage>
-          {currentPage === 0 && (
+          {currentPage === 1 && (
             <PageDemo1
               width="100%"
               height="100%"
             />
           )}
-          {currentPage === 1 && (
+          {currentPage === 2 && (
             <PageDemo2
               width="100%"
               height="100%"
             />
           )}
-          {currentPage === 2 && (
+          {currentPage === 3 && (
             <PageDemo3
               width="100%"
               height="100%"
             />
           )}
-          {currentPage === 3 && (
+          {currentPage === 4 && (
             <PageDemo4
               width="100%"
               height="100%"
             />
           )}
-          {currentPage === 4 && (
+          {currentPage === 5 && (
             <PageDemo5
               width="100%"
               height="100%"
@@ -124,18 +133,21 @@ function PageDemoCarousel() {
             wrappercolor={colors.gray.threeHundred}
           />
           {currentPage === 0 && (
-            <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
+            <p>A5 (5.5 x 8.5") wired notebook in white with custom page layouts.</p>
           )}
           {currentPage === 1 && (
-            <p>0.25mm wide light gray dot grid, spaced 5mm apart and centrally positioned with margins on all four sides.</p>
+            <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
           )}
           {currentPage === 2 && (
-            <p>Calligraphy practice rows spaced 10mm apart with adjustable spacing on slants, descenders, and ascenders.</p>
+            <p>0.25mm wide light gray dot grid, spaced 5mm apart and centrally positioned with margins on all four sides.</p>
           )}
           {currentPage === 3 && (
-            <p>Seyes ruled grid with adjustable margins, spacing, and number of rows and columns. </p>
+            <p>Calligraphy practice rows spaced 10mm apart with adjustable spacing on slants, descenders, and ascenders.</p>
           )}
           {currentPage === 4 && (
+            <p>Seyes ruled grid with adjustable margins, spacing, and number of rows and columns. </p>
+          )}
+          {currentPage === 5 && (
             <p>Lined grid or graph paper with lines evenly spaced 10mm apart and no borders.</p>
           )}
         </DemoImageCaption>

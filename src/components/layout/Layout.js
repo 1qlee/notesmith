@@ -14,7 +14,7 @@ const StyledLayout = styled.div`
   position: relative;
   width: 100%;
   &.is-full-height {
-    height: 100vh;
+    min-height: 100vh;
   }
 `
 

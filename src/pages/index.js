@@ -156,34 +156,6 @@ const IndexPage = ({ data }) => {
           </SectionContent>
         </Section>
         <Section>
-          <SectionContent
-            padding={`${spacing.small} 0`}
-          >
-            <Container xl lg md sm xs>
-              <Row>
-                <Col>
-                  <StaticImage
-                    src="../images/index/splash-image.jpg"
-                    alt="Ink on paper"
-                    loading="eager"
-                    quality={100}
-                  />
-                </Col>
-                <Col>
-                  <StaticImage
-                    src="../images/index/splash-image-alt.jpg"
-                    alt="Ink on paper"
-                    loading="eager"
-                    quality={100}
-                  />
-                </Col>
-                <Col>
-                </Col>
-              </Row>
-            </Container>
-          </SectionContent>
-        </Section>
-        <Section>
           <SectionContent>
             <Container xl lg md sm xs>
               <Row>

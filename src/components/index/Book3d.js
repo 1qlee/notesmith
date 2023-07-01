@@ -147,9 +147,10 @@ const StyledBook3d = styled.div`
   transition: 1s ease;
   animation: 1s ease 0s 1 ${initAnimation};
   height: 100%;
+  transform: rotate3d(0,1,0,-30deg);
   width: 100%;
   &:not(.is-active) {
-    transform: ${props => props.hovered ? "rotate3d(0,1,0,-30deg)" : null};
+    transform: ${props => props.hovered ? "rotate3d(0,0,0,0)" : null};
   }
   &.is-active {
     transform: rotate3d(0,1,0,-180deg);
@@ -168,21 +169,21 @@ function Book3d({
 }) {
   const [hovered, setHovered] = useState(false)
   const [showBackCover, setShowBackCover] = useState(false)
-  const [coverColor, setCoverColor] = useState("white")
+  const [coverColor, setCoverColor] = useState("black")
   const [pageDimensions, setPageDimensions] = useState({
     height: 594.67,
     width: 361.25,
   })
   const covers = [
     {
-      "slug": "white",
-      "name": "White",
-      "hex": "#fff"
-    },
-    {
       "slug": "black",
       "name": "Black",
       "hex": "#000"
+    },
+    {
+      "slug": "white",
+      "name": "White",
+      "hex": "#fff"
     },
   ]
 
