@@ -7,10 +7,6 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
             test: /@svgedit/,
             use: loaders.null(),
           },
-          {
-            test: /use-shopping-cart/,
-            use: loaders.null(),
-          },
         ],
       },
     })
