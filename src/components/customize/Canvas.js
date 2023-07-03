@@ -1,5 +1,4 @@
 import React, { useState, useRef, useContext, useLayoutEffect } from "react"
-import { isBrowser } from "../../utils/helper-functions"
 import SvgCanvas from '@svgedit/svgcanvas'
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
@@ -43,40 +42,36 @@ function Canvas({
   })
 
   const updateContextPanel = () => {
-    if (isBrowser()) {
-      let elem = canvasState.selectedElement
-      // If element has just been deleted, consider it null
-      if (elem && !elem.parentNode) {
-        elem = null
-      }
-      if (elem) {
-        const { tagName } = elem
-        if (tagName === 'text') {
-          // we should here adapt the context to a text field
-          textRef.current.value = elem.textContent
-        }
+    let elem = canvasState.selectedElement
+    // If element has just been deleted, consider it null
+    if (elem && !elem.parentNode) {
+      elem = null
+    }
+    if (elem) {
+      const { tagName } = elem
+      if (tagName === 'text') {
+        // we should here adapt the context to a text field
+        textRef.current.value = elem.textContent
       }
     }
   }
 
   const selectedHandler = (win, elems) => {
-    if (isBrowser()) {
-      log('selectedHandler', elems)
-      const selectedElement = elems.length === 1 || !elems[1] ? elems[0] : null
-      const multiselected = (elems.length >= 2 && !!elems[1])
-      dispatchCanvasState({
-        type: 'selectedElement',
-        selectedElement,
-        multiselected,
-      })
-    }
+    log('selectedHandler', elems)
+
+    const selectedElement = elems.length === 1 || !elems[1] ? elems[0] : null
+    const multiselected = (elems.length >= 2 && !!elems[1])
+
+    dispatchCanvasState({
+      type: 'selectedElement',
+      selectedElement,
+      multiselected,
+    })
   }
 
   const changedHandler = (win, elems) => {
-    if (isBrowser()) {
-      log('changedHandler', { elems })
-      dispatchCanvasState({ type: 'updated', updated: true })
-    }
+    log('changedHandler', { elems })
+    dispatchCanvasState({ type: 'updated', updated: true })
   }
 
   const svgUpdateHandler = (svgString) => {
@@ -86,17 +81,17 @@ function Canvas({
   }
 
   const contextsetHandler = (win, context) => {
-    isBrowser() && dispatchCanvasState({ type: 'context', context })
+    dispatchCanvasState({ type: 'context', context })
   }
 
   const onKeyUp = (event) => {
-    isBrowser() && dispatchCanvasState({ type: 'setTextContent', text: event.target.value })
+    dispatchCanvasState({ type: 'setTextContent', text: event.target.value })
   }
 
   const onKeyDown = (event) => {
     if (event.key === 'Backspace' && event.target.tagName !== 'INPUT') {
       event.preventDefault()
-      isBrowser() && dispatchCanvasState({ type: 'deleteSelectedElements' })
+      dispatchCanvasState({ type: 'deleteSelectedElements' })
     }
   }
 
@@ -122,17 +117,21 @@ function Canvas({
   }
 
   useLayoutEffect(() => {
-    if (isBrowser()) {
-      const editorDom = svgcanvasRef.current
-      const canvas = new SvgCanvas(editorDom, config)
-      updateCanvas(canvas, editorDom, config, true)
-      canvas.textActions.setInputElem(textRef.current)
-      Object.entries(eventList).forEach(([eventName, eventHandler]) => {
-        canvas.bind(eventName, eventHandler)
-      })
-      dispatchCanvasState({ type: 'init', canvas, svgcanvas: editorDom, config })
-      document.addEventListener('keydown', onKeyDown.bind(canvas))
-    }
+    const editorDom = svgcanvasRef.current
+    const canvas = new SvgCanvas(editorDom, config)
+
+    updateCanvas(canvas, editorDom, config, true)
+
+    canvas.textActions.setInputElem(textRef.current)
+
+    Object.entries(eventList).forEach(([eventName, eventHandler]) => {
+      canvas.bind(eventName, eventHandler)
+    })
+
+    dispatchCanvasState({ type: 'init', canvas, svgcanvas: editorDom, config })
+
+    document.addEventListener('keydown', onKeyDown.bind(canvas))
+
     return () => {
       // cleanup function
       console.log('cleanup')
@@ -141,20 +140,24 @@ function Canvas({
   }, [])
 
   useLayoutEffect(() => {
-    if (isBrowser()) {
-      log('new svgContent', svgContent.length)
-      if (!canvasState.canvas) return
-      oiAttributes.current = sanitizeSvg.saveOIAttr(svgContent)
-      canvasState.canvas.clear()
-      console.log(canvasState.canvas)
-      const success = canvasState.canvas.setSvgString(svgContent.replace(/'/g, "\\'"), true) // true => prevent undo
-      updateCanvas(canvasState.canvas, svgcanvasRef.current, config, true)
-      if (!success) throw new Error('Error loading SVG')
-      dispatchCanvasState({ type: 'updated', updated: false })
-    }
+    log('new svgContent', svgContent.length)
+
+    if (!canvasState.canvas) return
+
+    oiAttributes.current = sanitizeSvg.saveOIAttr(svgContent)
+
+    canvasState.canvas.clear()
+
+    const success = canvasState.canvas.setSvgString(svgContent.replace(/'/g, "\\'"), true) // true => prevent undo
+
+    updateCanvas(canvasState.canvas, svgcanvasRef.current, config, true)
+
+    if (!success) throw new Error('Error loading SVG')
+
+    dispatchCanvasState({ type: 'updated', updated: false })
   }, [svgContent, canvasState.canvas])
 
-  isBrowser() && updateContextPanel()
+  updateContextPanel()
 
   return (
     <>
