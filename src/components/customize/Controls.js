@@ -4,7 +4,7 @@ import { colors, widths } from "../../styles/variables"
 
 import Controlsbar from "./bars/Controlsbar"
 import Templatesbar from "./bars/Templatesbar"
-import Checkoutbar from "./Bars/Checkoutbar"
+import Checkoutbar from "./bars/Checkoutbar"
 
 const StyledControls = styled.div`
   border-left: ${colors.borders.black};

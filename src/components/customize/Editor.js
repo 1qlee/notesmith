@@ -10,7 +10,7 @@ import { isBrowser } from "../../utils/helper-functions"
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
-import ApplyTemplateModal from "./Modals/ApplyTemplateModal"
+import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./modals/CheckLoginModal"
 import CreateBookModal from "./modals/CreateBookModal"
