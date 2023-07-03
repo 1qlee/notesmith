@@ -1,10 +1,11 @@
 import React from "react"
 import { graphql, navigate } from "gatsby"
+import { isBrowser } from "../../../../utils/helper-functions"
 
 const DefaultProductPage = ({ data }) => {
   const { products } = data
 
-  navigate(`/products/${products.category}/${products.slug}/${products.colors[0].slug}`, { replace: true })
+  isBrowser() && navigate(`/products/${products.category}/${products.slug}/${products.colors[0].slug}`, { replace: true })
 
   return (
     <div>

@@ -6,7 +6,6 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
-import Nav from "../components/layout/Nav"
 
 const SignUp = () => {
   const { user, loading } = useFirebaseContext()
@@ -20,8 +19,10 @@ const SignUp = () => {
   }
 
   return (
-    <Layout className="is-full-height">
-      <Nav />
+    <Layout 
+      title="Sign up for an account"
+      className="is-full-height"
+    >
       <SectionMain
         className="has-max-height"
       >

@@ -62,8 +62,12 @@ function convertUnix(timestamp) {
   return formattedDate
 }
 
+const isBrowser = () => typeof window !== "undefined" && document
+
+
 export {
   createAttributes,
   svgToObjects,
   convertUnix,
+  isBrowser,
 }

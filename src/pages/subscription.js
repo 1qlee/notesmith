@@ -6,7 +6,6 @@ import { get, ref, set } from "firebase/database"
 import { SectionMain, Section } from "../components/layout/Section"
 import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
 import Box from "../components/ui/Box"
 import { widths } from "../styles/variables"
 import Content from "../components/ui/Content"
@@ -85,8 +84,11 @@ const Subscription = ({ location }) => {
   }, [location, loading])
 
   return (
-    <Layout loading={processing} className="is-full-height">
-      <Nav />
+    <Layout 
+      title="Subscriptions"
+      loading={processing} 
+      className="is-full-height"
+    >
       <SectionMain
         className="has-max-height"
       >

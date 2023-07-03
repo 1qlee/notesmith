@@ -4,17 +4,13 @@ import { spacing, colors } from "../styles/variables"
 import Layout from "../components/layout/Layout"
 import { Container, Row, Col } from "react-grid-system"
 import RegisterForm from "../components/form/RegisterForm"
-import Nav from "../components/layout/Nav"
-import Seo from "../components/layout/Seo"
 import { Section, SectionMain, SectionContent } from "../components/layout/Section"
 import Content from "../components/ui/Content"
 import { StyledLabel } from "../components/form/FormComponents"
 
 const Waitlist = () => {
   return (
-    <Layout>
-      <Seo title="Pre-order waitlist" />
-      <Nav />
+    <Layout title="Join the pre-order waitlist">
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent

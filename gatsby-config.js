@@ -8,7 +8,7 @@ module.exports = {
     description: `Design and create your own unique notebook with fully customizable pages.`,
     username: `@notesmith`,
     url: `https://www.notesmithbooks.com/`,
-    image: "/meta-image.jpg"
+    image: "/stacked-books.jpg"
   },
   plugins: [
     {

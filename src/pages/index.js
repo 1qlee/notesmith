@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { graphql, Link } from "gatsby"
+import { graphql } from "gatsby"
 import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "phosphor-react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
@@ -16,7 +16,6 @@ import Content from "../components/ui/Content"
 import DemoControls from "../components/index/DemoControls"
 import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
 import { Patterns, Pattern } from "../components/misc/Patterns"
@@ -85,9 +84,7 @@ const IndexPage = ({ data }) => {
   }
 
   return (
-    <Layout>
-      <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
-      <Nav hideNavbar={false}></Nav>
+    <Layout title="Made-to-order notebooks crafted with your unique, custom printed pages">
       <Patterns 
         color={colors.gray.twoHundred} 
       />

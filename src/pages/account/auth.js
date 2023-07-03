@@ -8,7 +8,6 @@ import { Section, SectionMain } from "../../components/layout/Section"
 import ResetPwForm from "../../components/form/ResetPwForm"
 import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
-import Nav from "../../components/layout/Nav"
 import Loader from "../../components/misc/Loader"
 
 function Auth({ location }) {
@@ -94,7 +93,6 @@ function Auth({ location }) {
 
   return (
     <Layout>
-      <Nav />
       {loading ? (
         <Loader />
       ) : (

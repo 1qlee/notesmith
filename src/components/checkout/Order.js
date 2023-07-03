@@ -6,7 +6,7 @@ import { ArrowSquareOut, CircleNotch } from "phosphor-react"
 import { convertUnix } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { get, ref } from "firebase/database"
-import { useShoppingCart } from "use-shopping-cart"
+import { useShoppingCart } from "../../hooks/useShoppingCart"
 import { Container, Col, Row } from "react-grid-system"
 
 import { SectionMain, Section, SectionContent } from "../layout/Section"
@@ -19,8 +19,6 @@ import Content from "../ui/Content"
 import Notification from "../ui/Notification"
 import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
-import Nav from "../layout/Nav"
-import Seo from "../layout/Seo"
 import Tag from "../ui/Tag"
 
 const PlaceholderLine = styled.div`
@@ -184,9 +182,9 @@ const Order = ({ location, orderId }) => {
   }
 
   return (
-    <Layout>
-      <Seo title="Order Summary" />
-      <Nav />
+    <Layout 
+      title="Order Summary" 
+    >
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent

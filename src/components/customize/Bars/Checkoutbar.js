@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { colors } from "../../../styles/variables"
-import { useShoppingCart } from 'use-shopping-cart'
+import { useShoppingCart } from '../../../hooks/useShoppingCart'
 import { useFirebaseContext } from "../../../utils/auth"
 import { navigate } from "gatsby"
 import { CircleNotch } from "phosphor-react"

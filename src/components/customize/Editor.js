@@ -6,6 +6,7 @@ import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
+import { isBrowser } from "../../utils/helper-functions"
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
@@ -129,7 +130,7 @@ const Editor = ({
           }
           else {
             // else redirect the user to the generic editor page (based on the product they had selected)
-            navigate(`/customize/${productData.slug}`)
+            isBrowser() && navigate(`/customize/${productData.slug}`)
           }
         }
         // if the book doesn't exist

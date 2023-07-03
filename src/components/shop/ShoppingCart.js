@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { colors, convertToDecimal, fonts, widths } from "../../styles/variables"
-import { useShoppingCart } from "use-shopping-cart"
+import { useShoppingCart } from "../../hooks/useShoppingCart"
 import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
@@ -18,10 +18,8 @@ function ShoppingCart() {
     cartDetails,
     setItemQuantity,
     removeItem,
-    totalPrice,
     formattedTotalPrice
   } = useShoppingCart()
-  console.log(totalPrice)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
 

@@ -5,7 +5,6 @@ import { useFirebaseContext } from "../utils/auth"
 import { SectionMain, Section } from "../components/layout/Section"
 import SigninForm from "../components/form/SigninForm"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
 import Loader from "../components/misc/Loader"
 
 const Signin = () => {
@@ -20,8 +19,10 @@ const Signin = () => {
   }
 
   return (
-    <Layout className="is-full-height">
-      <Nav />
+    <Layout 
+      title="Sign into your account"
+      className="is-full-height"
+    >
       <SectionMain
         className="has-max-height"
       >

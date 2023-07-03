@@ -3,14 +3,12 @@ import { graphql, navigate } from "gatsby"
 import { colors, convertToPx, spacing, pageMargins } from "../../../../styles/variables"
 import { toast } from 'react-toastify'
 
-import { Container, Row, Col, setConfiguration } from 'react-grid-system'
+import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
 import Toastify from "../../../../components/ui/Toastify"
-import Nav from "../../../../components/layout/Nav"
 import ProductImages from "../../../../components/shop/ProductImages"
 import ProductInfo from "../../../../components/shop/ProductInfo"
-import Seo from "../../../../components/layout/Seo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
 import ProductDescription from "../../../../components/shop/ProductDescription"
@@ -114,9 +112,9 @@ const ProductPage = ({ data, params }) => {
   }, [productData, bookData, coverColor, pageData])
 
   return (
-    <Layout>
-      <Seo title={bookData.name} />
-      <Nav />
+    <Layout
+      title={bookData.name}
+    >
       <SectionMain>
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>

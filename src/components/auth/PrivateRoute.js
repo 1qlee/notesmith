@@ -6,7 +6,6 @@ import sendEmailVerification from "../../functions/sendEmailVerification"
 import { AuthFormWrapper } from "../form/FormComponents"
 import { Section, SectionMain } from "../layout/Section"
 import Layout from "../layout/Layout"
-import Nav from "../layout/Nav"
 import Content from "../ui/Content"
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
@@ -49,7 +48,6 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
   if (user && !user.emailVerified) {
     return (
       <Layout>
-        <Nav />
         <SectionMain
           className="has-max-height"
         >

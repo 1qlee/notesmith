@@ -13,7 +13,6 @@ import {
   getDatabase, 
 } from "firebase/database"
 
-export const isBrowser = () => typeof window !== "undefined"
 
 const defaultContext = {
   loading: false,

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { colors, fonts } from "../../styles/variables"
-import { useShoppingCart } from 'use-shopping-cart'
+import { colors,  } from "../../styles/variables"
+import { useShoppingCart } from '../../hooks/useShoppingCart'
 import { v4 as uuidv4 } from 'uuid'
 import { useFirebaseContext } from "../../utils/auth"
 import 'react-tooltip/dist/react-tooltip.css';
@@ -26,9 +26,10 @@ const ProductInfo = ({
   setPageData,
   toast,
 }) => {
+  // <s><span style={{color: colors.gray.sixHundred}}>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}
   const { user } = useFirebaseContext()
-  const showWarningMsg = !rightPageData.template || !leftPageData.template
   const { addItem } = useShoppingCart()
+  const showWarningMsg = !rightPageData.template || !leftPageData.template
   const [itemQuantity, setItemQuantity] = useState(1)
 
   function handleAddCartButton(bookData) {
@@ -76,27 +77,6 @@ const ProductInfo = ({
       >
         <h1>{bookData.name}</h1>
       </Content>
-      <Flexbox
-        alignitems="center"
-        margin="0 0 32px"
-      >
-        <Content
-          h2fontsize="2rem"
-          h2fontweight="400"
-          h2margin="0"
-          headingfontfamily={fonts.secondary}
-        >
-          <h2><s><span style={{color: colors.gray.sixHundred}}>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}</h2>
-        </Content>
-        <Tag
-          backgroundcolor={colors.white}
-          border={colors.borders.black}
-          color={colors.gray.nineHundred}
-          margin="0 0 0 8px"
-        >
-          Pre-order price (25% off)
-        </Tag>
-      </Flexbox>
       <Content
         paragraphfontsize="1.25rem"
         margin="0 0 32px"

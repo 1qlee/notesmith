@@ -3,9 +3,10 @@ import { navigate } from "gatsby"
 import { colors, fonts, spacing, convertToDecimal } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js'
-import { useShoppingCart } from "use-shopping-cart"
+import { useShoppingCart } from "../hooks/useShoppingCart"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
+import { isBrowser } from "../utils/helper-functions"
 
 import { AccordionTab } from "../components/checkout/Accordion"
 import { Flexbox } from "../components/layout/Flexbox"
@@ -17,8 +18,6 @@ import CheckoutForm from "../components/form/CheckoutForm"
 import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
-import Nav from "../components/layout/Nav"
-import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
@@ -26,13 +25,17 @@ import ValidateAddressModal from "../components/checkout/modals/ValidateAddressM
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
 const Checkout = () => {
-  const { cartDetails, totalPrice, clearCart } = useShoppingCart()
+  const { cartDetails, totalPrice } = useShoppingCart()
   // array to store cartItems
   const cartItems = []
-  // push all product objects in cartDetails to an array
-  for (const cartItem in cartDetails) {
-    cartItems.push(cartDetails[cartItem])
+
+  if (isBrowser()) {
+    // push all product objects in cartDetails to an array
+    for (const cartItem in cartDetails) {
+      cartItems.push(cartDetails[cartItem])
+    }
   }
+
   const breadcrumbItems = [
     {
       text: "Cart",
@@ -55,11 +58,6 @@ const Checkout = () => {
     msg: "Selection required",
     color: colors.red.oneHundred,
     background: colors.red.sixHundred,
-  })
-  const [checkoutStatus, setCheckoutStatus] = useState({
-    msg: "",
-    color: "",
-    background: "",
   })
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
@@ -93,8 +91,8 @@ const Checkout = () => {
     postal_code: "",
     country: "US",
   })
-  const isCartEmpty = Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
-  const pid = localStorage.getItem("pid")
+  const isCartEmpty = !cartDetails || Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
+  const pid = isBrowser() && localStorage.getItem("pid")
   const elementsOptions = {
     clientSecret: clientSecret,
     fonts: [
@@ -284,14 +282,15 @@ const Checkout = () => {
   }
 
   return (
-    <Layout loading={loading}>
+    <Layout 
+      title="Checkout"
+      loading={loading}
+    >
       {clientSecret && (
         <Elements
           stripe={stripePromise}
           options={elementsOptions}
         >
-          <Seo title="Checkout" />
-          <Nav />
           {!paymentProcessing ? (
             <SectionMain className="has-max-height">
               <Section>

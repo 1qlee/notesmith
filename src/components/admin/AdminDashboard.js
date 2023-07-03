@@ -16,6 +16,7 @@ import Button from "../ui/Button"
 import Progress from "../ui/Progress"
 import { Modal, ModalContent, ModalHeader, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
+import Layout from "../layout/Layout"
 import Toastify from "../ui/Toastify"
 
 const notebookSizes = [
@@ -353,101 +354,103 @@ const AdminDashboard = () => {
   }
 
   return (
-    <SectionMain
-      className="has-max-height"
-    >
-      <Section>
-        <SectionContent
-          padding={spacing.normal}
-        >
-          <Container>
-            <Row>
-              <Col>
-                <Button
-                  onClick={() => {
-                    setShowModal({ show: true })
-                  }}
-                  margin="0 16px 0 0"
-                >
-                  Download unprinted books
-                </Button>
-                <Button
-                  onClick={() => addToEarlyAccess()}
-                  margin="0 16px 0 0"
-                >
-                  Add user to early access
-                </Button>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-              </Col>
-            </Row>
-          </Container>
-          {showModal.show && (
-            <Modal
-              setShowModal={setShowModal}
-            >
-              <ModalHeader>
-                Choose book size
-              </ModalHeader>
-              <ModalContent>
-                {notebookSizes.map((size, index) => (
+    <Layout>
+      <SectionMain
+        className="has-max-height"
+      >
+        <Section>
+          <SectionContent
+            padding={spacing.normal}
+          >
+            <Container>
+              <Row>
+                <Col>
                   <Button
-                    key={size}
-                    onClick={() => setActiveBookSize(notebookSizes[index])}
+                    onClick={() => {
+                      setShowModal({ show: true })
+                    }}
                     margin="0 16px 0 0"
-                    backgroundcolor={activeBookSize === notebookSizes[index] ? colors.gray.nineHundred : colors.gray.oneHundred}
-                    color={activeBookSize === notebookSizes[index] ? colors.gray.oneHundred : colors.gray.nineHundred}
                   >
-                    {size}
+                    Download unprinted books
                   </Button>
-                ))}
-              </ModalContent>
-              {toBeDownloaded > 0 && (
-                <Content
-                  margin="0 0 16px"
-                >
-                  <Progress
-                    wrappercolor={colors.gray.twoHundred}
-                    barcolor={colors.gray.nineHundred}
-                    completion={downloadPct}
-                  />
-                  <p>
-                    {downloadPct}% ({downloaded} of {toBeDownloaded}) {convertTime(timeElapsed)}
-                  </p> 
-                </Content>
-              )}
-              <ModalFooter
-                justifycontent="flex-end"
+                  <Button
+                    onClick={() => addToEarlyAccess()}
+                    margin="0 16px 0 0"
+                  >
+                    Add user to early access
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                </Col>
+              </Row>
+            </Container>
+            {showModal.show && (
+              <Modal
+                setShowModal={setShowModal}
               >
-                <Button
-                  onClick={() => {
-                    setShowModal({ show: false })
-                    abortRef.current = true
-                  }}
-                  margin="0 8px 0 0"
-                  backgroundcolor={colors.gray.oneHundred}
-                  color={colors.gray.nineHundred}
+                <ModalHeader>
+                  Choose book size
+                </ModalHeader>
+                <ModalContent>
+                  {notebookSizes.map((size, index) => (
+                    <Button
+                      key={size}
+                      onClick={() => setActiveBookSize(notebookSizes[index])}
+                      margin="0 16px 0 0"
+                      backgroundcolor={activeBookSize === notebookSizes[index] ? colors.gray.nineHundred : colors.gray.oneHundred}
+                      color={activeBookSize === notebookSizes[index] ? colors.gray.oneHundred : colors.gray.nineHundred}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </ModalContent>
+                {toBeDownloaded > 0 && (
+                  <Content
+                    margin="0 0 16px"
+                  >
+                    <Progress
+                      wrappercolor={colors.gray.twoHundred}
+                      barcolor={colors.gray.nineHundred}
+                      completion={downloadPct}
+                    />
+                    <p>
+                      {downloadPct}% ({downloaded} of {toBeDownloaded}) {convertTime(timeElapsed)}
+                    </p>
+                  </Content>
+                )}
+                <ModalFooter
+                  justifycontent="flex-end"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  disabled={!activeBookSize}
-                  onClick={() => {
-                    downloadBooks(activeBookSize)
-                    abortRef.current = false
-                  }}
-                >
-                  Download
-                </Button>
-              </ModalFooter>
-            </Modal>
-          )}
-        </SectionContent>
-      </Section>
-      <Toastify />
-    </SectionMain>
+                  <Button
+                    onClick={() => {
+                      setShowModal({ show: false })
+                      abortRef.current = true
+                    }}
+                    margin="0 8px 0 0"
+                    backgroundcolor={colors.gray.oneHundred}
+                    color={colors.gray.nineHundred}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={!activeBookSize}
+                    onClick={() => {
+                      downloadBooks(activeBookSize)
+                      abortRef.current = false
+                    }}
+                  >
+                    Download
+                  </Button>
+                </ModalFooter>
+              </Modal>
+            )}
+          </SectionContent>
+        </Section>
+        <Toastify />
+      </SectionMain>
+    </Layout>
   )
 }
 

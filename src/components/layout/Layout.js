@@ -4,6 +4,8 @@ import { colors } from "../../styles/variables"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
+import Seo from "./Seo"
+import Nav from "./Nav"
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
 
@@ -18,10 +20,14 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ loading, children, className, backgroundcolor }) => {
+const Layout = ({ title, loading, children, className, backgroundcolor }) => {
 
   return (
     <StyledLayout className={className} backgroundcolor={backgroundcolor}>
+      <Seo 
+        title={title}
+      />
+      <Nav />
       {children}
       {loading && (
         <Loader />

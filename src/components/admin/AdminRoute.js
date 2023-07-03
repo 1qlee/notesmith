@@ -1,6 +1,7 @@
 import React from "react"
 import { navigate } from "gatsby"
-import { useFirebaseContext, isBrowser } from "../../utils/auth"
+import { useFirebaseContext } from "../../utils/auth"
+import { isBrowser } from "../../utils/helper-functions"
 
 const AdminRoute = ({ component: Component, location, ...rest }) => {
   const { user, loading } = useFirebaseContext()

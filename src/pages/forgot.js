@@ -7,7 +7,6 @@ import { Container, LayoutContainer } from "../components/layout/Container"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
 import Loader from "../components/misc/Loader"
 
 const Forgot = () => {
@@ -22,8 +21,10 @@ const Forgot = () => {
   }
 
   return (
-    <Layout className="is-full-height">
-      <Nav />
+    <Layout 
+      title="Password recovery"
+      className="is-full-height"
+    >
       <SectionMain
         className="has-max-height"
       >

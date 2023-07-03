@@ -17,9 +17,6 @@ import NewBookModal from "./modals/AppNewBookModal"
 const UserBooks = ({ allProducts }) => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
-  const { uid } = user
-  const booksRef = ref(firebaseDb, "books/")
-  const pagesRef = ref(firebaseDb, "pages/")
   const [processing, setProcessing] = useState(true)
   const [bookData, setBookData] = useState({
     size: "",
@@ -49,7 +46,7 @@ const UserBooks = ({ allProducts }) => {
       }
 
       // get all books that match the user's uid
-      onValue(query(booksRef, orderByChild('uid'), equalTo(uid)), (snapshot) => {
+      onValue(query(ref(firebaseDb, "books"), orderByChild('uid'), equalTo(user.uid)), (snapshot) => {
         const booksArray = []
         // push them into an array const
         snapshot.forEach(book => {
@@ -192,9 +189,9 @@ const UserBooks = ({ allProducts }) => {
     // remove the book from the books collection
     remove(ref(firebaseDb, `books/${book.id}`)).then(() => {
       // remove the book from user's 'books'
-      remove(ref(firebaseDb, `users/${uid}/books/${book.id}`))
+      remove(ref(firebaseDb, `users/${user.uid}/books/${book.id}`))
       // delete all pages that belong to this bookId
-      get(query(pagesRef, orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
+      get(query(ref(firebaseDb, "pages"), orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
         snapshot.forEach(child => {
           remove(ref(firebaseDb, `pages/${child.key}`))
         })
@@ -211,16 +208,16 @@ const UserBooks = ({ allProducts }) => {
 
   function duplicateBook(book) {
     // create a new key
-    const newBookKey = push(booksRef).key
+    const newBookKey = push(ref(firebaseDb, "books")).key
     // keep track of each page within this object
     const pagesObject = {}
 
     // get all pages for this bookId
-    get(query(pagesRef, orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
+    get(query(ref(firebaseDb, "pages"), orderByChild('bookId'), equalTo(book.id))).then((snapshot) => {
       snapshot.forEach(child => {
         const page = child.val()
         // create a new page key (id)
-        const newPageKey = push(pagesRef).key
+        const newPageKey = push(ref(firebaseDb, "pages")).key
         // creating key:value pairs for old page id to new page id
         pagesObject[page.id] = newPageKey
 
@@ -229,7 +226,7 @@ const UserBooks = ({ allProducts }) => {
           "bookId": newBookKey,
           "svg": page.svg,
           "id": newPageKey,
-          "uid": uid,
+          "uid": user.uid,
         })
       })
     }).then(() => {
@@ -255,12 +252,12 @@ const UserBooks = ({ allProducts }) => {
         "size": book.size,
         "slug": book.slug,
         "title": `${book.title} (Copy)`,
-        "uid": uid,
+        "uid": user.uid,
         "widthInch": book.widthInch,
         "widthPixel": book.widthPixel,
       }).then(() => {
         // afterwards, log that book id into 'users/userId/books/bookId'
-        set(ref(firebaseDb, `users/${uid}/books/${newBookKey}`), true)
+        set(ref(firebaseDb, `users/${user.uid}/books/${newBookKey}`), true)
       })
     }).catch(error => {
       toast.error("Failed to duplicate book.")

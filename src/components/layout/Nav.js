@@ -3,11 +3,74 @@ import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { useShoppingCart } from "use-shopping-cart"
+import { useShoppingCart } from "../../hooks/useShoppingCart"
 
 import { Container, setConfiguration } from "react-grid-system"
 import Banner from "../ui/Banner"
 import Logo from "../misc/Logo"
+
+// {
+//   user ? (
+//     <>
+//       <NavItem>
+//         <NavLink
+//           to="/account/dashboard"
+//           color={colors.gray.nineHundred}
+//         >
+//           Dashboard
+//         </NavLink>
+//       </NavItem>
+//       <NavItem>
+//         <NavLink
+//           as="a"
+//           tabIndex={0}
+//           onClick={() => handleSignOut()}
+//           color={colors.gray.nineHundred}
+//         >
+//           Sign out
+//         </NavLink>
+//       </NavItem>
+//     </>
+//   ) : (
+//     <>
+//       <NavItem>
+//         <NavLink
+//           to="/signin"
+//           color={colors.gray.nineHundred}
+//         >
+//           Sign in
+//         </NavLink>
+//       </NavItem>
+//       <NavItem
+//         className="last-item"
+//       >
+//         <NavLink
+//           to="/signup"
+//           color={colors.gray.nineHundred}
+//         >
+//           Sign up
+//         </NavLink>
+//       </NavItem>
+//     </>
+//   )
+// }
+// <NavSection
+//   justifycontent="flex-end"
+// >
+//   <NavItem>
+//     <NavLink
+//       to="/cart"
+//       color={colors.gray.nineHundred}
+//     >
+//       Cart
+//       {cartCount > 0 && (
+//         <CartCounter>
+//           ({cartCount})
+//         </CartCounter>
+//       )}
+//     </NavLink>
+//   </NavItem>
+// </NavSection>
 
 const StyledNav = styled.nav`
   width: 100%;
@@ -67,7 +130,7 @@ const CartCounter = styled.span`
   margin-left: 0.25rem;
 `
 
-function Nav(props) {
+const Nav = ({ hideNavbar }) => {
   setConfiguration({ gutterWidth: 64 })
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount, clearCart } = useShoppingCart()
@@ -87,7 +150,7 @@ function Nav(props) {
         }}
       />
       <Container xl lg md sm xs>
-        <HorizontalNav hideNavbar={props.hideNavbar}>
+        <HorizontalNav hideNavbar={hideNavbar}>
           <NavSection>
             <Link to="/">
               <NavLogo>
@@ -106,67 +169,8 @@ function Nav(props) {
                     Shop
                   </NavLink>
                 </NavItem>
-                {user ? (
-                  <>
-                    <NavItem>
-                      <NavLink
-                        to="/account/dashboard"
-                        color={colors.gray.nineHundred}
-                      >
-                        Dashboard
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        as="a"
-                        tabIndex={0}
-                        onClick={() => handleSignOut()}
-                        color={colors.gray.nineHundred}
-                      >
-                        Sign out
-                      </NavLink>
-                    </NavItem>
-                  </>
-                ) : (
-                  <>
-                    <NavItem>
-                      <NavLink
-                        to="/signin"
-                        color={colors.gray.nineHundred}
-                      >
-                        Sign in
-                      </NavLink>
-                    </NavItem>
-                    <NavItem
-                      className="last-item"
-                    >
-                      <NavLink
-                        to="/signup"
-                        color={colors.gray.nineHundred}
-                      >
-                        Sign up
-                      </NavLink>
-                    </NavItem>
-                  </>
-                )}
               </NavSection>
-              <NavSection
-                justifycontent="flex-end"
-              >
-                <NavItem>
-                  <NavLink
-                    to="/cart"
-                    color={colors.gray.nineHundred}
-                  >
-                    Cart
-                    {cartCount > 0 && (
-                      <CartCounter>
-                        ({cartCount})
-                      </CartCounter>
-                    )}
-                  </NavLink>
-                </NavItem>
-              </NavSection>
+              <NavSection></NavSection>
             </>
           )}
         </HorizontalNav>
@@ -174,6 +178,5 @@ function Nav(props) {
     </StyledNav>
   )
 }
-
 
 export default Nav

@@ -4,15 +4,13 @@ import { spacing } from "../styles/variables"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import ShoppingCart from "../components/shop/ShoppingCart"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
-import Seo from "../components/layout/Seo"
 import { Container } from "react-grid-system"
 
 const Cart = () => {
   return (
-    <Layout>
-      <Seo title="Your cart" />
-      <Nav />
+    <Layout
+      title="Your cart"
+    >
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
