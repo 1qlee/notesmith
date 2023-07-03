@@ -7,7 +7,7 @@ module.exports = {
     title: `Notesmith`,
     description: `Design and create your own unique notebook with fully customizable pages.`,
     username: `@notesmith`,
-    siteUrl: `https://www.notesmithbooks.com`,
+    url: `https://www.notesmithbooks.com`,
     image: "/stacked-books.jpg"
   },
   plugins: [
