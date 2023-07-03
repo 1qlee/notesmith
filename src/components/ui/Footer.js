@@ -1,17 +1,13 @@
 import React from "react"
-import styled from "styled-components"
+import { Link } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
 
 import { Section, SectionContent } from "../layout/Section"
-import { Container, LayoutContainer } from "../layout/Container"
-import { Grid, Cell } from "styled-css-grid"
-import Content from "../Content"
-import Logo from "../Logo"
-
-const StyledFooter = styled.footer`
-  width: 100%;
-  height: 100%;
-`
+import { Container, Row, Col } from 'react-grid-system'
+import Divider from "../layout/Divider"
+import RegisterForm from "../form/RegisterForm"
+import Content from "../ui/Content"
+import Logo from "../misc/Logo"
 
 function getDate() {
   const d = new Date()
@@ -21,31 +17,45 @@ function getDate() {
 
 const Footer = () => {
   return (
-    <Section backgroundcolor={colors.primary.sixHundred}>
-      <Container>
-        <LayoutContainer>
-          <SectionContent spacing={spacing.large}>
-            <StyledFooter>
-              <Grid
-                columns="repeat(auto-fit,minmax(120px,1fr))"
-                columnGap={spacing.normal}
-                rowGap={spacing.normal}
+    <Section backgroundcolor={colors.gray.nineHundred}>
+      <SectionContent padding={`${spacing.medium} 0`}>
+        <Container xs sm md lg xl>
+          <Row>
+            <Col md={4} push={{ md: 2 }}>
+              <Content
+                paragraphcolor={colors.gray.oneHundred}
+                h4color={colors.gray.oneHundred}
+                h4fontweight="400"
+                h4margin="0 0 0.5rem"
               >
-                <Cell>
-                  <Content
-                    paragraphcolor={colors.primary.whiteLight}
-                  >
-                    <Logo color={colors.primary.white} />
-                    <p>
-                      © {getDate()} Notesmith LLC. All rights reserved.
-                    </p>
-                  </Content>
-                </Cell>
-              </Grid>
-            </StyledFooter>
-          </SectionContent>
-        </LayoutContainer>
-      </Container>
+                <h4>Sign up to join the waitlist for early access to all our features and notebooks</h4>
+              </Content>
+            </Col>
+            <Col md={4} push={{ md: 2 }}>
+              <RegisterForm />
+            </Col>
+          </Row>
+          <Row>
+            <Divider margin="16px" backgroundcolor={colors.gray.sixHundred} />
+          </Row>
+          <Row>
+            <Col lg={4}>
+              <Content
+                paragraphcolor={colors.gray.oneHundred}
+              >
+                <Link
+                  to="/"
+                >
+                  <Logo color={colors.gray.oneHundred} />
+                </Link>
+                <p>
+                  © {getDate()} Notesmith LLC.
+                </p>
+              </Content>
+            </Col>
+          </Row>
+        </Container>
+      </SectionContent>
     </Section>
   )
 }

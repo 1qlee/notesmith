@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from "react"
-import { colors, convertToPx } from "../../styles/variables"
-import { Minus, Plus } from "phosphor-react"
+import React from "react"
 
-import { StyledFieldset, StyledSelect, StyledLabel, StyledInput } from "../form/FormComponents"
+import { StyledFieldset, StyledSelect, StyledLabel } from "../form/FormComponents"
 import { ProductDetails } from "../shop/ShopComponents"
-import Content from "../Content"
-import Button from "../Button"
-import Icon from "../Icon"
+import Content from "../ui/Content"
+import Button from "../ui/Button"
 
 const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
   return (
@@ -24,7 +21,7 @@ const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
           <StyledLabel>Templates</StyledLabel>
           <StyledSelect
             padding="0.5rem"
-            borderradius="0.25rem"
+            borderradius="0"
             value={pageData.type}
             onChange={e => setPageData({...pageData, type: e.target.value})}
           >

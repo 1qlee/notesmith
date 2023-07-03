@@ -1,14 +1,15 @@
 import React, { useState } from "react"
-import { colors, regex } from "../../styles/variables"
+import { colors, regex, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
+import { Warning, CircleNotch } from "phosphor-react"
+import { reauthenticateWithCredential, updateEmail as fbUpdateEmail, updatePassword as fbUpdatePassword } from "firebase/auth"
 
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"
-import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "./FormComponents"
+import { StyledInput, StyledFieldset, StyledLabel, ErrorLine } from "./FormComponents"
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
-import Content from "../Content"
-import Icon from "../Icon"
-import Button from "../Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
+import Button from "../ui/Button"
 
 function SettingsForm() {
   const { user, getAuthCredential } = useFirebaseContext()
@@ -99,8 +100,11 @@ function SettingsForm() {
 
   // update email and present errors
   function updateEmail() {
-    user.updateEmail(newEmail).then(() => {
+    setLoading(true)
+
+    fbUpdateEmail(user, newEmail).then(() => {
       saveChanges()
+      setLoading(false)
     }).catch(error => {
       // handle various error-codes and show their respective error messages
       switch(error.code) {
@@ -132,13 +136,17 @@ function SettingsForm() {
         default:
           setShowSettingsForm(true)
       }
+
+      setLoading(false)
     })
   }
 
   // function to update password
   function updatePassword() {
-    user.updatePassword(newPassword).then(res => {
+    setLoading(true)
+    fbUpdatePassword(user, newPassword).then(() => {
       saveChanges()
+      setLoading(false)
     }).catch(error => {
       if (error.code === "auth/requires-recent-login") {
         setShowModal({
@@ -150,6 +158,7 @@ function SettingsForm() {
       else {
         console.log(error.message)
       }
+      setLoading(false)
     })
   }
 
@@ -167,8 +176,7 @@ function SettingsForm() {
     e.preventDefault()
     setLoading(true)
     if (showModal.process === "reauthentication") {
-      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
-      .then(res => {
+      reauthenticateWithCredential(user, getAuthCredential(user.email, reauthenticatedPassword)).then(res => {
         updateEmail()
         clearError("email")
         clearError("password")
@@ -179,8 +187,7 @@ function SettingsForm() {
       })
     }
     if (showModal.process === "changePassword") {
-      user.reauthenticateWithCredential(getAuthCredential(user.email, reauthenticatedPassword))
-      .then(res => {
+      reauthenticateWithCredential(user, getAuthCredential(user.email, reauthenticatedPassword)).then(res => {
         updatePassword()
         setLoading(false)
         clearError("password")
@@ -194,7 +201,7 @@ function SettingsForm() {
   function handleChangePasswordSubmit(e) {
     e.preventDefault()
     if (regex.password.test(newPassword)) {
-      updatePassword(newPassword)
+      updatePassword()
     }
     else {
       console.log("bad password")
@@ -207,14 +214,22 @@ function SettingsForm() {
         flex="flex"
         alignitems="center"
         justifycontent="space-between"
-        margin="2rem 0"
+        className="has-border-bottom"
+        margin="32px 0"
+        padding="0 0 16px"
       >
-        <h2>Settings</h2>
+        <Content
+          h1fontsize="2rem"
+          h1margin="0"
+        >
+          <h1>Profile</h1>
+        </Content>
         <FlexboxButtons>
           {showSettingsForm ? (
             <>
               <Button
                 backgroundcolor={colors.gray.oneHundred}
+                color={colors.gray.nineHundred}
                 onClick={() => {
                   setShowSettingsForm(false)
                   clearError("email")
@@ -225,8 +240,8 @@ function SettingsForm() {
                 Cancel
               </Button>
               <Button
-                backgroundcolor={colors.primary.sixHundred}
-                color={colors.primary.oneHundred}
+                backgroundcolor={colors.gray.nineHundred}
+                color={colors.gray.oneHundred}
                 form="settings-form"
                 type="submit"
                 disabled={!emailValidated}
@@ -236,13 +251,14 @@ function SettingsForm() {
             </>
           ) : (
             <Button
-              backgroundcolor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
               onClick={() => {
                 setShowSettingsForm(true)
                 setNewEmail("")
               }}
             >
-              Edit settings
+              Edit
             </Button>
           )}
         </FlexboxButtons>
@@ -252,19 +268,25 @@ function SettingsForm() {
           flex="flex"
           alignitems="flex-start"
           justifycontent="space-between"
-          margin="2rem 0"
+          margin="16px 0"
+          width="100%"
         >
-          <div>
-            <h4>Email</h4>
-            <p>You'll use this email for all communications.</p>
-          </div>
+          <Content
+            h5margin="0 0 8px"
+          >
+            <h5>Email address</h5>
+            <p>This email is used for communication and for logging into your account.</p>
+          </Content>
           {showSettingsForm ? (
-            <StyledFieldset className="is-vertical">
+            <StyledFieldset 
+              className="is-vertical"
+              flex="0"
+            >
               <StyledInput
-                className="has-width-auto"
-                borderradius="0.25rem"
+                padding="8px"
                 placeholder={user.email}
                 onChange={e => validateEmail(e.currentTarget.value)}
+                width={widths.input}
               />
               {emailError.msg && (
                 <ErrorLine color={emailError.color}>
@@ -283,15 +305,18 @@ function SettingsForm() {
           flex="flex"
           alignitems="flex-start"
           justifycontent="space-between"
-          margin="2rem 0"
+          margin="16px 0"
         >
-          <div>
-            <h4>Password</h4>
-            <p>Minimum eight characters.</p>
-          </div>
+          <Content
+            h5margin="0 0 8px"
+          >
+            <h5>Password</h5>
+            <p>Must be a minimum of eight characters.</p>
+          </Content>
           {showSettingsForm ? (
             <Button
-              backgroundcolor={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
               onClick={e => {
                 e.preventDefault()
                 setShowModal({
@@ -312,66 +337,69 @@ function SettingsForm() {
           {showModal.type === "reauthentication" ? (
             <>
               <ModalHeader>
-                <h5>Please confirm your password to continue.</h5>
+                Please confirm your password to continue
               </ModalHeader>
               <ModalContent>
                 <Content>
+                  <p>It's been a while since you've logged into this account. Please confirm your original password below.</p>
                   <form id="reauthentication" noValidate
                     onSubmit={e => handleReauthenticationSubmit(e)}
                   >
-                    <StyledFieldset
-                      className="is-vertical"
-                      margin="1rem 0"
-                    >
-                      <StyledLabel htmlFor="current-password">Password</StyledLabel>
-                      <StyledInput
-                        borderradius="0.25rem"
-                        id="current-password"
-                        type="password"
-                        name="current-password"
-                        onChange={e => setReauthenticatedPassword(e.currentTarget.value)}
-                      />
-                      {passwordError.msg && (
-                        <ErrorLine color={passwordError.color}>
-                          <Icon>
-                            <Warning weight="fill" color={passwordError.color} size={16} />
-                          </Icon>
-                          <span>{passwordError.msg}</span>
-                        </ErrorLine>
-                      )}
-                    </StyledFieldset>
+                    <StyledLabel htmlFor="current-password">Password</StyledLabel>
+                    <StyledInput
+                      id="current-password"
+                      type="password"
+                      name="current-password"
+                      onChange={e => setReauthenticatedPassword(e.currentTarget.value)}
+                    />
+                    {passwordError.msg && (
+                      <ErrorLine color={passwordError.color}>
+                        <Icon>
+                          <Warning weight="fill" color={passwordError.color} size={16} />
+                        </Icon>
+                        <span>{passwordError.msg}</span>
+                      </ErrorLine>
+                    )}
                   </form>
                 </Content>
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundcolor={colors.primary.sixHundred}
+                  backgroundcolor={colors.gray.nineHundred}
                   color={colors.white}
                   width="100%"
                   form="reauthentication"
                   type="submit"
+                  padding="16px"
                   disabled={loading}
-                  className="is-medium"
+                  className={loading && "is-loading"}
                 >
-                  Continue
+                  {loading ? (
+                    <Icon>
+                      <CircleNotch size="1rem" />
+                    </Icon>
+                  ) : (
+                    <span>
+                      Continue
+                    </span>
+                  )}
                 </Button>
               </ModalFooter>
             </>
           ) : (
             <>
               <ModalHeader>
-                <h5>Change your password</h5>
+                Change your password
               </ModalHeader>
               <ModalContent>
                 <Content>
                   <form id="change-password" noValidate onSubmit={e => handleChangePasswordSubmit(e)}>
                     <StyledFieldset
                       className="is-vertical"
-                      margin="1rem 0"
+                      margin="0"
                     >
                       <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
                       <StyledInput
-                        borderradius="0.25rem"
                         id="new-password"
                         type="password"
                         name="new-password"
@@ -384,15 +412,24 @@ function SettingsForm() {
               </ModalContent>
               <ModalFooter>
                 <Button
-                  backgroundcolor={colors.primary.sixHundred}
-                  color={colors.white}
+                  backgroundcolor={colors.gray.nineHundred}
+                  color={colors.gray.oneHundred}
                   width="100%"
                   form="change-password"
                   type="submit"
+                  padding="16px"
                   disabled={!passwordValidated || loading}
-                  className="is-medium"
+                  className={loading && "is-loading"}
                 >
-                  Change password
+                  {loading ? (
+                    <Icon>
+                      <CircleNotch size="1rem" />
+                    </Icon>
+                  ) : (
+                    <span>
+                      Change password
+                    </span>
+                  )}
                 </Button>
               </ModalFooter>
             </>

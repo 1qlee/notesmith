@@ -1,48 +1,61 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import PropTypes from "prop-types"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 import { Check, CaretDown } from "phosphor-react"
 
-import Icon from "../Icon"
-import Button from "../Button"
+import Icon from "../ui/Icon"
+import Button from "../ui/Button"
 
 const StyledSelect = styled.div`
   position: relative;
   display: inline-block;
-  margin-right: 0.5rem;
+  p {
+    font-size: 0.875rem;
+    font-family: ${fonts.secondary};
+    margin-right: 4px;
+    color: ${colors.gray.sixHundred};
+  }
 `
 
 const SelectMenu = styled.div`
-  background-color: ${colors.gray.nineHundred};
-  box-shadow: ${colors.shadow.modal};
-  color: ${colors.white};
+  background-color: ${colors.white};
+  box-shadow: ${colors.shadow.layeredSmall};
+  border: ${colors.borders.black};
   padding: 0.5rem 0;
   position: absolute;
-  font-size: 0.8rem;
-  top: calc(100% + 0.5rem);
+  font-size: 0.875rem;
+  top: calc(100% + 8px);
   left: 0;
-  width: calc(200% - 1.35rem);
+  width: 100%;
+  z-index: 1000;
   &::before {
     content: "";
     position: absolute;
     width: 0.5rem;
     height: 0.5rem;
-    background-color: ${colors.gray.nineHundred};
+    background-color: ${colors.white};
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
-    top: -0.25rem;
+    top: -5px;
+    border: ${colors.borders.black};
+    border-width: 1px 0 0 1px;
   }
 `
 
+const SelectMenuDivider = styled.hr`
+  background-color: ${colors.gray.threeHundred};
+  margin: 0.5rem 0;
+`
+
 const SelectOption = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
+  font-family: ${fonts.secondary};
   padding: 0.25rem 2rem;
   position: relative;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.blue.sixHundred};
+    background-color: ${colors.gray.twoHundred};
   }
 `
 
@@ -53,10 +66,12 @@ const SelectIcon = styled.div`
 `
 
 const SelectHeading = styled.h4`
-  color: ${colors.gray.fiveHundred};
+  color: ${colors.gray.fourHundred};
+  font-family: ${fonts.secondary};
   padding: 0.25rem 2rem;
+  font-weight: 400;
   &:hover {
-    color: ${colors.white};
+    color: ${colors.gray.sixHundred};
   }
 `
 
@@ -111,14 +126,13 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
       ref={menuRef}
     >
       <Button
-        className="has-icon"
-        borderradius="0.25rem"
-        backgroundcolor={colors.white}
+        backgroundcolor={colors.gray.oneHundred}
+        color={colors.gray.nineHundred}
         onClick={() => setShowMenu(!showMenu)}
       >
-        <span>{currentOption}</span>
-        <Icon>
-          <CaretDown weight="regular" color={colors.gray.nineHundred} size="0.5rem"  />
+        <span>Sort by: {currentOption}</span>
+        <Icon margin="0 0 0 0.125rem">
+          <CaretDown color={colors.gray.nineHundred} size="0.625rem"  />
         </Icon>
       </Button>
       {showMenu && (
@@ -133,7 +147,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentDbValue === "title" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
@@ -141,19 +155,20 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
           </SelectOption>
           <SelectOption
             onClick={e => {handleMenuClick({
-              dbValue: "date_created",
+              dbValue: "dateCreated",
               domValue: "Date created"
             })}}
           >
-            {currentDbValue === "date_created" && (
+            {currentDbValue === "dateCreated" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
             Date created
           </SelectOption>
+          <SelectMenuDivider />
           <SelectHeading>Order</SelectHeading>
           <SelectOption
             onClick={e => {handleMenuClick(null, "ascending")}}
@@ -161,7 +176,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "ascending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
@@ -173,7 +188,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "descending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.white} size="0.8rem" />
+                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
                 </Icon>
               </SelectIcon>
             )}
@@ -183,19 +198,6 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
       )}
     </StyledSelect>
   )
-}
-
-Select.propTypes = {
-  initialSortOrder: PropTypes.string.isRequired,
-  initialOption: PropTypes.string.isRequired,
-  initialDbValue: PropTypes.string.isRequired,
-  mainFunction: PropTypes.func.isRequired
-}
-
-SelectOption.propTypes = {
-  'data-primaryoption': PropTypes.string,
-  'data-secondaryoption': PropTypes.string,
-  'data-optionname': PropTypes.string
 }
 
 export {

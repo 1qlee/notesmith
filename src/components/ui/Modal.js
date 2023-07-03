@@ -1,64 +1,68 @@
 import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { colors, fonts, widths } from "../../styles/variables"
 
 const StyledModal = styled.div`
-  background-color: ${colors.paper.offWhite};
-  border-radius: 0.25rem;
-  box-shadow: ${colors.shadow.modal};
-  position: absolute;
-  transform: translate(-50%, -25%);
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
+  border: ${colors.borders.black};
   left: 50%;
+  width: ${widths.modal};
+  position: absolute;
   top: 25%;
-  min-width: ${widths.modal};
+  transform: translate(-50%, -25%);
+  width: ${props => props.width};
+  padding: 0 16px;
   z-index: 9001;
 `
 
 const ModalBackground = styled.div`
-  background-color: ${colors.gray.threeHundred};
+  background-color: ${colors.primary.shadow};
   height: 100vh;
-  background: ${colors.shadow.float};
-  position: absolute;
+  left: 0;
+  position: fixed;
+  top: 0;
   width: 100vw;
   z-index: 9000;
-  top: 0;
-  left: 0;
 `
 
 const ModalHeader = styled.div`
-  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.threeHundred};
-  color: ${props => props.color};
-  border-radius: 0.25rem 0.25rem 0 0;
-  padding: 1rem;
-  h5 {
-    color: ${props => props.color};
-    font-size: 1rem;
-    font-weight: 400;
-  }
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  color: ${props => props.color || colors.primary.nineHundred};
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-family: ${props => fonts.secondary};
+  padding: 16px 0 0;
 `
 
 const ModalContent = styled.div`
-  padding: 1rem;
+  padding: 32px 0;
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  font-size: 1rem;
 `
 
 const ModalFooter = styled.div`
-  display: flex;
   align-items: center;
+  background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
+  border-top: ${props => props.border ? props.border : `${colors.borders.black}`};
+  border-radius: 0 0 8px 8px;
+  display: flex;
   justify-content: ${props => props.justifycontent};
-  padding: 1rem;
-  border-top: 1px solid ${colors.gray.threeHundred};
+  padding: 16px 0;
 `
 
-function Modal({ children, setShowModal }) {
+function Modal({ children, setShowModal, width, boxshadow, backgroundcolor, unclickable }) {
   const modalBackground = useRef()
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClick)
-    document.addEventListener("keydown", handleEscKey)
+    if (!unclickable) {
+      document.addEventListener("mousedown", handleClick)
+      document.addEventListener("keydown", handleEscKey)
 
-    return () => {
-      document.removeEventListener("mousedown", handleClick)
-      document.removeEventListener("keydown", handleEscKey)
+      return () => {
+        document.removeEventListener("mousedown", handleClick)
+        document.removeEventListener("keydown", handleEscKey)
+      }
     }
   })
 
@@ -83,7 +87,13 @@ function Modal({ children, setShowModal }) {
 
   return (
     <ModalBackground>
-      <StyledModal ref={modalBackground} onClick={e => handleClick(e)}>
+      <StyledModal
+        width={width}
+        boxshadow={boxshadow}
+        backgroundcolor={backgroundcolor}
+        ref={modalBackground}
+        onClick={e => handleClick(e)}
+      >
         {children}
       </StyledModal>
     </ModalBackground>

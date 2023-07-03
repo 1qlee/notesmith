@@ -1,0 +1,666 @@
+[
+  {
+    "name": "Albany County",
+    "rate": 8
+  },
+  {
+    "name": "Albany",
+    "rate": 8
+  },
+  {
+    "name": "Allegany County",
+    "rate": 8.5
+  },
+  {
+    "name": "Allegany",
+    "rate": 8.5
+  },
+  {
+    "name": "Auburn County",
+    "rate": 8
+  },
+  {
+    "name": "Auburn",
+    "rate": 8
+  },
+  {
+    "name": "Bronx County",
+    "rate": 8.875
+  },
+  {
+    "name": "Bronx",
+    "rate": 8.875
+  },
+  {
+    "name": "Brooklyn County",
+    "rate": 8.875
+  },
+  {
+    "name": "Brooklyn",
+    "rate": 8.875
+  },
+  {
+    "name": "Broome County",
+    "rate": 8
+  },
+  {
+    "name": "Broome",
+    "rate": 8
+  },
+  {
+    "name": "Cattaraugus County",
+    "rate": 8
+  },
+  {
+    "name": "Cattaraugus",
+    "rate": 8
+  },
+  {
+    "name": "Cayuga County",
+    "rate": 8
+  },
+  {
+    "name": "Cayuga",
+    "rate": 8
+  },
+  {
+    "name": "Chautauqua County",
+    "rate": 8
+  },
+  {
+    "name": "Chautauqua",
+    "rate": 8
+  },
+  {
+    "name": "Chemung County",
+    "rate": 8
+  },
+  {
+    "name": "Chemung",
+    "rate": 8
+  },
+  {
+    "name": "Chenango County",
+    "rate": 8
+  },
+  {
+    "name": "Chenango",
+    "rate": 8
+  },
+  {
+    "name": "Clinton County",
+    "rate": 8
+  },
+  {
+    "name": "Clinton",
+    "rate": 8
+  },
+  {
+    "name": "Columbia County",
+    "rate": 8
+  },
+  {
+    "name": "Columbia",
+    "rate": 8
+  },
+  {
+    "name": "Cortland County",
+    "rate": 8
+  },
+  {
+    "name": "Cortland",
+    "rate": 8
+  },
+  {
+    "name": "Delaware County",
+    "rate": 8
+  },
+  {
+    "name": "Delaware",
+    "rate": 8
+  },
+  {
+    "name": "Dutchess County",
+    "rate": 8.125
+  },
+  {
+    "name": "Dutchess",
+    "rate": 8.125
+  },
+  {
+    "name": "Erie County",
+    "rate": 8.75
+  },
+  {
+    "name": "Erie",
+    "rate": 8.75
+  },
+  {
+    "name": "Essex County",
+    "rate": 8
+  },
+  {
+    "name": "Essex",
+    "rate": 8
+  },
+  {
+    "name": "Franklin County",
+    "rate": 8
+  },
+  {
+    "name": "Franklin",
+    "rate": 8
+  },
+  {
+    "name": "Fulton County",
+    "rate": 8
+  },
+  {
+    "name": "Fulton",
+    "rate": 8
+  },
+  {
+    "name": "Genesee County",
+    "rate": 8
+  },
+  {
+    "name": "Genesee",
+    "rate": 8
+  },
+  {
+    "name": "Glens Falls County",
+    "rate": 7
+  },
+  {
+    "name": "Glens Falls",
+    "rate": 7
+  },
+  {
+    "name": "Gloversville County",
+    "rate": 8
+  },
+  {
+    "name": "Gloversville",
+    "rate": 8
+  },
+  {
+    "name": "Greene County",
+    "rate": 8
+  },
+  {
+    "name": "Greene",
+    "rate": 8
+  },
+  {
+    "name": "Hamilton County",
+    "rate": 8
+  },
+  {
+    "name": "Hamilton",
+    "rate": 8
+  },
+  {
+    "name": "Herkimer County",
+    "rate": 8.25
+  },
+  {
+    "name": "Herkimer",
+    "rate": 8.25
+  },
+  {
+    "name": "Ithaca County",
+    "rate": 8
+  },
+  {
+    "name": "Ithaca",
+    "rate": 8
+  },
+  {
+    "name": "Jefferson County",
+    "rate": 8
+  },
+  {
+    "name": "Jefferson",
+    "rate": 8
+  },
+  {
+    "name": "Johnstown County",
+    "rate": 8
+  },
+  {
+    "name": "Johnstown",
+    "rate": 8
+  },
+  {
+    "name": "Kings County",
+    "rate": 8.875
+  },
+  {
+    "name": "Kings",
+    "rate": 8.875
+  },
+  {
+    "name": "Lewis County",
+    "rate": 8
+  },
+  {
+    "name": "Lewis",
+    "rate": 8
+  },
+  {
+    "name": "Livingston County",
+    "rate": 8
+  },
+  {
+    "name": "Livingston",
+    "rate": 8
+  },
+  {
+    "name": "Madison County",
+    "rate": 8
+  },
+  {
+    "name": "Madison",
+    "rate": 8
+  },
+  {
+    "name": "Manhattan",
+    "rate": 8.875
+  },
+  {
+    "name": "Monroe County",
+    "rate": 8
+  },
+  {
+    "name": "Monroe",
+    "rate": 8
+  },
+  {
+    "name": "Montgomery County",
+    "rate": 8
+  },
+  {
+    "name": "Montgomery",
+    "rate": 8
+  },
+  {
+    "name": "Mount Vernon County",
+    "rate": 8.375
+  },
+  {
+    "name": "Mount Vernon",
+    "rate": 8.375
+  },
+  {
+    "name": "Nassau County",
+    "rate": 8.625
+  },
+  {
+    "name": "Nassau",
+    "rate": 8.625
+  },
+  {
+    "name": "New Rochelle County",
+    "rate": 8.375
+  },
+  {
+    "name": "New Rochelle",
+    "rate": 8.375
+  },
+  {
+    "name": "New York County",
+    "rate": 8.875
+  },
+  {
+    "name": "New York City",
+    "rate": 8.875
+  },
+  {
+    "name": "New York",
+    "rate": 8.875
+  },
+  {
+    "name": "Niagara County",
+    "rate": 8
+  },
+  {
+    "name": "Niagara",
+    "rate": 8
+  },
+  {
+    "name": "Norwich County",
+    "rate": 8
+  },
+  {
+    "name": "Norwich",
+    "rate": 8
+  },
+  {
+    "name": "Ogdensburg County",
+    "rate": 8
+  },
+  {
+    "name": "Ogdensburg",
+    "rate": 8
+  },
+  {
+    "name": "Olean County",
+    "rate": 8
+  },
+  {
+    "name": "Olean",
+    "rate": 8
+  },
+  {
+    "name": "Oneida County",
+    "rate": 8.75
+  },
+  {
+    "name": "Oneida",
+    "rate": 8.75
+  },
+  {
+    "name": "Onondaga County",
+    "rate": 8
+  },
+  {
+    "name": "Onondaga",
+    "rate": 8
+  },
+  {
+    "name": "Ontario County",
+    "rate": 7.5
+  },
+  {
+    "name": "Ontario",
+    "rate": 7.5
+  },
+  {
+    "name": "Orange County",
+    "rate": 8.125
+  },
+  {
+    "name": "Orange",
+    "rate": 8.125
+  },
+  {
+    "name": "Orleans County",
+    "rate": 8
+  },
+  {
+    "name": "Orleans",
+    "rate": 8
+  },
+  {
+    "name": "Oswego City",
+    "rate": 8
+  },
+  {
+    "name": "Oswego County",
+    "rate": 8
+  },
+  {
+    "name": "Oswego",
+    "rate": 8
+  },
+  {
+    "name": "Otsego County",
+    "rate": 8
+  },
+  {
+    "name": "Otsego",
+    "rate": 8
+  },
+  {
+    "name": "Putnam County",
+    "rate": 8.375
+  },
+  {
+    "name": "Putnam",
+    "rate": 8.375
+  },
+  {
+    "name": "Queens County",
+    "rate": 8.875
+  },
+  {
+    "name": "Queens",
+    "rate": 8.875
+  },
+  {
+    "name": "Rensselaer County",
+    "rate": 8
+  },
+  {
+    "name": "Rensselaer",
+    "rate": 8
+  },
+  {
+    "name": "Richmond County",
+    "rate": 8.875
+  },
+  {
+    "name": "Richmond",
+    "rate": 8.875
+  },
+  {
+    "name": "Rockland County",
+    "rate": 8.375
+  },
+  {
+    "name": "Rockland",
+    "rate": 8.375
+  },
+  {
+    "name": "Rome County",
+    "rate": 8.75
+  },
+  {
+    "name": "Rome",
+    "rate": 8.75
+  },
+  {
+    "name": "Saint Lawrence County",
+    "rate": 8
+  },
+  {
+    "name": "Saint Lawrence",
+    "rate": 8
+  },
+  {
+    "name": "St Lawrence County",
+    "rate": 8
+  },
+  {
+    "name": "St Lawrence",
+    "rate": 8
+  },
+  {
+    "name": "St. Lawrence County",
+    "rate": 8
+  },
+  {
+    "name": "St. Lawrence",
+    "rate": 8
+  },
+  {
+    "name": "Salamanca County",
+    "rate": 8
+  },
+  {
+    "name": "Salamanca",
+    "rate": 8
+  },
+  {
+    "name": "Saratoga County",
+    "rate": 7
+  },
+  {
+    "name": "Saratoga",
+    "rate": 7
+  },
+  {
+    "name": "Saratoga Springs County",
+    "rate": 7
+  },
+  {
+    "name": "Saratoga Springs",
+    "rate": 7
+  },
+  {
+    "name": "Schenectady County",
+    "rate": 8
+  },
+  {
+    "name": "Schenectady",
+    "rate": 8
+  },
+  {
+    "name": "Schoharie County",
+    "rate": 8
+  },
+  {
+    "name": "Schoharie",
+    "rate": 8
+  },
+  {
+    "name": "Schuyler County",
+    "rate": 8
+  },
+  {
+    "name": "Schuyler",
+    "rate": 8
+  },
+  {
+    "name": "Seneca County",
+    "rate": 8
+  },
+  {
+    "name": "Seneca",
+    "rate": 8
+  },
+  {
+    "name": "Staten Island",
+    "rate": 8.875
+  },
+  {
+    "name": "Steuben County",
+    "rate": 8
+  },
+  {
+    "name": "Steuben",
+    "rate": 8
+  },
+  {
+    "name": "Suffolk County",
+    "rate": 8.625
+  },
+  {
+    "name": "Suffolk",
+    "rate": 8.625
+  },
+  {
+    "name": "Sullivan County",
+    "rate": 8
+  },
+  {
+    "name": "Sullivan",
+    "rate": 8
+  },
+  {
+    "name": "Tioga County",
+    "rate": 8
+  },
+  {
+    "name": "Tioga",
+    "rate": 8
+  },
+  {
+    "name": "Tompkins County",
+    "rate": 8
+  },
+  {
+    "name": "Tompkins",
+    "rate": 8
+  },
+  {
+    "name": "Ulster County",
+    "rate": 8
+  },
+  {
+    "name": "Ulster",
+    "rate": 8
+  },
+  {
+    "name": "Utica County",
+    "rate": 8.75
+  },
+  {
+    "name": "Utica",
+    "rate": 8.75
+  },
+  {
+    "name": "Warren County",
+    "rate": 7
+  },
+  {
+    "name": "Warren",
+    "rate": 7
+  },
+  {
+    "name": "Washington County",
+    "rate": 7
+  },
+  {
+    "name": "Washington",
+    "rate": 7
+  },
+  {
+    "name": "Wayne County",
+    "rate": 8
+  },
+  {
+    "name": "Wayne",
+    "rate": 8
+  },
+  {
+    "name": "Westchester County",
+    "rate": 8.375
+  },
+  {
+    "name": "Westchester",
+    "rate": 8.375
+  },
+  {
+    "name": "White Plains County",
+    "rate": 8.375
+  },
+  {
+    "name": "White Plains",
+    "rate": 8.375
+  },
+  {
+    "name": "Wyoming County",
+    "rate": 8
+  },
+  {
+    "name": "Wyoming",
+    "rate": 8
+  },
+  {
+    "name": "Yates County",
+    "rate": 8
+  },
+  {
+    "name": "Yates",
+    "rate": 8
+  },
+  {
+    "name": "Yonkers County",
+    "rate": 8.875
+  },
+  {
+    "name": "Yonkers",
+    "rate": 8.875
+  }
+]

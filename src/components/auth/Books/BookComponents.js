@@ -1,18 +1,37 @@
-import React from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 
+const BookRadio = styled.button`
+  display: block;
+  background-color: ${colors.white};
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
+  border-radius: 4px;
+  border: 1px solid ${colors.gray.nineHundred};
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    &:not(.is-active) {
+      background-color: ${colors.gray.oneHundred};
+    }
+  }
+`
+
 const Book = styled.div`
-  border-radius: 0.25rem;
+  background-color: ${colors.white};
   border: 1px solid ${colors.gray.threeHundred};
+  border-radius: 0.25rem;
   display: block;
   height: 100%;
   padding: 1rem;
   user-select: none;
+  transition: border-color 0.2s;
+  max-width: 250px;
   width: 100%;
   &.is-selected {
-    box-shadow: 0 0 0 1px ${colors.blue.sixHundred}, inset 0 0 0 1px ${colors.white};
-    border-color: ${colors.blue.sixHundred};
+    border-color: ${colors.gray.sixHundred};
   }
   p {
     color: ${colors.gray.nineHundred};
@@ -24,18 +43,7 @@ const Book = styled.div`
   }
 `
 
-const BookInput = styled.input`
-  background: ${colors.paper.offWhite};
-  border: none;
-  box-shadow: inset 0 -1px 0 ${colors.gray.fourHundred};
-  display: block;
-  padding: 0;
-  &:focus {
-    outline: none;
-  }
-`
-
 export {
   Book,
-  BookInput
+  BookRadio,
 }

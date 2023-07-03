@@ -1,84 +1,102 @@
 import React from 'react'
-import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const StyledContextMenu = styled.article`
-  background-color: ${colors.gray.nineHundred};
-  box-shadow: ${colors.shadow.modal};
-  color: ${colors.white};
-  font-size: 0.8rem;
-  position: absolute;
+  background-color: ${colors.white};
+  box-shadow: ${colors.shadow.layeredSmall};
+  font-size: 0.875rem;
   padding: 0.5rem 0;
+  position: absolute;
+  border: ${colors.borders.black};
 `
 
 const ContextMenuItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.25rem 2rem;
   position: relative;
+  display: block;
+  padding: 0.25rem 2rem;
+  width: 100%;
   &:hover {
     cursor: pointer;
-    background-color: ${colors.blue.sixHundred};
+    background-color: ${colors.gray.twoHundred};
   }
-  a {
-    width: 100%;
+`
+
+const ContextMenuLink = styled.a`
+  display: block;
+  width: 100%;
+  &:focus {
+    outline: none;
   }
 `
 
 const ContextMenuDivider = styled.hr`
-  background-color: ${colors.gray.sevenHundred};
+  height: 0;
+  border-top: 1px dotted #212121;
   margin: 0.5rem 0;
 `
 
 const ContextMenu = (
-    {
-      selectedBookId,
-      selectedBook,
-      duplicateBook,
-      handleBookDelete,
-      coordinates,
-      showContextMenu,
-      setShowBookTitleInput
-    }
-  ) => {
+  {
+    selectedBookId,
+    selectedBook,
+    duplicateBook,
+    handleBookDelete,
+    coordinates,
+    showContextMenu,
+    setShowBookTitleInput
+  }
+) => {
 
   return showContextMenu && (
     <StyledContextMenu style={{
       top: coordinates.y,
       left: coordinates.x
     }}>
-      <ContextMenuItem>
-        <Link to={`/app/create/${selectedBookId}`}>
+      <ContextMenuLink
+        href={`/customize/${selectedBook.slug}/${selectedBookId}`}
+      >
+        <ContextMenuItem>
           Open
-        </Link>
-      </ContextMenuItem>
-      <ContextMenuItem>
-        <a
-          href={`/app/create/${selectedBookId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        </ContextMenuItem>
+      </ContextMenuLink>
+      <ContextMenuLink
+        href={`/customize/${selectedBook.slug}/${selectedBookId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ContextMenuItem>
           Open in new tab
-        </a>
-      </ContextMenuItem>
+        </ContextMenuItem>
+      </ContextMenuLink>
       <ContextMenuDivider />
-      <ContextMenuItem
+      <ContextMenuLink
         onClick={() => duplicateBook(selectedBook)}
+        tabindex="0"
       >
-        Duplicate
-      </ContextMenuItem>
-      <ContextMenuItem
+        <ContextMenuItem>
+          Duplicate
+        </ContextMenuItem>
+      </ContextMenuLink>
+      <ContextMenuLink
         onClick={() => setShowBookTitleInput(true)}
+        tabindex="0"
       >
-        Rename
-      </ContextMenuItem>
+        <ContextMenuItem>
+          Rename
+        </ContextMenuItem>
+      </ContextMenuLink>
       <ContextMenuDivider />
-      <ContextMenuItem
+      <ContextMenuLink
         onClick={() => handleBookDelete(selectedBook)}
+        tabindex="0"
       >
-        Delete
-      </ContextMenuItem>
+        <ContextMenuItem>
+          Delete
+        </ContextMenuItem>
+      </ContextMenuLink>
     </StyledContextMenu>
   )
 }

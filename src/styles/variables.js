@@ -12,19 +12,20 @@ const colors = {
     nineHundred: "#212121"
   },
   primary: {
-    hover: "#e4f1e4",
-    active: "#bcdcbc",
+    shadow: "rgba(74,100,98,0.35)",
+    hover: "#EBEEEE",
+    active: "#d0dddd",
     white: "#eef6f6",
     whiteLight: "#cde5e4",
-    oneHundred: "#e9ecec",
-    twoHundred: "#a7b4b3",
-    threeHundred: "#7b8e8e",
-    fourHundred: "#657b7b",
-    fiveHundred: "#4f6968",
-    sixHundred: "#234342",
+    oneHundred: "#dde4e3",
+    twoHundred: "#7C8F8E",
+    threeHundred: "#607675",
+    fourHundred: "#4A6462",
+    fiveHundred: "#33504F",
+    sixHundred: "#22403F",
     sevenHundred: "#1c3635",
-    eightHundred: "#152828",
-    nineHundred: "#093737"
+    eightHundred: "#192f2f",
+    nineHundred: "#152828"
   },
   blue: {
     oneHundred: "#d1e3fa",
@@ -93,21 +94,55 @@ const colors = {
   kraft: "#8a5842",
   black: "#000",
   shadow: {
-    float: "rgba(0,0,0,0.2)",
+    solidTiny: "0px 1px 0 #212121",
+    solidSmall: "0px 2px 0 #212121",
+    solid: "0px 2px 0 #212121",
+    float: "rgba(0,0,0,0.07)",
+    layeredSmall: "0 1px 1px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.03), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.07)",
+    layered: "0 2px 2px rgba(0,0,0,0.02), 0 4px 4px rgba(0,0,0,0.03), 0 8px 8px rgba(0,0,0,0.06), 0 16px 16px rgba(0,0,0,0.07)",
+    layeredLarge: "0 12px 12px rgba(0,0,0,0.02), 0 24px 24px rgba(0,0,0,0.03), 0 48px 48px rgba(0,0,0,0.06), 0 96px 96px rgba(0,0,0,0.07)",
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
-    modal: "0 7px 14px 0 rgba(60,66,87,.08), 0 3px 6px 0 rgba(0,0,0,.12)"
+    modal: "0 2px 12px rgba(0,0,0,0.25)",
+    focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff",
+    drawer: "4px 0 12px rgba(0,0,0,0.12)"
   },
-  highlighter: "#ffff00"
+  highlighter: "#fbff00",
+  borders: {
+    black: "1px solid #212121",
+  }
+}
+
+const breakpoints = {
+  xs: "575px", 
+  sm: "767px", 
+  md: "991px", 
+  lg: "1199px", 
+  xl: "1599px", 
+  xxl: "1919px",
+}
+
+const fonts = {
+  heading: "'Nanum Myeongjo', Georgia, serif",
+  text: "'Jost', Georgia, serif",
+  primary: "'Nanum Myeongjo', Georgia, serif",
+  secondary: "'Jost', Georgia, serif",
 }
 
 const widths = {
+  logo: "160px",
   sidebar: "300px",
+  caption: "300px",
+  input: "300px",
+  notification: "450px",
   modal: "480px",
+  form: "600px",
   tablet: "800px",
   desktop: "1440px",
+  widescreen: "2560px",
   content: {
-    index: "600px"
+    index: "440px",
+    normal: "700px",
   },
   breakpoint: {
     index: "936px"
@@ -118,7 +153,8 @@ const spacing = {
   normal: "1rem",
   medium: "2rem",
   large: "3rem",
-  section: "8rem"
+  xlarge: "6rem",
+  section: "8rem",
 }
 
 const regex = {
@@ -126,12 +162,45 @@ const regex = {
   password: RegExp(/^.{8,256}$/)
 }
 
+const convertToDecimal = (num, places) => {
+
+  return ((num * 1.0) / 100).toFixed(places)
+}
+
 const convertToMM = pixels => {
-  return pixels * .264583
+  return parseFloat((pixels * .2645833333).toFixed(3))
 }
 
 const convertToPx = mm => {
-  return mm * 3.7795275591
+  return parseFloat((mm * 3.7795275591).toFixed(3))
 }
 
-export { colors, widths, spacing, regex, convertToMM, convertToPx }
+const convertToIn = pixels => {
+  return parseFloat((pixels * .0104166667).toFixed(2))
+}
+
+const convertFloatFixed = (number, places) => {
+  return parseFloat(number.toFixed(places))
+}
+
+const pageMargins = {
+  vertical: convertToPx(6.35),
+  horizontal: convertToPx(13.335),
+  holes: convertToPx(10.16),
+  minimum: convertToPx(3.175),
+}
+
+export { 
+  breakpoints,
+  colors, 
+  convertFloatFixed, 
+  convertToDecimal, 
+  convertToMM, 
+  convertToIn,
+  convertToPx, 
+  fonts,
+  pageMargins,
+  regex, 
+  spacing, 
+  widths, 
+}

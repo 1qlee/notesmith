@@ -1,14 +1,16 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -10%, 0);
+    opacity: 0;
     visibility: visible;
   }
   to {
     transform: translate3d(0, 0, 0);
+    opacity: 1;
   }
 `
 
@@ -22,38 +24,42 @@ const loading = keyframes`
 `
 
 const StyledNotification = styled.div`
-  align-items: center;
+  align-items: ${props => props.alignitems || "flex-start"};
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
-  border-radius: 0.25rem;
-  border: 2px solid ${props => props.bordercolor};
-  box-shadow: 0 1px 3px ${colors.shadow.float}, 0 0 1px ${colors.shadow.float};
+  border: ${props => props.border};
+  border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
-  display: inline-flex;
-  justify-content: space-between;
-  padding: 1rem;
+  display: ${props => props.display || "flex"};
+  justify-content: ${props => props.justifycontent || "space-between"};
+  margin: ${props => props.margin || "1rem 0"};
+  padding: ${props => props.padding || "16px"};
   transition: background-color 0.2s, color 0.2s;
-  margin: 1rem 0;
+  max-width: ${props => props.maxwidth};
   z-index: 8000;
-  span {
-    margin-right: 1rem;
-  }
-  button, a {
-    margin-left: 1rem;
-  }
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);
     animation: ${loading} 1s infinite;
   }
+  &.has-no-style {
+    border: none;
+    box-shadow: none;
+  }
   p {
     color: ${props => props.color};
+    font-size: ${props => props.fontsize || "0.75rem"};
+    margin-bottom: 0;
+    line-height: 1.5;
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
   }
 `
 
-function Notification(props) {
+function Notification({ children, ...p }) {
   return (
-    <StyledNotification color={props.color} backgroundcolor={props.backgroundcolor} className={props.className} bordercolor={props.bordercolor}>
-      {props.children}
+    <StyledNotification {...p}>
+      {children}
     </StyledNotification>
   )
 }

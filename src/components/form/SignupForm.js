@@ -1,213 +1,208 @@
 import React, { useState } from "react"
-import { colors, regex } from "../../styles/variables"
-import { navigate } from "gatsby"
+import { colors } from "../../styles/variables"
+import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "phosphor-react"
+import { ref, set, onValue, query, orderByChild, equalTo } from "firebase/database"
+import sendEmailVerification from "../../functions/sendEmailVerification"
+import validatePassword from "../../functions/validatePassword"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
-import Button from "../Button"
-import Content from "../Content"
-import Icon from "../Icon"
-import SEO from "../layout/Seo"
+import Button from "../ui/Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
+import Seo from "../layout/Seo"
 
-const SignUpForm = () => {
-  const { signUp, sendEmailVerificationOnSignUp, firebaseDb } = useFirebaseContext()
+const SignupForm = () => {
+  const { signUp, firebaseDb } = useFirebaseContext()
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [emailError, setEmailError] = useState({
-    msg: "",
-    color: colors.red.sixHundred
-  })
-  const [passwordError, setPasswordError] = useState({
-    msg: "",
-    color: colors.gray.sevenHundred
-  })
-  const [emailValidated, setEmailValidated] = useState()
+  const [emailError, setEmailError] = useState(null)
+  const [passwordError, setPasswordError] = useState(null)
   const [passwordValidated, setPasswordValidated] = useState()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    signUp(email, password).then(userObject => {
-      const { user } = userObject
-      // Record new user in the db
-      firebaseDb.ref('users/' + user.uid).set({
-        email: user.email
-      })
-      // Send the user a verification email
-      user.sendEmailVerificationOnSignUp().then(() => {
-        navigate("/app/dashboard")
+    setLoading(true)
+    
+    const validated = await validateEmail(email)
+
+    if (validated) {
+      console.log('validated')
+      signUp(email, password).then(async userObject => {
+        const { user } = userObject
+        console.log(userObject)
+        // Record new user in the db
+        await set(ref(firebaseDb, 'users/' + user.uid), {
+          email: user.email
+        })
+
+        return user
+      }).then(async user => {
+        console.log("sending verification email")
+        // Send the user a verification email
+        await sendEmailVerification(user.email)
+        setLoading(false)
       }).catch(error => {
-        console.log(error.code, error.msg)
+        setLoading(false)
+
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setEmailError("This email is already in use.")
+            break
+          case "auth/invalid-email":
+            setEmailError("Email was in an invalid format.")
+            break
+          case "auth/operation-not-allowed":
+            setEmailError("Sorry, our server is busy.")
+            break
+          default:
+            setEmailError("Something went wrong.")
+        }
       })
-    })
-    .catch(error => {
-      switch(error.code) {
-        case "auth/email-already-in-use":
-          setEmailError({
-            msg: "This email is already in use.",
-            color: colors.red.sixHundred
-          })
-          break
-        case "auth/invalid-email":
-          setEmailError({
-            msg: "Email was in an invalid format.",
-            color: colors.red.sixHundred
-          })
-          break
-        case "auth/operation-not-allowed":
-          setEmailError({
-            msg: "Sorry, our server is busy.",
-            color: colors.red.sixHundred
-          })
-          break
-        default:
-          setEmailError({
-            msg: "Something went wrong.",
-            color: colors.red.sixHundred
-          })
+    }
+    else {
+      console.log("you aint ready!")
+      setLoading(false)
+    }
+  }
+
+  // check the db to see if this user has an early access email
+  async function validateEmail(email) {
+    await onValue(query(ref(firebaseDb, "earlyAccess"), orderByChild('email'), equalTo(email)), (snapshot) => {
+      console.log(snapshot.val())
+      if (snapshot.exists()) {
+        setEmailError(null)
+        return true
+      }
+      else {
+        setEmailError("This email does not have early access yet!")
+        return false
       }
     })
   }
 
-  function validateEmail(email) {
-    if (regex.email.test(email) || email.length === 0) {
-      setEmailError({
-        msg: "",
-        color: colors.gray.sevenHundred
-      })
-      setEmailValidated(true)
-      setEmail(email)
-    }
-    else {
-      setEmailError({
-        msg: "Invalid format",
-        color: colors.red.sixHundred
-      })
-      setEmailValidated(false)
-    }
-  }
+  function handlePasswordOnChange(password) {
+    const { isValid, error } = validatePassword(password)
 
-  function validatePassword(password) {
-    let additionalCharsReq = 8 - password.length
-
-    if (regex.password.test(password)) {
-      setPasswordError({
-        msg: "",
-        color: colors.gray.sevenHundred
-      })
+    if (isValid) {
       setPasswordValidated(true)
+      setPasswordError(null)
       setPassword(password)
     }
     else {
-      if (password.length > 0) {
-        setPasswordError({
-          msg: additionalCharsReq === 1 ? `You need ${additionalCharsReq} more character.` : `You need ${additionalCharsReq} more characters.`,
-          color: colors.gray.sevenHundred
-        })
-      }
-      else if (password.length === 0) {
-        setPasswordError({
-          msg: "",
-          color: colors.gray.sevenHundred
-        })
-      }
+      setPasswordError(error)
       setPasswordValidated(false)
     }
   }
 
-  function validatePasswordOnBlur(password) {
-    let currentNumOfChars = password.length
-
-    if (currentNumOfChars !== 0 && currentNumOfChars < 8) {
+  function handlePasswordOnBlur(password) {
+    if (password.length === 0) {
+      setPasswordError(null)
       setPasswordValidated(false)
-      return setPasswordError({
-        msg: "Password must be at least 8 characters.",
-        color: colors.red.sixHundred
-      })
     }
   }
 
   return (
-    <>
-      <AuthFormWrapper>
-        <SEO title="Sign Up" />
-        <Content>
-          <h4>Create your Notesmith account</h4>
-        </Content>
-        <form
-          id="signup-form"
-          onSubmit={e => handleSubmit(e)}
+    <AuthFormWrapper>
+      <Seo title="Sign Up" />
+      <Content
+        h1fontsize="2rem"
+        margin="0 0 32px"
+        linktextdecoration="underline"
+      >
+        <h1>Create your Notesmith account</h1>
+        <p>Notesmith is currently taking pre-orders. Only users who have been granted early access may create an account at this time. If you would like to get early access please <Link to="/waitlist">sign up here</Link>.</p>
+      </Content>
+      <form
+        id="signup-form"
+        onSubmit={e => handleSubmit(e)}
+      >
+        <StyledFieldset
+          margin="0 0 16px"
         >
-          <StyledFieldset className="is-vertical">
-            <StyledLabel>Email</StyledLabel>
-            <StyledInput
-              onChange={e => validateEmail(e.currentTarget.value)}
-              className={emailError.msg && "is-error"}
-              borderradius="0.25rem"
-              id="email"
-              type="email"
-              name="email"
-              autocomplete="email"
-            />
-            {emailError.msg && (
-              <ErrorLine color={emailError.color}>
-                <Icon>
-                  <Warning weight="fill" color={emailError.color} size={16} />
-                </Icon>
-                <span>{emailError.msg}</span>
-              </ErrorLine>
+          <StyledLabel>Email</StyledLabel>
+          <StyledInput
+            onChange={e => setEmail(e.currentTarget.value)}
+            onFocus={() => setEmailError(null)}
+            className={emailError && "is-error"}
+            id="email"
+            type="email"
+            name="email"
+            autocomplete="email"
+          />
+          {emailError && (
+            <ErrorLine color={colors.red.sixHundred}>
+              <Icon>
+                <WarningCircle weight="fill" color={colors.red.sixHundred} size={16} />
+              </Icon>
+              <span>{emailError}</span>
+            </ErrorLine>
+          )}
+        </StyledFieldset>
+        <StyledFieldset
+          margin="0 0 32px"
+        >
+          <StyledLabel>Password (min. 8 characters)</StyledLabel>
+          <StyledInput
+            onChange={(e) => handlePasswordOnChange(e.currentTarget.value)}
+            onBlur={(e) => handlePasswordOnBlur(e.currentTarget.value)}
+            className={passwordError && "is-error"}
+            id="password"
+            type="password"
+            name="password"
+            autocomplete="new-password"
+          />
+          {passwordValidated && (
+            <div style={{position: `absolute`, right: `1rem`, bottom: `0`}}>
+              <Icon
+                icon="ShieldCheck"
+                weight="regular"
+                size="1.5rem"
+                color={colors.green.sixHundred}
+              />
+            </div>
+          )}
+          {passwordError && (
+            <ErrorLine color={colors.red.sixHundred}>
+              <Icon>
+                <WarningCircle weight="fill" color={colors.red.sixHundred} size={16} />
+              </Icon>
+              <span>{passwordError}</span>
+            </ErrorLine>
+          )}
+        </StyledFieldset>
+        <StyledFieldset>
+          <Button
+            backgroundcolor={colors.gray.nineHundred}
+            className={loading && "is-loading"}
+            color={colors.gray.oneHundred}
+            disabled={!passwordValidated || !email || loading}
+            form="signup-form"
+            padding="16px"
+            type="submit"
+            width="100%"
+          >
+            {loading ? (
+              <Icon>
+                <CircleNotch size="1rem" />
+              </Icon>
+            ) : (
+              <span>Create account</span>
             )}
-          </StyledFieldset>
-          <StyledFieldset className="is-vertical has-space-bottom">
-            <StyledLabel>Password</StyledLabel>
-            <StyledInput
-              onFocus={(e) => validatePassword(e.currentTarget.value)}
-              onChange={(e) => validatePassword(e.currentTarget.value)}
-              onBlur={(e) => validatePasswordOnBlur(e.currentTarget.value)}
-              className={passwordError.msg && "is-error"}
-              borderradius="0.25rem"
-              id="password"
-              type="password"
-              name="password"
-              autocomplete="new-password"
-            />
-            {passwordValidated && (
-              <div style={{position: `absolute`, right: `1rem`, bottom: `0`}}>
-                <Icon
-                  icon="ShieldCheck"
-                  weight="regular"
-                  size="1.5rem"
-                  color={colors.green.sixHundred}
-                />
-              </div>
-            )}
-            {passwordError.msg && (
-              <ErrorLine color={passwordError.color}>
-                <Icon>
-                  <Warning weight="fill" color={passwordError.color} size={16} />
-                </Icon>
-                <span>{passwordError.msg}</span>
-              </ErrorLine>
-            )}
-          </StyledFieldset>
-          <StyledFieldset>
-            <Button
-              color={colors.white}
-              backgroundcolor={colors.primary.sixHundred}
-              borderradius="0.25rem"
-              disabled={passwordValidated && emailValidated && email.length > 0 ? false : true}
-              type="submit"
-              form="signup-form"
-              width="100%"
-              className="is-medium"
-              >
-              Create account
-            </Button>
-          </StyledFieldset>
-        </form>
-      </AuthFormWrapper>
-    </>
+          </Button>
+        </StyledFieldset>
+      </form>
+      <Content 
+        paragraphtextalign="center"
+        linktextdecoration="underline"
+        margin="16px 0 0"
+      >
+        <p>Already have an account? <Link to="/signin">Sign in</Link></p>
+      </Content>
+    </AuthFormWrapper>
   )
 }
 
-export default SignUpForm
+export default SignupForm

@@ -1,131 +1,227 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import Button from "../Button"
-import { colors, regex } from "../../styles/variables"
+import Button from "../ui/Button"
+import { colors, fonts } from "../../styles/variables"
+import { CircleNotch, PaperPlaneRight } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning } from "phosphor-react"
+import { ref, set, push, get, query, orderByChild, equalTo } from "firebase/database"
 
-import { StyledFieldset, StyledFloatingLabel, StyledInput, ErrorLine } from "./FormComponents"
-import Icon from "../Icon"
-import Loading from "../../assets/loading.svg"
+import Icon from "../ui/Icon"
+import { StyledInput, ErrorLine } from "./FormComponents"
 
-const StyledRegisterForm = styled.form`
-  display: ${props => props.formHidden ? "none" : "block"};
+const InputWrapper = styled.div`
+  position: relative;
+  margin: ${props => props.margin};
 `
 
-function RegisterForm(props) {
+const InputLabel = styled.label`
+  background-color: ${colors.white};
+  border: ${props => props.border && colors.borders.black};
+  display: block;
+  font-family: ${fonts.secondary};
+  font-size: 0.875rem;
+  border-radius: 4px;
+  width: 100%;
+  &:hover {
+    cursor: text;
+  }
+  label {
+    transition: top 0.2s ease-in-out, font-size 0.2s ease-in-out;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: ${colors.gray.sixHundred};
+    &:hover {
+      cursor: text;
+    }
+    &.has-value {
+      top: 8px;
+      font-size: 0.625rem;
+      color: ${colors.gray.nineHundred};
+    }
+  }
+  input {
+    &:focus {
+      & + label {
+        top: 8px;
+        font-size: 0.625rem;
+        color: ${colors.gray.nineHundred};
+      }
+    }
+  }
+`
+
+const InputButton = styled(Button)`
+  position: absolute;
+  right: 8px;
+  top: ${props => props.top || "8px"};
+`
+
+const EmailInput = styled(StyledInput)`
+  padding: 24px 16px 8px;
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+  font-size: ${props => props.fontsize};
+  &.has-value {
+    width: calc(100% - 36px);
+  }
+  &:focus {
+    box-shadow: none;
+  }
+`
+
+function RegisterForm({ border, margin, fontsize, top, color }) {
+  const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
-  const [inputFocused, setInputFocused] = useState(false)
   const [emailError, setEmailError] = useState({
     msg: "",
-    color: colors.red.sixHundred
+    color: colors.red.threeHundred
   })
-  const [emailValidated, setEmailValidated] = useState(false)
 
-  const sendgridSignUp = async e => {
-    e.preventDefault()
-    setLoading(true)
-
-    if (regex.email.test(email)) {
-      setEmailError({
-        msg: "",
-        color: colors.gray.sevenHundred
+  const sendRegisterEmail = async (newSignupKey) => {
+    const response = await fetch("/.netlify/functions/register-signup", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        id: newSignupKey,
       })
-      setEmailValidated(true)
-      setEmail(email)
+    })
+    const data = await response.json()
 
-      const response = await fetch("/.netlify/functions/register-signup", {
-        method: "put",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email
-        })
-      }).then(res => {
-        const promise = res.json()
-
-        promise.then(obj => {
-          // if the response contains any errors, throw an Error
-          if (obj.errors) {
-            throw obj.errors
-          }
-          else {
-            setLoading(false)
-            setEmailValidated(false)
-            setEmailError({
-              msg: obj.msg,
-              color: colors.green.sixHundred
-            })
-          }
-        })
-      }).catch(err => {
-        setLoading(false)
-        setEmailValidated(false)
-        setEmailError({
-          msg: "Something went wrong. Please try again.",
-          color: colors.red.sixHundred
-        })
+    if (data.error) {
+      setLoading(false)
+      setEmailError({
+        msg: "Please double-check your inputted email address.",
+        color: colors.red.threeHundred
       })
     }
     else {
       setLoading(false)
-      setEmailValidated(false)
-      setEmail("")
       setEmailError({
-        msg: "Invalid format",
-        color: colors.red.sixHundred
+        msg: data.msg,
+        color: color || colors.gray.oneHundred
       })
     }
   }
 
+
+  const registerEmail = e => {
+    e.preventDefault()
+    setLoading(true)
+    setEmailError({
+      msg: "",
+      color: color || colors.gray.oneHundred
+    })
+
+    get(query(ref(firebaseDb, "signups"), orderByChild("email"), equalTo(email))).then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val()
+        let signup;
+
+        // extra object
+        for (const key in data) {
+          signup = data[key]
+        }
+
+        if (signup.subscribed) {
+          setEmailError({
+            msg: "This email is already registered.",
+            color: colors.red.threeHundred
+          })
+        }
+        else {
+          sendRegisterEmail(signup.id)
+        }
+
+        setLoading(false)
+      }
+      else {
+        const newSignupKey = push(ref(firebaseDb, "signups")).key
+        // add the email with a unique id to the database
+        // we will use the id to link the user to subscription page from an email
+        set(ref(firebaseDb, `signups/${newSignupKey}`), {
+          email: email,
+          id: newSignupKey,
+          subscribed: false,
+        }).then(async () => {
+          sendRegisterEmail(newSignupKey)
+        }).catch(() => {
+          setLoading(false)
+          setEmailError({
+            msg: "An error occured. Please try again.",
+            color: colors.red.threeHundred
+          })
+        })
+      }
+    })
+  }
+
   return (
-    <StyledRegisterForm id={`register-form-${props.id}`} onSubmit={e => sendgridSignUp(e)}>
-      <StyledFieldset
-        margin="2rem 0 0"
+    <form 
+      id="register-form"
+      onSubmit={e => registerEmail(e)}
+    >
+      <InputWrapper
+        margin={margin}
       >
-        <StyledFieldset width="100%">
-          <StyledFloatingLabel
-            htmlFor={`email-${props.id}`}
-          >
-            Sign up for early access
-          </StyledFloatingLabel>
-          <StyledInput
+        <InputLabel 
+          htmlFor="register-form-input"
+          border={border}
+        >
+          <EmailInput
             onFocus={() => setEmailError({
-                    msg: "",
-                    color: colors.red.sixHundred
-                  })}
+              msg: "",
+              color: colors.red.threeHundred
+            })}
             onChange={e => setEmail(e.currentTarget.value)}
-            id={`email-${props.id}`}
+            className={email && "has-value"}
+            id="register-form-input"
             type="email"
             name="email"
-            placeholder="signmeup@gmail.com"
+            margin="0"
+            autoComplete="off"
+            fontsize={fontsize}
           />
-        </StyledFieldset>
-        <Button
-          color={colors.white}
-          backgroundcolor={colors.primary.sixHundred}
-          padding="1rem"
-          type="submit"
-          form={`register-form-${props.id}`}
-          className={loading ? "is-loading" : null}
-          disabled={emailValidated}
-        >
-          {loading ? (
-            <Loading height="1rem" width="57px" />
-          ) : (
-            "Sign Up"
+          <label
+            className={email && "has-value"}
+            htmlFor="register-form-input"
+          >
+            Email address
+          </label>
+          {email && (
+            <InputButton
+              color={colors.gray.oneHundred}
+              backgroundcolor={colors.gray.nineHundred}
+              padding="8px"
+              type="submit"
+              form="register-form"
+              className={loading ? "is-loading" : null}
+              disabled={loading}
+              margin="0 0 0 2px"
+              top={top}
+            >
+              <Icon>
+                {loading ? (
+                  <CircleNotch size={16} />
+                ) : (
+                  <PaperPlaneRight size={16} color={colors.gray.oneHundred} weight="fill" />
+                )}
+              </Icon>
+            </InputButton>
           )}
-        </Button>
-      </StyledFieldset>
+        </InputLabel>
+      </InputWrapper>
       {emailError.msg && (
         <ErrorLine color={emailError.color}>
           <span>{emailError.msg}</span>
         </ErrorLine>
       )}
-      <small>Notesmith is in early access. Enter your email to join!</small>
-    </StyledRegisterForm>
+    </form>
   )
 }
 

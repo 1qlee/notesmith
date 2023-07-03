@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react"
+import { colors } from "../../../styles/variables"
 import { navigate } from "gatsby"
-import { colors, spacing } from "../../../styles/variables"
-import { Grid, Cell } from "styled-css-grid"
 
-import { Book, BookInput } from "./BookComponents"
+import { Flexbox } from "../../layout/Flexbox"
+import { StyledInput } from "../../form/FormComponents"
+import { Select } from "../../ui/Select"
+import Table from "../../ui/Table"
+import Button from "../../ui/Button"
 import ContextMenu from "../../ui/ContextMenu"
-import Content from "../../Content"
 
 // should export this function to utils
 function convertTime(time) {
@@ -15,7 +17,15 @@ function convertTime(time) {
   return humanDateFormat
 }
 
-function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook }) {
+function BooksContainer({
+  duplicateBook,
+  getLocalStorage,
+  handleBookDelete,
+  renameBook,
+  userBooks,
+  setShowModal,
+  sortBooks,
+}) {
   const [selectedBook, setSelectedBook] = useState()
   const [selectedBookDOM, setSelectedBookDOM] = useState(null)
   const [selectedBookTitle, setSelectedBookTitle] = useState()
@@ -44,7 +54,7 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
   function handleRenameBook(e) {
     e.preventDefault()
     // db function from props
-    renameBook(selectedBookTitle, newBookTitle, selectedBookId)
+    renameBook(newBookTitle, selectedBookId)
     setShowBookTitleInput(false)
   }
 
@@ -73,7 +83,7 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
     e.preventDefault()
     // to display the menu on cursor
     setCoordinates({
-      x: e.clientX,
+      x: e.clientX - 180,
       y: e.clientY
     })
     // show in DOM
@@ -102,51 +112,78 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
   }, [])
 
   return (
-    <>
-      <Grid
-        columnGap={spacing.normal}
-        columns="repeat(auto-fit, minmax(250px, 1fr))"
-        data-clickoutside={true}
-        height="100%"
-        onClick={e => handleClickOutside(e)}
-        rowGap={spacing.normal}
-        style={{gridAutoRows: "min-content"}}
+    <div
+      data-clickoutside={true}
+      onClick={e => handleClickOutside(e)}
+    >
+      <Flexbox
+        flex="flex"
+        alignitems="center"
+        margin="32px 0 16px"
       >
-        {userBooks.map(book => (
-          <Cell
-            key={book.id}
-          >
-            <Book
+        <Button
+          color={colors.gray.oneHundred}
+          backgroundcolor={colors.gray.nineHundred}
+          margin="0 16px 0 0"
+          onClick={() => setShowModal({
+            show: true,
+            type: "createbook",
+          })}
+        >
+          New book
+        </Button>
+        <Select
+          initialDbValue={getLocalStorage("sortMethod")}
+          initialOption={getLocalStorage("sortValue")}
+          initialSortOrder={getLocalStorage("sortOrder")}
+          mainFunction={sortBooks}
+        />
+      </Flexbox>
+      <Table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Date created</th>
+          </tr>
+        </thead>
+        <tbody style={{position: 'relative'}}>
+          {userBooks && userBooks.map(book => (
+            <tr
               data-title={book.title}
+              key={book.id}
               onClick={e => handleBookSelect(e, book)}
-              onDoubleClick={() => navigate(`/app/create/${book.id}`)}
+              onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
+              tabIndex="0"
               onContextMenu={e => {
                 handleBookSelect(e, book)
                 handleShowContextMenu(e, book)
               }}
             >
-              {selectedBookId === book.id && showBookTitleInput ? (
-                <form onSubmit={e => handleRenameBook(e)}>
-                  <BookInput
-                    type="text"
-                    id="new-book-title"
-                    name="new-book-title"
-                    autocomplete="chrome-off"
-                    defaultValue={selectedBookTitle}
-                    onChange={e => setNewBookTitle(e.target.value)}
-                    ref={renameBookTitleRef}
-                  />
-                </form>
-              ) : (
-                <p>
-                  {book.title}
-                </p>
-              )}
-              <small>Created on {convertTime(book.date_created)}</small>
-            </Book>
-          </Cell>
-        ))}
-      </Grid>
+              <td>
+                {selectedBookId === book.id && showBookTitleInput ? (
+                  <form onSubmit={e => handleRenameBook(e)}>
+                    <StyledInput
+                      type="text"
+                      id="new-book-title"
+                      name="new-book-title"
+                      autocomplete="chrome-off"
+                      defaultValue={selectedBookTitle}
+                      onChange={e => setNewBookTitle(e.target.value.trim())}
+                      padding="4px"
+                      ref={renameBookTitleRef}
+                    />
+                  </form>
+                ) : (
+                  <p>
+                    {book.title}
+                  </p>
+                )}
+              </td>
+              <td>{convertTime(book.dateCreated)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
       <ContextMenu
         selectedBook={selectedBook}
         selectedBookId={selectedBookId}
@@ -156,7 +193,7 @@ function BooksContainer({ userBooks, renameBook, handleBookDelete, duplicateBook
         showContextMenu={showContextMenu}
         setShowBookTitleInput={setShowBookTitleInput}
       />
-    </>
+    </div>
   )
 }
 

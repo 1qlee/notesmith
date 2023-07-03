@@ -1,19 +1,29 @@
 import styled from "styled-components"
+import { colors } from "../../styles/variables"
 
 const Flexbox = styled.div`
   align-items: ${props => props.alignitems};
   background-color: ${props => props.backgroundcolor};
   border: ${props => props.border};
-  borderWidth: ${props => props.borderWidth};
-  display: ${props => props.flex};
+  border-width: ${props => props.borderwidth};
+  border-radius: ${props => props.borderradius};
+  box-shadow: ${props => props.boxshadow};
+  display: ${props => props.flex || "flex"};
   justify-content: ${props => props.justifycontent};
   flex-direction: ${props => props.flexdirection};
+  flex-wrap: ${props => props.flexwrap};
+  flex: ${props => props.flexprop};
+  height: ${props => props.height};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;
   width: ${props => props.width};
+  max-width: ${props => props.maxwidth};
   &.has-border-bottom {
-    border-bottom: 1px solid ${props => props.bordercolor};
+    border-bottom: ${colors.borders.black};
+  }
+  &.has-border-top {
+    border-top: ${colors.borders.black};
   }
 `
 

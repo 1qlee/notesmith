@@ -1,0 +1,74 @@
+[
+  {
+    "camelName": "proWiredNotebookA5Custom",
+    "category": "notebooks",
+    "custom": true,
+    "description": "One signature, custom-printed Notesmith wired notebook in A5 (8.5 x 5.5 inches) with 140 pages, 70lb paper, and extra thick cover stock that is laminated on both sides.",
+    "longDescription": "All of our Wired Notebooks are produced and manufactured in our factory in New York. They are made only with materials sourced from American vendors and are made-to-order according to your custom specifications.",
+    "heightInch": "8.5",
+    "heightPixel": 816,
+    "name": "Pro Wired Notebook A5 (Custom)",
+    "numOfPages": 140,
+    "paperColor": "Bright white",
+    "paperTooth": "Ultra smooth",
+    "paperWeight": "70lb",
+    "price": 3200,
+    "preorderPrice": 2400,
+    "size": "A5",
+    "slug": "pro-wired-notebook-a5-custom",
+    "stripePriceId": "price_1IbAlnIN24Fw2SWdOVRXdimr",
+    "stripePreorderPriceId": "price_1NCYdgIN24Fw2SWdSphB0e28",
+    "weight": 9.6,
+    "widthInch": "5.5",
+    "widthPixel": 528,
+    "infoList": [
+      "Designed and manufactured in U.S.A. only",
+      "High quality, bright white and ultra smooth writing paper",
+      "Covers with extra thick cover stock and double-sided lamination"
+    ],
+    "halfandhalf": [
+      {
+        "heading": "Fountain pen friendly",
+        "text": "Our carefully selected writing paper is fountain pen friendly. Bright white and ultra smooth, our paper is a pleasure to write on. We use a 70lb paper weight, which is not too thick or thin - perfect for writing!"
+      },
+      {
+        "heading": "A layout for everyone",
+        "text": "Choose from any of our premade templates to create a custom notebook that fits your needs. Or, utilize our online page editor to create your very own custom layout!"
+      }
+    ],
+    "hero": {
+      "heading": "Carefully selected, expertly crafted",
+      "text": "With our notebooks, you can expect a high quality product that was crafted with a focus on delivering an excellent writing experience. If you're not satisfied with your purchase, we offer free returns within 14 days of purchase."
+    },
+    "infoBoxes": [
+      {
+        "heading": "Materials",
+        "text": "70lb text paper, double-mounted 130lb coated cover stock, gold wire, sand-matte textured lamination"
+      },
+      {
+        "heading": "Size",
+        "text": "5.5in x 8.5in (page size)"
+      },
+      {
+        "heading": "Pages",
+        "text": "70 sheets (140 pages total)"
+      },
+      {
+        "heading": "Returns",
+        "text": "Free returns within 14 days of purchase"
+      }
+    ],
+    "colors": [
+      {
+        "slug": "white",
+        "name": "White",
+        "hex": "#fff"
+      },
+      {
+        "slug": "black",
+        "name": "Black",
+        "hex": "#000"
+      }
+    ]
+  }
+]

@@ -1,11 +1,12 @@
+import React from "react"
 import styled from "styled-components"
-import { colors, spacing, widths } from "../../styles/variables"
+import { colors, fonts, spacing } from "../../styles/variables"
+import RandomLine from "../misc/Lines"
 
 const SectionMain = styled.main`
-  background-color: ${colors.paper.offWhite};
+  background-color: ${colors.white};
   position: relative;
-  padding: 6rem 0 0 6rem;
-  height: 100%;
+  padding: 0;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;
   }
@@ -13,34 +14,55 @@ const SectionMain = styled.main`
     padding: 0;
   }
   &.has-max-height {
-    min-height: 100vh;
-  }
-  @media only screen and (max-width: ${widths.tablet}) {
-    padding: 6rem 0 0;
+    min-height: calc(100vh - 105px);
   }
 `
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
+  background-image: url(${props => props.backgroundimage});
+  position: relative;
   width: 100%;
 `
 
 const SectionContent = styled.div`
-  padding: ${props => props.spacing ? props.spacing : spacing.section} 0;
-  @media only screen and (max-width: ${widths.tablet}) {
-    padding: 4rem 0;
+  background-color: ${props => props.backgroundcolor};
+  padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
+  position: relative;
+  &.has-border-top {
+    border-top: 2px solid ${colors.gray.nineHundred};
   }
 `
 
-const SectionApp = styled.div`
-  display: flex;
-  height: 100%;
-  width: 100%;
+const StyledSectionHeading = styled.div`
+  margin: ${props => props.margin || "0 0 32px 0"};
+  display: inline-block;
+  position: relative;
+  h3 {
+    font-size: 1rem;
+    padding-bottom: 4px;
+    font-family: ${fonts.secondary};
+  }
 `
 
-const SectionAppContent = styled.section`
-  padding: ${spacing.normal} ${spacing.medium};
-  width: calc(100% - ${widths.sidebar});
-`
+function SectionHeading({
+  children,
+  margin,
+  fontsize,
+}) {
+  return (
+    <StyledSectionHeading
+      margin={margin}
+      fontsize={fontsize}
+    >
+      <h3>{children}</h3>
+    </StyledSectionHeading>
+  )
+}
 
-export { SectionMain, Section, SectionContent, SectionApp, SectionAppContent }
+export {
+  SectionMain,
+  Section,
+  SectionContent,
+  SectionHeading,
+}

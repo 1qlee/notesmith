@@ -1,678 +1,659 @@
 import React, { useState } from "react"
-import { Book, HandWaving, Mouse, Package } from "phosphor-react"
-import { colors, spacing, widths } from "../styles/variables"
-import { Link } from "gatsby"
+import { graphql } from "gatsby"
+import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "phosphor-react"
+import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { Container, Row, Col, setConfiguration } from 'react-grid-system'
 
-import { Card, CardWrapper } from "../components/ui/Card"
-import { Container, LayoutContainer } from "../components/layout/Container"
 import { Flexbox } from "../components/layout/Flexbox"
-import { Grid, Cell } from "styled-css-grid"
-import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Button from "../components/Button"
-import Content from "../components/Content"
-import Footer from "../components/ui/Footer"
-import Icon from "../components/Icon"
-import Img from "gatsby-image"
+import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
+import { Tabs } from "../components/ui/Tabs"
+import Book3d from "../components/index/Book3d"
+import Box from "../components/ui/Box"
+import Button from "../components/ui/Button"
+import CircledText from "../components/misc/CircledText"
+import Content from "../components/ui/Content"
+import DemoControls from "../components/index/DemoControls"
+import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
-import Nav from "../components/layout/Nav"
-import Notification from "../components/ui/Notification"
-import PageAnimation from "../components/PageAnimation"
-import PageGallery from "../components/PageGallery"
+import PageDemoCarousel from "../components/index/PageDemoCarousel"
+import PageIcons from "../components/customize/PageIcons"
+import { Patterns, Pattern } from "../components/misc/Patterns"
+import Progress from "../components/ui/Progress"
+import Reviews from "../components/index/Reviews"
 import RegisterForm from "../components/form/RegisterForm"
-import SEO from "../components/layout/Seo"
+import Seo from "../components/layout/Seo"
+import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
-
-const chapterData = {
-  chapterOne: {
-    title: "Custom notebooks made-to-order",
-    chapter: "01"
-  },
-  chapterTwo: {
-    title: "Create a truly unique notebook of your own",
-    chapter: "02",
-    heading: "Commitment to customization",
-  },
-  chapterThree: {
-    title: "High quality, fountain pen friendly paper",
-    chapter: "03",
-    heading: "Smooth writing experience"
-  },
-  chapterFour: {
-    title: "Simple, clean design and functional materials",
-    chapter: "04",
-    heading: "Strive for quality"
-  },
-  chapterFive: {
-    title: "Our current notebook specifications",
-    chapter: "05",
-    heading: "Good things come in bundles"
-  }
-}
+import TextLink from "../components/ui/TextLink"
 
 const IndexPage = ({ data }) => {
-  const [ hideNavbar, setHideNavbar ] = useState(false)
-  const [ chapterOnePosition, setchapterOnePosition ] = useState()
-  const [ chapterTwoPosition, setchapterTwoPosition ] = useState()
-  const [ chapterThreePosition, setchapterThreePosition ] = useState()
-  const [ chapterFourPosition, setchapterFourPosition ] = useState()
-  const [ chapterFivePosition, setchapterFivePosition ] = useState()
-  const [ currentChapterTitle, setCurrentChapterTitle ] = useState(chapterData.chapterOne.title)
-  const [ currentChapterNumber, setCurrentChapterNumber ] = useState(chapterData.chapterOne.chapter)
-
-  const setPosition = (element, section) => {
-    // element is passed from each section's ref and section is just a corresponding number value
-    if (element) {
-      switch(section) {
-        case 1:
-          return setchapterOnePosition(element.offsetHeight)
-        case 2:
-          return setchapterTwoPosition(element.offsetTop)
-        case 3:
-          return setchapterThreePosition(element.offsetTop)
-        case 4:
-          return setchapterFourPosition(element.offsetTop)
-        case 5:
-          return setchapterFivePosition(element.offsetTop)
-        default:
-          return 0
-      }
-    }
+  setConfiguration({ gutterWidth: 64 })
+  const { tabImages } = data
+  const [activeTab, setActiveTab] = useState(0)
+  const [pageData, setPageData] = useState({
+    alignmentHorizontal: "center",
+    alignmentVertical: "top",
+    angle: 30,
+    ascSpacing: 5,
+    borderData: {
+      sync: true,
+      toggle: true,
+      thickness: 0.088,
+      opacity: 1,
+    },
+    columns: 27,
+    columnSpacing: 5,
+    dashedLineData: {
+      sync: true,
+      thickness: 0.088,
+      opacity: 1,
+      dashArray: "2 4 4 2",
+      dashOffset: 0,
+    },
+    dscSpacing: 5,
+    hexagonRadius: 1,
+    lineWidth: 100,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 0,
+    opacity: 1,
+    radius: 0.1,
+    rows: 20,
+    rowSpacing: 5,
+    show: false,
+    crossSize: 1,
+    slantAngle: 55,
+    slants: 20,
+    slantSpacing: 5,
+    spacing: 5,
+    staffSpacing: 5,
+    staves: 9,
+    svgHeight: 607,
+    svgWidth: 366,
+    template: "",
+    thickness: 0.088,
+    xHeight: 5,
+  })
+  const leftPageData = {
+    template: ""
+  }
+  const rightPageData = {
+    template: ""
   }
 
-  useScrollPosition(({ prevPos, currPos }) => {
-    const isHidden = currPos.y < prevPos.y
-
-    if (isHidden !== hideNavbar) {
-      setHideNavbar(isHidden)
-    }
-    if (chapterOnePosition / 1.2 > -currPos.y) {
-      setCurrentChapterTitle(chapterData.chapterOne.title)
-      setCurrentChapterNumber(chapterData.chapterOne.chapter)
-    }
-    if (chapterOnePosition / 1.2 < -currPos.y && -currPos.y > chapterTwoPosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterTwo.title)
-      setCurrentChapterNumber(chapterData.chapterTwo.chapter)
-    }
-    if (chapterTwoPosition / 1.2 < -currPos.y && -currPos.y > chapterThreePosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterThree.title)
-      setCurrentChapterNumber(chapterData.chapterThree.chapter)
-    }
-    if (chapterFourPosition / 1.2 < -currPos.y && -currPos.y > chapterFourPosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterFour.title)
-      setCurrentChapterNumber(chapterData.chapterFour.chapter)
-    }
-    if (chapterFivePosition / 1.2 < -currPos.y && -currPos.y > chapterFivePosition / 1.5) {
-      setCurrentChapterTitle(chapterData.chapterFive.title)
-      setCurrentChapterNumber(chapterData.chapterFive.chapter)
-    }
-
-  }, [chapterOnePosition, chapterTwoPosition, chapterThreePosition, hideNavbar])
-
   return (
-    <Layout>
-      <SEO title="Create truly unique custom notebooks" />
-      <Nav chapterNumber={currentChapterNumber} title={currentChapterTitle} hideNavbar={hideNavbar}></Nav>
+    <Layout title="Made-to-order notebooks crafted with your unique, custom printed pages">
+      <Patterns 
+        color={colors.gray.twoHundred} 
+      />
       <SectionMain>
         <Section>
-          <Container ref={element => setPosition(element, 1)}>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="1fr"
-                  columnGap={spacing.large}
-                  justifycontent="center"
-                >
-                  <Grid
-                    flow="row"
-                    rowGap={spacing.normal}
-                    columns="minmax(0, 1fr)"
-                    rows="auto"
+          <SectionContent
+            padding={`${spacing.xlarge} 0`}
+          >
+            <Pattern
+              pattern={26}
+              height="100%"
+              width={200}
+              top={12}
+              left={0}
+            />
+            <Container xl lg md sm xs>
+              <Row>
+                <Col xl={4} lg={4} offset={{ sm: 2, lg: 0 }} sm={8}>
+                  <Content
+                    paragraphfontsize="1.25rem"
+                    smallfontsize="0.8rem"
+                    margin="0 0 32px"
+                    h1margin="0 0 32px"
+                    style={{ clipPath: `url(#pattern-26)` }}
+                  >
+                    <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
+                    <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
+                  </Content>
+                  <Content
+                    paragraphmargin="0"
+                    h5margin="8px 0"
+                    h5fontweight="800"
+                    className="has-border-top"
+                    padding="32px 0 0"
+                    margin="0"
+                  >
+                    <Flexbox
+                      alignitems="center"
+                      justifycontent="space-between"
+                    >
+                      <h5>Pre-order sale</h5>
+                      <Tag
+                        padding="3px 6px"
+                        backgroundcolor={colors.white}
+                        border={colors.borders.black}
+                        color={colors.gray.nineHundred}
+                      >
+                        Announcement
+                      </Tag>
+                    </Flexbox>
+                    <p>You can now sign up for the waitlist to join the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
+                  </Content>
+                  <RegisterForm 
+                    border
+                    fontsize="1rem"
+                    margin="16px 0 0"
+                    top="12px"
+                    color={colors.gray.nineHundred}
+                  />
+                </Col>
+                <Col xl={8} lg={8}>
+                  <PageDemoCarousel />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <SectionHeading>
+                    Signature custom notebook
+                  </SectionHeading>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6} lg={4}>
+                  <Content
+                    h2margin="0 0 2rem 0"
+                    h2fontsize="3rem"
+                    h2fontweight="400"
+                    h5fontsize="0.75rem"
+                    paragraphfontsize="1.25rem"
+                    paragraphmargin="0 0 16px"
+                    maxwidth={widths.content.index}
+                    margin="0 0 32px"
+                  >
+                    <h2>Your custom layouts on <b>every single page</b></h2>
+                    <p>With Notesmith, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                  </Content>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                  >
+                    <TextLink
+                      className="has-icon"
+                      color={colors.gray.nineHundred}
+                      fontweight="700"
+                      href="/waitlist"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>Join the waitlist</span>
+                      <Icon
+                        margin="0 0 0 4px"
+                      >
+                        <ArrowRight color={colors.gray.nineHundred} />
+                      </Icon>
+                    </TextLink>
+                  </Flexbox>
+                </Col>
+                <Col md={6} lg={4}>
+                  <Book3d 
+                    pageData={pageData}
+                    setPageData={setPageData}
+                  />
+                </Col>
+                <Col lg={4}>
+                  <Content
+                    margin="0 0 32px"
+                    paragraphfontsize="1rem"
+                    h5margin="0"
+                    h5fontweight="700"
+                  >
+                    <Flexbox
+                      margin="0 0 16px"
+                      alignitems="flex-start"
+                      justifycontent="space-between"
+                    >
+                      <h5>Choose from a template below</h5>
+                      <Tag
+                        padding="3px 6px"
+                        backgroundcolor={colors.white}
+                        border={colors.borders.black}
+                        color={colors.gray.nineHundred}
+                        margin="0 0 0 8px"
+                      >
+                        Demo
+                      </Tag>
+                    </Flexbox>
+                    <p>Just click on any of the template boxes below and the layout of the book will change automatically. Use the controls to make adjustments to the layout.</p>
+                  </Content>
+                  <Flexbox
+                    margin="0 0 16px"
+                    alignitems="flex-end"
+                  >
+                    <Content
+                      paragraphfontweight="700"
+                    >
+                      <p>Try it out</p>
+                    </Content>
+                    <Icon margin="0 0 0 4px">
+                      <ArrowBendRightDown size="1rem" weight="bold" color={colors.gray.nineHundred} />
+                    </Icon>
+                  </Flexbox>
+                  <Flexbox
+                    flex="flex"
+                    flexwrap="wrap"
+                    margin="0 0 16px"
+                  >
+                    <PageIcons
+                      checkActiveVar={pageData.template}
+                      data={pageData}
+                      iconMargin="0 24px 16px 0"
+                      isProductPage={true}
+                      leftPageData={leftPageData}
+                      rightPageData={rightPageData}
+                      setData={setPageData}
+                      showLabels={false}
+                    />
+                  </Flexbox>
+                  <DemoControls
+                    pageData={pageData}
+                    setPageData={setPageData}
+                  />
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    margin="0 0 32px"
+                  >
+                    <Button
+                      backgroundcolor={colors.white}
+                      color={colors.gray.nineHundred}
+                      border={`1px solid ${colors.gray.nineHundred}`}
+                      padding="1rem"
+                      margin="0 1rem 0 0"
+                      width="50%"
+                      onClick={() => setPageData({
+                        ...pageData,
+                        template: null,
+                      })}
+                    >
+                      Hide layout
+                    </Button>
+                    <Button
+                      backgroundcolor={colors.gray.nineHundred}
+                      color={colors.gray.oneHundred}
+                      border={`1px solid ${colors.gray.nineHundred}`}
+                      padding="1rem"
+                      width="50%"
+                      onClick={() => setPageData({
+                        ...pageData,
+                        slants: 21,
+                        columns: 27,
+                        radius: 0.1,
+                        groupSpacing: 5,
+                        hexagonRadius: 1,
+                        lineWidth: 100,
+                        opacity: 1,
+                        rows: pageData.template === "seyes" ? 97 : 42,
+                        thickness: 0.088,
+                        size: 1,
+                      })}
+                    >
+                      Reset layout
+                    </Button>
+                  </Flexbox>
+                  <hr />
+                  <Flexbox
+                    flex="flex"
+                    alignitems="flex-start"
+                    margin="16px 0 0" 
+                  >
+                    <Icon>
+                      <WarningCircle color={colors.gray.sixHundred} />
+                    </Icon>
+                    <Content
+                      margin="0 0 0 4px"
+                      smallmargin="0"
+                    >
+                      <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
+                    </Content>
+                  </Flexbox>
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <SectionHeading>
+                    High quality materials
+                  </SectionHeading>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={4}>
+                  <Content
+                    h2fontweight="400"
+                    h2margin="0 0 2rem"
+                    paragraphfontsize="1.25rem"
+                    paragraphmargin="0 0 16px"
+                    margin="0 0 32px"
+                  >
+                    <h2>We use only the best stuff, guaranteed</h2>
+                    <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
+                  </Content>
+                </Col>
+                <Col lg={8}>
+                  <Tabs 
+                    tabList={["Paper", "Cover", "Lamination", "Binding"]}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    fontsize="1rem"
+                  />
+                  <TabContent
+                    activeTab={activeTab}
+                    tabImages={tabImages.nodes}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section
+          backgroundcolor={colors.gray.nineHundred}
+        >
+          <SectionContent
+            padding={`${spacing.large} 0`}
+          >
+            <Container sm xs>
+              <Row>
+                <Col md={5} push={{md: 1}}>
+                  <Content
+                    h3fontweight="400"
+                    h3fontsize="2rem"
+                    h3color={colors.gray.oneHundred}
+                    h3margin="0"
+                  >
+                    <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
+                  </Content>
+                </Col>
+                <Col md={5} push={{ md: 1 }}>
+                  <Content
+                    paragraphcolor={colors.gray.oneHundred}
+                  >
+                    <p>
+                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access on a rolling basis.
+                    </p>
+                  </Content>
+                  <Flexbox
+                    flex="flex"
+                    alignitems="center"
+                    margin="16px 0 0"
+                  >
+                    <TextLink
+                      className="has-icon"
+                      color={colors.gray.oneHundred}
+                      underlinecolor={colors.gray.oneHundred}
+                      hovercolor={colors.gray.nineHundred}
+                      href="/waitlist"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>Join the waitlist</span>
+                      <Icon
+                        margin="0 0 0 8px"
+                      >
+                        <ArrowRight 
+                          size="1rem" 
+                          color={colors.gray.oneHundred} 
+                          weight="bold"
+                        />
+                      </Icon>
+                    </TextLink>
+                  </Flexbox>
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <SectionHeading>
+                    Fountain pen friendly
+                  </SectionHeading>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={4}>
+                  <Content
+                    paragraphfontsize="1.25rem"
+                    margin="0 0 2rem 0"
+                    h2margin="0 0 2rem 0"
+                  >
+                    <h2>Smooth, ink-loving paper</h2>
+                    <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
+                  </Content>
+                  <Box>
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      bordercolor={colors.gray.nineHundred}
+                    >
+                      <Content
+                        width="128px"
+                      >
+                        <p>
+                          Bleeding
+                        </p>
+                      </Content>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={93}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
+                      >
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.nineHundred} />
+                        </Icon>
+                        <span>4.7</span>
+                      </Tag>
+                    </Flexbox>
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      className="has-border-top"
+                      bordercolor={colors.gray.nineHundred}
+                    >
+                      <Content
+                        width="128px"
+                      >
+                        <p>
+                          Feathering
+                        </p>
+                      </Content>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={90}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
+                      >
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.nineHundred} />
+                        </Icon>
+                        <span>4.5</span>
+                      </Tag>
+                    </Flexbox>
+                    <Flexbox
+                      padding="16px 0"
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="space-between"
+                      className="has-border-top"
+                      margin="0 0 16px"
+                    >
+                      <Content
+                        width="128px"
+                      >
+                        <p>
+                          Ghosting
+                        </p>
+                      </Content>
+                      <Progress
+                        barcolor={colors.gray.nineHundred}
+                        completion={75}
+                        margin="0"
+                        wrappercolor={colors.gray.threeHundred}
+                      />
+                      <Tag
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={colors.borders.black}
+                        padding="4px 6px"
+                        fontfamily={fonts.secondary}
+                        margin="0 0 0 0.5rem"
+                      >
+                        <Icon
+                          margin="0 1px 1px 0"
+                        >
+                          <Star weight="fill" color={colors.gray.nineHundred} />
+                        </Icon>
+                        <span>3.8</span>
+                      </Tag>
+                    </Flexbox>
+                  </Box>
+                  <hr />
+                  <Flexbox
+                    flex="flex"
+                    alignitems="flex-start"
+                    margin="16px 0"
+                  >
+                    <Icon>
+                      <WarningCircle color={colors.gray.sixHundred} />
+                    </Icon>
+                    <Content
+                      margin="0 0 0 4px"
+                      smallmargin="0"
+                    >
+                      <small>Results are from a survey conducted on early test users.</small>
+                    </Content>
+                  </Flexbox>
+                </Col>
+                <Col lg={8}>
+                  <Flexbox
                     justifycontent="center"
                   >
-                    <Content
-                      margin="0 auto"
-                      headingtextalign="center"
-                      h1fontweight="400"
-                    >
-                      <h1>Custom notebooks <b>made by you</b></h1>
-                    </Content>
-                    <Content
-                      maxwidth={widths.content.index}
-                      paragraphfontsize="1.25rem"
-                      margin="0 auto"
-                      smallfontsize="0.8rem"
-                    >
-                      <p>Fully customize the layout of every page in your notebook - from dot thickness to line spacing - and create your own custom-made notebook.</p>
-                      <RegisterForm id="1" />
-                    </Content>
-                    <Flexbox
-                      flex="flex"
-                      margin="2rem auto"
-                    >
-                      <PageGallery />
-                    </Flexbox>
-                  </Grid>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section backgroundcolor={colors.primary.sixHundred}>
-          <Container ref={element => setPosition(element, 1)}>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="1fr"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
-                >
-                  <Cell center>
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2color={colors.primary.white}
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      headingtextalign="center"
-                    >
-                      <h2>Have you ever bought a notebook...</h2>
-                    </Content>
-                    <PageAnimation />
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
+                    <StaticImage
+                      src="../images/index/writing-closeup.jpg"
+                      alt="Ink on paper"
+                      loading="eager"
+                      quality={100}
+                    />
+                  </Flexbox>
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
         </Section>
         <Section>
-          <Container ref={element => setPosition(element, 2)}>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifyContent="center"
-                  alignContent="center"
-                >
-                  <Cell
-                    width={3}
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <SectionHeading>
+                    Early reviews
+                  </SectionHeading>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6} lg={6} xl={4}>
+                  <Content
+                    h2margin="0 0 2rem"
+                    h2fontweight="400"
+                    paragraphfontsize="1.25rem"
+                    margin="0 0 32px"
                   >
-                    <StaticImage
-                      src="../images/index-image-1.jpg"
-                      alt="Notesmith logo image"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                    <small>Notesmith notebook in packs of two.</small>
-                  </Cell>
-                  <Cell
-                    width={2}
-                    className="is-fullwidth-mobile"
+                    <h2>Feedback from our early users</h2>
+                    <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
+                  </Content>
+                  <hr />
+                  <Flexbox
+                    flex="flex"
+                    alignitems="flex-start"
+                    margin="16px 0"
                   >
+                    <Icon>
+                      <NoteBlank color={colors.gray.sixHundred} />
+                    </Icon>
                     <Content
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      paragraphfontsize="1.2rem"
-                      maxwidth={widths.content.index}
+                      margin="0 0 0 4px"
+                      smallmargin="0"
                     >
-                      <h4>{chapterData.chapterTwo.heading}</h4>
-                      <h2>{chapterData.chapterTwo.title}</h2>
-                      <p>Notesmith gives you the power to <b>customize every single page</b> to your needs. You can simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
-                      <p>At Notesmith, we don't keep an inventory of bland, generic notebooks collecting dust in some warehouse. Every custom notebook is made to order in our New York factory by experienced printing veterans.</p>
+                      <small>Quotes represent real words from real users with fake names.</small>
                     </Content>
-                    <Content
-                      h3fontweight="400"
-                    >
-                      <h3>How it works</h3>
-                    </Content>
-                    <Grid
-                      columns="repeat(auto-fit,minmax(135px,1fr))"
-                      columnGap={spacing.normal}
-                    >
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                            <Flexbox
-                              flex="flex"
-                              alignitems="center"
-                              margin="0 0 0.5rem 0"
-                            >
-                              <Tag
-                                margin="0"
-                                fontsize="1rem"
-                                padding="0.25rem 0.5rem"
-                                backgroundcolor={colors.paper.cream}
-                                color={colors.primary.sixHundred}
-                              >
-                                01
-                              </Tag>
-                              <Icon margin="0 0 0 0.25rem">
-                                <Mouse
-                                  size="1.5rem"
-                                  color={colors.primary.sixHundred}
-                                  weight="duotone"
-                                />
-                              </Icon>
-                            </Flexbox>
-                            <h3>Design layout</h3>
-                            <p>Use our online tool to create your custom layout.</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                            <Flexbox
-                              flex="flex"
-                              alignitems="center"
-                              margin="0 0 0.5rem 0"
-                            >
-                              <Tag
-                                margin="0"
-                                fontsize="1rem"
-                                padding="0.25rem 0.5rem"
-                                backgroundcolor={colors.paper.cream}
-                                color={colors.primary.sixHundred}
-                              >
-                                02
-                              </Tag>
-                              <Icon margin="0 0 0 0.25rem">
-                                <Book
-                                  size="1.5rem"
-                                  color={colors.primary.sixHundred}
-                                  weight="duotone"
-                                />
-                              </Icon>
-                            </Flexbox>
-                            <h3>Create notebook</h3>
-                            <p>Put together your notebook with your custom pages.</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                      <Cell>
-                        <Flexbox
-                          flex="flex"
-                        >
-                          <Content
-                            h3fontsize="1.2rem"
-                            h3fontweight="400"
-                            h3margin="0 0 0.5rem"
-                          >
-                          <Flexbox
-                            flex="flex"
-                            alignitems="center"
-                            margin="0 0 0.5rem 0"
-                          >
-                            <Tag
-                              margin="0"
-                              fontsize="1rem"
-                              padding="0.25rem 0.5rem"
-                              backgroundcolor={colors.paper.cream}
-                              color={colors.primary.sixHundred}
-                            >
-                              03
-                            </Tag>
-                            <Icon margin="0 0 0 0.25rem">
-                              <Package
-                                size="1.5rem"
-                                color={colors.primary.sixHundred}
-                                weight="duotone"
-                              />
-                            </Icon>
-                          </Flexbox>
-                            <h3>Packed and ready</h3>
-                            <p>Congratulations, your notebook is being shipped to you!</p>
-                          </Content>
-                        </Flexbox>
-                      </Cell>
-                    </Grid>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
+                  </Flexbox>
+                </Col>
+                <Col md={6} lg={6} xl={8}>
+                  <Reviews />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
         </Section>
-        <Section>
-          <Container ref={element => setPosition(element, 3)}>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
-                >
-                  <Cell width={3}>
-                    <StaticImage
-                      src="../images/writing-closeup-3.jpg"
-                      alt="Notesmith notebook bundle"
-                      placeholder="blurred"
-                    />
-                    <small>A close-up of our paper. Ink is Pilot Iroshizuku take-sumi.</small>
-                  </Cell>
-                  <Cell
-                    width={2}
-                    className="is-fullwidth-mobile"
-                  >
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      paragraphfontsize="1.2rem"
-                      maxwidth={widths.content.index}
-                    >
-                      <h4>{chapterData.chapterThree.heading}</h4>
-                      <h2>{chapterData.chapterThree.title}</h2>
-                      <p></p>
-                      <p>You don't have to worry about your writing smudging or spreading. We tested over 50 different writing papers from various brands to find the one that produces the best results with fountain pen inks.</p>
-                      <p>Our white, super-smooth paper scored high marks on bleeding, ghosting, and feathering among early test users. 70lb paper adds slightly more thickness than traditional notebook paper for extra durability.</p>
-                      <Notification
-                        backgroundcolor={colors.paper.cream}
-                        color={colors.primary.sevenHundred}
-                        bordercolor='transparent'
-                      >
-                        <Flexbox
-                          flex="flex"
-                          alignitems="center"
-                        >
-                          <Icon>
-                            <HandWaving color={colors.primary.sevenHundred} size="1.5rem" />
-                          </Icon>
-                          <Content
-                            paragraphcolor={colors.primary.sevenHundred}
-                            paragraphfontsize="1rem"
-                          >
-                            <p>We are working on discovering additional paper options.</p>
-                          </Content>
-                        </Flexbox>
-                      </Notification>
-                    </Content>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section>
-          <Container ref={element => setPosition(element, 4)}>
-            <LayoutContainer>
-              <SectionContent>
-              <Content
-                margin="0 0 2rem 0"
-                h2margin="0 0 1.5rem 0"
-                h4color={colors.link.normal}
-                h4fontweight="400"
-                h2fontweight="400"
-                h2fontsize="2.5rem"
-                paragraphfontsize="1.2rem"
-              >
-                <h4>{chapterData.chapterFour.heading}</h4>
-                <h2>{chapterData.chapterFour.title}</h2>
-              </Content>
-                <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
-                >
-                  <Cell>
-                    <StaticImage
-                      src="../images/index-column-1.jpg"
-                      alt="Notesmith logo image"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                    <Content
-                      margin="1rem 0 0"
-                      h3margin="1rem 0 0.5rem"
-                      h3fontweight="400"
-                      paragraphfontsize="1.2rem"
-                    >
-                      <h3>Linen paper cover</h3>
-                      <p>Finely patterned with a slightly raised, but smooth texture. Branding only on the back cover.</p>
-                    </Content>
-                  </Cell>
-                  <Cell>
-                    <StaticImage
-                      src="../images/index-column-2.jpg"
-                      alt="Notesmith logo image"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                    <Content
-                      margin="1rem 0 0"
-                      h3margin="1rem 0 0.5rem"
-                      h3fontweight="400"
-                      paragraphfontsize="1.2rem"
-                    >
-                      <h3>Saddle stitched</h3>
-                      <p>Machine stitched with two staples. Clean, precise cuts create a high quality product.</p>
-                    </Content>
-                  </Cell>
-                  <Cell>
-                    <StaticImage
-                      src="../images/index-column-3.jpg"
-                      alt="Notesmith logo image"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                    <Content
-                      margin="1rem 0 0"
-                      h3margin="1rem 0 0.5rem"
-                      h3fontweight="400"
-                      paragraphfontsize="1.2rem"
-                    >
-                      <h3>Smooth white paper</h3>
-                      <p>Every page can be printed with a different layout. Smooth paper is a joy to write on.</p>
-                    </Content>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section
-          backgroundcolor={colors.paper.offWhite}
-        >
-          <Container ref={element => setPosition(element, 5)}>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns="repeat(auto-fit,minmax(120px,1fr))"
-                  columnGap={spacing.large}
-                  rowGap={spacing.large}
-                  justifycontent="center"
-                  alignContent="center"
-                >
-                  <Cell width={3}>
-                    <StaticImage
-                      src="../images/index-image-2.jpg"
-                      alt="Notesmith notebook bundle"
-                      placeholder="blurred"
-                      quality={100}
-                    />
-                    <small>Two Notesmith notebooks bundled together.</small>
-                  </Cell>
-                  <Cell
-                    width={2}
-                    className="is-fullwidth-mobile"
-                  >
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      paragraphfontsize="1.2rem"
-                      maxwidth={widths.content.index}
-                    >
-                      <h4>{chapterData.chapterFive.heading}</h4>
-                      <h2>{chapterData.chapterFive.title}</h2>
-                      <p>You'll find the current specifications for our notebooks below. We hope to be able to provide more customization options in the future. Including but not limited to: rounded corners, various sizes, multiple colors, more pages, different binding methods, etc.</p>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Tag
-                          fontsize="1.5rem"
-                          backgroundcolor={colors.paper.cream}
-                          color={colors.primary.sevenHundred}
-                        >
-                          $20 / pack
-                        </Tag>
-                      </Content>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Flexbox
-                          alignitems="center"
-                          bordercolor={colors.primary.sixHundred}
-                          className="has-border-bottom"
-                          flex="flex"
-                          justifycontent="space-between"
-                          margin="1rem 0"
-                          padding="0 0 1rem"
-                        >
-                          <p>Pages</p>
-                          <p>48 total pages (70lb)</p>
-                        </Flexbox>
-                      </Content>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Flexbox
-                          alignitems="center"
-                          bordercolor={colors.primary.sixHundred}
-                          className="has-border-bottom"
-                          flex="flex"
-                          justifycontent="space-between"
-                          margin="1rem 0"
-                          padding="0 0 1rem"
-                        >
-                          <p>Size</p>
-                          <p>5.5" x 8.5" (A5)</p>
-                        </Flexbox>
-                      </Content>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Flexbox
-                          alignitems="center"
-                          bordercolor={colors.primary.sixHundred}
-                          className="has-border-bottom"
-                          flex="flex"
-                          justifycontent="space-between"
-                          margin="1rem 0"
-                          padding="0 0 1rem"
-                        >
-                          <p>Cover</p>
-                          <p>Linen paper, forest green (80c)</p>
-                        </Flexbox>
-                      </Content>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Flexbox
-                          alignitems="center"
-                          bordercolor={colors.primary.sixHundred}
-                          className="has-border-bottom"
-                          flex="flex"
-                          justifycontent="space-between"
-                          margin="1rem 0"
-                          padding="0 0 1rem"
-                        >
-                          <p>Quantity</p>
-                          <p>2 notebooks</p>
-                        </Flexbox>
-                      </Content>
-                      <Content
-                        paragraphfontsize="1.2rem"
-                        paragraphmarginbottom="0"
-                      >
-                        <Flexbox
-                          alignitems="center"
-                          bordercolor={colors.primary.sixHundred}
-                          className="has-border-bottom"
-                          flex="flex"
-                          justifycontent="space-between"
-                          margin="1rem 0"
-                          padding="0 0 1rem"
-                        >
-                          <p>Manufactured</p>
-                          <p>Made in U.S.A</p>
-                        </Flexbox>
-                      </Content>
-                    </Content>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Section
-          backgroundcolor={colors.paper.cream}
-        >
-          <Container>
-            <LayoutContainer>
-              <SectionContent>
-                <Grid
-                  columns={`minmax(120px, ${widths.content.index})`}
-                >
-                  <Cell>
-                    <Content
-                      margin="0 0 2rem 0"
-                      h2margin="0 0 1.5rem 0"
-                      h4color={colors.link.normal}
-                      h4fontweight="400"
-                      h2fontweight="400"
-                      h2fontsize="2.5rem"
-                      paragraphfontsize="1.2rem"
-                    >
-                      <h2>Sign up for early access</h2>
-                      <RegisterForm id="2" />
-                    </Content>
-                  </Cell>
-                </Grid>
-              </SectionContent>
-            </LayoutContainer>
-          </Container>
-        </Section>
-        <Footer />
       </SectionMain>
     </Layout>
   )
 }
+
+export const pageQuery = graphql`
+  query IndexPageQuery {
+    tabImages: allFile(filter: { relativeDirectory: { eq: "index-tab-images" }}) {
+      nodes {
+        childImageSharp {
+          fluid {
+            src
+            originalName
+          }
+          gatsbyImageData(
+            width: 996
+            placeholder: BLURRED
+            quality: 100
+          )
+        }
+      }
+    }
+  }
+`
 
 export default IndexPage

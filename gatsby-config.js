@@ -4,25 +4,19 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Notesmith - Made-to-order notebooks crafted with your unique, custom printed pages.`,
-    description: `Design and create your own unique notebook with fully customizable pages. Every notebook is made-to-order and custom printed specially for you.`,
-    author: `@notesmith`,
+    title: `Notesmith`,
+    description: `Design and create your own unique notebook with fully customizable pages.`,
+    username: `@notesmith`,
     url: `https://www.notesmithbooks.com/`,
-    image: "/meta-image.jpg"
+    image: "/stacked-books.jpg"
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,
     {
-      resolve: `gatsby-source-stripe`,
+      resolve: `gatsby-source-filesystem`,
       options: {
-        objects: ['Balance', 'BalanceTransaction', 'Product', 'Price', 'ApplicationFee', 'Sku', 'Subscription'],
-        secretKey: process.env.GATSBY_STRIPE_SECRET_KEY,
-        downloadFiles: true,
-      }
-    },
-    {
-      resolve: `gatsby-plugin-create-client-paths`,
-      options: { prefixes: [`/app/*`, `/orders/*`] },
+        name: `data`,
+        path: `${__dirname}/src/data`,
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
@@ -47,19 +41,11 @@ module.exports = {
       }
     },
     {
-      resolve: `gatsby-source-contentful`,
-      options: {
-        spaceId: process.env.CONTENTFUL_SPACE_ID,
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-        downloadLocal: true,
-      },
-    },
-    {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `Crimson Pro\:400,400i,700`,
-          `Spectral\:400,700,700i`,
+          `Nanum Myeongjo\:400,700`,
+          `Jost\:400,400i,700,700i`,
         ]
       },
     },
@@ -69,14 +55,14 @@ module.exports = {
         name: `Notesmith`,
         short_name: `Notesmith`,
         start_url: `/`,
-        background_color: `#234342`,
-        theme_color: `#234342`,
+        background_color: `#fff`,
+        theme_color: `#fff`,
         display: `minimal-ui`,
         icon: `src/images/fav.png`, // This path is relative to the root of the site.
       },
     },
     {
-      resolve: "gatsby-plugin-firebase",
+      resolve: "gatsby-plugin-firebase-v9.0",
       options: {
         credentials: {
           apiKey: process.env.GATSBY_FIREBASE_API_KEY,
@@ -86,13 +72,16 @@ module.exports = {
           storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
           messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
           appId: process.env.GATSBY_FIREBASE_APP_ID,
-          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID
+          measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID,
+          privateKey: process.env.GATSBY_FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          clientEmail: process.env.GATSBY_FIREBASE_CLIENT_EMAIL,
         }
       }
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
+    `gatsby-transformer-json`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
