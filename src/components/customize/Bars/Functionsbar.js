@@ -3,8 +3,8 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 
 import { Flexbox } from "../../layout/Flexbox"
-import TitleBox from "../barComponents/TitleBox"
-import Toolbox from "../barComponents/Toolbox"
+import TitleBox from "../boxes/TitleBox"
+import ToolBox from "../boxes/ToolBox"
 
 const StyledFunctionsBar = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ function Functionsbar({
 
   return (
     <StyledFunctionsBar>
-      <Toolbox />
+      <ToolBox />
       <TitleBox
         bookData={bookData}
         setBookData={setBookData}

@@ -20,7 +20,7 @@ const ToolItem = styled.div`
   }
 `
 
-function Toolbar() {
+function ToolBox() {
   const [selectedTool, setSelectedTool] = useState("cursor")
 
   const selectTool = e => {
@@ -115,4 +115,4 @@ function Toolbar() {
   )
 }
 
-export default Toolbar
+export default ToolBox

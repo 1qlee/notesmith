@@ -6,7 +6,7 @@ import memoizeOne from "memoize-one"
 import styled from "styled-components"
 import Svg from "react-inlinesvg"
 
-import PageBox from "../barComponents/PageBox"
+import PageBox from "../boxes/PageBox"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
