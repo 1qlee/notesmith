@@ -3,7 +3,8 @@ import { colors } from "../styles/variables"
 import { useFirebaseContext } from "../utils/auth"
 import { get, ref, set } from "firebase/database"
 
-import { SectionMain, Section } from "../components/layout/Section"
+import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import { Container, Row, Col } from "react-grid-system"
 import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
 import Box from "../components/ui/Box"
@@ -93,40 +94,48 @@ const Subscription = ({ location }) => {
         className="has-max-height"
       >
         <Section>
-          <Box 
-            padding="16px"
-            margin="0 auto"
-            className="has-border no-border-top"
-            width={widths.form}
-          >
-            {subscribed ? (
-              <>
-                <Content
-                  h1fontsize="2rem"
-                  headingtextalign="center"
-                >
-                  <h1>Thanks for subscribing!</h1>
-                </Content>
-                <Notification
-                  backgroundcolor={colors.gray.twoHundred}
-                  color={colors.gray.nineHundred}
-                >
-                  <p>Welcome to the Notesmith community! You are now subscribed to our mailing list for marketing and general updates.</p>
-                </Notification>
-              </>
-            ) : (
-              <>
-                {error && (
-                  <Notification
-                    backgroundcolor={colors.gray.twoHundred}
-                    color={colors.gray.nineHundred}
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <Box
+                    padding="16px"
+                    margin="0 auto"
+                    className="has-border no-border-top"
+                    width={widths.form}
                   >
-                    <p>{error}</p>
-                  </Notification>
-                )}
-              </>
-            )}
-          </Box>
+                    {subscribed ? (
+                      <>
+                        <Content
+                          h1fontsize="2rem"
+                          headingtextalign="center"
+                        >
+                          <h1>Thanks for subscribing!</h1>
+                        </Content>
+                        <Notification
+                          backgroundcolor={colors.gray.twoHundred}
+                          color={colors.gray.nineHundred}
+                        >
+                          <p>Welcome to the Notesmith community! You are now subscribed to our mailing list for marketing and general updates.</p>
+                        </Notification>
+                      </>
+                    ) : (
+                      <>
+                        {error && (
+                          <Notification
+                            backgroundcolor={colors.gray.twoHundred}
+                            color={colors.gray.nineHundred}
+                          >
+                            <p>{error}</p>
+                          </Notification>
+                        )}
+                      </>
+                    )}
+                  </Box>
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
         </Section>
       </SectionMain>
     </Layout>

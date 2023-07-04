@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import Button from "../ui/Button"
 import { colors, fonts } from "../../styles/variables"
-import { CircleNotch, PaperPlaneRight } from "phosphor-react"
+import { CircleNotch, PaperPlaneRight, Check } from "phosphor-react"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, set, push, get, query, orderByChild, equalTo } from "firebase/database"
 
@@ -75,38 +75,61 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailCd, setEmailCd] = useState(false)
   const [emailError, setEmailError] = useState({
     msg: "",
-    color: colors.red.threeHundred
+    color: colors.red.sixHundred
   })
 
-  const sendRegisterEmail = async (newSignupKey) => {
-    const response = await fetch("/.netlify/functions/register-signup", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: email,
-        id: newSignupKey,
-      })
-    })
-    const data = await response.json()
-
-    if (data.error) {
+  const sendRegisterEmail = async (newSignupKey, customMsg) => {
+    if (emailCd) {
       setLoading(false)
       setEmailError({
-        msg: "Please double-check your inputted email address.",
-        color: colors.red.threeHundred
+        msg: "Please wait a few seconds before trying again.",
+        color: colors.red.sixHundred
       })
-    }
+    } 
     else {
-      setLoading(false)
-      setEmailError({
-        msg: data.msg,
-        color: color || colors.gray.oneHundred
+      const response = await fetch("/.netlify/functions/register-signup", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          id: newSignupKey,
+        })
       })
+      const data = await response.json()
+
+      if (data.error) {
+        setLoading(false)
+        setEmailError({
+          msg: "Please double-check your inputted email address.",
+          color: colors.red.sixHundred
+        })
+      }
+      else {
+        setEmailSent(true)
+        setEmailCd(true)
+        setLoading(false)
+        setEmailError({
+          msg: customMsg || data.msg,
+          color: color || colors.gray.oneHundred
+        })
+        setTimeout(() => {
+          setEmailCd(false)
+        }, 5000)
+      }
     }
+  }
+
+  const wipeMsg = () => {
+    setEmailError({
+      msg: "",
+      color: colors.gray.nineHundred
+    })
   }
 
 
@@ -131,14 +154,13 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
         if (signup.subscribed) {
           setEmailError({
             msg: "This email is already registered.",
-            color: colors.red.threeHundred
+            color: colors.red.sixHundred
           })
+          setLoading(false)
         }
         else {
-          sendRegisterEmail(signup.id)
+          sendRegisterEmail(signup.id, "Re-sent email.")
         }
-
-        setLoading(false)
       }
       else {
         const newSignupKey = push(ref(firebaseDb, "signups")).key
@@ -154,7 +176,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
           setLoading(false)
           setEmailError({
             msg: "An error occured. Please try again.",
-            color: colors.red.threeHundred
+            color: colors.red.sixHundred
           })
         })
       }
@@ -176,7 +198,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
           <EmailInput
             onFocus={() => setEmailError({
               msg: "",
-              color: colors.red.threeHundred
+              color: colors.red.sixHundred
             })}
             onChange={e => setEmail(e.currentTarget.value)}
             className={email && "has-value"}
@@ -201,7 +223,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
               type="submit"
               form="register-form"
               className={loading ? "is-loading" : null}
-              disabled={loading}
+              disabled={loading || emailCd}
               margin="0 0 0 2px"
               top={top}
             >
@@ -209,7 +231,13 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
                 {loading ? (
                   <CircleNotch size={16} />
                 ) : (
-                  <PaperPlaneRight size={16} color={colors.gray.oneHundred} weight="fill" />
+                  <>
+                    {emailSent && emailCd ? (
+                      <Check size={16} weight="fill" />
+                    ) : (
+                      <PaperPlaneRight size={16} color={colors.gray.oneHundred} weight="fill" />
+                    )}
+                  </>
                 )}
               </Icon>
             </InputButton>
