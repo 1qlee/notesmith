@@ -15,6 +15,7 @@ import ProductDescription from "../../../../components/shop/ProductDescription"
 import ProductSplash from "../../../../components/shop/ProductSplash"
 import ProductHalfandHalf from "../../../../components/shop/ProductHalfandHalf"
 import ProductHero from "../../../../components/shop/ProductHero"
+import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
   const { productData, productImages, productThumbnails, splashImage, halfandhalfImages } = data
@@ -112,9 +113,7 @@ const ProductPage = ({ data, params }) => {
   }, [productData, bookData, coverColor, pageData])
 
   return (
-    <Layout
-      title={bookData.name}
-    >
+    <Layout>
       <SectionMain>
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
@@ -294,3 +293,7 @@ export const pageQuery = graphql`
 `
 
 export default ProductPage
+
+export const Head = ({ data }) => (
+  <Seo title={data.productData.name} />
+)

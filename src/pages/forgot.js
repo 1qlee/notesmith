@@ -7,6 +7,7 @@ import { SectionMain, Section, SectionContent } from "../components/layout/Secti
 import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
+import Seo from "../components/layout/Seo"
 
 const Forgot = () => {
   const { user, loading } = useFirebaseContext()
@@ -21,7 +22,6 @@ const Forgot = () => {
 
   return (
     <Layout 
-      title="Password recovery"
       className="is-full-height"
     >
       <SectionMain
@@ -40,3 +40,7 @@ const Forgot = () => {
 }
 
 export default Forgot
+
+export const Head = () => (
+  <Seo title="Recover your password" />
+)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { colors } from "../styles/variables"
+import { colors, widths } from "../styles/variables"
 import { useFirebaseContext } from "../utils/auth"
 import { get, ref, set } from "firebase/database"
 
@@ -8,8 +8,8 @@ import { Container, Row, Col } from "react-grid-system"
 import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
 import Box from "../components/ui/Box"
-import { widths } from "../styles/variables"
 import Content from "../components/ui/Content"
+import Seo from "../components/layout/Seo"
 
 const Subscription = ({ location }) => {
   const params = new URLSearchParams(location.search)
@@ -86,7 +86,6 @@ const Subscription = ({ location }) => {
 
   return (
     <Layout 
-      title="Subscriptions"
       loading={processing} 
       className="is-full-height"
     >
@@ -143,3 +142,7 @@ const Subscription = ({ location }) => {
 }
 
 export default Subscription
+
+export const Head = () => (
+  <Seo title="Subscribe to Notesmith" />
+)

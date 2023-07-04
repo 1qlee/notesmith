@@ -6,6 +6,7 @@ import { SectionMain, Section } from "../components/layout/Section"
 import SigninForm from "../components/form/SigninForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
+import Seo from "../components/layout/Seo"
 
 const Signin = () => {
   const { user, loading } = useFirebaseContext()
@@ -20,7 +21,6 @@ const Signin = () => {
 
   return (
     <Layout 
-      title="Sign into your account"
       className="is-full-height"
     >
       <SectionMain
@@ -35,3 +35,7 @@ const Signin = () => {
 }
 
 export default Signin
+
+export const Head = () => (
+  <Seo title="Sign into your account" />
+)

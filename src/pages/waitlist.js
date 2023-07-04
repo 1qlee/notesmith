@@ -1,6 +1,7 @@
 import React from "react"
 import { spacing, colors } from "../styles/variables"
 
+import Seo from "../components/layout/Seo"
 import Layout from "../components/layout/Layout"
 import { Container, Row, Col } from "react-grid-system"
 import RegisterForm from "../components/form/RegisterForm"
@@ -48,3 +49,7 @@ const Waitlist = () => {
 }
 
 export default Waitlist
+
+export const Head = () => (
+  <Seo title="Join the pre-order waitlist" />
+)

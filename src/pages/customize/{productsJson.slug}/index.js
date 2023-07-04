@@ -2,6 +2,8 @@ import React from "react"
 import { graphql } from "gatsby"
 import Editor from "../../../components/customize/Editor"
 
+import Seo from "../../../components/layout/Seo"
+
 const DefaultEditorPage = ({ data }) => {
   return (
     <Editor
@@ -39,3 +41,7 @@ export const pageQuery = graphql`
 `
 
 export default DefaultEditorPage
+
+export const Head = () => (
+  <Seo title="Book editor" />
+)

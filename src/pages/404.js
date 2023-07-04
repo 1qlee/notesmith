@@ -1,18 +1,19 @@
 import React from "react"
 
+import Seo from "../components/layout/Seo"
 import Layout from "../components/layout/Layout"
 import Content from "../components/ui/Content"
 import { Section, SectionMain, SectionContent } from "../components/layout/Section"
 
 const NotFoundPage = () => {
   return (
-    <Layout title="Page not found">
+    <Layout>
       <SectionMain
         className="has-max-height"
       >
         <Section>
           <SectionContent>
-            <Content headingtextalign="center">
+            <Content headingtextalign="center" h1fontsize="3rem">
               <h1>Page not found</h1>
             </Content>
           </SectionContent>
@@ -23,3 +24,7 @@ const NotFoundPage = () => {
 }
 
 export default NotFoundPage
+
+export const Head = () => (
+  <Seo title="Page not found" />
+)

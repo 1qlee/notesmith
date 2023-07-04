@@ -1,6 +1,7 @@
 import React from "react"
 import { spacing } from "../styles/variables"
 
+import Seo from "../components/layout/Seo"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import ShoppingCart from "../components/shop/ShoppingCart"
 import Layout from "../components/layout/Layout"
@@ -8,9 +9,7 @@ import { Container } from "react-grid-system"
 
 const Cart = () => {
   return (
-    <Layout
-      title="Your cart"
-    >
+    <Layout>
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
@@ -27,3 +26,7 @@ const Cart = () => {
 }
 
 export default Cart
+
+export const Head = () => (
+  <Seo title="Your cart" />
+)

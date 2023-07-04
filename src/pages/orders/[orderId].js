@@ -1,6 +1,7 @@
 import React from "react"
 
 import Order from "../../components/checkout/Order"
+import Seo from "../../components/layout/Seo"
 
 const OrdersPage = ({ params, location }) => {
   return (
@@ -12,3 +13,7 @@ const OrdersPage = ({ params, location }) => {
 }
 
 export default OrdersPage
+
+export const Head = () => (
+  <Seo title="Your order" />
+)

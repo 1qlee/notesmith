@@ -18,6 +18,7 @@ import CheckoutForm from "../components/form/CheckoutForm"
 import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
+import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
@@ -283,7 +284,6 @@ const Checkout = () => {
 
   return (
     <Layout 
-      title="Checkout"
       loading={loading}
     >
       {clientSecret && (
@@ -432,3 +432,7 @@ const Checkout = () => {
 }
 
 export default Checkout
+
+export const Head = () => (
+  <Seo title="Checkout" />
+)

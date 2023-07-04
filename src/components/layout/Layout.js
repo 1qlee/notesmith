@@ -5,7 +5,6 @@ import useIsClient from "../../hooks/checkClient"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
-import Seo from "./Seo"
 import Nav from "./Nav"
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
@@ -21,7 +20,7 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ title, loading, children, className, backgroundcolor }) => {
+const Layout = ({ loading, children, className, backgroundcolor }) => {
   const { isClient, key } = useIsClient()
   if (!isClient) return null;
 
@@ -31,9 +30,6 @@ const Layout = ({ title, loading, children, className, backgroundcolor }) => {
       className={className} 
       backgroundcolor={backgroundcolor}
     >
-      <Seo 
-        title={title}
-      />
       <Nav />
       {children}
       {loading && (

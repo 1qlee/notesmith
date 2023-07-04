@@ -25,6 +25,7 @@ import RegisterForm from "../components/form/RegisterForm"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
+import Seo from "../components/layout/Seo"
 
 const IndexPage = ({ data }) => {
   setConfiguration({ gutterWidth: 64 })
@@ -83,7 +84,7 @@ const IndexPage = ({ data }) => {
   }
 
   return (
-    <Layout title="Made-to-order notebooks crafted with your unique, custom printed pages">
+    <Layout>
       <Patterns 
         color={colors.gray.twoHundred} 
       />
@@ -657,3 +658,7 @@ export const pageQuery = graphql`
 `
 
 export default IndexPage
+
+export const Head = () => (
+  <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
+)
