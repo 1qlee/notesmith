@@ -4,7 +4,6 @@ import Layout from "../layout/Layout"
 import Seo from "../layout/Seo"
 import Nav from "../layout/Nav"
 import Content from "../ui/Content"
-import { Container, LayoutContainer } from "../layout/Container"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 
 const Book404 = () => {
@@ -14,8 +13,6 @@ const Book404 = () => {
       <Nav />
       <SectionMain>
         <Section>
-         <Container>
-          <LayoutContainer>
             <SectionContent>
               <Content
                 headingtextalign="center"
@@ -26,8 +23,6 @@ const Book404 = () => {
                 <p>Something might have gone wrong on our end or you might have entered an incorrect link.</p>
               </Content>
             </SectionContent>
-          </LayoutContainer>
-         </Container>
         </Section>
       </SectionMain>
     </Layout>

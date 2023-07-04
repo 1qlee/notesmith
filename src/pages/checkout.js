@@ -91,7 +91,7 @@ const Checkout = () => {
     postal_code: "",
     country: "US",
   })
-  const isCartEmpty = !cartDetails || Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object
+  const isCartEmpty = !cartDetails || (Object.keys(cartDetails).length === 0 && cartDetails.constructor === Object)
   const pid = isBrowser() && localStorage.getItem("pid")
   const elementsOptions = {
     clientSecret: clientSecret,

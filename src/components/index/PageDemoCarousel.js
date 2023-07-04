@@ -30,10 +30,14 @@ const DemoImage = styled.div`
 const DemoImageCaption = styled.article`
   top: 0;
   padding: 16px;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.75) 50%, #fff 100%);
+  background-image: linear-gradient(180deg, rgba(255,255,255) 25%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.5) 100%);
   position: absolute;
   left: 0;
   width: ${widths.caption};
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    top: auto;
+    bottom: -64px;
+  }
   p {
     line-height: 1.75;
     font-size: 0.875rem;

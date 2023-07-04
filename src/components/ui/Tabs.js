@@ -1,5 +1,5 @@
 import React from "react"
-import { colors, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import styled from "styled-components"
 
 const StyledTabs = styled.ul`

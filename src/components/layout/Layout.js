@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
+import useIsClient from "../../hooks/checkClient"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
@@ -21,9 +22,15 @@ const StyledLayout = styled.div`
 `
 
 const Layout = ({ title, loading, children, className, backgroundcolor }) => {
+  const { isClient, key } = useIsClient()
+  if (!isClient) return null;
 
   return (
-    <StyledLayout className={className} backgroundcolor={backgroundcolor}>
+    <StyledLayout 
+      key={key} 
+      className={className} 
+      backgroundcolor={backgroundcolor}
+    >
       <Seo 
         title={title}
       />

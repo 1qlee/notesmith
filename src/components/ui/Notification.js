@@ -1,6 +1,5 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
-import { colors, fonts } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {

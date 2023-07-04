@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 
 const TextLink = styled.a`
   align-items: ${props => props.alignitems};
