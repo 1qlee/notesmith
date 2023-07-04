@@ -28,7 +28,7 @@ function TabImagesCaption({
         <p>Double mounted 130lb cover stock.</p>
       )}
       {activeTab === 2 && (
-        <p>Sand-matte textured lamination film on the outer side of each cover.</p>
+        <p>Lamination film on both sides of each cover.</p>
       )}
       {activeTab === 3 && (
         <p>Gold colored Wire-O binding.</p>

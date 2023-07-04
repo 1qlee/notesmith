@@ -25,6 +25,7 @@ const DemoImage = styled.div`
   top: 0;
   left: 0;
   height: 100%;
+  width: 100%;
 `
 
 const DemoImageCaption = styled.article`
@@ -36,7 +37,7 @@ const DemoImageCaption = styled.article`
   width: ${widths.caption};
   @media only screen and (max-width: ${breakpoints.sm}) {
     top: auto;
-    bottom: -64px;
+    bottom: -96px;
   }
   p {
     line-height: 1.75;

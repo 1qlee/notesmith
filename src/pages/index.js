@@ -343,7 +343,7 @@ const IndexPage = ({ data }) => {
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>We use only the best stuff, guaranteed</h2>
+                    <h2>We use only the best materials, guaranteed</h2>
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
                 </Col>
@@ -376,7 +376,7 @@ const IndexPage = ({ data }) => {
                     h3fontweight="400"
                     h3fontsize="2rem"
                     h3color={colors.gray.oneHundred}
-                    h3margin="0"
+                    h3margin="0 0 16px"
                   >
                     <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
                   </Content>
@@ -384,9 +384,10 @@ const IndexPage = ({ data }) => {
                 <Col md={5} push={{ md: 1 }}>
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
+                    margin="16px 0 0"
                   >
                     <p>
-                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access on a rolling basis.
+                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access in batches.
                     </p>
                   </Content>
                   <Flexbox

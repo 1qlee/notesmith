@@ -41,6 +41,8 @@ const StyledSectionHeading = styled.div`
   h3 {
     font-size: 1rem;
     padding-bottom: 4px;
+    color: ${props => props.color || colors.gray.sixHundred};
+    font-weight: ${props => props.fontweight || 400};
     font-family: ${fonts.secondary};
   }
 `

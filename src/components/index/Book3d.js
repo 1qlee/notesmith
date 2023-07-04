@@ -276,7 +276,7 @@ function Book3d({
         flex="flex"
         alignitems="center"
         justifycontent="center"
-        margin="16px 0"
+        margin="32px 0"
         flexwrap="wrap"
       >
         <ColorPicker 
