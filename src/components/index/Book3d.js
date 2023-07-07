@@ -34,11 +34,16 @@ const gradient = `linear-gradient(90deg,
 
 const StyledDemoTemplate = styled.div`
   position: absolute;
-  top: 1.9%;
-  left: 13.2%;
+  top: 12px;
+  left: 62px;
   z-index: 5;
-  width: 84%;
-  height: 96%;
+  height: 560px;
+  width: 400px;
+  @media only screen and (max-width: 1548px) {
+    height: 428px;
+    width: 306px;
+    left: 47px;
+  }
 `
 
 const initAnimation = keyframes`
@@ -203,14 +208,21 @@ function Book3d({
               <>
                 <Measure
                   bounds
-                  onResize={contentRect => setPageDimensions({
-                    height: contentRect.bounds.height,
-                    width: contentRect.bounds.width,
-                  })}
+                  onResize={contentRect => {
+                    setPageData({
+                      ...pageData,
+                      rows: 100,
+                      columns: 100,
+                    })
+                    setPageDimensions({
+                      height: contentRect.bounds.height,
+                      width: contentRect.bounds.width,
+                    })
+                  }}
                 >
                   {({ measureRef }) => (
                     <StyledDemoTemplate
-                      ref={measureRef} 
+                      ref={measureRef}
                     >
                       <DemoTemplate
                         pageDimensions={pageDimensions}

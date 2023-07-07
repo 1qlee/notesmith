@@ -16,6 +16,7 @@ function DemoTemplate({
   pageData,
   setPageData,
 }) {
+  console.log(pageDimensions.height, pageDimensions.width)
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
