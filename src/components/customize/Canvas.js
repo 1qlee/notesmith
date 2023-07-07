@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useLayoutEffect } from "react"
+import React, { useEffect, useState, useRef, useContext, useLayoutEffect } from "react"
 import SvgCanvas from '@svgedit/svgcanvas'
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
@@ -11,7 +11,10 @@ import PageSpread from "./PageSpread"
 import Workspace from "./Workspace"
 
 const StyledCanvas = styled.div`
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   background-color: ${colors.white};
   height: ${props => props.height || "100%"};
   width: ${props => props.width || "100%"};
@@ -117,10 +120,12 @@ function Canvas({
   }
 
   useLayoutEffect(() => {
-    const editorDom = svgcanvasRef.current
-    const canvas = new SvgCanvas(editorDom, config)
+    // get the outer container for the svg canvas
+    const canvasDom = svgcanvasRef.current
+    // create new canvas instance inside the container
+    const canvas = new SvgCanvas(canvasDom, config)
 
-    updateCanvas(canvas, editorDom, config, true)
+    updateCanvas(canvas, canvasDom, config, true)
 
     canvas.textActions.setInputElem(textRef.current)
 
@@ -128,7 +133,7 @@ function Canvas({
       canvas.bind(eventName, eventHandler)
     })
 
-    dispatchCanvasState({ type: 'init', canvas, svgcanvas: editorDom, config })
+    dispatchCanvasState({ type: 'init', canvas, svgcanvas: canvasDom, config })
 
     document.addEventListener('keydown', onKeyDown.bind(canvas))
 
@@ -163,33 +168,22 @@ function Canvas({
     <>
       <Workspace>
         <StyledCanvas>
-          <StyledCanvas>
-            <svg
-              id="page-root"
-              xmlns="http://www.w3.org/2000/svg"
-              xlinkns="http://www.w3.org/1999/xlink"
-              width={canvasSize.width}
-              height={canvasSize.height}
-              viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
-            >
-              <PageSpread
-                bookData={bookData}
-                canvasSize={canvasSize}
-                canvasPages={canvasPages}
-                canvasPageTemplates={canvasPageTemplates}
-                pageData={pageData}
-                selectedPage={selectedPage}
-                setPageData={setPageData}
-                setSelectedPageSvg={setSelectedPageSvg}
-                setSvgSize={setSvgSize}
-              />
-            </svg>
-          </StyledCanvas>
+          <PageSpread
+            bookData={bookData}
+            canvasSize={canvasSize}
+            canvasPages={canvasPages}
+            canvasPageTemplates={canvasPageTemplates}
+            pageData={pageData}
+            selectedPage={selectedPage}
+            setPageData={setPageData}
+            setSelectedPageSvg={setSelectedPageSvg}
+            setSvgSize={setSvgSize}
+          />
+        </StyledCanvas>
           <div className="workarea">
-            <div ref={svgcanvasRef} className="svgcanvas" style={{ position: 'relative' }} />
+            <div ref={svgcanvasRef} id="svgcanvas" className="svgcanvas" style={{ position: 'relative' }} />
           </div>
           <input ref={textRef} onKeyUp={onKeyUp} type="text" size="35" style={{ position: 'absolute', left: '-9999px' }} />
-        </StyledCanvas>
       </Workspace>
     </>
   )

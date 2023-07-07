@@ -104,7 +104,7 @@ const Editor = ({
   const [activeTab, setActiveTab] = useState(0)
   const [config, setConfig] = useState({
     debug: true,
-    i18n: 'fr',
+    i18n: 'en',
     saveHandler: null,
     onCloseHandler: null,
     debugPrefix: 'editor',

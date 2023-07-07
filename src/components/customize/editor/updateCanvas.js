@@ -1,7 +1,7 @@
 // code derived from svg-editor.js
-const updateCanvas = (svgCanvas, cnvs, curConfig, center, newCtr = {}) => {
+const updateCanvas = (canvas, canvasDom, curConfig, center, newCtr = {}) => {
   // workarea node is the parent of the svg canvas
-  const workarea = cnvs.parentNode
+  const workarea = canvasDom.parentNode
   //  let w = workarea.width(), h = workarea.height();
   let { width: w, height: h } = workarea.getBoundingClientRect()
   const wOrig = w
@@ -12,34 +12,34 @@ const updateCanvas = (svgCanvas, cnvs, curConfig, center, newCtr = {}) => {
   }
   // multi: The minimum area visible outside the canvas, as a multiple of the image dimensions.
   const multi = curConfig.canvas_expansion
-  const zoom = svgCanvas.getZoom()
-  w = Math.max(wOrig, svgCanvas.contentW * zoom * multi)
-  h = Math.max(hOrig, svgCanvas.contentH * zoom * multi)
+  const zoom = canvas.getZoom()
+  w = Math.max(wOrig, canvas.contentW * zoom * multi)
+  h = Math.max(hOrig, canvas.contentH * zoom * multi)
 
   if (w === wOrig && h === hOrig) {
     workarea.style.overflow = 'hidden'
   } else {
     workarea.style.overflow = 'scroll'
   }
-  // const oldCanY = cnvs.height() / 2;
-  // const oldCanX = cnvs.width() / 2;
-  // cnvs.width(w).height(h);
-  const { width: cw, height: ch } = cnvs.getBoundingClientRect()
+  // const oldCanY = canvas.height() / 2;
+  // const oldCanX = canvas.width() / 2;
+  // canvas.width(w).height(h);
+  const { width: cw, height: ch } = canvasDom.getBoundingClientRect()
   const oldCanY = ch / 2
   const oldCanX = cw / 2
-  cnvs.style.width = w
-  cnvs.style.height = h
+  canvasDom.style.width = w
+  canvasDom.style.height = h
 
   const newCanY = h / 2
   const newCanX = w / 2
-  const offset = svgCanvas.updateCanvas(w, h)
+  const offset = canvas.updateCanvas(w, h)
 
   const ratio = newCanX / oldCanX
 
   const scrollX = w / 2 - wOrig / 2
   const scrollY = h / 2 - hOrig / 2
 
-  //   if (!newCtr) {
+  // if (!newCtr) {
   if (!newCtr.x) {
     const oldDistX = oldCtr.x - oldCanX
     const newX = newCanX + oldDistX * ratio
@@ -55,7 +55,7 @@ const updateCanvas = (svgCanvas, cnvs, curConfig, center, newCtr = {}) => {
 
   if (center) {
     // Go to top-left for larger documents
-    if (svgCanvas.contentW > workarea.getBoundingClientRect().width) {
+    if (canvas.contentW > workarea.getBoundingClientRect().width) {
       // Top-left
       // workarea[0].scrollLeft = offset.x - 10
       // workarea[0].scrollTop = offset.y - 10
