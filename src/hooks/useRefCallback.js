@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react'
-import svgDragSelect from 'svg-drag-select'
 
 function useRefCallback(cb, clean) {
   const ref = useRef(null)

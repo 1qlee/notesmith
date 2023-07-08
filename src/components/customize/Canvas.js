@@ -119,50 +119,50 @@ function Canvas({
     extensionsAdded: () => log('extensionsAddedHandler'),
   }
 
-  useLayoutEffect(() => {
-    // get the outer container for the svg canvas
-    const canvasDom = svgcanvasRef.current
-    // create new canvas instance inside the container
-    const canvas = new SvgCanvas(canvasDom, config)
+  // useLayoutEffect(() => {
+  //   // get the outer container for the svg canvas
+  //   const canvasDom = svgcanvasRef.current
+  //   // create new canvas instance inside the container
+  //   const canvas = new SvgCanvas(canvasDom, config)
 
-    updateCanvas(canvas, canvasDom, config, true)
+  //   updateCanvas(canvas, canvasDom, config, true)
 
-    canvas.textActions.setInputElem(textRef.current)
+  //   canvas.textActions.setInputElem(textRef.current)
 
-    Object.entries(eventList).forEach(([eventName, eventHandler]) => {
-      canvas.bind(eventName, eventHandler)
-    })
+  //   Object.entries(eventList).forEach(([eventName, eventHandler]) => {
+  //     canvas.bind(eventName, eventHandler)
+  //   })
 
-    dispatchCanvasState({ type: 'init', canvas, svgcanvas: canvasDom, config })
+  //   dispatchCanvasState({ type: 'init', canvas, svgcanvas: canvasDom, config })
 
-    document.addEventListener('keydown', onKeyDown.bind(canvas))
+  //   document.addEventListener('keydown', onKeyDown.bind(canvas))
 
-    return () => {
-      // cleanup function
-      console.log('cleanup')
-      document.removeEventListener('keydown', onKeyDown.bind(canvas))
-    }
-  }, [])
+  //   return () => {
+  //     // cleanup function
+  //     console.log('cleanup')
+  //     document.removeEventListener('keydown', onKeyDown.bind(canvas))
+  //   }
+  // }, [])
 
-  useLayoutEffect(() => {
-    log('new svgContent', svgContent.length)
+  // useLayoutEffect(() => {
+  //   log('new svgContent', svgContent.length)
 
-    if (!canvasState.canvas) return
+  //   if (!canvasState.canvas) return
 
-    oiAttributes.current = sanitizeSvg.saveOIAttr(svgContent)
+  //   oiAttributes.current = sanitizeSvg.saveOIAttr(svgContent)
 
-    canvasState.canvas.clear()
+  //   canvasState.canvas.clear()
 
-    const success = canvasState.canvas.setSvgString(svgContent.replace(/'/g, "\\'"), true) // true => prevent undo
+  //   const success = canvasState.canvas.setSvgString(svgContent.replace(/'/g, "\\'"), true) // true => prevent undo
 
-    updateCanvas(canvasState.canvas, svgcanvasRef.current, config, true)
+  //   updateCanvas(canvasState.canvas, svgcanvasRef.current, config, true)
 
-    if (!success) throw new Error('Error loading SVG')
+  //   if (!success) throw new Error('Error loading SVG')
 
-    dispatchCanvasState({ type: 'updated', updated: false })
-  }, [svgContent, canvasState.canvas])
+  //   dispatchCanvasState({ type: 'updated', updated: false })
+  // }, [svgContent, canvasState.canvas])
 
-  updateContextPanel()
+  // updateContextPanel()
 
   return (
     <>
@@ -180,10 +180,7 @@ function Canvas({
             setSvgSize={setSvgSize}
           />
         </StyledCanvas>
-          <div className="workarea">
-            <div ref={svgcanvasRef} id="svgcanvas" className="svgcanvas" style={{ position: 'relative' }} />
-          </div>
-          <input ref={textRef} onKeyUp={onKeyUp} type="text" size="35" style={{ position: 'absolute', left: '-9999px' }} />
+          
       </Workspace>
     </>
   )
