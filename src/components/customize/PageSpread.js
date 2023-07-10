@@ -20,84 +20,72 @@ function PageSpread({
   setSelectedPageSvg,
   setSvgSize,
 }) {
-  const [svgLoaded, setSvgLoaded] = useState(false)
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
+  const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
-  const margin = {
-    top: convertToPx(marginTop),
-    right: convertToPx(marginRight),
-    bottom: convertToPx(marginBottom),
-    left: convertToPx(marginLeft),
-  }
-  const pagePosition = {
-    rightX: svgWidth + pageMargins.holes + margin.left,
-    leftX: minimumMargin + margin.left,
-    bothY: minimumMargin + margin.top,
-    spreadX: (canvasSize.width - svgWidth * 2) / 2,
-    spreadY: (canvasSize.height - svgHeight) / 2,
-  }
-  const maxSvgSize = {
-    height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
-    width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
-  }
-  const pageIndex = selectedPage - 1
-  const pageIsEven = selectedPage % 2 === 0
-  const pageId = canvasPages[pageIndex].pageId
-  const currentPageSide = pageIsEven ? "left" : "right"
-  const pageIsFrontCover = selectedPage === 1
-  const pageIsBackCover = selectedPage === bookData.numOfPages
-  const adjacentPageIndex = pageIsEven ? selectedPage + 1 : selectedPage - 1
-  const adjacentPageId = !pageIsBackCover && canvasPages[adjacentPageIndex].pageId
-  
-  const leftPage = {
-    index: pageIndex,
-    id: pageId,
-    side: currentPageSide,
-    svg: pageIsEven ? canvasPageTemplates[pageId].svg : canvasPageTemplates[adjacentPageId].svg,
-    margins: pageIsEven ? {
-      top: convertToPx(canvasPageTemplates[pageId].marginTop),
-      right: convertToPx(canvasPageTemplates[pageId].marginRight),
-      bottom: convertToPx(canvasPageTemplates[pageId].marginBottom),
-      left: convertToPx(canvasPageTemplates[pageId].marginLeft),
-    } : {
-      top: convertToPx(canvasPageTemplates[adjacentPageId].marginTop),
-      right: convertToPx(canvasPageTemplates[adjacentPageId].marginRight),
-      bottom: convertToPx(canvasPageTemplates[adjacentPageId].marginBottom),
-      left: convertToPx(canvasPageTemplates[adjacentPageId].marginLeft),
-    },
-    isSelected: pageIsEven,
-    htmlId: "left-template",
-  }
-  const rightPage = {
-    index: pageIndex,
-    id: pageId,
-    side: currentPageSide,
-    svg: !pageIsEven ? canvasPageTemplates[pageId].svg : canvasPageTemplates[adjacentPageId].svg,
-    margins: !pageIsEven ? {
-      top: convertToPx(canvasPageTemplates[pageId].marginTop),
-      right: convertToPx(canvasPageTemplates[pageId].marginRight),
-      bottom: convertToPx(canvasPageTemplates[pageId].marginBottom),
-      left: convertToPx(canvasPageTemplates[pageId].marginLeft),
-    } : {
-      top: convertToPx(canvasPageTemplates[adjacentPageId].marginTop),
-      right: convertToPx(canvasPageTemplates[adjacentPageId].marginRight),
-      bottom: convertToPx(canvasPageTemplates[adjacentPageId].marginBottom),
-      left: convertToPx(canvasPageTemplates[adjacentPageId].marginLeft),
-    },
-    isSelected: pageIsEven,
-    htmlId: "right-template",
-  }
+  const [maxSvgSize, setMaxSvgSize] = useState()
+  const [currentPageSide, setCurrentPageSide] = useState("")
+  const [leftPage, setLeftPage] = useState("")
+  const [rightPage, setRightPage] = useState("")
+  const [pagePosition, setPagePosition] = useState({})
 
   useEffect(() => {
-    console.log(canvasPageRef)
-    console.log(pageIsEven)
-    if (canvasPageRef.current === null) {
-      console.log("null")
+    // even pages
+    if (selectedPage % 2 === 0) {
+      // set page side in state
+      setCurrentPageSide("left")
+
+      // if it's the last page, show only the left page
+      if (selectedPage === bookData.numOfPages) {
+        setLeftPage(canvasPages[selectedPage - 1].pageId)
+        setRightPage(null)
+      }
+      // otherwise show the 2-page spread
+      else {
+        setLeftPage(canvasPages[selectedPage - 1].pageId)
+        setRightPage(canvasPages[selectedPage].pageId)
+      }
     }
+    // odd pages
+    else {
+      // set page side in state
+      setCurrentPageSide("right")
+
+      // if it's the first page, show only the right page
+      if (selectedPage === 1) {
+        setRightPage(canvasPages[selectedPage - 1].pageId)
+        setLeftPage(null)
+      }
+      // otherwise show the 2-page spread
+      else {
+        setLeftPage(canvasPages[selectedPage - 2].pageId)
+        setRightPage(canvasPages[selectedPage - 1].pageId)
+      }
+    }
+
+    const margin = {
+      top: convertToPx(marginTop),
+      right: convertToPx(marginRight),
+      bottom: convertToPx(marginBottom),
+      left: convertToPx(marginLeft),
+    }
+
+    setPagePosition({
+      rightX: svgWidth + pageMargins.holes + margin.left,
+      leftX: minimumMargin + margin.left,
+      bothY: minimumMargin + margin.top,
+      spreadX: (canvasSize.width - svgWidth * 2) / 2,
+      spreadY: (canvasSize.height - svgHeight) / 2,
+    })
+
+    setMaxSvgSize({
+      height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
+      width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
+    })
+
     if (svgLoaded) {
-      console.log("loaded")
-      const canvas = canvasRef.current
+      console.log(canvasPageRef.current)
 
       const {
         cancel,           // cleanup function.
@@ -107,7 +95,7 @@ function PageSpread({
         // this element has "svg-drag-select-area-overlay" class by default.
       } = svgDragSelect({
         // the svg element (required).
-        svg: canvas,
+        svg: canvasRef.current,
         // followings are optional parameters with default values.
         referenceElement: canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
         selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
@@ -160,108 +148,152 @@ function PageSpread({
         cancel()
       }
     }
-  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates, canvasPageRef.current, svgLoaded])
+  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates, svgLoaded])
 
   return (
     <svg
       ref={canvasRef}
       id="page-spread"
       xmlns="http://www.w3.org/2000/svg"
-      xlinkns="http://www.w3.org/1999/xlink"
       height={svgHeight + 2}
       width={svgWidth * 2 + 3}
       x={pagePosition.spreadX}
       y={pagePosition.spreadY}
     >
-      {(pageIsFrontCover || pageIsBackCover) && (
-        <CoverPage
-          currentPageSide={currentPageSide}
-          pageHeight={svgHeight}
-          pageWidth={svgWidth}
-        />
-      )}
-      {/* The left side page that is NOT a cover page */}
-      {(!pageIsFrontCover && currentPageSide === "left") && (
-        <Page
-          canvasPageRef={pageIsEven ? canvasPageRef : null}
-          maxSvgSize={maxSvgSize}
-          page={leftPage}
-          pageData={pageData}
-          pagePosition={pagePosition}
-          setPageData={setPageData}
-          setSelectedPageSvg={setSelectedPageSvg}
-          setSvgLoaded={setSvgLoaded}
-          setSvgSize={setSvgSize}
-        />
-      )}
-      {/* The right side page that is NOT a cover page */}
-      {(!pageIsBackCover && currentPageSide === "right") && (
-        <Page
-          canvasPageRef={!pageIsEven ? canvasPageRef : null}
-          maxSvgSize={maxSvgSize}
-          page={rightPage}
-          pageData={pageData}
-          pagePosition={pagePosition}
-          setPageData={setPageData}
-          setSelectedPageSvg={setSelectedPageSvg}
-          setSvgLoaded={setSvgLoaded}
-          setSvgSize={setSvgSize}
-        />
-      )}
-      <g id="selected-group"></g>
+      <CoverPage
+        bookData={bookData}
+        selectedPage={selectedPage}
+        pageHeight={svgHeight}
+        pageWidth={svgWidth}
+      />
+      <Page
+        bookData={bookData}
+        canvasPageRef={canvasPageRef}
+        canvasPageTemplates={canvasPageTemplates}
+        currentPageSide={currentPageSide}
+        isSelected={currentPageSide === "left" ? true : false}
+        maxSvgSize={maxSvgSize}
+        pageData={pageData}
+        pageSide="left"
+        pageId={leftPage}
+        pagePosition={pagePosition}
+        selectedPage={selectedPage}
+        setPageData={setPageData}
+        setSelectedPageSvg={setSelectedPageSvg}
+        setSvgSize={setSvgSize}
+        setSvgLoaded={setSvgLoaded}
+      />
+      <Page
+        bookData={bookData}
+        canvasPageRef={canvasPageRef}
+        canvasPageTemplates={canvasPageTemplates}
+        currentPageSide={currentPageSide}
+        isSelected={currentPageSide === "right" ? true : false}
+        maxSvgSize={maxSvgSize}
+        pageData={pageData}
+        pageSide="right"
+        pageId={rightPage}
+        pagePosition={pagePosition}
+        selectedPage={selectedPage}
+        setPageData={setPageData}
+        setSelectedPageSvg={setSelectedPageSvg}
+        setSvgSize={setSvgSize}
+        setSvgLoaded={setSvgLoaded}
+      />
     </svg>
   )
 }
 
-const Page = ({
-  canvasPageRef,
+function Page({
+  bookData,
+  canvasPageTemplates,
+  currentPageSide,
+  isSelected,
   maxSvgSize,
-  page,
   pageData,
   pagePosition,
+  pageSide,
+  pageId,
+  selectedPage,
   setPageData,
   setSelectedPageSvg,
-  setSvgLoaded,
   setSvgSize,
-}) => {
-  console.log(page)
+  setSvgLoaded,
+  canvasPageRef,
+}) {
+  const [pageSvg, setPageSvg] = useState({
+    svg: `<svg><rect width="477.6" height="792" fill="white"></rect></svg>`,
+    marginTop: 12,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 12,
+  })
+  const isLeftPage = pageSide === "left"
+  const margins = {
+    top: convertFloatFixed(convertToPx(pageSvg.marginTop), 3),
+    right: convertFloatFixed(convertToPx(pageSvg.marginRight), 3),
+    bottom: convertFloatFixed(convertToPx(pageSvg.marginBottom), 3),
+    left: convertFloatFixed(convertToPx(pageSvg.marginLeft), 3),
+  }
 
-  return (
-    <>
-      <PageBackground
-        currentPageSide={page.side}
-        isSelected={page.isSelected}
-        pageHeight={pageData.svgHeight}
-        pageWidth={pageData.svgWidth}
-      />
-      {pageData.template ? (
-        <Template
-          maxSvgSize={maxSvgSize}
-          currentPageSide={page.side}
-          pageData={pageData}
-          pagePosition={pagePosition}
-          setPageData={setPageData}
-          setSelectedPageSvg={setSelectedPageSvg}
-          setSvgSize={setSvgSize}
+  useEffect(() => {
+    console.log(isSelected)
+    if (isSelected) {
+      const template = canvasPageTemplates[pageId]
+      setPageSvg(template)
+    }
+  }, [pageId, canvasPageTemplates])
+
+  const handleLoadSvg = (src) => {
+    console.log(currentPageSide, pageSide)
+    if (currentPageSide === pageSide) {
+      setSvgLoaded(src)
+    }
+  }
+
+  if (selectedPage === 1 && pageSide === "left") {
+    return null
+  }
+  else if (selectedPage === bookData.numOfPages && pageSide === "right") {
+    return null
+  }
+  else {
+    return (
+      <>
+        <PageBackground
+          currentPageSide={currentPageSide}
+          isSelected={isSelected}
+          pageHeight={pageData.svgHeight}
+          pageWidth={pageData.svgWidth}
+          pageSide={pageSide}
         />
-      ) : (
-        <SVG
-          onLoad={() => {
-            setSvgLoaded(true)
-            console.log(`loaded page: ${page.htmlId}`)
-          }}
-          innerRef={canvasPageRef}
-          id={page.htmlId}
-          xmlns="http://www.w3.org/2000/svg"
-          x={page.side === "left" ? minimumMargin + page.margins.left : pageData.svgWidth + pageMargins.holes + page.margins.left}
-          y={minimumMargin + page.margins.top}
-          width={pageData.maxContentWidth}
-          height={pageData.maxContentHeight}
-          src={page.svg}
-        />
-      )}
-    </>
-  )
+        {pageData.template && currentPageSide === pageSide ? (
+          <Template
+            bookData={bookData}
+            maxSvgSize={maxSvgSize}
+            currentPageSide={currentPageSide}
+            pageData={pageData}
+            pagePosition={pagePosition}
+            setPageData={setPageData}
+            setSelectedPageSvg={setSelectedPageSvg}
+            setSvgSize={setSvgSize}
+          />
+        ) : (
+          <SVG
+            onLoad={(src, hasCache) => handleLoadSvg(src)}
+            innerRef={isSelected && canvasPageRef}
+            id={isLeftPage ? "left-template" : "right-template"}
+            xmlns="http://www.w3.org/2000/svg"
+            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + pageMargins.holes + margins.left}
+            y={minimumMargin + margins.top}
+            width={pageData.maxContentWidth}
+            height={pageData.maxContentHeight}
+            src={pageSvg.svg}
+          />
+        )}
+      </>
+    )
+  }
 }
 
 

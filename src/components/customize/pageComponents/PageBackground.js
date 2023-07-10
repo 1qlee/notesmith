@@ -7,14 +7,14 @@ function PageBackground({
   isSelected,
   pageHeight,
   pageWidth,
-  currentPageSide,
+  pageSide,
 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={pageWidth}
       height={pageHeight}
-      x={currentPageSide === "left" ? "0" : pageWidth}
+      x={pageSide === "left" ? "0" : pageWidth}
       y="0"
     >
       <rect
@@ -25,8 +25,8 @@ function PageBackground({
         strokeWidth="2px"
         style={isSelected ? { stroke: colors.primary.sixHundred } : null}
       ></rect>
-      <Holes 
-        currentPageSide={currentPageSide} 
+      <Holes
+        currentPageSide={pageSide}
         pageHeight={pageHeight}
         pageWidth={pageWidth}
       />
