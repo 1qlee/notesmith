@@ -16,8 +16,8 @@ const StyledCanvas = styled.div`
   align-items: center;
   position: relative;
   background-color: ${colors.white};
-  height: ${props => props.height || "100%"};
-  width: ${props => props.width || "100%"};
+  height: ${props => props.height + "px" || "100%"};
+  width: ${props => props.width  + "px" || "100%"};
 `
 
 function Canvas({
@@ -167,7 +167,10 @@ function Canvas({
   return (
     <>
       <Workspace>
-        <StyledCanvas>
+        <StyledCanvas
+          height={canvasSize.height}
+          width={canvasSize.width}
+        >
           <PageSpread
             bookData={bookData}
             canvasSize={canvasSize}
