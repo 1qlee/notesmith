@@ -2,6 +2,7 @@ import React, { useEffect, useState, useLayoutEffect, useRef, forwardRef } from 
 import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
+import { useEditorContext, useEditorDispatch } from './context/EditorContext'
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -23,6 +24,8 @@ function PageSpread({
 }) {
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
+  const canvasState = useEditorContext()
+  const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const [maxSvgSize, setMaxSvgSize] = useState()
@@ -85,10 +88,7 @@ function PageSpread({
       width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
     })
 
-    if (svgLoaded) {
-      console.log(canvasPageRef.current)
-      console.log(selectedPageSvg && pageData.template)
-
+    if (canvasState.mode === "select" && svgLoaded) {
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -132,6 +132,10 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          dispatch({
+            type: "select",
+            selectedElements: selectedElements,
+          })
           // for example: toggle "data-selected" attribute
           newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
           newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))

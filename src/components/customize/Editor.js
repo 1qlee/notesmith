@@ -278,7 +278,7 @@ const Editor = ({
   }
 
   return (
-    <EditorProvider bookData={bookData}>
+    <EditorProvider>
       {noExistingBook ? (
         <Book404 />
       ) : (

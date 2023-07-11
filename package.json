@@ -11,6 +11,7 @@
     "@sendgrid/mail": "^7.4.6",
     "@stripe/react-stripe-js": "^2.0.0",
     "@stripe/stripe-js": "^1.51.0",
+    "@svgdotjs/svg.js": "^3.2.0",
     "@svgedit/svgcanvas": "^7.2.1",
     "babel-plugin-styled-components": "^1.13.2",
     "concurrent-each": "github:1qlee/concurrent-each",
