@@ -7,7 +7,7 @@ import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/databa
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { isBrowser } from "../../utils/helper-functions"
-import { EditorContext, EditorDispatchContext } from "./context/editorContext"
+import { EditorProvider } from "./context/EditorContext"
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
@@ -29,31 +29,12 @@ const StyledEditor = styled.div`
   position: relative;
 `
 
-const tasksReducer = (state, action) => {
-  switch (action.type) {
-    case 'add':
-      return [...state, action.task];
-    case 'remove':
-      return state.filter((_, index) => index !== action.index);
-    case 'update':
-      return state.map((task, index) => {
-        if (index === action.index) {
-          return { ...task, ...action.task };
-        }
-        return task;
-      });
-    default:
-      return state;
-  }
-}
-
 const Editor = ({ 
   bookId, 
   productData, 
   productImages,
 }) => {
   const { loading, user, firebaseDb } = useFirebaseContext()
-  const [tasks, dispatch] = useReducer(tasksReducer, [])
   const [showModal, setShowModal] = useState({
     show: false,
     type: "",
@@ -297,103 +278,99 @@ const Editor = ({
   }
 
   return (
-    <EditorContext.Provider
-      value={pageData}
-    >
-      <EditorDispatchContext.Provider>
-        {noExistingBook ? (
-          <Book404 />
-        ) : (
-          <>
-            <Functionsbar
-              selectedPage={selectedPage}
-              setSelectedPage={setSelectedPage}
+    <EditorProvider bookData={bookData}>
+      {noExistingBook ? (
+        <Book404 />
+      ) : (
+        <>
+          <Functionsbar
+            selectedPage={selectedPage}
+            setSelectedPage={setSelectedPage}
+            bookData={bookData}
+            setBookData={setBookData}
+            bookId={bookId}
+            toast={toast}
+          />
+          <StyledEditor>
+            <Pagebar
+              activeTab={activeTab}
               bookData={bookData}
+              canvasPages={canvasPages}
+              canvasPageTemplates={canvasPageTemplates}
+              pageData={pageData}
+              selectedPage={selectedPage}
+              setActiveTab={setActiveTab}
+              setPageData={setPageData}
+              setSelectedPage={setSelectedPage}
+            />
+            <Canvas
+              bookData={bookData}
+              canvasPages={canvasPages}
+              canvasPageTemplates={canvasPageTemplates}
+              pageData={pageData}
+              setSvgSize={setSvgSize}
+              selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
+              setPageData={setPageData}
+              setSelectedPageSvg={setSelectedPageSvg}
+              svgContent={svgContent}
+              locale={config.i18n}
+              svgUpdate={svgUpdate}
+              log={logDebugData}
+            />
+            <Controls
+              activeTab={activeTab}
+              bookData={bookData}
+              canvasPages={canvasPages}
+              pageData={pageData}
+              productData={productData}
+              productImages={productImages}
+              setActiveTab={setActiveTab}
               setBookData={setBookData}
-              bookId={bookId}
+              setPageData={setPageData}
+              setShowModal={setShowModal}
+              svgSize={svgSize}
+              user={user}
               toast={toast}
             />
-            <StyledEditor>
-              <Pagebar
-                activeTab={activeTab}
-                bookData={bookData}
-                canvasPages={canvasPages}
-                canvasPageTemplates={canvasPageTemplates}
-                pageData={pageData}
-                selectedPage={selectedPage}
-                setActiveTab={setActiveTab}
-                setPageData={setPageData}
-                setSelectedPage={setSelectedPage}
-              />
-              <Canvas
-                bookData={bookData}
-                canvasPages={canvasPages}
-                canvasPageTemplates={canvasPageTemplates}
-                pageData={pageData}
-                setSvgSize={setSvgSize}
-                selectedPage={selectedPage}
-                selectedPageSvg={selectedPageSvg}
-                setPageData={setPageData}
-                setSelectedPageSvg={setSelectedPageSvg}
-                svgContent={svgContent}
-                locale={config.i18n}
-                svgUpdate={svgUpdate}
-                log={logDebugData}
-              />
-              <Controls
-                activeTab={activeTab}
-                bookData={bookData}
-                canvasPages={canvasPages}
-                pageData={pageData}
-                productData={productData}
-                productImages={productImages}
-                setActiveTab={setActiveTab}
-                setBookData={setBookData}
-                setPageData={setPageData}
-                setShowModal={setShowModal}
-                svgSize={svgSize}
-                user={user}
-                toast={toast}
-              />
-            </StyledEditor>
-          </>
-        )}
-        {showModal.show && (
-          <>
-            {showModal.type === "notSignedIn" && (
-              <CheckLoginModal setShowModal={setShowModal} />
-            )}
-            {showModal.type === "signedIn" && (
-              <CreateBookModal
-                bookData={bookData}
-                pageData={pageData}
-                productData={productData}
-                setBookData={setBookData}
-                setShowModal={setShowModal}
-                toast={toast}
-              />
-            )}
-            {showModal.type === "template" && (
-              <ApplyTemplateModal
-                bookData={bookData}
-                bookId={bookId}
-                canvasPages={canvasPages}
-                canvasPageTemplates={canvasPageTemplates}
-                pageData={pageData}
-                selectedPage={selectedPage}
-                selectedPageSvg={selectedPageSvg}
-                setCanvasPages={setCanvasPages}
-                setCanvasPageTemplates={setCanvasPageTemplates}
-                setShowModal={setShowModal}
-                toast={toast}
-                user={user}
-              />
-            )}
-          </>
-        )}
-        <Toastify />
-      </EditorDispatchContext.Provider>
-    </EditorContext.Provider>
+          </StyledEditor>
+        </>
+      )}
+      {showModal.show && (
+        <>
+          {showModal.type === "notSignedIn" && (
+            <CheckLoginModal setShowModal={setShowModal} />
+          )}
+          {showModal.type === "signedIn" && (
+            <CreateBookModal
+              bookData={bookData}
+              pageData={pageData}
+              productData={productData}
+              setBookData={setBookData}
+              setShowModal={setShowModal}
+              toast={toast}
+            />
+          )}
+          {showModal.type === "template" && (
+            <ApplyTemplateModal
+              bookData={bookData}
+              bookId={bookId}
+              canvasPages={canvasPages}
+              canvasPageTemplates={canvasPageTemplates}
+              pageData={pageData}
+              selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
+              setCanvasPages={setCanvasPages}
+              setCanvasPageTemplates={setCanvasPageTemplates}
+              setShowModal={setShowModal}
+              toast={toast}
+              user={user}
+            />
+          )}
+        </>
+      )}
+      <Toastify />
+    </EditorProvider>
   )
 }
 
