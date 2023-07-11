@@ -16,6 +16,7 @@ function PageSpread({
   canvasSize,
   pageData,
   selectedPage,
+  selectedPageSvg,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
@@ -86,6 +87,7 @@ function PageSpread({
 
     if (svgLoaded) {
       console.log(canvasPageRef.current)
+      console.log(selectedPageSvg && pageData.template)
 
       const {
         cancel,           // cleanup function.
@@ -97,7 +99,7 @@ function PageSpread({
         // the svg element (required).
         svg: canvasRef.current,
         // followings are optional parameters with default values.
-        referenceElement: canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
+        referenceElement: pageData.template ? selectedPageSvg : canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
         selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
         // "intersection": selects intersected elements using getIntersectionList().
         // function: custom selector implementation
@@ -148,7 +150,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates, svgLoaded])
+  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates, canvasPageRef.current, svgLoaded])
 
   return (
     <svg
@@ -237,19 +239,15 @@ function Page({
   }
 
   useEffect(() => {
-    console.log(isSelected)
-    if (isSelected) {
+    if (canvasPageTemplates && pageId) {
       const template = canvasPageTemplates[pageId]
       setPageSvg(template)
     }
-  }, [pageId, canvasPageTemplates])
 
-  const handleLoadSvg = (src) => {
-    console.log(currentPageSide, pageSide)
-    if (currentPageSide === pageSide) {
-      setSvgLoaded(src)
+    if (isSelected) {
+      setSvgLoaded(canvasPageRef.current)
     }
-  }
+  }, [pageId, canvasPageTemplates, currentPageSide, selectedPage, isSelected])
 
   if (selectedPage === 1 && pageSide === "left") {
     return null
@@ -269,6 +267,7 @@ function Page({
         />
         {pageData.template && currentPageSide === pageSide ? (
           <Template
+            ref={canvasPageRef}
             bookData={bookData}
             maxSvgSize={maxSvgSize}
             currentPageSide={currentPageSide}
@@ -280,7 +279,6 @@ function Page({
           />
         ) : (
           <SVG
-            onLoad={(src, hasCache) => handleLoadSvg(src)}
             innerRef={isSelected && canvasPageRef}
             id={isLeftPage ? "left-template" : "right-template"}
             xmlns="http://www.w3.org/2000/svg"

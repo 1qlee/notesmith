@@ -26,6 +26,7 @@ function Canvas({
   canvasPageTemplates,
   pageData,
   selectedPage,
+  selectedPageSvg,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
@@ -38,7 +39,6 @@ function Canvas({
   const svgcanvasRef = useRef(null)
   const oiAttributes = React.useRef(sanitizeSvg.saveOIAttr(svgContent))
   const [canvasState, dispatchCanvasState] = useContext(canvasContext)
-  log('Canvas', { locale, canvasState })
   const [canvasSize, setCanvasSize] = useState({
     width: 1456,
     height: 916,
@@ -178,6 +178,7 @@ function Canvas({
             canvasPageTemplates={canvasPageTemplates}
             pageData={pageData}
             selectedPage={selectedPage}
+            selectedPageSvg={selectedPageSvg}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}

@@ -545,6 +545,5 @@ select:-webkit-autofill:focus {
   background-color: rgba(26, 115, 232, 0.1);
 }
 [data-selected] {
-  fill: blue;
-  stroke: blue;
+  stroke: #1a73e8;
 }
