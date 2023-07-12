@@ -27,13 +27,18 @@ export function EditorProvider({ children }) {
 
 const setCanvasState = (state, action) => {
   switch (action.type) {
-    case 'add':
-      return [...state, action.task];
+    case 'init':
+      console.log("init: ", action.canvas)
+      return {
+        ...state,
+        canvas: action.canvas,
+      }
     case 'select':
       console.log("selecting: ", action.selectedElements)
       return {
         ...state,
-        selectedElement: action.selectedElements,
+        selectedElements: action.selectedElements,
+        selectedGroup: action.selectedGroup,
       }
     case 'remove':
       return state.filter((_, index) => index !== action.index);

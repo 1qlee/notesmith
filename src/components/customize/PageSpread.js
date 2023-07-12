@@ -2,7 +2,8 @@ import React, { useEffect, useState, useLayoutEffect, useRef, forwardRef } from 
 import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
-import { useEditorContext, useEditorDispatch } from './context/EditorContext'
+import { useEditorContext, useEditorDispatch } from './context/editorContext'
+import { SVG as svgJs } from "@svgdotjs/svg.js"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -35,6 +36,7 @@ function PageSpread({
   const [pagePosition, setPagePosition] = useState({})
 
   useEffect(() => {
+    let svgPage
     // even pages
     if (selectedPage % 2 === 0) {
       // set page side in state
@@ -89,6 +91,11 @@ function PageSpread({
     })
 
     if (canvasState.mode === "select" && svgLoaded) {
+      dispatch({
+        type: "init",
+        canvas: svgJs(canvasPageRef.current),
+      })
+
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -132,10 +139,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          dispatch({
-            type: "select",
-            selectedElements: selectedElements,
-          })
           // for example: toggle "data-selected" attribute
           newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
           newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
@@ -147,6 +150,25 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           selectedElements,         // selected element array.
         }) {
+          // create an svg group to temporarily contain the selected elements
+          const group = canvasState.canvas.group()
+          // add selected elements to state
+          dispatch({
+            type: "select",
+            selectedElements: selectedElements,
+          })
+
+          dispatch({
+
+          })
+          
+          if (selectedElements.length > 1) {
+            selectedElements.forEach(element => {
+              group.add(element)
+            })
+          }
+
+          console.log(group.bbox())
         },
       })
 
@@ -158,14 +180,15 @@ function PageSpread({
 
   return (
     <svg
-      ref={canvasRef}
       id="page-spread"
+      ref={canvasRef}
       xmlns="http://www.w3.org/2000/svg"
       height={svgHeight + 2}
       width={svgWidth * 2 + 3}
       x={pagePosition.spreadX}
       y={pagePosition.spreadY}
     >
+      <div id="page-spread"></div>
       <CoverPage
         bookData={bookData}
         selectedPage={selectedPage}

@@ -7,7 +7,7 @@ import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/databa
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { isBrowser } from "../../utils/helper-functions"
-import { EditorProvider } from "./context/EditorContext"
+import { EditorProvider } from "./context/editorContext"
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
