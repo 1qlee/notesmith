@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useReducer } from "react"
 
 const initialState = {
-  mode: 'select',
-  selectedElements: null,
-  multiselected: false,
-  updated: false,
-  zoom: 100,
+  canvas: null,
   context: null,
   layerName: '',
+  mode: 'select',
+  multiselected: false,
+  selectedElements: null,
+  selectedGroup: null,
+  updated: false,
+  zoom: 100,
 }
 
 const EditorContext = createContext(null);
@@ -34,11 +36,35 @@ const setCanvasState = (state, action) => {
         canvas: action.canvas,
       }
     case 'select':
-      console.log("selecting: ", action.selectedElements)
+      console.log("selecting elements: ", action.selectedElements)
+      // create an svg group to temporarily contain the selected elements
+      const group = state.canvas.group().attr("id", "selected-group")
+
+      action.selectedElements.forEach(element => {
+        group.add(element)
+      })
+      
+      console.log("grouping elements: ", group)
+      
       return {
         ...state,
         selectedElements: action.selectedElements,
-        selectedGroup: action.selectedGroup,
+        selectedGroup: group,
+      }
+    case 'ungroup-selection':
+      console.log(state)
+      console.log("ungrouping elements: ", action.id)
+      // find the group by id
+      const findGroup = state.canvas.findOne(`#${action.id}`)
+      // ungroup the selected elements
+      if (state.selectedGroup) {
+        console.log(state.selectedGroup)
+        state.selectedGroup.ungroup()
+      }
+
+      return {
+        ...state,
+        selectedGroup: null,
       }
     case 'remove':
       return state.filter((_, index) => index !== action.index);

@@ -36,7 +36,6 @@ function PageSpread({
   const [pagePosition, setPagePosition] = useState({})
 
   useEffect(() => {
-    let svgPage
     // even pages
     if (selectedPage % 2 === 0) {
       // set page side in state
@@ -91,11 +90,13 @@ function PageSpread({
     })
 
     if (canvasState.mode === "select" && svgLoaded) {
+      let canvas = (pageData.template && selectedPageSvg) ? selectedPageSvg : canvasPageRef.current
+      
       dispatch({
         type: "init",
-        canvas: svgJs(canvasPageRef.current),
+        canvas: svgJs(canvas),
       })
-
+      
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -106,7 +107,7 @@ function PageSpread({
         // the svg element (required).
         svg: canvasRef.current,
         // followings are optional parameters with default values.
-        referenceElement: pageData.template ? selectedPageSvg : canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
+        referenceElement: (pageData.template && selectedPageSvg) ? selectedPageSvg : canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
         selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
         // "intersection": selects intersected elements using getIntersectionList().
         // function: custom selector implementation
@@ -123,6 +124,13 @@ function PageSpread({
             cancel()
             return
           }
+
+          console.log("clearing GROUP!!!")
+          dispatch({
+            type: "ungroup-selection",
+            id: "selected-group",
+          })
+
           // for example: clear "data-selected" attribute
           const selectedElements = svg.querySelectorAll('[data-selected]')
           for (let i = 0; i < selectedElements.length; i++) {
@@ -142,6 +150,8 @@ function PageSpread({
           // for example: toggle "data-selected" attribute
           newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
           newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
+
+
         },
 
         onSelectionEnd({
@@ -150,25 +160,14 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           selectedElements,         // selected element array.
         }) {
-          // create an svg group to temporarily contain the selected elements
-          const group = canvasState.canvas.group()
-          // add selected elements to state
-          dispatch({
-            type: "select",
-            selectedElements: selectedElements,
-          })
-
-          dispatch({
-
-          })
-          
-          if (selectedElements.length > 1) {
-            selectedElements.forEach(element => {
-              group.add(element)
+          if (selectedElements.length > 0) {
+            console.log("creating group...")
+            
+            dispatch({
+              type: "select",
+              selectedElements: selectedElements,
             })
           }
-
-          console.log(group.bbox())
         },
       })
 
@@ -176,7 +175,13 @@ function PageSpread({
         cancel()
       }
     }
-  }, [pageData, canvasSize, selectedPage, canvasPages, canvasPageTemplates, canvasPageRef.current, svgLoaded])
+
+    const deleteElements = () => {
+
+    }
+
+    document.addEventListener("keydown", deleteElements)
+  }, [pageData, canvasSize, selectedPage, canvasPages, selectedPageSvg, canvasPageTemplates, canvasPageRef.current, svgLoaded])
 
   return (
     <svg
@@ -188,7 +193,6 @@ function PageSpread({
       x={pagePosition.spreadX}
       y={pagePosition.spreadY}
     >
-      <div id="page-spread"></div>
       <CoverPage
         bookData={bookData}
         selectedPage={selectedPage}

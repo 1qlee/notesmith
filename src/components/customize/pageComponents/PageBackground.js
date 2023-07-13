@@ -23,7 +23,7 @@ function PageBackground({
         fill={colors.white}
         stroke={colors.gray.threeHundred}
         strokeWidth="2px"
-        style={isSelected ? { stroke: colors.primary.sixHundred } : null}
+        style={isSelected ? { stroke: colors.gray.nineHundred } : null}
       ></rect>
       <Holes
         currentPageSide={pageSide}

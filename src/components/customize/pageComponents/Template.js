@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback, forwardRef } from "react"
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
-import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
@@ -59,10 +58,7 @@ const Template = forwardRef(function Template(props, ref) {
       fill="#fff"
     >
       {pageData.template === "blank" && (
-        <Blank
-          pageData={pageData}
-          maxSvgSize={maxSvgSize}
-        />
+        null
       )}
       {pageData.template === "ruled" && (
         <Ruled

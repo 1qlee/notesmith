@@ -6,7 +6,6 @@ import Holes from "../pageComponents/Holes"
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
-import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
@@ -150,10 +149,7 @@ function ProductTemplate({
               fill="#fff"
             >
               {pageData.template === "blank" && (
-                <Blank
-                  maxSvgSize={maxSvgSize}
-                  pageData={pageData}
-                />
+                null
               )}
               {pageData.template === "ruled" && (
                 <Ruled
