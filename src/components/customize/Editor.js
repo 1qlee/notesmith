@@ -278,7 +278,12 @@ const Editor = ({
   }
 
   return (
-    <EditorProvider>
+    <EditorProvider
+      bookDimensions={{
+        width: bookData.widthPixel,
+        height: bookData.heightPixel,
+      }}
+    >
       {noExistingBook ? (
         <Book404 />
       ) : (

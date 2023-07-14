@@ -3,7 +3,6 @@ import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variab
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
-import { SVG as svgJs } from "@svgdotjs/svg.js"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -91,10 +90,11 @@ function PageSpread({
 
     if (canvasState.mode === "select" && svgLoaded) {
       let canvas = (pageData.template && selectedPageSvg) ? selectedPageSvg : canvasPageRef.current
+      console.log(canvas)
       
       dispatch({
         type: "init",
-        canvas: svgJs(canvas),
+        canvas: canvas,
       })
       
       const {
@@ -125,7 +125,6 @@ function PageSpread({
             return
           }
 
-          console.log("clearing GROUP!!!")
           dispatch({
             type: "ungroup-selection",
             id: "selected-group",
@@ -147,11 +146,15 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          if (selectedElements.length > 0) {
+            dispatch({
+              type: "change-selection",
+              selectedElements: newlySelectedElements,
+            })
+          }
           // for example: toggle "data-selected" attribute
           newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
           newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
-
-
         },
 
         onSelectionEnd({
@@ -161,7 +164,6 @@ function PageSpread({
           selectedElements,         // selected element array.
         }) {
           if (selectedElements.length > 0) {
-            console.log("creating group...")
             
             dispatch({
               type: "select",
@@ -175,12 +177,6 @@ function PageSpread({
         cancel()
       }
     }
-
-    const deleteElements = () => {
-
-    }
-
-    document.addEventListener("keydown", deleteElements)
   }, [pageData, canvasSize, selectedPage, canvasPages, selectedPageSvg, canvasPageTemplates, canvasPageRef.current, svgLoaded])
 
   return (
