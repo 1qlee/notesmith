@@ -50,6 +50,7 @@ const setCanvasState = (state, action) => {
       log("initializing canvas...")
       // create the canvas object
       const canvas = svgJs(action.canvas)
+      console.log(canvas)
       // create a group object to hold the selected elements (selection)
       const selection = canvas.group().attr("id", "selection-group")
       const selectionPath = selection.path(``).attr("id", "selection-path")

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, forwardRef } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -11,16 +11,15 @@ import Handwriting from "../templates/Handwriting"
 import CrossGrid from "../templates/CrossGrid"
 import Calligraphy from "../templates/Calligraphy"
 
-const Template = forwardRef(function Template(props, ref) {
-  const {
-    currentPageSide,
-    maxSvgSize,
-    pageData,
-    pagePosition,
-    setPageData,
-    setSelectedPageSvg,
-    setSvgSize,
-  } = props
+const Template = ({
+  currentPageSide,
+  maxSvgSize,
+  pageData,
+  pagePosition,
+  setPageData,
+  setSelectedPageSvg,
+  setSvgSize,
+}) => {
   const [node, setNode] = useState()
 
   const templateRef = useCallback(node => {
@@ -31,6 +30,7 @@ const Template = forwardRef(function Template(props, ref) {
 
   useEffect(() => {
     if (node) {
+      console.log(node)
       setSelectedPageSvg(node)
       
       setTimeout(() => {
@@ -132,6 +132,6 @@ const Template = forwardRef(function Template(props, ref) {
       )}
     </svg>
   )
-})
+}
 
 export default Template

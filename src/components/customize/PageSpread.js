@@ -28,156 +28,159 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
-  const [maxSvgSize, setMaxSvgSize] = useState()
-  const [currentPageSide, setCurrentPageSide] = useState("")
-  const [leftPage, setLeftPage] = useState("")
-  const [rightPage, setRightPage] = useState("")
-  const [pagePosition, setPagePosition] = useState({})
+  const margin = {
+    top: convertToPx(marginTop),
+    right: convertToPx(marginRight),
+    bottom: convertToPx(marginBottom),
+    left: convertToPx(marginLeft),
+  }
+  const pagePosition = {
+    rightX: svgWidth + pageMargins.holes + margin.left,
+    leftX: minimumMargin + margin.left,
+    bothY: minimumMargin + margin.top,
+    spreadX: (canvasSize.width - svgWidth * 2) / 2,
+    spreadY: (canvasSize.height - svgHeight) / 2,
+  }
+  let currentPageSide = "right"
+  let leftPage = null
+  let rightPage = null
+  
+  if (selectedPage % 2 === 0) {
+    // set page side in state
+    currentPageSide = "left"
+
+    // if it's the last page, show only the left page
+    if (selectedPage === bookData.numOfPages) {
+      leftPage = (canvasPages[selectedPage - 1].pageId)
+      rightPage = (null)
+    }
+    // otherwise show the 2-page spread
+    else {
+      leftPage = (canvasPages[selectedPage - 1].pageId)
+      rightPage = (canvasPages[selectedPage].pageId)
+    }
+  }
+  // odd pages
+  else {
+    // set page side in state
+    currentPageSide = "right"
+
+    // if it's the first page, show only the right page
+    if (selectedPage === 1) {
+      rightPage = (canvasPages[selectedPage - 1].pageId)
+      leftPage = (null)
+    }
+    // otherwise show the 2-page spread
+    else {
+      leftPage = (canvasPages[selectedPage - 2].pageId)
+      rightPage = (canvasPages[selectedPage - 1].pageId)
+    }
+  }
+
+  let referenceElement = null
+
+  if (pageData.template && selectedPageSvg) {
+    console.log(selectedPageSvg)
+    // dispatch({
+    //   type: "init",
+    //   canvas: selectedPageSvg,
+    // })
+    referenceElement = selectedPageSvg
+  }
+
+  if (svgLoaded && canvasPageRef) {
+    console.log(canvasPageRef)
+    // dispatch({
+    //   type: "init",
+    //   canvas: canvasPageRef.current,
+    // })
+    referenceElement = canvasPageRef.current
+  }
 
   useEffect(() => {
-    // even pages
-    if (selectedPage % 2 === 0) {
-      // set page side in state
-      setCurrentPageSide("left")
 
-      // if it's the last page, show only the left page
-      if (selectedPage === bookData.numOfPages) {
-        setLeftPage(canvasPages[selectedPage - 1].pageId)
-        setRightPage(null)
-      }
-      // otherwise show the 2-page spread
-      else {
-        setLeftPage(canvasPages[selectedPage - 1].pageId)
-        setRightPage(canvasPages[selectedPage].pageId)
-      }
-    }
-    // odd pages
-    else {
-      // set page side in state
-      setCurrentPageSide("right")
+    // if (canvasState.mode === "select") {
+    //   const {
+    //     cancel,           // cleanup function.
+    //     // please call `cancel()` when the select-on-drag behavior is no longer needed.
+    //     dragAreaOverlay,  // a div element overlaying dragging area.
+    //     // you can customize the style of this element.
+    //     // this element has "svg-drag-select-area-overlay" class by default.
+    //   } = svgDragSelect({
+    //     // the svg element (required).
+    //     svg: canvasRef.current,
+    //     // followings are optional parameters with default values.
+    //     referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
+    //     selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
+    //     // "intersection": selects intersected elements using getIntersectionList().
+    //     // function: custom selector implementation
 
-      // if it's the first page, show only the right page
-      if (selectedPage === 1) {
-        setRightPage(canvasPages[selectedPage - 1].pageId)
-        setLeftPage(null)
-      }
-      // otherwise show the 2-page spread
-      else {
-        setLeftPage(canvasPages[selectedPage - 2].pageId)
-        setRightPage(canvasPages[selectedPage - 1].pageId)
-      }
-    }
+    //     // followings are optional selection handlers
+    //     onSelectionStart({
+    //       svg,                      // the svg element.
+    //       pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
+    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+    //       cancel,                   // cancel() cancels.
+    //     }) {
+    //       // for example: handles mouse left button only.
+    //       if (pointerEvent.button !== 0) {
+    //         cancel()
+    //         return
+    //       }
 
-    const margin = {
-      top: convertToPx(marginTop),
-      right: convertToPx(marginRight),
-      bottom: convertToPx(marginBottom),
-      left: convertToPx(marginLeft),
-    }
+    //       dispatch({
+    //         type: "ungroup-selection",
+    //         id: "selected-group",
+    //       })
 
-    setPagePosition({
-      rightX: svgWidth + pageMargins.holes + margin.left,
-      leftX: minimumMargin + margin.left,
-      bothY: minimumMargin + margin.top,
-      spreadX: (canvasSize.width - svgWidth * 2) / 2,
-      spreadY: (canvasSize.height - svgHeight) / 2,
-    })
+    //       // for example: clear "data-selected" attribute
+    //       const selectedElements = svg.querySelectorAll('[data-selected]')
+    //       for (let i = 0; i < selectedElements.length; i++) {
+    //         selectedElements[i].removeAttribute('data-selected')
+    //       }
+    //     },
 
-    setMaxSvgSize({
-      height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
-      width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
-    })
+    //     onSelectionChange({
+    //       svg,                      // the svg element.
+    //       pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
+    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+    //       selectedElements,         // selected element array.
+    //       previousSelectedElements, // previous selected element array.
+    //       newlySelectedElements,    // `selectedElements - previousSelectedElements`
+    //       newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
+    //     }) {
+    //       if (selectedElements.length > 0) {
+    //         dispatch({
+    //           type: "change-selection",
+    //           selectedElements: newlySelectedElements,
+    //         })
+    //       }
+    //       // for example: toggle "data-selected" attribute
+    //       newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
+    //       newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
+    //     },
 
-    if (canvasState.mode === "select" && svgLoaded) {
-      let canvas = (pageData.template && selectedPageSvg) ? selectedPageSvg : canvasPageRef.current
-      console.log(canvas)
-      
-      dispatch({
-        type: "init",
-        canvas: canvas,
-      })
-      
-      const {
-        cancel,           // cleanup function.
-        // please call `cancel()` when the select-on-drag behavior is no longer needed.
-        dragAreaOverlay,  // a div element overlaying dragging area.
-        // you can customize the style of this element.
-        // this element has "svg-drag-select-area-overlay" class by default.
-      } = svgDragSelect({
-        // the svg element (required).
-        svg: canvasRef.current,
-        // followings are optional parameters with default values.
-        referenceElement: (pageData.template && selectedPageSvg) ? selectedPageSvg : canvasPageRef.current,     // selects only descendants of this SVGElement if specified.
-        selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
-        // "intersection": selects intersected elements using getIntersectionList().
-        // function: custom selector implementation
-
-        // followings are optional selection handlers
-        onSelectionStart({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          cancel,                   // cancel() cancels.
-        }) {
-          // for example: handles mouse left button only.
-          if (pointerEvent.button !== 0) {
-            cancel()
-            return
-          }
-
-          dispatch({
-            type: "ungroup-selection",
-            id: "selected-group",
-          })
-
-          // for example: clear "data-selected" attribute
-          const selectedElements = svg.querySelectorAll('[data-selected]')
-          for (let i = 0; i < selectedElements.length; i++) {
-            selectedElements[i].removeAttribute('data-selected')
-          }
-        },
-
-        onSelectionChange({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-          previousSelectedElements, // previous selected element array.
-          newlySelectedElements,    // `selectedElements - previousSelectedElements`
-          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
-        }) {
-          if (selectedElements.length > 0) {
-            dispatch({
-              type: "change-selection",
-              selectedElements: newlySelectedElements,
-            })
-          }
-          // for example: toggle "data-selected" attribute
-          newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
-          newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
-        },
-
-        onSelectionEnd({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-        }) {
-          if (selectedElements.length > 0) {
+    //     onSelectionEnd({
+    //       svg,                      // the svg element.
+    //       pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
+    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+    //       selectedElements,         // selected element array.
+    //     }) {
+    //       if (selectedElements.length > 0) {
             
-            dispatch({
-              type: "select",
-              selectedElements: selectedElements,
-            })
-          }
-        },
-      })
+    //         dispatch({
+    //           type: "select",
+    //           selectedElements: selectedElements,
+    //         })
+    //       }
+    //     },
+    //   })
 
-      return () => {
-        cancel()
-      }
-    }
-  }, [pageData, canvasSize, selectedPage, canvasPages, selectedPageSvg, canvasPageTemplates, canvasPageRef.current, svgLoaded])
+    //   return () => {
+    //     cancel()
+    //   }
+    // }
+  }, [canvasPageRef, svgLoaded])
 
   return (
     <svg
@@ -201,7 +204,6 @@ function PageSpread({
         canvasPageTemplates={canvasPageTemplates}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
-        maxSvgSize={maxSvgSize}
         pageData={pageData}
         pageSide="left"
         pageId={leftPage}
@@ -218,7 +220,6 @@ function PageSpread({
         canvasPageTemplates={canvasPageTemplates}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
-        maxSvgSize={maxSvgSize}
         pageData={pageData}
         pageSide="right"
         pageId={rightPage}
@@ -235,10 +236,10 @@ function PageSpread({
 
 function Page({
   bookData,
+  canvasPageRef,
   canvasPageTemplates,
   currentPageSide,
   isSelected,
-  maxSvgSize,
   pageData,
   pagePosition,
   pageSide,
@@ -248,8 +249,11 @@ function Page({
   setSelectedPageSvg,
   setSvgSize,
   setSvgLoaded,
-  canvasPageRef,
 }) {
+  const maxSvgSize = {
+    height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
+    width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
+  }
   const [pageSvg, setPageSvg] = useState({
     svg: `<svg><rect width="477.6" height="792" fill="white"></rect></svg>`,
     marginTop: 12,
@@ -266,15 +270,17 @@ function Page({
   }
 
   useEffect(() => {
+    console.log(isSelected)
     if (canvasPageTemplates && pageId) {
       const template = canvasPageTemplates[pageId]
       setPageSvg(template)
+
+      if (isSelected) {
+        setSvgLoaded(canvasPageRef.current)
+      }
     }
 
-    if (isSelected) {
-      setSvgLoaded(canvasPageRef.current)
-    }
-  }, [pageId, canvasPageTemplates, currentPageSide, selectedPage, isSelected])
+  }, [pageId, canvasPageTemplates, selectedPage, isSelected])
 
   if (selectedPage === 1 && pageSide === "left") {
     return null
@@ -292,9 +298,8 @@ function Page({
           pageWidth={pageData.svgWidth}
           pageSide={pageSide}
         />
-        {pageData.template && currentPageSide === pageSide ? (
+        {pageData.template && isSelected ? (
           <Template
-            ref={canvasPageRef}
             bookData={bookData}
             maxSvgSize={maxSvgSize}
             currentPageSide={currentPageSide}
