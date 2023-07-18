@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { colors } from "../../../styles/variables"
 import PageIcons from "../PageIcons"
 
@@ -8,8 +8,17 @@ import Button from "../../ui/Button"
 function Templatesbar({
   pageData,
   setPageData,
-  handleApplyTemplateButton,
+  setShowModal,
 }) {
+  let buttonText
+
+  if (pageData.template) {
+    buttonText = "Apply template"
+  }
+  else {
+    buttonText = "Apply changes"
+  }
+
   return (
     <>
       <ControlsContent>
@@ -35,10 +44,12 @@ function Templatesbar({
           color={colors.gray.oneHundred}
           padding="16px"
           width="100%"
-          disabled={!pageData.template}
-          onClick={() => handleApplyTemplateButton()}
+          onClick={() => setShowModal({
+            show: true,
+            type: "template"
+          })}
         >
-          Apply template
+          {buttonText}
         </Button>
       </ControlsFooter>
     </>

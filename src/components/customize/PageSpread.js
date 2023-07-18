@@ -3,6 +3,7 @@ import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variab
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
+import { SVG as svgJs } from "@svgdotjs/svg.js"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -77,110 +78,114 @@ function PageSpread({
     }
   }
 
-  let referenceElement = null
-
-  if (pageData.template && selectedPageSvg) {
-    console.log(selectedPageSvg)
-    // dispatch({
-    //   type: "init",
-    //   canvas: selectedPageSvg,
-    // })
-    referenceElement = selectedPageSvg
-  }
-
-  if (svgLoaded && canvasPageRef) {
-    console.log(canvasPageRef)
-    // dispatch({
-    //   type: "init",
-    //   canvas: canvasPageRef.current,
-    // })
-    referenceElement = canvasPageRef.current
-  }
 
   useEffect(() => {
+    let referenceElement = null
 
-    // if (canvasState.mode === "select") {
-    //   const {
-    //     cancel,           // cleanup function.
-    //     // please call `cancel()` when the select-on-drag behavior is no longer needed.
-    //     dragAreaOverlay,  // a div element overlaying dragging area.
-    //     // you can customize the style of this element.
-    //     // this element has "svg-drag-select-area-overlay" class by default.
-    //   } = svgDragSelect({
-    //     // the svg element (required).
-    //     svg: canvasRef.current,
-    //     // followings are optional parameters with default values.
-    //     referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-    //     selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
-    //     // "intersection": selects intersected elements using getIntersectionList().
-    //     // function: custom selector implementation
+    if (pageData.template && selectedPageSvg) {
+      console.log("Rendering template component.")
+      // dispatch({
+      //   type: "init",
+      //   canvas: selectedPageSvg,
+      // })
+      referenceElement = selectedPageSvg
+    }
 
-    //     // followings are optional selection handlers
-    //     onSelectionStart({
-    //       svg,                      // the svg element.
-    //       pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
-    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-    //       cancel,                   // cancel() cancels.
-    //     }) {
-    //       // for example: handles mouse left button only.
-    //       if (pointerEvent.button !== 0) {
-    //         cancel()
-    //         return
-    //       }
+    if (svgLoaded && canvasPageRef) {
+      console.log("Rendering canvas page.")
+      dispatch({
+        type: "init",
+        canvas: svgJs(canvasPageRef.current),
+      })
+      referenceElement = canvasPageRef.current
+    }
 
-    //       dispatch({
-    //         type: "ungroup-selection",
-    //         id: "selected-group",
-    //       })
+    if (canvasState.mode === "select") {
+      const {
+        cancel,           // cleanup function.
+        // please call `cancel()` when the select-on-drag behavior is no longer needed.
+        dragAreaOverlay,  // a div element overlaying dragging area.
+        // you can customize the style of this element.
+        // this element has "svg-drag-select-area-overlay" class by default.
+      } = svgDragSelect({
+        // the svg element (required).
+        svg: canvasRef.current,
+        // followings are optional parameters with default values.
+        referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
+        selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
+        // "intersection": selects intersected elements using getIntersectionList().
+        // function: custom selector implementation
 
-    //       // for example: clear "data-selected" attribute
-    //       const selectedElements = svg.querySelectorAll('[data-selected]')
-    //       for (let i = 0; i < selectedElements.length; i++) {
-    //         selectedElements[i].removeAttribute('data-selected')
-    //       }
-    //     },
+        // followings are optional selection handlers
+        onSelectionStart({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          cancel,                   // cancel() cancels.
+        }) {
+          // for example: handles mouse left button only.
+          if (pointerEvent.button !== 0) {
+            cancel()
+            return
+          }
 
-    //     onSelectionChange({
-    //       svg,                      // the svg element.
-    //       pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
-    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-    //       selectedElements,         // selected element array.
-    //       previousSelectedElements, // previous selected element array.
-    //       newlySelectedElements,    // `selectedElements - previousSelectedElements`
-    //       newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
-    //     }) {
-    //       if (selectedElements.length > 0) {
-    //         dispatch({
-    //           type: "change-selection",
-    //           selectedElements: newlySelectedElements,
-    //         })
-    //       }
-    //       // for example: toggle "data-selected" attribute
-    //       newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
-    //       newlySelectedElements.forEach(element => element.setAttribute('data-selected', ''))
-    //     },
+          dispatch({
+            type: "ungroup-selection",
+            id: "selected-group",
+          })
 
-    //     onSelectionEnd({
-    //       svg,                      // the svg element.
-    //       pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
-    //       // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-    //       selectedElements,         // selected element array.
-    //     }) {
-    //       if (selectedElements.length > 0) {
+          // for example: clear "data-selected" attribute
+          const selectedElements = svg.querySelectorAll('[data-selected]')
+          for (let i = 0; i < selectedElements.length; i++) {
+            selectedElements[i].removeAttribute('data-selected')
+          }
+        },
+
+        onSelectionChange({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+          previousSelectedElements, // previous selected element array.
+          newlySelectedElements,    // `selectedElements - previousSelectedElements`
+          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
+        }) {
+          if (selectedElements.length > 0) {
+            dispatch({
+              type: "change-selection",
+              selectedElements: selectedElements,
+            })
+          }
+          // for example: toggle "data-selected" attribute
+          newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
+          newlySelectedElements.forEach(element => {
+            if (element.getAttribute("id") !== "selection-path") {
+              element.setAttribute('data-selected', '')
+            }
+          })
+        },
+
+        onSelectionEnd({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+        }) {
+          if (selectedElements.length > 0) {
             
-    //         dispatch({
-    //           type: "select",
-    //           selectedElements: selectedElements,
-    //         })
-    //       }
-    //     },
-    //   })
+            dispatch({
+              type: "select",
+              selectedElements: selectedElements,
+            })
+          }
+        },
+      })
 
-    //   return () => {
-    //     cancel()
-    //   }
-    // }
-  }, [canvasPageRef, svgLoaded])
+      return () => {
+        cancel()
+      }
+    }
+  }, [canvasPageRef, svgLoaded, canvasState.mode])
 
   return (
     <svg
@@ -250,37 +255,22 @@ function Page({
   setSvgSize,
   setSvgLoaded,
 }) {
+  const [loaded, setLoaded] = useState(false)
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
     width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
   }
-  const [pageSvg, setPageSvg] = useState({
-    svg: `<svg><rect width="477.6" height="792" fill="white"></rect></svg>`,
-    marginTop: 12,
-    marginRight: 0,
-    marginBottom: 0,
-    marginLeft: 12,
-  })
   const isLeftPage = pageSide === "left"
-  const margins = {
-    top: convertFloatFixed(convertToPx(pageSvg.marginTop), 3),
-    right: convertFloatFixed(convertToPx(pageSvg.marginRight), 3),
-    bottom: convertFloatFixed(convertToPx(pageSvg.marginBottom), 3),
-    left: convertFloatFixed(convertToPx(pageSvg.marginLeft), 3),
-  }
 
   useEffect(() => {
-    console.log(isSelected)
-    if (canvasPageTemplates && pageId) {
-      const template = canvasPageTemplates[pageId]
-      setPageSvg(template)
+    console.log("page rendered")
 
-      if (isSelected) {
-        setSvgLoaded(canvasPageRef.current)
-      }
+    if (isSelected && loaded) {
+      console.log(`Loaded template for ${currentPageSide} page.`)
+      setSvgLoaded(canvasPageRef.current)
     }
 
-  }, [pageId, canvasPageTemplates, selectedPage, isSelected])
+  }, [pageId, canvasPageTemplates, selectedPage, isSelected, loaded])
 
   if (selectedPage === 1 && pageSide === "left") {
     return null
@@ -289,6 +279,25 @@ function Page({
     return null
   }
   else {
+    let pageTemplate = {}
+    let margins = {
+      top: 12,
+      right: 0,
+      bottom: 0,
+      left: 12,
+    }
+
+    if (canvasPageTemplates && pageId) {
+      pageTemplate = canvasPageTemplates[pageId]
+
+      margins = {
+        top: convertToPx(pageTemplate.marginTop),
+        right: convertToPx(pageTemplate.marginRight),
+        bottom: convertToPx(pageTemplate.marginBottom),
+        left: convertToPx(pageTemplate.marginLeft),
+      }
+    }
+      
     return (
       <>
         <PageBackground
@@ -312,13 +321,14 @@ function Page({
         ) : (
           <SVG
             innerRef={isSelected && canvasPageRef}
+            onLoad={() => setLoaded(true)}
             id={isLeftPage ? "left-template" : "right-template"}
             xmlns="http://www.w3.org/2000/svg"
             x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + pageMargins.holes + margins.left}
             y={minimumMargin + margins.top}
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
-            src={pageSvg.svg}
+            src={(canvasPageTemplates && pageId) && canvasPageTemplates[pageId].svg}
           />
         )}
       </>

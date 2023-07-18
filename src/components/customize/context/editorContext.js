@@ -16,19 +16,24 @@ const initialState = {
 const EditorContext = createContext(null);
 const EditorDispatchContext = createContext(null);
 
-export function EditorProvider({ bookDimensions, children }) {
+export function EditorProvider({ bookDimensions, children, setSelectedPageSvg }) {
   const [canvasState, dispatch] = useReducer(setCanvasState, { ...initialState, bookWidth: bookDimensions.width, bookHeight: bookDimensions.height })
 
   useEffect(() => {
     const deleteElements = (e) => {
-      console.log(e)
       // if key pressed is delete or backspace
       if (e.key === "Delete" || e.key === "Backspace") {
-        console.log(canvasState.selection)
+        canvasState.selectedElements.forEach(ele => {
+          ele.remove()
+          canvasState.selectionPath.hide()
+        })
       }
     }
 
     document.addEventListener("keydown", deleteElements)
+    if (canvasState.canvas) {
+      setSelectedPageSvg(canvasState.canvas.node)
+    }
 
     return () => {
       document.removeEventListener("keydown", deleteElements)
@@ -49,11 +54,11 @@ const setCanvasState = (state, action) => {
     case 'init':
       log("initializing canvas...")
       // create the canvas object
-      const canvas = svgJs(action.canvas)
-      console.log(canvas)
+      const canvas = action.canvas
       // create a group object to hold the selected elements (selection)
       const selection = canvas.group().attr("id", "selection-group")
-      const selectionPath = selection.path(``).attr("id", "selection-path")
+      // create a path object to display the selection "box"
+      const selectionPath = selection.path(``).attr("id", "selection-path").hide()
 
       return {
         ...state,
@@ -62,48 +67,72 @@ const setCanvasState = (state, action) => {
         selectionPath: selectionPath,
       }
     case 'change-selection':
+      log("changing selection...")
+      let elements = []
+      if (state.selection) {
+        state.selection.each((index, element) => {
+          if (element[index].node.getAttribute("id") !== "selection-path") {
+            element[index].toParent(state.canvas)
+          }
+        })
+
+        state.selectionPath.hide()
+      }
       // add the selected elements to the selection group
       action.selectedElements.forEach(element => {
-        state.selection.add(element)
+        // don't add the selection path to the selection group
+        if (element.getAttribute("id") !== "selection-path") {
+          state.selection.add(element)
+          elements.push(element)
+        }
       })
 
-      const rbox = state.selection.rbox(state.canvas)
-      console.log(rbox)
+      let newSelectionPath 
 
-      // state.selectionPath.attr("d", `M ${selPathBox.x} L776.9484252929688,393.39801025390625 776.9484252929688,594 106.61907958984375,594z`)
-
-      return {
-        ...state
-      }
-    case 'select':
-      log("selecting elements: ", action.selectedElements)
-      
-      return {
-        ...state,
-        selectedElements: action.selectedElements,
-      }
-    case 'ungroup-selection':
-      log("ungrouping selection...")
-
-      if (state.selection.children().length > 1) {
-        log("ungrouping selection...")
-        // ungroup the selected elements
-        state.selection.ungroup()
-
-        // create a new selection group
-        const newSelectionGroup = state.canvas.group().attr("id", "selection-group")
-        // add the selection path to the new selection group
-        const newSelectionPath = state.canvas.findOne("#selection-path").addTo(newSelectionGroup)
+      if (elements.length > 1) {
+        const selPathBox = state.selection.bbox()
+        newSelectionPath = state.selectionPath.attr("d", `M ${selPathBox.x}, ${selPathBox.y} L${selPathBox.x2}, ${selPathBox.y} ${selPathBox.x2}, ${selPathBox.y2} ${selPathBox.x}, ${selPathBox.y2}z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
 
         return {
           ...state,
-          selection: newSelectionGroup,
           selectionPath: newSelectionPath,
         }
       }
+      else {
+        return {
+          ...state,
+        }
+      }
+    case 'select':
+      log("selecting elements: ", action.selectedElements)
+
+      let finalSelection = []
+
+      action.selectedElements.forEach(element => {
+        if (element.getAttribute("id") !== "selection-path") {
+          finalSelection.push(element)
+        }
+      })
+      
+      return {
+        ...state,
+        selectedElements: finalSelection,
+      }
+    case 'ungroup-selection':
+      log("ungrouping selection...")
+      // ungroup the selected elements
+      state.selection.ungroup()
+
+      // create a new selection group
+      const replaceSelectionGroup = state.canvas.group().attr("id", "selection-group")
+      state.canvas.findOne("#selection-path").remove()
+      // add the selection path to the new selection group
+      const replaceSelectionPath = replaceSelectionGroup.path(``).attr("id", "selection-path").hide()
 
       return {
         ...state,
+        selection: replaceSelectionGroup,
+        selectionPath: replaceSelectionPath,
       }
     default:
       return state;

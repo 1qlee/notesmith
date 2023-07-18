@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 
-import Controlsbar from "./bars/Controlsbar"
+import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
 import Checkoutbar from "./bars/Checkoutbar"
 
@@ -82,19 +82,6 @@ function Controls({
   toast,
   user,
 }) {
-  function handleApplyTemplateButton() {
-    // don't show the modal if no template is selected
-    if (!pageData.template) {
-      toast.error("Click and select a template first!")
-    }
-    else {
-      setShowModal({
-        show: true,
-        type: "template"
-      })
-    }
-  }
-
   return (
     <StyledControls>
       <ControlsTabs>
@@ -125,16 +112,16 @@ function Controls({
         <Templatesbar
           pageData={pageData}
           setPageData={setPageData}
-          handleApplyTemplateButton={handleApplyTemplateButton}
+          setShowModal={setShowModal}
+          toast={toast}
         />
       )}
       {activeTab === 1 && (
-        <Controlsbar
+        <Designbar
           pageData={pageData}
           setPageData={setPageData}
           setShowModal={setShowModal}
           svgSize={svgSize}
-          handleApplyTemplateButton={handleApplyTemplateButton}
         />
       )}
       {activeTab === 2 && (

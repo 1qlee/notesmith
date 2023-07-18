@@ -14,11 +14,11 @@ import HandwritingControls from "../templateControls/HandwritingControls"
 import CrossGridControls from "../templateControls/CrossGridControls"
 import CalligraphyControls from "../templateControls/CalligraphyControls"
 
-function Controlsbar({
+function Designbar({
   pageData,
   setPageData,
   svgSize,
-  handleApplyTemplateButton,
+  setShowModal,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.thickness, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
@@ -128,7 +128,10 @@ function Controlsbar({
           padding="1rem"
           width="100%"
           disabled={!pageData.template}
-          onClick={() => handleApplyTemplateButton()}
+          onClick={() => setShowModal({
+            show: true,
+            type: "template"
+          })}
         >
           Apply template
         </Button>
@@ -137,4 +140,4 @@ function Controlsbar({
   )
 }
 
-export default Controlsbar
+export default Designbar

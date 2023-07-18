@@ -283,6 +283,7 @@ const Editor = ({
         width: bookData.widthPixel,
         height: bookData.heightPixel,
       }}
+      setSelectedPageSvg={setSelectedPageSvg}
     >
       {noExistingBook ? (
         <Book404 />
