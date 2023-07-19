@@ -9,8 +9,10 @@ function PageBackground({
   pageWidth,
   pageSide,
 }) {
+
   return (
     <svg
+      id={`${pageSide}-background`}
       xmlns="http://www.w3.org/2000/svg"
       width={pageWidth}
       height={pageHeight}

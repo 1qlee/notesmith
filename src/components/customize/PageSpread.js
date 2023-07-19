@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useLayoutEffect, useRef, forwardRef } from "react"
-import { pageMargins, convertToPx, convertFloatFixed } from "../../styles/variables"
+import React, { useEffect, useState, useRef } from "react"
+import { pageMargins, convertToPx } from "../../styles/variables"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
@@ -10,6 +10,7 @@ import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
 
 const minimumMargin = pageMargins.minimum
+const holesMargin = pageMargins.holes
 
 function PageSpread({
   bookData,
@@ -29,16 +30,10 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
-  const margin = {
-    top: convertToPx(marginTop),
-    right: convertToPx(marginRight),
-    bottom: convertToPx(marginBottom),
-    left: convertToPx(marginLeft),
-  }
+  const pageIsLeft = selectedPage % 2 === 0
   const pagePosition = {
-    rightX: svgWidth + pageMargins.holes + margin.left,
-    leftX: minimumMargin + margin.left,
-    bothY: minimumMargin + margin.top,
+    x: pageIsLeft ? minimumMargin + convertToPx(marginLeft) : svgWidth + holesMargin + convertToPx(marginLeft),
+    y: minimumMargin + convertToPx(marginTop),
     spreadX: (canvasSize.width - svgWidth * 2) / 2,
     spreadY: (canvasSize.height - svgHeight) / 2,
   }
@@ -46,7 +41,7 @@ function PageSpread({
   let leftPage = null
   let rightPage = null
   
-  if (selectedPage % 2 === 0) {
+  if (pageIsLeft) {
     // set page side in state
     currentPageSide = "left"
 
@@ -78,6 +73,25 @@ function PageSpread({
     }
   }
 
+  const leftPageTemplate = canvasPageTemplates[leftPage]
+  const rightPageTemplate = canvasPageTemplates[rightPage]
+  let margins = {
+    top: 12,
+    right: 0,
+    bottom: 0,
+    left: 12,
+  }
+  pageIsLeft ? margins = {
+    top: leftPageTemplate.marginTop,
+    right: leftPageTemplate.marginRight,
+    bottom: leftPageTemplate.marginBottom,
+    left: leftPageTemplate.marginLeft,
+  } : margins = {
+    top: rightPageTemplate.marginTop,
+    right: rightPageTemplate.marginRight,
+    bottom: rightPageTemplate.marginBottom,
+    left: rightPageTemplate.marginLeft,
+  }
 
   useEffect(() => {
     let referenceElement = null
@@ -95,7 +109,10 @@ function PageSpread({
       console.log("Rendering canvas page.")
       dispatch({
         type: "init",
+        margins: margins,
+        position: pagePosition,
         canvas: svgJs(canvasPageRef.current),
+        parent: svgJs(canvasRef.current),
       })
       referenceElement = canvasPageRef.current
     }
@@ -206,29 +223,31 @@ function PageSpread({
       <Page
         bookData={bookData}
         canvasPageRef={canvasPageRef}
-        canvasPageTemplates={canvasPageTemplates}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
+        margins={margins}
         pageData={pageData}
-        pageSide="left"
         pageId={leftPage}
         pagePosition={pagePosition}
+        pageSide="left"
+        pageTemplate={leftPageTemplate}
         selectedPage={selectedPage}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
-        setSvgSize={setSvgSize}
         setSvgLoaded={setSvgLoaded}
+        setSvgSize={setSvgSize}
       />
       <Page
         bookData={bookData}
         canvasPageRef={canvasPageRef}
-        canvasPageTemplates={canvasPageTemplates}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
+        margins={margins}
         pageData={pageData}
-        pageSide="right"
-        pageId={rightPage}
+        pageId={leftPage}
         pagePosition={pagePosition}
+        pageSide="right"
+        pageTemplate={rightPageTemplate}
         selectedPage={selectedPage}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
@@ -242,18 +261,19 @@ function PageSpread({
 function Page({
   bookData,
   canvasPageRef,
-  canvasPageTemplates,
   currentPageSide,
   isSelected,
+  margins,
   pageData,
+  pageId,
   pagePosition,
   pageSide,
-  pageId,
+  pageTemplate,
   selectedPage,
   setPageData,
   setSelectedPageSvg,
-  setSvgSize,
   setSvgLoaded,
+  setSvgSize,
 }) {
   const [loaded, setLoaded] = useState(false)
   const maxSvgSize = {
@@ -270,7 +290,7 @@ function Page({
       setSvgLoaded(canvasPageRef.current)
     }
 
-  }, [pageId, canvasPageTemplates, selectedPage, isSelected, loaded])
+  }, [pageId, selectedPage, isSelected, loaded])
 
   if (selectedPage === 1 && pageSide === "left") {
     return null
@@ -279,25 +299,6 @@ function Page({
     return null
   }
   else {
-    let pageTemplate = {}
-    let margins = {
-      top: 12,
-      right: 0,
-      bottom: 0,
-      left: 12,
-    }
-
-    if (canvasPageTemplates && pageId) {
-      pageTemplate = canvasPageTemplates[pageId]
-
-      margins = {
-        top: convertToPx(pageTemplate.marginTop),
-        right: convertToPx(pageTemplate.marginRight),
-        bottom: convertToPx(pageTemplate.marginBottom),
-        left: convertToPx(pageTemplate.marginLeft),
-      }
-    }
-      
     return (
       <>
         <PageBackground
@@ -324,11 +325,11 @@ function Page({
             onLoad={() => setLoaded(true)}
             id={isLeftPage ? "left-template" : "right-template"}
             xmlns="http://www.w3.org/2000/svg"
-            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + pageMargins.holes + margins.left}
+            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
             y={minimumMargin + margins.top}
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
-            src={(canvasPageTemplates && pageId) && canvasPageTemplates[pageId].svg}
+            src={pageTemplate && pageTemplate.svg}
           />
         )}
       </>
