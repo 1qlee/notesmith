@@ -82,15 +82,15 @@ function PageSpread({
     left: 12,
   }
   pageIsLeft ? margins = {
-    top: leftPageTemplate.marginTop,
-    right: leftPageTemplate.marginRight,
-    bottom: leftPageTemplate.marginBottom,
-    left: leftPageTemplate.marginLeft,
+    top: convertToPx(leftPageTemplate.marginTop),
+    right: convertToPx(leftPageTemplate.marginRight),
+    bottom: convertToPx(leftPageTemplate.marginBottom),
+    left: convertToPx(leftPageTemplate.marginLeft),
   } : margins = {
-    top: rightPageTemplate.marginTop,
-    right: rightPageTemplate.marginRight,
-    bottom: rightPageTemplate.marginBottom,
-    left: rightPageTemplate.marginLeft,
+    top: convertToPx(rightPageTemplate.marginTop),
+    right: convertToPx(rightPageTemplate.marginRight),
+    bottom: convertToPx(rightPageTemplate.marginBottom),
+    left: convertToPx(rightPageTemplate.marginLeft),
   }
 
   useEffect(() => {
@@ -105,8 +105,12 @@ function PageSpread({
       referenceElement = selectedPageSvg
     }
 
-    if (svgLoaded && canvasPageRef) {
-      console.log("Rendering canvas page.")
+    console.log(selectedPage)
+    console.log(svgLoaded)
+
+    if (svgLoaded === selectedPage && canvasPageRef.current) {
+      console.log("Svg loaded: ", svgLoaded)
+      console.log(canvasPageRef.current)
       dispatch({
         type: "init",
         margins: margins,
@@ -117,7 +121,8 @@ function PageSpread({
       referenceElement = canvasPageRef.current
     }
 
-    if (canvasState.mode === "select") {
+    if (canvasState.mode === "select" && svgLoaded) {
+      console.log(referenceElement)
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -167,12 +172,10 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          if (selectedElements.length > 0) {
-            dispatch({
-              type: "change-selection",
-              selectedElements: selectedElements,
-            })
-          }
+          dispatch({
+            type: "change-selection",
+            selectedElements: selectedElements,
+          })
           // for example: toggle "data-selected" attribute
           newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
           newlySelectedElements.forEach(element => {
@@ -202,7 +205,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasPageRef, svgLoaded, canvasState.mode])
+  }, [canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   return (
     <svg
@@ -265,7 +268,6 @@ function Page({
   isSelected,
   margins,
   pageData,
-  pageId,
   pagePosition,
   pageSide,
   pageTemplate,
@@ -275,7 +277,6 @@ function Page({
   setSvgLoaded,
   setSvgSize,
 }) {
-  const [loaded, setLoaded] = useState(false)
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
     width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
@@ -283,22 +284,29 @@ function Page({
   const isLeftPage = pageSide === "left"
 
   useEffect(() => {
-    console.log("page rendered")
-
-    if (isSelected && loaded) {
-      console.log(`Loaded template for ${currentPageSide} page.`)
-      setSvgLoaded(canvasPageRef.current)
+    if (isSelected) {
+      setSvgLoaded(selectedPage)
     }
+  }, [selectedPage])
 
-  }, [pageId, selectedPage, isSelected, loaded])
+  const handleSvgLoad = (src) => {
+    if (src && isSelected) {
+      console.log("svg source is set, setting svg loaded to: ", selectedPage)
+      console.log(canvasPageRef)
+      setSvgLoaded(selectedPage)
+    }
+  }
 
   if (selectedPage === 1 && pageSide === "left") {
+    console.log("Rendering front cover")
     return null
   }
   else if (selectedPage === bookData.numOfPages && pageSide === "right") {
+    console.log("Rendering back cover")
     return null
   }
   else {
+    console.log("Rendering SVG page")
     return (
       <>
         <PageBackground
@@ -321,9 +329,9 @@ function Page({
           />
         ) : (
           <SVG
-            innerRef={isSelected && canvasPageRef}
-            onLoad={() => setLoaded(true)}
-            id={isLeftPage ? "left-template" : "right-template"}
+            innerRef={isSelected ? canvasPageRef : null}
+            onLoad={(src) => handleSvgLoad(src)}
+            id={isLeftPage ? "left-page" : "right-page"}
             xmlns="http://www.w3.org/2000/svg"
             x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
             y={minimumMargin + margins.top}

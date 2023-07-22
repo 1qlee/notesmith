@@ -21,7 +21,6 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
   const [canvasState, dispatch] = useReducer(setCanvasState, { ...initialState, bookWidth: bookDimensions.width, bookHeight: bookDimensions.height })
 
   useEffect(() => {
-    console.log("render")
     const deleteElements = (e) => {
       // if key pressed is delete or backspace
       if (e.key === "Delete" || e.key === "Backspace") {
@@ -40,7 +39,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
     return () => {
       document.removeEventListener("keydown", deleteElements)
     }
-  }, [canvasState.canvas])
+  }, [canvasState])
 
   return (
     <EditorContext.Provider value={canvasState}>
@@ -57,6 +56,16 @@ const setCanvasState = (state, action) => {
       log("initializing canvas...")
       // create the canvas object
       const { canvas, parent, margins, position } = action
+      const doesSelectionGroupExist = parent.findOne("#selection-group")
+
+      if (doesSelectionGroupExist) {
+        doesSelectionGroupExist.remove()
+      }
+
+      if (state.selectedElements) {
+        state.selectedElements.forEach(ele => ele.attr({ 'data-selected': null}))
+      }
+
       // create a group object to hold the selected elements (selection)
       const selection = parent.group().attr("id", "selection-group")
       // create a path object to display the selection "box"
@@ -73,41 +82,41 @@ const setCanvasState = (state, action) => {
     // when user is dragging mouse to select elements
     case 'change-selection':
       log("changing selection...")
+      // move the selection group to the appropriate coordinates
       state.selection.transform({ translate: [state.margins.left + state.position.x, state.margins.top + state.position.y] })
 
-      let elementPaths = []
-
-      if (state.selection.children()) {
-        
-      }
-
+      // extract bbox coords from the first and last selected elements
       const firstSelectedEle = svgJs(action.selectedElements[0])
       const lastSelectedEle = svgJs(action.selectedElements[action.selectedElements.length - 1])
       const firstBbox = firstSelectedEle.bbox()
       const lastBbox = lastSelectedEle.bbox()
       const coords = {
-        x1: convertFloatFixed(firstBbox.x + state.margins.left, 3),
-        y1: convertFloatFixed(firstBbox.y + state.margins.top, 3),
-        x2: convertFloatFixed(lastBbox.x2 + state.margins.left, 3),
-        y2: convertFloatFixed(lastBbox.y + state.margins.top, 3),
+        x1: convertFloatFixed(firstBbox.x, 3),
+        y1: convertFloatFixed(firstBbox.y, 3),
+        x2: convertFloatFixed(lastBbox.x2, 3),
+        y2: convertFloatFixed(lastBbox.y2, 3),
       }
-
-      console.log(firstBbox)
-      console.log(lastBbox)
-
-      state.selectionPath.attr("d", `M ${coords.x1}, ${coords.y1} L ${coords.x2}, ${coords.y1} L ${coords.x2}, ${coords.y2} L ${coords.x1}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
+      
+      state.selectionPath.attr("d", `M ${coords.x1}, ${coords.y1} L ${coords.x2}, ${coords.y1} ${coords.x2}, ${coords.y2} ${coords.x1}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
       
       return {
-        ...state
+        ...state,
       }
     case 'select':
-      log("selecting elements: ", action.selectedElements)
+      log("selecting elements: ")
+
+      const selectedElementsConverted = action.selectedElements.map(ele => svgJs(ele))
 
       return {
-        ...state
+        ...state,
+        selectedElements: selectedElementsConverted,
       }
     case 'ungroup-selection':
       log("ungrouping selection...")
+
+      // clear the selection path and hide it
+      state.selectionPath.attr("d", "").hide()
+
       return {
         ...state
       }
