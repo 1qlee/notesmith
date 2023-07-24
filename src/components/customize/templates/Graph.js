@@ -126,7 +126,7 @@ function Graph({
 
   return (
     <>
-      <g>
+      <>
         {lineRows && lineRows.map((line, index) => (
           <line
             key={index}
@@ -141,8 +141,8 @@ function Graph({
           >
           </line>
         ))}
-      </g>
-      <g>
+      </>
+      <>
         {lineColumns && lineColumns.map((line, index) => (
           <line
             key={index}
@@ -156,7 +156,7 @@ function Graph({
             y2={line.y2}
           />
         ))}
-      </g>
+      </>
     </>
   )
 }

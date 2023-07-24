@@ -1,10 +1,12 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
+import { useEditorDispatch } from "./context/editorContext"
 
 import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
 import Checkoutbar from "./bars/Checkoutbar"
+import Button from "../ui/Button"
 
 const StyledControls = styled.div`
   border-left: ${colors.borders.black};
@@ -82,6 +84,20 @@ function Controls({
   toast,
   user,
 }) {
+  const dispatch = useEditorDispatch()
+
+  const handleShowModal = () => {
+    dispatch({
+      type: "ungroup-selection",
+      id: "selected-group",
+    })
+
+    setShowModal({
+      show: true,
+      type: "template"
+    })
+  }
+
   return (
     <StyledControls>
       <ControlsTabs>
@@ -135,6 +151,17 @@ function Controls({
           toast={toast}
         />
       )}
+      <ControlsFooter>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          padding="16px"
+          width="100%"
+          onClick={() => handleShowModal()}
+        >
+          Apply changes
+        </Button>
+      </ControlsFooter>
     </StyledControls>
   )
 }

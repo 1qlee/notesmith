@@ -31,8 +31,8 @@ function Canvas({
   setSelectedPageSvg,
   setSvgSize,
   svgContent, 
-  locale, 
   svgUpdate, 
+  svgSize,
   log
 }) {
   const textRef = useRef(null)
@@ -182,9 +182,9 @@ function Canvas({
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}
+            svgSize={svgSize}
           />
         </StyledCanvas>
-          
       </Workspace>
     </>
   )

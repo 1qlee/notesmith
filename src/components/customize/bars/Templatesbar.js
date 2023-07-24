@@ -1,24 +1,12 @@
-import React, { useState } from "react"
-import { colors } from "../../../styles/variables"
+import React from "react"
 import PageIcons from "../PageIcons"
 
-import { ControlsContent, ControlsFooter } from "../Controls"
-import Button from "../../ui/Button"
+import { ControlsContent } from "../Controls"
 
 function Templatesbar({
   pageData,
   setPageData,
-  setShowModal,
 }) {
-  let buttonText
-
-  if (pageData.template) {
-    buttonText = "Apply template"
-  }
-  else {
-    buttonText = "Apply changes"
-  }
-
   return (
     <>
       <ControlsContent>
@@ -38,20 +26,6 @@ function Templatesbar({
           />
         </div>
       </ControlsContent>
-      <ControlsFooter>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.gray.oneHundred}
-          padding="16px"
-          width="100%"
-          onClick={() => setShowModal({
-            show: true,
-            type: "template"
-          })}
-        >
-          {buttonText}
-        </Button>
-      </ControlsFooter>
     </>
   )
 }

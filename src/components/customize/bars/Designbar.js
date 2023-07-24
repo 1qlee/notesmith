@@ -1,8 +1,7 @@
 import React from "react"
-import { convertToMM, convertFloatFixed, colors } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed } from "../../../styles/variables"
 
-import { ControlsContent, ControlsFooter } from "../Controls"
-import Button from "../../ui/Button"
+import { ControlsContent } from "../Controls"
 import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
@@ -18,7 +17,6 @@ function Designbar({
   pageData,
   setPageData,
   svgSize,
-  setShowModal,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.thickness, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
@@ -121,21 +119,6 @@ function Designbar({
           </>
         )}
       </ControlsContent>
-      <ControlsFooter>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.gray.oneHundred}
-          padding="1rem"
-          width="100%"
-          disabled={!pageData.template}
-          onClick={() => setShowModal({
-            show: true,
-            type: "template"
-          })}
-        >
-          Apply template
-        </Button>
-      </ControlsFooter>
     </>
   )
 }

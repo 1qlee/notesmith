@@ -46,7 +46,7 @@ const StyledNotification = styled.div`
   }
   p {
     color: ${props => props.color};
-    font-size: ${props => props.fontsize || "0.75rem"};
+    font-size: ${props => props.fontsize || "1rem"};
     margin-bottom: 0;
     line-height: 1.5;
     &:not(:last-child) {

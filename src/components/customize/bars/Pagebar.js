@@ -167,6 +167,7 @@ function Pagebar({
                 borderRight: `${colors.borders.black}`,
                 top: "0",
                 overflowX: "hidden",
+                paddingBottom: "16px"
               }}
               itemData={itemData}
             >

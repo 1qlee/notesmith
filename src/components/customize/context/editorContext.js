@@ -85,17 +85,44 @@ const setCanvasState = (state, action) => {
       // move the selection group to the appropriate coordinates
       state.selection.transform({ translate: [state.margins.left + state.position.x, state.margins.top + state.position.y] })
 
+      // toggle "data-selected" attribute
+      action.newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
+      action.newlySelectedElements.forEach(element => {
+        if (element.getAttribute("id") !== "selection-path") {
+          element.setAttribute('data-selected', '')
+        }
+      })
+
       // extract bbox coords from the first and last selected elements
       const firstSelectedEle = svgJs(action.selectedElements[0])
-      const lastSelectedEle = svgJs(action.selectedElements[action.selectedElements.length - 1])
       const firstBbox = firstSelectedEle.bbox()
-      const lastBbox = lastSelectedEle.bbox()
-      const coords = {
+      let coords = {
         x1: convertFloatFixed(firstBbox.x, 3),
         y1: convertFloatFixed(firstBbox.y, 3),
-        x2: convertFloatFixed(lastBbox.x2, 3),
-        y2: convertFloatFixed(lastBbox.y2, 3),
+        x2: convertFloatFixed(firstBbox.x2, 3),
+        y2: convertFloatFixed(firstBbox.y2, 3),
       }
+
+      action.selectedElements.forEach(ele => {
+        const convertedEle = svgJs(ele)
+        const bbox = convertedEle.bbox()
+        console.log(bbox)
+
+        if (bbox.x > coords.x1) {
+          coords.x1 = bbox.x1;
+        }
+        if (bbox.y > coords.y1) {
+          coords.y1 = bbox.y1;
+        }
+        if (bbox.x2 < coords.x2) {
+          coords.x2 = bbox.x2;
+        }
+        if (bbox.y2 < coords.y2) {
+          coords.y2 = bbox.y2;
+        }
+      })
+
+      console.log(coords)
       
       state.selectionPath.attr("d", `M ${coords.x1}, ${coords.y1} L ${coords.x2}, ${coords.y1} ${coords.x2}, ${coords.y2} ${coords.x1}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
       
@@ -116,6 +143,11 @@ const setCanvasState = (state, action) => {
 
       // clear the selection path and hide it
       state.selectionPath.attr("d", "").hide()
+
+      if (state.selectedElements) {
+        // clear "data-selected" attribute from all selected elements
+        state.selectedElements.forEach(ele => ele.attr({ 'data-selected': null }))
+      }
 
       return {
         ...state

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useCallback } from "react"
+import { SVG as svgJs } from "@svgdotjs/svg.js"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -19,31 +20,25 @@ const Template = ({
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
+  setSvgLoaded,
 }) => {
-  const [node, setNode] = useState()
 
   const templateRef = useCallback(node => {
     if (node !== null) {
-      setNode(node)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (node) {
       console.log(node)
+      setSvgLoaded(null)
       setSelectedPageSvg(node)
-      
+      const dimensions = node.getBBox()
+
       setTimeout(() => {
-        const dimensions = node.getBBox()
-        
         setSvgSize({
           height: dimensions.height,
           width: dimensions.width,
         })
       }, 10)
-    }
 
-  }, [pageData, pagePosition, node, maxSvgSize])
+    }
+  }, [pageData])
 
   return (
     <svg

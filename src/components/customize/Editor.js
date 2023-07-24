@@ -22,7 +22,7 @@ import Book404 from "./Book404"
 
 const StyledEditor = styled.div`
   display: flex;
-  height: calc(100% - 58px);
+  height: calc(100% - 59px);
   justify-content: space-between;
   width: 100%;
   overflow-y: hidden;
@@ -322,6 +322,7 @@ const Editor = ({
               svgContent={svgContent}
               locale={config.i18n}
               svgUpdate={svgUpdate}
+              svgSize={svgSize}
               log={logDebugData}
             />
             <Controls

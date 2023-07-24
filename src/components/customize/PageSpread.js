@@ -23,6 +23,7 @@ function PageSpread({
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
+  svgSize,
 }) {
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
@@ -94,35 +95,31 @@ function PageSpread({
   }
 
   useEffect(() => {
-    let referenceElement = null
+    let referenceElement, canvas = null
+    const parent = svgJs(canvasRef.current)
+    const isTemplate = (pageData.template && selectedPageSvg) ? true : false
+    const isCanvasPage = svgLoaded === selectedPage ? true : false
 
-    if (pageData.template && selectedPageSvg) {
-      console.log("Rendering template component.")
-      // dispatch({
-      //   type: "init",
-      //   canvas: selectedPageSvg,
-      // })
+    if (isTemplate) {
+      canvas = svgJs(selectedPageSvg)
       referenceElement = selectedPageSvg
     }
+    if (isCanvasPage) {
+      canvas = svgJs(canvasPageRef.current)
+      referenceElement = canvasPageRef.current
+    }
 
-    console.log(selectedPage)
-    console.log(svgLoaded)
-
-    if (svgLoaded === selectedPage && canvasPageRef.current) {
-      console.log("Svg loaded: ", svgLoaded)
-      console.log(canvasPageRef.current)
+    if (isTemplate || isCanvasPage) {
       dispatch({
         type: "init",
         margins: margins,
         position: pagePosition,
-        canvas: svgJs(canvasPageRef.current),
-        parent: svgJs(canvasRef.current),
+        canvas: canvas,
+        parent: parent,
       })
-      referenceElement = canvasPageRef.current
     }
 
-    if (canvasState.mode === "select" && svgLoaded) {
-      console.log(referenceElement)
+    if (canvasState.mode === "select") {
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -155,12 +152,6 @@ function PageSpread({
             type: "ungroup-selection",
             id: "selected-group",
           })
-
-          // for example: clear "data-selected" attribute
-          const selectedElements = svg.querySelectorAll('[data-selected]')
-          for (let i = 0; i < selectedElements.length; i++) {
-            selectedElements[i].removeAttribute('data-selected')
-          }
         },
 
         onSelectionChange({
@@ -175,13 +166,8 @@ function PageSpread({
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
-          })
-          // for example: toggle "data-selected" attribute
-          newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
-          newlySelectedElements.forEach(element => {
-            if (element.getAttribute("id") !== "selection-path") {
-              element.setAttribute('data-selected', '')
-            }
+            newlySelectedElements: newlySelectedElements,
+            newlyDeselectedElements: newlyDeselectedElements,
           })
         },
 
@@ -205,7 +191,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   return (
     <svg
@@ -235,10 +221,12 @@ function PageSpread({
         pageSide="left"
         pageTemplate={leftPageTemplate}
         selectedPage={selectedPage}
+        selectedPageSvg={selectedPageSvg}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
         setSvgSize={setSvgSize}
+        svgSize={svgSize}
       />
       <Page
         bookData={bookData}
@@ -252,10 +240,12 @@ function PageSpread({
         pageSide="right"
         pageTemplate={rightPageTemplate}
         selectedPage={selectedPage}
+        selectedPageSvg={selectedPageSvg}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgSize={setSvgSize}
         setSvgLoaded={setSvgLoaded}
+        svgSize={svgSize}
       />
     </svg>
   )
@@ -272,10 +262,12 @@ function Page({
   pageSide,
   pageTemplate,
   selectedPage,
+  selectedPageSvg,
   setPageData,
   setSelectedPageSvg,
   setSvgLoaded,
   setSvgSize,
+  svgSize,
 }) {
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
@@ -291,22 +283,17 @@ function Page({
 
   const handleSvgLoad = (src) => {
     if (src && isSelected) {
-      console.log("svg source is set, setting svg loaded to: ", selectedPage)
-      console.log(canvasPageRef)
       setSvgLoaded(selectedPage)
     }
   }
 
   if (selectedPage === 1 && pageSide === "left") {
-    console.log("Rendering front cover")
     return null
   }
   else if (selectedPage === bookData.numOfPages && pageSide === "right") {
-    console.log("Rendering back cover")
     return null
   }
   else {
-    console.log("Rendering SVG page")
     return (
       <>
         <PageBackground
@@ -319,13 +306,16 @@ function Page({
         {pageData.template && isSelected ? (
           <Template
             bookData={bookData}
-            maxSvgSize={maxSvgSize}
             currentPageSide={currentPageSide}
+            maxSvgSize={maxSvgSize}
             pageData={pageData}
             pagePosition={pagePosition}
+            selectedPageSvg={selectedPageSvg}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}
+            setSvgLoaded={setSvgLoaded}
+            svgSize={svgSize}
           />
         ) : (
           <SVG
