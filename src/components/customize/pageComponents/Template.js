@@ -1,5 +1,4 @@
 import React, { useCallback } from "react"
-import { SVG as svgJs } from "@svgdotjs/svg.js"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -25,7 +24,6 @@ const Template = ({
 
   const templateRef = useCallback(node => {
     if (node !== null) {
-      console.log(node)
       setSvgLoaded(null)
       setSelectedPageSvg(node)
       const dimensions = node.getBBox()

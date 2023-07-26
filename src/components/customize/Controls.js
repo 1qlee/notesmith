@@ -107,14 +107,12 @@ function Controls({
         >
           Templates
         </ControlsTab>
-        {pageData.template && (
-          <ControlsTab
-            className={activeTab === 1 && "is-active"}
-            onClick={() => setActiveTab(1)}
-          >
-            Design
-          </ControlsTab>
-        )}
+        <ControlsTab
+          className={activeTab === 1 && "is-active"}
+          onClick={() => setActiveTab(1)}
+        >
+          Design
+        </ControlsTab>
         {user && (
           <ControlsTab
             className={activeTab === 2 && "is-active"}

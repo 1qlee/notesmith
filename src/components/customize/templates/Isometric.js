@@ -143,29 +143,23 @@ function Isometric({
   return (
     <>
       {linesTop.map((line, index) => (
-        <line
+        <path
           fill={line.fill}
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
+          d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
         />
       ))}
       {linesSides.map((line, index) => (
-        <line
+        <path
           fill={line.fill}
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
+          d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
         />
       ))}
       {borderData.toggle && (

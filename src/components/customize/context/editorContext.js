@@ -31,9 +31,12 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
       }
     }
 
-    document.addEventListener("keydown", deleteElements)
     if (canvasState.canvas) {
       setSelectedPageSvg(canvasState.canvas.node)
+    }
+
+    if (canvasState.selectedElements) {
+      document.addEventListener("keydown", deleteElements)
     }
 
     return () => {
@@ -83,7 +86,7 @@ const setCanvasState = (state, action) => {
     case 'change-selection':
       log("changing selection...")
       // move the selection group to the appropriate coordinates
-      state.selection.transform({ translate: [state.margins.left + state.position.x, state.margins.top + state.position.y] })
+      state.selection.transform({ translate: [state.position.x, state.position.y] })
 
       // toggle "data-selected" attribute
       action.newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
@@ -106,23 +109,21 @@ const setCanvasState = (state, action) => {
       action.selectedElements.forEach(ele => {
         const convertedEle = svgJs(ele)
         const bbox = convertedEle.bbox()
-        console.log(bbox)
 
-        if (bbox.x > coords.x1) {
-          coords.x1 = bbox.x1;
+        if (bbox.x < coords.x1) {
+          coords.x1 = bbox.x;
         }
-        if (bbox.y > coords.y1) {
-          coords.y1 = bbox.y1;
+        if (bbox.y < coords.y1) {
+          coords.y1 = bbox.y;
         }
-        if (bbox.x2 < coords.x2) {
+        if (bbox.x2 > coords.x2) {
           coords.x2 = bbox.x2;
         }
-        if (bbox.y2 < coords.y2) {
+        if (bbox.y2 > coords.y2) {
           coords.y2 = bbox.y2;
         }
       })
-
-      console.log(coords)
+      // coords are top-left (x1,y1), top-right (x2,y1), bottom-right (x2,y2), bottom-left (x1,y2)
       
       state.selectionPath.attr("d", `M ${coords.x1}, ${coords.y1} L ${coords.x2}, ${coords.y1} ${coords.x2}, ${coords.y2} ${coords.x1}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
       
@@ -131,6 +132,7 @@ const setCanvasState = (state, action) => {
       }
     case 'select':
       log("selecting elements: ")
+      console.log(action.selectedElements)
 
       const selectedElementsConverted = action.selectedElements.map(ele => svgJs(ele))
 

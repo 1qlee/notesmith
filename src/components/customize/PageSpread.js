@@ -32,11 +32,21 @@ function PageSpread({
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
-  const pagePosition = {
-    x: pageIsLeft ? minimumMargin + convertToPx(marginLeft) : svgWidth + holesMargin + convertToPx(marginLeft),
-    y: minimumMargin + convertToPx(marginTop),
+  const convertedMargins = {
+    top: convertToPx(marginTop),
+    right: convertToPx(marginRight),
+    bottom: convertToPx(marginBottom),
+    left: convertToPx(marginLeft),
+  }
+  let pagePosition = {
+    x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
+    y: minimumMargin + convertedMargins.top,
     spreadX: (canvasSize.width - svgWidth * 2) / 2,
     spreadY: (canvasSize.height - svgHeight) / 2,
+  }
+  const spreadPosition = {
+    x: (canvasSize.width - svgWidth * 2) / 2,
+    y: (canvasSize.height - svgHeight) / 2,
   }
   let currentPageSide = "right"
   let leftPage = null
@@ -76,25 +86,60 @@ function PageSpread({
 
   const leftPageTemplate = canvasPageTemplates[leftPage]
   const rightPageTemplate = canvasPageTemplates[rightPage]
-  let margins = {
-    top: 12,
-    right: 0,
-    bottom: 0,
-    left: 12,
+  let templateMargins = {
+    top: convertToPx(pageData.marginTop),
+    right: convertToPx(pageData.marginRight),
+    bottom: convertToPx(pageData.marginBottom),
+    left: convertToPx(pageData.marginLeft),
   }
-  pageIsLeft ? margins = {
+  let canvasPageMargins = pageIsLeft ? {
     top: convertToPx(leftPageTemplate.marginTop),
     right: convertToPx(leftPageTemplate.marginRight),
     bottom: convertToPx(leftPageTemplate.marginBottom),
     left: convertToPx(leftPageTemplate.marginLeft),
-  } : margins = {
+  } : {
     top: convertToPx(rightPageTemplate.marginTop),
     right: convertToPx(rightPageTemplate.marginRight),
     bottom: convertToPx(rightPageTemplate.marginBottom),
     left: convertToPx(rightPageTemplate.marginLeft),
   }
 
+  const strictIntersectionSelector = ({
+    svg,                            // the svg element.
+    referenceElement,               // please select only descendants of this SVGElement if specified.
+    pointerEvent,                   // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
+    // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+    dragAreaInClientCoordinate,     // a `SVGRect` that represents the dragging area in client coordinate.
+    dragAreaInSvgCoordinate,        // a `SVGRect` that represents the dragging area in svg coordinate.
+    dragAreaInInitialSvgCoordinate, // a `SVGRect` that represents the dragging area in initial viewport coordinate of the svg.
+    getEnclosures,                  // `getEnclosures()` returns elements enclosed in the dragging area.
+    getIntersections,               // `getIntersections()` returns elements intersect the dragging area.
+    // Chrome, Safari and Firefox checks only bounding box intersection.
+  }) => getIntersections().filter(element => {
+    // the element that the pointer event raised is considered to intersect.
+    if (pointerEvent.target === element) {
+      return true
+    }
+    // strictly check only <path>s.
+    if (!(element instanceof SVGPathElement)) {
+      return true
+    }
+    // check if there is at least one enclosed point in the path.
+    for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+      const { x, y } = element.getPointAtLength(i)
+
+      if (
+        dragAreaInSvgCoordinate.x <= x && x <= dragAreaInSvgCoordinate.x + dragAreaInSvgCoordinate.width &&
+        dragAreaInSvgCoordinate.y <= y && y <= dragAreaInSvgCoordinate.y + dragAreaInSvgCoordinate.height
+      ) {
+        return true
+      }
+    }
+    return false
+  })
+
   useEffect(() => {
+    let margins
     let referenceElement, canvas = null
     const parent = svgJs(canvasRef.current)
     const isTemplate = (pageData.template && selectedPageSvg) ? true : false
@@ -103,21 +148,29 @@ function PageSpread({
     if (isTemplate) {
       canvas = svgJs(selectedPageSvg)
       referenceElement = selectedPageSvg
+      margins = templateMargins
+      pagePosition = {
+        x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
+        y: minimumMargin + convertedMargins.top,
+      }
     }
     if (isCanvasPage) {
       canvas = svgJs(canvasPageRef.current)
       referenceElement = canvasPageRef.current
+      margins = canvasPageMargins
+      pagePosition = {
+        x: pageIsLeft ? minimumMargin + canvasPageMargins.left : svgWidth + holesMargin + canvasPageMargins.left,
+        y: minimumMargin + canvasPageMargins.top,
+      }
     }
 
-    if (isTemplate || isCanvasPage) {
-      dispatch({
-        type: "init",
-        margins: margins,
-        position: pagePosition,
-        canvas: canvas,
-        parent: parent,
-      })
-    }
+    dispatch({
+      type: "init",
+      margins: margins,
+      position: pagePosition,
+      canvas: canvas,
+      parent: parent,
+    })
 
     if (canvasState.mode === "select") {
       const {
@@ -131,7 +184,7 @@ function PageSpread({
         svg: canvasRef.current,
         // followings are optional parameters with default values.
         referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-        selector: "intersection",      // "enclosure": selects enclosed elements using getEnclosureList().
+        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
         // "intersection": selects intersected elements using getIntersectionList().
         // function: custom selector implementation
 
@@ -200,8 +253,8 @@ function PageSpread({
       xmlns="http://www.w3.org/2000/svg"
       height={svgHeight + 2}
       width={svgWidth * 2 + 3}
-      x={pagePosition.spreadX}
-      y={pagePosition.spreadY}
+      x={spreadPosition.x}
+      y={spreadPosition.y}
     >
       <CoverPage
         bookData={bookData}
@@ -214,7 +267,7 @@ function PageSpread({
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
-        margins={margins}
+        margins={canvasPageMargins}
         pageData={pageData}
         pageId={leftPage}
         pagePosition={pagePosition}
@@ -233,7 +286,7 @@ function PageSpread({
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
-        margins={margins}
+        margins={canvasPageMargins}
         pageData={pageData}
         pageId={leftPage}
         pagePosition={pagePosition}
