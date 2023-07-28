@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { navigate } from "gatsby"
 import { pageMargins } from "../../styles/variables"
@@ -90,6 +90,7 @@ const Editor = ({
     template: "",
     thickness: 0.088,
     xHeight: 5,
+    test: null,
   })
   const [svgSize, setSvgSize] = useState({
     height: bookData.heightPixel - pageMargins.vertical,
@@ -102,14 +103,6 @@ const Editor = ({
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
-  const [config, setConfig] = useState({
-    debug: true,
-    i18n: 'en',
-    saveHandler: null,
-    onCloseHandler: null,
-    debugPrefix: 'editor',
-  });
-  const [svgContent, setSvgContent] = useState(`<svg width="${pageData.svgWidth}" height="${pageData.svgHeight}" xmlns="http://www.w3.org/2000/svg"></svg>`);
 
   useEffect(() => {
     // queries db for the book by bookId
@@ -237,42 +230,6 @@ const Editor = ({
     setInitializing(false)
   }
 
-  const svgUpdate = (content) => {
-    logDebugData('svgUpdate', config.saveHandler !== null);
-    setSvgContent(content);
-    if (config.saveHandler !== null) {
-      config.saveHandler(content);
-    }
-  }
-
-  const getSvg = () => {
-    logDebugData('getSvg');
-    return svgContent;
-  };
-
-  const configure = (name, value) => {
-    logDebugData('configure', { name, value });
-    if (typeof config[name] === 'undefined') {
-      throw new Error(`${name} is not a valid configuration`);
-    }
-    const newConfig = { ...config, [name]: value };
-    setConfig(newConfig);
-    return newConfig;
-  };
-
-  const logDebugData = (functionName, args) => {
-    if (config.debug) {
-      console.info(
-        '%c%s',
-        'color:green',
-        config.debugPrefix,
-        functionName,
-        args,
-        new Error().stack.split(/\n/)[2]
-      );
-    }
-  };
-
   if (loading || initializing) {
     return <Loader />
   }
@@ -284,6 +241,8 @@ const Editor = ({
         height: bookData.heightPixel,
       }}
       setSelectedPageSvg={setSelectedPageSvg}
+      setPageData={setPageData}
+      pageData={pageData}
     >
       {noExistingBook ? (
         <Book404 />
@@ -319,11 +278,7 @@ const Editor = ({
               selectedPageSvg={selectedPageSvg}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
-              svgContent={svgContent}
-              locale={config.i18n}
-              svgUpdate={svgUpdate}
               svgSize={svgSize}
-              log={logDebugData}
             />
             <Controls
               activeTab={activeTab}

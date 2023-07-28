@@ -18,6 +18,7 @@ function PageBackground({
       height={pageHeight}
       x={pageSide === "left" ? "0" : pageWidth}
       y="0"
+      style={{pointerEvents:"none"}}
     >
       <rect
         width={pageWidth}

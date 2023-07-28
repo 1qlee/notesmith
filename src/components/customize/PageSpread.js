@@ -38,12 +38,6 @@ function PageSpread({
     bottom: convertToPx(marginBottom),
     left: convertToPx(marginLeft),
   }
-  let pagePosition = {
-    x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
-    y: minimumMargin + convertedMargins.top,
-    spreadX: (canvasSize.width - svgWidth * 2) / 2,
-    spreadY: (canvasSize.height - svgHeight) / 2,
-  }
   const spreadPosition = {
     x: (canvasSize.width - svgWidth * 2) / 2,
     y: (canvasSize.height - svgHeight) / 2,
@@ -103,6 +97,13 @@ function PageSpread({
     bottom: convertToPx(rightPageTemplate.marginBottom),
     left: convertToPx(rightPageTemplate.marginLeft),
   }
+  let pagePosition = pageData.template ? {
+    x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
+    y: minimumMargin + convertedMargins.top,
+  } : {
+    x: pageIsLeft ? minimumMargin + canvasPageMargins.left : svgWidth + holesMargin + canvasPageMargins.left,
+    y: minimumMargin + canvasPageMargins.top,
+  }
 
   const strictIntersectionSelector = ({
     svg,                            // the svg element.
@@ -126,11 +127,28 @@ function PageSpread({
     }
     // check if there is at least one enclosed point in the path.
     for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
-      const { x, y } = element.getPointAtLength(i)
+      let { x, y } = element.getPointAtLength(i)
+      
+      let dragCoords = {
+        x: dragAreaInSvgCoordinate.x - 12,
+        y: dragAreaInSvgCoordinate.y - 12,
+      }
+      if (pageData.template) {
+        dragCoords.x = dragCoords.x - templateMargins.left
+        dragCoords.y = dragCoords.y - templateMargins.top
+      }
+      else {
+        dragCoords.x = dragCoords.x - canvasPageMargins.left
+        dragCoords.y = dragCoords.y - canvasPageMargins.top
+      }
+
+      if (!pageIsLeft) {
+        dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
+      }
 
       if (
-        dragAreaInSvgCoordinate.x <= x && x <= dragAreaInSvgCoordinate.x + dragAreaInSvgCoordinate.width &&
-        dragAreaInSvgCoordinate.y <= y && y <= dragAreaInSvgCoordinate.y + dragAreaInSvgCoordinate.height
+        dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+        dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
       ) {
         return true
       }
@@ -320,8 +338,8 @@ function Page({
   setSelectedPageSvg,
   setSvgLoaded,
   setSvgSize,
-  svgSize,
 }) {
+  console.log(`Page side ${pageSide}`, margins)
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
     width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
@@ -368,7 +386,6 @@ function Page({
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}
             setSvgLoaded={setSvgLoaded}
-            svgSize={svgSize}
           />
         ) : (
           <SVG

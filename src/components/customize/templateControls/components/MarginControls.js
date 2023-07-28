@@ -1,13 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, ArrowsClockwise } from "phosphor-react"
+import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, X } from "phosphor-react"
 import { colors } from "../../../../styles/variables"
 
 import { StyledLabel, NumberInput } from "../../../form/FormComponents"
 import { ControlInnerButton } from "./TemplateComponents"
 import Icon from "../../../ui/Icon"
-
-const numberInputPadding = "8px 44px 8px 24px"
 
 const MarginContainer = styled.div`
   display: flex;
@@ -16,7 +14,7 @@ const MarginContainer = styled.div`
   margin-bottom: 16px;
 `
 
-const MarginInput = styled.div`
+const StyledMarginInput = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
@@ -32,146 +30,118 @@ const MarginInput = styled.div`
   }
 `
 
+function MarginInput({ 
+  margin,
+  pageData, 
+  setPageData,
+  max,
+  alignment,
+}) {
+  const numberInputPadding = "8px 44px 8px 24px"
+
+  return (
+    <StyledMarginInput>
+      <Icon className="icon">
+        {margin === "marginTop" &&(
+          <ArrowLineUp size={12} />
+        )}
+        {margin === "marginRight" && (
+          <ArrowLineRight size={12} />
+        )}
+        {margin === "marginBottom" && (
+          <ArrowLineDown size={12} />
+        )}
+        {margin === "marginLeft" && (
+          <ArrowLineLeft size={12} />
+        )}
+      </Icon>
+      <NumberInput
+        value={pageData[margin]}
+        min={0}
+        max={max}
+        onChange={value => setPageData({
+          ...pageData,
+          [alignment]: "",
+          [margin]: value,
+        })}
+        padding={numberInputPadding}
+        step={1}
+      />
+      <ControlInnerButton
+        backgroundcolor={colors.gray.oneHundred}
+        color={colors.gray.nineHundred}
+        padding="4px"
+        onClick={() => setPageData({
+          ...pageData,
+          [alignment]: "",
+          [margin]: 0,
+        })}
+      >
+        <Icon>
+          <X size={12} weight="bold" />
+        </Icon>
+      </ControlInnerButton>
+    </StyledMarginInput>
+  )
+}
+
 function MarginControls({
   setPageData,
   maximumMarginHeight,
   maximumMarginWidth,
   pageData,
 }) {
+  const inputs = [
+    {
+      margin: "marginTop",
+      alignment: "alignmentVertical",
+      max: maximumMarginHeight,
+    },
+    {
+      margin: "marginRight",
+      alignment: "alignmentHorizontal",
+      max: maximumMarginWidth - pageData.marginLeft - 1,
+    },
+  ]
+  const inputstwo = [
+    {
+      margin: "marginBottom",
+      alignment: "alignmentVertical",
+      max: maximumMarginHeight,
+    },
+    {
+      margin: "marginLeft",
+      alignment: "alignmentHorizontal",
+      max: maximumMarginWidth,
+    },
+  ]
+
   return (
     <>
       <StyledLabel>Page margins</StyledLabel>
       <MarginContainer>
-        <MarginInput>
-          <Icon className="icon">
-            <ArrowLineUp size={12} />
-          </Icon>
-          <NumberInput
-            value={pageData.marginTop}
-            min={0}
-            max={maximumMarginHeight}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              marginTop: value,
-            })}
-            padding={numberInputPadding}
-            step={1}
+        {inputs.map(input => (
+          <MarginInput
+            key={input.margin}
+            margin={input.margin}
+            pageData={pageData}
+            setPageData={setPageData}
+            max={input.max}
+            alignment={input.alignment}
           />
-          <ControlInnerButton
-            backgroundcolor={colors.gray.oneHundred}
-            color={colors.gray.nineHundred}
-            padding="4px"
-            fontsize="0.875rem"
-            onClick={() => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              marginTop: 0,
-            })}
-          >
-            <Icon>
-              <ArrowsClockwise size={12} weight="bold" />
-            </Icon>
-          </ControlInnerButton>
-        </MarginInput>
-        <MarginInput>
-          <Icon className="icon">
-            <ArrowLineRight size={12} />
-          </Icon>
-          <NumberInput
-            value={pageData.marginRight}
-            min={0}
-            max={maximumMarginWidth - pageData.marginLeft - 1}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginRight: value,
-            })}
-            padding={numberInputPadding}
-            step={1}
-          />
-          <ControlInnerButton
-            backgroundcolor={colors.gray.oneHundred}
-            color={colors.gray.nineHundred}
-            padding="4px"
-            fontsize="0.875rem"
-            onClick={() => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginRight: 0,
-            })}
-          >
-            <Icon>
-              <ArrowsClockwise size={12} />
-            </Icon>
-          </ControlInnerButton>
-        </MarginInput>
+        ))}
       </MarginContainer>
       <MarginContainer>
-        <MarginInput>
-          <Icon className="icon">
-            <ArrowLineDown size={12} />
-          </Icon>
-          <NumberInput
-            value={pageData.marginBottom}
-            min={0}
-            max={maximumMarginHeight}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              marginBottom: value,
-            })}
-            padding={numberInputPadding}
-            step={1}
+        {inputstwo.map(input => (
+          <MarginInput
+            key={input.margin}
+            margin={input.margin}
+            pageData={pageData}
+            setPageData={setPageData}
+            max={input.max}
+            alignment={input.alignment}
           />
-          <ControlInnerButton
-            backgroundcolor={colors.gray.oneHundred}
-            color={colors.gray.nineHundred}
-            padding="4px"
-            fontsize="0.875rem"
-            onClick={() => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              marginBottom: 0,
-            })}
-          >
-            <Icon>
-              <ArrowsClockwise size={12} />
-            </Icon>
-          </ControlInnerButton>
-        </MarginInput>
-        <MarginInput>
-          <Icon className="icon">
-            <ArrowLineLeft size={12} />
-          </Icon>
-          <NumberInput
-            value={pageData.marginLeft}
-            min={0}
-            max={maximumMarginWidth}
-            onChange={value => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginLeft: value,
-            })}
-            padding={numberInputPadding}
-            step={1}
-          />
-          <ControlInnerButton
-            backgroundcolor={colors.gray.oneHundred}
-            color={colors.gray.nineHundred}
-            padding="4px"
-            fontsize="0.875rem"
-            onClick={() => setPageData({
-              ...pageData,
-              alignmentHorizontal: "",
-              marginLeft: 0,
-            })}
-          >
-            <Icon>
-              <ArrowsClockwise size={12} />
-            </Icon>
-          </ControlInnerButton>
-        </MarginInput>
+        ))}
       </MarginContainer>
     </>
   )

@@ -4,7 +4,7 @@ import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 function Dot({ 
   maxSvgSize,
   pageData, 
-  setPageData 
+  setPageData,
 }) {
   const [dots, setDots] = useState([])
   const { radius, columns, rows, opacity, rowSpacing, columnSpacing } = pageData
@@ -67,10 +67,10 @@ function Dot({
 
   useEffect(() => {
     createDots()
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
-    <>
+    <svg>
       {dots.map((dot, index) => (
         <circle
           key={`${dot.row}-${index}`}
@@ -82,7 +82,7 @@ function Dot({
         >
         </circle>
       ))}
-    </>
+    </svg>
   )
 }
 

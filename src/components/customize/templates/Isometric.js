@@ -16,10 +16,16 @@ function Isometric({
   const halfLineThickness = lineThickness / 2
   const borderThickness = convertToPx(borderData.thickness)
   const halfBorderThickness = borderThickness / 2
+  const syncedBorderWidth = borderData.sync ? halfLineThickness : halfBorderThickness
   const lineSpacing = convertToPx(spacing) + lineThickness
   const angle = parseInt(pageData.angle)
   const complementaryAngle = 90 - angle
-  const rectPosition = borderData.sync ? halfLineThickness : halfBorderThickness
+  const borderPosition = {
+    x: syncedBorderWidth,
+    y: syncedBorderWidth,
+    x2: contentWidth - syncedBorderWidth,
+    y2: contentHeight - syncedBorderWidth,
+  }
   const adjustedWidth = contentWidth - halfLineThickness
 
   useEffect(() => {
@@ -163,16 +169,32 @@ function Isometric({
         />
       ))}
       {borderData.toggle && (
-        <rect
-          width={borderData.sync ? contentWidth - lineThickness : contentWidth - borderThickness}
-          height={borderData.sync ? contentHeight - lineThickness : contentHeight - borderThickness}
-          x={rectPosition}
-          y={rectPosition}
-          strokeWidth={borderData.sync ? lineThickness : borderThickness}
-          strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-          fill="none"
-          stroke="#000"
-        />
+        <>
+          <path 
+            d={`M 0,${borderPosition.y} L ${contentWidth},${borderPosition.y} z`}
+            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000"
+          />
+          <path
+            d={`M ${borderPosition.x2},0 L ${borderPosition.x2},${contentHeight} z`}
+            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000"
+          />
+          <path
+            d={`M ${contentWidth},${borderPosition.y2} L 0,${borderPosition.y2} z`}
+            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000"
+          />
+          <path
+            d={`M ${borderPosition.x},${contentHeight} L ${borderPosition.x},0 z`}
+            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000"
+          />
+        </>
       )}
     </>
   )

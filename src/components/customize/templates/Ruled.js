@@ -53,10 +53,11 @@ function Ruled({
 
   useEffect(() => {
     createLines()
+    console.log("Ruled rendered")
   }, [pageData, maxSvgSize])
 
   return (
-    <>
+    <svg>
       {lines.map((line, index) => (
         <line
           key={index}
@@ -71,7 +72,7 @@ function Ruled({
         >
         </line>
       ))}
-    </>
+    </svg>
   )
 }
 

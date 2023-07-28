@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useLayoutEffect, useRef } from "react"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -21,27 +21,30 @@ const Template = ({
   setSvgSize,
   setSvgLoaded,
 }) => {
+  const ref = useRef(null)
 
-  const templateRef = useCallback(node => {
-    if (node !== null) {
-      setSvgLoaded(null)
-      setSelectedPageSvg(node)
-      const dimensions = node.getBBox()
+  useLayoutEffect(() => {
+    setSvgLoaded(null)
 
+    if (ref && ref.current) {
+      const template = ref.current
+      setSelectedPageSvg(template)
+      
       setTimeout(() => {
-        setSvgSize({
-          height: dimensions.height,
-          width: dimensions.width,
-        })
-      }, 10)
+        const { height, width } = template.getBBox()
 
+        setSvgSize({
+          height: height,
+          width: width,
+        })
+      }, 0)
     }
-  }, [pageData])
+  }, [ref, pageData])
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      ref={templateRef}
+      ref={ref}
       id={currentPageSide === "left" ? "left-page" : "right-page"}
       x={pagePosition.x}
       y={pagePosition.y}
@@ -49,6 +52,8 @@ const Template = ({
       height={pageData.maxContentHeight}
       viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
       fill="#fff"
+      contentEditable
+      suppressContentEditableWarning={true}
     >
       {pageData.template === "blank" && (
         null

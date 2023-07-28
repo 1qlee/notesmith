@@ -17,7 +17,7 @@ const initialState = {
 const EditorContext = createContext(null);
 const EditorDispatchContext = createContext(null);
 
-export function EditorProvider({ bookDimensions, children, setSelectedPageSvg }) {
+export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, setPageData, pageData }) {
   const [canvasState, dispatch] = useReducer(setCanvasState, { ...initialState, bookWidth: bookDimensions.width, bookHeight: bookDimensions.height })
 
   useEffect(() => {
@@ -27,6 +27,10 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
         canvasState.selectedElements.forEach(ele => {
           ele.remove()
           canvasState.selectionPath.hide()
+        })
+
+        dispatch({
+          type: 'remove-selection',
         })
       }
     }
@@ -81,6 +85,7 @@ const setCanvasState = (state, action) => {
         canvas: canvas,
         selection: selection,
         selectionPath: selectionPath,
+        selectedElements: null,
       }
     // when user is dragging mouse to select elements
     case 'change-selection':
@@ -139,6 +144,13 @@ const setCanvasState = (state, action) => {
       return {
         ...state,
         selectedElements: selectedElementsConverted,
+      }
+    case 'remove-selection':
+      log("removing selection...")
+
+      return {
+        ...state,
+        selectedElements: null,
       }
     case 'ungroup-selection':
       log("ungrouping selection...")

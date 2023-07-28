@@ -546,4 +546,5 @@ select:-webkit-autofill:focus {
 }
 [data-selected] {
   stroke: #1a73e8;
+  opacity: 1;
 }
