@@ -12,16 +12,9 @@ const StyledPageBox = styled.div`
   width: 100%;
   position: relative;
   padding: 8px;
-  label, input {
-    font-family: "Inter", Helvetica, Tahoma, sans-serif;
+  input {
     font-size: 0.875rem;
     width: 100%;
-  }
-  label {
-    font-weight: 700;
-    position: absolute;
-    left: 1rem;
-    top: 0.125rem;
   }
   input {
     border: none;

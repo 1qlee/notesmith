@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, X } from "phosphor-react"
 import { colors } from "../../../../styles/variables"
@@ -37,10 +37,14 @@ function MarginInput({
   max,
   alignment,
 }) {
+  const [isHovered, setIsHovered] = useState(false)
   const numberInputPadding = "8px 44px 8px 24px"
 
   return (
-    <StyledMarginInput>
+    <StyledMarginInput
+      onMouseEnter={() => setIsHovered(!isHovered)}
+      onMouseLeave={() => setIsHovered(!isHovered)}
+    >
       <Icon className="icon">
         {margin === "marginTop" &&(
           <ArrowLineUp size={12} />
@@ -67,20 +71,22 @@ function MarginInput({
         padding={numberInputPadding}
         step={1}
       />
-      <ControlInnerButton
-        backgroundcolor={colors.gray.oneHundred}
-        color={colors.gray.nineHundred}
-        padding="4px"
-        onClick={() => setPageData({
-          ...pageData,
-          [alignment]: "",
-          [margin]: 0,
-        })}
-      >
-        <Icon>
-          <X size={12} weight="bold" />
-        </Icon>
-      </ControlInnerButton>
+      {isHovered && (
+        <ControlInnerButton
+          backgroundcolor={colors.gray.oneHundred}
+          color={colors.gray.nineHundred}
+          padding="4px"
+          onClick={() => setPageData({
+            ...pageData,
+            [alignment]: "",
+            [margin]: 0,
+          })}
+        >
+          <Icon>
+            <X size={12} weight="bold" />
+          </Icon>
+        </ControlInnerButton>
+      )}
     </StyledMarginInput>
   )
 }

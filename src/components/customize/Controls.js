@@ -46,7 +46,7 @@ const ControlsTabs = styled.ul`
 const ControlsTab = styled.li`
   background-color: ${colors.white};
   color: ${colors.gray.sixHundred};
-  padding: 1rem 0;
+  padding: 16px 0;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
   font-size: 0.875rem;

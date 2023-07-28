@@ -52,8 +52,6 @@ const Template = ({
       height={pageData.maxContentHeight}
       viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
       fill="#fff"
-      contentEditable
-      suppressContentEditableWarning={true}
     >
       {pageData.template === "blank" && (
         null

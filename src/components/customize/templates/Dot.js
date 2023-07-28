@@ -70,7 +70,7 @@ function Dot({
   }, [pageData])
 
   return (
-    <svg>
+    <>
       {dots.map((dot, index) => (
         <circle
           key={`${dot.row}-${index}`}
@@ -82,7 +82,7 @@ function Dot({
         >
         </circle>
       ))}
-    </svg>
+    </>
   )
 }
 

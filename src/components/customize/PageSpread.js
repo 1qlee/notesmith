@@ -32,12 +32,6 @@ function PageSpread({
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
-  const convertedMargins = {
-    top: convertToPx(marginTop),
-    right: convertToPx(marginRight),
-    bottom: convertToPx(marginBottom),
-    left: convertToPx(marginLeft),
-  }
   const spreadPosition = {
     x: (canvasSize.width - svgWidth * 2) / 2,
     y: (canvasSize.height - svgHeight) / 2,
@@ -81,30 +75,32 @@ function PageSpread({
   const leftPageTemplate = canvasPageTemplates[leftPage]
   const rightPageTemplate = canvasPageTemplates[rightPage]
   let templateMargins = {
-    top: convertToPx(pageData.marginTop),
-    right: convertToPx(pageData.marginRight),
-    bottom: convertToPx(pageData.marginBottom),
-    left: convertToPx(pageData.marginLeft),
+    top: convertToPx(marginTop),
+    right: convertToPx(marginRight),
+    bottom: convertToPx(marginBottom),
+    left: convertToPx(marginLeft),
   }
-  let canvasPageMargins = pageIsLeft ? {
+  const leftPageMargins = selectedPage !== 1 && {
     top: convertToPx(leftPageTemplate.marginTop),
     right: convertToPx(leftPageTemplate.marginRight),
     bottom: convertToPx(leftPageTemplate.marginBottom),
     left: convertToPx(leftPageTemplate.marginLeft),
-  } : {
+  }
+  const rightPageMargins = selectedPage !== bookData.numOfPages && {
     top: convertToPx(rightPageTemplate.marginTop),
     right: convertToPx(rightPageTemplate.marginRight),
     bottom: convertToPx(rightPageTemplate.marginBottom),
     left: convertToPx(rightPageTemplate.marginLeft),
   }
   let pagePosition = pageData.template ? {
-    x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
-    y: minimumMargin + convertedMargins.top,
+    x: pageIsLeft ? minimumMargin + templateMargins.left : svgWidth + holesMargin + templateMargins.left,
+    y: minimumMargin + templateMargins.top,
   } : {
-    x: pageIsLeft ? minimumMargin + canvasPageMargins.left : svgWidth + holesMargin + canvasPageMargins.left,
-    y: minimumMargin + canvasPageMargins.top,
+    x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
+    y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
   }
 
+  // stricter selection finder logic for paths
   const strictIntersectionSelector = ({
     svg,                            // the svg element.
     referenceElement,               // please select only descendants of this SVGElement if specified.
@@ -138,8 +134,14 @@ function PageSpread({
         dragCoords.y = dragCoords.y - templateMargins.top
       }
       else {
-        dragCoords.x = dragCoords.x - canvasPageMargins.left
-        dragCoords.y = dragCoords.y - canvasPageMargins.top
+        if (pageIsLeft) {
+          dragCoords.x = dragCoords.x - leftPageMargins.left
+          dragCoords.y = dragCoords.y - leftPageMargins.top
+        }
+        else {
+          dragCoords.x = dragCoords.x - rightPageMargins.left
+          dragCoords.y = dragCoords.y - rightPageMargins.top
+        }
       }
 
       if (!pageIsLeft) {
@@ -160,25 +162,25 @@ function PageSpread({
     let margins
     let referenceElement, canvas = null
     const parent = svgJs(canvasRef.current)
-    const isTemplate = (pageData.template && selectedPageSvg) ? true : false
     const isCanvasPage = svgLoaded === selectedPage ? true : false
+    // const isTemplate = (pageData.template && selectedPageSvg) ? true : false
 
-    if (isTemplate) {
-      canvas = svgJs(selectedPageSvg)
-      referenceElement = selectedPageSvg
-      margins = templateMargins
-      pagePosition = {
-        x: pageIsLeft ? minimumMargin + convertedMargins.left : svgWidth + holesMargin + convertedMargins.left,
-        y: minimumMargin + convertedMargins.top,
-      }
-    }
+    // if (isTemplate) {
+    //   canvas = svgJs(selectedPageSvg)
+    //   referenceElement = selectedPageSvg
+    //   margins = templateMargins
+    //   pagePosition = {
+    //     x: pageIsLeft ? minimumMargin + templateMargins.left : svgWidth + holesMargin + templateMargins.left,
+    //     y: minimumMargin + templateMargins.top,
+    //   }
+    // }
     if (isCanvasPage) {
       canvas = svgJs(canvasPageRef.current)
       referenceElement = canvasPageRef.current
-      margins = canvasPageMargins
+      margins = pageIsLeft ? leftPageMargins : rightPageMargins
       pagePosition = {
-        x: pageIsLeft ? minimumMargin + canvasPageMargins.left : svgWidth + holesMargin + canvasPageMargins.left,
-        y: minimumMargin + canvasPageMargins.top,
+        x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
+        y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
       }
     }
 
@@ -190,7 +192,7 @@ function PageSpread({
       parent: parent,
     })
 
-    if (canvasState.mode === "select") {
+    if (canvasState.mode === "select" && referenceElement) {
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -285,7 +287,7 @@ function PageSpread({
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
-        margins={canvasPageMargins}
+        margins={leftPageMargins}
         pageData={pageData}
         pageId={leftPage}
         pagePosition={pagePosition}
@@ -304,7 +306,7 @@ function PageSpread({
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
-        margins={canvasPageMargins}
+        margins={rightPageMargins}
         pageData={pageData}
         pageId={leftPage}
         pagePosition={pagePosition}
@@ -338,8 +340,8 @@ function Page({
   setSelectedPageSvg,
   setSvgLoaded,
   setSvgSize,
+  svgSize,
 }) {
-  console.log(`Page side ${pageSide}`, margins)
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
     width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
@@ -398,6 +400,8 @@ function Page({
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
             src={pageTemplate && pageTemplate.svg}
+            contentEditable
+            suppressContentEditableWarning={true}
           />
         )}
       </>

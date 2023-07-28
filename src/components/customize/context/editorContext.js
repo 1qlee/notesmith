@@ -137,7 +137,6 @@ const setCanvasState = (state, action) => {
       }
     case 'select':
       log("selecting elements: ")
-      console.log(action.selectedElements)
 
       const selectedElementsConverted = action.selectedElements.map(ele => svgJs(ele))
 
