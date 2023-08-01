@@ -20,6 +20,7 @@ function PageSpread({
   pageData,
   selectedPage,
   selectedPageSvg,
+  setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
@@ -295,6 +296,7 @@ function PageSpread({
         pageTemplate={leftPageTemplate}
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
+        setMax={setMax}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
@@ -314,6 +316,7 @@ function PageSpread({
         pageTemplate={rightPageTemplate}
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
+        setMax={setMax}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgSize={setSvgSize}
@@ -340,7 +343,7 @@ function Page({
   setSelectedPageSvg,
   setSvgLoaded,
   setSvgSize,
-  svgSize,
+  setMax,
 }) {
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
@@ -384,6 +387,7 @@ function Page({
             pageData={pageData}
             pagePosition={pagePosition}
             selectedPageSvg={selectedPageSvg}
+            setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}

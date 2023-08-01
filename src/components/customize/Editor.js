@@ -103,6 +103,10 @@ const Editor = ({
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
+  const [max, setMax] = useState({
+    rows: 200,
+    columns: 200,
+  })
 
   useEffect(() => {
     // queries db for the book by bookId
@@ -276,6 +280,7 @@ const Editor = ({
               setSvgSize={setSvgSize}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
+              setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
               svgSize={svgSize}
@@ -287,6 +292,7 @@ const Editor = ({
               pageData={pageData}
               productData={productData}
               productImages={productImages}
+              max={max}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}

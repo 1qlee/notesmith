@@ -22,13 +22,11 @@ function Canvas({
   pageData,
   selectedPage,
   selectedPageSvg,
+  setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
-  svgContent, 
-  svgUpdate, 
   svgSize,
-  log
 }) {
   const [canvasSize, setCanvasSize] = useState({
     width: 1456,
@@ -50,6 +48,7 @@ function Canvas({
             pageData={pageData}
             selectedPage={selectedPage}
             selectedPageSvg={selectedPageSvg}
+            setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}

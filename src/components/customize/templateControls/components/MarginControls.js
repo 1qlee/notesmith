@@ -42,8 +42,8 @@ function MarginInput({
 
   return (
     <StyledMarginInput
-      onMouseEnter={() => setIsHovered(!isHovered)}
-      onMouseLeave={() => setIsHovered(!isHovered)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <Icon className="icon">
         {margin === "marginTop" &&(

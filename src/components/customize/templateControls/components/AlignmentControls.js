@@ -40,7 +40,7 @@ function AlignmentControls({
   setPageData,
   svgSize,
 }) {
-  const { maxContentHeight, maxContentWidth, thickness } = pageData
+  const { maxContentHeight, maxContentWidth, thickness, radius } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
   let verticalTrim, horizontalTrim = 0
@@ -48,6 +48,8 @@ function AlignmentControls({
   switch(pageData.template) {
     case "ruled":
       verticalTrim = thickness
+      break
+    case "dot":
       break
     case "graph":
       verticalTrim = thickness

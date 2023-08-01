@@ -76,6 +76,7 @@ function Controls({
   pageData,
   productData,
   productImages,
+  max,
   setBookData,
   setPageData,
   setShowModal,
@@ -133,6 +134,7 @@ function Controls({
       {activeTab === 1 && (
         <Designbar
           pageData={pageData}
+          max={max}
           setPageData={setPageData}
           setShowModal={setShowModal}
           svgSize={svgSize}

@@ -5,6 +5,7 @@ import { NumberInput, StyledLabel } from "../../../form/FormComponents"
 import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function ColumnControls({
+  max,
   pageData,
   setPageData,
 }) {
@@ -16,12 +17,13 @@ function ColumnControls({
           id="column-input"
           value={pageData.columns}
           min={1}
+          max={max}
           onChange={value => setPageData({
             ...pageData,
             alignmentHorizontal: "",
             columns: value,
           })}
-          padding="0.5rem 1.5rem 0.5rem 0.5rem"
+          padding="8px 24px 8px 8px"
           step={1}
         />
         <ControlInnerButton
@@ -32,7 +34,7 @@ function ColumnControls({
           onClick={() => setPageData({
             ...pageData,
             alignmentHorizontal: "",
-            columns: 200,
+            columns: max,
           })}
         >
           Fill

@@ -16,6 +16,7 @@ const Template = ({
   maxSvgSize,
   pageData,
   pagePosition,
+  setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
@@ -68,6 +69,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "graph" && (

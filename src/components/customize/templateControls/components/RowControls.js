@@ -6,6 +6,7 @@ import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function RowControls({
   pageData,
+  max,
   setPageData,
 }) {
   return (
@@ -22,6 +23,7 @@ function RowControls({
             rows: value,
           })}
           padding="8px 24px 8px 8px"
+          max={max}
           step={1}
         />
         <ControlInnerButton
@@ -32,7 +34,7 @@ function RowControls({
           onClick={() => setPageData({
             ...pageData,
             alignmentVertical: "",
-            rows: 200,
+            rows: max,
           })}
         >
           Fill

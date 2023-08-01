@@ -15,6 +15,7 @@ import CalligraphyControls from "../templateControls/CalligraphyControls"
 
 function Designbar({
   pageData,
+  max,
   setPageData,
   svgSize,
 }) {
@@ -39,6 +40,7 @@ function Designbar({
               <DotControls
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
                 svgSize={svgSize}
