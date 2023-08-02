@@ -7,17 +7,20 @@ function Hexagon({
   setPageData,
   setMax,
 }) {
-  const { hexagonRadius, thickness, rows, opacity } = pageData
+  const { hexagonRadius, thickness, rows, opacity, columns } = pageData
   const { width, height } = maxSvgSize
   const hexRadius = convertToPx(hexagonRadius)
+  const hexDiameter = hexRadius * 2
   const hexThickness = convertToPx(thickness)
+  const halfHexThickness = hexThickness / 2
   const hexWidth = Math.sqrt(3) * hexRadius
+  const offset = hexWidth / 2
   const [hexagons, setHexagons] = useState([])
 
   useEffect(() => {
     function createHexagons() {
       // creates the shape of the hexagon by generating its points
-      function createPoints(x, y, radius, row) {
+      function createPoints(x, y, radius, col, row) {
         const pointsArray = []
 
         for (let theta = 0; theta < Math.PI * 2; theta += Math.PI / 3) {
@@ -26,7 +29,7 @@ function Hexagon({
           const pointY = convertFloatFixed(y + radius * Math.cos(theta), 2)
 
           if (pointX > width) {
-            return { row: null }
+            return { col: col }
           }
           if (pointY > height) {
             return { row: row }
@@ -41,18 +44,21 @@ function Hexagon({
 
       const hexagonsArray = []
 
-      for (let row = 0; row < rows; row++) {
-        const numOfCols = Math.floor(width / hexWidth)
-        const halfHexThickness = hexThickness / 2
+      for (let column = 0; column < columns; column++) {
 
-        for (let col = 0; col < numOfCols; col++) {
-          const offset = hexWidth / 2
-          let x = (offset / 2) + offset * col * 2 + halfHexThickness
-          let y = offset * row * Math.sqrt(3) + halfHexThickness
 
-          if (row % 2 !== 0) {
-            x += offset
+        for (let row = 0; row < rows; row++) {
+          let x = offset + offset * column * 2 + halfHexThickness
+          let y = hexWidth * row * Math.sqrt(3) + halfHexThickness + hexRadius
+
+          if (column % 2 !== 0) {
+            x -= offset
+            y += hexWidth * Math.sqrt(3) / 2
           }
+
+          // if (row % 2 !== 0) {
+          //   x += offset
+          // }
 
           const points = createPoints(x, y, hexRadius, row)
 
@@ -74,6 +80,39 @@ function Hexagon({
           }
         }
       }
+
+      // for (let row = 0; row < rows; row++) {
+      //   const numOfCols = Math.floor(width / hexWidth)
+
+      //   for (let col = 0; col < numOfCols; col++) {
+      //     const offset = hexWidth / 2
+      //     let x = offset + offset * col * 2 + halfHexThickness
+      //     let y = offset * row * Math.sqrt(3) + halfHexThickness + hexRadius
+
+      //     if (row % 2 !== 0) {
+      //       x += offset
+      //     }
+
+      //     const points = createPoints(x, y, hexRadius, row)
+
+      //     if (points.row) {
+      //       return setPageData({
+      //         ...pageData,
+      //         rows: row,
+      //       })
+      //     }
+      //     else {
+      //       const hexagon = {
+      //         stroke: "#000",
+      //         strokeWidth: hexThickness,
+      //         points: points,
+      //         opacity: opacity,
+      //       }
+
+      //       hexagonsArray.push(hexagon)
+      //     }
+      //   }
+      // }
 
       setHexagons(hexagonsArray)
     }
