@@ -5,6 +5,7 @@ function Hexagon({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const { hexagonRadius, thickness, rows, opacity } = pageData
   const { width, height } = maxSvgSize
@@ -46,8 +47,8 @@ function Hexagon({
 
         for (let col = 0; col < numOfCols; col++) {
           const offset = hexWidth / 2
-          let x = offset + offset * col * 2 + halfHexThickness
-          let y = hexRadius + offset * row * Math.sqrt(3) + halfHexThickness
+          let x = (offset / 2) + offset * col * 2 + halfHexThickness
+          let y = offset * row * Math.sqrt(3) + halfHexThickness
 
           if (row % 2 !== 0) {
             x += offset
@@ -78,7 +79,7 @@ function Hexagon({
     }
 
     createHexagons()
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

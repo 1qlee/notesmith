@@ -11,6 +11,7 @@ import ThicknessControls from "./components/ThicknessControls"
 function RuledControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -30,6 +31,7 @@ function RuledControls({
       />
       <ControlWrapper>
         <RowControls
+          max={max.rows}
           pageData={pageData}
           setPageData={setPageData}
         />

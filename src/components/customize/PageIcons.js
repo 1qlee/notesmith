@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts, convertToMM } from "../../styles/variables"
-import { Plus } from "phosphor-react"
+import { colors, fonts, convertToMM, pageDataConfig } from "../../styles/variables"
+import { Plus, X } from "phosphor-react"
 import { Tooltip } from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
 import HexPageIcon from "../../assets/hexagon-grid.svg"
@@ -261,11 +261,11 @@ function DotPageIcon({
     opacity: 1,
     thickness: 0.175,
     radius: 0.1,
-    rows: 42,
+    rows: 41,
     columns: 25,
-    marginTop: 0.123,
+    marginTop: 0.672,
     marginBottom: 0,
-    marginLeft: 1.881,
+    marginLeft: 0.681,
     marginRight: 0,
     width: 1,
   }
@@ -357,8 +357,10 @@ function GraphPageIcon({
     thickness: 0.088,
     rows: 41,
     columns: 24,
-    marginTop: 0.335,
+    marginTop: 0.379,
+    marginBottom: 0,
     marginLeft: 2.036,
+    marginRight: 0,
     width: 127,
   }
 
@@ -996,6 +998,56 @@ function CrossGridPageIcon({
   )
 }
 
+function NonePageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    ...pageDataConfig,
+    template: ""
+  }
+
+  return (
+    <Page
+      className="none-tooltip"
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline 
+        className="page-outline"
+      >
+        <Icon
+          margin="10px 6px"
+        >
+          <X size={16} />
+        </Icon>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">None</PageLabel>
+      ) : (
+        <Tooltip
+          anchorSelect=".none-tooltip"
+          content={dataTip}
+          place="top"
+        />
+      )}
+    </Page>
+  )
+}
+
 function PageIcons({
   checkActiveVar,
   data,
@@ -1008,6 +1060,17 @@ function PageIcons({
 }) {
   return (
     <>
+      <NonePageIcon 
+        data={data}
+        dataTip="None"
+        iconMargin={iconMargin}
+        isActive={checkActiveVar === ""}
+        isProductPage={isProductPage}
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setData={setData}
+        showLabels={showLabels}
+      />
       <BlankPageIcon
         data={data}
         dataTip="Blank"

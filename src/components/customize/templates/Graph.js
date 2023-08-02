@@ -5,6 +5,7 @@ function Graph({
   maxSvgSize,
   pageData, 
   setPageData,
+  setMax,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
@@ -13,7 +14,9 @@ function Graph({
   const lineColumnSpacing = convertToPx(columnSpacing)
   const lineRowSpacing = convertToPx(rowSpacing)
   const lineThickness = convertToPx(thickness)
-  const lineOffset = lineThickness / 2
+  const lineOffset = convertFloatFixed(lineThickness / 2, 3)
+  const maxRows = Math.floor((height + lineRowSpacing - lineOffset) / (lineThickness + lineRowSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
+  const maxCols = Math.floor((width + lineColumnSpacing - lineOffset) / (lineThickness + lineColumnSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
 
   function createColumns() {
     // placeholder array
@@ -52,7 +55,11 @@ function Graph({
       }
 
       // break the loop if columns break past the right side margin
+      // add the offset because lineX is the start point of the line, not where it ends
       if (lineX + lineOffset > width) {
+        console.log("🚀 ~ file: Graph.js:61 ~ createColumns ~ width:", width)
+        console.log("🚀 ~ file: Graph.js:61 ~ createColumns ~ lineX:", lineX)
+        
         return setPageData({
           ...pageData,
           columns: column,
@@ -72,10 +79,10 @@ function Graph({
     // grid row lines
     for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
-      const lineX1 = lineOffset
-      const lineX2 = columns * (lineColumnSpacing + lineThickness) + lineX1
+      const lineX1 = convertFloatFixed(lineOffset, 3)
+      const lineX2 = convertFloatFixed(columns * (lineColumnSpacing + lineThickness) + lineX1, 3)
       const lineYFirst = lineOffset
-      const lineY = lineYFirst + (row + 1) * (lineRowSpacing + lineThickness)
+      const lineY = convertFloatFixed(lineYFirst + (row + 1) * (lineRowSpacing + lineThickness), 3)
       // first row line
       const firstRowLine = {
         fill: "none",
@@ -104,6 +111,7 @@ function Graph({
       }
 
       // loop will exit if the last line has passed the height of the page
+      // add the offset because lineX is the start point of the line, not where it ends
       if (lineY + lineOffset > height) {
         // change the number of rows displayed
         return setPageData({
@@ -122,7 +130,11 @@ function Graph({
   useEffect(() => {
     createRows()
     createColumns()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+      columns: maxCols,
+    })
+  }, [pageData])
 
   return (
     <>

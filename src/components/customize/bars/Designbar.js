@@ -31,6 +31,7 @@ function Designbar({
               <RuledControls
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
                 svgSize={svgSize}
@@ -50,6 +51,7 @@ function Designbar({
               <GraphControls
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
                 svgSize={svgSize}
@@ -60,6 +62,7 @@ function Designbar({
                 svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
               />
@@ -69,53 +72,59 @@ function Designbar({
                 svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
               />
             )}
             {pageData.template === "seyes" && (
               <SeyesControls
-                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
+                svgSize={svgSize}
               />
             )}
             {pageData.template === "music" && (
               <MusicControls
-                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
+                svgSize={svgSize}
               />
             )}
             {pageData.template === "handwriting" && (
               <HandwritingControls
-                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
+                svgSize={svgSize}
               />
             )}
             {pageData.template === "cross" && (
               <CrossGridControls
-                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
+                svgSize={svgSize}
               />
             )}
             {pageData.template === "calligraphy" && (
               <CalligraphyControls
-                svgSize={svgSize}
                 maximumMarginHeight={maximumMarginHeight}
                 maximumMarginWidth={maximumMarginWidth}
+                max={max}
                 pageData={pageData}
                 setPageData={setPageData}
+                svgSize={svgSize}
               />
             )}
           </>

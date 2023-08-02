@@ -11,6 +11,7 @@ import RangeControls from "./components/RangeControls"
 function HexagonControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,

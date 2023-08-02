@@ -15,9 +15,7 @@ function Dot({
   const dotColumnSpacing = convertToPx(columnSpacing)
   const dotRowSpacing = convertToPx(rowSpacing)
   const maxRows = Math.floor((height + dotRowSpacing) / (dotDiameter + dotRowSpacing))
-  console.log("🚀 ~ file: Dot.js:18 ~ maxRows:", maxRows)
   const maxCols = Math.floor((width + dotColumnSpacing) / (dotDiameter + dotColumnSpacing))
-  console.log("🚀 ~ file: Dot.js:20 ~ maxCols:", maxCols)
 
   function createDots() {
     // placeholder array for dots

@@ -13,6 +13,7 @@ import ColumnSpacingControls from "./components/ColumnSpacingControls"
 function GraphControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -37,6 +38,7 @@ function GraphControls({
           flex={1}
         >
           <RowControls
+            max={max.rows}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -45,6 +47,7 @@ function GraphControls({
           flex={1}
         >
           <ColumnControls
+            max={max.columns}
             pageData={pageData}
             setPageData={setPageData}
           />

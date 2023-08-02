@@ -38,7 +38,7 @@ const Template = ({
           height: height,
           width: width,
         })
-      }, 0)
+      }, 1)
     }
   }, [ref, pageData])
 
@@ -62,6 +62,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "dot" && (
@@ -77,6 +78,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "hexagon" && (
@@ -84,6 +86,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "isometric" && (
@@ -91,6 +94,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "seyes" && (
@@ -98,6 +102,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "music" && (
@@ -105,6 +110,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "handwriting" && (
@@ -112,6 +118,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "cross" && (
@@ -119,6 +126,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "calligraphy" && (
@@ -126,6 +134,7 @@ const Template = ({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
     </svg>

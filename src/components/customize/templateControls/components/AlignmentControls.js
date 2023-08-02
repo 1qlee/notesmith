@@ -49,8 +49,6 @@ function AlignmentControls({
     case "ruled":
       verticalTrim = thickness
       break
-    case "dot":
-      break
     case "graph":
       verticalTrim = thickness
       horizontalTrim = thickness * 2

@@ -5,12 +5,14 @@ function Ruled({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [lines, setLines] = useState([])
   const { thickness, spacing, opacity, rows } = pageData
   const { width, height } = maxSvgSize
   const lineThickness = convertToPx(thickness)
   const lineSpacing = convertToPx(spacing)
+  const maxRows = Math.floor((height + lineSpacing) / (lineThickness + lineSpacing))
 
   function createLines() {
     const linesArray = []
@@ -53,7 +55,10 @@ function Ruled({
 
   useEffect(() => {
     createLines()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+    })
+  }, [pageData])
 
   return (
     <>
