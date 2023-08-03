@@ -14,6 +14,8 @@ function Hexagon({
   const hexThickness = convertToPx(thickness)
   const halfHexThickness = hexThickness / 2
   const hexWidth = Math.sqrt(3) * hexRadius
+  const hexHeight = Math.sqrt(3) * hexWidth
+  const halfHexHeight = hexHeight / 2
   const offset = hexWidth / 2
   const [hexagons, setHexagons] = useState([])
 
@@ -35,32 +37,35 @@ function Hexagon({
             return { row: row }
           }
           else {
-            pointsArray.push(pointX + ',' + pointY)
+            const pointCoord = pointX + ',' + pointY
+            pointsArray.push(pointCoord)
           }
         }
 
-        return pointsArray.join(' ')
+        const joinedPoints = pointsArray.join(' ')
+
+        return joinedPoints
       }
 
       const hexagonsArray = []
 
       for (let column = 0; column < columns; column++) {
-
-
         for (let row = 0; row < rows; row++) {
-          let x = offset + offset * column * 2 + halfHexThickness
+          let x = offset * column + halfHexThickness + offset
           let y = hexWidth * row * Math.sqrt(3) + halfHexThickness + hexRadius
+          let points = ""
 
-          if (column % 2 !== 0) {
-            x -= offset
-            y += hexWidth * Math.sqrt(3) / 2
+          // if col is even and row is even
+          if (column % 2 === 0 && row % 2 === 0) {
+            
+
+            points = createPoints(x, y, hexRadius, column, row)
           }
-
-          // if (row % 2 !== 0) {
-          //   x += offset
-          // }
-
-          const points = createPoints(x, y, hexRadius, row)
+          // if col is odd and row is odd
+          if (column % 2 !== 0 && row % 2 !== 0) {
+            y -= halfHexHeight
+            points = createPoints(x, y, hexRadius, column, row)
+          }
 
           if (points.row) {
             return setPageData({
