@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel } from "../../../form/FormComponents"
@@ -9,10 +9,15 @@ function ColumnControls({
   pageData,
   setPageData,
 }) {
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
     <>
       <StyledLabel htmlFor="column-input">Columns</StyledLabel>
-      <ControlInputGroup>
+      <ControlInputGroup
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <NumberInput
           id="column-input"
           value={pageData.columns}
@@ -26,19 +31,21 @@ function ColumnControls({
           padding="8px 24px 8px 8px"
           step={1}
         />
-        <ControlInnerButton
-          backgroundcolor={colors.gray.oneHundred}
-          color={colors.gray.nineHundred}
-          padding="4px"
-          fontsize="0.75rem"
-          onClick={() => setPageData({
-            ...pageData,
-            alignmentHorizontal: "",
-            columns: max,
-          })}
-        >
-          Fill
-        </ControlInnerButton>
+        {isHovered && (
+          <ControlInnerButton
+            color={colors.gray.oneHundred}
+            backgroundcolor={colors.gray.nineHundred}
+            padding="4px"
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              alignmentHorizontal: "",
+              columns: max,
+            })}
+          >
+            Fill
+          </ControlInnerButton>
+        )}
       </ControlInputGroup>
     </>
   )

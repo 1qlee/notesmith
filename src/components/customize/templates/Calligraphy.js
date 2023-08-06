@@ -5,6 +5,7 @@ function Calligraphy({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [slantRows, setSlantRows] = useState([])
@@ -18,6 +19,8 @@ function Calligraphy({
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
   const rowHeight = ascSpacing + dscSpacing + xHeight + lineThickness * 3
+  const maxSlants = 137
+  const maxRows = Math.floor((height + rowSpacing) / (rowHeight + rowSpacing))
 
   useEffect(() => {
     function getTan(angle) {
@@ -146,7 +149,11 @@ function Calligraphy({
     }
 
     createRows()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+      slants: maxSlants,
+    })
+  }, [pageData])
 
   return (
     <>

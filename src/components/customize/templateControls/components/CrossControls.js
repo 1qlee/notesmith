@@ -16,7 +16,7 @@ function CrossControls({
       inputProps={{
         min: 1,
         max: 122,
-        step: 1,
+        step: 0.1,
       }}
       pageData={pageData}
       setPageData={setPageData}

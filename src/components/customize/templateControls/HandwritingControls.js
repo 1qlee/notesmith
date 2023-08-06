@@ -13,6 +13,7 @@ import DashedLineControls from "./components/DashedLineControls"
 function HandwritingControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -36,6 +37,7 @@ function HandwritingControls({
       />
       <ControlWrapper>
         <RowControls
+          max={max.rows}
           pageData={pageData}
           setPageData={setPageData}
         />

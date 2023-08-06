@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
-import { useEditorDispatch } from "./context/editorContext"
+import { useEditorContext, useEditorDispatch } from "./context/editorContext"
 
 import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
@@ -86,6 +86,8 @@ function Controls({
   user,
 }) {
   const dispatch = useEditorDispatch()
+  const canvasState = useEditorContext()
+  const [showDesignbar, setShowDesignbar] = useState(false)
 
   const handleShowModal = () => {
     dispatch({
@@ -99,6 +101,19 @@ function Controls({
     })
   }
 
+  useEffect(() => {
+    if ((pageData.template && pageData.template !== "blank") || canvasState.selectedElements) {
+      // show design bar
+      setActiveTab(1) 
+      setShowDesignbar(true)
+    }
+    else {
+      // show templates bar
+      setShowDesignbar(false)
+      setActiveTab(0)
+    }
+  }, [pageData.template, canvasState])
+
   return (
     <StyledControls>
       <ControlsTabs>
@@ -108,12 +123,14 @@ function Controls({
         >
           Templates
         </ControlsTab>
-        <ControlsTab
-          className={activeTab === 1 && "is-active"}
-          onClick={() => setActiveTab(1)}
-        >
-          Design
-        </ControlsTab>
+        {showDesignbar && (
+          <ControlsTab
+            className={activeTab === 1 && "is-active"}
+            onClick={() => setActiveTab(1)}
+          >
+            Design
+          </ControlsTab>
+        )}
         {user && (
           <ControlsTab
             className={activeTab === 2 && "is-active"}

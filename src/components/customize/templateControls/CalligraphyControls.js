@@ -13,6 +13,7 @@ import { ControlWrapper } from "./components/TemplateComponents"
 function CalligraphyControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -32,6 +33,7 @@ function CalligraphyControls({
       />
       <ControlWrapper>
         <RowControls
+          max={max.rows}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -41,6 +43,7 @@ function CalligraphyControls({
         setPageData={setPageData}
       />
       <SlantControls
+        max={max.slants}
         pageData={pageData}
         setPageData={setPageData}
       />

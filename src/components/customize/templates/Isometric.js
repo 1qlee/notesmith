@@ -144,7 +144,7 @@ function Isometric({
 
     createLinesTop()
     createLinesSides()
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

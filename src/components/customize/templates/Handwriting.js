@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../styles/variables"
 
 function Handwriting({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [writingRows, setWritingRows] = useState([])
   const { opacity, rows, spacing, staffSpacing, thickness, dashedLineData } = pageData
@@ -14,6 +15,8 @@ function Handwriting({
   const rowSpacing = convertToPx(staffSpacing)
   const lineThickness = convertToPx(thickness)
   const halfLineThickness = lineThickness / 2
+  const rowHeight = lineSpacing * 2 + lineThickness * 2 // row always has 3 lines, but multiply by 2 because first line doesn't count
+  const maxRows = Math.floor((height + rowSpacing - halfLineThickness) / (rowHeight + rowSpacing))
 
   function parseDashArray(value) {
     if (value.length > 0) {
@@ -34,7 +37,6 @@ function Handwriting({
       const linesArray = []
 
       for (let line = 0; line < 3; line++) {
-        const rowHeight = lineSpacing * 2 + lineThickness * 2 // row always has 3 lines, but multiply by 2 because first line doesn't really count
         const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
         const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness
         const posX1 = 0
@@ -52,10 +54,10 @@ function Handwriting({
             strokeDasharray: dashedLineData.dashArray,
             strokeDashoffset: dashOffset,
             opacity: dashedLineData.opacity,
-            x1: posX1,
-            x2: posX2,
-            y1: posY1,
-            y2: posY2,
+            x1: convertFloatFixed(posX1, 3),
+            x2: convertFloatFixed(posX2, 3),
+            y1: convertFloatFixed(posY1, 3),
+            y2: convertFloatFixed(posY2, 3),
           }
         }
         else {
@@ -65,15 +67,15 @@ function Handwriting({
             strokeWidth: lineThickness,
             strokeDasharray: line === 1 && 2,
             opacity: opacity,
-            x1: posX1,
-            x2: posX2,
-            y1: posY1,
-            y2: posY2,
+            x1: convertFloatFixed(posX1, 3),
+            x2: convertFloatFixed(posX2, 3),
+            y1: convertFloatFixed(posY1, 3),
+            y2: convertFloatFixed(posY2, 3),
           }
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 > height) {
+        if (posY1 + halfLineThickness > height) {
           return setPageData({
             ...pageData,
             rows: row,
@@ -91,7 +93,10 @@ function Handwriting({
 
   useEffect(() => {
     createWritingRows()
-  }, [pageData, dashedLineData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+    })
+  }, [pageData, dashedLineData])
 
   return (
     <>

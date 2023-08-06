@@ -13,6 +13,7 @@ import RangeControls from "./components/RangeControls"
 function SeyesControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -36,6 +37,7 @@ function SeyesControls({
           flex={1}
         >
           <RowControls
+            max={max.rows}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -44,6 +46,7 @@ function SeyesControls({
           flex={1}
         >
           <ColumnControls
+            max={max.columns}
             pageData={pageData}
             setPageData={setPageData}
           />

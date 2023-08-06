@@ -5,6 +5,7 @@ function Seyes({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [horizontalLines, setHorizontalLines] = useState([])
   const [verticalLines, setVerticalLines] = useState([])
@@ -14,28 +15,61 @@ function Seyes({
   const sideMarginSpacing = convertToPx(columnSpacing)
   const lineSpacing = convertToPx(spacing)
   const lineThickness = convertToPx(thickness)
+  const halfLineThickness = lineThickness / 2
+  const dividerThickness = lineThickness * 1.5 // the bold lines that occur every 4 lines
+  const halfDividerThickness = dividerThickness / 2
+  const verticalLineThickness = lineThickness * 2
+  const halfVerticalLineThickness = verticalLineThickness / 2
+  // const maxRows = Math.floor((height - headerSpacing) / (lineThickness + lineSpacing))
+  // const maxCols = Math.floor((width - sideMarginSpacing) / (lineSpacing * 4 + verticalLineThickness)) + 1
+  const maxRows = 191
+  const maxCols = 31
 
   function createHorizontalLines() {
     const linesArray = []
+    let numOfDividers = 0
+    let numOfLines = -1
+    let currentLineThickness = dividerThickness
 
     for (let row = 0; row < rows; row++) {
+      let spaceBtwnLines
+      
+      if (row === 0) {
+        spaceBtwnLines = halfDividerThickness
+        numOfDividers += 1
+      }
+      else {
+        if (row % 4 === 0) {
+          numOfDividers += 1
+          currentLineThickness = dividerThickness
+          spaceBtwnLines = lineThickness * numOfLines + dividerThickness * numOfDividers + lineThickness / 4
+        }
+        else {
+          numOfLines += 1
+          currentLineThickness = lineThickness
+          spaceBtwnLines = lineThickness * numOfLines + dividerThickness * numOfDividers + halfLineThickness
+        }
+        
+      }
+
       const posX1 = 0
-      const posX2 = convertFloatFixed(width, 3)
-      const posY1 = convertFloatFixed((row * lineSpacing) + lineThickness * (row + 1) + headerSpacing, 3)
-      const posY2 = posY1
+      const posX2 = width
+      const posY = (row * lineSpacing) + headerSpacing + spaceBtwnLines
       const line = {
         fill: "none",
         stroke: "#000",
-        strokeWidth: row % 4 === 0 ? lineThickness * 2 : lineThickness, // every 4th line should be thicker when option is checked
+        strokeWidth: currentLineThickness, // every 4th line should be thicker when option is checked
         opacity: opacity,
-        x1: posX1,
-        x2: posX2,
-        y1: posY1,
-        y2: posY2,
+        x1: convertFloatFixed(posX1, 3),
+        x2: convertFloatFixed(posX2, 3),
+        y1: convertFloatFixed(posY, 3),
+        y2: convertFloatFixed(posY, 3),
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (posY1 > height) {
+      if (posY + currentLineThickness / 2 > height) {
+        console.log("🚀 ~ file: Seyes.js:71 ~ createHorizontalLines ~ row:", row)
+        
         // change the number of rows displayed
         return setPageData({
           ...pageData,
@@ -54,22 +88,21 @@ function Seyes({
     const linesArray = []
 
     for (let col = 0; col < columns; col++) {
-      const posX1 = convertFloatFixed((col * lineSpacing * 4) + lineThickness * (col + 1) + sideMarginSpacing, 3)
-      const posX2 = posX1
+      const posX = (col * lineSpacing * 4) + verticalLineThickness * col + sideMarginSpacing + halfVerticalLineThickness
       const posY1 = 0
-      const posY2 = convertFloatFixed(height, 3)
+      const posY2 = height
       const line = {
         fill: "none",
         stroke: "#000",
-        strokeWidth: lineThickness * 2,
+        strokeWidth: verticalLineThickness,
         opacity: opacity,
-        x1: posX1,
-        x2: posX2,
-        y1: posY1,
-        y2: posY2,
+        x1: convertFloatFixed(posX, 3),
+        x2: convertFloatFixed(posX, 3),
+        y1: convertFloatFixed(posY1, 3),
+        y2: convertFloatFixed(posY2, 3),
       }
 
-      if (posX1 > width) {
+      if (posX + halfVerticalLineThickness > width) {
         return setPageData({
           ...pageData,
           columns: col,
@@ -86,7 +119,11 @@ function Seyes({
   useEffect(() => {
     createHorizontalLines()
     createVerticalLines()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+      columns: maxCols,
+    })
+  }, [pageData])
 
   return (
     <>

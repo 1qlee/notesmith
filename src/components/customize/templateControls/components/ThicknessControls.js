@@ -14,7 +14,7 @@ function ThicknessControls({
       inputProps={{
         min: 0.088,
         max: 5,
-        step: 0.001,
+        step: 0.01,
       }}
       pageData={pageData}
       setPageData={setPageData}

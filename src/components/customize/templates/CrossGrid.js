@@ -4,7 +4,8 @@ import { convertToPx } from "../../../styles/variables"
 function CrossGrid({ 
   maxSvgSize,
   pageData, 
-  setPageData 
+  setPageData,
+  setMax,
 }) {
   const [crosses, setCrosses] = useState([])
   const { opacity, rows, columns, columnSpacing, rowSpacing } = pageData
@@ -12,6 +13,10 @@ function CrossGrid({
   const crossSize = convertToPx(pageData.crossSize)
   const crossColumnSpacing = convertToPx(columnSpacing)
   const crossRowSpacing = convertToPx(rowSpacing)
+  const maxRows = Math.floor((height + crossRowSpacing) / (crossSize + crossRowSpacing))
+  console.log("🚀 ~ file: CrossGrid.js:17 ~ maxRows:", maxRows)
+  const maxCols = Math.floor((width + crossColumnSpacing) / (crossSize + crossColumnSpacing))
+  console.log("🚀 ~ file: CrossGrid.js:19 ~ maxCols:", maxCols)
 
   function createCrosses() {
     // placeholder array for crosses
@@ -79,7 +84,11 @@ function CrossGrid({
 
   useEffect(() => {
     createCrosses()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+      columns: maxCols,
+    })
+  }, [pageData])
 
   return (
     <>

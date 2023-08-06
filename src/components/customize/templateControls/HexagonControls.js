@@ -36,6 +36,7 @@ function HexagonControls({
           flex={1}
         >
           <RowControls
+            max={max.rows}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -44,6 +45,7 @@ function HexagonControls({
           flex={1}
         >
           <ColumnControls
+            max={max.columns}
             pageData={pageData}
             setPageData={setPageData}
           />

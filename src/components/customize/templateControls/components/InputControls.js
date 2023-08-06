@@ -4,32 +4,32 @@ import { colors } from "../../../../styles/variables"
 import { NumberInput, StyledLabel } from "../../../form/FormComponents"
 import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
-function StavesControls({
-  pageData,
-  setPageData,
+function InputControls({
+  input,
   max,
+  min,
+  step,
+  value,
+  handler,
 }) {
+  const inputId = `${input}-input`
   const [isHovered, setIsHovered] = useState(false)
 
   return (
     <>
-      <StyledLabel htmlFor="staves-input">Staves</StyledLabel>
+      <StyledLabel htmlFor={inputId}>{input}</StyledLabel>
       <ControlInputGroup
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <NumberInput
-          id="staves-input"
-          value={pageData.staves}
-          min={1}
+          id={inputId}
           max={max}
-          onChange={value => setPageData({
-            ...pageData,
-            alignmentVertical: "",
-            staves: value,
-          })}
+          min={min}
           padding="8px 24px 8px 8px"
-          step={1}
+          step={step}
+          value={value}
+          onChange={val => handler(val, input)}
         />
         {isHovered && (
           <ControlInnerButton
@@ -37,11 +37,6 @@ function StavesControls({
             backgroundcolor={colors.gray.nineHundred}
             padding="4px"
             fontsize="0.75rem"
-            onClick={() => setPageData({
-              ...pageData,
-              alignmentVertical: "",
-              staves: max,
-            })}
           >
             Fill
           </ControlInnerButton>
@@ -51,4 +46,4 @@ function StavesControls({
   )
 }
 
-export default StavesControls
+export default InputControls

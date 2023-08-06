@@ -136,13 +136,40 @@ const setCanvasState = (state, action) => {
         ...state,
       }
     case 'select':
-      log("selecting elements: ")
+      log("selecting elements and saving bbox to state...")
 
       const selectedElementsConverted = action.selectedElements.map(ele => svgJs(ele))
+      const selectedElementsBbox = state.selection.bbox()
+      const convertedBbox = {
+        x: convertFloatFixed(selectedElementsBbox.x, 3),
+        y: convertFloatFixed(selectedElementsBbox.y, 3),
+        x2: convertFloatFixed(selectedElementsBbox.x2, 3),
+        y2: convertFloatFixed(selectedElementsBbox.y2, 3),
+        height: convertFloatFixed(selectedElementsBbox.height, 3),
+        width: convertFloatFixed(selectedElementsBbox.width, 3),
+        cx: convertFloatFixed(selectedElementsBbox.cx, 3),
+        cy: convertFloatFixed(selectedElementsBbox.cy, 3),
+        h: convertFloatFixed(selectedElementsBbox.h, 3),
+        w: convertFloatFixed(selectedElementsBbox.w, 3),
+      }
 
       return {
         ...state,
         selectedElements: selectedElementsConverted,
+        bbox: convertedBbox,
+      }
+    case "mutate-selection":
+      log("mutating selection...")
+      const input = action.input.toLowerCase()
+      const value = action.value
+
+      state.selectedElements.forEach(ele => {
+        console.log(ele, input, value)
+        ele[input](value)
+      })
+
+      return {
+        ...state,
       }
     case 'remove-selection':
       log("removing selection...")
@@ -163,7 +190,8 @@ const setCanvasState = (state, action) => {
       }
 
       return {
-        ...state
+        ...state,
+        selectedElements: null,
       }
     default:
       return state;

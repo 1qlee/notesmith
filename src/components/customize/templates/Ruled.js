@@ -11,19 +11,19 @@ function Ruled({
   const { thickness, spacing, opacity, rows } = pageData
   const { width, height } = maxSvgSize
   const lineThickness = convertToPx(thickness)
+  const halfLineThickness = lineThickness / 2
   const lineSpacing = convertToPx(spacing)
   const maxRows = Math.floor((height + lineSpacing) / (lineThickness + lineSpacing))
 
   function createLines() {
     const linesArray = []
 
-    for (let i = 0; i < rows; i++) {
+    for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
-      const halfLineThickness = lineThickness / 2
-      const spaceBtwnLines = i === 0 ? halfLineThickness : lineThickness * i + halfLineThickness
+      const spaceBtwnLines = row === 0 ? halfLineThickness : lineThickness * row + halfLineThickness
       const lineX1 = 0
       const lineX2 = width
-      const lineY = i * lineSpacing + spaceBtwnLines
+      const lineY = row * lineSpacing + spaceBtwnLines
       // line object
       const line = {
         fill: "none",
@@ -37,11 +37,11 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > height) {
+      if (lineY + halfLineThickness > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
-          rows: i,
+          rows: row,
         })
         break
       }

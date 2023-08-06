@@ -12,6 +12,7 @@ import ThicknessControls from "./components/ThicknessControls"
 function MusicControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -31,6 +32,7 @@ function MusicControls({
       />
       <ControlWrapper>
         <StavesControls
+          max={max.staves}
           pageData={pageData}
           setPageData={setPageData}
         />

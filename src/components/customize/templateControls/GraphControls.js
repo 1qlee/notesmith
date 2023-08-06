@@ -18,7 +18,6 @@ function GraphControls({
   setPageData,
   svgSize,
 }) {
-
   return (
     <>
       <AlignmentControls
