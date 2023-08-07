@@ -102,8 +102,20 @@ function Controls({
   }
 
   useEffect(() => {
-    if (canvasState.tempSelection) {
-      if ((pageData.template && pageData.template !== "blank") || canvasState.tempSelection.length > 0) {
+    // if we are displaying a template, show the design bar
+    if (pageData.template && pageData.template !== "blank") {
+      // show design bar
+      setActiveTab(1)
+      setShowDesignbar(true)
+    }
+    // else if user is currently drag selecting or done drag selecting elements, show design bar
+    else if (canvasState.tempSelectedElements || canvasState.selectedElements) {
+      if (canvasState.tempSelectedElements && canvasState.tempSelectedElements.length > 0) {
+        // show design bar
+        setActiveTab(1)
+        setShowDesignbar(true)
+      }
+      else if (canvasState.selectedElements && canvasState.selectedElements.length > 0) {
         // show design bar
         setActiveTab(1)
         setShowDesignbar(true)
@@ -114,7 +126,12 @@ function Controls({
         setActiveTab(0)
       }
     }
-  }, [pageData.template, canvasState.tempSelection])
+    else {
+      // show templates bar
+      setShowDesignbar(false)
+      setActiveTab(0)
+    }
+  }, [pageData.template, canvasState.tempSelectedElements, canvasState.selectedElements])
 
   return (
     <StyledControls>

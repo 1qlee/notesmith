@@ -7,25 +7,31 @@ import InputControls from "../templateControls/components/InputControls"
 const DesignControls = () => {
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
+  const selectedElements = canvasState.selectedElements
+  const selectionBox = canvasState.selectionBox
   const [bbox, setBbox] = useState({})
 
+  // function to manipulate the selected elements
   const handleUpdateBbox = (value, input) => {
-    console.log("hey?")
-    setBbox(prev => ({
-      ...prev,
-      [input.toLowerCase()]: value,
-    }))
+    const formattedInput = input.toLowerCase()
+    // update the bbox values
+    setBbox({
+      ...bbox,
+      [formattedInput]: value,
+    })
+
+    // loop through selected elements and perform mutation
+    selectedElements.forEach((ele) => {
+      // perform mutation
+      ele[formattedInput](value)
+    })
+
     dispatch({
       type: "mutate-selection",
-      input: input,
-      value: value,
     })
   }
 
   useEffect(() => {
-    const selectionBox = canvasState.selectionBox
-    console.log('loaded')
-
     if (selectionBox) {
       setBbox(selectionBox)
     }

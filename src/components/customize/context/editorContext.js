@@ -23,16 +23,19 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
 
   useEffect(() => {
     const deleteElements = (e) => {
-      // if key pressed is delete or backspace
-      if (e.key === "Delete" || e.key === "Backspace") {
-        canvasState.selectedElements.forEach(ele => {
-          ele.remove()
-          canvasState.selectionPath.hide()
-        })
+      // don't delete elements if the user is typing into an input
+      if (!document.hasFocus()) {
+        // if key pressed is delete or backspace
+        if (e.key === "Delete" || e.key === "Backspace") {
+          canvasState.selectedElements.forEach(ele => {
+            ele.remove()
+            canvasState.selectionPath.hide()
+          })
 
-        dispatch({
-          type: 'remove-selection',
-        })
+          dispatch({
+            type: 'remove-selection',
+          })
+        }
       }
     }
 
@@ -171,7 +174,7 @@ const setCanvasState = (state, action) => {
       
       return {
         ...state,
-        tempSelection: convertedSelectedElements,
+        tempSelectedElements: convertedSelectedElements,
         selectionBox: convertedBbox,
       }
     case 'select':
@@ -180,15 +183,13 @@ const setCanvasState = (state, action) => {
 
         return {
           ...state,
-          selectedElements: state.tempSelection,
-          tempSelection: null,
+          selectedElements: state.tempSelectedElements,
+          tempSelectedElements: null,
         }
       }
     case "mutate-selection":
       {
         log("mutating selection...")
-        const input = action.input.toLowerCase()
-        const value = action.value
         // store new bbox coords
         let coords = {
           x: 0,
@@ -209,9 +210,6 @@ const setCanvasState = (state, action) => {
               y2: bbox.y2,
             }
           }
-          
-          // perform mutation
-          ele[input](value)
           
           // get bbox of element after mutation
           const bbox = ele.bbox()
@@ -273,7 +271,7 @@ const setCanvasState = (state, action) => {
       return {
         ...state,
         selectedElements: null,
-        tempSelection: null,
+        tempSelectedElements: null,
         selectionBox: null,
       }
     default:
