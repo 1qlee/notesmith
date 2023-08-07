@@ -102,17 +102,19 @@ function Controls({
   }
 
   useEffect(() => {
-    if ((pageData.template && pageData.template !== "blank") || canvasState.selectedElements) {
-      // show design bar
-      setActiveTab(1) 
-      setShowDesignbar(true)
+    if (canvasState.tempSelection) {
+      if ((pageData.template && pageData.template !== "blank") || canvasState.tempSelection.length > 0) {
+        // show design bar
+        setActiveTab(1)
+        setShowDesignbar(true)
+      }
+      else {
+        // show templates bar
+        setShowDesignbar(false)
+        setActiveTab(0)
+      }
     }
-    else {
-      // show templates bar
-      setShowDesignbar(false)
-      setActiveTab(0)
-    }
-  }, [pageData.template, canvasState])
+  }, [pageData.template, canvasState.tempSelection])
 
   return (
     <StyledControls>
