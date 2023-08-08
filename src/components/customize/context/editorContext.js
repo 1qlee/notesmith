@@ -1,6 +1,7 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import { SVG as svgJs } from "@svgdotjs/svg.js"
 import { convertFloatFixed } from "../../../styles/variables"
+import { compareObjects } from "../../../utils/helper-functions"
 
 const initialState = {
   canvas: null,
@@ -12,7 +13,7 @@ const initialState = {
   selection: null,
   updated: false,
   zoom: 100,
-  selectionBox: {},
+  selectionBbox: {},
 }
 
 const EditorContext = createContext(null);
@@ -61,6 +62,72 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   );
 }
 
+const createSelectionBbox = (elements, path) => {
+  // coords for the selection path box
+  let selectionPathCoords = {}
+  // selection bbox properties
+  let selectionBbox = {}
+
+  // loop through selected elements and get the coords of the bbox
+  // in this process, we convert the elements to svg.js objects so we should re-save them to state
+  const convertedElements = []
+
+  // for each selected element, get the bbox and find its bbox
+  elements.forEach((ele, index) => {
+    // convert to svg.js object
+    const convertedEle = svgJs(ele)
+    // push into dummy array so we can save to state later
+    convertedElements.push(convertedEle)
+    const currentEleBbox = convertedEle.bbox()
+    const convertedEleBbox = {
+      x: convertFloatFixed(currentEleBbox.x, 3),
+      y: convertFloatFixed(currentEleBbox.y, 3),
+      x2: convertFloatFixed(currentEleBbox.x2, 3),
+      y2: convertFloatFixed(currentEleBbox.y2, 3),
+      width: convertFloatFixed(currentEleBbox.width, 3),
+      height: convertFloatFixed(currentEleBbox.height, 3),
+      cx: convertFloatFixed(currentEleBbox.cx, 3),
+      cy: convertFloatFixed(currentEleBbox.cy, 3),
+    }
+    
+    // set initial coords using the first element
+    if (index === 0) {
+      selectionPathCoords = {
+        x: convertedEleBbox.x,
+        y: convertedEleBbox.y,
+        x2: convertedEleBbox.x2,
+        y2: convertedEleBbox.y2,
+      }
+      selectionBbox = convertedEleBbox
+    }
+    
+    selectionBbox = compareObjects(convertedEleBbox, selectionBbox)
+
+    // find min-max coord values for the selection box
+    if (convertedEleBbox.x < selectionPathCoords.x) {
+      selectionPathCoords.x = convertedEleBbox.x;
+    }
+    if (convertedEleBbox.y < selectionPathCoords.y) {
+      selectionPathCoords.y = convertedEleBbox.y;
+    }
+    if (convertedEleBbox.x2 > selectionPathCoords.x2) {
+      selectionPathCoords.x2 = convertedEleBbox.x2;
+    }
+    if (convertedEleBbox.y2 > selectionPathCoords.y2) {
+      selectionPathCoords.y2 = convertedEleBbox.y2;
+    }
+  })
+
+  // create the selection path based on coords
+  // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
+  path.attr("d", `M ${selectionPathCoords.x}, ${selectionPathCoords.y} L ${selectionPathCoords.x2}, ${selectionPathCoords.y} ${selectionPathCoords.x2}, ${selectionPathCoords.y2} ${selectionPathCoords.x}, ${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
+  
+  return {
+    selectionBbox: selectionBbox,
+    tempSelectedElements: convertedElements,
+  }
+}
+
 const setCanvasState = (state, action) => {
   switch (action.type) {
     case 'init':
@@ -91,7 +158,7 @@ const setCanvasState = (state, action) => {
         selection: selection,
         selectionPath: selectionPath,
         selectedElements: null,
-        selectionBox: bbox,
+        selectionBbox: bbox,
       }}
     // when user is dragging mouse to select elements
     case 'change-selection':
@@ -107,75 +174,13 @@ const setCanvasState = (state, action) => {
         }
       })
 
-      // coords will hold bbox properties
-      let coords = {
-        x: 0,
-        y: 0,
-        x2: 0,
-        y2: 0,
-      }
-
-      // loop through selected elements and get the coords of the bbox
-      // in this process, we convert the elements to svg.js objects so we should re-save them to state
-      const convertedSelectedElements = []
-
-      // for each selected element, get the bbox and find its bbox
-      action.selectedElements.forEach((ele, index) => {
-        // convert to svg.js object
-        const convertedEle = svgJs(ele)
-        // push into dummy array so we can save to state later
-        convertedSelectedElements.push(convertedEle)
-        const bbox = convertedEle.bbox()
-
-        // set initial coords using the first element
-        if (index === 0) {
-          coords = {
-            x: bbox.x,
-            y: bbox.y,
-            x2: bbox.x2,
-            y2: bbox.y2,
-          }
-        }
-
-        // find min-max coord values for the selection box
-        if (bbox.x < coords.x) {
-          coords.x = convertFloatFixed(bbox.x, 3);
-        }
-        if (bbox.y < coords.y) {
-          coords.y = convertFloatFixed(bbox.y, 3);
-        }
-        if (bbox.x2 > coords.x2) {
-          coords.x2 = convertFloatFixed(bbox.x2, 3);
-        }
-        if (bbox.y2 > coords.y2) {
-          coords.y2 = convertFloatFixed(bbox.y2, 3);
-        }
-      })
-      
-      // create the selection path based on coords
-      // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-      state.selectionPath.attr("d", `M ${coords.x}, ${coords.y} L ${coords.x2}, ${coords.y} ${coords.x2}, ${coords.y2} ${coords.x}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
-
-      // get the bbox of the selection so we can set it to state
-      // we need this value in designbar to allow input changes
-      const selectedElementsBbox = state.selection.bbox()
-      const convertedBbox = {
-        x: convertFloatFixed(selectedElementsBbox.x, 3),
-        y: convertFloatFixed(selectedElementsBbox.y, 3),
-        x2: convertFloatFixed(selectedElementsBbox.x2, 3),
-        y2: convertFloatFixed(selectedElementsBbox.y2, 3),
-        height: convertFloatFixed(selectedElementsBbox.height, 3),
-        width: convertFloatFixed(selectedElementsBbox.width, 3),
-        cx: convertFloatFixed(selectedElementsBbox.cx, 3),
-        cy: convertFloatFixed(selectedElementsBbox.cy, 3),
-        h: convertFloatFixed(selectedElementsBbox.h, 3),
-        w: convertFloatFixed(selectedElementsBbox.w, 3),
-      }
+      const results = createSelectionBbox(action.selectedElements, state.selectionPath)
+      const { selectionBbox, tempSelectedElements } = results
       
       return {
         ...state,
-        tempSelectedElements: convertedSelectedElements,
-        selectionBox: convertedBbox,
+        tempSelectedElements: tempSelectedElements,
+        selectionBbox: selectionBbox,
       }
     case 'select':
       {
@@ -190,64 +195,13 @@ const setCanvasState = (state, action) => {
     case "mutate-selection":
       {
         log("mutating selection...")
-        // store new bbox coords
-        let coords = {
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 0,
-        }
 
-        // loop through selected elements and perform mutation
-        // then get the bbox of the newly mutated element and find the new selection bbox
-        state.selectedElements.forEach((ele, index) => {
-          if (index === 0) {
-            const bbox = ele.bbox()
-            coords = {
-              x: bbox.x,
-              y: bbox.y,
-              x2: bbox.x2,
-              y2: bbox.y2,
-            }
-          }
-          
-          // get bbox of element after mutation
-          const bbox = ele.bbox()
-
-          if (bbox.x < coords.x) {
-            coords.x = convertFloatFixed(bbox.x, 3);
-          }
-          if (bbox.y < coords.y) {
-            coords.y = convertFloatFixed(bbox.y, 3);
-          }
-          if (bbox.x2 > coords.x2) {
-            coords.x2 = convertFloatFixed(bbox.x2, 3);
-          }
-          if (bbox.y2 > coords.y2) {
-            coords.y2 = convertFloatFixed(bbox.y2, 3);
-          }
-        })
-
-        // draw a new selection path
-        state.selectionPath.attr("d", `M ${coords.x}, ${coords.y} L ${coords.x2}, ${coords.y} ${coords.x2}, ${coords.y2} ${coords.x}, ${coords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
-
-        const selectedElementsBbox = state.selection.bbox()
-        const convertedBbox = {
-          x: convertFloatFixed(selectedElementsBbox.x, 3),
-          y: convertFloatFixed(selectedElementsBbox.y, 3),
-          x2: convertFloatFixed(selectedElementsBbox.x2, 3),
-          y2: convertFloatFixed(selectedElementsBbox.y2, 3),
-          height: convertFloatFixed(selectedElementsBbox.height, 3),
-          width: convertFloatFixed(selectedElementsBbox.width, 3),
-          cx: convertFloatFixed(selectedElementsBbox.cx, 3),
-          cy: convertFloatFixed(selectedElementsBbox.cy, 3),
-          h: convertFloatFixed(selectedElementsBbox.h, 3),
-          w: convertFloatFixed(selectedElementsBbox.w, 3),
-        }
+        const results = createSelectionBbox(state.selectedElements, state.selectionPath)
+        const { selectionBbox } = results
 
         return {
           ...state,
-          selectionBox: convertedBbox,
+          selectionBobx: selectionBbox,
         }
       }
     case 'remove-selection':
@@ -272,7 +226,7 @@ const setCanvasState = (state, action) => {
         ...state,
         selectedElements: null,
         tempSelectedElements: null,
-        selectionBox: null,
+        selectionBbox: null,
       }
     default:
       return state;

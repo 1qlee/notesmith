@@ -7,8 +7,7 @@ import InputControls from "../templateControls/components/InputControls"
 const DesignControls = () => {
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
-  const selectedElements = canvasState.selectedElements
-  const selectionBox = canvasState.selectionBox
+  const { selectedElements, selectionBbox } = canvasState
   const [bbox, setBbox] = useState({})
 
   // function to manipulate the selected elements
@@ -32,10 +31,10 @@ const DesignControls = () => {
   }
 
   useEffect(() => {
-    if (selectionBox) {
-      setBbox(selectionBox)
+    if (selectionBbox) {
+      setBbox(selectionBbox)
     }
-  }, [canvasState.selectionBox])
+  }, [canvasState.selectionBbox])
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { convertFloatFixed } from "../styles/variables"
 // parse a node to return an object with its attributes
 function createAttributes(elem) {
   const { attributes, nodeName } = elem
@@ -62,6 +63,18 @@ function convertUnix(timestamp) {
   return formattedDate
 }
 
+function compareObjects(obj1, obj2) {
+  const result = {};
+
+  for (const prop in obj1) {
+    if (obj1.hasOwnProperty(prop) && obj2.hasOwnProperty(prop)) {
+      result[prop] = obj1[prop] === obj2[prop] ? obj1[prop] : "Mixed";
+    }
+  }
+
+  return result;
+}
+
 const isBrowser = () => typeof window !== "undefined" && document
 
 
@@ -70,4 +83,5 @@ export {
   svgToObjects,
   convertUnix,
   isBrowser,
+  compareObjects,
 }
