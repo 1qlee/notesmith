@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import { SVG as svgJs } from "@svgdotjs/svg.js"
 import { convertFloatFixed } from "../../../styles/variables"
-import { compareObjects } from "../../../utils/helper-functions"
+import { consolidateMixedObjects, consolidateObjectProps } from "../../../utils/helper-functions"
 
 const initialState = {
   canvas: null,
@@ -14,6 +14,7 @@ const initialState = {
   updated: false,
   zoom: 100,
   selectionBbox: {},
+  selectionAttributes: [],
 }
 
 const EditorContext = createContext(null);
@@ -62,11 +63,12 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   );
 }
 
-const createSelectionBbox = (elements, path) => {
+const parseSelection = (elements, path) => {
   // coords for the selection path box
   let selectionPathCoords = {}
   // selection bbox properties
   let selectionBbox = {}
+  let selectionAttributes = {}
 
   // loop through selected elements and get the coords of the bbox
   // in this process, we convert the elements to svg.js objects so we should re-save them to state
@@ -76,8 +78,22 @@ const createSelectionBbox = (elements, path) => {
   elements.forEach((ele, index) => {
     // convert to svg.js object
     const convertedEle = svgJs(ele)
-    // push into dummy array so we can save to state later
+    const allAttr = convertedEle.attr()
+    const { fill, opacity, stroke } = allAttr
+    const fillOpacity = allAttr['fill-opacity']
+    const strokeWidth = allAttr['stroke-width']
+    const eleAttr = {
+      fill,
+      opacity,
+      stroke,
+      fillOpacity,
+      strokeWidth,
+    }
+    
+    // push converted elements into dummy array so we can save to state later
     convertedElements.push(convertedEle)
+    
+    // get the bbox of the element
     const currentEleBbox = convertedEle.bbox()
     const convertedEleBbox = {
       x: convertFloatFixed(currentEleBbox.x, 3),
@@ -99,9 +115,13 @@ const createSelectionBbox = (elements, path) => {
         y2: convertedEleBbox.y2,
       }
       selectionBbox = convertedEleBbox
+      selectionAttributes = eleAttr
     }
     
-    selectionBbox = compareObjects(convertedEleBbox, selectionBbox)
+    // function to create bbox object for client
+    selectionBbox = consolidateMixedObjects(convertedEleBbox, selectionBbox)
+    // function to create attributes object for client
+    selectionAttributes = consolidateObjectProps(eleAttr, selectionAttributes)
 
     // find min-max coord values for the selection box
     if (convertedEleBbox.x < selectionPathCoords.x) {
@@ -120,12 +140,17 @@ const createSelectionBbox = (elements, path) => {
 
   // create the selection path based on coords
   // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-  path.attr("d", `M ${selectionPathCoords.x}, ${selectionPathCoords.y} L ${selectionPathCoords.x2}, ${selectionPathCoords.y} ${selectionPathCoords.x2}, ${selectionPathCoords.y2} ${selectionPathCoords.x}, ${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
+  path.attr("d", `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
   
   return {
     selectionBbox: selectionBbox,
     tempSelectedElements: convertedElements,
+    selectionAttributes: selectionAttributes,
   }
+}
+
+const hideSelectionPath = (path) => {
+  path.attr("d", "").hide()
 }
 
 const setCanvasState = (state, action) => {
@@ -163,6 +188,7 @@ const setCanvasState = (state, action) => {
     // when user is dragging mouse to select elements
     case 'change-selection':
       log("changing selection...")
+      let results = {}
       // move the selection group to the appropriate coordinates
       state.selection.transform({ translate: [state.position.x, state.position.y] })
 
@@ -174,13 +200,18 @@ const setCanvasState = (state, action) => {
         }
       })
 
-      const results = createSelectionBbox(action.selectedElements, state.selectionPath)
-      const { selectionBbox, tempSelectedElements } = results
+      if (action.selectedElements.length > 0) {
+        results = parseSelection(action.selectedElements, state.selectionPath)
+      }
+      else {
+        hideSelectionPath(state.selectionPath)
+      }
       
       return {
         ...state,
-        tempSelectedElements: tempSelectedElements,
-        selectionBbox: selectionBbox,
+        selectionAttributes: results.selectionAttributes,
+        selectionBbox: results.selectionBbox,
+        tempSelectedElements: results.tempSelectedElements,
       }
     case 'select':
       {
@@ -196,12 +227,12 @@ const setCanvasState = (state, action) => {
       {
         log("mutating selection...")
 
-        const results = createSelectionBbox(state.selectedElements, state.selectionPath)
+        const results = parseSelection(state.selectedElements, state.selectionPath)
         const { selectionBbox } = results
 
         return {
           ...state,
-          selectionBobx: selectionBbox,
+          selectionBbox: selectionBbox,
         }
       }
     case 'remove-selection':
@@ -215,7 +246,7 @@ const setCanvasState = (state, action) => {
       log("ungrouping selection...")
 
       // clear the selection path and hide it
-      state.selectionPath.attr("d", "").hide()
+      hideSelectionPath(state.selectionPath)
 
       if (state.selectedElements) {
         // clear "data-selected" attribute from all selected elements

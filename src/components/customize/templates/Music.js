@@ -31,7 +31,6 @@ function Music({
         const posY1 = line * lineSpacing + spaceBtwnStaves + spaceBtwnLines
         const posY2 = posY1
         const lineProps = {
-          fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: opacity,
@@ -74,7 +73,6 @@ function Music({
           {staff.map((line, index) => (
             <line
               key={index}
-              fill={line.fill}
               stroke={line.stroke}
               strokeWidth={line.strokeWidth}
               opacity={line.opacity}

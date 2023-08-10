@@ -26,7 +26,6 @@ function Ruled({
       const lineY = row * lineSpacing + spaceBtwnLines
       // line object
       const line = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: opacity,
@@ -65,7 +64,6 @@ function Ruled({
       {lines.map((line, index) => (
         <line
           key={index}
-          fill={line.fill}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
           opacity={line.opacity}

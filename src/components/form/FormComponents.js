@@ -237,6 +237,7 @@ function NumberInput({
         onBlur={e => validateInput(inputValue)}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={e => handleKeyDown(e)}
+        onFocus={e => e.target.select()}
         padding={padding}
         ref={inputRef}
         type="text"

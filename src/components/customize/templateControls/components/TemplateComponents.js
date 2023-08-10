@@ -5,8 +5,12 @@ import Button from "../../../ui/Button"
 
 const ControlWrapper = styled.div`
   position: relative;
+  padding: ${props => props.padding || "0"};
   margin-bottom: 16px;
   width: 100%;
+  &.has-border-bottom {
+    border-bottom: ${colors.borders.black};
+  }
 `
 
 const ControlFlexWrapper = styled.div`

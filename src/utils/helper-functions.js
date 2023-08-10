@@ -63,12 +63,42 @@ function convertUnix(timestamp) {
   return formattedDate
 }
 
-function compareObjects(obj1, obj2) {
+function consolidateMixedObjects(obj1, obj2) {
   const result = {};
 
   for (const prop in obj1) {
     if (obj1.hasOwnProperty(prop) && obj2.hasOwnProperty(prop)) {
       result[prop] = obj1[prop] === obj2[prop] ? obj1[prop] : "Mixed";
+    }
+  }
+
+  return result;
+}
+
+function consolidateObjectProps(newObj, exisitingObj) {
+  const result = {};
+
+  for (const prop in newObj) {
+    if (newObj.hasOwnProperty(prop) && exisitingObj.hasOwnProperty(prop)) {
+      if (newObj[prop] === exisitingObj[prop]) {
+        result[prop] = newObj[prop];
+      } 
+      else {
+        // if this prop in exisitingObj is already an array, add the new value to it using spread operator
+        if (typeof exisitingObj[prop] === "object") {
+          result[prop] = [...exisitingObj[prop], newObj[prop]];
+        }
+        // otherwise create a new array with both values
+        else {
+          result[prop] = [exisitingObj[prop], newObj[prop]];
+        }
+      }
+    }
+    
+    for (const prop in exisitingObj) {
+      if (exisitingObj.hasOwnProperty(prop) && !newObj.hasOwnProperty(prop)) {
+        result[prop] = exisitingObj[prop];
+      }
     }
   }
 
@@ -83,5 +113,6 @@ export {
   svgToObjects,
   convertUnix,
   isBrowser,
-  compareObjects,
+  consolidateMixedObjects,
+  consolidateObjectProps
 }

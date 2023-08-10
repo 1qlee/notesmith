@@ -65,7 +65,6 @@ function Isometric({
           y1: 0,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: opacity,
@@ -77,7 +76,6 @@ function Isometric({
           y1: 0,
           x2: adjustedPosY2 ? halfLineThickness : contentWidth - posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: opacity,
@@ -118,7 +116,6 @@ function Isometric({
           y1: posY1,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: opacity,
@@ -130,7 +127,6 @@ function Isometric({
           y1: posY1,
           x2: adjustedPosY2 ? halfLineThickness : convertFloatFixed(contentWidth - posX2, 3),
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
           stroke: "#000",
           strokeWidth: lineThickness,
           opacity: opacity,
@@ -150,7 +146,6 @@ function Isometric({
     <>
       {linesTop.map((line, index) => (
         <path
-          fill={line.fill}
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}
@@ -160,7 +155,6 @@ function Isometric({
       ))}
       {linesSides.map((line, index) => (
         <path
-          fill={line.fill}
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}

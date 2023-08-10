@@ -14,9 +14,7 @@ function CrossGrid({
   const crossColumnSpacing = convertToPx(columnSpacing)
   const crossRowSpacing = convertToPx(rowSpacing)
   const maxRows = Math.floor((height + crossRowSpacing) / (crossSize + crossRowSpacing))
-  console.log("🚀 ~ file: CrossGrid.js:17 ~ maxRows:", maxRows)
   const maxCols = Math.floor((width + crossColumnSpacing) / (crossSize + crossColumnSpacing))
-  console.log("🚀 ~ file: CrossGrid.js:19 ~ maxCols:", maxCols)
 
   function createCrosses() {
     // placeholder array for crosses

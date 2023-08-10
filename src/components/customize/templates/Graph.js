@@ -29,7 +29,6 @@ function Graph({
       const lineX = lineXFirst + (column + 1) * (lineColumnSpacing + lineThickness)
       // first  column
       const firstColumnLine = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: opacity,
@@ -40,7 +39,6 @@ function Graph({
       }
       // line object that holds line properties
       const line = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: opacity,
@@ -57,8 +55,6 @@ function Graph({
       // break the loop if columns break past the right side margin
       // add the offset because lineX is the start point of the line, not where it ends
       if (lineX + lineOffset > width) {
-        console.log("🚀 ~ file: Graph.js:61 ~ createColumns ~ width:", width)
-        console.log("🚀 ~ file: Graph.js:61 ~ createColumns ~ lineX:", lineX)
         
         return setPageData({
           ...pageData,
@@ -85,7 +81,6 @@ function Graph({
       const lineY = convertFloatFixed(lineYFirst + (row + 1) * (lineRowSpacing + lineThickness), 3)
       // first row line
       const firstRowLine = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: opacity,
@@ -96,7 +91,6 @@ function Graph({
       }
       // line object
       const line = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: lineThickness,
         opacity: opacity,
@@ -142,7 +136,6 @@ function Graph({
         {lineRows && lineRows.map((line, index) => (
           <line
             key={index}
-            fill={line.fill}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
             strokeOpacity={line.opacity}
@@ -158,7 +151,6 @@ function Graph({
         {lineColumns && lineColumns.map((line, index) => (
           <line
             key={index}
-            fill={line.fill}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
             strokeOpacity={line.opacity}

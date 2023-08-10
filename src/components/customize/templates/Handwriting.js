@@ -48,7 +48,6 @@ function Handwriting({
         // middle line is a dashed line
         if (line === 1 && !dashedLineData.sync) {
           lineProps = {
-            fill: "none",
             stroke: "#000",
             strokeWidth: dashedLineData.thickness,
             strokeDasharray: dashedLineData.dashArray,
@@ -62,7 +61,6 @@ function Handwriting({
         }
         else {
           lineProps = {
-            fill: "none",
             stroke: "#000",
             strokeWidth: lineThickness,
             strokeDasharray: line === 1 && 2,
@@ -105,7 +103,6 @@ function Handwriting({
           {row.map((line, index) => (
             <line
               key={index}
-              fill={line.fill}
               stroke={line.stroke}
               strokeWidth={line.strokeWidth}
               strokeDasharray={line.strokeDasharray ? line.strokeDasharray : null}

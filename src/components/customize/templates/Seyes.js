@@ -56,7 +56,6 @@ function Seyes({
       const posX2 = width
       const posY = (row * lineSpacing) + headerSpacing + spaceBtwnLines
       const line = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: currentLineThickness, // every 4th line should be thicker when option is checked
         opacity: opacity,
@@ -92,7 +91,6 @@ function Seyes({
       const posY1 = 0
       const posY2 = height
       const line = {
-        fill: "none",
         stroke: "#000",
         strokeWidth: verticalLineThickness,
         opacity: opacity,
@@ -131,7 +129,6 @@ function Seyes({
         {horizontalLines.map((line, index) => (
           <line
             key={index}
-            fill={line.fill}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
             opacity={line.opacity}
@@ -146,7 +143,6 @@ function Seyes({
         {verticalLines.map((line, index) => (
           <line
             key={index}
-            fill={line.fill}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
             opacity={line.opacity}
