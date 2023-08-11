@@ -9,14 +9,14 @@ function Graph({
 }) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
-  const { thickness, opacity, columns, rows, columnSpacing, rowSpacing } = pageData
+  const { strokeWidth, opacity, columns, rows, columnSpacing, rowSpacing } = pageData
   const { width, height } = maxSvgSize
   const lineColumnSpacing = convertToPx(columnSpacing)
   const lineRowSpacing = convertToPx(rowSpacing)
-  const lineThickness = convertToPx(thickness)
-  const lineOffset = convertFloatFixed(lineThickness / 2, 3)
-  const maxRows = Math.floor((height + lineRowSpacing - lineOffset) / (lineThickness + lineRowSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
-  const maxCols = Math.floor((width + lineColumnSpacing - lineOffset) / (lineThickness + lineColumnSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const lineOffset = convertFloatFixed(lineStrokeWidth / 2, 3)
+  const maxRows = Math.floor((height + lineRowSpacing - lineOffset) / (lineStrokeWidth + lineRowSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
+  const maxCols = Math.floor((width + lineColumnSpacing - lineOffset) / (lineStrokeWidth + lineColumnSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
 
   function createColumns() {
     // placeholder array
@@ -24,13 +24,13 @@ function Graph({
     // grid column lines
     for (let column = 0; column < columns; column++) {
       const lineY1 = 0
-      const lineY2 = rows * (lineRowSpacing + lineThickness) + lineY1 + lineThickness
+      const lineY2 = rows * (lineRowSpacing + lineStrokeWidth) + lineY1 + lineStrokeWidth
       const lineXFirst = lineOffset
-      const lineX = lineXFirst + (column + 1) * (lineColumnSpacing + lineThickness)
+      const lineX = lineXFirst + (column + 1) * (lineColumnSpacing + lineStrokeWidth)
       // first  column
       const firstColumnLine = {
         stroke: "#000",
-        strokeWidth: lineThickness,
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineXFirst, 3),
         x2: convertFloatFixed(lineXFirst, 3),
@@ -40,7 +40,7 @@ function Graph({
       // line object that holds line properties
       const line = {
         stroke: "#000",
-        strokeWidth: lineThickness,
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineX, 3),
         x2: convertFloatFixed(lineX, 3),
@@ -76,13 +76,13 @@ function Graph({
     for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
       const lineX1 = convertFloatFixed(lineOffset, 3)
-      const lineX2 = convertFloatFixed(columns * (lineColumnSpacing + lineThickness) + lineX1, 3)
+      const lineX2 = convertFloatFixed(columns * (lineColumnSpacing + lineStrokeWidth) + lineX1, 3)
       const lineYFirst = lineOffset
-      const lineY = convertFloatFixed(lineYFirst + (row + 1) * (lineRowSpacing + lineThickness), 3)
+      const lineY = convertFloatFixed(lineYFirst + (row + 1) * (lineRowSpacing + lineStrokeWidth), 3)
       // first row line
       const firstRowLine = {
         stroke: "#000",
-        strokeWidth: lineThickness,
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: lineX1,
         x2: lineX2,
@@ -92,7 +92,7 @@ function Graph({
       // line object
       const line = {
         stroke: "#000",
-        strokeWidth: lineThickness,
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: lineX1,
         x2: lineX2,

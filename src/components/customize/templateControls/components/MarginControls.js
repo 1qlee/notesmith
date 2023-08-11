@@ -73,8 +73,8 @@ function MarginInput({
       />
       {isHovered && (
         <ControlInnerButton
-          backgroundcolor={colors.gray.oneHundred}
-          color={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          backgroundcolor={colors.gray.nineHundred}
           padding="4px"
           onClick={() => setPageData({
             ...pageData,

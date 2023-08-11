@@ -5,14 +5,16 @@ import { NumberInput, StyledLabel } from "../../../form/FormComponents"
 import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function InputControls({
+  handler,
   input,
   max,
   min,
+  onFocus,
+  property,
   step,
   value,
-  handler,
 }) {
-  const inputId = `${input}-input`
+  const inputId = `${property}-input`
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -29,7 +31,8 @@ function InputControls({
           padding="8px 24px 8px 8px"
           step={step}
           value={value}
-          onChange={val => handler(val, input)}
+          onChange={val => handler(val, property)}
+          onFocus={onFocus}
         />
         {isHovered && (
           <ControlInnerButton

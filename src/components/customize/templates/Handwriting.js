@@ -8,15 +8,15 @@ function Handwriting({
   setMax,
 }) {
   const [writingRows, setWritingRows] = useState([])
-  const { opacity, rows, spacing, staffSpacing, thickness, dashedLineData } = pageData
+  const { opacity, rows, spacing, staffSpacing, strokeWidth, dashedLineData } = pageData
   const { width, height } = maxSvgSize
   const dashOffset = convertToPx(dashedLineData.dashOffset)
   const lineSpacing = convertToPx(spacing)
   const rowSpacing = convertToPx(staffSpacing)
-  const lineThickness = convertToPx(thickness)
-  const halfLineThickness = lineThickness / 2
-  const rowHeight = lineSpacing * 2 + lineThickness * 2 // row always has 3 lines, but multiply by 2 because first line doesn't count
-  const maxRows = Math.floor((height + rowSpacing - halfLineThickness) / (rowHeight + rowSpacing))
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
+  const rowHeight = lineSpacing * 2 + lineStrokeWidth * 2 // row always has 3 lines, but multiply by 2 because first line doesn't count
+  const maxRows = Math.floor((height + rowSpacing - halfLineStrokeWidth) / (rowHeight + rowSpacing))
 
   function parseDashArray(value) {
     if (value.length > 0) {
@@ -37,8 +37,8 @@ function Handwriting({
       const linesArray = []
 
       for (let line = 0; line < 3; line++) {
-        const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
-        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness
+        const spaceBtwnRows = row * (rowSpacing + rowHeight + lineStrokeWidth)
+        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineStrokeWidth : lineStrokeWidth * line + halfLineStrokeWidth
         const posX1 = 0
         const posX2 = width
         const posY1 = line * lineSpacing + spaceBtwnRows + spaceBtwnLines
@@ -49,7 +49,7 @@ function Handwriting({
         if (line === 1 && !dashedLineData.sync) {
           lineProps = {
             stroke: "#000",
-            strokeWidth: dashedLineData.thickness,
+            strokeWidth: dashedLineData.strokeWidth,
             strokeDasharray: dashedLineData.dashArray,
             strokeDashoffset: dashOffset,
             opacity: dashedLineData.opacity,
@@ -62,7 +62,7 @@ function Handwriting({
         else {
           lineProps = {
             stroke: "#000",
-            strokeWidth: lineThickness,
+            strokeWidth: lineStrokeWidth,
             strokeDasharray: line === 1 && 2,
             opacity: opacity,
             x1: convertFloatFixed(posX1, 3),
@@ -73,7 +73,7 @@ function Handwriting({
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 + halfLineThickness > height) {
+        if (posY1 + halfLineStrokeWidth > height) {
           return setPageData({
             ...pageData,
             rows: row,

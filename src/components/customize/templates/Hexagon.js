@@ -7,11 +7,11 @@ function Hexagon({
   setPageData,
   setMax,
 }) {
-  const { hexagonRadius, thickness, rows, opacity, columns } = pageData
+  const { hexagonRadius, strokeWidth, rows, opacity, columns } = pageData
   const { width, height } = maxSvgSize
   const hexRadius = convertToPx(hexagonRadius)
-  const hexThickness = convertToPx(thickness)
-  const halfHexThickness = hexThickness / 2
+  const hexStrokeWidth = convertToPx(strokeWidth)
+  const halfHexStrokeWidth = hexStrokeWidth / 2
   const coeff = Math.sqrt(3)
   const apothem = coeff * hexRadius * 0.5
   const hexWidth = apothem * 2
@@ -21,7 +21,7 @@ function Hexagon({
   const realHexHeight = hexRadius * 2
   const avgHexHeight = (realHexHeight + hexRadius) / 2
   const maxColumns = Math.floor((width) / ((hexWidth)) * 2)
-  const maxRows = Math.floor((height - halfHexThickness) / avgHexHeight)
+  const maxRows = Math.floor((height - halfHexStrokeWidth) / avgHexHeight)
   const [hexagons, setHexagons] = useState([])
 
   useEffect(() => {
@@ -56,8 +56,8 @@ function Hexagon({
 
       for (let column = 0; column < columns; column++) {
         for (let row = 0; row < rows; row++) {
-          let x = offset * column + halfHexThickness + offset
-          let y = halfHexHeight * row + halfHexThickness + hexRadius
+          let x = offset * column + halfHexStrokeWidth + offset
+          let y = halfHexHeight * row + halfHexStrokeWidth + hexRadius
           let points = ""
 
           // if col is even and row is even
@@ -85,7 +85,7 @@ function Hexagon({
             if (points) {
               const hexagon = {
                 stroke: "#000",
-                strokeWidth: hexThickness,
+                strokeWidth: hexStrokeWidth,
                 points: points,
                 opacity: opacity,
               }

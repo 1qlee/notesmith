@@ -5,7 +5,7 @@ import AlignmentControls from "./components/AlignmentControls"
 import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import RangeControls from "./components/RangeControls"
 import ColumnControls from "./components/ColumnControls"
 
@@ -67,7 +67,7 @@ function HexagonControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

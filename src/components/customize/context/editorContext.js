@@ -1,11 +1,12 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import { SVG as svgJs } from "@svgdotjs/svg.js"
-import { convertFloatFixed } from "../../../styles/variables"
+import { convertFloatFixed, convertToMM } from "../../../styles/variables"
 import { consolidateMixedObjects, consolidateObjectProps } from "../../../utils/helper-functions"
 
 const initialState = {
   canvas: null,
   context: null,
+  deletionAllowed: true,
   layerName: '',
   mode: 'select',
   multiselected: false,
@@ -25,8 +26,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
 
   useEffect(() => {
     const deleteElements = (e) => {
-      // don't delete elements if the user is typing into an input
-      if (!document.hasFocus()) {
+      if (canvasState.deletionAllowed) {
         // if key pressed is delete or backspace
         if (e.key === "Delete" || e.key === "Backspace") {
           canvasState.selectedElements.forEach(ele => {
@@ -69,6 +69,7 @@ const parseSelection = (elements, path) => {
   // selection bbox properties
   let selectionBbox = {}
   let selectionAttributes = {}
+  let eleBboxMM = {}
 
   // loop through selected elements and get the coords of the bbox
   // in this process, we convert the elements to svg.js objects so we should re-save them to state
@@ -79,15 +80,16 @@ const parseSelection = (elements, path) => {
     // convert to svg.js object
     const convertedEle = svgJs(ele)
     const allAttr = convertedEle.attr()
-    const { fill, opacity, stroke } = allAttr
+    const { fill, opacity, stroke, strokeDasharray } = allAttr
     const fillOpacity = allAttr['fill-opacity']
-    const strokeWidth = allAttr['stroke-width']
+    const strokeWidth = convertToMM(allAttr['stroke-width'])
     const eleAttr = {
       fill,
+      fillOpacity,
       opacity,
       stroke,
-      fillOpacity,
       strokeWidth,
+      strokeDasharray,
     }
     
     // push converted elements into dummy array so we can save to state later
@@ -105,6 +107,16 @@ const parseSelection = (elements, path) => {
       cx: convertFloatFixed(currentEleBbox.cx, 3),
       cy: convertFloatFixed(currentEleBbox.cy, 3),
     }
+    eleBboxMM = {
+      x: convertToMM(convertedEleBbox.x),
+      y: convertToMM(convertedEleBbox.y),
+      x2: convertToMM(convertedEleBbox.x2),
+      y2: convertToMM(convertedEleBbox.y2),
+      width: convertToMM(convertedEleBbox.width),
+      height: convertToMM(convertedEleBbox.height),
+      cx: convertToMM(convertedEleBbox.cx),
+      cy: convertToMM(convertedEleBbox.cy),
+    }
     
     // set initial coords using the first element
     if (index === 0) {
@@ -121,7 +133,7 @@ const parseSelection = (elements, path) => {
     // function to create bbox object for client
     selectionBbox = consolidateMixedObjects(convertedEleBbox, selectionBbox)
     // function to create attributes object for client
-    selectionAttributes = consolidateObjectProps(eleAttr, selectionAttributes)
+    selectionAttributes = consolidateMixedObjects(eleAttr, selectionAttributes)
 
     // find min-max coord values for the selection box
     if (convertedEleBbox.x < selectionPathCoords.x) {
@@ -143,7 +155,7 @@ const parseSelection = (elements, path) => {
   path.attr("d", `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
   
   return {
-    selectionBbox: selectionBbox,
+    selectionBbox: eleBboxMM,
     tempSelectedElements: convertedElements,
     selectionAttributes: selectionAttributes,
   }
@@ -228,11 +240,12 @@ const setCanvasState = (state, action) => {
         log("mutating selection...")
 
         const results = parseSelection(state.selectedElements, state.selectionPath)
-        const { selectionBbox } = results
+        const { selectionBbox, selectionAttributes } = results
 
         return {
           ...state,
           selectionBbox: selectionBbox,
+          selectionAttributes: selectionAttributes,
         }
       }
     case 'remove-selection':
@@ -258,6 +271,13 @@ const setCanvasState = (state, action) => {
         selectedElements: null,
         tempSelectedElements: null,
         selectionBbox: null,
+      }
+    case "toggle-deletion":
+      console.log(action.deletionAllowed)
+
+      return {
+        ...state,
+        deletionAllowed: action.deletionAllowed,
       }
     default:
       return state;

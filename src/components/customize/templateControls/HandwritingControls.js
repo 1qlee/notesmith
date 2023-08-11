@@ -6,7 +6,7 @@ import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import StaffSpacingControls from "./components/StaffSpacingControls"
 import DashedLineControls from "./components/DashedLineControls"
 
@@ -56,7 +56,7 @@ function HandwritingControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

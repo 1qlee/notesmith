@@ -6,7 +6,7 @@ import ColumnControls from "./components/ColumnControls"
 import MarginControls from "./components/MarginControls"
 import OpacityControls from "./components/OpacityControls"
 import RowControls from "./components/RowControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import SpacingControls from "./components/SpacingControls"
 import RangeControls from "./components/RangeControls"
 
@@ -84,7 +84,7 @@ function SeyesControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

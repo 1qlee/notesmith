@@ -8,26 +8,26 @@ function Ruled({
   setMax,
 }) {
   const [lines, setLines] = useState([])
-  const { thickness, spacing, opacity, rows } = pageData
+  const { strokeWidth, spacing, opacity, rows } = pageData
   const { width, height } = maxSvgSize
-  const lineThickness = convertToPx(thickness)
-  const halfLineThickness = lineThickness / 2
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
   const lineSpacing = convertToPx(spacing)
-  const maxRows = Math.floor((height + lineSpacing) / (lineThickness + lineSpacing))
+  const maxRows = Math.floor((height + lineSpacing) / (lineStrokeWidth + lineSpacing))
 
   function createLines() {
     const linesArray = []
 
     for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
-      const spaceBtwnLines = row === 0 ? halfLineThickness : lineThickness * row + halfLineThickness
+      const spaceBtwnLines = row === 0 ? halfLineStrokeWidth : lineStrokeWidth * row + halfLineStrokeWidth
       const lineX1 = 0
       const lineX2 = width
       const lineY = row * lineSpacing + spaceBtwnLines
       // line object
       const line = {
         stroke: "#000",
-        strokeWidth: lineThickness,
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineX1, 3),
         x2: convertFloatFixed(lineX2, 3),
@@ -36,7 +36,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY + halfLineThickness > height) {
+      if (lineY + halfLineStrokeWidth > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,

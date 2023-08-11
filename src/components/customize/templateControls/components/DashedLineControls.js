@@ -22,7 +22,7 @@ function DashedLineControls({
           ...dashedLineData,
           sync: true,
           opacity: 1,
-          thickness: 0.088,
+          strokeWidth: 0.088,
         }
       })
     }
@@ -154,14 +154,14 @@ function DashedLineControls({
               />
             </ControlFlexChild>
           </ControlFlexWrapper>
-          <StyledLabel>Thickness</StyledLabel>
+          <StyledLabel>Stroke Width</StyledLabel>
           <ControlFlexWrapper>
             <ControlFlexChild
               flex={1}
               margin="0 8px 0 0"
             >
               <NumberInput
-                value={dashedLineData.thickness}
+                value={dashedLineData.strokeWidth}
                 min={0.088}
                 max={3}
                 onChange={value => setPageData({
@@ -169,7 +169,7 @@ function DashedLineControls({
                   dashedLineData: {
                     ...dashedLineData,
                     alignmentHorizontal: "",
-                    thickness: value,
+                    strokeWidth: value,
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
@@ -186,12 +186,12 @@ function DashedLineControls({
                 min={0.088}
                 step={0.001}
                 max={3}
-                value={dashedLineData.thickness}
+                value={dashedLineData.strokeWidth}
                 onChange={e => setPageData({
                   ...pageData,
                   dashedLineData: {
                     ...dashedLineData,
-                    thickness: parseFloat(e.target.value)
+                    strokeWidth: parseFloat(e.target.value)
                   }
                 })}
               />

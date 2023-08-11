@@ -125,6 +125,7 @@ function NumberInput({
   max,
   min,
   onChange,
+  onFocus,
   padding,
   step,
   value,
@@ -229,15 +230,29 @@ function NumberInput({
     }
   }
 
+  function handleFocus(e) {
+    e.target.select()
+    if (onFocus) {
+      onFocus(false)
+    }
+  }
+
+  function handleBlur() {
+    if (onFocus) {
+      onFocus(true)
+    }
+    validateInput(inputValue)
+  }
+
   return (
     <NumberInputWrapper
       width={width}
     >
       <StyledInput
-        onBlur={e => validateInput(inputValue)}
+        onBlur={() => handleBlur()}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={e => handleKeyDown(e)}
-        onFocus={e => e.target.select()}
+        onFocus={e => handleFocus(e)}
         padding={padding}
         ref={inputRef}
         type="text"
@@ -604,14 +619,15 @@ const SelectIcon = styled.span`
   position: absolute;
   top: ${props => props.top ? props.top : "2.5rem"};
   right: ${props => props.right ? props.right : "1rem"};
+  pointer-events: none;
 `
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "4px"};
   border: 1px solid ${colors.gray.nineHundred};
-  font-size: ${props => props.fontsize || "0.8rem"};
-  padding: ${props => props.padding || "1rem 4rem 1rem 1rem"};
+  font-size: ${props => props.fontsize || "0.875rem"};
+  padding: ${props => props.padding || "16px 64px 16px 16px"};
   height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;

@@ -6,7 +6,7 @@ import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import ColumnControls from "./components/ColumnControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import RowSpacingControls from "./components/RowSpacingControls"
 import ColumnSpacingControls from "./components/ColumnSpacingControls"
 
@@ -64,7 +64,7 @@ function GraphControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

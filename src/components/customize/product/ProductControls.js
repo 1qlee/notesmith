@@ -120,7 +120,7 @@ function ProductControls({
     left: convertToPx(marginLeft),
   }
   const minimumMargin = pageMargins.minimum
-  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.thickness, 3)
+  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
   function handleSetTemplate() {

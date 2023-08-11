@@ -40,32 +40,32 @@ function AlignmentControls({
   setPageData,
   svgSize,
 }) {
-  const { maxContentHeight, maxContentWidth, thickness, radius } = pageData
+  const { maxContentHeight, maxContentWidth, strokeWidth, radius } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
   let verticalTrim, horizontalTrim = 0
 
   switch(pageData.template) {
     case "ruled":
-      verticalTrim = thickness
+      verticalTrim = strokeWidth
       break
     case "graph":
-      verticalTrim = thickness
-      horizontalTrim = thickness * 2
+      verticalTrim = strokeWidth
+      horizontalTrim = strokeWidth * 2
       break
     case "hexagon":
-      verticalTrim = thickness
-      horizontalTrim = thickness
+      verticalTrim = strokeWidth
+      horizontalTrim = strokeWidth
       break
     case "music":
-      verticalTrim = thickness
+      verticalTrim = strokeWidth
       break
     case "handwriting":
-      verticalTrim = thickness
+      verticalTrim = strokeWidth
       break
     case "cross":
       verticalTrim = 0.333
-      horizontalTrim = thickness * 2
+      horizontalTrim = strokeWidth * 2
       break
     case "calligraphy":
       verticalTrim = 0.333

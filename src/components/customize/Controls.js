@@ -23,7 +23,7 @@ const ControlsContent = styled.div`
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 32px 16px;
+  padding: 16px;
   width: 100%;
   &::-webkit-scrollbar {
     height: 0.5rem;

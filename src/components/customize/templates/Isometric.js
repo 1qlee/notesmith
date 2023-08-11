@@ -8,16 +8,16 @@ function Isometric({
 }) {
   const [linesTop, setLinesTop] = useState([])
   const [linesSides, setLinesSides] = useState([])
-  const { thickness, opacity, spacing, borderData } = pageData
+  const { strokeWidth, opacity, spacing, borderData } = pageData
   const { width, height } = maxSvgSize
   const contentHeight = height
   const contentWidth = width
-  const lineThickness = convertToPx(thickness)
-  const halfLineThickness = lineThickness / 2
-  const borderThickness = convertToPx(borderData.thickness)
-  const halfBorderThickness = borderThickness / 2
-  const syncedBorderWidth = borderData.sync ? halfLineThickness : halfBorderThickness
-  const lineSpacing = convertToPx(spacing) + lineThickness
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
+  const borderStrokeWidth = convertToPx(borderData.strokeWidth)
+  const halfBorderStrokeWidth = borderStrokeWidth / 2
+  const syncedBorderWidth = borderData.sync ? halfLineStrokeWidth : halfBorderStrokeWidth
+  const lineSpacing = convertToPx(spacing) + lineStrokeWidth
   const angle = parseInt(pageData.angle)
   const complementaryAngle = 90 - angle
   const borderPosition = {
@@ -26,7 +26,7 @@ function Isometric({
     x2: contentWidth - syncedBorderWidth,
     y2: contentHeight - syncedBorderWidth,
   }
-  const adjustedWidth = contentWidth - halfLineThickness
+  const adjustedWidth = contentWidth - halfLineStrokeWidth
 
   useEffect(() => {
     function getTan(angle) {
@@ -49,7 +49,7 @@ function Isometric({
         const spacing = lineSpacingTop * realNumOfLines
         // the starting x position of the line
         const posX1 = convertFloatFixed(spacing, 3)
-        const posX2 = convertFloatFixed(adjacentSide * getTan(angle), 3) - halfLineThickness
+        const posX2 = convertFloatFixed(adjacentSide * getTan(angle), 3) - halfLineStrokeWidth
         const invertedPosX1 = convertFloatFixed(contentWidth - posX1, 3)
         let adjustedPosY2
 
@@ -66,7 +66,7 @@ function Isometric({
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
           stroke: "#000",
-          strokeWidth: lineThickness,
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -74,10 +74,10 @@ function Isometric({
         const lineCoordsTwo = {
           x1: invertedPosX1,
           y1: 0,
-          x2: adjustedPosY2 ? halfLineThickness : contentWidth - posX2,
+          x2: adjustedPosY2 ? halfLineStrokeWidth : contentWidth - posX2,
           y2: adjustedPosY2 || contentHeight,
           stroke: "#000",
-          strokeWidth: lineThickness,
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -98,7 +98,7 @@ function Isometric({
         // the side adjacent to the angle of our "triangle" used to calculate the line's x2 position
         const adjacentSide = contentHeight - posY1
         // ending point of the line on the X-axis
-        let posX2 = convertFloatFixed(adjacentSide * Math.tan(angle * Math.PI / 180), 3) - halfLineThickness
+        let posX2 = convertFloatFixed(adjacentSide * Math.tan(angle * Math.PI / 180), 3) - halfLineStrokeWidth
         let adjustedPosY2
 
         if (posY1 > contentHeight) {
@@ -117,7 +117,7 @@ function Isometric({
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
           stroke: "#000",
-          strokeWidth: lineThickness,
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -125,10 +125,10 @@ function Isometric({
         const lineCoordsTwo = {
           x1: adjustedWidth,
           y1: posY1,
-          x2: adjustedPosY2 ? halfLineThickness : convertFloatFixed(contentWidth - posX2, 3),
+          x2: adjustedPosY2 ? halfLineStrokeWidth : convertFloatFixed(contentWidth - posX2, 3),
           y2: adjustedPosY2 || contentHeight,
           stroke: "#000",
-          strokeWidth: lineThickness,
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -166,25 +166,25 @@ function Isometric({
         <>
           <path 
             d={`M 0,${borderPosition.y} L ${contentWidth},${borderPosition.y} z`}
-            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000"
           />
           <path
             d={`M ${borderPosition.x2},0 L ${borderPosition.x2},${contentHeight} z`}
-            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000"
           />
           <path
             d={`M ${contentWidth},${borderPosition.y2} L 0,${borderPosition.y2} z`}
-            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000"
           />
           <path
             d={`M ${borderPosition.x},${contentHeight} L ${borderPosition.x},0 z`}
-            strokeWidth={borderData.sync ? lineThickness : borderThickness}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000"
           />

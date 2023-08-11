@@ -52,10 +52,10 @@ function DemoControls({
   const { template } = pageData
   const spacingTemplates = ["ruled", "seyes", "isometric", "music", "handwriting"]
   const rowColSpacingTemplates = ["dot", "graph", "cross"]
-  const thicknessTemplates = ["ruled", "graph", "hexagon", "seyes", "music", "handwriting", "calligraphy"]
+  const strokeWidthTemplates = ["ruled", "graph", "hexagon", "seyes", "music", "handwriting", "calligraphy"]
   const showSpacing = spacingTemplates.includes(template)
   const showRolColSpacing = rowColSpacingTemplates.includes(template)
-  const showThickness = thicknessTemplates.includes(template)
+  const showStrokeWidth = strokeWidthTemplates.includes(template)
 
   return (
     <>
@@ -201,14 +201,14 @@ function DemoControls({
               setPageData={setPageData}
             />
           )}
-          {showThickness && (
+          {showStrokeWidth && (
             <DemoInput
               min={0.088}
               step={0.001}
               max={3}
-              label="Thickness"
-              property="thickness"
-              value={pageData.thickness}
+              label="Stroke width"
+              property="strokeWidth"
+              value={pageData.strokeWidth}
               pageData={pageData}
               setPageData={setPageData}
             />

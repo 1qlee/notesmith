@@ -165,7 +165,7 @@ function BoxList({
               <ArrowRight size="1.5rem" />
             </BoxListIcon>
           </Flexbox>
-          <p>130lb cover stock that has been double mounted for extra thickness and durability.</p>
+          <p>130lb cover stock that has been double mounted for extra strokeWidth and durability.</p>
         </BoxListContent>
       </BoxListItem>
       <BoxListItem
