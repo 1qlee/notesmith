@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts, convertToMM, pageDataConfig } from "../../styles/variables"
+import { colors, fonts, pageDataConfig } from "../../styles/variables"
+import { convertToMM  } from "../../utils/helper-functions"
 import { Plus, X } from "phosphor-react"
 import { Tooltip } from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"

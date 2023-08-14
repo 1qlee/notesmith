@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, widths, convertFloatFixed, convertToPx, convertToMM, breakpoints, pageMargins } from "../../../styles/variables"
+import { colors, widths, breakpoints, pageMargins } from "../../../styles/variables"
+import { convertFloatFixed, convertToPx, convertToMM } from "../../../utils/helper-functions"
 import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "phosphor-react"
 import { ScreenClassRender } from "react-grid-system"
 

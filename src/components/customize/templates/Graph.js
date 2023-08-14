@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Graph({ 
   maxSvgSize,

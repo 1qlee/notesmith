@@ -1,5 +1,6 @@
 import React from "react"
-import { colors, convertToPx } from "../../styles/variables"
+import { colors } from "../../styles/variables"
+import { convertToPx } from "../../utils/helper-functions"
 
 function PageSvg({ children, pageData, bookData }) {
   return (

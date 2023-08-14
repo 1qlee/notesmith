@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, convertFloatFixed, convertToMM } from "../../../../styles/variables"
+import { colors } from "../../../../styles/variables"
+import { convertFloatFixed, convertToMM } from "../../../../utils/helper-functions"
 
 import { StyledLabel } from "../../../form/FormComponents"
 import Button from "../../../ui/Button"

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import styled from "styled-components"
-import { colors, fonts, convertFloatFixed, widths } from "../../styles/variables"
+import { colors, fonts, widths } from "../../styles/variables"
+import { convertFloatFixed } from "../../utils/helper-functions"
 import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
 
 import Icon from "../ui/Icon"

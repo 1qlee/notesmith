@@ -1,7 +1,6 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import { SVG as svgJs } from "@svgdotjs/svg.js"
-import { convertFloatFixed, convertToMM } from "../../../styles/variables"
-import { consolidateMixedObjects, consolidateObjectProps } from "../../../utils/helper-functions"
+import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
 
 const initialState = {
   canvas: null,
@@ -80,9 +79,13 @@ const parseSelection = (elements, path) => {
     // convert to svg.js object
     const convertedEle = svgJs(ele)
     const allAttr = convertedEle.attr()
-    const { fill, opacity, stroke, strokeDasharray } = allAttr
+    const { fill, opacity } = allAttr
+    const stroke = allAttr.stroke || "#000"
     const fillOpacity = allAttr['fill-opacity']
-    const strokeWidth = convertToMM(allAttr['stroke-width'])
+    const strokeWidth = convertToMM(allAttr['stroke-width']) || 0.088
+    const strokeDasharray = allAttr['stroke-dasharray'] !== undefined ? processStringNumbers(allAttr['stroke-dasharray'], convertToMM) : ""
+    const strokeStyle = convertedEle.data("strokeStyle") || "Solid"
+    console.log("🚀 ~ file: editorContext.js:88 ~ elements.forEach ~ strokeStyle:", strokeStyle)
     const eleAttr = {
       fill,
       fillOpacity,
@@ -90,63 +93,53 @@ const parseSelection = (elements, path) => {
       stroke,
       strokeWidth,
       strokeDasharray,
+      strokeStyle,
     }
-    
+    console.log("🚀 ~ file: editorContext.js:96 ~ elements.forEach ~ eleAttr:", eleAttr)
     // push converted elements into dummy array so we can save to state later
     convertedElements.push(convertedEle)
     
     // get the bbox of the element
-    const currentEleBbox = convertedEle.bbox()
-    const convertedEleBbox = {
-      x: convertFloatFixed(currentEleBbox.x, 3),
-      y: convertFloatFixed(currentEleBbox.y, 3),
-      x2: convertFloatFixed(currentEleBbox.x2, 3),
-      y2: convertFloatFixed(currentEleBbox.y2, 3),
-      width: convertFloatFixed(currentEleBbox.width, 3),
-      height: convertFloatFixed(currentEleBbox.height, 3),
-      cx: convertFloatFixed(currentEleBbox.cx, 3),
-      cy: convertFloatFixed(currentEleBbox.cy, 3),
-    }
-    eleBboxMM = {
-      x: convertToMM(convertedEleBbox.x),
-      y: convertToMM(convertedEleBbox.y),
-      x2: convertToMM(convertedEleBbox.x2),
-      y2: convertToMM(convertedEleBbox.y2),
-      width: convertToMM(convertedEleBbox.width),
-      height: convertToMM(convertedEleBbox.height),
-      cx: convertToMM(convertedEleBbox.cx),
-      cy: convertToMM(convertedEleBbox.cy),
+    const bbox = convertedEle.bbox()
+    const currentEleBbox = {
+      x: convertFloatFixed(bbox.x, 3),
+      y: convertFloatFixed(bbox.y, 3),
+      x2: convertFloatFixed(bbox.x2, 3),
+      y2: convertFloatFixed(bbox.y2, 3),
+      width: convertFloatFixed(bbox.width, 3),
+      height: convertFloatFixed(bbox.height, 3),
+      cx: convertFloatFixed(bbox.cx, 3),
+      cy: convertFloatFixed(bbox.cy, 3),
     }
     
     // set initial coords using the first element
     if (index === 0) {
       selectionPathCoords = {
-        x: convertedEleBbox.x,
-        y: convertedEleBbox.y,
-        x2: convertedEleBbox.x2,
-        y2: convertedEleBbox.y2,
+        x: currentEleBbox.x,
+        y: currentEleBbox.y,
+        x2: currentEleBbox.x2,
+        y2: currentEleBbox.y2,
       }
-      selectionBbox = convertedEleBbox
+      selectionBbox = currentEleBbox
       selectionAttributes = eleAttr
     }
-    
     // function to create bbox object for client
-    selectionBbox = consolidateMixedObjects(convertedEleBbox, selectionBbox)
+    selectionBbox = consolidateMixedObjects(currentEleBbox, selectionBbox)
     // function to create attributes object for client
     selectionAttributes = consolidateMixedObjects(eleAttr, selectionAttributes)
 
     // find min-max coord values for the selection box
-    if (convertedEleBbox.x < selectionPathCoords.x) {
-      selectionPathCoords.x = convertedEleBbox.x;
+    if (currentEleBbox.x < selectionPathCoords.x) {
+      selectionPathCoords.x = currentEleBbox.x;
     }
-    if (convertedEleBbox.y < selectionPathCoords.y) {
-      selectionPathCoords.y = convertedEleBbox.y;
+    if (currentEleBbox.y < selectionPathCoords.y) {
+      selectionPathCoords.y = currentEleBbox.y;
     }
-    if (convertedEleBbox.x2 > selectionPathCoords.x2) {
-      selectionPathCoords.x2 = convertedEleBbox.x2;
+    if (currentEleBbox.x2 > selectionPathCoords.x2) {
+      selectionPathCoords.x2 = currentEleBbox.x2;
     }
-    if (convertedEleBbox.y2 > selectionPathCoords.y2) {
-      selectionPathCoords.y2 = convertedEleBbox.y2;
+    if (currentEleBbox.y2 > selectionPathCoords.y2) {
+      selectionPathCoords.y2 = currentEleBbox.y2;
     }
   })
 
@@ -154,6 +147,17 @@ const parseSelection = (elements, path) => {
   // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
   path.attr("d", `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
   
+  eleBboxMM = {
+    x: typeof selectionBbox.x === "number" ? convertToMM(selectionBbox.x) : selectionBbox.x,
+    y: typeof selectionBbox.y === "number" ? convertToMM(selectionBbox.y) : selectionBbox.y,
+    x2: typeof selectionBbox.x2 === "number" ? convertToMM(selectionBbox.x2) : selectionBbox.x2,
+    y2: typeof selectionBbox.y2 === "number" ? convertToMM(selectionBbox.y2) : selectionBbox.y2,
+    width: typeof selectionBbox.width === "number" ? convertToMM(selectionBbox.width) : selectionBbox.width,
+    height: typeof selectionBbox.height === "number" ? convertToMM(selectionBbox.height) : selectionBbox.height,
+    cx: typeof selectionBbox.cx === "number" ? convertToMM(selectionBbox.cx) : selectionBbox.cx,
+    cy: typeof selectionBbox.cy === "number" ? convertToMM(selectionBbox.cy) : selectionBbox.cy,
+  }
+
   return {
     selectionBbox: eleBboxMM,
     tempSelectedElements: convertedElements,
@@ -273,7 +277,6 @@ const setCanvasState = (state, action) => {
         selectionBbox: null,
       }
     case "toggle-deletion":
-      console.log(action.deletionAllowed)
 
       return {
         ...state,

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react"
-import { colors, convertToMM, convertToIn, convertFloatFixed, pageMargins } from "../../styles/variables"
+import { colors, pageMargins } from "../../styles/variables"
+import { convertToMM, convertToIn, convertFloatFixed } from "../../utils/helper-functions"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, get, query, orderByChild, equalTo, set, push } from "firebase/database"
 import { spacing } from "../../styles/variables"

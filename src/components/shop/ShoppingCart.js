@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { colors, convertToDecimal, fonts, widths } from "../../styles/variables"
+import { colors, fonts, widths } from "../../styles/variables"
+import { convertToDecimal } from "../../utils/helper-functions"
 import { useShoppingCart } from "../../hooks/useShoppingCart"
 import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "phosphor-react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"

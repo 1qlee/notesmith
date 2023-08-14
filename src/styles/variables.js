@@ -1,3 +1,5 @@
+import { convertToPx } from "../utils/helper-functions"
+
 const colors = {
   gray: {
     oneHundred: "#F5F5F5",
@@ -162,27 +164,6 @@ const regex = {
   password: RegExp(/^.{8,256}$/)
 }
 
-const convertToDecimal = (num, places) => {
-
-  return ((num * 1.0) / 100).toFixed(places)
-}
-
-const convertToMM = pixels => {
-  return parseFloat((pixels * .2645833333).toFixed(3))
-}
-
-const convertToPx = mm => {
-  return parseFloat((mm * 3.7795275591).toFixed(3))
-}
-
-const convertToIn = pixels => {
-  return parseFloat((pixels * .0104166667).toFixed(2))
-}
-
-const convertFloatFixed = (number, places) => {
-  return parseFloat(number.toFixed(places))
-}
-
 const pageMargins = {
   vertical: convertToPx(6.35),
   horizontal: convertToPx(13.335),
@@ -237,11 +218,6 @@ const pageDataConfig = {
 export { 
   breakpoints,
   colors, 
-  convertFloatFixed, 
-  convertToDecimal, 
-  convertToMM, 
-  convertToIn,
-  convertToPx, 
   fonts,
   pageMargins,
   pageDataConfig,

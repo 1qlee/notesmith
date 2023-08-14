@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
-import { pageMargins, convertToPx, colors } from "../../../styles/variables"
+import { pageMargins, colors } from "../../../styles/variables"
+import { convertToPx } from "../../../utils/helper-functions"
 import { ScreenClassRender } from "react-grid-system"
 
 import Holes from "../pageComponents/Holes"

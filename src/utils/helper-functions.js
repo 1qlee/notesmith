@@ -1,4 +1,3 @@
-import { convertFloatFixed } from "../styles/variables"
 // parse a node to return an object with its attributes
 function createAttributes(elem) {
   const { attributes, nodeName } = elem
@@ -105,8 +104,41 @@ function consolidateObjectProps(newObj, exisitingObj) {
   return result;
 }
 
+function processStringNumbers(inputString, processingFunction) {
+  const numbers = String(inputString).split(' ').map(num => {
+    const numericValue = +num;
+    
+    if (isNaN(numericValue) || numericValue === 0) {
+      return num
+    } else {
+      return processingFunction(numericValue); // Keep non-numeric values as they are
+    }
+  });
+
+  return numbers.join(' ');
+}
+
 const isBrowser = () => typeof window !== "undefined" && document
 
+const convertToDecimal = (num, places) => {
+  return ((num * 1.0) / 100).toFixed(places)
+}
+
+const convertToMM = pixels => {
+  return parseFloat((pixels * .2645833333).toFixed(3))
+}
+
+const convertToPx = mm => {
+  return parseFloat((mm * 3.7795275591).toFixed(3))
+}
+
+const convertToIn = pixels => {
+  return parseFloat((pixels * .0104166667).toFixed(2))
+}
+
+const convertFloatFixed = (number, places) => {
+  return parseFloat(number.toFixed(places))
+}
 
 export {
   createAttributes,
@@ -114,5 +146,11 @@ export {
   convertUnix,
   isBrowser,
   consolidateMixedObjects,
-  consolidateObjectProps
+  consolidateObjectProps,
+  processStringNumbers,
+  convertFloatFixed,
+  convertToDecimal,
+  convertToMM,
+  convertToIn,
+  convertToPx,
 }

@@ -1,5 +1,5 @@
 import React from "react"
-import { convertToMM, convertFloatFixed } from "../../../styles/variables"
+import { convertToMM, convertFloatFixed } from "../../../utils/helper-functions"
 
 import { ControlsContent } from "../Controls"
 import TemplateControls from "../controls/TemplateControls"

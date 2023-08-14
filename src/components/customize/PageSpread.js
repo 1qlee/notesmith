@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
-import { pageMargins, convertToPx } from "../../styles/variables"
+import { pageMargins } from "../../styles/variables"
+import { convertToPx } from "../../utils/helper-functions"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
