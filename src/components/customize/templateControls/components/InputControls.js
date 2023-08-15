@@ -7,6 +7,7 @@ import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 function InputControls({
   handler,
   input,
+  fill,
   max,
   min,
   onFocus,
@@ -34,7 +35,7 @@ function InputControls({
           onChange={val => handler(val, property)}
           onFocus={onFocus}
         />
-        {isHovered && (
+        {(isHovered && fill) && (
           <ControlInnerButton
             color={colors.gray.oneHundred}
             backgroundcolor={colors.gray.nineHundred}

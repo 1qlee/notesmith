@@ -31,7 +31,7 @@ function Music({
         const posY1 = line * lineSpacing + spaceBtwnStaves + spaceBtwnLines
         const posY2 = posY1
         const lineProps = {
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
           x1: convertFloatFixed(posX1, 3),

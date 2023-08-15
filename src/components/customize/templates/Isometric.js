@@ -65,7 +65,7 @@ function Isometric({
           y1: 0,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
@@ -76,7 +76,7 @@ function Isometric({
           y1: 0,
           x2: adjustedPosY2 ? halfLineStrokeWidth : contentWidth - posX2,
           y2: adjustedPosY2 || contentHeight,
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
@@ -116,7 +116,7 @@ function Isometric({
           y1: posY1,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
@@ -127,7 +127,7 @@ function Isometric({
           y1: posY1,
           x2: adjustedPosY2 ? halfLineStrokeWidth : convertFloatFixed(contentWidth - posX2, 3),
           y2: adjustedPosY2 || contentHeight,
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
@@ -168,25 +168,25 @@ function Isometric({
             d={`M 0,${borderPosition.y} L ${contentWidth},${borderPosition.y} z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-            stroke="#000"
+            stroke="#000000"
           />
           <path
             d={`M ${borderPosition.x2},0 L ${borderPosition.x2},${contentHeight} z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-            stroke="#000"
+            stroke="#000000"
           />
           <path
             d={`M ${contentWidth},${borderPosition.y2} L 0,${borderPosition.y2} z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-            stroke="#000"
+            stroke="#000000"
           />
           <path
             d={`M ${borderPosition.x},${contentHeight} L ${borderPosition.x},0 z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-            stroke="#000"
+            stroke="#000000"
           />
         </>
       )}

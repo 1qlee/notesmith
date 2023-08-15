@@ -42,8 +42,12 @@ function Hexagon({
             return { row: row }
           }
           else {
-            const pointCoord = pointX + ',' + pointY
-            pointsArray.push(pointCoord)
+            if (theta === 0) {
+              pointsArray.push(`M${pointX} ${pointY}`)
+            }
+            else {
+              pointsArray.push(`L${pointX} ${pointY}`)
+            }
           }
         }
 
@@ -84,7 +88,7 @@ function Hexagon({
           else {
             if (points) {
               const hexagon = {
-                stroke: "#000",
+                stroke: "#000000",
                 strokeWidth: hexStrokeWidth,
                 points: points,
                 opacity: opacity,
@@ -109,12 +113,12 @@ function Hexagon({
   return (
     <>
       {hexagons.map((hex, index) => (
-        <polygon
+        <path
           key={index}
           fill={hex.fill}
           stroke={hex.stroke}
           strokeWidth={hex.strokeWidth}
-          points={hex.points}
+          d={hex.points}
           opacity={hex.opacity}
         />
       ))}

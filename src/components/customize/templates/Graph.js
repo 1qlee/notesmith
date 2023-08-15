@@ -39,7 +39,7 @@ function Graph({
       }
       // line object that holds line properties
       const line = {
-        stroke: "#000",
+        stroke: "#000000",
         strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineX, 3),

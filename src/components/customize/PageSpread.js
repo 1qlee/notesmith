@@ -405,8 +405,6 @@ function Page({
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
             src={pageTemplate && pageTemplate.svg}
-            contentEditable
-            suppressContentEditableWarning={true}
           />
         )}
       </>

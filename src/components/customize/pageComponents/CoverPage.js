@@ -8,6 +8,7 @@ function CoverPage({
   pageHeight,
   pageWidth,
   selectedPage,
+  x,
 }) {
 
   if (selectedPage === 1) {
@@ -28,12 +29,12 @@ function CoverPage({
         >
         </rect>
         <text
-          x={(pageWidth / 2) - 80}
+          x={(pageWidth / 2) - 40}
           y={pageHeight / 2}
           width={pageWidth}
           fill={colors.gray.nineHundred}
         >
-          THIS IS THE COVER PAGE
+          Front cover
         </text>
         <Holes
           currentPageSide="left"
@@ -50,7 +51,7 @@ function CoverPage({
         height={pageHeight}
         width={pageWidth}
         viewBox={`0 0 ${pageWidth} ${pageHeight}`}
-        x="0"
+        x={pageWidth}
         y="0"
       >
         <rect
@@ -61,12 +62,12 @@ function CoverPage({
         >
         </rect>
         <text
-          x={(pageWidth / 2) - 80}
+          x={(pageWidth / 2) - 40}
           y={pageHeight / 2}
           width={pageWidth}
           fill={colors.gray.nineHundred}
         >
-          THIS IS THE COVER PAGE
+          Back cover
         </text>
         <Holes
           currentPageSide="right"

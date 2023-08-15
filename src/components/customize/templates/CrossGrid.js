@@ -55,7 +55,7 @@ function CrossGrid({
         crossPos.x4 = crossPos.x3 + crossSize
         // create cross object with appropriate properties
         const cross = {
-          stroke: "#000",
+          stroke: "#000000",
           opacity: opacity,
           ...crossPos,
         }

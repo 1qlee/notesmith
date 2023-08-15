@@ -66,7 +66,7 @@ function Calligraphy({
         }
 
         const slantProps = {
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
           x1: posX1,
@@ -100,7 +100,7 @@ function Calligraphy({
 
         const posY2 = posY1
         const lineProps = {
-          stroke: "#000",
+          stroke: "#000000",
           strokeWidth: lineStrokeWidth,
           opacity: opacity,
           x1: posX1,

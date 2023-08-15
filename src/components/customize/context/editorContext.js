@@ -80,12 +80,11 @@ const parseSelection = (elements, path) => {
     const convertedEle = svgJs(ele)
     const allAttr = convertedEle.attr()
     const { fill, opacity } = allAttr
-    const stroke = allAttr.stroke || "#000"
-    const fillOpacity = allAttr['fill-opacity']
-    const strokeWidth = convertToMM(allAttr['stroke-width']) || 0.088
+    const stroke = allAttr.stroke || "none"
+    const fillOpacity = allAttr['fill-opacity'] || 1
+    const strokeWidth = convertToMM(allAttr['stroke-width'])
     const strokeDasharray = allAttr['stroke-dasharray'] !== undefined ? processStringNumbers(allAttr['stroke-dasharray'], convertToMM) : ""
     const strokeStyle = convertedEle.data("strokeStyle") || "Solid"
-    console.log("🚀 ~ file: editorContext.js:88 ~ elements.forEach ~ strokeStyle:", strokeStyle)
     const eleAttr = {
       fill,
       fillOpacity,
@@ -95,7 +94,6 @@ const parseSelection = (elements, path) => {
       strokeDasharray,
       strokeStyle,
     }
-    console.log("🚀 ~ file: editorContext.js:96 ~ elements.forEach ~ eleAttr:", eleAttr)
     // push converted elements into dummy array so we can save to state later
     convertedElements.push(convertedEle)
     

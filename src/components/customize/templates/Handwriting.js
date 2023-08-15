@@ -48,7 +48,7 @@ function Handwriting({
         // middle line is a dashed line
         if (line === 1 && !dashedLineData.sync) {
           lineProps = {
-            stroke: "#000",
+            stroke: "#000000",
             strokeWidth: dashedLineData.strokeWidth,
             strokeDasharray: dashedLineData.dashArray,
             strokeDashoffset: dashOffset,
@@ -61,7 +61,7 @@ function Handwriting({
         }
         else {
           lineProps = {
-            stroke: "#000",
+            stroke: "#000000",
             strokeWidth: lineStrokeWidth,
             strokeDasharray: line === 1 && 2,
             opacity: opacity,

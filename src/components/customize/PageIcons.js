@@ -477,8 +477,8 @@ function HexagonPageIcon({
     opacity: 1,
     strokeWidth: 0.088,
     hexagonRadius: 5,
-    rows: 30,
-    columns: 16,
+    rows: 27,
+    columns: 28,
     marginTop: 0,
     marginLeft: 0,
   }

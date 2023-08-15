@@ -91,7 +91,7 @@ function Seyes({
       const posY1 = 0
       const posY2 = height
       const line = {
-        stroke: "#000",
+        stroke: "#000000",
         strokeWidth: verticalLineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(posX, 3),
