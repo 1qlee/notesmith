@@ -277,6 +277,7 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
+      onMouseOver={e => console.log(e.target)}
     >
       <CoverPage
         bookData={bookData}
@@ -379,6 +380,7 @@ function Page({
           pageHeight={pageData.svgHeight}
           pageWidth={pageData.svgWidth}
           pageSide={pageSide}
+          suppressContentEditableWarning={true}
         />
         {pageData.template && isSelected ? (
           <Template
@@ -393,6 +395,7 @@ function Page({
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}
             setSvgLoaded={setSvgLoaded}
+            suppressContentEditableWarning={true}
           />
         ) : (
           <SVG
@@ -405,6 +408,7 @@ function Page({
             width={pageData.maxContentWidth}
             height={pageData.maxContentHeight}
             src={pageTemplate && pageTemplate.svg}
+            suppressContentEditableWarning={true}
           />
         )}
       </>

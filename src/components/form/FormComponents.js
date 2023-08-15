@@ -123,6 +123,7 @@ function QuantityTracker(props) {
 }
 
 function NumberInput({
+  id,
   max,
   min,
   onChange,
@@ -250,6 +251,7 @@ function NumberInput({
       width={width}
     >
       <StyledInput
+        id={id}
         onBlur={() => handleBlur()}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={e => handleKeyDown(e)}

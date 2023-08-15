@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import { SVG as svgJs } from "@svgdotjs/svg.js"
+import "@svgdotjs/svg.draggable.js"
 import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
 
 const initialState = {
@@ -54,7 +55,10 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   }, [canvasState])
 
   return (
-    <EditorContext.Provider value={canvasState}>
+    <EditorContext.Provider 
+      value={canvasState}
+      suppressContentEditableWarning={true}
+    >
       <EditorDispatchContext.Provider value={dispatch}>
         {children}
       </EditorDispatchContext.Provider>
