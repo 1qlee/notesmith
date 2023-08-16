@@ -548,3 +548,7 @@ select:-webkit-autofill:focus {
   stroke: #1a73e8;
   opacity: 1;
 }
+[data-hovered] {
+  stroke: #1a73e8;
+  opacity: 1;
+}

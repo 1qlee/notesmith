@@ -5,6 +5,7 @@ import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { SVG as svgJs } from "@svgdotjs/svg.js"
+import "@svgdotjs/svg.draggable.js"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -41,6 +42,7 @@ function PageSpread({
   let currentPageSide = "right"
   let leftPage = null
   let rightPage = null
+  let hoveredNode = null
   
   if (pageIsLeft) {
     // set page side in state
@@ -253,7 +255,6 @@ function PageSpread({
           selectedElements,         // selected element array.
         }) {
           if (selectedElements.length > 0) {
-            
             dispatch({
               type: "select",
               selectedElements: selectedElements,
@@ -266,7 +267,25 @@ function PageSpread({
         cancel()
       }
     }
-  }, [pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [canvasState.mode, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg, hoveredNode])
+
+  const handleMouseOver = (event) => {
+    const node = event.target
+    console.log(event)
+
+    if (hoveredNode) {
+      hoveredNode.removeAttribute("data-hovered")
+      hoveredNode = null
+    }
+    
+    // check if the node is a child of canvas page
+    if (canvasPageRef.current.contains(node)) {
+      if (!node.getAttribute("data-hovered")) {
+        hoveredNode = node
+        hoveredNode.setAttribute("data-hovered", "")
+      }
+    }
+  }
 
   return (
     <svg
@@ -277,7 +296,7 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
-      onMouseOver={e => console.log(e.target)}
+      onMouseOver={e => handleMouseOver(e)}
     >
       <CoverPage
         bookData={bookData}

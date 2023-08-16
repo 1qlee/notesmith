@@ -147,7 +147,7 @@ const parseSelection = (elements, path) => {
 
   // create the selection path based on coords
   // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-  path.attr("d", `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none")
+  path.attr("d", `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`).show().stroke({ color: "#1a73e8", width: 1 }).fill("none").css("pointer-events", "none")
   
   eleBboxMM = {
     x: typeof selectionBbox.x === "number" ? convertToMM(selectionBbox.x) : selectionBbox.x,
@@ -283,6 +283,14 @@ const setCanvasState = (state, action) => {
       return {
         ...state,
         deletionAllowed: action.deletionAllowed,
+      }
+    case "change-mode":
+      log(`Changing mode to [${action.mode}]`)
+      const { mode } = action
+
+      return {
+        ...state,
+        mode: mode,
       }
     default:
       return state;
