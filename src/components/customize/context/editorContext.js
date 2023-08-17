@@ -8,6 +8,7 @@ const initialState = {
   context: null,
   deletionAllowed: true,
   layerName: '',
+  hoveredElement: null,
   mode: 'select',
   multiselected: false,
   selectedElements: null,
@@ -218,18 +219,42 @@ const setCanvasState = (state, action) => {
         }
       })
 
+      // if there are selected elements, parse them to create the selection box and attributes for designbar
       if (action.selectedElements.length > 0) {
-        results = parseSelection(action.selectedElements, state.selectionPath)
+        // if there is a hoveredElement that means the user has their cursor on an element
+        // make the element draggable
+        if (state.hoveredElement) {
+          const dragElement = state.hoveredElement.draggable()
+          // attach draggable to the hovered element
+          // fires even if the element was not dragged (aka "clicked" - when mouse is up)
+          dragElement.on("dragend", e => {
+            console.log("drag end")
+            // remove draggable on drag end
+            state.hoveredElement.draggable(false)
+          })
+
+          dragElement.on("dragmove", e => {
+            // we need a custom selector to select the element that is being dragged
+            // and create a selection box around it afterwards
+            console.log(e)
+          })
+        }
+        else {
+          results = parseSelection(action.selectedElements, state.selectionPath)
+
+          return {
+            ...state,
+            selectionAttributes: results.selectionAttributes,
+            selectionBbox: results.selectionBbox,
+            tempSelectedElements: results.tempSelectedElements,
+            mode: "select",
+          }
+        }
       }
       else {
         hideSelectionPath(state.selectionPath)
-      }
-      
-      return {
-        ...state,
-        selectionAttributes: results.selectionAttributes,
-        selectionBbox: results.selectionBbox,
-        tempSelectedElements: results.tempSelectedElements,
+
+        return state
       }
     case 'select':
       {
@@ -288,9 +313,47 @@ const setCanvasState = (state, action) => {
       log(`Changing mode to [${action.mode}]`)
       const { mode } = action
 
-      return {
-        ...state,
-        mode: mode,
+      if (mode !== state.mode) {
+        return {
+          ...state,
+          mode: mode,
+        }
+      }
+      else {
+        return state
+      }
+    case "hover-selection":
+      log("Adding hovered element to state")
+      const convertedElement = svgJs(action.hoveredElement)
+      console.log(action.hoveredElement)
+
+      // if a hoveredElement already exists, remove the data-hovered attribute from it
+      if (state.hoveredElement) {
+        // unless it's the same element as the new hoveredElement
+        if (state.hoveredElement !== convertedElement) {
+          state.hoveredElement.attr({ 'data-hovered': null })
+        }
+      }
+
+      // if the hoveredElement exists (it is a child of canvasPageRef)
+      if (convertedElement) {
+        // add the hovered attribute
+        convertedElement.attr({ 'data-hovered': '' })
+
+        // save it to state
+        return {
+          ...state,
+          hoveredElement: convertedElement,
+        }
+      }
+      // otherwise set mode back to select; it could have been changed to drag
+      // and remove any existing hoveredElement
+      else {
+        return {
+          ...state,
+          mode: "select",
+          hoveredElement: null,
+        }
       }
     default:
       return state;

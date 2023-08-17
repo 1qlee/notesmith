@@ -42,7 +42,6 @@ function PageSpread({
   let currentPageSide = "right"
   let leftPage = null
   let rightPage = null
-  let hoveredNode = null
   
   if (pageIsLeft) {
     // set page side in state
@@ -267,23 +266,23 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasState.mode, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg, hoveredNode])
+  }, [canvasState.mode, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   const handleMouseOver = (event) => {
     const node = event.target
-    console.log(event)
-
-    if (hoveredNode) {
-      hoveredNode.removeAttribute("data-hovered")
-      hoveredNode = null
-    }
     
     // check if the node is a child of canvas page
     if (canvasPageRef.current.contains(node)) {
-      if (!node.getAttribute("data-hovered")) {
-        hoveredNode = node
-        hoveredNode.setAttribute("data-hovered", "")
-      }
+      dispatch({
+        type: "hover-selection",
+        hoveredElement: node,
+      })
+    }
+    else {
+      dispatch({
+        type: "hover-selection",
+        hoveredElement: null,
+      })
     }
   }
 
