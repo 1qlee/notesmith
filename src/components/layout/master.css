@@ -544,11 +544,15 @@ select:-webkit-autofill:focus {
   border: 1px solid #1a73e8;
   background-color: rgba(26, 115, 232, 0.1);
 }
-[data-selected] {
-  stroke: #1a73e8;
-  opacity: 1;
+rect.selection {
+  fill: #1a73e8;
 }
-[data-hovered] {
+rect.overlay {
+  cursor: default;
+}
+#selection-path {
   stroke: #1a73e8;
-  opacity: 1;
+  stroke-width: 1px;
+  fill: none;
+  pointer-events: none;
 }

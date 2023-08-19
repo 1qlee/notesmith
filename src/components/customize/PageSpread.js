@@ -5,11 +5,11 @@ import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { SVG as svgJs } from "@svgdotjs/svg.js"
-import "@svgdotjs/svg.draggable.js"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
+import Selection from "./Selection"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -162,14 +162,11 @@ function PageSpread({
   })
 
   useEffect(() => {
-    let margins
-    let referenceElement, canvas = null
-    const parent = svgJs(canvasRef.current)
+    let referenceElement = null
     const isCanvasPage = svgLoaded === selectedPage ? true : false
     // const isTemplate = (pageData.template && selectedPageSvg) ? true : false
 
     // if (isTemplate) {
-    //   canvas = svgJs(selectedPageSvg)
     //   referenceElement = selectedPageSvg
     //   margins = templateMargins
     //   pagePosition = {
@@ -178,9 +175,7 @@ function PageSpread({
     //   }
     // }
     if (isCanvasPage) {
-      canvas = svgJs(canvasPageRef.current)
       referenceElement = canvasPageRef.current
-      margins = pageIsLeft ? leftPageMargins : rightPageMargins
       pagePosition = {
         x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
         y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
@@ -188,11 +183,8 @@ function PageSpread({
     }
 
     dispatch({
-      type: "init",
-      margins: margins,
-      position: pagePosition,
-      canvas: canvas,
-      parent: parent,
+      type: "reset",
+      test: referenceElement,
     })
 
     if (canvasState.mode === "select" && referenceElement) {
@@ -225,8 +217,7 @@ function PageSpread({
           }
 
           dispatch({
-            type: "ungroup-selection",
-            id: "selected-group",
+            type: "reset",
           })
         },
 
@@ -266,7 +257,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasState.mode, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   const handleMouseOver = (event) => {
     const node = event.target
@@ -295,7 +286,6 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
-      onMouseOver={e => handleMouseOver(e)}
     >
       <CoverPage
         bookData={bookData}
@@ -343,6 +333,12 @@ function PageSpread({
         setSvgLoaded={setSvgLoaded}
         svgSize={svgSize}
       />
+      {(canvasState.selectedElements || canvasState.tempSelectedElements) && (
+        <Selection
+          position={pagePosition}
+          path={canvasState.selectionPath}
+        />
+      )}
     </svg>
   )
 }
