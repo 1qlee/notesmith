@@ -333,10 +333,9 @@ function PageSpread({
         setSvgLoaded={setSvgLoaded}
         svgSize={svgSize}
       />
-      {(canvasState.selectedElements || canvasState.tempSelectedElements) && (
+      {(canvasState.selectedElements.length > 0 || canvasState.tempSelectedElements.length > 0) && (
         <Selection
           position={pagePosition}
-          path={canvasState.selectionPath}
         />
       )}
     </svg>

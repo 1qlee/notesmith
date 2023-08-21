@@ -18,6 +18,7 @@ const initialState = {
   selectionAttributes: [],
   selectionBbox: {},
   selectionPath: "",
+  tempSelectedElements: [],
   updated: false,
   zoom: 100,
 }
@@ -71,7 +72,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
 
 const parseSelection = (elements) => {
   // coords for the selection path box
-  let selectionPathCoords = {
+  let selectionPath = {
     x: Infinity,
     y: Infinity,
     x2: -Infinity,
@@ -80,24 +81,24 @@ const parseSelection = (elements) => {
   // selection bbox properties
   let selectionBbox = {}
   let selectionAttributes = {}
-  let eleBboxMM = {}
+  let convertedSelectionBbox = {}
 
   // loop through selected elements and get the coords of the bbox
   // in this process, we convert the elements to svg.js objects so we should re-save them to state
   const selectedElements = []
 
-  // for each selected element, get the bbox and find its bbox
+  // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
-    // convert to svg.js object
-    const allAttr = ele.attributes
-    const fill = allAttr.fill ? allAttr.fill.value : "none"
-    const opacity = allAttr.opacity ? allAttr.opacity.value : 1
-    const stroke = allAttr.stroke ? allAttr.stroke.value : "none"
-    const fillOpacity = allAttr['fill-opacity'] ? allAttr['fill-opacity'].value : 1
-    const strokeWidth = allAttr['stroke-width'] ? allAttr['stroke-width'].value : 0
-    const strokeDasharray = allAttr['stroke-dasharray'] !== undefined ? processStringNumbers(allAttr['stroke-dasharray'].value, convertToMM) : ""
+    const { nodeName } = ele
+    const attributes = ele.attributes
+    const fill = attributes.fill ? attributes.fill.value : "none"
+    const opacity = attributes.opacity ? attributes.opacity.value : 1
+    const stroke = attributes.stroke ? attributes.stroke.value : "none"
+    const fillOpacity = attributes['fill-opacity'] ? attributes['fill-opacity'].value : 1
+    const strokeWidth = attributes['stroke-width'] ? attributes['stroke-width'].value : 0
+    const strokeDasharray = attributes['stroke-dasharray'] !== undefined ? processStringNumbers(attributes['stroke-dasharray'].value, convertToMM) : ""
     const strokeStyle = ele.getAttribute("strokeStyle") || "Solid"
-    const eleAttr = {
+    const nodeAttributes = {
       fill,
       fillOpacity,
       opacity,
@@ -112,47 +113,67 @@ const parseSelection = (elements) => {
     
     // get the bbox of the element
     const bbox = ele.getBBox()
-    const currentEleBbox = {
+    const nodeBbox = {
       x: convertFloatFixed(bbox.x, 3),
       y: convertFloatFixed(bbox.y, 3),
       width: convertFloatFixed(bbox.width, 3),
       height: convertFloatFixed(bbox.height, 3),
     }
+    const nodeBboxAlt = {
+      x: convertFloatFixed(bbox.x, 3),
+      y: convertFloatFixed(bbox.y, 3),
+      width: convertFloatFixed(bbox.width, 3),
+      height: convertFloatFixed(bbox.height, 3),
+    }
+
+    switch (nodeName) {
+      case "ellipse":
+        nodeBboxAlt.x = convertFloatFixed(+attributes.cx.value, 3)
+        nodeBboxAlt.y = convertFloatFixed(+attributes.cy.value, 3)
+        break
+      case "circle":
+        nodeBboxAlt.x = convertFloatFixed(+attributes.cx.value, 3)
+        nodeBboxAlt.y = convertFloatFixed(+attributes.cy.value, 3)
+        break
+    }
     
     // set initial coords using the first element
     if (index === 0) {
-      selectionBbox = currentEleBbox
-      selectionAttributes = eleAttr
+      selectionBbox = nodeBboxAlt
+      selectionAttributes = nodeAttributes
     }
+    
     // function to create bbox object for client
-    selectionBbox = consolidateMixedObjects(currentEleBbox, selectionBbox)
+    selectionBbox = consolidateMixedObjects(nodeBboxAlt, selectionBbox)
     // function to create attributes object for client
-    selectionAttributes = consolidateMixedObjects(eleAttr, selectionAttributes)
+    selectionAttributes = consolidateMixedObjects(nodeAttributes, selectionAttributes)
 
-    selectionPathCoords.x = Math.min(selectionPathCoords.x, currentEleBbox.x);
-    selectionPathCoords.y = Math.min(selectionPathCoords.y, currentEleBbox.y);
-    selectionPathCoords.x2 = Math.max(selectionPathCoords.x2, convertFloatFixed(currentEleBbox.x + currentEleBbox.width, 3));
-    selectionPathCoords.y2 = Math.max(selectionPathCoords.y2, convertFloatFixed(currentEleBbox.y + currentEleBbox.height, 3));
+    // create coords for the selection path
+    selectionPath.x = Math.min(selectionPath.x, nodeBbox.x);
+    selectionPath.y = Math.min(selectionPath.y, nodeBbox.y);
+    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(nodeBbox.x + nodeBbox.width, 3));
+    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(nodeBbox.y + nodeBbox.height, 3));
   })
 
   // create the selection path based on coords
   // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-  const path = `M ${selectionPathCoords.x},${selectionPathCoords.y} L ${selectionPathCoords.x2},${selectionPathCoords.y} ${selectionPathCoords.x2},${selectionPathCoords.y2} ${selectionPathCoords.x},${selectionPathCoords.y2} Z`
+  const path = `M ${selectionPath.x},${selectionPath.y} L ${selectionPath.x2},${selectionPath.y} ${selectionPath.x2},${selectionPath.y2} ${selectionPath.x},${selectionPath.y2} Z`
   
-  eleBboxMM = {
+  convertedSelectionBbox = {
     x: typeof selectionBbox.x === "number" ? convertToMM(selectionBbox.x) : selectionBbox.x,
     y: typeof selectionBbox.y === "number" ? convertToMM(selectionBbox.y) : selectionBbox.y,
     width: typeof selectionBbox.width === "number" ? convertToMM(selectionBbox.width) : selectionBbox.width,
     height: typeof selectionBbox.height === "number" ? convertToMM(selectionBbox.height) : selectionBbox.height,
   }
   
-  console.log("🚀 ~ file: editorContext.js:142 ~ parseSelection ~ eleBboxMM:", eleBboxMM)
+  console.log("🚀 ~ file: editorContext.js:170 ~ parseSelection ~ selectionPath:", selectionPath)
+  console.log("🚀 ~ file: editorContext.js:142 ~ parseSelection ~ convertedSelectionBbox:", convertedSelectionBbox)
   console.log("🚀 ~ file: editorContext.js:154 ~ parseSelection ~ selectedElements:", selectedElements)
   console.log("🚀 ~ file: editorContext.js:156 ~ parseSelection ~ selectionAttributes:", selectionAttributes)
   
 
   return {
-    selectionBbox: eleBboxMM,
+    selectionBbox: convertedSelectionBbox,
     tempSelectedElements: selectedElements,
     selectionAttributes: selectionAttributes,
     selectionPath: path,
@@ -163,7 +184,7 @@ const setCanvasState = (state, action) => {
   switch (action.type) {
     case "reset":
       log("Resetting...")
-      
+
       return {
         ...state,
         selectedElements: [],
@@ -220,13 +241,14 @@ const setCanvasState = (state, action) => {
       {
         log("mutating selection...")
 
-        const results = parseSelection(state.selectedElements, state.selectionPath)
-        const { selectionBbox, selectionAttributes } = results
+        const results = parseSelection(state.selectedElements)
+        const { selectionBbox, selectionAttributes, selectionPath } = results
 
         return {
           ...state,
           selectionBbox: selectionBbox,
           selectionAttributes: selectionAttributes,
+          selectionPath: selectionPath,
         }
       }
     case "toggle-deletion":
@@ -286,7 +308,7 @@ const setCanvasState = (state, action) => {
 }
 
 function log(msg) {
-  console.log("%c[-EDITOR-]%c " + msg, 'color:#22543D;background-color:#9AE6B4', 'color:inherit')
+  console.log(`%c[-EDITOR-] ${msg}%c `, 'color:#fff;background-color:#007aff', 'color:inherit')
 }
 
 export function useEditorContext() {

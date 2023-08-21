@@ -1,9 +1,11 @@
 import React from "react"
 
+import { useEditorContext } from "./context/editorContext"
+
 const Selection = ({
   position,
-  path,
 }) => {
+  const canvasState = useEditorContext()
 
   return (
     <g 
@@ -14,7 +16,7 @@ const Selection = ({
     >
       <path 
         id="selection-path"
-        d={path}
+        d={canvasState.selectionPath}
       />
     </g>
   )

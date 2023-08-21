@@ -3,6 +3,7 @@ import { useEditorContext, useEditorDispatch } from "../context/editorContext"
 import { CaretDown, Question } from "phosphor-react"
 import { convertFloatFixed, convertToPx, processStringNumbers  } from "../../../utils/helper-functions"
 import { Tooltip } from "react-tooltip"
+import * as d3 from "d3"
 
 import { ControlWrapper, ControlFlexWrapper, ControlFlexChild } from "../templateControls/components/TemplateComponents"
 import { SelectWrapper, SelectIcon, StyledSelect, StyledLabel, StyledInput } from "../../form/FormComponents"
@@ -38,14 +39,64 @@ const DesignControls = () => {
   const handleUpdateBbox = (value, property) => {
     if (selectedElements) {
       // update the bbox values
-      setBbox({
-        ...bbox,
-        [property]: value,
-      })
+      // setBbox({
+      //   ...bbox,
+      //   [property]: value,
+      // })
+      const convertedValue = convertToPx(value)
 
       // loop through selected elements and perform mutation
       selectedElements.forEach((ele) => {
-        ele[property](convertToPx(value))
+        const { nodeName } = ele
+        const isCircle = nodeName === "circle" || nodeName === "ellipse"
+        const line = nodeName === "line"
+
+        switch(true) {
+          case isCircle:
+            if (property === "x") {
+              ele.setAttribute("cx", convertedValue)
+            }
+            else if (property === "y") {
+              ele.setAttribute("cy", convertedValue)
+            }
+            else if (property === "width") {
+              ele.setAttribute("rx", convertFloatFixed(convertedValue / 2, 3))
+            }
+            else if (property === "height") {
+              ele.setAttribute("ry", convertFloatFixed(convertedValue / 2, 3))
+            }
+            break
+          case line:
+            const x1 = +ele.getAttribute("x1")
+            const x2 = +ele.getAttribute("x2")
+
+            if (property === "x") {
+              // Calculate the current length
+              let length = Math.abs(x2 - x1);
+
+              // Calculate new positions while preserving length
+              let x1New, x2New;
+              if (x1 < x2) {
+                x1New = convertedValue;
+                x2New = convertedValue + length;
+              } else {
+                x1New = convertedValue - length;
+                x2New = convertedValue;
+              }
+
+              ele.setAttribute("x1", x1New)
+              ele.setAttribute("x2", x2New)
+            }
+            else if (property === "y") {
+              ele.setAttribute("y1", convertedValue)
+            }
+            else if (property === "width") {
+              ele.setAttribute("x2", x1 + convertedValue)
+            }
+            break
+          default:
+            ele.setAttribute(`${property}`, convertedValue)
+        }
       })
 
       dispatch({
@@ -57,10 +108,10 @@ const DesignControls = () => {
   const handleUpdateAttr = (value, property) => {
     if (selectedElements) {
       // update the bbox values
-      setAttributes({
-        ...attributes,
-        [property]: value,
-      })
+      // setAttributes({
+      //   ...attributes,
+      //   [property]: value,
+      // })
 
       // loop through selected elements and perform mutation
       selectedElements.forEach((ele) => {
@@ -151,7 +202,7 @@ const DesignControls = () => {
               min={0}
               property="x"
               step={1}
-              value={bbox.x}
+              value={selectionBbox.x}
               onFocus={handleDeletionAllowed}
             />
           </ControlFlexChild>
