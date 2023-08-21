@@ -1,10 +1,9 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
-import { createRoot } from 'react-dom/client';
 import { SVG as svgJs } from "@svgdotjs/svg.js"
 import "@svgdotjs/svg.draggable.js"
 import * as d3 from "d3"
 
-import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
+import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
 
 const initialState = {
   canvas: null,
@@ -46,7 +45,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
     }
 
     if (canvasState.canvas) {
-      setSelectedPageSvg(canvasState.canvas.node)
+      setSelectedPageSvg(canvasState.canvas)
     }
 
     if (canvasState.selectedElements) {
@@ -89,19 +88,20 @@ const parseSelection = (elements) => {
 
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
-    const { nodeName } = ele
-    const attributes = ele.attributes
+    const { nodeName, attributes } = ele
+    const cy = attributes.cy ? convertFloatFixed(+attributes.cy.value, 3) : null
+    const cx = attributes.cx ? convertFloatFixed(+attributes.cx.value, 3) : null
     const fill = attributes.fill ? attributes.fill.value : "none"
-    const opacity = attributes.opacity ? attributes.opacity.value : 1
     const stroke = attributes.stroke ? attributes.stroke.value : "none"
+    const strokeOpacity = attributes['stroke-opacity'] ? attributes['stroke-opacity'].value : 1
     const fillOpacity = attributes['fill-opacity'] ? attributes['fill-opacity'].value : 1
-    const strokeWidth = attributes['stroke-width'] ? attributes['stroke-width'].value : 0
+    const strokeWidth = attributes['stroke-width'] ? convertToMM(attributes['stroke-width'].value) : 0.088
     const strokeDasharray = attributes['stroke-dasharray'] !== undefined ? processStringNumbers(attributes['stroke-dasharray'].value, convertToMM) : ""
     const strokeStyle = ele.getAttribute("strokeStyle") || "Solid"
     const nodeAttributes = {
       fill,
       fillOpacity,
-      opacity,
+      strokeOpacity,
       stroke,
       strokeWidth,
       strokeDasharray,
@@ -111,29 +111,45 @@ const parseSelection = (elements) => {
     // push converted elements into dummy array so we can save to state later
     selectedElements.push(ele)
     
+    // we need to offset the stroke-width if it exists because bbox() does not account for stroke-width
+    const strokeOffset = convertToPx(strokeWidth / 2)
+
     // get the bbox of the element
     const bbox = ele.getBBox()
+    const bboxX = convertFloatFixed(bbox.x, 3)
+    const bboxY = convertFloatFixed(bbox.y, 3)
+    const bboxWidth = convertFloatFixed(bbox.width, 3)
+    const bboxHeight = convertFloatFixed(bbox.height, 3)
+    // for selection path
     const nodeBbox = {
-      x: convertFloatFixed(bbox.x, 3),
-      y: convertFloatFixed(bbox.y, 3),
-      width: convertFloatFixed(bbox.width, 3),
-      height: convertFloatFixed(bbox.height, 3),
+      x: bboxX,
+      y: bboxY,
+      x2: bboxX,
+      y2: bboxY,
+      width: bboxWidth,
+      height: bboxHeight,
     }
+    // for selection bbox (client side inputs)
     const nodeBboxAlt = {
-      x: convertFloatFixed(bbox.x, 3),
-      y: convertFloatFixed(bbox.y, 3),
-      width: convertFloatFixed(bbox.width, 3),
-      height: convertFloatFixed(bbox.height, 3),
+      x: bboxX,
+      y: bboxY,
+      width: bboxWidth,
+      height: bboxHeight,
     }
+    const isCircle = nodeName === "circle" || nodeName === "ellipse"
+    const isLine = nodeName === "line"
 
-    switch (nodeName) {
-      case "ellipse":
-        nodeBboxAlt.x = convertFloatFixed(+attributes.cx.value, 3)
-        nodeBboxAlt.y = convertFloatFixed(+attributes.cy.value, 3)
+    switch (true) {
+      case isCircle:
+        nodeBboxAlt.x = cx
+        nodeBboxAlt.y = cy
+        nodeBbox.x = convertFloatFixed(bboxX - strokeOffset, 3)
+        nodeBbox.y = convertFloatFixed(bboxY - strokeOffset, 3)
+        nodeBbox.x2 = convertFloatFixed(bboxX + strokeOffset, 3)
+        nodeBbox.y2 = convertFloatFixed(bboxY + strokeOffset, 3)
         break
-      case "circle":
-        nodeBboxAlt.x = convertFloatFixed(+attributes.cx.value, 3)
-        nodeBboxAlt.y = convertFloatFixed(+attributes.cy.value, 3)
+      case isLine:
+        nodeBbox.y2 = convertFloatFixed(bboxY + strokeOffset, 3)
         break
     }
     
@@ -151,8 +167,8 @@ const parseSelection = (elements) => {
     // create coords for the selection path
     selectionPath.x = Math.min(selectionPath.x, nodeBbox.x);
     selectionPath.y = Math.min(selectionPath.y, nodeBbox.y);
-    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(nodeBbox.x + nodeBbox.width, 3));
-    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(nodeBbox.y + nodeBbox.height, 3));
+    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(nodeBbox.x2 + nodeBbox.width, 3))
+    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(nodeBbox.y2 + nodeBbox.height, 3))
   })
 
   // create the selection path based on coords
@@ -191,6 +207,7 @@ const setCanvasState = (state, action) => {
         tempSelectedElements: [],
         selectionBbox: {},
         selectionPath: "",
+        canvas: action.canvas,
       }
     // when user is dragging mouse to select elements
     case 'change-selection':

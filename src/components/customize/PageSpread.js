@@ -184,7 +184,7 @@ function PageSpread({
 
     dispatch({
       type: "reset",
-      test: referenceElement,
+      canvas: referenceElement
     })
 
     if (canvasState.mode === "select" && referenceElement) {
@@ -257,7 +257,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   const handleMouseOver = (event) => {
     const node = event.target

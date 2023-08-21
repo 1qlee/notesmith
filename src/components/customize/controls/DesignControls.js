@@ -30,19 +30,12 @@ const DesignControls = () => {
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
   const { selectedElements, selectionBbox, selectionAttributes } = canvasState
-  const [bbox, setBbox] = useState(selectionBbox)
-  const [attributes, setAttributes] = useState({selectionAttributes})
   const defaultDash = convertFloatFixed(7.5590551182, 3)
   const defaultGap = convertFloatFixed(3.7795275591, 3)
 
   // function to manipulate the selected elements
   const handleUpdateBbox = (value, property) => {
     if (selectedElements) {
-      // update the bbox values
-      // setBbox({
-      //   ...bbox,
-      //   [property]: value,
-      // })
       const convertedValue = convertToPx(value)
 
       // loop through selected elements and perform mutation
@@ -89,6 +82,7 @@ const DesignControls = () => {
             }
             else if (property === "y") {
               ele.setAttribute("y1", convertedValue)
+              ele.setAttribute("y2", convertedValue)
             }
             else if (property === "width") {
               ele.setAttribute("x2", x1 + convertedValue)
@@ -107,60 +101,47 @@ const DesignControls = () => {
 
   const handleUpdateAttr = (value, property) => {
     if (selectedElements) {
-      // update the bbox values
-      // setAttributes({
-      //   ...attributes,
-      //   [property]: value,
-      // })
-
       // loop through selected elements and perform mutation
       selectedElements.forEach((ele) => {
         switch(property) {
           case "stroke":
-            ele.attr({
-              stroke: value,
-              'stroke-width': convertToPx(0.088),
-              opacity: 1,
-            })
+            ele.setAttribute("stroke", value)
+            ele.setAttribute("stroke-width", convertToPx(0.088))
+            ele.setAttribute("stroke-opacity", 1)
             break
           case "strokeWidth":
-            ele.attr("stroke-width", convertToPx(value))
+            ele.setAttribute("stroke-width", convertToPx(value))
             break
           case "strokeStyle":
-            ele.data("strokeStyle", value)
+            ele.setAttribute("strokeStyle", value)
 
             if (value === "Dashed") {
-              setAttributes({
-                ...attributes,
-                strokeDasharray: `${defaultDash} ${defaultGap}`,
-              })
-              ele.attr("stroke-dasharray", `${defaultDash} ${defaultGap}`)
+              ele.setAttribute("stroke-dasharray", `${defaultDash} ${defaultGap}`)
             }
             else {
-              setAttributes({
-                ...attributes,
-                strokeDasharray: "",
-              })
-              ele.attr("stroke-dasharray", null)
+              ele.setAttribute("stroke-dasharray", null)
             }
             break
           case "strokeDasharray":
             const dashes = value && processStringNumbers(value, convertToPx)
-            ele.attr("stroke-dasharray", dashes)
+            ele.setAttribute("stroke-dasharray", dashes)
+            break
+          case "strokeOpacity":
+            ele.setAttribute("stroke-opacity", value)
             break
           case "fill":
             if (value === "#000000") {
-              ele.attr("fill", "#000000")
+              ele.setAttribute("fill", "#000000")
             }
             else {
-              ele.attr("fill", "none")
+              ele.setAttribute("fill", "none")
             }
             break
           case "fillOpacity":
-            ele.attr("fill-opacity", value)
+            ele.setAttribute("fill-opacity", value)
             break
           default:
-            ele.attr(`${property}`, value)
+            ele.setAttribute(`${property}`, value)
         }
       })
 
@@ -176,15 +157,6 @@ const DesignControls = () => {
       deletionAllowed: value,
     })
   }
-
-  useEffect(() => {
-    if (selectionBbox) {
-      setBbox(selectionBbox)
-    }
-    if (selectionAttributes) {
-      setAttributes(selectionAttributes)
-    }
-  }, [selectionBbox, selectionAttributes])
 
   return (
     <>
@@ -216,7 +188,7 @@ const DesignControls = () => {
               min={0}
               property="y"
               step={1}
-              value={bbox.y}
+              value={selectionBbox.y}
               onFocus={handleDeletionAllowed}
             />
           </ControlFlexChild>
@@ -232,11 +204,11 @@ const DesignControls = () => {
               min={0.088}
               property="width"
               step={1}
-              value={bbox.width}
+              value={selectionBbox.width}
               onFocus={handleDeletionAllowed}
             />
           </ControlFlexChild>
-          {bbox.height !== 0 && (
+          {selectionBbox.height !== 0 && (
             <ControlFlexChild
               margin="0 0 0 8px"
               flex={1}
@@ -248,14 +220,14 @@ const DesignControls = () => {
                 min={1}
                 property="height"
                 step={1}
-                value={bbox.height}
+                value={selectionBbox.height}
                 onFocus={handleDeletionAllowed}
               />
             </ControlFlexChild>
           )}
         </ControlFlexWrapper>
       </ControlWrapper>
-      {attributes.strokeWidth && (
+      {selectionAttributes.strokeWidth && (
         <ControlWrapper>
           <StyledTag>Stroke</StyledTag>
           <ControlFlexWrapper>
@@ -271,9 +243,9 @@ const DesignControls = () => {
                   onChange={(e) => handleUpdateAttr(e.target.value, "stroke")}
                   onFocus={() => handleDeletionAllowed(false)}
                   onBlur={() => handleDeletionAllowed(true)}
-                  value={attributes.stroke}
+                  value={selectionAttributes.stroke}
                 >
-                  {attributes.stroke === "Mixed" && (
+                  {selectionAttributes.stroke === "Mixed" && (
                     <option value="Mixed" disabled>Mixed</option>
                   )}
                   <option value="none">None</option>
@@ -287,7 +259,7 @@ const DesignControls = () => {
                 </SelectIcon>
               </SelectWrapper>
             </ControlFlexChild>
-            {attributes.stroke !== "none" && (
+            {selectionAttributes.stroke !== "none" && (
               <>
                 <ControlFlexChild
                   flex={1}
@@ -300,7 +272,7 @@ const DesignControls = () => {
                     min={0.088}
                     property="strokeWidth"
                     step={0.01}
-                    value={attributes.strokeWidth}
+                    value={selectionAttributes.strokeWidth}
                     onFocus={handleDeletionAllowed}
                   />
                 </ControlFlexChild>
@@ -313,16 +285,16 @@ const DesignControls = () => {
                     input="Opacity"
                     max={1}
                     min={0.5}
-                    property="opacity"
+                    property="strokeOpacity"
                     step={0.01}
-                    value={attributes.opacity}
+                    value={selectionAttributes.strokeOpacity}
                     onFocus={handleDeletionAllowed}
                   />
                 </ControlFlexChild>
               </>
             )}
           </ControlFlexWrapper>
-          {attributes.stroke !== "none" && (
+          {selectionAttributes.stroke !== "none" && (
             <ControlFlexWrapper>
               <ControlFlexChild
                 flex={1}
@@ -336,9 +308,9 @@ const DesignControls = () => {
                     onChange={(e) => handleUpdateAttr(e.target.value, "strokeStyle")}
                     onFocus={() => handleDeletionAllowed(false)}
                     onBlur={() => handleDeletionAllowed(true)}
-                    value={attributes.strokeStyle}
+                    value={selectionAttributes.strokeStyle}
                   >
-                    {attributes.strokeStyle === "Mixed" && (
+                    {selectionAttributes.strokeStyle === "Mixed" && (
                       <option value="Mixed" disabled>Mixed</option>
                     )}
                     <option value="Solid">Solid</option>
@@ -352,7 +324,7 @@ const DesignControls = () => {
                   </SelectIcon>
                 </SelectWrapper>
               </ControlFlexChild>
-              {(attributes.strokeStyle === "Dashed" || attributes.strokeStyle === "Mixed") && (
+              {(selectionAttributes.strokeStyle === "Dashed" || selectionAttributes.strokeStyle === "Mixed") && (
                 <ControlFlexChild
                   flex={1}
                   margin="0 0 0 8px"
@@ -377,13 +349,13 @@ const DesignControls = () => {
                     onChange={e => handleUpdateAttr(e.target.value, "strokeDasharray")}
                     type="text"
                     padding="8px 24px 8px 8px"
-                    value={attributes.strokeDasharray}
+                    value={selectionAttributes.strokeDasharray}
                     onFocus={e => {
                       e.target.select();
                       handleDeletionAllowed(false)
                     }}
                     onBlur={() => {
-                      if (!attributes.strokeDasharray) {
+                      if (!selectionAttributes.strokeDasharray) {
                         handleUpdateAttr("Solid", "strokeStyle")
                       }
                       handleDeletionAllowed(true)
@@ -395,7 +367,7 @@ const DesignControls = () => {
           )}
         </ControlWrapper>
       )}
-      {attributes.fill && (
+      {selectionAttributes.fill && (
         <ControlWrapper>
           <StyledTag>Fill</StyledTag>
           <ControlFlexWrapper>
@@ -411,9 +383,9 @@ const DesignControls = () => {
                   onChange={(e) => handleUpdateAttr(e.target.value, "fill")}
                   onFocus={() => handleDeletionAllowed(true)}
                   onBlur={() => handleDeletionAllowed(false)}
-                  value={attributes.fill}
+                  value={selectionAttributes.fill}
                 >
-                  {attributes.fill === "Mixed" && (
+                  {selectionAttributes.fill === "Mixed" && (
                     <option value="Mixed" disabled>Mixed</option>
                   )}        
                   <option value="none">None</option>
@@ -427,7 +399,7 @@ const DesignControls = () => {
                 </SelectIcon>
               </SelectWrapper>
             </ControlFlexChild>
-            {attributes.fill !== "none" && (
+            {selectionAttributes.fill !== "none" && (
               <ControlFlexChild
                 flex={1}
                 margin="0 0 0 8px"
@@ -439,7 +411,7 @@ const DesignControls = () => {
                   min={0.5}
                   property="fillOpacity"
                   step={0.01}
-                  value={attributes.fillOpacity}
+                  value={selectionAttributes.fillOpacity}
                   onFocus={handleDeletionAllowed}
                 />
               </ControlFlexChild>  
