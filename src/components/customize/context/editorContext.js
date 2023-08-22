@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
-import { SVG as svgJs } from "@svgdotjs/svg.js"
 import "@svgdotjs/svg.draggable.js"
 import * as d3 from "d3"
 
@@ -182,10 +181,10 @@ const parseSelection = (elements) => {
     height: typeof selectionBbox.height === "number" ? convertToMM(selectionBbox.height) : selectionBbox.height,
   }
   
-  console.log("🚀 ~ file: editorContext.js:170 ~ parseSelection ~ selectionPath:", selectionPath)
-  console.log("🚀 ~ file: editorContext.js:142 ~ parseSelection ~ convertedSelectionBbox:", convertedSelectionBbox)
-  console.log("🚀 ~ file: editorContext.js:154 ~ parseSelection ~ selectedElements:", selectedElements)
-  console.log("🚀 ~ file: editorContext.js:156 ~ parseSelection ~ selectionAttributes:", selectionAttributes)
+  // console.log("🚀 ~ file: editorContext.js:170 ~ parseSelection ~ selectionPath:", selectionPath)
+  // console.log("🚀 ~ file: editorContext.js:142 ~ parseSelection ~ convertedSelectionBbox:", convertedSelectionBbox)
+  // console.log("🚀 ~ file: editorContext.js:154 ~ parseSelection ~ selectedElements:", selectedElements)
+  // console.log("🚀 ~ file: editorContext.js:156 ~ parseSelection ~ selectionAttributes:", selectionAttributes)
   
 
   return {
@@ -213,10 +212,13 @@ const setCanvasState = (state, action) => {
     case 'change-selection':
       log("changing selection...")
       let results = {}
+      const { newlyDeselectedElements, newlySelectedElements } = action
 
       // toggle "data-selected" attribute directly through the DOM
-      action.newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
-      action.newlySelectedElements.forEach(element => {
+      if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
+        newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
+      }
+      newlySelectedElements.forEach(element => {
         // make sure we don't add the selection path to the selected elements
         if (element.getAttribute("id") !== "selection-path") {
           element.setAttribute('data-selected', '')
@@ -274,6 +276,13 @@ const setCanvasState = (state, action) => {
         ...state,
         deletionAllowed: action.deletionAllowed,
       }
+    case "remove-selectionPath":
+      log("toggling selection path...")
+
+      return {
+        ...state,
+        selectionPath: "",
+      }
     case "change-mode":
       log(`Changing mode to [${action.mode}]`)
       const { mode } = action
@@ -289,36 +298,37 @@ const setCanvasState = (state, action) => {
       }
     case "hover-selection":
       log("Adding hovered element to state")
-      const convertedElement = svgJs(action.hoveredElement)
 
-      // if a hoveredElement already exists, remove the data-hovered attribute from it
-      if (state.hoveredElement) {
-        // unless it's the same element as the new hoveredElement
-        if (state.hoveredElement !== convertedElement) {
-          state.hoveredElement.attr({ 'data-hovered': null })
-        }
-      }
+      // // if a hoveredElement already exists, remove the data-hovered attribute from it
+      // if (state.hoveredElement) {
+      //   // unless it's the same element as the new hoveredElement
+      //   if (state.hoveredElement !== convertedElement) {
+      //     state.hoveredElement.attr({ 'data-hovered': null })
+      //   }
+      // }
 
-      // if the hoveredElement exists (it is a child of canvasPageRef)
-      if (convertedElement) {
-        // add the hovered attribute
-        convertedElement.attr({ 'data-hovered': '' })
+      // // if the hoveredElement exists (it is a child of canvasPageRef)
+      // if (convertedElement) {
+      //   // add the hovered attribute
+      //   convertedElement.attr({ 'data-hovered': '' })
 
-        // save it to statez
-        return {
-          ...state,
-          hoveredElement: convertedElement,
-        }
-      }
-      // otherwise set mode back to select; it could have been changed to drag
-      // and remove any existing hoveredElement
-      else {
-        return {
-          ...state,
-          mode: "select",
-          hoveredElement: null,
-        }
-      }
+      //   // save it to statez
+      //   return {
+      //     ...state,
+      //     hoveredElement: convertedElement,
+      //   }
+      // }
+      // // otherwise set mode back to select; it could have been changed to drag
+      // // and remove any existing hoveredElement
+      // else {
+      //   return {
+      //     ...state,
+      //     mode: "select",
+      //     hoveredElement: null,
+      //   }
+      // }
+
+      return state
     default:
       return state;
   }

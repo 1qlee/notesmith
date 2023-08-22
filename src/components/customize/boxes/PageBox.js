@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { CaretDown, CaretUp } from "phosphor-react"
+import { CaretDown, CaretUp } from "@phosphor-icons/react"
 
 import Icon from "../../ui/Icon"
+import Button from "../../ui/Button"
 
 const StyledPageBox = styled.div`
   border-bottom: ${colors.borders.black};
@@ -11,14 +12,13 @@ const StyledPageBox = styled.div`
   align-items: center;
   width: 100%;
   position: relative;
-  padding: 8px;
   input {
     font-size: 0.875rem;
     width: 100%;
   }
   input {
     border: none;
-    padding: 8px;
+    padding: 14.5px 8px;
     text-align: center;
     -moz-appearance: textfield;
     &::-webkit-outer-spin-button,
@@ -31,7 +31,7 @@ const StyledPageBox = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  top: 16px;
+  top: 14.5px;
   left: ${props => props.left || null};
   right: ${props => props.right || null};
   &:hover {
@@ -56,7 +56,7 @@ function PageBox({
       return changePage(1)
     }
     else if (pageNumber > bookData.numOfPages) {
-      return changePage(160)
+      return changePage(bookData.numOfPages)
     }
     else {
       return changePage(pageNumber)
@@ -92,12 +92,19 @@ function PageBox({
   return (
     <StyledPageBox>
       <IconWrapper
-        onClick={() => validatePageChange(selectedPage - 1)}
         left="1rem"
       >
-        <Icon>
-          <CaretDown />
-        </Icon>
+        <Button
+          onClick={() => validatePageChange(selectedPage - 1)}
+          padding="0"
+          backgroundcolor={colors.white}
+          color={colors.gray.nineHundred}
+          hoverbackgroundcolor={colors.gray.oneHundred}
+        >
+          <Icon>
+            <CaretDown />
+          </Icon>
+        </Button>
       </IconWrapper>
       <input
         ref={pageSelectorInput}
@@ -105,6 +112,7 @@ function PageBox({
         id="page-number-input"
         onKeyDown={e => validatePageChangeKeydown(e)}
         onBlur={e => validatePageChange(e.target.value)}
+        onFocus={e => e.target.select()}
         defaultValue={selectedPage}
         min="1"
         max={bookData.numOfPages}
@@ -112,11 +120,18 @@ function PageBox({
       />
       <IconWrapper
         right="1rem"
-        onClick={() => validatePageChange(selectedPage + 1)}
       >
-        <Icon>
-          <CaretUp />
-        </Icon>
+        <Button
+          onClick={() => validatePageChange(selectedPage + 1)}
+          padding="0"
+          backgroundcolor={colors.white}
+          color={colors.gray.nineHundred}
+          hoverbackgroundcolor={colors.gray.oneHundred}
+        >
+          <Icon>
+            <CaretUp />
+          </Icon>
+        </Button>
       </IconWrapper>
     </StyledPageBox>
   )

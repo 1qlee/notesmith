@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { graphql } from "gatsby"
-import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "phosphor-react"
+import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col, setConfiguration } from 'react-grid-system'

@@ -1,5 +1,5 @@
 import React from "react"
-import { CheckSquare, Square } from "phosphor-react"
+import { CheckSquare, Square } from "@phosphor-icons/react"
 import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel, StyledCheckbox, RangeInput } from "../../../form/FormComponents"

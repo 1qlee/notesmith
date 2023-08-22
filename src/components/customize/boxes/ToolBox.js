@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "phosphor-react"
+import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "@phosphor-icons/react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"

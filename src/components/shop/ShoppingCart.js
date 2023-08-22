@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import { colors, fonts, widths } from "../../styles/variables"
 import { convertToDecimal } from "../../utils/helper-functions"
 import { useShoppingCart } from "../../hooks/useShoppingCart"
-import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "phosphor-react"
+import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "@phosphor-icons/react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"

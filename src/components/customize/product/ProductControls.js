@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, breakpoints, pageMargins } from "../../../styles/variables"
 import { convertFloatFixed, convertToPx, convertToMM } from "../../../utils/helper-functions"
-import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "phosphor-react"
+import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"

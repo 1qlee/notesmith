@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
 import Icon from "../ui/Icon"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight } from "@phosphor-icons/react"
 import { Flexbox } from "../layout/Flexbox"
 
 const StyledBoxList = styled.div`

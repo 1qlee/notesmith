@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { colors, regex } from "../../styles/variables"
-import { CircleNotch } from "phosphor-react"
+import { CircleNotch } from "@phosphor-icons/react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
 
 import { Flexbox } from "../layout/Flexbox"

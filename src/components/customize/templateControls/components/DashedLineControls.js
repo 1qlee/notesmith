@@ -1,6 +1,6 @@
 import React from "react"
 import { colors } from "../../../../styles/variables"
-import { Question, CheckSquare, Square } from "phosphor-react"
+import { Question, CheckSquare, Square } from "@phosphor-icons/react"
 import { Tooltip } from "react-tooltip"
 
 import { NumberInput, StyledLabel, StyledCheckbox, StyledInput, RangeInput } from "../../../form/FormComponents"

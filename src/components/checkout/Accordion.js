@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { CaretDown, CaretUp, CheckCircle } from "phosphor-react"
+import { CaretDown, CaretUp, CheckCircle } from "@phosphor-icons/react"
 import { useCollapse } from "react-collapsed"
 
 import { Flexbox } from "../layout/Flexbox"

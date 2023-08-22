@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useEditorContext, useEditorDispatch } from "../context/editorContext"
-import { CaretDown, Question } from "phosphor-react"
+import { CaretDown, Question } from "@phosphor-icons/react"
 import { convertFloatFixed, convertToPx, processStringNumbers  } from "../../../utils/helper-functions"
 import { Tooltip } from "react-tooltip"
 import * as d3 from "d3"

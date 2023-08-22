@@ -1,7 +1,7 @@
 import React from "react"
-import { WarningCircle } from "phosphor-react"
+import { WarningCircle } from "@phosphor-icons/react"
 import { colors } from "../../../styles/variables"
-import { CircleNotch } from "phosphor-react"
+import { CircleNotch } from "@phosphor-icons/react"
 
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import Notification from "../../ui/Notification"

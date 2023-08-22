@@ -4,7 +4,7 @@ import { convertToPx } from "../../utils/helper-functions"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
-import { SVG as svgJs } from "@svgdotjs/svg.js"
+import * as d3 from "d3"
 
 import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
@@ -162,6 +162,7 @@ function PageSpread({
   })
 
   useEffect(() => {
+    const canvas = canvasRef.current
     let referenceElement = null
     const isCanvasPage = svgLoaded === selectedPage ? true : false
     // const isTemplate = (pageData.template && selectedPageSvg) ? true : false
@@ -180,12 +181,68 @@ function PageSpread({
         x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
         y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
       }
-    }
 
-    dispatch({
-      type: "reset",
-      canvas: referenceElement
-    })
+      const clicked = (event, d) => {
+        console.log("Click")
+        console.log(event)
+        if (event.defaultPrevented) return; // dragged
+
+        console.log(d)
+      }
+
+      const mouseover = (event, d) => {
+        console.log("mouseover")
+        const { target } = event
+
+        d3.select(target).call(drag())
+        console.log(event.target)
+        console.log(d)
+      }
+
+      const drag = () => {
+        function dragstart(event, d) {
+          console.log("dragstart")
+          console.log(event)
+          console.log(d)
+        }
+
+        function dragged(event, d) {
+          console.log("draggin")
+          d3.select(this).raise().attr("cx", event.x).attr("cy", event.y);
+          dispatch({
+            type: "change-mode",
+            mode: "drag",
+          })
+          dispatch({
+            type: "remove-selectionPath"
+          })
+        }
+
+        function dragend(event, d) {
+          console.log("dragEnd")
+          console.log(this)
+          const test = []
+          test.push(this)
+          dispatch({
+            type: "change-mode",
+            mode: "select",
+          })
+          dispatch({
+            type: "change-selection",
+            selectedElements: test,
+            newlySelectedElements: test,
+          })
+        }
+
+        return d3.drag()
+          .on("start", dragstart)
+          .on("drag", dragged)
+          .on("end", dragend)
+      }
+      d3.select(referenceElement)
+        .on("click", clicked)
+        .on("mouseover", mouseover)
+    }
 
     if (canvasState.mode === "select" && referenceElement) {
       const {
@@ -257,7 +314,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
   const handleMouseOver = (event) => {
     const node = event.target
@@ -360,6 +417,7 @@ function Page({
   setSvgSize,
   setMax,
 }) {
+  const dispatch = useEditorDispatch()
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
     width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
@@ -370,6 +428,10 @@ function Page({
     if (isSelected) {
       setSvgLoaded(selectedPage)
     }
+
+    dispatch({
+      type: "reset"
+    })
   }, [selectedPage])
 
   const handleSvgLoad = (src) => {

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { colors, regex, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { Warning, CircleNotch } from "phosphor-react"
+import { Warning, CircleNotch } from "@phosphor-icons/react"
 import { reauthenticateWithCredential, updateEmail as fbUpdateEmail, updatePassword as fbUpdatePassword } from "firebase/auth"
 
 import { Flexbox, FlexboxButtons } from "../layout/Flexbox"

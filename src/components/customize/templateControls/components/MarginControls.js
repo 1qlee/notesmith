@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, X } from "phosphor-react"
+import { ArrowLineUp, ArrowLineDown, ArrowLineRight, ArrowLineLeft, X } from "@phosphor-icons/react"
 import { colors } from "../../../../styles/variables"
 
 import { StyledLabel, NumberInput } from "../../../form/FormComponents"

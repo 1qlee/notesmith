@@ -4,7 +4,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
 import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
 import { useFirebaseContext } from "../../utils/auth"
-import { ArrowLeft, CaretDown } from "phosphor-react"
+import { ArrowLeft, CaretDown } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledFloatingLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"

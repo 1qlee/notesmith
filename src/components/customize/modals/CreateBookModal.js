@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link, navigate } from "gatsby"
-import { Warning, CircleNotch } from "phosphor-react"
+import { Warning, CircleNotch } from "@phosphor-icons/react"
 import { colors } from "../../../styles/variables"
 import { convertToPx } from "../../../utils/helper-functions"
 import { useFirebaseContext } from "../../../utils/auth"

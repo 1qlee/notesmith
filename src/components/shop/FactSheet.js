@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import { Files, Book, Stamp } from "phosphor-react"
+import { Files, Book, Stamp } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
