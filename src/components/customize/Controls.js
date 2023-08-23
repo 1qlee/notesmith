@@ -109,22 +109,10 @@ function Controls({
       setShowDesignbar(true)
     }
     // else if user is currently drag selecting or done drag selecting elements, show design bar
-    else if (canvasState.tempSelectedElements || canvasState.selectedElements) {
-      if (canvasState.tempSelectedElements && canvasState.tempSelectedElements.length > 0) {
-        // show design bar
-        setActiveTab(1)
-        setShowDesignbar(true)
-      }
-      else if (canvasState.selectedElements && canvasState.selectedElements.length > 0) {
-        // show design bar
-        setActiveTab(1)
-        setShowDesignbar(true)
-      }
-      else {
-        // show templates bar
-        setShowDesignbar(false)
-        setActiveTab(0)
-      }
+    if (canvasState.selectionBbox && canvasState.selectionPath) {
+      // show design bar
+      setActiveTab(1)
+      setShowDesignbar(true)
     }
     else {
       // show templates bar

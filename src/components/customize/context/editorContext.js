@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
-import "@svgdotjs/svg.draggable.js"
 import * as d3 from "d3"
 
 import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
@@ -197,6 +196,13 @@ const parseSelection = (elements) => {
 
 const setCanvasState = (state, action) => {
   switch (action.type) {
+    case "initialize":
+      log("Initializing canvas...")
+
+      return {
+        ...state,
+        canvas: action.canvas,
+      }
     case "reset":
       log("Resetting...")
 
@@ -206,12 +212,35 @@ const setCanvasState = (state, action) => {
         tempSelectedElements: [],
         selectionBbox: {},
         selectionPath: "",
-        canvas: action.canvas,
       }
+    case "select":
+      {
+        log("selecting elements and saving them to state...")
+        console.log(state.tempSelectedElements)
+
+        return {
+          ...state,
+          selectedElements: state.tempSelectedElements,
+          tempSelectedElements: [],
+        }
+      }
+    case "ungroup-selection": {
+      if (state.selectedElements) {
+        // clear "data-selected" attribute from all selected elements
+        state.selectedElements.forEach(ele => ele.removeAttribute('data-selected'))
+      }
+
+      return {
+        ...state,
+        selectedElements: [],
+        tempSelectedElements: [],
+        selectionBbox: {},
+        selectionPath: "",
+      }
+    }
     // when user is dragging mouse to select elements
-    case 'change-selection':
+    case "change-selection": {
       log("changing selection...")
-      let results = {}
       const { newlyDeselectedElements, newlySelectedElements } = action
 
       // toggle "data-selected" attribute directly through the DOM
@@ -227,7 +256,7 @@ const setCanvasState = (state, action) => {
 
       // if there are selected elements, parse them to create the selection box and attributes for designbar
       if (action.selectedElements.length > 0) {
-        results = parseSelection(action.selectedElements)
+        const results = parseSelection(action.selectedElements)
         
         return {
           ...state,
@@ -246,30 +275,30 @@ const setCanvasState = (state, action) => {
           selectionPath: "",
         }
       }
-    case 'select':
-      {
-        log("selecting elements and saving them to state...")
+    }
+    case "drag-selection": {
+      log("dragging selection...")
 
-        return {
-          ...state,
-          selectedElements: state.tempSelectedElements,
-          tempSelectedElements: [],
-        }
+
+
+      return {
+        ...state,
+        mode: "drag"
       }
-    case "mutate-selection":
-      {
-        log("mutating selection...")
+    }
+    case "mutate-selection": {
+      log("mutating selection...")
 
-        const results = parseSelection(state.selectedElements)
-        const { selectionBbox, selectionAttributes, selectionPath } = results
+      const results = parseSelection(state.selectedElements)
+      const { selectionBbox, selectionAttributes, selectionPath } = results
 
-        return {
-          ...state,
-          selectionBbox: selectionBbox,
-          selectionAttributes: selectionAttributes,
-          selectionPath: selectionPath,
-        }
+      return {
+        ...state,
+        selectionBbox: selectionBbox,
+        selectionAttributes: selectionAttributes,
+        selectionPath: selectionPath,
       }
+    }
     case "toggle-deletion":
 
       return {

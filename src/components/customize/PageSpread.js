@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
+import { createPortal } from 'react-dom'
 import { pageMargins } from "../../styles/variables"
 import { convertToPx } from "../../utils/helper-functions"
 import SVG from "react-inlinesvg"
@@ -165,84 +166,19 @@ function PageSpread({
     const canvas = canvasRef.current
     let referenceElement = null
     const isCanvasPage = svgLoaded === selectedPage ? true : false
-    // const isTemplate = (pageData.template && selectedPageSvg) ? true : false
 
-    // if (isTemplate) {
-    //   referenceElement = selectedPageSvg
-    //   margins = templateMargins
-    //   pagePosition = {
-    //     x: pageIsLeft ? minimumMargin + templateMargins.left : svgWidth + holesMargin + templateMargins.left,
-    //     y: minimumMargin + templateMargins.top,
-    //   }
-    // }
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
       pagePosition = {
         x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
         y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
       }
-
-      const clicked = (event, d) => {
-        console.log("Click")
-        console.log(event)
-        if (event.defaultPrevented) return; // dragged
-
-        console.log(d)
-      }
-
-      const mouseover = (event, d) => {
-        console.log("mouseover")
-        const { target } = event
-
-        d3.select(target).call(drag())
-        console.log(event.target)
-        console.log(d)
-      }
-
-      const drag = () => {
-        function dragstart(event, d) {
-          console.log("dragstart")
-          console.log(event)
-          console.log(d)
-        }
-
-        function dragged(event, d) {
-          console.log("draggin")
-          d3.select(this).raise().attr("cx", event.x).attr("cy", event.y);
-          dispatch({
-            type: "change-mode",
-            mode: "drag",
-          })
-          dispatch({
-            type: "remove-selectionPath"
-          })
-        }
-
-        function dragend(event, d) {
-          console.log("dragEnd")
-          console.log(this)
-          const test = []
-          test.push(this)
-          dispatch({
-            type: "change-mode",
-            mode: "select",
-          })
-          dispatch({
-            type: "change-selection",
-            selectedElements: test,
-            newlySelectedElements: test,
-          })
-        }
-
-        return d3.drag()
-          .on("start", dragstart)
-          .on("drag", dragged)
-          .on("end", dragend)
-      }
-      d3.select(referenceElement)
-        .on("click", clicked)
-        .on("mouseover", mouseover)
     }
+
+    dispatch({
+      type: "initialize",
+      canvas: referenceElement,
+    })
 
     if (canvasState.mode === "select" && referenceElement) {
       const {
@@ -274,7 +210,7 @@ function PageSpread({
           }
 
           dispatch({
-            type: "reset",
+            type: "ungroup-selection",
           })
         },
 
@@ -316,22 +252,44 @@ function PageSpread({
     }
   }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
-  const handleMouseOver = (event) => {
-    const node = event.target
-    
-    // check if the node is a child of canvas page
-    if (canvasPageRef.current.contains(node)) {
-      dispatch({
-        type: "hover-selection",
-        hoveredElement: node,
-      })
+  const handleMouseOver = e => {
+
+
+    const drag = () => {
+      function dragstart(event, d) {
+        console.log("dragstart")
+      }
+
+      function dragged(event, d) {
+        console.log("draggin")
+        d3.select(this).raise().attr("cx", event.x).attr("cy", event.y);
+
+      }
+
+      function dragend(event, d) {
+        console.log("dragEnd")
+        const test = []
+        test.push(this)
+      }
+
+      return d3.drag()
+        .on("start", dragstart)
+        .on("drag", dragged)
+        .on("end", dragend)
     }
-    else {
-      dispatch({
-        type: "hover-selection",
-        hoveredElement: null,
-      })
+
+    if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
+      d3.select(e.target).call(drag())
+        .on("click", clicked)
     }
+  }
+
+  const clicked = (event, d) => {
+    console.log("Click")
+    console.log(event)
+    if (event.defaultPrevented) return; // dragged
+
+    console.log(d)
   }
 
   return (
@@ -343,6 +301,7 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
+      onMouseOver={(e) => handleMouseOver(e)}
     >
       <CoverPage
         bookData={bookData}
@@ -427,11 +386,13 @@ function Page({
   useEffect(() => {
     if (isSelected) {
       setSvgLoaded(selectedPage)
-    }
 
-    dispatch({
-      type: "reset"
-    })
+      dispatch({
+        type: "reset",
+      })
+
+      console.log(pageTemplate)
+    }
   }, [selectedPage])
 
   const handleSvgLoad = (src) => {
@@ -473,18 +434,20 @@ function Page({
             suppressContentEditableWarning={true}
           />
         ) : (
-          <SVG
-            innerRef={isSelected ? canvasPageRef : null}
-            onLoad={(src) => handleSvgLoad(src)}
-            id={isLeftPage ? "left-page" : "right-page"}
-            xmlns="http://www.w3.org/2000/svg"
-            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
-            y={minimumMargin + margins.top}
-            width={pageData.maxContentWidth}
-            height={pageData.maxContentHeight}
-            src={pageTemplate && pageTemplate.svg}
-            suppressContentEditableWarning={true}
-          />
+          <>
+            <SVG
+              innerRef={isSelected ? canvasPageRef : null}
+              onLoad={(src) => handleSvgLoad(src)}
+              id={isLeftPage ? "left-page" : "right-page"}
+              xmlns="http://www.w3.org/2000/svg"
+              x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
+              y={minimumMargin + margins.top}
+              width={pageData.maxContentWidth}
+              height={pageData.maxContentHeight}
+              src={pageTemplate && pageTemplate.svg}
+              suppressContentEditableWarning={true}
+            />
+          </>
         )}
       </>
     )
