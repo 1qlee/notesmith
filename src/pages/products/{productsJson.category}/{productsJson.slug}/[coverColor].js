@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { colors, convertToPx, spacing, pageMargins } from "../../../../styles/variables"
+import { colors, spacing, pageMargins } from "../../../../styles/variables"
 import { toast } from 'react-toastify'
+import { convertToPx } from "../../../../utils/helper-functions"
 
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
-import { colors, fonts, spacing, convertToDecimal } from "../styles/variables"
+import { colors, fonts, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "../hooks/useShoppingCart"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
-import { isBrowser } from "../utils/helper-functions"
+import { isBrowser, convertToDecimal } from "../utils/helper-functions"
 
 import { AccordionTab } from "../components/checkout/Accordion"
 import { Flexbox } from "../components/layout/Flexbox"

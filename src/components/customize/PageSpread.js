@@ -11,6 +11,7 @@ import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
+import Portal from "../misc/Portal"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -376,6 +377,7 @@ function Page({
   setSvgSize,
   setMax,
 }) {
+  const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
   const maxSvgSize = {
     height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
@@ -390,8 +392,6 @@ function Page({
       dispatch({
         type: "reset",
       })
-
-      console.log(pageTemplate)
     }
   }, [selectedPage])
 
@@ -447,6 +447,11 @@ function Page({
               src={pageTemplate && pageTemplate.svg}
               suppressContentEditableWarning={true}
             />
+            {canvasPageRef.current && isSelected && (
+              <Portal node={canvasPageRef.current}>
+                <g id="selection-group"></g>
+              </Portal>
+            )}
           </>
         )}
       </>

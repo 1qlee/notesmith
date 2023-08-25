@@ -248,9 +248,11 @@ const setCanvasState = (state, action) => {
         newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
       }
       newlySelectedElements.forEach(element => {
+        const eleId = element.getAttribute("id")
         // make sure we don't add the selection path to the selected elements
-        if (element.getAttribute("id") !== "selection-path") {
+        if (eleId !== "selection-path" && eleId !== "selection-group") {
           element.setAttribute('data-selected', '')
+          document.querySelector("#selection-group").appendChild(element)
         }
       })
 

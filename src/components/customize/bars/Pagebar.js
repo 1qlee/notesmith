@@ -4,7 +4,7 @@ import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
-import Svg from "react-inlinesvg"
+import SVG from "react-inlinesvg"
 
 import PageBox from "../boxes/PageBox"
 
@@ -100,7 +100,7 @@ const Page = memo(props => {
       className={selectedPage === currentPage.pageNumber ? "is-active" : null}
       style={style}
     >
-      <Svg
+      <SVG
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${pageData.svgWidth} ${pageData.svgHeight}`}
         src={canvasPageTemplates[currentPage.pageId].svg}
