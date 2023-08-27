@@ -270,7 +270,6 @@ const setCanvasState = (state, action) => {
         })
       }
       newlySelectedElements.forEach(element => {
-        console.log("🚀 ~ file: editorContext.js:273 ~ setCanvasState ~ element:", element)
         const eleId = element.getAttribute("id")
         // make sure we don't add the selection path to the selected elements
         if (eleId !== "selection-path" && eleId !== "selection-group") {

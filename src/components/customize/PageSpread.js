@@ -180,6 +180,60 @@ function PageSpread({
       canvas: referenceElement,
     })
 
+    function drag() {
+      function dragstart(event, d) {
+        console.log("dragstart")
+        dispatch({
+          type: "change-mode",
+          mode: "drag",
+        })
+      }
+
+      function dragged(event, d) {
+        console.log("draggin")
+        const nodeName = this.nodeName
+
+        if (nodeName === "circle" || nodeName === "ellipse") {
+          d3.select(this).raise().attr("cx", event.x).attr("cy", event.y)
+        }
+        else if (nodeName === "line") {
+          let line = d3.select(this)
+          let x1 = parseFloat(line.attr("x1")) + event.dx;
+          let y1 = parseFloat(line.attr("y1")) + event.dy;
+          let x2 = parseFloat(line.attr("x2")) + event.dx;
+          let y2 = parseFloat(line.attr("y2")) + event.dy;
+
+          d3.select(this).raise().attr("x1", x1).attr("x2", x2).attr("y1", y1).attr("y2", y2)
+        }
+        else {
+          d3.select(this).raise().attr("x", event.x).attr("y", event.y);
+        }
+      }
+
+      function dragend(event, d) {
+        console.log("dragEnd")
+        const test = []
+        test.push(this)
+        dispatch({
+          type: "change-mode",
+          mode: "select",
+        })
+      }
+
+      return d3.drag()
+        .on("start", dragstart)
+        .on("drag", dragged)
+        .on("end", dragend)
+    }
+
+    function clicked(event, d) {
+      console.log("clicked")
+      if (event.defaultPrevented) return; // dragged
+
+      d3.select(this).transition()
+        .attr("fill", "black")
+    }
+
     if (canvasState.mode === "select" && referenceElement) {
       const {
         cancel,           // cleanup function.
@@ -252,74 +306,11 @@ function PageSpread({
     }
   }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
+  // detect mouseover and then set the elements in state
+  // then add d3 drag to the elements in useEffect
   function handleMouseOver(e) {
-    console.log(e)
-    function drag() {
-      function dragstart(event, d) {
-        console.log("dragstart")
-        dispatch({
-          type: "change-mode",
-          mode: "drag",
-        })
-      }
-
-      function dragged(event, d) {
-        console.log("draggin")
-        const nodeName = this.nodeName
-
-        if (nodeName === "circle" || nodeName === "ellipse") {
-          d3.select(this).raise().attr("cx", event.x).attr("cy", event.y)
-        }
-        else if (nodeName === "line") {
-          let line = d3.select(this)
-          let x1 = parseFloat(line.attr("x1")) + event.dx;
-          let y1 = parseFloat(line.attr("y1")) + event.dy;
-          let x2 = parseFloat(line.attr("x2")) + event.dx;
-          let y2 = parseFloat(line.attr("y2")) + event.dy;
-
-          d3.select(this).raise().attr("x1", x1).attr("x2", x2).attr("y1", y1).attr("y2", y2)
-        }
-        else {
-          d3.select(this).raise().attr("x", event.x).attr("y", event.y);
-        }
-      }
-
-      function dragend(event, d) {
-        console.log("dragEnd")
-        const test = []
-        test.push(this)
-        dispatch({
-          type: "change-mode",
-          mode: "select",
-        })
-      }
-
-      return d3.drag()
-        .on("start", dragstart)
-        .on("drag", dragged)
-        .on("end", dragend)
-    }
-
-    function clicked(event, d) {
-      console.log("clicked")
-      if (event.defaultPrevented) return; // dragged
-
-      d3.select(this).transition()
-        .attr("fill", "black")
-    }
-
     if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
-      console.log("🚀 ~ file: PageSpread.js:297 ~ handleMouseOver ~ e.target:", e.target)
-
-      d3.selectAll("line")
-        .call(drag())
-        .on("click", () => clicked())
-    }
-    else {
-      dispatch({
-        type: "change-mode",
-        mode: "select"
-      })
+      console.log(e.target)
     }
   }
 
