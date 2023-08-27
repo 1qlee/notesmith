@@ -216,18 +216,38 @@ const setCanvasState = (state, action) => {
     case "select":
       {
         log("selecting elements and saving them to state...")
-        console.log(state.tempSelectedElements)
+        let lastNode, selectedGroup
+        const lastElement = state.tempSelectedElements.length - 1
+
+        if (d3.select("#selected-elements")) {
+          d3.selectAll("#selected-elements").remove()
+          selectedGroup = d3.select(state.canvas).append("g").attr("id", "selected-elements").style("pointer-events", "bounding-box")
+        }
+        else {
+          selectedGroup = d3.select("#selected-elements")
+        }
+
+        state.tempSelectedElements.forEach((element, index) => {
+          if (index === lastElement) {
+            lastNode = element.nextSibling
+          }
+          selectedGroup.node().appendChild(element)
+        })
 
         return {
           ...state,
           selectedElements: state.tempSelectedElements,
+          lastNode: lastNode,
           tempSelectedElements: [],
         }
       }
     case "ungroup-selection": {
       if (state.selectedElements) {
         // clear "data-selected" attribute from all selected elements
-        state.selectedElements.forEach(ele => ele.removeAttribute('data-selected'))
+        state.selectedElements.forEach(element => {
+          element.removeAttribute('data-selected')
+          state.canvas.insertBefore(element, state.lastNode)
+        })
       }
 
       return {
@@ -245,14 +265,16 @@ const setCanvasState = (state, action) => {
 
       // toggle "data-selected" attribute directly through the DOM
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
-        newlyDeselectedElements.forEach(element => element.removeAttribute('data-selected'))
+        newlyDeselectedElements.forEach(element => {
+          element.removeAttribute('data-selected')
+        })
       }
       newlySelectedElements.forEach(element => {
+        console.log("🚀 ~ file: editorContext.js:273 ~ setCanvasState ~ element:", element)
         const eleId = element.getAttribute("id")
         // make sure we don't add the selection path to the selected elements
         if (eleId !== "selection-path" && eleId !== "selection-group") {
           element.setAttribute('data-selected', '')
-          document.querySelector("#selection-group").appendChild(element)
         }
       })
 
