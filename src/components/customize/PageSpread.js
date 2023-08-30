@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
-import { createPortal } from 'react-dom'
-import { pageMargins } from "../../styles/variables"
+import { pageMargins, colors } from "../../styles/variables"
 import { convertToPx } from "../../utils/helper-functions"
 import SVG from "react-inlinesvg"
 import svgDragSelect from "svg-drag-select"
@@ -11,7 +10,6 @@ import Template from "./pageComponents/Template"
 import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
-import Portal from "../misc/Portal"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -180,6 +178,84 @@ function PageSpread({
       canvas: referenceElement,
     })
 
+    if (canvasState.mode === "select" && referenceElement) {
+      const {
+        cancel,           // cleanup function.
+        // please call `cancel()` when the select-on-drag behavior is no longer needed.
+        dragAreaOverlay,  // a div element overlaying dragging area.
+        // you can customize the style of this element.
+        // this element has "svg-drag-select-area-overlay" class by default.
+      } = svgDragSelect({
+        // the svg element (required).
+        svg: canvasRef.current,
+        // followings are optional parameters with default values.
+        referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
+        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
+        // "intersection": selects intersected elements using getIntersectionList().
+        // function: custom selector implementation
+
+        // followings are optional selection handlers
+        onSelectionStart({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          cancel,                   // cancel() cancels.
+        }) {
+          // for example: handles mouse left button only.
+          if (pointerEvent.button !== 0) {
+            cancel()
+            return
+          }
+
+          // remove any existing hover clones before starting selection
+          d3.selectAll("#hover-clone").remove()
+
+          dispatch({
+            type: "ungroup-selection",
+          })
+        },
+
+        onSelectionChange({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+          previousSelectedElements, // previous selected element array.
+          newlySelectedElements,    // `selectedElements - previousSelectedElements`
+          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
+        }) {
+          dispatch({
+            type: "change-selection",
+            selectedElements: selectedElements,
+            newlySelectedElements: newlySelectedElements,
+            newlyDeselectedElements: newlyDeselectedElements,
+          })
+        },
+
+        onSelectionEnd({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+        }) {
+          if (selectedElements.length > 0) {
+            dispatch({
+              type: "select",
+              selectedElements: selectedElements,
+            })
+          }
+        },
+      })
+
+      return () => {
+        cancel()
+      }
+    }
+  }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+
+  // detect mouseover and then set the elements in state
+  // then add d3 drag to the elements in useEffect
+  function handleMouseOver(e) {
     function drag() {
       function dragstart(event, d) {
         console.log("dragstart")
@@ -234,83 +310,41 @@ function PageSpread({
         .attr("fill", "black")
     }
 
-    if (canvasState.mode === "select" && referenceElement) {
-      const {
-        cancel,           // cleanup function.
-        // please call `cancel()` when the select-on-drag behavior is no longer needed.
-        dragAreaOverlay,  // a div element overlaying dragging area.
-        // you can customize the style of this element.
-        // this element has "svg-drag-select-area-overlay" class by default.
-      } = svgDragSelect({
-        // the svg element (required).
-        svg: canvasRef.current,
-        // followings are optional parameters with default values.
-        referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
-        // "intersection": selects intersected elements using getIntersectionList().
-        // function: custom selector implementation
+    // if the currently moused element is a child of the current page ref
+    // this prevents us from manipulating the wrong elements
+    if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
+      console.log('yup')
+      const node = d3.select(e.target)
+      
+      // if the node is not our cloned hover node, create one
+      if (node.attr("id") !== "hover-clone" && node.attr("data-selected") === null) {
+        node.attr("data-hovered", "")
+        // remove any existing
+        d3.selectAll("#hover-clone").remove()
 
-        // followings are optional selection handlers
-        onSelectionStart({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          cancel,                   // cancel() cancels.
-        }) {
-          // for example: handles mouse left button only.
-          if (pointerEvent.button !== 0) {
-            cancel()
-            return
-          }
+        // slightly thicker stroke width so it shows over the original
+        const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
+        node.clone()
+          .raise()
+          .attr("id", "hover-clone")
+          .attr("stroke-width", nodeStrokeWidth)
+          .attr("fill", "transparent")
+          .attr("stroke", colors.blue.sixHundred)
+      }
 
-          dispatch({
-            type: "ungroup-selection",
-          })
-        },
-
-        onSelectionChange({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-          previousSelectedElements, // previous selected element array.
-          newlySelectedElements,    // `selectedElements - previousSelectedElements`
-          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
-        }) {
-          dispatch({
-            type: "change-selection",
-            selectedElements: selectedElements,
-            newlySelectedElements: newlySelectedElements,
-            newlyDeselectedElements: newlyDeselectedElements,
-          })
-        },
-
-        onSelectionEnd({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-        }) {
-          if (selectedElements.length > 0) {
-            dispatch({
-              type: "select",
-              selectedElements: selectedElements,
-            })
-          }
-        },
-      })
-
-      return () => {
-        cancel()
+      if (node.attr("id") === "selected-elements") {
+        canvasState.selectedElements.forEach(element => {
+          d3.select(element).call(drag).on("click", clicked)
+        })
+      }
+      else {
+        node.call(drag())
+          .on("click", clicked)
       }
     }
-  }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
-
-  // detect mouseover and then set the elements in state
-  // then add d3 drag to the elements in useEffect
-  function handleMouseOver(e) {
-    if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
-      console.log(e.target)
+    else {
+      d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
+      d3.select("#hover-clone").remove()
     }
   }
 

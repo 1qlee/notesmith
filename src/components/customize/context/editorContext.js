@@ -244,10 +244,16 @@ const setCanvasState = (state, action) => {
     case "ungroup-selection": {
       if (state.selectedElements) {
         // clear "data-selected" attribute from all selected elements
+        d3.selectAll("[data-selected]").attr("data-selected", null)
+
+        // move selected elements back into the canvas
         state.selectedElements.forEach(element => {
-          element.removeAttribute('data-selected')
           state.canvas.insertBefore(element, state.lastNode)
         })
+
+        if (d3.select("#selected-elements")) {
+          d3.selectAll("#selected-elements").remove()
+        }
       }
 
       return {
@@ -364,7 +370,7 @@ const setCanvasState = (state, action) => {
       //   // add the hovered attribute
       //   convertedElement.attr({ 'data-hovered': '' })
 
-      //   // save it to statez
+      //   // save it to state
       //   return {
       //     ...state,
       //     hoveredElement: convertedElement,
