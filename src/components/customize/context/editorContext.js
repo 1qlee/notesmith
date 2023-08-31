@@ -217,11 +217,21 @@ const setCanvasState = (state, action) => {
       {
         log("selecting elements and saving them to state...")
         let lastNode, selectedGroup
-        const lastElement = state.tempSelectedElements.length - 1
+        const { tempSelectedElements } = state
+        const lastElement = tempSelectedElements.length - 1
 
         if (d3.select("#selected-elements")) {
           d3.selectAll("#selected-elements").remove()
-          selectedGroup = d3.select(state.canvas).append("g").attr("id", "selected-elements").style("pointer-events", "bounding-box")
+          let selection = d3.select(state.canvas).append("g").attr("id", "selected-elements")
+          
+          if (tempSelectedElements.length > 1) {
+            selection.style("pointer-events", "bounding-box")
+          }
+          else {
+            selection.style("pointer-events", "all")
+          }
+
+          selectedGroup = selection
         }
         else {
           selectedGroup = d3.select("#selected-elements")
@@ -308,7 +318,8 @@ const setCanvasState = (state, action) => {
     case "drag-selection": {
       log("dragging selection...")
 
-
+      console.log(state.selectedElements)
+      console.log(state.tempSelectedElements)
 
       return {
         ...state,
@@ -342,7 +353,6 @@ const setCanvasState = (state, action) => {
         selectionPath: "",
       }
     case "change-mode":
-      log(`Changing mode to [${action.mode}]`)
       const { mode } = action
 
       if (mode !== state.mode) {
@@ -354,39 +364,6 @@ const setCanvasState = (state, action) => {
       else {
         return state
       }
-    case "hover-selection":
-      log("Adding hovered element to state")
-
-      // // if a hoveredElement already exists, remove the data-hovered attribute from it
-      // if (state.hoveredElement) {
-      //   // unless it's the same element as the new hoveredElement
-      //   if (state.hoveredElement !== convertedElement) {
-      //     state.hoveredElement.attr({ 'data-hovered': null })
-      //   }
-      // }
-
-      // // if the hoveredElement exists (it is a child of canvasPageRef)
-      // if (convertedElement) {
-      //   // add the hovered attribute
-      //   convertedElement.attr({ 'data-hovered': '' })
-
-      //   // save it to state
-      //   return {
-      //     ...state,
-      //     hoveredElement: convertedElement,
-      //   }
-      // }
-      // // otherwise set mode back to select; it could have been changed to drag
-      // // and remove any existing hoveredElement
-      // else {
-      //   return {
-      //     ...state,
-      //     mode: "select",
-      //     hoveredElement: null,
-      //   }
-      // }
-
-      return state
     default:
       return state;
   }

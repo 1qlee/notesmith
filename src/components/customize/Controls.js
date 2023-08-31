@@ -90,14 +90,17 @@ function Controls({
   const [showDesignbar, setShowDesignbar] = useState(false)
 
   const handleShowModal = () => {
-    dispatch({
-      type: "ungroup-selection",
-      id: "selected-group",
-    })
-
+    clearSelection()
     setShowModal({
       show: true,
       type: "template"
+    })
+  }
+
+  function clearSelection() {
+    dispatch({
+      type: "ungroup-selection",
+      id: "selected-group",
     })
   }
 

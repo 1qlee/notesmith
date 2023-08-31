@@ -256,68 +256,79 @@ function PageSpread({
   // detect mouseover and then set the elements in state
   // then add d3 drag to the elements in useEffect
   function handleMouseOver(e) {
-    function drag() {
-      function dragstart(event, d) {
-        console.log("dragstart")
+    function dragstart(event, d) {
+      console.log("dragstart")
+    }
+
+    function dragged(event, d) {
+      console.log("draggin")
+
+      // change mode to drag if it is not already
+      if (canvasState.mode !== "drag") {
         dispatch({
           type: "change-mode",
           mode: "drag",
         })
       }
 
-      function dragged(event, d) {
-        console.log("draggin")
-        const nodeName = this.nodeName
+      const nodeName = this.nodeName
 
-        if (nodeName === "circle" || nodeName === "ellipse") {
-          d3.select(this).raise().attr("cx", event.x).attr("cy", event.y)
-        }
-        else if (nodeName === "line") {
-          let line = d3.select(this)
-          let x1 = parseFloat(line.attr("x1")) + event.dx;
-          let y1 = parseFloat(line.attr("y1")) + event.dy;
-          let x2 = parseFloat(line.attr("x2")) + event.dx;
-          let y2 = parseFloat(line.attr("y2")) + event.dy;
+      // handle various node types (shapes, lines, text, etc.)
+      if (nodeName === "circle" || nodeName === "ellipse") {
+        d3.select(this).raise().attr("cx", event.x).attr("cy", event.y)
+      }
+      else if (nodeName === "line") {
+        let line = d3.select(this)
+        let x1 = parseFloat(line.attr("x1")) + event.dx;
+        let y1 = parseFloat(line.attr("y1")) + event.dy;
+        let x2 = parseFloat(line.attr("x2")) + event.dx;
+        let y2 = parseFloat(line.attr("y2")) + event.dy;
 
-          d3.select(this).raise().attr("x1", x1).attr("x2", x2).attr("y1", y1).attr("y2", y2)
-        }
-        else {
-          d3.select(this).raise().attr("x", event.x).attr("y", event.y);
-        }
+        d3.select(this).raise().attr("x1", x1).attr("x2", x2).attr("y1", y1).attr("y2", y2)
+      }
+      else {
+        d3.select(this).raise().attr("x", event.x).attr("y", event.y);
       }
 
-      function dragend(event, d) {
-        console.log("dragEnd")
-        const test = []
-        test.push(this)
+      dispatch({
+        type: "drag-selection",
+      })
+    }
+
+    function draggedMulti(event, d) {
+      console.log("dragging multi")
+
+      // change mode to drag if it is not already
+      if (canvasState.mode !== "drag") {
         dispatch({
           type: "change-mode",
-          mode: "select",
+          mode: "drag",
         })
       }
-
-      return d3.drag()
-        .on("start", dragstart)
-        .on("drag", dragged)
-        .on("end", dragend)
     }
 
-    function clicked(event, d) {
-      console.log("clicked")
-      if (event.defaultPrevented) return; // dragged
-
-      d3.select(this).transition()
-        .attr("fill", "black")
+    function dragend(event, d) {
+      console.log("dragEnd")
+      const test = []
+      test.push(this)
+      dispatch({
+        type: "change-mode",
+        mode: "select",
+      })
     }
-
+    
     // if the currently moused element is a child of the current page ref
     // this prevents us from manipulating the wrong elements
     if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
-      console.log('yup')
       const node = d3.select(e.target)
+
+      // don't work with hover clone node
+      if (node.attr("id") === "hover-clone") return
       
       // if the node is not our cloned hover node, create one
-      if (node.attr("id") !== "hover-clone" && node.attr("data-selected") === null) {
+      // we only create these for single node selections
+      // look for nodes that are not selected or is a selection group
+      if (node.attr("data-selected") === null && node.attr("id") !== "selected-elements") {
         node.attr("data-hovered", "")
         // remove any existing
         d3.selectAll("#hover-clone").remove()
@@ -330,16 +341,23 @@ function PageSpread({
           .attr("stroke-width", nodeStrokeWidth)
           .attr("fill", "transparent")
           .attr("stroke", colors.blue.sixHundred)
+          .style("pointer-events", "none")
       }
 
-      if (node.attr("id") === "selected-elements") {
-        canvasState.selectedElements.forEach(element => {
-          d3.select(element).call(drag).on("click", clicked)
-        })
+      // when there are multiple nodes selected
+      if (canvasState.selectedElements.length > 1) {
+        console.log("🚀 ~ file: PageSpread.js:350 ~ handleMouseOver ~ e.target:", e.target)
+        node.call(d3.drag()
+          .on("start", dragstart)
+          .on("drag", draggedMulti)
+          .on("end", dragend))
       }
       else {
-        node.call(drag())
-          .on("click", clicked)
+        console.log("🚀 ~ file: PageSpread.js:357 ~ handleMouseOver ~ e.target:", e.target)
+        node.call(d3.drag()
+          .on("start", dragstart)
+          .on("drag", dragged)
+          .on("end", dragend))
       }
     }
     else {
