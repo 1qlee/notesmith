@@ -253,6 +253,41 @@ function PageSpread({
     }
   }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
 
+  function parseDragElements(node, nodeName, event) {
+    // handle various node types (shapes, lines, text, etc.)
+    switch (nodeName) {
+      case "circle":
+      case "ellipse":
+        node
+          .raise()
+          .attr("cx", event.x)
+          .attr("cy", event.y);
+        break;
+
+      case "line":
+        let line = node;
+        let x1 = parseFloat(line.attr("x1")) + event.dx;
+        let y1 = parseFloat(line.attr("y1")) + event.dy;
+        let x2 = parseFloat(line.attr("x2")) + event.dx;
+        let y2 = parseFloat(line.attr("y2")) + event.dy;
+
+        node
+          .raise()
+          .attr("x1", x1)
+          .attr("x2", x2)
+          .attr("y1", y1)
+          .attr("y2", y2);
+        break;
+
+      default:
+        node
+          .raise()
+          .attr("x", event.x)
+          .attr("y", event.y);
+        break;
+    }
+  }
+
   // detect mouseover and then set the elements in state
   // then add d3 drag to the elements in useEffect
   function handleMouseOver(e) {
@@ -272,24 +307,10 @@ function PageSpread({
       }
 
       const nodeName = this.nodeName
+      const node = d3.select(this)
 
-      // handle various node types (shapes, lines, text, etc.)
-      if (nodeName === "circle" || nodeName === "ellipse") {
-        d3.select(this).raise().attr("cx", event.x).attr("cy", event.y)
-      }
-      else if (nodeName === "line") {
-        let line = d3.select(this)
-        let x1 = parseFloat(line.attr("x1")) + event.dx;
-        let y1 = parseFloat(line.attr("y1")) + event.dy;
-        let x2 = parseFloat(line.attr("x2")) + event.dx;
-        let y2 = parseFloat(line.attr("y2")) + event.dy;
-
-        d3.select(this).raise().attr("x1", x1).attr("x2", x2).attr("y1", y1).attr("y2", y2)
-      }
-      else {
-        d3.select(this).raise().attr("x", event.x).attr("y", event.y);
-      }
-
+      parseDragElements(node, nodeName, event)
+      
       dispatch({
         type: "drag-selection",
       })
@@ -304,6 +325,15 @@ function PageSpread({
           type: "change-mode",
           mode: "drag",
         })
+      }
+      
+      const childNodes = d3.select(this).selectAll("*")._groups[0]
+      for (let i = 0; i < childNodes.length; i++) {
+        const childNode = childNodes[i];
+        const node = d3.select(childNode)
+        const nodeName = childNode.nodeName
+        // 'childNode' is the actual child DOM element
+        parseDragElements(node, nodeName, event)
       }
     }
 
