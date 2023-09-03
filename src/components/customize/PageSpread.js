@@ -345,8 +345,12 @@ function PageSpread({
       }
 
       // when there are multiple nodes selected
-      if (canvasState.selectedElements.length > 1) {
+      if (node.attr("id") === "selected-elements") {
         console.log("🚀 ~ file: PageSpread.js:350 ~ handleMouseOver ~ e.target:", e.target)
+        dispatch({
+          type: "change-mode",
+          mode: "drag"
+        })
         node.call(d3.drag()
           .on("start", dragstart)
           .on("drag", draggedMulti)
@@ -361,6 +365,10 @@ function PageSpread({
       }
     }
     else {
+      dispatch({
+        type: "change-mode",
+        mode: "select"
+      })
       d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
       d3.select("#hover-clone").remove()
     }
