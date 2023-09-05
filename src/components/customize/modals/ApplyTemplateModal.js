@@ -64,6 +64,7 @@ function ApplyTemplateModal({
   selectedPageSvg,
   setCanvasPages,
   setCanvasPageTemplates,
+  setPageData,
   setShowModal,
   toast,
   user,
@@ -218,6 +219,10 @@ function ApplyTemplateModal({
 
     // update canvasPages with the updated array clone
     updatePagesDb(canvasPagesClone)
+    setPageData({
+      ...pageData,
+      template: ""
+    })
     toast.success("Succesfully updated pages!")
 
     setLoading(false)

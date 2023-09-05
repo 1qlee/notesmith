@@ -100,7 +100,6 @@ function Controls({
   function clearSelection() {
     dispatch({
       type: "ungroup-selection",
-      id: "selected-group",
     })
   }
 
@@ -112,7 +111,7 @@ function Controls({
       setShowDesignbar(true)
     }
     // else if user is currently drag selecting or done drag selecting elements, show design bar
-    if (canvasState.selectionBbox && canvasState.selectionPath) {
+    else if (canvasState.selectionBbox && canvasState.selectionPath) {
       // show design bar
       setActiveTab(1)
       setShowDesignbar(true)

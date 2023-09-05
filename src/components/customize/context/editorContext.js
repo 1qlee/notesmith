@@ -206,6 +206,9 @@ const setCanvasState = (state, action) => {
     case "reset":
       log("Resetting...")
 
+      d3.selectAll("[data-selected]").attr("data-selected", null)
+      d3.selectAll("[data-hovered]").attr("data-hovered", null)
+
       return {
         ...state,
         selectedElements: [],

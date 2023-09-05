@@ -290,6 +290,7 @@ const Editor = ({
               selectedPageSvg={selectedPageSvg}
               setCanvasPages={setCanvasPages}
               setCanvasPageTemplates={setCanvasPageTemplates}
+              setPageData={setPageData}
               setShowModal={setShowModal}
               toast={toast}
               user={user}

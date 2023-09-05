@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef } from "react"
+import { useEditorDispatch } from "../context/editorContext"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -22,6 +23,7 @@ const Template = ({
   setSvgSize,
   setSvgLoaded,
 }) => {
+  const dispatch = useEditorDispatch()
   const ref = useRef(null)
 
   useLayoutEffect(() => {
@@ -30,6 +32,11 @@ const Template = ({
     if (ref && ref.current) {
       const template = ref.current
       setSelectedPageSvg(template)
+
+      dispatch({
+        type: "initialize",
+        canvas: template,
+      })
       
       setTimeout(() => {
         const { height, width } = template.getBBox()

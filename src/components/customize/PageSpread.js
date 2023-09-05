@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from "react"
 import { pageMargins, colors } from "../../styles/variables"
-import { convertFloatFixed, convertToPx } from "../../utils/helper-functions"
-import SVG from "react-inlinesvg"
+import { convertToPx } from "../../utils/helper-functions"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import * as d3 from "d3"
 
-import Template from "./pageComponents/Template"
-import PageBackground from "./pageComponents/PageBackground"
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
+import CanvasPage from "./editor/CanvasPage"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -42,7 +40,7 @@ function PageSpread({
   let currentPageSide = "right"
   let leftPage = null
   let rightPage = null
-  
+
   if (pageIsLeft) {
     // set page side in state
     currentPageSide = "left"
@@ -103,95 +101,6 @@ function PageSpread({
     y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
   }
 
-  const getSelections = ({
-    svg,
-    referenceElement,
-    pointerEvent,
-    dragAreaInClientCoordinate,
-    dragAreaInSvgCoordinate,
-    dragAreaInInitialSvgCoordinate,
-  }) => {
-    var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement];
-
-    var collectElements = function (into, svg, ancestor, filter) {
-      for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
-        if (element instanceof SVGGElement) {
-          collectElements(into, svg, element, filter);
-          continue;
-        }
-        for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
-          var elementType = svgDragSelectElementTypes_1[_i];
-          if (element instanceof elementType && filter(element)) {
-            into.push(element);
-          }
-        }
-      }
-      return into;
-    };
-
-    var inRange = function (x, min, max) { return (min <= x && x <= max); };
-
-    // Updated intersects function to check cursor distance.
-    var intersects = function (areaInSvgCoordinate, bbox, cursorX, cursorY, maxDistance) {
-      var left = areaInSvgCoordinate.x;
-      var right = left + areaInSvgCoordinate.width;
-      var top = areaInSvgCoordinate.y;
-      var bottom = top + areaInSvgCoordinate.height;
-
-      // Calculate the center of the bounding box.
-      var centerX = bbox.x + bbox.width / 2;
-      var centerY = bbox.y + bbox.height / 2;
-
-      // Calculate the distance between the cursor and the center of the bounding box.
-      var distance = Math.sqrt(Math.pow(cursorX - centerX, 2) + Math.pow(cursorY - centerY, 2));
-
-      return (
-        (inRange(bbox.x, left - maxDistance, right + maxDistance) ||
-          inRange(bbox.x + bbox.width, left - maxDistance, right + maxDistance) ||
-          inRange(left - maxDistance, bbox.x, bbox.x + bbox.width)) &&
-        (inRange(bbox.y, top - maxDistance, bottom + maxDistance) ||
-          inRange(bbox.y + bbox.height, top - maxDistance, bottom + maxDistance) ||
-          inRange(top - maxDistance, bbox.y, bbox.y + bbox.height)) &&
-        distance <= maxDistance
-      );
-    };
-
-    function expandSVGRect(rect, margin) {
-      // Create a new SVGRect object using createSVGRect.
-      rect.x = rect.x - margin;
-      rect.y = rect.y - margin;
-      rect.width = rect.width + 2 * margin;
-      rect.height = rect.height + 2 * margin;
-
-      return rect;
-    }
-
-    var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate, cursorX, cursorY, maxDistance) {
-      return svg.getIntersectionList
-        ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 3), referenceElement))
-        : collectElements([], svg, referenceElement || svg, function (element) {
-          return intersects(areaInSvgCoordinate, element.getBBox(), cursorX, cursorY, maxDistance);
-        });
-    };
-
-    // Extract cursor position from the pointer event.
-    const cursorX = pointerEvent.clientX;
-    const cursorY = pointerEvent.clientY;
-
-    // Define the maximum distance for selection (5 pixels).
-    const maxDistance = 3;
-
-    return getIntersections(
-      svg,
-      referenceElement,
-      dragAreaInSvgCoordinate,
-      dragAreaInInitialSvgCoordinate,
-      cursorX,
-      cursorY,
-      maxDistance
-    );
-  };
-
   // stricter selection finder logic for paths
   const strictIntersectionSelector = ({
     svg,                            // the svg element.
@@ -213,11 +122,10 @@ function PageSpread({
     if (!(element instanceof SVGPathElement)) {
       return true
     }
-
     // check if there is at least one enclosed point in the path.
     for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
       let { x, y } = element.getPointAtLength(i)
-      
+
       let dragCoords = {
         x: dragAreaInSvgCoordinate.x - 12,
         y: dragAreaInSvgCoordinate.y - 12,
@@ -280,7 +188,7 @@ function PageSpread({
         svg: canvasRef.current,
         // followings are optional parameters with default values.
         referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-        selector: getSelections,      // "enclosure": selects enclosed elements using getEnclosureList().
+        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
         // "intersection": selects intersected elements using getIntersectionList().
         // function: custom selector implementation
 
@@ -314,7 +222,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          console.log(selectedElements)
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
@@ -342,76 +249,48 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasState.mode, canvasPages, pageData, canvasPageRef, svgLoaded, selectedPage, selectedPageSvg])
+  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage])
 
   function parseDragElements(node, nodeName, event) {
     // handle various node types (shapes, lines, text, etc.)
     switch (nodeName) {
       case "circle":
       case "ellipse":
+        let circle = node
+        let cx = parseFloat(circle.attr("cx")) + event.dx
+        let cy = parseFloat(circle.attr("cy")) + event.dy
+
         node
           .raise()
-          .attr("cx", event.x)
-          .attr("cy", event.y);
+          .attr("cx", cx)
+          .attr("cy", cy)
         break;
 
       case "line":
-        let line = node;
-        let x1 = parseFloat(line.attr("x1")) + event.dx;
-        let y1 = parseFloat(line.attr("y1")) + event.dy;
-        let x2 = parseFloat(line.attr("x2")) + event.dx;
-        let y2 = parseFloat(line.attr("y2")) + event.dy;
+        let line = node
+        let x1 = parseFloat(line.attr("x1")) + event.dx
+        let y1 = parseFloat(line.attr("y1")) + event.dy
+        let x2 = parseFloat(line.attr("x2")) + event.dx
+        let y2 = parseFloat(line.attr("y2")) + event.dy
 
         node
           .raise()
           .attr("x1", x1)
           .attr("x2", x2)
           .attr("y1", y1)
-          .attr("y2", y2);
+          .attr("y2", y2)
         break;
 
       default:
         node
           .raise()
           .attr("x", event.x)
-          .attr("y", event.y);
+          .attr("y", event.y)
         break;
     }
   }
 
-  // detect mouseover and then set the elements in state
-  // then add d3 drag to the elements in useEffect
   function handleMouseMove(e) {
-    // let mouseY = e.clientY
-    // let mouseX = e.clientX
-    // // Choose the element that is closest to the pointer for dragging, within a specified threshold.
-    // let subject = null
-    // let distance = 3
-    // let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
-
-    // for (const node of nodes) {
-    //   const strokeWidth = node.getAttribute("stroke-width")
-    //   const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-    //   const rect = node.getBoundingClientRect()
-      
-    //   // Adjust the bounding box to consider the stroke width.
-    //   const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-    //   const adjustedRight = rect.right + distance + adjustedStrokeWidth
-    //   const adjustedTop = rect.top - distance - adjustedStrokeWidth
-    //   const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
-
-    //   // Check if the cursor is within the adjusted bounding box.
-    //   if (
-    //     mouseX >= adjustedLeft &&
-    //     mouseX <= adjustedRight &&
-    //     mouseY >= adjustedTop &&
-    //     mouseY <= adjustedBottom
-    //   ) {
-    //     subject = node;
-    //     break; // Break early if a valid subject is found.
-    //   }
-    // }
-
     function dragstart(event, d) {
       console.log("dragstart")
     }
@@ -431,7 +310,7 @@ function PageSpread({
       const node = d3.select(this)
 
       parseDragElements(node, nodeName, event)
-      
+
       dispatch({
         type: "drag-selection",
       })
@@ -447,8 +326,10 @@ function PageSpread({
           mode: "drag",
         })
       }
-      
+
+      // all elements inside #selected-elements <g>
       const childNodes = d3.select(this).selectAll("*")._groups[0]
+
       for (let i = 0; i < childNodes.length; i++) {
         const childNode = childNodes[i];
         const node = d3.select(childNode)
@@ -467,7 +348,7 @@ function PageSpread({
         mode: "select",
       })
     }
-    
+
     // if the currently moused element is a child of the current page ref
     // this prevents us from manipulating the wrong elements
     if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
@@ -475,7 +356,7 @@ function PageSpread({
 
       // don't work with hover clone node
       if (node.attr("id") === "hover-clone") return
-      
+
       // if the node is not our cloned hover node, create one
       // we only create these for single node selections
       // look for nodes that are not selected or is a selection group
@@ -507,7 +388,6 @@ function PageSpread({
           .on("end", dragend))
       }
       else {
-        
         node.call(d3.drag()
           .on("start", dragstart)
           .on("drag", dragged)
@@ -541,7 +421,7 @@ function PageSpread({
         pageHeight={svgHeight}
         pageWidth={svgWidth}
       />
-      <Page
+      <CanvasPage
         bookData={bookData}
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
@@ -561,14 +441,14 @@ function PageSpread({
         setSvgSize={setSvgSize}
         svgSize={svgSize}
       />
-      <Page
+      <CanvasPage
         bookData={bookData}
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
         margins={rightPageMargins}
         pageData={pageData}
-        pageId={leftPage}
+        pageId={rightPage}
         pagePosition={pagePosition}
         pageSide="right"
         pageTemplate={rightPageTemplate}
@@ -590,99 +470,123 @@ function PageSpread({
   )
 }
 
-function Page({
-  bookData,
-  canvasPageRef,
-  currentPageSide,
-  isSelected,
-  margins,
-  pageData,
-  pagePosition,
-  pageSide,
-  pageTemplate,
-  selectedPage,
-  selectedPageSvg,
-  setPageData,
-  setSelectedPageSvg,
-  setSvgLoaded,
-  setSvgSize,
-  setMax,
-}) {
-  const dispatch = useEditorDispatch()
-  const maxSvgSize = {
-    height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
-    width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
-  }
-  const isLeftPage = pageSide === "left"
-
-  useEffect(() => {
-    if (isSelected) {
-      setSvgLoaded(selectedPage)
-
-      dispatch({
-        type: "reset",
-      })
-    }
-  }, [selectedPage])
-
-  const handleSvgLoad = (src) => {
-    if (src && isSelected) {
-      setSvgLoaded(selectedPage)
-    }
-  }
-
-  if (selectedPage === 1 && pageSide === "left") {
-    return null
-  }
-  else if (selectedPage === bookData.numOfPages && pageSide === "right") {
-    return null
-  }
-  else {
-    return (
-      <>
-        <PageBackground
-          currentPageSide={currentPageSide}
-          isSelected={isSelected}
-          pageHeight={pageData.svgHeight}
-          pageWidth={pageData.svgWidth}
-          pageSide={pageSide}
-          suppressContentEditableWarning={true}
-        />
-        {pageData.template && isSelected ? (
-          <Template
-            bookData={bookData}
-            currentPageSide={currentPageSide}
-            maxSvgSize={maxSvgSize}
-            pageData={pageData}
-            pagePosition={pagePosition}
-            selectedPageSvg={selectedPageSvg}
-            setMax={setMax}
-            setPageData={setPageData}
-            setSelectedPageSvg={setSelectedPageSvg}
-            setSvgSize={setSvgSize}
-            setSvgLoaded={setSvgLoaded}
-            suppressContentEditableWarning={true}
-          />
-        ) : (
-          <>
-            <SVG
-              innerRef={isSelected ? canvasPageRef : null}
-              onLoad={(src) => handleSvgLoad(src)}
-              id={isLeftPage ? "left-page" : "right-page"}
-              xmlns="http://www.w3.org/2000/svg"
-              x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
-              y={minimumMargin + margins.top}
-              width={pageData.maxContentWidth}
-              height={pageData.maxContentHeight}
-              src={pageTemplate && pageTemplate.svg}
-              suppressContentEditableWarning={true}
-            />
-          </>
-        )}
-      </>
-    )
-  }
-}
-
-
 export default PageSpread
+
+// const getSelections = ({
+//   svg,
+//   referenceElement,
+//   pointerEvent, // listens to click and drag events
+//   dragAreaInClientCoordinate,
+//   dragAreaInSvgCoordinate,
+//   dragAreaInInitialSvgCoordinate,
+// }) => {
+//   var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement];
+
+//   var collectElements = function (into, svg, ancestor, filter) {
+//     for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
+//       if (element instanceof SVGGElement) {
+//         collectElements(into, svg, element, filter);
+//         continue;
+//       }
+//       for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
+//         var elementType = svgDragSelectElementTypes_1[_i];
+//         if (element instanceof elementType && filter(element)) {
+//           into.push(element);
+//         }
+//       }
+//     }
+//     return into;
+//   };
+
+//   var inRange = function (x, min, max) { return (min <= x && x <= max); };
+
+//   // Updated intersects function to check cursor distance.
+//   var intersects = function (areaInSvgCoordinate, bbox) {
+//     var left = areaInSvgCoordinate.x;
+//     var right = left + areaInSvgCoordinate.width;
+//     var top = areaInSvgCoordinate.y;
+//     var bottom = top + areaInSvgCoordinate.height;
+//     return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
+//       (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)));
+//   };
+
+//   function expandSVGRect(rect, margin) {
+//     // Create a new SVGRect object using createSVGRect.
+//     rect.x = rect.x - margin;
+//     rect.y = rect.y - margin;
+//     rect.width = rect.width + 2 * margin;
+//     rect.height = rect.height + 2 * margin;
+
+//     return rect;
+//   }
+
+//   var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate, cursorX, cursorY, maxDistance) {
+//     return svg.getIntersectionList
+//       ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 0), referenceElement))
+//       : collectElements([], svg, referenceElement || svg, function (element) {
+//         return intersects(areaInSvgCoordinate, element.getBBox());
+//       });
+//   };
+
+//   // Extract cursor position from the pointer event.
+//   const cursorX = pointerEvent.clientX;
+//   const cursorY = pointerEvent.clientY;
+
+//   // Define the maximum distance for selection (5 pixels).
+//   const maxDistance = 3;
+
+//   return getIntersections(
+//     svg,
+//     referenceElement,
+//     dragAreaInSvgCoordinate,
+//     dragAreaInInitialSvgCoordinate,
+//     cursorX,
+//     cursorY,
+//     maxDistance
+//   ).filter(element => {
+//     // the element that the pointer event raised is considered to intersect.
+//     if (pointerEvent.target === element) {
+//       return true
+//     }
+//     // strictly check only <path>s.
+//     if (!(element instanceof SVGPathElement)) {
+//       return true
+//     }
+
+//     // check if there is at least one enclosed point in the path.
+//     for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+//       let { x, y } = element.getPointAtLength(i)
+
+//       let dragCoords = {
+//         x: dragAreaInSvgCoordinate.x - 12,
+//         y: dragAreaInSvgCoordinate.y - 12,
+//       }
+//       if (pageData.template) {
+//         dragCoords.x = dragCoords.x - templateMargins.left
+//         dragCoords.y = dragCoords.y - templateMargins.top
+//       }
+//       else {
+//         if (pageIsLeft) {
+//           dragCoords.x = dragCoords.x - leftPageMargins.left
+//           dragCoords.y = dragCoords.y - leftPageMargins.top
+//         }
+//         else {
+//           dragCoords.x = dragCoords.x - rightPageMargins.left
+//           dragCoords.y = dragCoords.y - rightPageMargins.top
+//         }
+//       }
+
+//       if (!pageIsLeft) {
+//         dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
+//       }
+
+//       if (
+//         dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+//         dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
+//       ) {
+//         return true
+//       }
+//     }
+//     return false
+//   })
+// };
