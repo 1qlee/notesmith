@@ -159,98 +159,6 @@ function PageSpread({
     return false
   })
 
-  useEffect(() => {
-    let referenceElement = null
-    const isCanvasPage = svgLoaded === selectedPage ? true : false
-
-    if (isCanvasPage) {
-      referenceElement = canvasPageRef.current
-      pagePosition = {
-        x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
-        y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
-      }
-    }
-
-    dispatch({
-      type: "initialize",
-      canvas: referenceElement,
-    })
-
-    if (canvasState.mode === "select" && referenceElement) {
-      const {
-        cancel,           // cleanup function.
-        // please call `cancel()` when the select-on-drag behavior is no longer needed.
-        dragAreaOverlay,  // a div element overlaying dragging area.
-        // you can customize the style of this element.
-        // this element has "svg-drag-select-area-overlay" class by default.
-      } = svgDragSelect({
-        // the svg element (required).
-        svg: canvasRef.current,
-        // followings are optional parameters with default values.
-        referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
-        // "intersection": selects intersected elements using getIntersectionList().
-        // function: custom selector implementation
-
-        // followings are optional selection handlers
-        onSelectionStart({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          cancel,                   // cancel() cancels.
-        }) {
-          // for example: handles mouse left button only.
-          if (pointerEvent.button !== 0) {
-            cancel()
-            return
-          }
-
-          // remove any existing hover clones before starting selection
-          d3.selectAll("#hover-clone").remove()
-
-          dispatch({
-            type: "ungroup-selection",
-          })
-        },
-
-        onSelectionChange({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-          previousSelectedElements, // previous selected element array.
-          newlySelectedElements,    // `selectedElements - previousSelectedElements`
-          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
-        }) {
-          dispatch({
-            type: "change-selection",
-            selectedElements: selectedElements,
-            newlySelectedElements: newlySelectedElements,
-            newlyDeselectedElements: newlyDeselectedElements,
-          })
-        },
-
-        onSelectionEnd({
-          svg,                      // the svg element.
-          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
-          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-          selectedElements,         // selected element array.
-        }) {
-          if (selectedElements.length > 0) {
-            dispatch({
-              type: "select",
-              selectedElements: selectedElements,
-            })
-          }
-        },
-      })
-
-      return () => {
-        cancel()
-      }
-    }
-  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage])
-
   function parseDragElements(node, nodeName, event) {
     // handle various node types (shapes, lines, text, etc.)
     switch (nodeName) {
@@ -404,6 +312,99 @@ function PageSpread({
     }
   }
 
+  useEffect(() => {
+    let referenceElement = null
+    // this is how we know we have the canvas page loaded
+    const isCanvasPage = svgLoaded === selectedPage ? true : false
+
+    if (isCanvasPage) {
+      referenceElement = canvasPageRef.current
+      pagePosition = {
+        x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
+        y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
+      }
+    }
+
+    dispatch({
+      type: "initialize",
+      canvas: referenceElement,
+    })
+
+    if (canvasState.mode === "select" && referenceElement) {
+      const {
+        cancel,           // cleanup function.
+        // please call `cancel()` when the select-on-drag behavior is no longer needed.
+        dragAreaOverlay,  // a div element overlaying dragging area.
+        // you can customize the style of this element.
+        // this element has "svg-drag-select-area-overlay" class by default.
+      } = svgDragSelect({
+        // the svg element (required).
+        svg: canvasRef.current,
+        // followings are optional parameters with default values.
+        referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
+        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
+        // "intersection": selects intersected elements using getIntersectionList().
+        // function: custom selector implementation
+
+        // followings are optional selection handlers
+        onSelectionStart({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with "pointerdown" type.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          cancel,                   // cancel() cancels.
+        }) {
+          // for example: handles mouse left button only.
+          if (pointerEvent.button !== 0) {
+            cancel()
+            return
+          }
+
+          // remove any existing hover clones before starting selection
+          d3.selectAll("#hover-clone").remove()
+
+          dispatch({
+            type: "ungroup-selection",
+          })
+        },
+
+        onSelectionChange({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+          previousSelectedElements, // previous selected element array.
+          newlySelectedElements,    // `selectedElements - previousSelectedElements`
+          newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
+        }) {
+          dispatch({
+            type: "change-selection",
+            selectedElements: selectedElements,
+            newlySelectedElements: newlySelectedElements,
+            newlyDeselectedElements: newlyDeselectedElements,
+          })
+        },
+
+        onSelectionEnd({
+          svg,                      // the svg element.
+          pointerEvent,             // a `PointerEvent` instance with either a "pointerup" event or a "pointercancel" event.
+          // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
+          selectedElements,         // selected element array.
+        }) {
+          if (selectedElements.length > 0) {
+            dispatch({
+              type: "select",
+              selectedElements: selectedElements,
+            })
+          }
+        },
+      })
+
+      return () => {
+        cancel()
+      }
+    }
+  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage])
+
   return (
     <svg
       id="page-spread"
@@ -413,7 +414,7 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
-      onMouseMove={(e) => handleMouseMove(e)}
+      onMouseMove={e => handleMouseMove(e)}
     >
       <CoverPage
         bookData={bookData}

@@ -545,7 +545,8 @@ select:-webkit-autofill:focus {
   background-color: rgba(26, 115, 232, 0.1);
 }
 rect.selection {
-  fill: #1a73e8;
+  stroke: #1a73e8;
+  fill: rgba(26, 115, 232, 0.1);
 }
 rect.overlay {
   cursor: default;

@@ -34,7 +34,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
           canvasState.selectedElements.forEach(ele => {
             ele.remove()
           })
-
+          
           dispatch({
             type: 'reset',
           })
