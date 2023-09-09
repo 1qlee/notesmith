@@ -216,6 +216,49 @@ const setCanvasState = (state, action) => {
         selectionBbox: {},
         selectionPath: "",
       }
+    // when user is dragging mouse to select elements
+    case "change-selection": {
+      log("changing selection...")
+      const { newlyDeselectedElements, newlySelectedElements } = action
+
+      // toggle "data-selected" attribute directly through the DOM
+      if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
+        newlyDeselectedElements.forEach(element => {
+          const ele = d3.select(element)
+          ele.attr("data-selected", null)
+        })
+      }
+      newlySelectedElements.forEach(element => {
+        const ele = d3.select(element)
+        const eleId = ele.attr("id")
+        // make sure we don't add the selection path to the selected elements
+        if (eleId !== "selection-path" && eleId !== "selection-group") {
+          ele.attr('data-selected', '')
+        }
+      })
+
+      // if there are selected elements, parse them to create the selection box and attributes for designbar
+      if (action.selectedElements.length > 0) {
+        const results = parseSelection(action.selectedElements)
+
+        return {
+          ...state,
+          selectionAttributes: results.selectionAttributes,
+          selectionBbox: results.selectionBbox,
+          tempSelectedElements: results.tempSelectedElements,
+          selectionPath: results.selectionPath,
+        }
+      }
+      else {
+        return {
+          ...state,
+          selectionAttributes: [],
+          selectionBbox: {},
+          tempSelectedElements: [],
+          selectionPath: "",
+        }
+      }
+    }
     case "select":
       {
         log("selecting elements and saving them to state...")
@@ -275,58 +318,6 @@ const setCanvasState = (state, action) => {
         tempSelectedElements: [],
         selectionBbox: {},
         selectionPath: "",
-      }
-    }
-    // when user is dragging mouse to select elements
-    case "change-selection": {
-      log("changing selection...")
-      const { newlyDeselectedElements, newlySelectedElements } = action
-
-      // toggle "data-selected" attribute directly through the DOM
-      if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
-        newlyDeselectedElements.forEach(element => {
-          element.removeAttribute('data-selected')
-        })
-      }
-      newlySelectedElements.forEach(element => {
-        const eleId = element.getAttribute("id")
-        // make sure we don't add the selection path to the selected elements
-        if (eleId !== "selection-path" && eleId !== "selection-group") {
-          element.setAttribute('data-selected', '')
-        }
-      })
-
-      // if there are selected elements, parse them to create the selection box and attributes for designbar
-      if (action.selectedElements.length > 0) {
-        const results = parseSelection(action.selectedElements)
-        
-        return {
-          ...state,
-          selectionAttributes: results.selectionAttributes,
-          selectionBbox: results.selectionBbox,
-          tempSelectedElements: results.tempSelectedElements,
-          selectionPath: results.selectionPath,
-        }
-      }
-      else {
-        return {
-          ...state,
-          selectionAttributes: [],
-          selectionBbox: {},
-          tempSelectedElements: [],
-          selectionPath: "",
-        }
-      }
-    }
-    case "drag-selection": {
-      log("dragging selection...")
-
-      console.log(state.selectedElements)
-      console.log(state.tempSelectedElements)
-
-      return {
-        ...state,
-        mode: "drag"
       }
     }
     case "mutate-selection": {

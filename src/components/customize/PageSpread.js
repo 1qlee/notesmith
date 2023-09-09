@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import { pageMargins, colors } from "../../styles/variables"
-import { convertToPx } from "../../utils/helper-functions"
+import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
 import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import * as d3 from "d3"
+import drag from "./editor/drag"
 
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
@@ -101,166 +102,162 @@ function PageSpread({
     y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
   }
 
-  // stricter selection finder logic for paths
-  const strictIntersectionSelector = ({
-    svg,                            // the svg element.
-    referenceElement,               // please select only descendants of this SVGElement if specified.
-    pointerEvent,                   // a `PointerEvent` instance with either a "pointerdown" event or a "pointermove" event.
-    // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
-    dragAreaInClientCoordinate,     // a `SVGRect` that represents the dragging area in client coordinate.
-    dragAreaInSvgCoordinate,        // a `SVGRect` that represents the dragging area in svg coordinate.
-    dragAreaInInitialSvgCoordinate, // a `SVGRect` that represents the dragging area in initial viewport coordinate of the svg.
-    getEnclosures,                  // `getEnclosures()` returns elements enclosed in the dragging area.
-    getIntersections,               // `getIntersections()` returns elements intersect the dragging area.
-    // Chrome, Safari and Firefox checks only bounding box intersection.
-  }) => getIntersections().filter(element => {
-    // the element that the pointer event raised is considered to intersect.
-    if (pointerEvent.target === element) {
-      return true
-    }
-    // strictly check only <path>s.
-    if (!(element instanceof SVGPathElement)) {
-      return true
-    }
-    // check if there is at least one enclosed point in the path.
-    for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
-      let { x, y } = element.getPointAtLength(i)
+  // custom selector function
+  const makeSelections = ({
+    svg,
+    referenceElement,
+    pointerEvent, // listens to click and drag events
+    dragAreaInClientCoordinate,
+    dragAreaInSvgCoordinate,
+    dragAreaInInitialSvgCoordinate,
+  }) => {
+    var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement];
 
-      let dragCoords = {
-        x: dragAreaInSvgCoordinate.x - 12,
-        y: dragAreaInSvgCoordinate.y - 12,
-      }
-      if (pageData.template) {
-        dragCoords.x = dragCoords.x - templateMargins.left
-        dragCoords.y = dragCoords.y - templateMargins.top
-      }
-      else {
-        if (pageIsLeft) {
-          dragCoords.x = dragCoords.x - leftPageMargins.left
-          dragCoords.y = dragCoords.y - leftPageMargins.top
+    var collectElements = function (into, svg, ancestor, filter) {
+      for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
+        if (element instanceof SVGGElement) {
+          collectElements(into, svg, element, filter);
+          continue;
         }
-        else {
-          dragCoords.x = dragCoords.x - rightPageMargins.left
-          dragCoords.y = dragCoords.y - rightPageMargins.top
+        for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
+          var elementType = svgDragSelectElementTypes_1[_i];
+          if (element instanceof elementType && filter(element)) {
+            into.push(element);
+          }
         }
       }
+      return into;
+    };
 
-      if (!pageIsLeft) {
-        dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
-      }
+    var inRange = function (x, min, max) { return (min <= x && x <= max); };
 
-      if (
-        dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-        dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
-      ) {
+    // Updated intersects function to check cursor distance.
+    var intersects = function (areaInSvgCoordinate, bbox) {
+      var left = areaInSvgCoordinate.x;
+      var right = left + areaInSvgCoordinate.width;
+      var top = areaInSvgCoordinate.y;
+      var bottom = top + areaInSvgCoordinate.height;
+      return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
+        (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)));
+    };
+
+    function expandSVGRect(rect, margin) {
+      // Create a new SVGRect object using createSVGRect.
+      rect.x = rect.x - margin;
+      rect.y = rect.y - margin;
+      rect.width = rect.width + 2 * margin;
+      rect.height = rect.height + 2 * margin;
+
+      return rect;
+    }
+
+    var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate, cursorX, cursorY, maxDistance) {
+      return svg.getIntersectionList
+        ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 3), referenceElement))
+        : collectElements([], svg, referenceElement || svg, function (element) {
+          return intersects(areaInSvgCoordinate, element.getBBox());
+        });
+    };
+
+    // Extract cursor position from the pointer event.
+    const cursorX = pointerEvent.clientX;
+    const cursorY = pointerEvent.clientY;
+
+    // Define the maximum distance for selection (5 pixels).
+    const maxDistance = 3;
+
+    return getIntersections(
+      svg,
+      referenceElement,
+      dragAreaInSvgCoordinate,
+      dragAreaInInitialSvgCoordinate,
+      cursorX,
+      cursorY,
+      maxDistance
+    ).filter(element => {
+      // the element that the pointer event raised is considered to intersect.
+      if (pointerEvent.target === element) {
         return true
       }
-    }
-    return false
-  })
+      // strictly check only <path>s.
+      if (!(element instanceof SVGPathElement)) {
+        return true
+      }
 
-  function parseDragElements(node, nodeName, event) {
-    // handle various node types (shapes, lines, text, etc.)
-    switch (nodeName) {
-      case "circle":
-      case "ellipse":
-        let circle = node
-        let cx = parseFloat(circle.attr("cx")) + event.dx
-        let cy = parseFloat(circle.attr("cy")) + event.dy
+      // check if there is at least one enclosed point in the path.
+      for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+        let { x, y } = element.getPointAtLength(i)
 
-        node
-          .raise()
-          .attr("cx", cx)
-          .attr("cy", cy)
-        break;
+        let dragCoords = {
+          x: dragAreaInSvgCoordinate.x - 12,
+          y: dragAreaInSvgCoordinate.y - 12,
+        }
+        if (pageData.template) {
+          dragCoords.x = dragCoords.x - templateMargins.left
+          dragCoords.y = dragCoords.y - templateMargins.top
+        }
+        else {
+          if (pageIsLeft) {
+            dragCoords.x = dragCoords.x - leftPageMargins.left
+            dragCoords.y = dragCoords.y - leftPageMargins.top
+          }
+          else {
+            dragCoords.x = dragCoords.x - rightPageMargins.left
+            dragCoords.y = dragCoords.y - rightPageMargins.top
+          }
+        }
 
-      case "line":
-        let line = node
-        let x1 = parseFloat(line.attr("x1")) + event.dx
-        let y1 = parseFloat(line.attr("y1")) + event.dy
-        let x2 = parseFloat(line.attr("x2")) + event.dx
-        let y2 = parseFloat(line.attr("y2")) + event.dy
+        if (!pageIsLeft) {
+          dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
+        }
 
-        node
-          .raise()
-          .attr("x1", x1)
-          .attr("x2", x2)
-          .attr("y1", y1)
-          .attr("y2", y2)
-        break;
+        if (
+          dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+          dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
+        ) {
+          return true
+        }
+      }
+      return false
+    })
+  };
 
-      default:
-        node
-          .raise()
-          .attr("x", event.x)
-          .attr("y", event.y)
-        break;
-    }
-  }
-
+  // give hover "effect" to elements to aid with selection
   function handleMouseMove(e) {
-    function dragstart(event, d) {
-      console.log("dragstart")
-    }
+    let mouseY = e.clientY
+    let mouseX = e.clientX
+    // Choose the element that is closest to the pointer for dragging, within a specified threshold.
+    let subject = null
+    let distance = 3
+    let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
 
-    function dragged(event, d) {
-      console.log("draggin")
+    for (const node of nodes) {
+      const strokeWidth = node.getAttribute("stroke-width")
+      const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
+      const rect = node.getBoundingClientRect()
 
-      // change mode to drag if it is not already
-      if (canvasState.mode !== "drag") {
-        dispatch({
-          type: "change-mode",
-          mode: "drag",
-        })
-      }
+      // Adjust the bounding box to consider the stroke width.
+      const adjustedLeft = rect.left - distance - adjustedStrokeWidth
+      const adjustedRight = rect.right + distance + adjustedStrokeWidth
+      const adjustedTop = rect.top - distance - adjustedStrokeWidth
+      const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
 
-      const nodeName = this.nodeName
-      const node = d3.select(this)
-
-      parseDragElements(node, nodeName, event)
-
-      dispatch({
-        type: "drag-selection",
-      })
-    }
-
-    function draggedMulti(event, d) {
-      console.log("dragging multi")
-
-      // change mode to drag if it is not already
-      if (canvasState.mode !== "drag") {
-        dispatch({
-          type: "change-mode",
-          mode: "drag",
-        })
-      }
-
-      // all elements inside #selected-elements <g>
-      const childNodes = d3.select(this).selectAll("*")._groups[0]
-
-      for (let i = 0; i < childNodes.length; i++) {
-        const childNode = childNodes[i];
-        const node = d3.select(childNode)
-        const nodeName = childNode.nodeName
-        // 'childNode' is the actual child DOM element
-        parseDragElements(node, nodeName, event)
+      // Check if the cursor is within the adjusted bounding box.
+      if (
+        mouseX >= adjustedLeft &&
+        mouseX <= adjustedRight &&
+        mouseY >= adjustedTop &&
+        mouseY <= adjustedBottom
+      ) {
+        subject = node;
+        break; // Break early if a valid subject is found.
       }
     }
-
-    function dragend(event, d) {
-      console.log("dragEnd")
-      const test = []
-      test.push(this)
-      dispatch({
-        type: "change-mode",
-        mode: "select",
-      })
-    }
-
-    // if the currently moused element is a child of the current page ref
-    // this prevents us from manipulating the wrong elements
-    if (canvasPageRef.current && canvasPageRef.current.contains(e.target)) {
-      const node = d3.select(e.target)
+    
+    // create a hover-clone element which sits on top of the hovered element
+    // creating an illusion of hovered effect (blue border effect)
+    if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
+      const node = d3.select(subject)
 
       // don't work with hover clone node
       if (node.attr("id") === "hover-clone") return
@@ -283,30 +280,13 @@ function PageSpread({
           .attr("stroke", colors.blue.sixHundred)
           .style("pointer-events", "none")
       }
-
-      // when there are multiple nodes selected
-      if (node.attr("id") === "selected-elements") {
-        dispatch({
-          type: "change-mode",
-          mode: "drag"
-        })
-        node.call(d3.drag()
-          .on("start", dragstart)
-          .on("drag", draggedMulti)
-          .on("end", dragend))
-      }
-      else {
-        node.call(d3.drag()
-          .on("start", dragstart)
-          .on("drag", dragged)
-          .on("end", dragend))
-      }
     }
     else {
       dispatch({
         type: "change-mode",
-        mode: "select"
+        mode: "select",
       })
+      
       d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
       d3.select("#hover-clone").remove()
     }
@@ -330,6 +310,14 @@ function PageSpread({
       canvas: referenceElement,
     })
 
+    if (canvasRef.current && referenceElement) {
+      // all the child nodes of the canvas page
+      const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
+
+      // call drag on the reference element
+      d3.select(canvasRef.current).call(drag(nodes))
+    }
+
     if (canvasState.mode === "select" && referenceElement) {
       const {
         cancel,           // cleanup function.
@@ -342,7 +330,7 @@ function PageSpread({
         svg: canvasRef.current,
         // followings are optional parameters with default values.
         referenceElement: referenceElement,     // selects only descendants of this SVGElement if specified.
-        selector: strictIntersectionSelector,      // "enclosure": selects enclosed elements using getEnclosureList().
+        selector: makeSelections,      // "enclosure": selects enclosed elements using getEnclosureList().
         // "intersection": selects intersected elements using getIntersectionList().
         // function: custom selector implementation
 
@@ -414,7 +402,6 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
-      onMouseMove={e => handleMouseMove(e)}
     >
       <CoverPage
         bookData={bookData}
@@ -472,122 +459,3 @@ function PageSpread({
 }
 
 export default PageSpread
-
-// const getSelections = ({
-//   svg,
-//   referenceElement,
-//   pointerEvent, // listens to click and drag events
-//   dragAreaInClientCoordinate,
-//   dragAreaInSvgCoordinate,
-//   dragAreaInInitialSvgCoordinate,
-// }) => {
-//   var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement];
-
-//   var collectElements = function (into, svg, ancestor, filter) {
-//     for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
-//       if (element instanceof SVGGElement) {
-//         collectElements(into, svg, element, filter);
-//         continue;
-//       }
-//       for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
-//         var elementType = svgDragSelectElementTypes_1[_i];
-//         if (element instanceof elementType && filter(element)) {
-//           into.push(element);
-//         }
-//       }
-//     }
-//     return into;
-//   };
-
-//   var inRange = function (x, min, max) { return (min <= x && x <= max); };
-
-//   // Updated intersects function to check cursor distance.
-//   var intersects = function (areaInSvgCoordinate, bbox) {
-//     var left = areaInSvgCoordinate.x;
-//     var right = left + areaInSvgCoordinate.width;
-//     var top = areaInSvgCoordinate.y;
-//     var bottom = top + areaInSvgCoordinate.height;
-//     return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
-//       (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)));
-//   };
-
-//   function expandSVGRect(rect, margin) {
-//     // Create a new SVGRect object using createSVGRect.
-//     rect.x = rect.x - margin;
-//     rect.y = rect.y - margin;
-//     rect.width = rect.width + 2 * margin;
-//     rect.height = rect.height + 2 * margin;
-
-//     return rect;
-//   }
-
-//   var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate, cursorX, cursorY, maxDistance) {
-//     return svg.getIntersectionList
-//       ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 0), referenceElement))
-//       : collectElements([], svg, referenceElement || svg, function (element) {
-//         return intersects(areaInSvgCoordinate, element.getBBox());
-//       });
-//   };
-
-//   // Extract cursor position from the pointer event.
-//   const cursorX = pointerEvent.clientX;
-//   const cursorY = pointerEvent.clientY;
-
-//   // Define the maximum distance for selection (5 pixels).
-//   const maxDistance = 3;
-
-//   return getIntersections(
-//     svg,
-//     referenceElement,
-//     dragAreaInSvgCoordinate,
-//     dragAreaInInitialSvgCoordinate,
-//     cursorX,
-//     cursorY,
-//     maxDistance
-//   ).filter(element => {
-//     // the element that the pointer event raised is considered to intersect.
-//     if (pointerEvent.target === element) {
-//       return true
-//     }
-//     // strictly check only <path>s.
-//     if (!(element instanceof SVGPathElement)) {
-//       return true
-//     }
-
-//     // check if there is at least one enclosed point in the path.
-//     for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
-//       let { x, y } = element.getPointAtLength(i)
-
-//       let dragCoords = {
-//         x: dragAreaInSvgCoordinate.x - 12,
-//         y: dragAreaInSvgCoordinate.y - 12,
-//       }
-//       if (pageData.template) {
-//         dragCoords.x = dragCoords.x - templateMargins.left
-//         dragCoords.y = dragCoords.y - templateMargins.top
-//       }
-//       else {
-//         if (pageIsLeft) {
-//           dragCoords.x = dragCoords.x - leftPageMargins.left
-//           dragCoords.y = dragCoords.y - leftPageMargins.top
-//         }
-//         else {
-//           dragCoords.x = dragCoords.x - rightPageMargins.left
-//           dragCoords.y = dragCoords.y - rightPageMargins.top
-//         }
-//       }
-
-//       if (!pageIsLeft) {
-//         dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
-//       }
-
-//       if (
-//         dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-//         dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
-//       ) {
-//         return true
-//       }
-//     }
-//     return false
-//   })
-// };
