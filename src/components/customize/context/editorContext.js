@@ -67,6 +67,59 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   );
 }
 
+const parseAttributes = (ele) => {
+  const element = d3.select(ele)
+  const fill = element.attr("fill") || "none"
+  const stroke = element.attr("stroke") || "none"
+  const strokeOpacity = element.attr("stroke-opacity") || 1
+  const fillOpacity = element.attr("fill-opacity") || 1
+  const strokeWidth = convertToMM(element.attr("stroke-width")) || 0.088
+  const strokeDasharray = element.attr("stroke-dasharray") !== undefined ? processStringNumbers(element.attr("stroke-dasharray"), convertToMM) : ""
+  const strokeStyle = element.attr("strokeStyle") || "Solid"
+  const nodeAttributes = {
+    fill,
+    fillOpacity,
+    strokeOpacity,
+    stroke,
+    strokeWidth,
+    strokeDasharray,
+    strokeStyle,
+  }
+
+  return nodeAttributes
+}
+
+const parseBbox = (ele, path) => {
+  const bbox = ele.getBBox()
+  const bboxX = convertFloatFixed(bbox.x, 3)
+  const bboxY = convertFloatFixed(bbox.y, 3)
+  const bboxWidth = convertFloatFixed(bbox.width, 3)
+  const bboxHeight = convertFloatFixed(bbox.height, 3)
+  const nodeBbox = {}
+
+  if (path) {
+    // for selection path
+    nodeBbox = {
+      x: bboxX,
+      y: bboxY,
+      x2: bboxX,
+      y2: bboxY,
+      width: bboxWidth,
+      height: bboxHeight,
+    }
+  }
+  else {
+    nodeBbox = {
+      x: bboxX,
+      y: bboxY,
+      width: bboxWidth,
+      height: bboxHeight,
+    }
+  }
+
+  return nodeBbox
+}
+
 const parseSelection = (elements) => {
   // coords for the selection path box
   let selectionPath = {
@@ -80,67 +133,40 @@ const parseSelection = (elements) => {
   let selectionAttributes = {}
   let convertedSelectionBbox = {}
 
-  // loop through selected elements and get the coords of the bbox
-  // in this process, we convert the elements to svg.js objects so we should re-save them to state
-  const selectedElements = []
-
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
-    const { nodeName, attributes } = ele
-    const cy = attributes.cy ? convertFloatFixed(+attributes.cy.value, 3) : null
-    const cx = attributes.cx ? convertFloatFixed(+attributes.cx.value, 3) : null
-    const fill = attributes.fill ? attributes.fill.value : "none"
-    const stroke = attributes.stroke ? attributes.stroke.value : "none"
-    const strokeOpacity = attributes['stroke-opacity'] ? attributes['stroke-opacity'].value : 1
-    const fillOpacity = attributes['fill-opacity'] ? attributes['fill-opacity'].value : 1
-    const strokeWidth = attributes['stroke-width'] ? convertToMM(attributes['stroke-width'].value) : 0.088
-    const strokeDasharray = attributes['stroke-dasharray'] !== undefined ? processStringNumbers(attributes['stroke-dasharray'].value, convertToMM) : ""
-    const strokeStyle = ele.getAttribute("strokeStyle") || "Solid"
-    const nodeAttributes = {
-      fill,
-      fillOpacity,
-      strokeOpacity,
-      stroke,
-      strokeWidth,
-      strokeDasharray,
-      strokeStyle,
+    const element = d3.select(ele)
+    const { nodeName } = ele
+
+    // if the element is a child of a group, get the group's bbox instead
+    if (ele.parentNode && ele.parentNode instanceof SVGGElement) {
+      console.log(ele.parentNode.getBBox())
+      ele = ele.parentNode
+      if (ele.parentNode instanceof SVGGElement) {
+        ele = ele.parentNode
+      }
+      else {
+        const groupElements = ele.childNodes
+      }
     }
-    
-    // push converted elements into dummy array so we can save to state later
-    selectedElements.push(ele)
-    
-    // we need to offset the stroke-width if it exists because bbox() does not account for stroke-width
-    const strokeOffset = convertToPx(strokeWidth / 2)
+
+    // get the attribute values of the element
+    let nodeAttributes = parseAttributes(element)
 
     // get the bbox of the element
-    const bbox = ele.getBBox()
-    const bboxX = convertFloatFixed(bbox.x, 3)
-    const bboxY = convertFloatFixed(bbox.y, 3)
-    const bboxWidth = convertFloatFixed(bbox.width, 3)
-    const bboxHeight = convertFloatFixed(bbox.height, 3)
+    const strokeOffset = convertToPx(nodeAttributes.strokeWidth / 2)
     // for selection path
-    const nodeBbox = {
-      x: bboxX,
-      y: bboxY,
-      x2: bboxX,
-      y2: bboxY,
-      width: bboxWidth,
-      height: bboxHeight,
-    }
+    let nodeBbox = parseBbox(ele, true)
     // for selection bbox (client side inputs)
-    const nodeBboxAlt = {
-      x: bboxX,
-      y: bboxY,
-      width: bboxWidth,
-      height: bboxHeight,
-    }
+    let nodeBboxAlt = parseBbox(ele, false)
     const isCircle = nodeName === "circle" || nodeName === "ellipse"
     const isLine = nodeName === "line"
 
+    // adjust selection bbox values for different svg elements
     switch (true) {
       case isCircle:
-        nodeBboxAlt.x = cx
-        nodeBboxAlt.y = cy
+        nodeBboxAlt.x = convertFloatFixed(element.attr("cx"), 3)
+        nodeBboxAlt.y = convertFloatFixed(element.attr("cy"), 3)
         nodeBbox.x = convertFloatFixed(bboxX - strokeOffset, 3)
         nodeBbox.y = convertFloatFixed(bboxY - strokeOffset, 3)
         nodeBbox.x2 = convertFloatFixed(bboxX + strokeOffset, 3)
@@ -179,16 +205,10 @@ const parseSelection = (elements) => {
     width: typeof selectionBbox.width === "number" ? convertToMM(selectionBbox.width) : selectionBbox.width,
     height: typeof selectionBbox.height === "number" ? convertToMM(selectionBbox.height) : selectionBbox.height,
   }
-  
-  // console.log("🚀 ~ file: editorContext.js:170 ~ parseSelection ~ selectionPath:", selectionPath)
-  // console.log("🚀 ~ file: editorContext.js:142 ~ parseSelection ~ convertedSelectionBbox:", convertedSelectionBbox)
-  // console.log("🚀 ~ file: editorContext.js:154 ~ parseSelection ~ selectedElements:", selectedElements)
-  // console.log("🚀 ~ file: editorContext.js:156 ~ parseSelection ~ selectionAttributes:", selectionAttributes)
-  
 
   return {
     selectionBbox: convertedSelectionBbox,
-    tempSelectedElements: selectedElements,
+    tempSelectedElements: elements,
     selectionAttributes: selectionAttributes,
     selectionPath: path,
   }
@@ -241,6 +261,8 @@ const setCanvasState = (state, action) => {
       if (action.selectedElements.length > 0) {
         const results = parseSelection(action.selectedElements)
 
+        console.log(results.tempSelectedElements)
+
         return {
           ...state,
           selectionAttributes: results.selectionAttributes,
@@ -266,8 +288,11 @@ const setCanvasState = (state, action) => {
         const { tempSelectedElements } = state
         const lastElement = tempSelectedElements.length - 1
 
+        // if selected elements group exists, remove it and create a new one
         if (d3.select("#selected-elements")) {
           d3.selectAll("#selected-elements").remove()
+
+          // create a new selection group
           let selection = d3.select(state.canvas).append("g").attr("id", "selected-elements")
           
           if (tempSelectedElements.length > 1) {
@@ -304,6 +329,7 @@ const setCanvasState = (state, action) => {
 
         // move selected elements back into the canvas
         state.selectedElements.forEach(element => {
+          d3.select(element).attr("data-selected", null)
           state.canvas.insertBefore(element, state.lastNode)
         })
 

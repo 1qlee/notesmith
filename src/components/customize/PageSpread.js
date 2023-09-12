@@ -31,6 +31,7 @@ function PageSpread({
   const canvasPageRef = useRef(null)
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
+  const [multi, setMulti] = useState(false)
   const [svgLoaded, setSvgLoaded] = useState(false)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
@@ -272,13 +273,24 @@ function PageSpread({
 
         // slightly thicker stroke width so it shows over the original
         const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
-        node.clone()
-          .raise()
-          .attr("id", "hover-clone")
-          .attr("stroke-width", nodeStrokeWidth)
-          .attr("fill", "transparent")
-          .attr("stroke", colors.blue.sixHundred)
-          .style("pointer-events", "none")
+        
+        if (node.node().nodeName === "g") {
+          node.clone()
+            .raise()
+            .attr("id", "hover-clone")
+            .style("pointer-events", "none")
+            .append("rect")
+            .attr("fill", "transparent")
+        }
+        else {
+          node.clone()
+            .raise()
+            .attr("id", "hover-clone")
+            .attr("stroke-width", nodeStrokeWidth)
+            .attr("fill", "transparent")
+            .attr("stroke", colors.blue.sixHundred)
+            .style("pointer-events", "none")
+        }
       }
     }
     else {
@@ -315,7 +327,7 @@ function PageSpread({
       const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
 
       // call drag on the reference element
-      d3.select(canvasRef.current).call(drag(nodes))
+      d3.select(canvasRef.current).call(drag(nodes, dispatch))
     }
 
     if (canvasState.mode === "select" && referenceElement) {
@@ -364,6 +376,7 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          console.log(selectedElements)
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
@@ -378,11 +391,19 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           selectedElements,         // selected element array.
         }) {
-          if (selectedElements.length > 0) {
+          const numOfElements = selectedElements.length
+          if (numOfElements > 0) {
             dispatch({
               type: "select",
               selectedElements: selectedElements,
             })
+          }
+
+          if (numOfElements > 1) {
+            setMulti(true)
+          }
+          else {
+            setMulti(false)
           }
         },
       })
@@ -391,7 +412,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage])
+  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage, multi])
 
   return (
     <svg
@@ -402,6 +423,7 @@ function PageSpread({
       width={svgWidth * 2 + 3}
       x={spreadPosition.x}
       y={spreadPosition.y}
+      onMouseMove={e => handleMouseMove(e)}
     >
       <CoverPage
         bookData={bookData}

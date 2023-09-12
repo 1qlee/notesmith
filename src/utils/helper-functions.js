@@ -137,7 +137,8 @@ const convertToIn = pixels => {
 }
 
 const convertFloatFixed = (number, places) => {
-  return parseFloat(number.toFixed(places))
+  const convertedNum = Number(number)
+  return parseFloat(convertedNum.toFixed(places))
 }
 
 export {

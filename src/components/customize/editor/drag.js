@@ -17,7 +17,6 @@ function parseDragElements(node, nodeName, event) {
         .attr("cx", cx)
         .attr("cy", cy)
       break
-
     case "line":
       let line = node
       let x1 = convertFloatFixed((+line.attr("x1")) + event.dx, 3)
@@ -32,7 +31,6 @@ function parseDragElements(node, nodeName, event) {
         .attr("y1", y1)
         .attr("y2", y2)
       break
-
     default:
       node
         .raise()
@@ -65,7 +63,7 @@ function draggedMulti(event, d) {
   // }
 }
 
-function drag(nodes) {
+function drag(nodes, dispatch) {
   function parseDragSubject(node, nodeName, event) {
     const subject = d3.select(node)
     // handle various node types (shapes, lines, text, etc.)
@@ -97,66 +95,69 @@ function drag(nodes) {
     .y(function (d) { return d.y })
 
   function dragsubject(event) {
-    console.log("🚀 ~ file: drag.js:100 ~ dragsubject ~ event:", event)
-    const mouseY = event.y;
-    const mouseX = event.x;
-    console.log(`[${mouseX}, ${mouseY}]`)
+    console.log("🚀 ~ file: drag.js:98 ~ dragsubject ~ event:", event)
+    const mouseX = event.sourceEvent.clientX
+    const mouseY = event.sourceEvent.clientY
     let closestNode = null;
-    let distance = 5;
+    let distance = 3;
 
-    // Iterate through your nodes and calculate the distance to each node.
+    // Iterate through nodes and calculate the distance to each node.
     for (const node of nodes) {
       if (node.nodeName === "g") {
-        console.log("selection group")
+        console.log(node)
       }
-      else {
-        const strokeWidth = node.getAttribute("stroke-width")
-        const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-        const rect = node.getBoundingClientRect()
+      const strokeWidth = node.getAttribute("stroke-width")
+      const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
+      const rect = node.getBoundingClientRect()
 
-        // Adjust the bounding box to consider the stroke width.
-        const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-        const adjustedRight = rect.right + distance + adjustedStrokeWidth
-        const adjustedTop = rect.top - distance - adjustedStrokeWidth
-        const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
+      // Adjust the bounding box to consider the stroke width.
+      const adjustedLeft = rect.left - distance - adjustedStrokeWidth
+      const adjustedRight = rect.right + distance + adjustedStrokeWidth
+      const adjustedTop = rect.top - distance - adjustedStrokeWidth
+      const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
 
-        console.log(adjustedLeft, adjustedRight, adjustedTop, adjustedBottom)
-
-        // Check if the cursor is within the adjusted bounding box.
-        if (
-          mouseX >= adjustedLeft &&
-          mouseX <= adjustedRight &&
-          mouseY >= adjustedTop &&
-          mouseY <= adjustedBottom
-        ) {
-          closestNode = node;
-          break; // Break early if a valid subject is found.
-        }
+      // Check if the cursor is within the adjusted bounding box.
+      if (
+        mouseX >= adjustedLeft &&
+        mouseX <= adjustedRight &&
+        mouseY >= adjustedTop &&
+        mouseY <= adjustedBottom
+      ) {
+        closestNode = node;
+        break; // Break early if a valid subject is found.
       }
     }
-    console.log("🚀 ~ file: drag.js:128 ~ dragsubject ~ closestNode:", closestNode)
 
-    d3.select(closestNode).attr("fill", "red")
     // Return the closest node as the subject.
     return closestNode;
   }
 
   function dragstart(event, d) {
     console.log("drag start")
+    const { subject } = event
+
+    dispatch({
+      type: "change-mode",
+      mode: "drag",
+    })
   }
 
   function dragged(event, d) {
     console.log("draggin")
+    const { subject } = event
+    const { nodeName } = subject
+    const node = d3.select(subject)
 
-    // const nodeName = this.nodeName
-    // const node = d3.select(this)
-
-    // parseDragElements(node, nodeName, event)
-
+    parseDragElements(node, nodeName, event)
   }
   
   function dragend(event, d) {
     console.log("drag end")
+
+    dispatch({
+      type: "change-mode",
+      mode: "select",
+    })
   }
 
   return d3.drag()
