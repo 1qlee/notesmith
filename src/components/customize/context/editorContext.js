@@ -11,6 +11,7 @@ const initialState = {
   layerName: '',
   mode: 'select',
   multiselected: false,
+  selectionGroup: null,
   selectedElements: [],
   selectionAttributes: [],
   selectionBbox: {},
@@ -67,8 +68,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   );
 }
 
-const parseAttributes = (ele) => {
-  const element = d3.select(ele)
+const parseAttributes = (element) => {
   const fill = element.attr("fill") || "none"
   const stroke = element.attr("stroke") || "none"
   const strokeOpacity = element.attr("stroke-opacity") || 1
@@ -89,17 +89,17 @@ const parseAttributes = (ele) => {
   return nodeAttributes
 }
 
-const parseBbox = (ele, path) => {
-  const bbox = ele.getBBox()
+const parseBbox = (element, path) => {
+  const bbox = element.getBBox()
   const bboxX = convertFloatFixed(bbox.x, 3)
   const bboxY = convertFloatFixed(bbox.y, 3)
   const bboxWidth = convertFloatFixed(bbox.width, 3)
   const bboxHeight = convertFloatFixed(bbox.height, 3)
-  const nodeBbox = {}
+  let pathBbox = {}
 
   if (path) {
     // for selection path
-    nodeBbox = {
+    pathBbox = {
       x: bboxX,
       y: bboxY,
       x2: bboxX,
@@ -109,7 +109,7 @@ const parseBbox = (ele, path) => {
     }
   }
   else {
-    nodeBbox = {
+    pathBbox = {
       x: bboxX,
       y: bboxY,
       width: bboxWidth,
@@ -117,7 +117,11 @@ const parseBbox = (ele, path) => {
     }
   }
 
-  return nodeBbox
+  return pathBbox
+}
+
+const parseGroups = (group) => {
+  
 }
 
 const parseSelection = (elements) => {
@@ -132,6 +136,7 @@ const parseSelection = (elements) => {
   let selectionBbox = {}
   let selectionAttributes = {}
   let convertedSelectionBbox = {}
+  let selectedElements = []
 
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
@@ -141,58 +146,56 @@ const parseSelection = (elements) => {
     // if the element is a child of a group, get the group's bbox instead
     if (ele.parentNode && ele.parentNode instanceof SVGGElement) {
       console.log(ele.parentNode.getBBox())
-      ele = ele.parentNode
-      if (ele.parentNode instanceof SVGGElement) {
-        ele = ele.parentNode
-      }
-      else {
-        const groupElements = ele.childNodes
-      }
+      const groupNode = ele.parentNode
+      
+      selectedElements.push(groupNode)
+    }
+    else {
+      selectedElements.push(ele)
     }
 
     // get the attribute values of the element
     let nodeAttributes = parseAttributes(element)
-
     // get the bbox of the element
     const strokeOffset = convertToPx(nodeAttributes.strokeWidth / 2)
     // for selection path
-    let nodeBbox = parseBbox(ele, true)
-    // for selection bbox (client side inputs)
-    let nodeBboxAlt = parseBbox(ele, false)
+    let pathBbox = parseBbox(ele, true)
+    // for positioning attributes
+    let positioningBbox = parseBbox(ele, false)
     const isCircle = nodeName === "circle" || nodeName === "ellipse"
     const isLine = nodeName === "line"
 
     // adjust selection bbox values for different svg elements
     switch (true) {
       case isCircle:
-        nodeBboxAlt.x = convertFloatFixed(element.attr("cx"), 3)
-        nodeBboxAlt.y = convertFloatFixed(element.attr("cy"), 3)
-        nodeBbox.x = convertFloatFixed(bboxX - strokeOffset, 3)
-        nodeBbox.y = convertFloatFixed(bboxY - strokeOffset, 3)
-        nodeBbox.x2 = convertFloatFixed(bboxX + strokeOffset, 3)
-        nodeBbox.y2 = convertFloatFixed(bboxY + strokeOffset, 3)
+        positioningBbox.x = convertFloatFixed(element.attr("cx"), 3)
+        positioningBbox.y = convertFloatFixed(element.attr("cy"), 3)
+        pathBbox.x = convertFloatFixed(pathBbox.x - strokeOffset, 3)
+        pathBbox.y = convertFloatFixed(pathBbox.y - strokeOffset, 3)
+        pathBbox.x2 = convertFloatFixed(pathBbox.x2 + strokeOffset, 3)
+        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
         break
       case isLine:
-        nodeBbox.y2 = convertFloatFixed(bboxY + strokeOffset, 3)
+        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
         break
     }
     
     // set initial coords using the first element
     if (index === 0) {
-      selectionBbox = nodeBboxAlt
+      selectionBbox = positioningBbox
       selectionAttributes = nodeAttributes
     }
     
     // function to create bbox object for client
-    selectionBbox = consolidateMixedObjects(nodeBboxAlt, selectionBbox)
+    selectionBbox = consolidateMixedObjects(positioningBbox, selectionBbox)
     // function to create attributes object for client
     selectionAttributes = consolidateMixedObjects(nodeAttributes, selectionAttributes)
 
     // create coords for the selection path
-    selectionPath.x = Math.min(selectionPath.x, nodeBbox.x);
-    selectionPath.y = Math.min(selectionPath.y, nodeBbox.y);
-    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(nodeBbox.x2 + nodeBbox.width, 3))
-    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(nodeBbox.y2 + nodeBbox.height, 3))
+    selectionPath.x = Math.min(selectionPath.x, pathBbox.x);
+    selectionPath.y = Math.min(selectionPath.y, pathBbox.y);
+    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(pathBbox.x2 + pathBbox.width, 3))
+    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(pathBbox.y2 + pathBbox.height, 3))
   })
 
   // create the selection path based on coords
@@ -208,7 +211,7 @@ const parseSelection = (elements) => {
 
   return {
     selectionBbox: convertedSelectionBbox,
-    tempSelectedElements: elements,
+    tempSelectedElements: selectedElements,
     selectionAttributes: selectionAttributes,
     selectionPath: path,
   }
@@ -241,18 +244,21 @@ const setCanvasState = (state, action) => {
       log("changing selection...")
       const { newlyDeselectedElements, newlySelectedElements } = action
 
-      // toggle "data-selected" attribute directly through the DOM
+      // remove "data-selected" attribute from deselected elements
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
         newlyDeselectedElements.forEach(element => {
-          const ele = d3.select(element)
-          ele.attr("data-selected", null)
+          d3.select(element).attr("data-selected", null)
         })
       }
+      // add "data-selected" attribute to newly selected elements
       newlySelectedElements.forEach(element => {
         const ele = d3.select(element)
         const eleId = ele.attr("id")
+        const isGrouped = ele.node().parentNode instanceof SVGGElement
+
+        // if the element is part of a group don't give it the "data-selected" attribute
         // make sure we don't add the selection path to the selected elements
-        if (eleId !== "selection-path" && eleId !== "selection-group") {
+        if (!isGrouped && eleId !== "selection-path" && eleId !== "selection-group") {
           ele.attr('data-selected', '')
         }
       })
@@ -261,14 +267,12 @@ const setCanvasState = (state, action) => {
       if (action.selectedElements.length > 0) {
         const results = parseSelection(action.selectedElements)
 
-        console.log(results.tempSelectedElements)
-
         return {
           ...state,
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
-          tempSelectedElements: results.tempSelectedElements,
           selectionPath: results.selectionPath,
+          tempSelectedElements: results.tempSelectedElements,
         }
       }
       else {
@@ -284,59 +288,45 @@ const setCanvasState = (state, action) => {
     case "select":
       {
         log("selecting elements and saving them to state...")
-        let lastNode, selectedGroup
         const { tempSelectedElements } = state
         const lastElement = tempSelectedElements.length - 1
+        let lastNode
+        let selection = d3.select(state.canvas).append("g").attr("id", "selected-elements")
 
-        // if selected elements group exists, remove it and create a new one
-        if (d3.select("#selected-elements")) {
-          d3.selectAll("#selected-elements").remove()
-
-          // create a new selection group
-          let selection = d3.select(state.canvas).append("g").attr("id", "selected-elements")
-          
-          if (tempSelectedElements.length > 1) {
-            selection.style("pointer-events", "bounding-box")
-          }
-          else {
-            selection.style("pointer-events", "all")
-          }
-
-          selectedGroup = selection
-        }
-        else {
-          selectedGroup = d3.select("#selected-elements")
-        }
-
-        state.tempSelectedElements.forEach((element, index) => {
+        tempSelectedElements.forEach((element, index) => {
           if (index === lastElement) {
             lastNode = element.nextSibling
           }
-          selectedGroup.node().appendChild(element)
+          selection.node().appendChild(element)
         })
 
         return {
           ...state,
           selectedElements: state.tempSelectedElements,
+          selectionGroup: selection,
           lastNode: lastNode,
           tempSelectedElements: [],
         }
       }
     case "ungroup-selection": {
-      if (state.selectedElements) {
+      const { selectedElements, selectionGroup, lastNode, canvas } = state
+      
+      if (selectedElements) {
         // clear "data-selected" attribute from all selected elements
-        d3.selectAll("[data-selected]").attr("data-selected", null)
-
-        // move selected elements back into the canvas
-        state.selectedElements.forEach(element => {
+        selectedElements.forEach(element => {
           d3.select(element).attr("data-selected", null)
-          state.canvas.insertBefore(element, state.lastNode)
+          
+          if (lastNode) {
+            canvas.insertBefore(element, lastNode)
+          }
+          else {
+            canvas.appendChild(element)
+          }
         })
-
-        if (d3.select("#selected-elements")) {
-          d3.selectAll("#selected-elements").remove()
-        }
+        console.log(lastNode)
       }
+
+      d3.selectAll("#selected-elements").remove()
 
       return {
         ...state,

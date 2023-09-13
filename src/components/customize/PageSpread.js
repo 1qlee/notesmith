@@ -9,6 +9,7 @@ import drag from "./editor/drag"
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
 import CanvasPage from "./editor/CanvasPage"
+import { createPortal } from "react-dom"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -397,14 +398,15 @@ function PageSpread({
               type: "select",
               selectedElements: selectedElements,
             })
+            
+            if (numOfElements > 1) {
+              setMulti(true)
+            }
+            else {
+              setMulti(false)
+            }
           }
 
-          if (numOfElements > 1) {
-            setMulti(true)
-          }
-          else {
-            setMulti(false)
-          }
         },
       })
 

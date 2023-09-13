@@ -42,10 +42,6 @@ function CanvasPage({
     }
 
     dispatch({
-      type: "ungroup-selection"
-    })
-
-    dispatch({
       type: "reset"
     })
   }, [selectedPage, isSelected, pageTemplate, pageId])
