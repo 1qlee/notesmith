@@ -153,8 +153,9 @@ const DesignControls = () => {
 
   const handleDeletionAllowed = (value) => {
     dispatch({
-      type: "toggle-deletion",
-      deletionAllowed: value,
+      type: "toggle",
+      setting: "deletionAllowed",
+      value: value,
     })
   }
 

@@ -5,6 +5,7 @@ import svgDragSelect from "svg-drag-select"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import * as d3 from "d3"
 import drag from "./editor/drag"
+import { throttle } from "lodash"
 
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
@@ -34,6 +35,7 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [multi, setMulti] = useState(false)
   const [svgLoaded, setSvgLoaded] = useState(false)
+  const [hoverClone, setHoverClone] = useState(undefined)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
   const spreadPosition = {
@@ -225,85 +227,103 @@ function PageSpread({
   };
 
   // give hover "effect" to elements to aid with selection
-  function handleMouseMove(e) {
-    let mouseY = e.clientY
-    let mouseX = e.clientX
-    // Choose the element that is closest to the pointer for dragging, within a specified threshold.
-    let subject = null
-    let distance = 3
-    let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
+  const handleMouseMove = throttle(e => {
+    if (!canvasState.selecting) {
+      let mouseY = e.clientY
+      let mouseX = e.clientX
+      // Choose the element that is closest to the pointer for dragging, within a specified threshold.
+      let subject = null
+      let distance = 3
+      let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
 
-    for (const node of nodes) {
-      const strokeWidth = node.getAttribute("stroke-width")
-      const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-      const rect = node.getBoundingClientRect()
+      for (const node of nodes) {
+        const strokeWidth = node.getAttribute("stroke-width")
+        const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
+        const rect = node.getBoundingClientRect()
 
-      // Adjust the bounding box to consider the stroke width.
-      const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-      const adjustedRight = rect.right + distance + adjustedStrokeWidth
-      const adjustedTop = rect.top - distance - adjustedStrokeWidth
-      const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
+        // Adjust the bounding box to consider the stroke width.
+        const adjustedLeft = rect.left - distance - adjustedStrokeWidth
+        const adjustedRight = rect.right + distance + adjustedStrokeWidth
+        const adjustedTop = rect.top - distance - adjustedStrokeWidth
+        const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
 
-      // Check if the cursor is within the adjusted bounding box.
-      if (
-        mouseX >= adjustedLeft &&
-        mouseX <= adjustedRight &&
-        mouseY >= adjustedTop &&
-        mouseY <= adjustedBottom
-      ) {
-        subject = node;
-        break; // Break early if a valid subject is found.
-      }
-    }
-    
-    // create a hover-clone element which sits on top of the hovered element
-    // creating an illusion of hovered effect (blue border effect)
-    if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
-      const node = d3.select(subject)
-
-      // don't work with hover clone node
-      if (node.attr("id") === "hover-clone") return
-
-      // if the node is not our cloned hover node, create one
-      // we only create these for single node selections
-      // look for nodes that are not selected or is a selection group
-      if (node.attr("data-selected") === null && node.attr("id") !== "selected-elements") {
-        node.attr("data-hovered", "")
-        // remove any existing
-        d3.selectAll("#hover-clone").remove()
-
-        // slightly thicker stroke width so it shows over the original
-        const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
-        
-        if (node.node().nodeName === "g") {
-          node.clone()
-            .raise()
-            .attr("id", "hover-clone")
-            .style("pointer-events", "none")
-            .append("rect")
-            .attr("fill", "transparent")
-        }
-        else {
-          node.clone()
-            .raise()
-            .attr("id", "hover-clone")
-            .attr("stroke-width", nodeStrokeWidth)
-            .attr("fill", "transparent")
-            .attr("stroke", colors.blue.sixHundred)
-            .style("pointer-events", "none")
+        // Check if the cursor is within the adjusted bounding box.
+        if (
+          mouseX >= adjustedLeft &&
+          mouseX <= adjustedRight &&
+          mouseY >= adjustedTop &&
+          mouseY <= adjustedBottom
+        ) {
+          subject = node
+          break; // Break early if a valid subject is found.
         }
       }
+
+      // create a hover-clone element which sits on top of the hovered element
+      // creating an illusion of hovered effect (blue border effect)
+      if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
+        const node = d3.select(subject)
+
+        // don't work with hover clone node
+        if (node.attr("id") === "hover-clone") return
+
+        // don't work with hover clone node
+        // if (node.attr("id") === "hover-clone") return
+
+        // if the node is not our cloned hover node, create one
+        // we only create these for single node selections
+        // look for nodes that are not selected or is a selection group
+        if (node.attr("data-selected") === null && node.attr("id") !== "selected-elements") {
+          const cloneNotFound = d3.selectAll("#hover-clone").empty()
+          node.attr("data-hovered", "")
+
+          // if there is no clone, then create one
+          if (cloneNotFound) {
+            // slightly thicker stroke width so it shows over the original
+            const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
+
+            // if the node is a group, add an invisible rectangle to the cloned node
+            if (node.node().nodeName === "g") {
+              const groupClone = node.clone()
+                .raise()
+                .attr("id", "hover-clone")
+                .style("pointer-events", "none")
+                .append("rect")
+                .attr("fill", "transparent")
+
+              setHoverClone(groupClone.node())
+            }
+            else {
+              const nodeClone = node.clone()
+                .raise()
+                .attr("id", "hover-clone")
+                .attr("stroke-width", nodeStrokeWidth)
+                .attr("fill", "transparent")
+                .attr("stroke", colors.blue.sixHundred)
+                .style("pointer-events", "none")
+
+              setHoverClone(nodeClone.node())
+            }
+          }
+          // otherwise find the clone and do a comparison check against hoveredClone in state
+          else {
+            if (d3.select("#hover-clone").node() === hoverClone) {
+              return
+            }
+          }
+        }
+      }
+      else {
+        dispatch({
+          type: "change-mode",
+          mode: "select",
+        })
+
+        d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
+        d3.select("#hover-clone").remove()
+      }
     }
-    else {
-      dispatch({
-        type: "change-mode",
-        mode: "select",
-      })
-      
-      d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
-      d3.select("#hover-clone").remove()
-    }
-  }
+  }, 10)
 
   useEffect(() => {
     let referenceElement = null
@@ -366,6 +386,12 @@ function PageSpread({
           dispatch({
             type: "ungroup-selection",
           })
+
+          dispatch({
+            type: "toggle",
+            setting: "selecting",
+            value: true,
+          })
         },
 
         onSelectionChange({
@@ -377,7 +403,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          console.log(selectedElements)
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
@@ -407,6 +432,11 @@ function PageSpread({
             }
           }
 
+          dispatch({
+            type: "toggle",
+            setting: "selecting",
+            value: false,
+          })
         },
       })
 

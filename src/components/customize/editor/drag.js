@@ -1,5 +1,6 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
+import { throttle } from "lodash"
 
 function parseDragElements(node, nodeName, event) {
   const eventX = convertFloatFixed(event.x, 3)
@@ -142,14 +143,14 @@ function drag(nodes, dispatch) {
     })
   }
 
-  function dragged(event, d) {
+  const dragged = throttle((event, d) => {
     console.log("draggin")
     const { subject } = event
     const { nodeName } = subject
     const node = d3.select(subject)
 
     parseDragElements(node, nodeName, event)
-  }
+  }, 0)
   
   function dragend(event, d) {
     console.log("drag end")

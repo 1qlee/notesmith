@@ -16,6 +16,7 @@ const initialState = {
   selectionAttributes: [],
   selectionBbox: {},
   selectionPath: "",
+  selecting: false,
   tempSelectedElements: [],
   updated: false,
   zoom: 100,
@@ -145,7 +146,6 @@ const parseSelection = (elements) => {
 
     // if the element is a child of a group, get the group's bbox instead
     if (ele.parentNode && ele.parentNode instanceof SVGGElement) {
-      console.log(ele.parentNode.getBBox())
       const groupNode = ele.parentNode
       
       selectedElements.push(groupNode)
@@ -296,6 +296,7 @@ const setCanvasState = (state, action) => {
         tempSelectedElements.forEach((element, index) => {
           if (index === lastElement) {
             lastNode = element.nextSibling
+            console.log("🚀 ~ file: editorContext.js:298 ~ tempSelectedElements.forEach ~ lastNode:", lastNode)
           }
           selection.node().appendChild(element)
         })
@@ -323,7 +324,6 @@ const setCanvasState = (state, action) => {
             canvas.appendChild(element)
           }
         })
-        console.log(lastNode)
       }
 
       d3.selectAll("#selected-elements").remove()
@@ -349,11 +349,10 @@ const setCanvasState = (state, action) => {
         selectionPath: selectionPath,
       }
     }
-    case "toggle-deletion":
-
+    case "toggle":
       return {
         ...state,
-        deletionAllowed: action.deletionAllowed,
+        [action.setting]: action.value || !state[action.setting],
       }
     case "remove-selectionPath":
       log("toggling selection path...")
