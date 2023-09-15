@@ -91,10 +91,6 @@ function drag(nodes, dispatch) {
     }
   }
 
-  const quadtree = d3.quadtree()
-    .x(function (d) { return d.x })
-    .y(function (d) { return d.y })
-
   function dragsubject(event) {
     console.log("🚀 ~ file: drag.js:98 ~ dragsubject ~ event:", event)
     const mouseX = event.sourceEvent.clientX
@@ -136,15 +132,14 @@ function drag(nodes, dispatch) {
   function dragstart(event, d) {
     console.log("drag start")
     const { subject } = event
-
-    dispatch({
-      type: "change-mode",
-      mode: "drag",
-    })
   }
 
   const dragged = throttle((event, d) => {
     console.log("draggin")
+    dispatch({
+      type: "change-mode",
+      mode: "drag",
+    })
     const { subject } = event
     const { nodeName } = subject
     const node = d3.select(subject)

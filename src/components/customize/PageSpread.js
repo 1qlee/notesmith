@@ -237,6 +237,10 @@ function PageSpread({
       let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
 
       for (const node of nodes) {
+        if (d3.select(node).attr("id") === "hover-clone") {
+          continue
+        }
+
         const strokeWidth = node.getAttribute("stroke-width")
         const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
         const rect = node.getBoundingClientRect()
@@ -267,15 +271,13 @@ function PageSpread({
         // don't work with hover clone node
         if (node.attr("id") === "hover-clone") return
 
-        // don't work with hover clone node
-        // if (node.attr("id") === "hover-clone") return
-
         // if the node is not our cloned hover node, create one
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
         if (node.attr("data-selected") === null && node.attr("id") !== "selected-elements") {
+          // check if there is a hover clone already
           const cloneNotFound = d3.selectAll("#hover-clone").empty()
-          node.attr("data-hovered", "")
+          d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
           // if there is no clone, then create one
           if (cloneNotFound) {
@@ -310,6 +312,9 @@ function PageSpread({
             if (d3.select("#hover-clone").node() === hoverClone) {
               return
             }
+            else {
+              setHoverClone(null)
+            }
           }
         }
       }
@@ -319,7 +324,8 @@ function PageSpread({
           mode: "select",
         })
 
-        d3.selectAll("[data-hovered]").attr("data-hovered", null).attr("filter", null)
+        setHoverClone(null)
+        d3.selectAll("[data-hovered]").attr("data-hovered", null)
         d3.select("#hover-clone").remove()
       }
     }
@@ -342,14 +348,6 @@ function PageSpread({
       type: "initialize",
       canvas: referenceElement,
     })
-
-    if (canvasRef.current && referenceElement) {
-      // all the child nodes of the canvas page
-      const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
-
-      // call drag on the reference element
-      d3.select(canvasRef.current).call(drag(nodes, dispatch))
-    }
 
     if (canvasState.mode === "select" && referenceElement) {
       const {
@@ -379,6 +377,7 @@ function PageSpread({
             cancel()
             return
           }
+          console.log("🚀 ~ file: PageSpread.js:377 ~ useEffect ~ pointerEvent:", pointerEvent)
 
           // remove any existing hover clones before starting selection
           d3.selectAll("#hover-clone").remove()
@@ -403,6 +402,7 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          console.log("🚀 ~ file: PageSpread.js:405 ~ useEffect ~ pointerEvent:", pointerEvent)
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
@@ -437,8 +437,15 @@ function PageSpread({
             setting: "selecting",
             value: false,
           })
-        },
+        }
       })
+
+      if (canvasRef.current && referenceElement) {
+        // all the child nodes of the canvas page
+        const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
+
+        d3.select(canvasRef.current).call(drag(nodes, dispatch))
+      }
 
       return () => {
         cancel()
