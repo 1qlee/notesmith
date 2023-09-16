@@ -223,7 +223,7 @@ function ApplyTemplateModal({
       ...pageData,
       template: ""
     })
-    toast.success("Succesfully updated pages!")
+    toast.success("Updated pages.")
 
     setLoading(false)
     setShowModal({

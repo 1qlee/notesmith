@@ -236,30 +236,32 @@ function PageSpread({
       let distance = 3
       let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
 
-      for (const node of nodes) {
-        if (d3.select(node).attr("id") === "hover-clone") {
-          continue
-        }
+      if (nodes) {
+        for (const node of nodes) {
+          if (d3.select(node).attr("id") === "hover-clone") {
+            continue
+          }
 
-        const strokeWidth = node.getAttribute("stroke-width")
-        const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-        const rect = node.getBoundingClientRect()
+          const strokeWidth = node.getAttribute("stroke-width")
+          const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
+          const rect = node.getBoundingClientRect()
 
-        // Adjust the bounding box to consider the stroke width.
-        const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-        const adjustedRight = rect.right + distance + adjustedStrokeWidth
-        const adjustedTop = rect.top - distance - adjustedStrokeWidth
-        const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
+          // Adjust the bounding box to consider the stroke width.
+          const adjustedLeft = rect.left - distance - adjustedStrokeWidth
+          const adjustedRight = rect.right + distance + adjustedStrokeWidth
+          const adjustedTop = rect.top - distance - adjustedStrokeWidth
+          const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
 
-        // Check if the cursor is within the adjusted bounding box.
-        if (
-          mouseX >= adjustedLeft &&
-          mouseX <= adjustedRight &&
-          mouseY >= adjustedTop &&
-          mouseY <= adjustedBottom
-        ) {
-          subject = node
-          break; // Break early if a valid subject is found.
+          // Check if the cursor is within the adjusted bounding box.
+          if (
+            mouseX >= adjustedLeft &&
+            mouseX <= adjustedRight &&
+            mouseY >= adjustedTop &&
+            mouseY <= adjustedBottom
+          ) {
+            subject = node
+            break; // Break early if a valid subject is found.
+          }
         }
       }
 
@@ -377,7 +379,6 @@ function PageSpread({
             cancel()
             return
           }
-          console.log("🚀 ~ file: PageSpread.js:377 ~ useEffect ~ pointerEvent:", pointerEvent)
 
           // remove any existing hover clones before starting selection
           d3.selectAll("#hover-clone").remove()
@@ -402,7 +403,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          console.log("🚀 ~ file: PageSpread.js:405 ~ useEffect ~ pointerEvent:", pointerEvent)
           dispatch({
             type: "change-selection",
             selectedElements: selectedElements,
@@ -444,14 +444,16 @@ function PageSpread({
         // all the child nodes of the canvas page
         const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
 
-        d3.select(canvasRef.current).call(drag(nodes, dispatch))
+        if (nodes) {
+          d3.select(canvasRef.current).call(drag(nodes, dispatch))
+        }
       }
 
       return () => {
         cancel()
       }
     }
-  }, [canvasState.mode, canvasPageRef, svgLoaded, selectedPage, multi])
+  }, [canvasState.mode, canvasState.canvas, canvasPageRef, svgLoaded, selectedPage, multi])
 
   return (
     <svg

@@ -33,6 +33,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
       if (canvasState.deletionAllowed) {
         // if key pressed is delete or backspace
         if (e.key === "Delete" || e.key === "Backspace") {
+          console.log("Deleting")
           canvasState.selectedElements.forEach(ele => {
             ele.remove()
           })
@@ -229,15 +230,19 @@ const setCanvasState = (state, action) => {
     case "reset":
       log("Resetting...")
 
+      d3.selectAll("#selected-elements").remove()
       d3.selectAll("[data-selected]").attr("data-selected", null)
       d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
       return {
         ...state,
+        canvas: null,
+        mode: "select",
         selectedElements: [],
-        tempSelectedElements: [],
         selectionBbox: {},
+        selectionGroup: null,
         selectionPath: "",
+        tempSelectedElements: [],
       }
     // when user is dragging mouse to select elements
     case "change-selection": {
@@ -315,6 +320,8 @@ const setCanvasState = (state, action) => {
         }
       }
     case "ungroup-selection": {
+      log("ungrouping all selections...")
+
       const { selectedElements, selectionGroup, lastNode, canvas } = state
 
       d3.selectAll("[data-selected]").attr("data-selected", null)

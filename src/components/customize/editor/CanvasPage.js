@@ -42,7 +42,7 @@ function CanvasPage({
     }
 
     dispatch({
-      type: "reset"
+      type: "reset",
     })
   }, [selectedPage, isSelected, pageTemplate, pageId])
 

@@ -14,7 +14,6 @@ function parseDragElements(node, nodeName, event) {
       let cy = convertFloatFixed((+circle.attr("cy")) + event.dy, 3)
 
       node
-        .raise()
         .attr("cx", cx)
         .attr("cy", cy)
       break
@@ -26,7 +25,6 @@ function parseDragElements(node, nodeName, event) {
       let y2 = convertFloatFixed((+line.attr("y2")) + event.dy, 3)
 
       node
-        .raise()
         .attr("x1", x1)
         .attr("x2", x2)
         .attr("y1", y1)
@@ -34,7 +32,6 @@ function parseDragElements(node, nodeName, event) {
       break
     default:
       node
-        .raise()
         .attr("x", eventX)
         .attr("y", eventY)
       break
@@ -132,6 +129,8 @@ function drag(nodes, dispatch) {
   function dragstart(event, d) {
     console.log("drag start")
     const { subject } = event
+
+    d3.select(subject).attr("data-selecting", null)
   }
 
   const dragged = throttle((event, d) => {
