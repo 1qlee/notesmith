@@ -13,7 +13,7 @@ function Templatesbar({
   function handleTemplateChange(data) {
     dispatch({
       type: "ungroup-selection",
-      id: "selected-group",
+      id: "selection-group",
     })
     return setPageData(data)
   }

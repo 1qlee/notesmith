@@ -11,6 +11,7 @@ import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
 import CanvasPage from "./editor/CanvasPage"
 import { createPortal } from "react-dom"
+import { findClosestNode } from "./editor/editor-functions"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -229,41 +230,18 @@ function PageSpread({
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
     if (!canvasState.selecting) {
-      let mouseY = e.clientY
-      let mouseX = e.clientX
-      // Choose the element that is closest to the pointer for dragging, within a specified threshold.
+      let coords = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+      }
       let subject = null
-      let distance = 3
-      let nodes = d3.select(canvasPageRef.current).selectAll("*")._groups[0]
+      let nodes = d3.select(canvasPageRef.current).selectChildren()
 
       if (nodes) {
-        for (const node of nodes) {
-          if (d3.select(node).attr("id") === "hover-clone") {
-            continue
-          }
-
-          const strokeWidth = node.getAttribute("stroke-width")
-          const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-          const rect = node.getBoundingClientRect()
-
-          // Adjust the bounding box to consider the stroke width.
-          const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-          const adjustedRight = rect.right + distance + adjustedStrokeWidth
-          const adjustedTop = rect.top - distance - adjustedStrokeWidth
-          const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
-
-          // Check if the cursor is within the adjusted bounding box.
-          if (
-            mouseX >= adjustedLeft &&
-            mouseX <= adjustedRight &&
-            mouseY >= adjustedTop &&
-            mouseY <= adjustedBottom
-          ) {
-            subject = node
-            break; // Break early if a valid subject is found.
-          }
-        }
+        subject = findClosestNode(nodes, coords, 3)
       }
+
+      console.log(subject)
 
       // create a hover-clone element which sits on top of the hovered element
       // creating an illusion of hovered effect (blue border effect)
@@ -276,7 +254,7 @@ function PageSpread({
         // if the node is not our cloned hover node, create one
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
-        if (node.attr("data-selected") === null && node.attr("id") !== "selected-elements") {
+        if (node.attr("data-selected") === null && node.attr("id") !== "selection-group") {
           // check if there is a hover clone already
           const cloneNotFound = d3.selectAll("#hover-clone").empty()
           d3.selectAll("[data-hovered]").attr("data-hovered", null)
@@ -319,6 +297,13 @@ function PageSpread({
             }
           }
         }
+        // else if the node is the selection group
+        else if (node.attr("id") === "selection-group") {
+          dispatch({
+            type: "change-mode",
+            mode: "drag",
+          })
+        }
       }
       else {
         dispatch({
@@ -332,6 +317,10 @@ function PageSpread({
       }
     }
   }, 10)
+
+  const handleMouseClick = (e) => {
+    console.log(e)
+  }
 
   useEffect(() => {
     let referenceElement = null
@@ -441,12 +430,8 @@ function PageSpread({
       })
 
       if (canvasRef.current && referenceElement) {
-        // all the child nodes of the canvas page
-        const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
-
-        if (nodes) {
-          d3.select(canvasRef.current).call(drag(nodes, dispatch))
-        }
+        d3.select(canvasRef.current)
+          .call(drag(referenceElement, dispatch, canvasState))
       }
 
       return () => {
@@ -465,6 +450,7 @@ function PageSpread({
       x={spreadPosition.x}
       y={spreadPosition.y}
       onMouseMove={e => handleMouseMove(e)}
+      onPointerUp={e => handleMouseClick(e)}
     >
       <CoverPage
         bookData={bookData}
@@ -512,9 +498,10 @@ function PageSpread({
         setSvgLoaded={setSvgLoaded}
         svgSize={svgSize}
       />
-      {(canvasState.selectedElements.length > 0 || canvasState.tempSelectedElements.length > 0) && (
+      {(canvasState.selectedElements.length > 0 || canvasState.tempSelectedElements.length > 0) && canvasState.selectionPath && (
         <Selection
           position={pagePosition}
+          path={canvasState.selectionPath}
         />
       )}
     </svg>

@@ -1,22 +1,19 @@
 import React from "react"
 
-import { useEditorContext } from "./context/editorContext"
-
 const Selection = ({
   position,
+  path,
 }) => {
-  const canvasState = useEditorContext()
 
   return (
     <g 
-      id="selection-group"
+      id="selection-path"
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
     >
       <path 
-        id="selection-path"
-        d={canvasState.selectionPath}
+        d={path}
       />
     </g>
   )

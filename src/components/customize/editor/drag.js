@@ -1,6 +1,7 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { throttle } from "lodash"
+import { findClosestNode } from "./editor-functions"
 
 function parseDragElements(node, nodeName, event) {
   const eventX = convertFloatFixed(event.x, 3)
@@ -49,7 +50,7 @@ function draggedMulti(event, d) {
   //   })
   // }
 
-  // // all elements inside #selected-elements <g>
+  // // all elements inside #selection-group <g>
   // const childNodes = d3.select(this).selectAll("*")._groups[0]
 
   // for (let i = 0; i < childNodes.length; i++) {
@@ -61,7 +62,7 @@ function draggedMulti(event, d) {
   // }
 }
 
-function drag(nodes, dispatch) {
+function drag(referenceElement, dispatch, canvasState) {
   function parseDragSubject(node, nodeName, event) {
     const subject = d3.select(node)
     // handle various node types (shapes, lines, text, etc.)
@@ -89,41 +90,11 @@ function drag(nodes, dispatch) {
   }
 
   function dragsubject(event) {
-    console.log("🚀 ~ file: drag.js:98 ~ dragsubject ~ event:", event)
-    const mouseX = event.sourceEvent.clientX
-    const mouseY = event.sourceEvent.clientY
-    let closestNode = null;
-    let distance = 3;
+    // all the child nodes of the canvas page
+    const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
+    const { sourceEvent } = event
 
-    // Iterate through nodes and calculate the distance to each node.
-    for (const node of nodes) {
-      if (node.nodeName === "g") {
-        console.log(node)
-      }
-      const strokeWidth = node.getAttribute("stroke-width")
-      const adjustedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-      const rect = node.getBoundingClientRect()
-
-      // Adjust the bounding box to consider the stroke width.
-      const adjustedLeft = rect.left - distance - adjustedStrokeWidth
-      const adjustedRight = rect.right + distance + adjustedStrokeWidth
-      const adjustedTop = rect.top - distance - adjustedStrokeWidth
-      const adjustedBottom = rect.bottom + distance + adjustedStrokeWidth
-
-      // Check if the cursor is within the adjusted bounding box.
-      if (
-        mouseX >= adjustedLeft &&
-        mouseX <= adjustedRight &&
-        mouseY >= adjustedTop &&
-        mouseY <= adjustedBottom
-      ) {
-        closestNode = node;
-        break; // Break early if a valid subject is found.
-      }
-    }
-
-    // Return the closest node as the subject.
-    return closestNode;
+    return findClosestNode(nodes, sourceEvent, 3)
   }
 
   function dragstart(event, d) {
@@ -133,21 +104,36 @@ function drag(nodes, dispatch) {
     d3.select(subject).attr("data-selecting", null)
   }
 
+  const draggedMulti = throttle((event, d) => {
+    console.log("dragging multi")
+    
+  }, 0)
+
   const dragged = throttle((event, d) => {
     console.log("draggin")
+    
     dispatch({
       type: "change-mode",
       mode: "drag",
     })
+
     const { subject } = event
     const { nodeName } = subject
     const node = d3.select(subject)
 
     parseDragElements(node, nodeName, event)
+
+    dispatch({
+      type: "remove",
+      setting: "selectionPath",
+      value: "",
+    })
   }, 0)
   
   function dragend(event, d) {
     console.log("drag end")
+    
+    const { subject } = event
 
     dispatch({
       type: "change-mode",

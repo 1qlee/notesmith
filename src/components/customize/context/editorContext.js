@@ -230,7 +230,7 @@ const setCanvasState = (state, action) => {
     case "reset":
       log("Resetting...")
 
-      d3.selectAll("#selected-elements").remove()
+      d3.selectAll("#selection-group").remove()
       d3.selectAll("[data-selected]").attr("data-selected", null)
       d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
@@ -264,7 +264,7 @@ const setCanvasState = (state, action) => {
 
         // if the element is part of a group don't give it the "data-selected" attribute
         // make sure we don't add the selection path to the selected elements
-        if (!isGrouped && eleId !== "selection-path" && eleId !== "selection-group") {
+        if (!isGrouped && eleId !== "selection-path" && eleId !== "selection-path") {
           ele.attr('data-selecting', '')
         }
       })
@@ -297,7 +297,7 @@ const setCanvasState = (state, action) => {
         const { tempSelectedElements } = state
         const lastElement = tempSelectedElements.length - 1
         let lastNode
-        let selection = d3.select(state.canvas).append("g").attr("id", "selected-elements")
+        let selection = d3.select(state.canvas).append("g").attr("id", "selection-group")
 
         tempSelectedElements.forEach((element, index) => {
           if (index === lastElement) {
@@ -365,19 +365,31 @@ const setCanvasState = (state, action) => {
         selectionPath: selectionPath,
       }
     }
+    case "remake-selection": {
+      log("remaking selection...")
+
+      console.log(state.selectedElements)
+
+      return {
+        ...state,
+      }
+    }
     case "toggle":
+      log(`toggling setting: ${action.setting} to ${action.value}...`)
+
       return {
         ...state,
         [action.setting]: action.value || !state[action.setting],
       }
-    case "remove-selectionPath":
-      log("toggling selection path...")
+    case "remove":
+      // log(`removing state: ${action.setting}...`)
 
       return {
         ...state,
-        selectionPath: "",
+        [action.setting]: action.value || null,
       }
     case "change-mode":
+
       const { mode } = action
 
       if (mode !== state.mode) {
