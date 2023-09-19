@@ -101,7 +101,7 @@ function drag(referenceElement, dispatch, canvasState) {
     console.log("drag start")
     const { subject } = event
 
-    d3.select(subject).attr("data-selecting", null)
+    d3.select(subject).attr("data-selected", null)
   }
 
   const draggedMulti = throttle((event, d) => {

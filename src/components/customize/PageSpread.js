@@ -34,7 +34,6 @@ function PageSpread({
   const canvasPageRef = useRef(null)
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
-  const [multi, setMulti] = useState(false)
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
@@ -241,8 +240,6 @@ function PageSpread({
         subject = findClosestNode(nodes, coords, 3)
       }
 
-      console.log(subject)
-
       // create a hover-clone element which sits on top of the hovered element
       // creating an illusion of hovered effect (blue border effect)
       if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
@@ -319,7 +316,7 @@ function PageSpread({
   }, 10)
 
   const handleMouseClick = (e) => {
-    console.log(e)
+    console.log("Click")
   }
 
   useEffect(() => {
@@ -406,21 +403,6 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           selectedElements,         // selected element array.
         }) {
-          const numOfElements = selectedElements.length
-          if (numOfElements > 0) {
-            dispatch({
-              type: "select",
-              selectedElements: selectedElements,
-            })
-            
-            if (numOfElements > 1) {
-              setMulti(true)
-            }
-            else {
-              setMulti(false)
-            }
-          }
-
           dispatch({
             type: "toggle",
             setting: "selecting",
@@ -438,7 +420,7 @@ function PageSpread({
         cancel()
       }
     }
-  }, [canvasState.mode, canvasState.canvas, canvasPageRef, svgLoaded, selectedPage, multi])
+  }, [canvasState.mode, canvasState.canvas, canvasPageRef, svgLoaded, selectedPage])
 
   return (
     <svg
@@ -498,7 +480,7 @@ function PageSpread({
         setSvgLoaded={setSvgLoaded}
         svgSize={svgSize}
       />
-      {(canvasState.selectedElements.length > 0 || canvasState.tempSelectedElements.length > 0) && canvasState.selectionPath && (
+      {canvasState.selectedElements.length > 0 && canvasState.selectionPath && (
         <Selection
           position={pagePosition}
           path={canvasState.selectionPath}

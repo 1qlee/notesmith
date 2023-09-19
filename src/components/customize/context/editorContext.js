@@ -17,7 +17,6 @@ const initialState = {
   selectionBbox: {},
   selectionPath: "",
   selecting: false,
-  tempSelectedElements: [],
   updated: false,
   zoom: 100,
 }
@@ -143,13 +142,11 @@ const parseSelection = (elements) => {
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
     const element = d3.select(ele)
-    const { nodeName } = ele
+    const { nodeName, parentNode } = ele
 
     // if the element is a child of a group, get the group's bbox instead
-    if (ele.parentNode && ele.parentNode instanceof SVGGElement) {
-      const groupNode = ele.parentNode
-      
-      selectedElements.push(groupNode)
+    if (parentNode && parentNode instanceof SVGGElement && parentNode.getAttribute("id") !== "selection-group") {
+      selectedElements.push(parentNode)
     }
     else {
       selectedElements.push(ele)
@@ -212,7 +209,7 @@ const parseSelection = (elements) => {
 
   return {
     selectionBbox: convertedSelectionBbox,
-    tempSelectedElements: selectedElements,
+    selectedElements: selectedElements,
     selectionAttributes: selectionAttributes,
     selectionPath: path,
   }
@@ -242,30 +239,58 @@ const setCanvasState = (state, action) => {
         selectionBbox: {},
         selectionGroup: null,
         selectionPath: "",
-        tempSelectedElements: [],
       }
     // when user is dragging mouse to select elements
     case "change-selection": {
       log("changing selection...")
+      const { canvas, selectionGroup } = state
       const { newlyDeselectedElements, newlySelectedElements } = action
+      const lastElement = newlySelectedElements.length - 1
+      let lastNode
+      let selection
 
-      // remove "data-selecting" attribute from deselected elements
+      // create a selection group if it doesn't exist already
+      if (d3.select("#selection-group").empty()) {
+        selection = d3.select(state.canvas).append("g").attr("id", "selection-group")
+      }
+      else {
+        selection = selectionGroup
+      }
+
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
         newlyDeselectedElements.forEach(element => {
-          d3.select(element)
-            .attr("data-selecting", null)
+          const node = d3.select(element)
+          // remove "data-selected" attribute from deselected elements
+          node.attr("data-selected", null)
+
+          // if the nodes are in the selection group, remove them and re-insert them into the canvas
+          if (node.node().parentNode.getAttribute("id") === "selection-group") {
+            if (lastNode) {
+              canvas.insertBefore(element, lastNode)
+            }
+            else {
+              canvas.appendChild(element)
+            }
+          }
         })
       }
-      // add "data-selecting" attribute to newly selected elements
-      newlySelectedElements.forEach(element => {
-        const ele = d3.select(element)
-        const eleId = ele.attr("id")
-        const isGrouped = ele.node().parentNode instanceof SVGGElement
+
+      // add "data-selected" attribute to newly selected elements
+      newlySelectedElements.forEach((element, index) => {
+        const node = d3.select(element)
+        const nodeId = node.attr("id")
+        const isGrouped = node.node().parentNode instanceof SVGGElement
+
+        if (index === lastElement) {
+          lastNode = element.nextSibling
+        }
+
+        selection.node().appendChild(element)
 
         // if the element is part of a group don't give it the "data-selected" attribute
         // make sure we don't add the selection path to the selected elements
-        if (!isGrouped && eleId !== "selection-path" && eleId !== "selection-path") {
-          ele.attr('data-selecting', '')
+        if (!isGrouped && nodeId !== "selection-path" && nodeId !== "selection-path") {
+          node.attr('data-selected', '')
         }
       })
 
@@ -278,47 +303,27 @@ const setCanvasState = (state, action) => {
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
           selectionPath: results.selectionPath,
-          tempSelectedElements: results.tempSelectedElements,
+          selectedElements: results.selectedElements,
+          selectionGroup: selection,
+          lastNode: lastNode,
         }
       }
       else {
+        if (selection) {
+          selection.remove()
+        }
+        
         return {
           ...state,
           selectionAttributes: [],
           selectionBbox: {},
-          tempSelectedElements: [],
+          selectedElements: [],
           selectionPath: "",
+          selectionGroup: null,
+          lastNode: null,
         }
       }
     }
-    case "select":
-      {
-        log("selecting elements and saving them to state...")
-        const { tempSelectedElements } = state
-        const lastElement = tempSelectedElements.length - 1
-        let lastNode
-        let selection = d3.select(state.canvas).append("g").attr("id", "selection-group")
-
-        tempSelectedElements.forEach((element, index) => {
-          if (index === lastElement) {
-            lastNode = element.nextSibling
-          }
-          const node = d3.select(element)
-
-          selection.node().appendChild(element)
-
-          node.attr("data-selected", "")
-          node.attr("data-selecting", null)
-        })
-
-        return {
-          ...state,
-          lastNode: lastNode,
-          selectedElements: state.tempSelectedElements,
-          selectionGroup: selection,
-          tempSelectedElements: [],
-        }
-      }
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
@@ -329,7 +334,6 @@ const setCanvasState = (state, action) => {
       if (selectedElements) {
         // clear "data-selected" attribute from all selected elements
         selectedElements.forEach(element => {
-          
           if (lastNode) {
             canvas.insertBefore(element, lastNode)
           }
@@ -349,7 +353,6 @@ const setCanvasState = (state, action) => {
         selectionBbox: {},
         selectionGroup: null,
         selectionPath: "",
-        tempSelectedElements: [],
       }
     }
     case "mutate-selection": {
@@ -368,7 +371,6 @@ const setCanvasState = (state, action) => {
     case "remake-selection": {
       log("remaking selection...")
 
-      console.log(state.selectedElements)
 
       return {
         ...state,

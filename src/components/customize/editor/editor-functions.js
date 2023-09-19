@@ -5,8 +5,6 @@ const findClosestNode = (nodes, coords, distance) => {
   const mouseY = coords.clientY
   let closestNode = null
 
-  console.log(mouseX, mouseY)
-
   // Iterate through nodes and calculate the distance to each node.
   for (const node of nodes) {
     // calculate the targetable area for each node in the canvas
@@ -14,6 +12,9 @@ const findClosestNode = (nodes, coords, distance) => {
     let strokeWidth = node.getAttribute("stroke-width")
     let convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
     let rect = node.getBoundingClientRect()
+
+    // If the node is a group, check the last child node for a stroke width
+    // this will create a better targetable area
     if (node instanceof SVGGElement) {
       const { childNodes } = node
       const { length } = childNodes
