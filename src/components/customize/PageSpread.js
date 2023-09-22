@@ -263,14 +263,18 @@ function PageSpread({
 
             // if the node is a group, add an invisible rectangle to the cloned node
             if (node.node().nodeName === "g") {
-              const groupClone = node.clone()
+              const nodeBBox = node.node().getBBox()
+              const groupRect = d3.select(canvasPageRef.current).append("rect")
                 .raise()
                 .attr("id", "hover-clone")
+                .attr("stroke-width", nodeStrokeWidth)
+                .attr("stroke", colors.blue.sixHundred)
+                .attr("width", convertFloatFixed(nodeBBox.width, 3))
+                .attr("height", convertFloatFixed(nodeBBox.height, 3))
                 .style("pointer-events", "none")
-                .append("rect")
                 .attr("fill", "transparent")
 
-              setHoverClone(groupClone.node())
+              setHoverClone(groupRect.node())
             }
             else {
               const nodeClone = node.clone()
