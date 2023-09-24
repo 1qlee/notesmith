@@ -291,7 +291,7 @@ const setCanvasState = (state, action) => {
           orderedElements.push(nodeToAppend)
         }
         console.log("🚀 ~ file: editorContext.js:273 ~ setCanvasState ~ orderedElements:", orderedElements)
-        const results = parseSelection(selectedElements)
+        const results = parseSelection(orderedElements)
 
         return {
           ...state,
