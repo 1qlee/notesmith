@@ -393,8 +393,11 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          const parent = Array.from(referenceElement.children)
+
           dispatch({
             type: "change-selection",
+            parent: parent,
             selectedElements: selectedElements,
             newlySelectedElements: newlySelectedElements,
             newlyDeselectedElements: newlyDeselectedElements,

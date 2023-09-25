@@ -122,15 +122,21 @@ const parseBbox = (element, path) => {
   return pathBbox
 }
 
-function sortNodesByDOMOrder(scrambledNodes) {
-  return scrambledNodes.sort((a, b) => {
-    const position = a.compareDocumentPosition(b);
-    return position === Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-  });
+function sortNodesByDOMOrder(nodes) {
+  return nodes.sort((a, b) => {
+    const position = a.compareDocumentPosition(b)
+
+    if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+      return -1 // a comes before b
+    } else if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+      return 1 // b comes before a
+    } else {
+      return 0 // nodes are disconnected or equal
+    }
+  })
 }
 
 const parseSelection = (elements, cb) => {
-  console.log(elements)
   // coords for the selection path box
   let selectionPath = {
     x: Infinity,
@@ -244,8 +250,9 @@ const setCanvasState = (state, action) => {
     case "change-selection": {
       log("changing selection...")
       const { canvas, selectionGroup, lastNode } = state
-      const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
+      const { newlyDeselectedElements, newlySelectedElements, parent } = action
       let selection, currentNode
+      let orderedNodes = []
 
       // create a selection group if it doesn't exist already
       if (d3.select("#selection-group").empty()) {
@@ -258,17 +265,26 @@ const setCanvasState = (state, action) => {
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
         newlyDeselectedElements.forEach(element => {
           const node = d3.select(element)
-          
+
           // remove "data-selected" attribute from deselected elements
           node.attr("data-selected", null)
         })
       }
 
-      newlySelectedElements.forEach((element, index) => {
+      newlySelectedElements.forEach((element) => {
         const node = d3.select(element)
         const nodeId = node.attr("id")
         const parentNode = element.parentNode
         const isGrouped = parentNode && parentNode instanceof SVGGElement
+        const nodeToAppend = isGrouped ? parentNode : element
+        const nodePosition = parent.indexOf(nodeToAppend)
+        
+        const orderedNode = {
+          node: nodeToAppend,
+          position: nodePosition,
+        }
+
+        orderedNodes.push(orderedNode)
 
         if (!isGrouped && nodeId !== "selection-group") {
           node.attr('data-selected', '')
@@ -276,26 +292,14 @@ const setCanvasState = (state, action) => {
       })
 
       // if there are selected elements, parse them to create the selection box and attributes for designbar
-      if (selectedElements.length > 0) {
-        let orderedElements = []
-
-        for (let i = 0, numOfEles = selectedElements.length; i < numOfEles; i++) {
-          const node = selectedElements[i]
-          const parentNode = node.parentNode
-          const isGrouped = parentNode && parentNode.nodeName === "g" && parentNode.getAttribute("id") !== "selection-group"
-          const nodeToAppend = isGrouped ? parentNode : node
-
-          // if the element is part of a group, append the entire group to the selection group
-          selection.node().appendChild(nodeToAppend)
-
-          orderedElements.push(nodeToAppend)
-        }
-        console.log("🚀 ~ file: editorContext.js:273 ~ setCanvasState ~ orderedElements:", orderedElements)
-        const results = parseSelection(orderedElements)
+      if (action.selectedElements.length > 0) {
+        const newSelectedElements = [...state.selectedElements, ...orderedNodes]
+        console.log(newSelectedElements)
+        const results = parseSelection(action.selectedElements)
 
         return {
           ...state,
-          selectedElements: selectedElements,
+          selectedElements: newSelectedElements,
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
           selectionGroup: selection,
@@ -324,7 +328,6 @@ const setCanvasState = (state, action) => {
 
       const { selectedElements, selectionGroup, lastNode, canvas } = state
 
-      console.log(selectedElements)
 
       d3.selectAll("[data-selected]").attr("data-selected", null)
       

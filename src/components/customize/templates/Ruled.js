@@ -71,6 +71,7 @@ function Ruled({
           x2={line.x2}
           y1={line.y1}
           y2={line.y2}
+          id={`svg_${index + 1}`}
         >
         </line>
       ))}

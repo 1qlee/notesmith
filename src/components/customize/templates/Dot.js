@@ -49,6 +49,7 @@ function Dot({
           cx: convertFloatFixed(dotPos.x, 3),
           cy: convertFloatFixed(dotPos.y, 3),
           row: i,
+          id: `svg_${(i + 1) + (ii + 1)}`,
         }
 
         // loop will exit if the dots have passed the width of the page
@@ -88,6 +89,7 @@ function Dot({
           fillOpacity={dot.opacity}
           cx={dot.cx}
           cy={dot.cy}
+          id={`svg_${index + 1}`}
         >
         </ellipse>
       ))}
