@@ -393,11 +393,8 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          const parent = Array.from(referenceElement.children)
-
           dispatch({
             type: "change-selection",
-            parent: parent,
             selectedElements: selectedElements,
             newlySelectedElements: newlySelectedElements,
             newlyDeselectedElements: newlyDeselectedElements,
@@ -410,10 +407,17 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           selectedElements,         // selected element array.
         }) {
+          console.log(selectedElements)
           dispatch({
             type: "toggle",
             setting: "selecting",
             value: false,
+          })
+
+          dispatch({
+            type: "make-selection",
+            selectedElements: selectedElements,
+            pointerEvent: pointerEvent,
           })
         }
       })

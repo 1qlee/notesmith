@@ -49,28 +49,28 @@ function parseDragElements(nodes, event) {
   }
 }
 
-function draggedMulti(event, d) {
-  console.log("dragging multi")
+// function draggedMulti(event, d) {
+//   console.log("dragging multi")
 
-  // change mode to drag if it is not already
-  // if (canvasState.mode !== "drag") {
-  //   dispatch({
-  //     type: "change-mode",
-  //     mode: "drag",
-  //   })
-  // }
+//   // change mode to drag if it is not already
+//   if (canvasState.mode !== "drag") {
+//     dispatch({
+//       type: "change-mode",
+//       mode: "drag",
+//     })
+//   }
 
-  // // all elements inside #selection-group <g>
-  // const childNodes = d3.select(this).selectAll("*")._groups[0]
+//   // all elements inside #selection-group <g>
+//   const childNodes = d3.select(this).selectAll("*")._groups[0]
 
-  // for (let i = 0; i < childNodes.length; i++) {
-  //   const childNode = childNodes[i];
-  //   const node = d3.select(childNode)
-  //   const nodeName = childNode.nodeName
-  //   // 'childNode' is the actual child DOM element
-  //   parseDragElements(node, nodeName, event)
-  // }
-}
+//   for (let i = 0; i < childNodes.length; i++) {
+//     const childNode = childNodes[i];
+//     const node = d3.select(childNode)
+//     const nodeName = childNode.nodeName
+//     // 'childNode' is the actual child DOM element
+//     parseDragElements(node, nodeName, event)
+//   }
+// }
 
 // function parseDragSubject(node, nodeName, event) {
 //   const subject = d3.select(node)

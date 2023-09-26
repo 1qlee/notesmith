@@ -35,7 +35,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
         if (e.key === "Delete" || e.key === "Backspace") {
           console.log("Deleting")
           canvasState.selectedElements.forEach(ele => {
-            ele.remove()
+            ele.node.remove()
           })
           
           dispatch({
@@ -250,41 +250,23 @@ const setCanvasState = (state, action) => {
     case "change-selection": {
       log("changing selection...")
       const { canvas, selectionGroup, lastNode } = state
-      const { newlyDeselectedElements, newlySelectedElements, parent } = action
+      const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
+      const numOfElements = selectedElements.length
       let selection, currentNode
-      let orderedNodes = []
 
-      // create a selection group if it doesn't exist already
-      if (d3.select("#selection-group").empty()) {
-        selection = d3.select(state.canvas).append("g").attr("id", "selection-group")
-      }
-      else {
-        selection = selectionGroup
-      }
-
+      // remove data-selected from newly deselected elements
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
         newlyDeselectedElements.forEach(element => {
-          const node = d3.select(element)
-
-          // remove "data-selected" attribute from deselected elements
-          node.attr("data-selected", null)
+          d3.select(element).attr("data-selected", null)
         })
       }
 
+      // add data-selected to newly selected elements
       newlySelectedElements.forEach((element) => {
         const node = d3.select(element)
         const nodeId = node.attr("id")
         const parentNode = element.parentNode
         const isGrouped = parentNode && parentNode instanceof SVGGElement
-        const nodeToAppend = isGrouped ? parentNode : element
-        const nodePosition = parent.indexOf(nodeToAppend)
-        
-        const orderedNode = {
-          node: nodeToAppend,
-          position: nodePosition,
-        }
-
-        orderedNodes.push(orderedNode)
 
         if (!isGrouped && nodeId !== "selection-group") {
           node.attr('data-selected', '')
@@ -292,14 +274,57 @@ const setCanvasState = (state, action) => {
       })
 
       // if there are selected elements, parse them to create the selection box and attributes for designbar
-      if (action.selectedElements.length > 0) {
-        const newSelectedElements = [...state.selectedElements, ...orderedNodes]
-        console.log(newSelectedElements)
-        const results = parseSelection(action.selectedElements)
+      if (numOfElements > 0) {
+        const results = parseSelection(selectedElements)
+
+        if (numOfElements === 1) {
+          // we should only have 1 selected element, at index 0
+          const node = selectedElements[0]
+          const nextNode = node.nextSibling
+          let selectionGroup = null
+
+          if (nextNode) {
+            // insert a <g> before nextNode
+            selectionGroup = d3.select(canvas).insert("g", `#${nextNode.id}`).attr("id", "selection-group")
+          }
+          else {
+            selectionGroup = d3.select(canvas).append("g").attr("id", "selection-group")
+          }
+
+          selectionGroup.node().appendChild(node)
+
+          selection = selectionGroup
+        }
+        // let orderedElements = []
+        // const fragment = document.createDocumentFragment()
+
+        // for (let i = 0, length = action.selectedElements.length; i < length; i++) {
+        //   const ele = action.selectedElements[i]
+        //   const parentEle = ele.parentNode
+        //   const isGrouped = parentEle && parentEle instanceof SVGGElement
+        //   const eleToAppend = isGrouped ? parentEle : ele
+        //   const elePosition = parent.indexOf(eleToAppend)
+
+        //   const orderedEle = {
+        //     ele: eleToAppend,
+        //     position: elePosition,
+        //   }
+
+        //   orderedElements.push(orderedEle)
+        // }
+
+        // orderedElements.sort((a, b) => a.position - b.position)
+        // orderedElements.forEach(ele => {
+        //   fragment.appendChild(ele.ele)
+        // })
+        // if (action.selectedElements.length === orderedElements.length) {
+        //   selection.node().appendChild(fragment)
+        // }
+        // console.log(fragment)
 
         return {
           ...state,
-          selectedElements: newSelectedElements,
+          selectedElements: action.selectedElements,
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
           selectionGroup: selection,
@@ -323,6 +348,9 @@ const setCanvasState = (state, action) => {
         }
       }
     }
+    case "make-selection": {
+
+    }
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
@@ -331,16 +359,16 @@ const setCanvasState = (state, action) => {
 
       d3.selectAll("[data-selected]").attr("data-selected", null)
       
-      if (selectedElements) {
-        // clear "data-selected" attribute from all selected elements
-        selectedElements.forEach(element => {
-          canvas.appendChild(element)
-        })
-      }
+      // if (selectedElements) {
+      //   // clear "data-selected" attribute from all selected elements
+      //   selectedElements.forEach(element => {
+      //     canvas.appendChild(element.node)
+      //   })
+      // }
 
-      if (selectionGroup) {
-        selectionGroup.remove()
-      }
+      // if (selectionGroup) {
+      //   selectionGroup.remove()
+      // }
 
       return {
         ...state,
