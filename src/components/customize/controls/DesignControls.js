@@ -3,7 +3,6 @@ import { useEditorContext, useEditorDispatch } from "../context/editorContext"
 import { CaretDown, Question } from "@phosphor-icons/react"
 import { convertFloatFixed, convertToPx, processStringNumbers  } from "../../../utils/helper-functions"
 import { Tooltip } from "react-tooltip"
-import * as d3 from "d3"
 
 import { ControlWrapper, ControlFlexWrapper, ControlFlexChild } from "../templateControls/components/TemplateComponents"
 import { SelectWrapper, SelectIcon, StyledSelect, StyledLabel, StyledInput } from "../../form/FormComponents"
@@ -94,7 +93,7 @@ const DesignControls = () => {
       })
 
       dispatch({
-        type: "mutate-selection",
+        type: "parse-selection",
       })
     }
   }
@@ -146,7 +145,7 @@ const DesignControls = () => {
       })
 
       dispatch({
-        type: "mutate-selection",
+        type: "parse-selection",
       })
     }
   }

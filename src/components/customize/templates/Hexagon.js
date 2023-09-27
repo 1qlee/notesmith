@@ -120,6 +120,7 @@ function Hexagon({
           strokeWidth={hex.strokeWidth}
           d={hex.points}
           opacity={hex.opacity}
+          id={`svg_${index}`}
         />
       ))}
     </>

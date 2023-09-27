@@ -132,6 +132,10 @@ function drag(referenceElement, dispatch, canvasState) {
     parseDragElements(children, event)
 
     dispatch({
+      type: "parse-selection"
+    })
+
+    dispatch({
       type: "remove",
       setting: "selectionPath",
       value: "",
@@ -146,6 +150,10 @@ function drag(referenceElement, dispatch, canvasState) {
     dispatch({
       type: "change-mode",
       mode: "select",
+    })
+
+    dispatch({
+      type: "parse-selection"
     })
   }
 

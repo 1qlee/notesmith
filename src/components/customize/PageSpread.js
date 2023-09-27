@@ -10,7 +10,6 @@ import { throttle } from "lodash"
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
 import CanvasPage from "./editor/CanvasPage"
-import { createPortal } from "react-dom"
 import { findClosestNode } from "./editor/editor-functions"
 
 const minimumMargin = pageMargins.minimum
@@ -115,7 +114,7 @@ function PageSpread({
     dragAreaInSvgCoordinate,
     dragAreaInInitialSvgCoordinate,
   }) => {
-    var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement];
+    var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement]
 
     var collectElements = function (into, svg, ancestor, filter) {
       for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
@@ -126,58 +125,48 @@ function PageSpread({
         for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
           var elementType = svgDragSelectElementTypes_1[_i];
           if (element instanceof elementType && filter(element)) {
-            into.push(element);
+            into.push(element)
           }
         }
       }
       return into;
     };
 
-    var inRange = function (x, min, max) { return (min <= x && x <= max); };
+    var inRange = function (x, min, max) { return (min <= x && x <= max); }
 
     // Updated intersects function to check cursor distance.
     var intersects = function (areaInSvgCoordinate, bbox) {
-      var left = areaInSvgCoordinate.x;
-      var right = left + areaInSvgCoordinate.width;
-      var top = areaInSvgCoordinate.y;
-      var bottom = top + areaInSvgCoordinate.height;
+      var left = areaInSvgCoordinate.x
+      var right = left + areaInSvgCoordinate.width
+      var top = areaInSvgCoordinate.y
+      var bottom = top + areaInSvgCoordinate.height
       return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
-        (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)));
+        (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)))
     };
 
     function expandSVGRect(rect, margin) {
       // Create a new SVGRect object using createSVGRect.
-      rect.x = rect.x - margin;
-      rect.y = rect.y - margin;
-      rect.width = rect.width + 2 * margin;
-      rect.height = rect.height + 2 * margin;
+      rect.x = rect.x - margin
+      rect.y = rect.y - margin
+      rect.width = rect.width + 2 * margin
+      rect.height = rect.height + 2 * margin
 
-      return rect;
+      return rect
     }
 
-    var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate, cursorX, cursorY, maxDistance) {
+    var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
       return svg.getIntersectionList
         ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 3), referenceElement))
         : collectElements([], svg, referenceElement || svg, function (element) {
-          return intersects(areaInSvgCoordinate, element.getBBox());
-        });
+          return intersects(areaInSvgCoordinate, element.getBBox())
+        })
     };
-
-    // Extract cursor position from the pointer event.
-    const cursorX = pointerEvent.clientX;
-    const cursorY = pointerEvent.clientY;
-
-    // Define the maximum distance for selection (5 pixels).
-    const maxDistance = 3;
 
     return getIntersections(
       svg,
       referenceElement,
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
-      cursorX,
-      cursorY,
-      maxDistance
     ).filter(element => {
       // the element that the pointer event raised is considered to intersect.
       if (pointerEvent.target === element) {
@@ -224,7 +213,7 @@ function PageSpread({
       }
       return false
     })
-  };
+  }
 
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
@@ -238,6 +227,7 @@ function PageSpread({
 
       if (nodes) {
         subject = findClosestNode(nodes, coords, 3)
+        d3.select(subject).attr("fill", "pink")
       }
 
       // create a hover-clone element which sits on top of the hovered element
@@ -256,13 +246,25 @@ function PageSpread({
           const cloneNotFound = d3.selectAll("#hover-clone").empty()
           d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
-          // if there is no clone, then create one
-          if (cloneNotFound) {
+          // if hoverClone already exists in the state
+          if (hoverClone) {
+            // if the hovered node is the same as the hoverClone, do nothing
+            if (hoverClone.isSameNode(subject)) {
+              return
+            }
+            // if the hovered node is not the same as the hoverClone, remove the hoverClone
+            else {
+              setHoverClone(null)
+              d3.selectAll("[data-hovered]").attr("data-hovered", null)
+              d3.select("#hover-clone").remove()
+            }
+          }
+          else {
             // slightly thicker stroke width so it shows over the original
             const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
 
             // if the node is a group, add an invisible rectangle to the cloned node
-            if (node.node().nodeName === "g") {
+            if (node.node() instanceof SVGGElement) {
               const nodeBBox = node.node().getBBox()
               const groupRect = d3.select(canvasPageRef.current).append("rect")
                 .raise()
@@ -286,15 +288,6 @@ function PageSpread({
                 .style("pointer-events", "none")
 
               setHoverClone(nodeClone.node())
-            }
-          }
-          // otherwise find the clone and do a comparison check against hoveredClone in state
-          else {
-            if (d3.select("#hover-clone").node() === hoverClone) {
-              return
-            }
-            else {
-              setHoverClone(null)
             }
           }
         }
@@ -414,11 +407,11 @@ function PageSpread({
             value: false,
           })
 
-          dispatch({
-            type: "make-selection",
-            selectedElements: selectedElements,
-            pointerEvent: pointerEvent,
-          })
+          // dispatch({
+          //   type: "make-selection",
+          //   selectedElements: selectedElements,
+          //   pointerEvent: pointerEvent,
+          // })
         }
       })
 

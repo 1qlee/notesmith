@@ -20,16 +20,16 @@ import Logo from "../misc/Logo"
 //           Dashboard
 //         </NavLink>
 //       </NavItem>
-//       <NavItem>
-//         <NavLink
-//           as="a"
-//           tabIndex={0}
-//           onClick={() => handleSignOut()}
-//           color={colors.gray.nineHundred}
-//         >
-//           Sign out
-//         </NavLink>
-//       </NavItem>
+      // <NavItem>
+      //   <NavLink
+      //     as="a"
+      //     tabIndex={0}
+      //     onClick={() => handleSignOut()}
+      //     color={colors.gray.nineHundred}
+      //   >
+      //     Sign out
+      //   </NavLink>
+      // </NavItem>
 //     </>
 //   ) : (
 //     <>
