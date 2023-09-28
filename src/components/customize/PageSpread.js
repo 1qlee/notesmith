@@ -111,7 +111,7 @@ function PageSpread({
     referenceElement,
     pointerEvent, // listens to click and drag events
     dragAreaInClientCoordinate,
-    dragAreaInSvgCoordinate,
+    dragAreaInSvgCoordinate, // bbox of the selection rectangle relative to the svg canvas
     dragAreaInInitialSvgCoordinate,
   }) => {
     var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement]
@@ -132,34 +132,47 @@ function PageSpread({
       return into;
     };
 
-    var inRange = function (x, min, max) { return (min <= x && x <= max); }
-
     // Updated intersects function to check cursor distance.
     var intersects = function (areaInSvgCoordinate, bbox) {
-      var left = areaInSvgCoordinate.x
-      var right = left + areaInSvgCoordinate.width
-      var top = areaInSvgCoordinate.y
-      var bottom = top + areaInSvgCoordinate.height
-      return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
-        (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)))
-    };
+      // bbox for the selection box/rect
+      let rectX = areaInSvgCoordinate.x
+      let rectY = areaInSvgCoordinate.y
+      let rectWidth = areaInSvgCoordinate.width
+      let rectHeight = areaInSvgCoordinate.height
 
-    function expandSVGRect(rect, margin) {
-      // Create a new SVGRect object using createSVGRect.
-      rect.x = rect.x - margin
-      rect.y = rect.y - margin
-      rect.width = rect.width + 2 * margin
-      rect.height = rect.height + 2 * margin
+      if (pageIsLeft) {
+        rectX -= 12
+        rectY -= 12
+      }
+      else {
+        rectX -= (svgWidth + holesMargin)
+        rectY -= 12
+      }
 
-      return rect
+      if (
+        bbox.x + bbox.width + 3 >= rectX &&
+        bbox.x - 3 <= rectX + rectWidth &&
+        bbox.y + bbox.height + 3 >= rectY &&
+        bbox.y - 3 <= rectY + rectHeight
+      ) {
+        return true
+      }
     }
 
+    // function expandSVGRect(rect, margin) {
+    //   // Create a new SVGRect object using createSVGRect.
+    //   rect.x = rect.x - margin
+    //   rect.y = rect.y - margin
+    //   rect.width = rect.width + 2 * margin
+    //   rect.height = rect.height + 2 * margin
+
+    //   return rect
+    // }
+
     var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
-      return svg.getIntersectionList
-        ? Array.prototype.slice.call(svg.getIntersectionList(expandSVGRect(areaInInitialSvgCoordinate, 3), referenceElement))
-        : collectElements([], svg, referenceElement || svg, function (element) {
-          return intersects(areaInSvgCoordinate, element.getBBox())
-        })
+      return collectElements([], svg, referenceElement || svg, function (element) {
+        return intersects(areaInSvgCoordinate, element.getBBox())
+      })
     };
 
     return getIntersections(
@@ -227,7 +240,6 @@ function PageSpread({
 
       if (nodes) {
         subject = findClosestNode(nodes, coords, 3)
-        d3.select(subject).attr("fill", "pink")
       }
 
       // create a hover-clone element which sits on top of the hovered element
@@ -242,53 +254,44 @@ function PageSpread({
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
         if (node.attr("data-selected") === null && node.attr("id") !== "selection-group") {
-          // check if there is a hover clone already
-          const cloneNotFound = d3.selectAll("#hover-clone").empty()
           d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
-          // if hoverClone already exists in the state
-          if (hoverClone) {
-            // if the hovered node is the same as the hoverClone, do nothing
-            if (hoverClone.isSameNode(subject)) {
-              return
-            }
-            // if the hovered node is not the same as the hoverClone, remove the hoverClone
-            else {
-              setHoverClone(null)
-              d3.selectAll("[data-hovered]").attr("data-hovered", null)
-              d3.select("#hover-clone").remove()
-            }
+          // exit if we are hovering the same node
+          if (hoverClone && hoverClone.isSameNode(subject)) {
+            return
+          }
+
+          // remove existing hover clone node
+          d3.select("#hover-clone").remove()
+
+          // slightly thicker stroke width so it shows over the original
+          const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
+
+          // if the node is a group, add an invisible rectangle to the cloned node
+          if (node.node() instanceof SVGGElement) {
+            const nodeBBox = node.node().getBBox()
+            const groupRect = d3.select(canvasPageRef.current).append("rect")
+              .raise()
+              .attr("id", "hover-clone")
+              .attr("stroke-width", nodeStrokeWidth)
+              .attr("stroke", colors.blue.sixHundred)
+              .attr("width", convertFloatFixed(nodeBBox.width, 3))
+              .attr("height", convertFloatFixed(nodeBBox.height, 3))
+              .style("pointer-events", "none")
+              .attr("fill", "transparent")
+
+            setHoverClone(groupRect.node())
           }
           else {
-            // slightly thicker stroke width so it shows over the original
-            const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
+            const nodeClone = node.clone()
+              .raise()
+              .attr("id", "hover-clone")
+              .attr("stroke-width", nodeStrokeWidth)
+              .attr("fill", "transparent")
+              .attr("stroke", colors.blue.sixHundred)
+              .style("pointer-events", "none")
 
-            // if the node is a group, add an invisible rectangle to the cloned node
-            if (node.node() instanceof SVGGElement) {
-              const nodeBBox = node.node().getBBox()
-              const groupRect = d3.select(canvasPageRef.current).append("rect")
-                .raise()
-                .attr("id", "hover-clone")
-                .attr("stroke-width", nodeStrokeWidth)
-                .attr("stroke", colors.blue.sixHundred)
-                .attr("width", convertFloatFixed(nodeBBox.width, 3))
-                .attr("height", convertFloatFixed(nodeBBox.height, 3))
-                .style("pointer-events", "none")
-                .attr("fill", "transparent")
-
-              setHoverClone(groupRect.node())
-            }
-            else {
-              const nodeClone = node.clone()
-                .raise()
-                .attr("id", "hover-clone")
-                .attr("stroke-width", nodeStrokeWidth)
-                .attr("fill", "transparent")
-                .attr("stroke", colors.blue.sixHundred)
-                .style("pointer-events", "none")
-
-              setHoverClone(nodeClone.node())
-            }
+            setHoverClone(nodeClone.node())
           }
         }
         // else if the node is the selection group
