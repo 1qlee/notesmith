@@ -27,8 +27,8 @@ const findClosestNode = (nodes, coords, distance) => {
 
     // Adjust the bounding box to consider the stroke width as well as distance
     // distance is the amount of pixels (leeway) to add to the bounding box
-    let adjustedLeft = rect.left - distance - convertedStrokeWidth
-    let adjustedRight = rect.right + distance + convertedStrokeWidth
+    let adjustedLeft = rect.left - distance
+    let adjustedRight = rect.right + distance
     let adjustedTop = rect.top - distance - convertedStrokeWidth
     let adjustedBottom = rect.bottom + distance + convertedStrokeWidth
 

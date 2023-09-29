@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from "react"
-import { pageMargins, colors } from "../../styles/variables"
 import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
-import svgDragSelect from "svg-drag-select"
+import { pageMargins, colors } from "../../styles/variables"
+import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
+import { findClosestNode } from "./editor/editor-functions"
 import * as d3 from "d3"
 import drag from "./editor/drag"
-import { throttle } from "lodash"
+import svgDragSelect from "svg-drag-select"
 
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
 import CanvasPage from "./editor/CanvasPage"
-import { findClosestNode } from "./editor/editor-functions"
 
 const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
@@ -114,26 +114,35 @@ function PageSpread({
     dragAreaInSvgCoordinate, // bbox of the selection rectangle relative to the svg canvas
     dragAreaInInitialSvgCoordinate,
   }) => {
-    var svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement]
+    const svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement, SVGGElement]
 
-    var collectElements = function (into, svg, ancestor, filter) {
-      for (var element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
-        if (element instanceof SVGGElement) {
+    const collectElements = function (into, svg, ancestor, filter) {
+      for (let element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
+        if (element instanceof SVGGElement && element.getAttribute("id") === "selection-group") {
           collectElements(into, svg, element, filter);
           continue;
         }
-        for (var _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
-          var elementType = svgDragSelectElementTypes_1[_i];
+        for (let _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
+          let elementType = svgDragSelectElementTypes_1[_i];
           if (element instanceof elementType && filter(element)) {
             into.push(element)
           }
         }
       }
+
       return into;
     };
 
     // Updated intersects function to check cursor distance.
-    var intersects = function (areaInSvgCoordinate, bbox) {
+    const intersects = function (areaInSvgCoordinate, element) {
+      let bbox = element.getBBox()
+      let convertedStrokeWidth = 0
+
+      // If the element is a line, check the last child node for a stroke width
+      if (element instanceof SVGLineElement) {
+        convertedStrokeWidth = convertFloatFixed(element.getAttribute("stroke-width") / 2, 3)
+      }
+
       // bbox for the selection box/rect
       let rectX = areaInSvgCoordinate.x
       let rectY = areaInSvgCoordinate.y
@@ -152,14 +161,15 @@ function PageSpread({
       if (
         bbox.x + bbox.width + 3 >= rectX &&
         bbox.x - 3 <= rectX + rectWidth &&
-        bbox.y + bbox.height + 3 >= rectY &&
-        bbox.y - 3 <= rectY + rectHeight
+        bbox.y + bbox.height + 3 + convertedStrokeWidth >= rectY &&
+        bbox.y - 3 - convertedStrokeWidth <= rectY + rectHeight
       ) {
         return true
       }
     }
 
     // function expandSVGRect(rect, margin) {
+    //   console.log("yo")
     //   // Create a new SVGRect object using createSVGRect.
     //   rect.x = rect.x - margin
     //   rect.y = rect.y - margin
@@ -171,9 +181,59 @@ function PageSpread({
 
     var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
       return collectElements([], svg, referenceElement || svg, function (element) {
-        return intersects(areaInSvgCoordinate, element.getBBox())
+        return intersects(areaInSvgCoordinate, element)
       })
     };
+
+    // returns an array of selected elements
+    // const getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
+    //   const ref = referenceElement || svg
+    //   const nodes = d3.select(ref).selectChildren()
+    //   let selectedElements = []
+
+    //   for (const node of nodes) {
+    //     // skip selection group <g> element
+    //     if (node.getAttribute("id") === "selection-group") {
+    //       getIntersections(node, node, areaInSvgCoordinate, areaInInitialSvgCoordinate)
+    //       continue
+    //     }
+
+    //     let bbox = node.getBBox()
+    //     let convertedStrokeWidth = 0
+
+    //     // If the element is a line, check the last child node for a stroke width
+    //     if (node instanceof SVGLineElement) {
+    //       convertedStrokeWidth = convertFloatFixed(node.getAttribute("stroke-width") / 2, 3)
+    //     }
+
+    //     // bbox for the selection box/rect
+    //     let rectX = areaInSvgCoordinate.x
+    //     let rectY = areaInSvgCoordinate.y
+    //     let rectWidth = areaInSvgCoordinate.width
+    //     let rectHeight = areaInSvgCoordinate.height
+
+    //     if (pageIsLeft) {
+    //       rectX -= 12
+    //       rectY -= 12
+    //     }
+    //     else {
+    //       rectX -= (svgWidth + holesMargin)
+    //       rectY -= 12
+    //     }
+
+    //     if (
+    //       bbox.x + bbox.width + 3 >= rectX &&
+    //       bbox.x - 3 <= rectX + rectWidth &&
+    //       bbox.y + bbox.height + 3 + convertedStrokeWidth >= rectY &&
+    //       bbox.y - 3 - convertedStrokeWidth <= rectY + rectHeight
+    //     ) {
+    //       selectedElements.push(node)
+    //     }
+    //   }
+
+
+    //   return selectedElements
+    // }
 
     return getIntersections(
       svg,
@@ -389,12 +449,14 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          dispatch({
-            type: "change-selection",
-            selectedElements: selectedElements,
-            newlySelectedElements: newlySelectedElements,
-            newlyDeselectedElements: newlyDeselectedElements,
-          })
+          if (selectedElements && selectedElements.length > 0) {
+            dispatch({
+              type: "change-selection",
+              selectedElements: selectedElements,
+              newlySelectedElements: newlySelectedElements,
+              newlyDeselectedElements: newlyDeselectedElements,
+            })
+          }
         },
 
         onSelectionEnd({

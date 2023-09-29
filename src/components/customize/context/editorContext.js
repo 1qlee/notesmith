@@ -35,7 +35,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
         if (e.key === "Delete" || e.key === "Backspace") {
           console.log("Deleting")
           canvasState.selectedElements.forEach(ele => {
-            ele.node.remove()
+            ele.remove()
           })
           
           dispatch({
@@ -251,9 +251,8 @@ const setCanvasState = (state, action) => {
       log("changing selection...")
       const { canvas, lastNode } = state
       const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
-      console.log("🚀 ~ file: editorContext.js:254 ~ setCanvasState ~ selectedElements:", selectedElements)
       const numOfElements = selectedElements.length
-      let selection, currentNode
+      let selectionGroup, currentNode
 
       // remove data-selected from newly deselected elements
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
@@ -277,16 +276,18 @@ const setCanvasState = (state, action) => {
       // if there are selected elements, parse them to create the selection box and attributes for designbar
       if (numOfElements > 0) {
         if (numOfElements === 1) {
+          console.log(selectedElements)
           // we should only have 1 selected element, at index 0
           let node = selectedElements[0]
           let { nextSibling, parentNode } = node
-          let selectionGroup = null
+
+          d3.select("#selection-group").remove()
 
           // if the element is wrapped in a group, select the group instead
-          if (parentNode instanceof SVGGElement && parentNode.getAttribute("id") !== "selection-group") {
-            node = parentNode
-            nextSibling = parentNode.nextSibling
-          }
+          // if (parentNode instanceof SVGGElement && parentNode.getAttribute("id") !== "selection-group") {
+          //   node = parentNode
+          //   nextSibling = parentNode.nextSibling
+          // }
 
           // insert a group before nextSibling
           if (nextSibling) {
@@ -299,8 +300,6 @@ const setCanvasState = (state, action) => {
 
           // append the node to the group
           selectionGroup.node().appendChild(node)
-
-          selection = selectionGroup
         }
         else {
           // any number of nodes greater than 1
@@ -342,11 +341,13 @@ const setCanvasState = (state, action) => {
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
           selectionPath: results.selectionPath,
-          selectionGroup: selection,
           lastNode: currentNode ? currentNode : lastNode,
         }
       }
       else {
+        if (selectionGroup) {
+          selectionGroup.remove()
+        }
         
         return {
           ...state,
