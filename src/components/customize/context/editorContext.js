@@ -136,7 +136,7 @@ function sortNodesByDOMOrder(nodes) {
   })
 }
 
-const parseSelection = (elements, cb) => {
+const parseSelection = (elements) => {
   // coords for the selection path box
   let selectionPath = {
     x: Infinity,
@@ -164,10 +164,11 @@ const parseSelection = (elements, cb) => {
     let positioningBbox = parseBbox(ele, false)
     const isCircle = nodeName === "circle" || nodeName === "ellipse"
     const isLine = nodeName === "line"
+    const isGroup = ele instanceof SVGGElement
 
     // adjust selection bbox values for different svg elements
     switch (true) {
-      case isCircle:
+      case isCircle: 
         positioningBbox.x = convertFloatFixed(element.attr("cx"), 3)
         positioningBbox.y = convertFloatFixed(element.attr("cy"), 3)
         pathBbox.x = convertFloatFixed(pathBbox.x - strokeOffset, 3)
@@ -175,8 +176,11 @@ const parseSelection = (elements, cb) => {
         pathBbox.x2 = convertFloatFixed(pathBbox.x2 + strokeOffset, 3)
         pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
         break
-      case isLine:
+      case isLine: 
         pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
+        break
+      case isGroup:
+        console.log("Hello group")
         break
     }
     
@@ -196,11 +200,6 @@ const parseSelection = (elements, cb) => {
     selectionPath.y = Math.min(selectionPath.y, pathBbox.y);
     selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(pathBbox.x2 + pathBbox.width, 3))
     selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(pathBbox.y2 + pathBbox.height, 3))
-
-    if (cb) {
-      // fire the callback
-      cb(ele)
-    }
   })
 
   // create the selection path based on coords
@@ -276,18 +275,11 @@ const setCanvasState = (state, action) => {
       // if there are selected elements, parse them to create the selection box and attributes for designbar
       if (numOfElements > 0) {
         if (numOfElements === 1) {
-          console.log(selectedElements)
           // we should only have 1 selected element, at index 0
           let node = selectedElements[0]
           let { nextSibling, parentNode } = node
 
           d3.select("#selection-group").remove()
-
-          // if the element is wrapped in a group, select the group instead
-          // if (parentNode instanceof SVGGElement && parentNode.getAttribute("id") !== "selection-group") {
-          //   node = parentNode
-          //   nextSibling = parentNode.nextSibling
-          // }
 
           // insert a group before nextSibling
           if (nextSibling) {
@@ -308,32 +300,6 @@ const setCanvasState = (state, action) => {
         }
 
         const results = parseSelection(selectedElements)
-        // let orderedElements = []
-        // const fragment = document.createDocumentFragment()
-
-        // for (let i = 0, length = action.selectedElements.length; i < length; i++) {
-        //   const ele = action.selectedElements[i]
-        //   const parentEle = ele.parentNode
-        //   const isGrouped = parentEle && parentEle instanceof SVGGElement
-        //   const eleToAppend = isGrouped ? parentEle : ele
-        //   const elePosition = parent.indexOf(eleToAppend)
-
-        //   const orderedEle = {
-        //     ele: eleToAppend,
-        //     position: elePosition,
-        //   }
-
-        //   orderedElements.push(orderedEle)
-        // }
-
-        // orderedElements.sort((a, b) => a.position - b.position)
-        // orderedElements.forEach(ele => {
-        //   fragment.appendChild(ele.ele)
-        // })
-        // if (action.selectedElements.length === orderedElements.length) {
-        //   selection.node().appendChild(fragment)
-        // }
-        // console.log(fragment)
 
         return {
           ...state,
@@ -341,22 +307,28 @@ const setCanvasState = (state, action) => {
           selectionAttributes: results.selectionAttributes,
           selectionBbox: results.selectionBbox,
           selectionPath: results.selectionPath,
-          lastNode: currentNode ? currentNode : lastNode,
         }
       }
       else {
-        if (selectionGroup) {
+        const selectionGroup = d3.select("#selection-group")
+        const isGroupEmpty = selectionGroup && selectionGroup.empty()
+
+        if (!isGroupEmpty) {
+          const nextNode = selectionGroup.node().nextSibling
+
+          Array.from(selectionGroup.node().children).forEach(ele => {
+            canvas.insertBefore(ele, nextNode)
+          })
+
           selectionGroup.remove()
         }
         
         return {
           ...state,
+          selectedElements: [],
           selectionAttributes: [],
           selectionBbox: {},
-          selectedElements: [],
           selectionPath: "",
-          selectionGroup: null,
-          lastNode: null,
         }
       }
     }
