@@ -551,9 +551,8 @@ rect.selection {
 rect.overlay {
   cursor: default;
 }
-[data-selected],
-[data-selecting] {
-  stroke: #1a73e8;
+[data-selected] {
+  outline: 1px solid #1a73e8;
 }
 #selection-path {
   stroke: #1a73e8;

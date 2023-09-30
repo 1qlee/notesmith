@@ -153,6 +153,12 @@ function drag(referenceElement, dispatch, canvasState) {
     })
 
     dispatch({
+      type: "toggle",
+      setting: "selecting",
+      value: false,
+    })
+
+    dispatch({
       type: "parse-selection"
     })
   }

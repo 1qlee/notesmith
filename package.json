@@ -2,7 +2,7 @@
   "name": "notesmith",
   "private": true,
   "description": "Web app for Notesmith",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "<wonq33@gmail.com>",
   "dependencies": {
     "@easypost/api": "^6.1.0",

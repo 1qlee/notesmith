@@ -152,7 +152,6 @@ const parseSelection = (elements) => {
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
     const element = d3.select(ele)
-    const { nodeName } = ele
 
     // get the attribute values of the element
     let nodeAttributes = parseAttributes(element)
@@ -162,9 +161,8 @@ const parseSelection = (elements) => {
     let pathBbox = parseBbox(ele, true)
     // for positioning attributes
     let positioningBbox = parseBbox(ele, false)
-    const isCircle = nodeName === "circle" || nodeName === "ellipse"
-    const isLine = nodeName === "line"
-    const isGroup = ele instanceof SVGGElement
+    const isCircle = ele instanceof SVGCircleElement || ele instanceof SVGEllipseElement
+    const isLine = ele instanceof SVGLineElement
 
     // adjust selection bbox values for different svg elements
     switch (true) {
@@ -178,9 +176,6 @@ const parseSelection = (elements) => {
         break
       case isLine: 
         pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
-        break
-      case isGroup:
-        console.log("Hello group")
         break
     }
     
@@ -196,8 +191,8 @@ const parseSelection = (elements) => {
     selectionAttributes = consolidateMixedObjects(nodeAttributes, selectionAttributes)
 
     // create coords for the selection path
-    selectionPath.x = Math.min(selectionPath.x, pathBbox.x);
-    selectionPath.y = Math.min(selectionPath.y, pathBbox.y);
+    selectionPath.x = Math.min(selectionPath.x, pathBbox.x)
+    selectionPath.y = Math.min(selectionPath.y, pathBbox.y)
     selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(pathBbox.x2 + pathBbox.width, 3))
     selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(pathBbox.y2 + pathBbox.height, 3))
   })
@@ -248,10 +243,10 @@ const setCanvasState = (state, action) => {
     // when user is dragging mouse to select elements
     case "change-selection": {
       log("changing selection...")
-      const { canvas, lastNode } = state
+      const { canvas } = state
       const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
       const numOfElements = selectedElements.length
-      let selectionGroup, currentNode
+      let selectionGroup
 
       // remove data-selected from newly deselected elements
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
@@ -276,8 +271,8 @@ const setCanvasState = (state, action) => {
       if (numOfElements > 0) {
         if (numOfElements === 1) {
           // we should only have 1 selected element, at index 0
-          let node = selectedElements[0]
-          let { nextSibling, parentNode } = node
+          const node = selectedElements[0]
+          const { nextSibling } = node
 
           d3.select("#selection-group").remove()
 
@@ -294,9 +289,39 @@ const setCanvasState = (state, action) => {
           selectionGroup.node().appendChild(node)
         }
         else {
+          d3.select("#selection-group").remove()
           // any number of nodes greater than 1
-          const nodes = selectedElements
+          const elements = selectedElements
+          const fragment = document.createDocumentFragment()
+          let orderedElements = []
 
+          for (let ele of elements) {
+            const elePosition = Array.from(canvas.children).indexOf(ele)
+
+            const orderedEle = {
+              ele: ele,
+              position: elePosition,
+            }
+
+            orderedElements.push(orderedEle)
+          }
+
+          orderedElements.sort((a, b) => a.position - b.position)
+          orderedElements.forEach((ele, index) => {
+            if (index === numOfElements - 1) {
+              const nextSibling = ele.ele.nextSibling
+
+              if (nextSibling) {
+                selectionGroup = d3.select(canvas).insert("g", `#${ele.ele.id}`).attr("id", "selection-group")
+              }
+              else {
+                selectionGroup = d3.select(canvas).append("g").attr("id", "selection-group")
+              }
+            }
+            fragment.appendChild(ele.ele)
+          })
+
+          selectionGroup.node().appendChild(fragment)
         }
 
         const results = parseSelection(selectedElements)

@@ -33,15 +33,15 @@ const DesignControls = () => {
   const defaultGap = convertFloatFixed(3.7795275591, 3)
 
   // function to manipulate the selected elements
-  const handleUpdateBbox = (value, property) => {
-    if (selectedElements) {
+  const handleUpdateBbox = (elements, value, property) => {
+    if (elements) {
       const convertedValue = convertToPx(value)
 
       // loop through selected elements and perform mutation
-      selectedElements.forEach((ele) => {
-        const { nodeName } = ele
-        const isCircle = nodeName === "circle" || nodeName === "ellipse"
-        const line = nodeName === "line"
+      elements.forEach((ele) => {
+        const isCircle = ele instanceof SVGCircleElement || ele instanceof SVGEllipseElement
+        const isLine = ele instanceof SVGLineElement
+        const isGroup = ele instanceof SVGGElement
 
         switch(true) {
           case isCircle:
@@ -58,7 +58,7 @@ const DesignControls = () => {
               ele.setAttribute("ry", convertFloatFixed(convertedValue / 2, 3))
             }
             break
-          case line:
+          case isLine:
             const x1 = +ele.getAttribute("x1")
             const x2 = +ele.getAttribute("x2")
 
@@ -86,6 +86,9 @@ const DesignControls = () => {
             else if (property === "width") {
               ele.setAttribute("x2", x1 + convertedValue)
             }
+            break
+          case isGroup:
+            handleUpdateBbox(ele.childNodes, value, property)
             break
           default:
             ele.setAttribute(`${property}`, convertedValue)
@@ -168,6 +171,7 @@ const DesignControls = () => {
             flex={1}
           >
             <InputControls
+              elements={selectedElements}
               handler={handleUpdateBbox}
               input="X"
               max={1000}
@@ -182,6 +186,7 @@ const DesignControls = () => {
             flex={1}
           >
             <InputControls
+              elements={selectedElements}
               handler={handleUpdateBbox}
               input="Y"
               max={1000}
@@ -198,6 +203,7 @@ const DesignControls = () => {
             flex={1}
           >
             <InputControls
+              elements={selectedElements}
               handler={handleUpdateBbox}
               input="Width"
               max={1000}
@@ -214,6 +220,7 @@ const DesignControls = () => {
               flex={1}
             >
               <InputControls
+                elements={selectedElements}
                 handler={handleUpdateBbox}
                 input="Height"
                 max={1000}

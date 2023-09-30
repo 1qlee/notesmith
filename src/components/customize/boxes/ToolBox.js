@@ -46,7 +46,7 @@ function ToolBox() {
           />
         </Icon>
       </ToolItem>
-      <ToolItem
+      {/* <ToolItem
         data-tool="pencil"
         onClick={e => selectTool(e)}
         className={selectedTool === "pencil" ? "is-active" : null}
@@ -110,7 +110,7 @@ function ToolBox() {
             color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
-      </ToolItem>
+      </ToolItem> */}
     </Flexbox>
   )
 }

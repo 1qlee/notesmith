@@ -337,8 +337,9 @@ function PageSpread({
               .attr("stroke", colors.blue.sixHundred)
               .attr("width", convertFloatFixed(nodeBBox.width, 3))
               .attr("height", convertFloatFixed(nodeBBox.height, 3))
-              .style("pointer-events", "none")
               .attr("fill", "transparent")
+              .style("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
+              .style("pointer-events", "none")
 
             setHoverClone(groupRect.node())
           }

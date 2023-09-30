@@ -5,6 +5,7 @@ import { NumberInput, StyledLabel } from "../../../form/FormComponents"
 import { ControlInputGroup, ControlInnerButton } from "./TemplateComponents"
 
 function InputControls({
+  elements,
   handler,
   input,
   fill,
@@ -32,7 +33,7 @@ function InputControls({
           padding="8px 24px 8px 8px"
           step={step}
           value={value}
-          onChange={val => handler(val, property)}
+          onChange={val => handler(elements, val, property)}
           onFocus={onFocus}
         />
         {(isHovered && fill) && (
