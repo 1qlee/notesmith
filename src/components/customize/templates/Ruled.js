@@ -26,7 +26,7 @@ function Ruled({
       const lineY = row * lineSpacing + spaceBtwnLines
       // line object
       const line = {
-        stroke: "#000000",
+        stroke: "currentcolor",
         strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineX1, 3),

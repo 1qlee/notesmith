@@ -33,7 +33,7 @@ const DesignControls = () => {
   const defaultGap = convertFloatFixed(3.7795275591, 3)
 
   // function to manipulate the selected elements
-  const handleUpdateBbox = (elements, value, property) => {
+  const handleUpdateBbox = (value, property, elements) => {
     if (elements) {
       const convertedValue = convertToPx(value)
 

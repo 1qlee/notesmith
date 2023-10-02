@@ -33,7 +33,7 @@ function InputControls({
           padding="8px 24px 8px 8px"
           step={step}
           value={value}
-          onChange={val => handler(elements, val, property)}
+          onChange={val => handler(val, property, elements)}
           onFocus={onFocus}
         />
         {(isHovered && fill) && (

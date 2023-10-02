@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { useEditorDispatch } from "../context/editorContext"
 
 import Ruled from "../templates/Ruled"
@@ -26,7 +26,7 @@ const Template = ({
   const dispatch = useEditorDispatch()
   const ref = useRef(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setSvgLoaded(null)
 
     if (ref && ref.current) {

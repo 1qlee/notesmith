@@ -144,18 +144,11 @@ function drag(referenceElement, dispatch, canvasState) {
   
   function dragend(event, d) {
     console.log("drag end")
-    
     const { subject } = event
 
     dispatch({
       type: "change-mode",
       mode: "select",
-    })
-
-    dispatch({
-      type: "toggle",
-      setting: "selecting",
-      value: false,
     })
 
     dispatch({

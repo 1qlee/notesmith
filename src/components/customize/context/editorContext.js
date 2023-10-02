@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import * as d3 from "d3"
 
-import { consolidateMixedObjects, processStringNumbers, convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
+import { parseSelection } from "../editor/editor-functions"
 
 const initialState = {
   canvas: null,
@@ -70,151 +70,6 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
   );
 }
 
-const parseAttributes = (element) => {
-  const fill = element.attr("fill") || "none"
-  const stroke = element.attr("stroke") || "none"
-  const strokeOpacity = element.attr("stroke-opacity") || 1
-  const fillOpacity = element.attr("fill-opacity") || 1
-  const strokeWidth = convertToMM(element.attr("stroke-width")) || 0.088
-  const strokeDasharray = element.attr("stroke-dasharray") !== undefined ? processStringNumbers(element.attr("stroke-dasharray"), convertToMM) : ""
-  const strokeStyle = element.attr("strokeStyle") || "Solid"
-  const nodeAttributes = {
-    fill,
-    fillOpacity,
-    strokeOpacity,
-    stroke,
-    strokeWidth,
-    strokeDasharray,
-    strokeStyle,
-  }
-
-  return nodeAttributes
-}
-
-const parseBbox = (element, path) => {
-  const bbox = element.getBBox()
-  const bboxX = convertFloatFixed(bbox.x, 3)
-  const bboxY = convertFloatFixed(bbox.y, 3)
-  const bboxWidth = convertFloatFixed(bbox.width, 3)
-  const bboxHeight = convertFloatFixed(bbox.height, 3)
-  let pathBbox = {}
-
-  if (path) {
-    // for selection path
-    pathBbox = {
-      x: bboxX,
-      y: bboxY,
-      x2: bboxX,
-      y2: bboxY,
-      width: bboxWidth,
-      height: bboxHeight,
-    }
-  }
-  else {
-    pathBbox = {
-      x: bboxX,
-      y: bboxY,
-      width: bboxWidth,
-      height: bboxHeight,
-    }
-  }
-
-  return pathBbox
-}
-
-function sortNodesByDOMOrder(nodes) {
-  return nodes.sort((a, b) => {
-    const position = a.compareDocumentPosition(b)
-
-    if (position & Node.DOCUMENT_POSITION_PRECEDING) {
-      return -1 // a comes before b
-    } else if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
-      return 1 // b comes before a
-    } else {
-      return 0 // nodes are disconnected or equal
-    }
-  })
-}
-
-const parseSelection = (elements) => {
-  // coords for the selection path box
-  let selectionPath = {
-    x: Infinity,
-    y: Infinity,
-    x2: -Infinity,
-    y2: -Infinity,
-  }
-  // selection bbox properties
-  let selectionBbox = {}
-  let selectionAttributes = {}
-  let convertedSelectionBbox = {}
-
-  // for each selected element, get the bbox and attributes
-  elements.forEach((ele, index) => {
-    const element = d3.select(ele)
-
-    // get the attribute values of the element
-    let nodeAttributes = parseAttributes(element)
-    // get the bbox of the element
-    const strokeOffset = convertToPx(nodeAttributes.strokeWidth / 2)
-    // for selection path
-    let pathBbox = parseBbox(ele, true)
-    // for positioning attributes
-    let positioningBbox = parseBbox(ele, false)
-    const isCircle = ele instanceof SVGCircleElement || ele instanceof SVGEllipseElement
-    const isLine = ele instanceof SVGLineElement
-
-    // adjust selection bbox values for different svg elements
-    switch (true) {
-      case isCircle: 
-        positioningBbox.x = convertFloatFixed(element.attr("cx"), 3)
-        positioningBbox.y = convertFloatFixed(element.attr("cy"), 3)
-        pathBbox.x = convertFloatFixed(pathBbox.x - strokeOffset, 3)
-        pathBbox.y = convertFloatFixed(pathBbox.y - strokeOffset, 3)
-        pathBbox.x2 = convertFloatFixed(pathBbox.x2 + strokeOffset, 3)
-        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
-        break
-      case isLine: 
-        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
-        break
-    }
-    
-    // set initial coords using the first element
-    if (index === 0) {
-      selectionBbox = positioningBbox
-      selectionAttributes = nodeAttributes
-    }
-    
-    // function to create bbox object for client
-    selectionBbox = consolidateMixedObjects(positioningBbox, selectionBbox)
-    // function to create attributes object for client
-    selectionAttributes = consolidateMixedObjects(nodeAttributes, selectionAttributes)
-
-    // create coords for the selection path
-    selectionPath.x = Math.min(selectionPath.x, pathBbox.x)
-    selectionPath.y = Math.min(selectionPath.y, pathBbox.y)
-    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(pathBbox.x2 + pathBbox.width, 3))
-    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(pathBbox.y2 + pathBbox.height, 3))
-  })
-
-  // create the selection path based on coords
-  // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-  const path = `M ${selectionPath.x},${selectionPath.y} L ${selectionPath.x2},${selectionPath.y} ${selectionPath.x2},${selectionPath.y2} ${selectionPath.x},${selectionPath.y2} Z`
-  
-  convertedSelectionBbox = {
-    x: typeof selectionBbox.x === "number" ? convertToMM(selectionBbox.x) : selectionBbox.x,
-    y: typeof selectionBbox.y === "number" ? convertToMM(selectionBbox.y) : selectionBbox.y,
-    width: typeof selectionBbox.width === "number" ? convertToMM(selectionBbox.width) : selectionBbox.width,
-    height: typeof selectionBbox.height === "number" ? convertToMM(selectionBbox.height) : selectionBbox.height,
-  }
-
-  return {
-    selectionBbox: convertedSelectionBbox,
-    selectionAttributes: selectionAttributes,
-    selectionPath: path,
-  }
-}
-
 const setCanvasState = (state, action) => {
   switch (action.type) {
     case "initialize":
@@ -240,123 +95,6 @@ const setCanvasState = (state, action) => {
         selectionGroup: null,
         selectionPath: "",
       }
-    // when user is dragging mouse to select elements
-    case "change-selection": {
-      log("changing selection...")
-      const { canvas } = state
-      const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
-      const numOfElements = selectedElements.length
-      let selectionGroup
-
-      // remove data-selected from newly deselected elements
-      if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
-        newlyDeselectedElements.forEach(element => {
-          d3.select(element).attr("data-selected", null)
-        })
-      }
-
-      // add data-selected to newly selected elements
-      newlySelectedElements.forEach((element) => {
-        const node = d3.select(element)
-        const nodeId = node.attr("id")
-        const parentNode = element.parentNode
-        const isGrouped = parentNode && parentNode instanceof SVGGElement
-
-        if (!isGrouped && nodeId !== "selection-group") {
-          node.attr('data-selected', '')
-        }
-      })
-
-      // if there are selected elements, parse them to create the selection box and attributes for designbar
-      if (numOfElements > 0) {
-        if (numOfElements === 1) {
-          // we should only have 1 selected element, at index 0
-          const node = selectedElements[0]
-          const { nextSibling } = node
-
-          d3.select("#selection-group").remove()
-
-          // insert a group before nextSibling
-          if (nextSibling) {
-            selectionGroup = d3.select(canvas).insert("g", `#${nextSibling.id}`).attr("id", "selection-group")
-          }
-          // otherwise just append the group to the canvas
-          else {
-            selectionGroup = d3.select(canvas).append("g").attr("id", "selection-group")
-          }
-
-          // append the node to the group
-          selectionGroup.node().appendChild(node)
-        }
-        else {
-          d3.select("#selection-group").remove()
-          // any number of nodes greater than 1
-          const elements = selectedElements
-          const fragment = document.createDocumentFragment()
-          let orderedElements = []
-
-          for (let ele of elements) {
-            const elePosition = Array.from(canvas.children).indexOf(ele)
-
-            const orderedEle = {
-              ele: ele,
-              position: elePosition,
-            }
-
-            orderedElements.push(orderedEle)
-          }
-
-          orderedElements.sort((a, b) => a.position - b.position)
-          orderedElements.forEach((ele, index) => {
-            if (index === numOfElements - 1) {
-              const nextSibling = ele.ele.nextSibling
-
-              if (nextSibling) {
-                selectionGroup = d3.select(canvas).insert("g", `#${ele.ele.id}`).attr("id", "selection-group")
-              }
-              else {
-                selectionGroup = d3.select(canvas).append("g").attr("id", "selection-group")
-              }
-            }
-            fragment.appendChild(ele.ele)
-          })
-
-          selectionGroup.node().appendChild(fragment)
-        }
-
-        const results = parseSelection(selectedElements)
-
-        return {
-          ...state,
-          selectedElements: action.selectedElements,
-          selectionAttributes: results.selectionAttributes,
-          selectionBbox: results.selectionBbox,
-          selectionPath: results.selectionPath,
-        }
-      }
-      else {
-        const selectionGroup = d3.select("#selection-group")
-        const isGroupEmpty = selectionGroup && selectionGroup.empty()
-
-        if (!isGroupEmpty) {
-          const nextNode = selectionGroup.node().nextSibling
-
-          Array.from(selectionGroup.node().children).forEach(ele => {
-            canvas.insertBefore(ele, nextNode)
-          })
-
-          selectionGroup.remove()
-        }
-        
-        return {
-          ...state,
-          selectedElements: [],
-          selectionAttributes: [],
-          selectionBbox: {},
-          selectionPath: "",
-        }
-      }
-    }
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
@@ -411,6 +149,13 @@ const setCanvasState = (state, action) => {
       return {
         ...state,
         [action.setting]: action.value || null,
+      }
+    case "bulk-update":
+      log(`bulk updating state...`)
+
+      return {
+        ...state,
+        ...action.state,
       }
     case "change-mode":
 

@@ -141,17 +141,27 @@ const convertFloatFixed = (number, places) => {
   return parseFloat(convertedNum.toFixed(places))
 }
 
+function findIndexOfElementInArray(array, propertyName, targetValue) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i][propertyName] === targetValue) {
+      return i; // Return the index of the element if found.
+    }
+  }
+  return -1; // Return -1 if the element is not found.
+}
+
 export {
-  createAttributes,
-  svgToObjects,
-  convertUnix,
-  isBrowser,
   consolidateMixedObjects,
   consolidateObjectProps,
-  processStringNumbers,
   convertFloatFixed,
   convertToDecimal,
-  convertToMM,
   convertToIn,
+  convertToMM,
   convertToPx,
+  convertUnix,
+  createAttributes,
+  findIndexOfElementInArray,
+  isBrowser,
+  processStringNumbers,
+  svgToObjects,
 }

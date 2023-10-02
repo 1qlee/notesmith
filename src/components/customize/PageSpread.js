@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react"
-import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
+import { convertToPx, convertFloatFixed, findIndexOfElementInArray } from "../../utils/helper-functions"
 import { pageMargins, colors } from "../../styles/variables"
-import { throttle } from "lodash"
+import { set, throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
-import { findClosestNode } from "./editor/editor-functions"
+import { findClosestNode, parseSelection } from "./editor/editor-functions"
 import * as d3 from "d3"
 import drag from "./editor/drag"
 import svgDragSelect from "svg-drag-select"
@@ -36,6 +36,7 @@ function PageSpread({
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  let allSelectedElements = []
   const pageIsLeft = selectedPage % 2 === 0
   const spreadPosition = {
     x: (canvasSize.width - svgWidth * 2) / 2,
@@ -399,6 +400,11 @@ function PageSpread({
     })
 
     if (canvasState.mode === "select" && referenceElement) {
+      let coords = {
+        clientX: 0,
+        clientY: 0,
+      }
+
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -421,6 +427,10 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           cancel,                   // cancel() cancels.
         }) {
+          coords = {
+            clientX: pointerEvent.clientX,
+            clientY: pointerEvent.clientY,
+          }
           // for example: handles mouse left button only.
           if (pointerEvent.button !== 0) {
             cancel()
@@ -450,12 +460,132 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          dispatch({
-            type: "change-selection",
-            selectedElements: selectedElements,
-            newlySelectedElements: newlySelectedElements,
-            newlyDeselectedElements: newlyDeselectedElements,
+          // calculate if the current clientX and clientY are greater than previous in `coords`
+          // if so, we are moving right/down, otherwise we are moving left/up
+          const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
+          const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY 
+          const numOfElements = selectedElements.length
+          const allCanvasElements = Array.from(referenceElement.children)
+
+          // remove data-selected from newly deselected elements
+          if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
+            newlyDeselectedElements.forEach(element => {
+              // if the deselected element is part of selection group, remove it from the group
+              if (element.parentNode && element.parentNode.getAttribute("id") === "selection-group") {
+                const nextNode = d3.select("#selection-group").node().nextSibling
+
+                // reappend to canvas
+                referenceElement.insertBefore(element, nextNode)
+
+                // if the element is in the allSelectedElements array, remove it
+                const indexToRemove = findIndexOfElementInArray(allSelectedElements, "element", element)
+
+                if (indexToRemove > -1) {
+                  // remove the element from the array and reattach the array
+                  const beforeElement = allSelectedElements.slice(0, indexToRemove)
+                  const afterElement = allSelectedElements.slice(indexToRemove + 1)
+                  const modifiedElements = beforeElement.concat(afterElement)
+
+                  allSelectedElements = modifiedElements
+                }
+              }
+
+              d3.select(element).attr("data-selected", null)
+            })
+          }
+
+          // parse newlySelectedElements and add them to state
+          // including their position in the canvas for reordering later
+          newlySelectedElements.forEach((element) => {
+            const node = d3.select(element)
+            const nodeId = node.attr("id")
+            const parentNode = element.parentNode
+            const isGrouped = parentNode && parentNode instanceof SVGGElement
+            const elePosition = allCanvasElements.indexOf(element)
+
+            // add data-selected to newly selected elements
+            if (!isGrouped && nodeId !== "selection-group") {
+              node.attr('data-selected', '')
+            }
+
+            // check if the element already exists in state
+            const indexExists = findIndexOfElementInArray(allSelectedElements, "element", element)
+
+            // if the element is not saved in state, add it to state
+            if (indexExists === -1) {
+              const orderedElements = allSelectedElements.length > 0 && allSelectedElements || []
+              orderedElements.push({
+                element: element,
+                position: elePosition,
+              })
+              // sort the elements saved to state by their position in the canvas
+              orderedElements.sort((a, b) => a.position - b.position)
+              console.log("🚀 ~ file: PageSpread.js:523 ~ newlySelectedElements.forEach ~ orderedElements:", orderedElements)
+
+              allSelectedElements = orderedElements
+            }
           })
+
+          // if there are selected elements, parse them to create the selection box and attributes for designbar
+          if (numOfElements > 0) {
+            d3.select("#selection-group").remove()
+
+            let fragment = document.createDocumentFragment()
+            let selectionGroup = null
+
+            console.log(allSelectedElements)
+
+            allSelectedElements.forEach((ele, index) => {
+              if (index === numOfElements - 1) {
+                const nextSibling = ele.element.nextSibling
+
+                if (nextSibling) {
+                  selectionGroup = d3.select(referenceElement).insert("g", `#${ele.element.id}`).attr("id", "selection-group")
+                }
+                else {
+                  selectionGroup = d3.select(referenceElement).append("g").attr("id", "selection-group")
+                }
+              }
+
+              fragment.appendChild(ele.element)
+            })
+
+            selectionGroup.node().appendChild(fragment)
+
+            const results = parseSelection(selectedElements)
+
+            dispatch({
+              type: "bulk-update",
+              state: {
+                selectedElements: selectedElements,
+                selectionAttributes: results.selectionAttributes,
+                selectionBbox: results.selectionBbox,
+                selectionPath: results.selectionPath,
+              }
+            })
+            console.log(allSelectedElements)
+          }
+          else {
+            const selectionGroup = d3.select("#selection-group")
+            const isGroupEmpty = selectionGroup && selectionGroup.empty()
+
+            if (!isGroupEmpty) {
+              const nextNode = selectionGroup.node().nextSibling
+
+              Array.from(selectionGroup.node().children).forEach(ele => {
+                referenceElement.insertBefore(ele, nextNode)
+              })
+
+              selectionGroup.remove()
+            }
+
+            dispatch({
+              selectedElements: [],
+              selectionAttributes: [],
+              selectionBbox: {},
+              selectionPath: "",
+            })
+          }
         },
 
         onSelectionEnd({
@@ -469,12 +599,6 @@ function PageSpread({
             setting: "selecting",
             value: false,
           })
-
-          // dispatch({
-          //   type: "make-selection",
-          //   selectedElements: selectedElements,
-          //   pointerEvent: pointerEvent,
-          // })
         }
       })
 
