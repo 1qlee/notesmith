@@ -22,6 +22,7 @@ function ProductTemplate({
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
+  setMax,
 }) {
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const minimumMargin = pageMargins.minimum
@@ -157,6 +158,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "dot" && (
@@ -164,6 +166,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "graph" && (
@@ -171,6 +174,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "hexagon" && (
@@ -178,6 +182,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "isometric" && (
@@ -185,6 +190,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "seyes" && (
@@ -192,6 +198,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "music" && (
@@ -199,6 +206,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "handwriting" && (
@@ -206,6 +214,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "cross" && (
@@ -213,6 +222,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "calligraphy" && (
@@ -220,6 +230,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
             </svg>

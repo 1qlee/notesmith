@@ -87,6 +87,7 @@ function PageDemoCarousel() {
             src="../../images/index/splash-image.jpg"
             alt="Ink on paper"
             loading="eager"
+            placeholder="none"
             quality={100}
           />
         ) : (
@@ -94,6 +95,7 @@ function PageDemoCarousel() {
             src="../../images/index/splash-image-blank.png"
             alt="Ink on paper"
             loading="eager"
+            placeholder="none"
             quality={100}
           />
         )}

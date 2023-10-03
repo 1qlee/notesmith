@@ -34,11 +34,11 @@ const gradient = `linear-gradient(90deg,
 
 const StyledDemoTemplate = styled.div`
   position: absolute;
-  top: 1.9%;
-  left: 13.2%;
+  top: 12px;
+  left: 56px;
   z-index: 5;
-  width: 84%;
-  height: 96%;
+  width: calc(100% - 28px);
+  height: calc(100% - 24px);
 `
 
 const initAnimation = keyframes`
@@ -204,7 +204,7 @@ function Book3d({
                 <Measure
                   bounds
                   onResize={contentRect => setPageDimensions({
-                    height: contentRect.bounds.height,
+                    height: contentRect.bounds.height - 24,
                     width: contentRect.bounds.width,
                   })}
                 >

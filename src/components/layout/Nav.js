@@ -4,73 +4,11 @@ import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "../../hooks/useShoppingCart"
+import { isBrowser } from "../../utils/helper-functions"
 
 import { Container, setConfiguration } from "react-grid-system"
 import Banner from "../ui/Banner"
 import Logo from "../misc/Logo"
-
-// {
-//   user ? (
-//     <>
-//       <NavItem>
-//         <NavLink
-//           to="/account/dashboard"
-//           color={colors.gray.nineHundred}
-//         >
-//           Dashboard
-//         </NavLink>
-//       </NavItem>
-      // <NavItem>
-      //   <NavLink
-      //     as="a"
-      //     tabIndex={0}
-      //     onClick={() => handleSignOut()}
-      //     color={colors.gray.nineHundred}
-      //   >
-      //     Sign out
-      //   </NavLink>
-      // </NavItem>
-//     </>
-//   ) : (
-//     <>
-//       <NavItem>
-//         <NavLink
-//           to="/signin"
-//           color={colors.gray.nineHundred}
-//         >
-//           Sign in
-//         </NavLink>
-//       </NavItem>
-//       <NavItem
-//         className="last-item"
-//       >
-//         <NavLink
-//           to="/signup"
-//           color={colors.gray.nineHundred}
-//         >
-//           Sign up
-//         </NavLink>
-//       </NavItem>
-//     </>
-//   )
-// }
-// <NavSection
-//   justifycontent="flex-end"
-// >
-//   <NavItem>
-//     <NavLink
-//       to="/cart"
-//       color={colors.gray.nineHundred}
-//     >
-//       Cart
-//       {cartCount > 0 && (
-//         <CartCounter>
-//           ({cartCount})
-//         </CartCounter>
-//       )}
-//     </NavLink>
-//   </NavItem>
-// </NavSection>
 
 const StyledNav = styled.nav`
   width: 100%;
@@ -130,7 +68,22 @@ const CartCounter = styled.span`
   margin-left: 0.25rem;
 `
 
-const Nav = ({ hideNavbar }) => {
+const Nav = ({ auth, hideNavbar }) => {
+  let hideDashboard = false
+
+  if (isBrowser) {
+    // get pathnames
+    const path = window.location.pathname
+
+    // get the first part of the pathname
+    const pathArray = path.split("/")
+    const firstPath = pathArray[1]
+
+    if (firstPath === "account") {
+      hideDashboard = true
+    }
+  }
+
   setConfiguration({ gutterWidth: 64 })
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount, clearCart } = useShoppingCart()
@@ -160,17 +113,77 @@ const Nav = ({ hideNavbar }) => {
           </NavSection>
           {!loading && (
             <>
-              <NavSection justifycontent="center">
+              <NavItem>
+                <NavLink
+                  to="/products/notebooks/pro-wired-notebook-a5-custom/white"
+                  color={colors.gray.nineHundred}
+                >
+                  Shop
+                </NavLink>
+              </NavItem>
+              {user ? (
+                  <>
+                    {!hideDashboard && (
+                      <NavItem>
+                        <NavLink
+                          to="/account/dashboard"
+                          color={colors.gray.nineHundred}
+                        >
+                          Dashboard
+                        </NavLink>
+                      </NavItem>
+                    )}
+                    <NavItem>
+                      <NavLink
+                        as="a"
+                        tabIndex={0}
+                        onClick={() => handleSignOut()}
+                        color={colors.gray.nineHundred}
+                      >
+                        Sign out
+                      </NavLink>
+                    </NavItem>
+                  </>
+                ) : (
+                  <>
+                    <NavItem>
+                      <NavLink
+                        to="/signin"
+                        color={colors.gray.nineHundred}
+                      >
+                        Sign in
+                      </NavLink>
+                    </NavItem>
+                    <NavItem
+                      className="last-item"
+                    >
+                      <NavLink
+                        to="/signup"
+                        color={colors.gray.nineHundred}
+                      >
+                        Sign up
+                      </NavLink>
+                    </NavItem>
+                  </>
+                )
+              }
+              <NavSection
+                justifycontent="flex-end"
+              >
                 <NavItem>
                   <NavLink
-                    to="/products/notebooks/pro-wired-notebook-a5-custom/white"
+                    to="/cart"
                     color={colors.gray.nineHundred}
                   >
-                    Shop
+                    Cart
+                    {cartCount > 0 && (
+                      <CartCounter>
+                        ({cartCount})
+                      </CartCounter>
+                    )}
                   </NavLink>
                 </NavItem>
               </NavSection>
-              <NavSection></NavSection>
             </>
           )}
         </HorizontalNav>

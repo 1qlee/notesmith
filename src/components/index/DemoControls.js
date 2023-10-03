@@ -114,6 +114,7 @@ function DemoControls({
                 ...pageData,
                 hexagonRadius: value,
                 rows: 139,
+                columns: 139,
               })}
               value={pageData.hexagonRadius}
               pageData={pageData}

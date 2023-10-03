@@ -31,10 +31,10 @@ const IndexPage = ({ data }) => {
   setConfiguration({ gutterWidth: 64 })
   const { tabImages } = data
   const [activeTab, setActiveTab] = useState(0)
-  const [pageData, setPageData] = useState({
+  const config = {
     alignmentHorizontal: "center",
     alignmentVertical: "top",
-    angle: 30,
+    angle: 60,
     ascSpacing: 5,
     borderData: {
       sync: true,
@@ -42,7 +42,7 @@ const IndexPage = ({ data }) => {
       thickness: 0.088,
       opacity: 1,
     },
-    columns: 27,
+    columns: 99,
     columnSpacing: 5,
     dashedLineData: {
       sync: true,
@@ -52,7 +52,7 @@ const IndexPage = ({ data }) => {
       dashOffset: 0,
     },
     dscSpacing: 5,
-    hexagonRadius: 1,
+    hexagonRadius: 5,
     lineWidth: 100,
     marginBottom: 0,
     marginLeft: 0,
@@ -60,7 +60,7 @@ const IndexPage = ({ data }) => {
     marginTop: 0,
     opacity: 1,
     radius: 0.1,
-    rows: 20,
+    rows: 99,
     rowSpacing: 5,
     show: false,
     crossSize: 1,
@@ -73,9 +73,10 @@ const IndexPage = ({ data }) => {
     svgHeight: 607,
     svgWidth: 366,
     template: "",
-    thickness: 0.088,
+    strokeWidth: 0.088,
     xHeight: 5,
-  })
+  }
+  const [pageData, setPageData] = useState(config)
   const leftPageData = {
     template: ""
   }
@@ -252,6 +253,7 @@ const IndexPage = ({ data }) => {
                       data={pageData}
                       iconMargin="0 24px 16px 0"
                       isProductPage={true}
+                      hideNone={true}
                       leftPageData={leftPageData}
                       rightPageData={rightPageData}
                       setData={setPageData}
@@ -265,6 +267,7 @@ const IndexPage = ({ data }) => {
                   <Flexbox
                     flex="flex"
                     alignitems="center"
+                    justifycontent="center"
                     margin="0 0 32px"
                   >
                     <Button
@@ -281,28 +284,19 @@ const IndexPage = ({ data }) => {
                     >
                       Hide layout
                     </Button>
-                    <Button
+                    {/* <Button
                       backgroundcolor={colors.gray.nineHundred}
                       color={colors.gray.oneHundred}
                       border={`1px solid ${colors.gray.nineHundred}`}
                       padding="1rem"
                       width="50%"
                       onClick={() => setPageData({
-                        ...pageData,
-                        slants: 21,
-                        columns: 27,
-                        radius: 0.1,
-                        groupSpacing: 5,
-                        hexagonRadius: 1,
-                        lineWidth: 100,
-                        opacity: 1,
-                        rows: pageData.template === "seyes" ? 97 : 42,
-                        thickness: 0.088,
-                        size: 1,
+                        ...config,
+                        template: pageData.template,
                       })}
                     >
                       Reset layout
-                    </Button>
+                    </Button> */}
                   </Flexbox>
                   <hr />
                   <Flexbox

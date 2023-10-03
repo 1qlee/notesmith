@@ -26,8 +26,8 @@ const Waitlist = () => {
                     textalign="center"
                     margin="0 0 32px"
                   >
-                    <h1>Your custom notebook awaits you</h1>
-                    <p>Join the waitlist to get early access to the Notesmith platform where you can create custom layouts and templates.</p>
+                    <h1>Your custom notebook awaits you!</h1>
+                    <p>Join the waitlist to get early access to the Notesmith platform where you can create custom notebook layouts. Additionally, all early access users will enjoy discounted notebook pricing.</p>
                   </Content>
                   <StyledLabel>
                     Best email to reach you at

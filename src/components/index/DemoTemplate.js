@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import Ruled from "../customize/templates/Ruled"
 import Dot from "../customize/templates/Dot"
@@ -16,6 +16,11 @@ function DemoTemplate({
   pageData,
   setPageData,
 }) {
+  const [max, setMax] = useState({
+    rows: 20,
+    columns: 20,
+  })
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -31,6 +36,7 @@ function DemoTemplate({
       {pageData.template === "ruled" && (
         <Ruled
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -38,6 +44,7 @@ function DemoTemplate({
       {pageData.template === "dot" && (
         <Dot
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -45,6 +52,7 @@ function DemoTemplate({
       {pageData.template === "graph" && (
         <Graph
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -52,6 +60,7 @@ function DemoTemplate({
       {pageData.template === "hexagon" && (
         <Hexagon
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -59,6 +68,7 @@ function DemoTemplate({
       {pageData.template === "isometric" && (
         <Isometric
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -66,6 +76,7 @@ function DemoTemplate({
       {pageData.template === "seyes" && (
         <Seyes
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -73,6 +84,7 @@ function DemoTemplate({
       {pageData.template === "music" && (
         <Music
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -80,6 +92,7 @@ function DemoTemplate({
       {pageData.template === "handwriting" && (
         <Handwriting
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -87,6 +100,7 @@ function DemoTemplate({
       {pageData.template === "cross" && (
         <CrossGrid
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -94,6 +108,7 @@ function DemoTemplate({
       {pageData.template === "calligraphy" && (
         <Calligraphy
           maxSvgSize={pageDimensions}
+          setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
         />

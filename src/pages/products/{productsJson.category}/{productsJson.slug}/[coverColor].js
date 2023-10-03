@@ -90,6 +90,10 @@ const ProductPage = ({ data, params }) => {
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
   const [showControls, setShowControls] = useState(false)
+  const [max, setMax] = useState({
+    rows: 200,
+    columns: 200,
+  })
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -126,6 +130,7 @@ const ProductPage = ({ data, params }) => {
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
+                        max={max}
                         showControls={showControls}
                         selectedPageSvg={selectedPageSvg}
                         setShowControls={setShowControls}
@@ -144,6 +149,7 @@ const ProductPage = ({ data, params }) => {
                         currentPageSide={currentPageSide}
                         pageData={pageData}
                         setPageData={setPageData}
+                        setMax={setMax}
                         setSelectedPageSvg={setSelectedPageSvg}
                         setSvgSize={setSvgSize}
                       />

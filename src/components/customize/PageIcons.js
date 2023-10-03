@@ -1054,6 +1054,7 @@ function PageIcons({
   data,
   iconMargin,
   isProductPage,
+  hideNone,
   leftPageData,
   rightPageData,
   setData,
@@ -1061,17 +1062,19 @@ function PageIcons({
 }) {
   return (
     <>
-      <NonePageIcon 
-        data={data}
-        dataTip="None"
-        iconMargin={iconMargin}
-        isActive={checkActiveVar === ""}
-        isProductPage={isProductPage}
-        leftPageData={leftPageData}
-        rightPageData={rightPageData}
-        setData={setData}
-        showLabels={showLabels}
-      />
+      {!hideNone && (
+        <NonePageIcon
+          data={data}
+          dataTip="None"
+          iconMargin={iconMargin}
+          isActive={checkActiveVar === ""}
+          isProductPage={isProductPage}
+          leftPageData={leftPageData}
+          rightPageData={rightPageData}
+          setData={setData}
+          showLabels={showLabels}
+        />
+      )}
       <BlankPageIcon
         data={data}
         dataTip="Blank"

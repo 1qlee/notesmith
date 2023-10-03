@@ -104,6 +104,7 @@ const PageButton = styled(Button)`
 function ProductControls({
   currentPageSide,
   pageData,
+  max,
   showControls,
   selectedPageSvg,
   setCurrentPageSide,
@@ -228,6 +229,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "dot" && (
@@ -237,6 +239,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "graph" && (
@@ -246,6 +249,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "hexagon" && (
@@ -255,6 +259,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "isometric" && (
@@ -264,6 +269,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "seyes" && (
@@ -273,6 +279,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "music" && (
@@ -282,6 +289,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "handwriting" && (
@@ -291,6 +299,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "cross" && (
@@ -300,6 +309,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "calligraphy" && (
@@ -309,6 +319,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                     </>
