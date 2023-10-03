@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { colors } from "../../../styles/variables"
-import { Info } from "phosphor-react"
+import { Info } from "@phosphor-icons/react"
 
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "../../ui/Modal"
 import Icon from "../../ui/Icon"

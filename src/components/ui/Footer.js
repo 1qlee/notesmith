@@ -17,7 +17,6 @@ function getDate() {
 }
 
 const Footer = ({ screenClass }) => {
-  console.log(screenClass)
   
   return (
     <ScreenClassRender

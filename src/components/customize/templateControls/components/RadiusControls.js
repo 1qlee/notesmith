@@ -3,6 +3,9 @@ import React from "react"
 import RangeControls from "./RangeControls"
 
 function RadiusControls({
+  min,
+  max,
+  step,
   pageData,
   setPageData,
 }) {
@@ -12,9 +15,9 @@ function RadiusControls({
       propertyName="Dot radius"
       propertyObj={{ alignmentVertical: "", alignmentHorizontal: "" }}
       inputProps={{
-        min: 0.1,
-        max: 5,
-        step: 0.1,
+        min: min,
+        max: max,
+        step: step,
       }}
       pageData={pageData}
       setPageData={setPageData}

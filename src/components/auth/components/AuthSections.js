@@ -1,8 +1,8 @@
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
 
 const AuthSection = styled.div`
   position: relative;
+  margin-top: 32px;
   width: 100%;
   height: 100%;
 `

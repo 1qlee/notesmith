@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
-import { ArrowBendLeftUp, Smiley, SmileyMeh, SmileySad, Square, CheckSquare, ArrowClockwise } from "phosphor-react"
+import { ArrowBendLeftUp, Smiley, SmileyMeh, SmileySad, Square, CheckSquare, ArrowClockwise } from "@phosphor-icons/react"
 
 import Content from "./Content"
 import { Flexbox } from "../layout/Flexbox"

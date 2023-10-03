@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight } from "@phosphor-icons/react"
 import { Link } from "gatsby"
 
 import Icon from "./Icon"

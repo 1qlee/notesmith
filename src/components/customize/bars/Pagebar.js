@@ -4,7 +4,7 @@ import { FixedSizeGrid as WindowGrid, areEqual } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
-import Svg from "react-inlinesvg"
+import SVG from "react-inlinesvg"
 
 import PageBox from "../boxes/PageBox"
 
@@ -24,11 +24,11 @@ const StyledPage = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  margin: 0 0.875rem;
+  margin: 0 16px;
   p {
     color: ${colors.gray.sixHundred};
     font-size: 0.875rem;
-    margin: 0.875rem 0 0 0;
+    margin: 8px 0 0 0;
     transition: color 0.2s;
     user-select: none;
   }
@@ -100,7 +100,7 @@ const Page = memo(props => {
       className={selectedPage === currentPage.pageNumber ? "is-active" : null}
       style={style}
     >
-      <Svg
+      <SVG
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${pageData.svgWidth} ${pageData.svgHeight}`}
         src={canvasPageTemplates[currentPage.pageId].svg}
@@ -167,6 +167,7 @@ function Pagebar({
                 borderRight: `${colors.borders.black}`,
                 top: "0",
                 overflowX: "hidden",
+                paddingBottom: "16px"
               }}
               itemData={itemData}
             >

@@ -1,16 +1,18 @@
 import React from "react"
 
-import { ControlWrapper } from "./components/TemplateComponents"
+import { ControlWrapper, ControlFlexChild, ControlFlexWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
 import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import RangeControls from "./components/RangeControls"
+import ColumnControls from "./components/ColumnControls"
 
 function HexagonControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -28,12 +30,27 @@ function HexagonControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ControlWrapper>
-        <RowControls
-          pageData={pageData}
-          setPageData={setPageData}
-        />
-      </ControlWrapper>
+      <ControlFlexWrapper>
+        <ControlFlexChild
+          margin="0 8px 0 0"
+          flex={1}
+        >
+          <RowControls
+            max={max.rows}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        </ControlFlexChild>
+        <ControlFlexChild
+          flex={1}
+        >
+          <ColumnControls
+            max={max.columns}
+            pageData={pageData}
+            setPageData={setPageData}
+          />
+        </ControlFlexChild>
+      </ControlFlexWrapper>
       <RangeControls 
         property="hexagonRadius"
         propertyName="Hexagon radius"
@@ -50,7 +67,7 @@ function HexagonControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

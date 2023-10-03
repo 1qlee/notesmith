@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { colors, fonts } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { WarningCircle, CircleNotch } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import { Flexbox } from "../layout/Flexbox"

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { colors, convertToPx, spacing, pageMargins } from "../../../../styles/variables"
+import { colors, spacing, pageMargins } from "../../../../styles/variables"
 import { toast } from 'react-toastify'
+import { convertToPx } from "../../../../utils/helper-functions"
 
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
@@ -89,6 +90,10 @@ const ProductPage = ({ data, params }) => {
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
   const [showControls, setShowControls] = useState(false)
+  const [max, setMax] = useState({
+    rows: 200,
+    columns: 200,
+  })
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -125,6 +130,7 @@ const ProductPage = ({ data, params }) => {
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
+                        max={max}
                         showControls={showControls}
                         selectedPageSvg={selectedPageSvg}
                         setShowControls={setShowControls}
@@ -143,6 +149,7 @@ const ProductPage = ({ data, params }) => {
                         currentPageSide={currentPageSide}
                         pageData={pageData}
                         setPageData={setPageData}
+                        setMax={setMax}
                         setSelectedPageSvg={setSelectedPageSvg}
                         setSvgSize={setSvgSize}
                       />

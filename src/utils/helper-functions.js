@@ -62,12 +62,106 @@ function convertUnix(timestamp) {
   return formattedDate
 }
 
+function consolidateMixedObjects(obj1, obj2) {
+  const result = {};
+
+  for (const prop in obj1) {
+    if (obj1.hasOwnProperty(prop) && obj2.hasOwnProperty(prop)) {
+      result[prop] = obj1[prop] === obj2[prop] ? obj1[prop] : "Mixed";
+    }
+  }
+
+  return result;
+}
+
+function consolidateObjectProps(newObj, exisitingObj) {
+  const result = {};
+
+  for (const prop in newObj) {
+    if (newObj.hasOwnProperty(prop) && exisitingObj.hasOwnProperty(prop)) {
+      if (newObj[prop] === exisitingObj[prop]) {
+        result[prop] = newObj[prop];
+      } 
+      else {
+        // if this prop in exisitingObj is already an array, add the new value to it using spread operator
+        if (typeof exisitingObj[prop] === "object") {
+          result[prop] = [...exisitingObj[prop], newObj[prop]];
+        }
+        // otherwise create a new array with both values
+        else {
+          result[prop] = [exisitingObj[prop], newObj[prop]];
+        }
+      }
+    }
+    
+    for (const prop in exisitingObj) {
+      if (exisitingObj.hasOwnProperty(prop) && !newObj.hasOwnProperty(prop)) {
+        result[prop] = exisitingObj[prop];
+      }
+    }
+  }
+
+  return result;
+}
+
+function processStringNumbers(inputString, processingFunction) {
+  const numbers = String(inputString).split(' ').map(num => {
+    const numericValue = +num;
+    
+    if (isNaN(numericValue) || numericValue === 0) {
+      return num
+    } else {
+      return processingFunction(numericValue); // Keep non-numeric values as they are
+    }
+  });
+
+  return numbers.join(' ');
+}
+
 const isBrowser = () => typeof window !== "undefined" && document
 
+const convertToDecimal = (num, places) => {
+  return ((num * 1.0) / 100).toFixed(places)
+}
+
+const convertToMM = pixels => {
+  return parseFloat((pixels * .2645833333).toFixed(3))
+}
+
+const convertToPx = mm => {
+  return parseFloat((mm * 3.7795275591).toFixed(3))
+}
+
+const convertToIn = pixels => {
+  return parseFloat((pixels * .0104166667).toFixed(2))
+}
+
+const convertFloatFixed = (number, places) => {
+  const convertedNum = Number(number)
+  return parseFloat(convertedNum.toFixed(places))
+}
+
+function findIndexOfElementInArray(array, propertyName, targetValue) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i][propertyName] === targetValue) {
+      return i; // Return the index of the element if found.
+    }
+  }
+  return -1; // Return -1 if the element is not found.
+}
 
 export {
-  createAttributes,
-  svgToObjects,
+  consolidateMixedObjects,
+  consolidateObjectProps,
+  convertFloatFixed,
+  convertToDecimal,
+  convertToIn,
+  convertToMM,
+  convertToPx,
   convertUnix,
+  createAttributes,
+  findIndexOfElementInArray,
   isBrowser,
+  processStringNumbers,
+  svgToObjects,
 }

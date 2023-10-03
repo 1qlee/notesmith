@@ -109,14 +109,14 @@ const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
                 className="is-vertical"
                 margin="0 0 1rem"
               >
-                <StyledLabel>Thickness</StyledLabel>
+                <StyledLabel>Stroke Width</StyledLabel>
                 <input
                   type="range"
                   min="0.3"
                   step="0.1"
                   max="5"
-                  value={pageData.thickness}
-                  onChange={e => setPageData({...pageData, thickness: e.target.value})}
+                  value={pageData.strokeWidth}
+                  onChange={e => setPageData({...pageData, strokeWidth: e.target.value})}
                 />
               </StyledFieldset>
             </StyledFieldset>
@@ -218,8 +218,8 @@ const EditPageForm = ({ setEditMode, setPageType, setPageData, pageData }) => {
                   min="0.3"
                   step="0.1"
                   max="5"
-                  value={pageData.thickness}
-                  onChange={e => setPageData({...pageData, thickness: e.target.value})}
+                  value={pageData.strokeWidth}
+                  onChange={e => setPageData({...pageData, strokeWidth: e.target.value})}
                 />
               </StyledFieldset>
             </StyledFieldset>

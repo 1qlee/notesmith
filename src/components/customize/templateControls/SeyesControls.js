@@ -6,13 +6,14 @@ import ColumnControls from "./components/ColumnControls"
 import MarginControls from "./components/MarginControls"
 import OpacityControls from "./components/OpacityControls"
 import RowControls from "./components/RowControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import SpacingControls from "./components/SpacingControls"
 import RangeControls from "./components/RangeControls"
 
 function SeyesControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -36,6 +37,7 @@ function SeyesControls({
           flex={1}
         >
           <RowControls
+            max={max.rows}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -44,6 +46,7 @@ function SeyesControls({
           flex={1}
         >
           <ColumnControls
+            max={max.columns}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -81,7 +84,7 @@ function SeyesControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, convertToDecimal, fonts } from "../../styles/variables"
+import { colors } from "../../styles/variables"
+import { convertToDecimal } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"

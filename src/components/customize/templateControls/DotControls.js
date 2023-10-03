@@ -13,6 +13,7 @@ import RadiusControls from "./components/RadiusControls"
 function DotControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -36,6 +37,7 @@ function DotControls({
           flex={1}
         >
           <RowControls
+            max={max.rows}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -44,6 +46,7 @@ function DotControls({
           flex={1}
         >
           <ColumnControls
+            max={max.columns}
             pageData={pageData}
             setPageData={setPageData}
           />
@@ -58,6 +61,9 @@ function DotControls({
         setPageData={setPageData}
       />
       <RadiusControls 
+        step={0.01}
+        max={50}
+        min={0.1}
         pageData={pageData}
         setPageData={setPageData}
       />

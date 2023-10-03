@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import styled from "styled-components"
-import { colors, fonts, convertFloatFixed, widths } from "../../styles/variables"
-import { Minus, Plus, CaretUp, CaretDown } from "phosphor-react"
+import { colors, fonts, widths } from "../../styles/variables"
+import { convertFloatFixed } from "../../utils/helper-functions"
+import { Minus, Plus, CaretUp, CaretDown } from "@phosphor-icons/react"
 
 import Icon from "../ui/Icon"
 
@@ -122,9 +123,11 @@ function QuantityTracker(props) {
 }
 
 function NumberInput({
+  id,
   max,
   min,
   onChange,
+  onFocus,
   padding,
   step,
   value,
@@ -229,14 +232,30 @@ function NumberInput({
     }
   }
 
+  function handleFocus(e) {
+    e.target.select()
+    if (onFocus) {
+      onFocus(false)
+    }
+  }
+
+  function handleBlur() {
+    if (onFocus) {
+      onFocus(true)
+    }
+    validateInput(inputValue)
+  }
+
   return (
     <NumberInputWrapper
       width={width}
     >
       <StyledInput
-        onBlur={e => validateInput(inputValue)}
+        id={id}
+        onBlur={() => handleBlur()}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={e => handleKeyDown(e)}
+        onFocus={e => handleFocus(e)}
         padding={padding}
         ref={inputRef}
         type="text"
@@ -603,14 +622,15 @@ const SelectIcon = styled.span`
   position: absolute;
   top: ${props => props.top ? props.top : "2.5rem"};
   right: ${props => props.right ? props.right : "1rem"};
+  pointer-events: none;
 `
 
 const StyledSelect = styled.select`
   background-color: ${colors.white};
-  border-radius: ${props => props.borderradius ? props.borderradius : "0.25rem"};
+  border-radius: ${props => props.borderradius ? props.borderradius : "4px"};
   border: 1px solid ${colors.gray.nineHundred};
-  font-size: ${props => props.fontsize || "0.8rem"};
-  padding: ${props => props.padding || "1rem 4rem 1rem 1rem"};
+  font-size: ${props => props.fontsize || "0.875rem"};
+  padding: ${props => props.padding || "16px 64px 16px 16px"};
   height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;

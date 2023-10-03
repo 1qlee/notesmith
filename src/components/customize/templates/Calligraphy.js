@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx } from "../../../styles/variables"
+import { convertToPx } from "../../../utils/helper-functions"
 
 function Calligraphy({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [slantRows, setSlantRows] = useState([])
-  const { opacity, rows, staffSpacing, thickness, slantAngle, slants } = pageData
+  const { opacity, rows, staffSpacing, strokeWidth, slantAngle, slants } = pageData
   const { height, width } = maxSvgSize
   const ascSpacing = convertToPx(pageData.ascSpacing)
   const dscSpacing = convertToPx(pageData.dscSpacing)
   const xHeight = convertToPx(pageData.xHeight)
   const slantSpacing = convertToPx(pageData.slantSpacing)
   const rowSpacing = convertToPx(staffSpacing)
-  const lineThickness = convertToPx(thickness)
-  const halfLineThickness = lineThickness / 2
-  const rowHeight = ascSpacing + dscSpacing + xHeight + lineThickness * 3
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
+  const rowHeight = ascSpacing + dscSpacing + xHeight + lineStrokeWidth * 3
+  const maxSlants = 137
+  const maxRows = Math.floor((height + rowSpacing) / (rowHeight + rowSpacing))
 
   useEffect(() => {
     function getTan(angle) {
@@ -32,7 +35,7 @@ function Calligraphy({
         const slantOffset = slant * slantSpacing
         let posX1 = slantOffset
         let posX2 = slant * slantSpacing - getTan(compSlantAngle) * rowHeight
-        let posY1 = spaceBtwnRows + thickness
+        let posY1 = spaceBtwnRows + strokeWidth
         let posY2 = posY1 + rowHeight
 
         // if the bottom of the lines exceed the maximum X position, restrict num of slants
@@ -43,7 +46,7 @@ function Calligraphy({
         // if the top of the lines exceed the width of the row on its right side
         if (posX1 > maxPosX) {
           const newOffset = maxPosX - posX2
-          const newPosY1 = rowHeight - (newOffset * getTan(slantAngle)) + spaceBtwnRows + thickness
+          const newPosY1 = rowHeight - (newOffset * getTan(slantAngle)) + spaceBtwnRows + strokeWidth
           posX1 = maxPosX
           posY1 = newPosY1
         }
@@ -63,8 +66,8 @@ function Calligraphy({
         }
 
         const slantProps = {
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
           x1: posX1,
           x2: posX2,
@@ -79,7 +82,7 @@ function Calligraphy({
 
     function createLines(linesArray, spaceBtwnRows, row) {
       for (let line = 0; line < 4; line++) {
-        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineThickness : lineThickness * line + halfLineThickness
+        const spaceBtwnLines = (line === 0 && row === 0) ? halfLineStrokeWidth : lineStrokeWidth * line + halfLineStrokeWidth
         const offset = spaceBtwnRows + spaceBtwnLines
         const posX1 = 0
         const posX2 = width
@@ -97,8 +100,8 @@ function Calligraphy({
 
         const posY2 = posY1
         const lineProps = {
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
           x1: posX1,
           x2: posX2,
@@ -122,7 +125,7 @@ function Calligraphy({
       const dummySlantsArray = []
 
       for (let row = 0; row < rows; row++) {
-        const spaceBtwnRows = row * (rowSpacing + rowHeight + lineThickness)
+        const spaceBtwnRows = row * (rowSpacing + rowHeight + lineStrokeWidth)
 
         const slants = createSlants(dummySlantsArray, spaceBtwnRows, row)
         const lines = createLines(dummyLinesArray, spaceBtwnRows, row)
@@ -146,7 +149,11 @@ function Calligraphy({
     }
 
     createRows()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+      slants: maxSlants,
+    })
+  }, [pageData])
 
   return (
     <>

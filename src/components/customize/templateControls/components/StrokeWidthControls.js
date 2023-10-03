@@ -2,19 +2,19 @@ import React from "react"
 
 import RangeControls from "./RangeControls"
 
-function ThicknessControls({
+function StrokeWidthControls({
   pageData,
   setPageData,
 }) {
   return (
     <RangeControls
-      property="thickness"
-      propertyName="Thickness"
+      property="strokeWidth"
+      propertyName="Stroke width"
       propertyObj={{ alignmentVertical: "", alignmentHorizontal: "" }}
       inputProps={{
         min: 0.088,
         max: 5,
-        step: 0.001,
+        step: 0.01,
       }}
       pageData={pageData}
       setPageData={setPageData}
@@ -22,4 +22,4 @@ function ThicknessControls({
   )
 }
 
-export default ThicknessControls
+export default StrokeWidthControls

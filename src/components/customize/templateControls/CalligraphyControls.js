@@ -5,7 +5,7 @@ import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import CalligraphySpacingControls from "./components/CalligraphySpacingControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import SlantControls from "./components/SlantControls"
 import StaffSpacingControls from "./components/StaffSpacingControls"
 import { ControlWrapper } from "./components/TemplateComponents"
@@ -13,6 +13,7 @@ import { ControlWrapper } from "./components/TemplateComponents"
 function CalligraphyControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -32,6 +33,7 @@ function CalligraphyControls({
       />
       <ControlWrapper>
         <RowControls
+          max={max.rows}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -41,6 +43,7 @@ function CalligraphyControls({
         setPageData={setPageData}
       />
       <SlantControls
+        max={max.slants}
         pageData={pageData}
         setPageData={setPageData}
       />
@@ -53,7 +56,7 @@ function CalligraphyControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls
+      <StrokeWidthControls
         pageData={pageData}
         setPageData={setPageData}
       />

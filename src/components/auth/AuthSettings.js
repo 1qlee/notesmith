@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Layout from "../layout/Layout"
 import { useFirebaseContext } from "../../utils/auth"
 import { colors } from "../../styles/variables"
-import { WarningCircle } from "phosphor-react"
+import { WarningCircle } from "@phosphor-icons/react"
 
 import Loader from "../misc/Loader"
 import SettingsForm from "../form/SettingsForm"

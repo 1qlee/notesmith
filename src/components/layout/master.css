@@ -540,3 +540,23 @@ select:-webkit-autofill:focus {
 .window-grid::-webkit-scrollbar-thumb {
   background-color: #E0E0E0;
 }
+.svg-drag-select-area-overlay {
+  border: 1px solid #1a73e8;
+  background-color: rgba(26, 115, 232, 0.1);
+}
+rect.selection {
+  stroke: #1a73e8;
+  fill: rgba(26, 115, 232, 0.1);
+}
+rect.overlay {
+  cursor: default;
+}
+[data-selected] {
+  outline: 1px solid #1a73e8;
+}
+#selection-path {
+  stroke: #1a73e8;
+  stroke-width: 1px;
+  fill: none;
+  pointer-events: none;
+}

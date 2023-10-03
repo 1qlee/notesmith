@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
-import { colors, convertToDecimal, fonts } from "../../styles/variables"
-import { CircleNotch } from "phosphor-react"
+import { colors, fonts } from "../../styles/variables"
+import { convertToDecimal } from "../../utils/helper-functions"
+import { CircleNotch } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"

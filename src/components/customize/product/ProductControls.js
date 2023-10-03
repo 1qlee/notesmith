@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, widths, convertFloatFixed, convertToPx, convertToMM, breakpoints, pageMargins } from "../../../styles/variables"
-import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "phosphor-react"
+import { colors, widths, breakpoints, pageMargins } from "../../../styles/variables"
+import { convertFloatFixed, convertToPx, convertToMM } from "../../../utils/helper-functions"
+import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"
@@ -103,6 +104,7 @@ const PageButton = styled(Button)`
 function ProductControls({
   currentPageSide,
   pageData,
+  max,
   showControls,
   selectedPageSvg,
   setCurrentPageSide,
@@ -120,7 +122,7 @@ function ProductControls({
     left: convertToPx(marginLeft),
   }
   const minimumMargin = pageMargins.minimum
-  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.thickness, 3)
+  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
   function handleSetTemplate() {
@@ -227,6 +229,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "dot" && (
@@ -236,6 +239,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "graph" && (
@@ -245,6 +249,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "hexagon" && (
@@ -254,6 +259,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "isometric" && (
@@ -263,6 +269,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "seyes" && (
@@ -272,6 +279,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "music" && (
@@ -281,6 +289,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "handwriting" && (
@@ -290,6 +299,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "cross" && (
@@ -299,6 +309,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                       {pageData.template === "calligraphy" && (
@@ -308,6 +319,7 @@ function ProductControls({
                           maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
+                          max={max}
                         />
                       )}
                     </>

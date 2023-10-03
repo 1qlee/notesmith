@@ -5,7 +5,7 @@ import MarginControls from "./components/MarginControls"
 import AngleControls from "./components/AngleControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 import BorderControls from "./components/BorderControls"
 
 function IsometricControls({
@@ -44,7 +44,7 @@ function IsometricControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls
+      <StrokeWidthControls
         pageData={pageData}
         setPageData={setPageData}
       />

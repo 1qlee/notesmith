@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { colors } from "../../styles/variables"
 import { Link } from "gatsby"
-import { WarningCircle, CircleNotch } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"
 import Content from "../ui/Content"

@@ -1,7 +1,8 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts, convertToMM } from "../../styles/variables"
-import { Plus } from "phosphor-react"
+import { colors, fonts, pageDataConfig } from "../../styles/variables"
+import { convertToMM  } from "../../utils/helper-functions"
+import { Plus, X } from "@phosphor-icons/react"
 import { Tooltip } from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
 import HexPageIcon from "../../assets/hexagon-grid.svg"
@@ -191,7 +192,7 @@ function RuledPageIcon({
     template: "ruled",
     spacing: 5,
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     rows: 42,
     columns: 26,
     marginTop: 0.379,
@@ -259,13 +260,13 @@ function DotPageIcon({
     template: "dot",
     spacing: 5,
     opacity: 1,
-    thickness: 0.175,
+    strokeWidth: 0.175,
     radius: 0.1,
-    rows: 42,
+    rows: 41,
     columns: 25,
-    marginTop: 0.123,
+    marginTop: 0.672,
     marginBottom: 0,
-    marginLeft: 1.881,
+    marginLeft: 0.681,
     marginRight: 0,
     width: 1,
   }
@@ -354,11 +355,13 @@ function GraphPageIcon({
     template: "graph",
     spacing: 5,
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     rows: 41,
     columns: 24,
-    marginTop: 0.335,
+    marginTop: 0.379,
+    marginBottom: 0,
     marginLeft: 2.036,
+    marginRight: 0,
     width: 127,
   }
 
@@ -419,7 +422,7 @@ function BlankPageIcon({
     template: "blank",
     spacing: 5,
     opacity: 1,
-    thickness: 0.175,
+    strokeWidth: 0.175,
     rows: 42,
     columns: 26,
     marginTop: 0,
@@ -472,10 +475,10 @@ function HexagonPageIcon({
     show: isProductPage ? true : false,
     template: "hexagon",
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     hexagonRadius: 5,
-    rows: 30,
-    columns: 16,
+    rows: 27,
+    columns: 28,
     marginTop: 0,
     marginLeft: 0,
   }
@@ -536,7 +539,7 @@ function IsometricPageIcon({
     template: "isometric",
     opacity: 1,
     angle: 60,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     spacing: 5,
     contentWidth: convertToMM(data.pageWidth),
     contentHeight: convertToMM(data.pageHeight),
@@ -599,7 +602,7 @@ function SeyesPageIcon({
     show: isProductPage ? true : false,
     template: "seyes",
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     spacing: 2,
     rows: 91,
     columns: 12,
@@ -664,7 +667,7 @@ function MusicPageIcon({
     show: isProductPage ? true : false,
     template: "music",
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     spacing: 2,
     staffSpacing: 7,
     staves: 14,
@@ -741,7 +744,7 @@ function HandwritingPageIcon({
     show: isProductPage ? true : false,
     template: "handwriting",
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     spacing: 5,
     groupSpacing: 5,
     rows: 14,
@@ -844,7 +847,7 @@ function CalligraphyPageIcon({
     show: isProductPage ? true : false,
     template: "calligraphy",
     opacity: 1,
-    thickness: 0.088,
+    strokeWidth: 0.088,
     spacing: 5,
     groupSpacing: 5,
     slants: 28,
@@ -996,11 +999,62 @@ function CrossGridPageIcon({
   )
 }
 
+function NonePageIcon({
+  setData,
+  data,
+  dataTip,
+  isActive,
+  isProductPage,
+  iconMargin,
+  leftPageData,
+  rightPageData,
+  showLabels,
+}) {
+  const newData = {
+    ...data,
+    ...pageDataConfig,
+    template: ""
+  }
+
+  return (
+    <Page
+      className="none-tooltip"
+      data={newData}
+      isActive={isActive}
+      isProductPage={isProductPage}
+      leftPageData={leftPageData}
+      margin={iconMargin}
+      rightPageData={rightPageData}
+      setData={setData}
+    >
+      <PageOutline 
+        className="page-outline"
+      >
+        <Icon
+          margin="10px 6px"
+        >
+          <X size={16} />
+        </Icon>
+      </PageOutline>
+      {showLabels ? (
+        <PageLabel margin="0.5rem 0 0 0">None</PageLabel>
+      ) : (
+        <Tooltip
+          anchorSelect=".none-tooltip"
+          content={dataTip}
+          place="top"
+        />
+      )}
+    </Page>
+  )
+}
+
 function PageIcons({
   checkActiveVar,
   data,
   iconMargin,
   isProductPage,
+  hideNone,
   leftPageData,
   rightPageData,
   setData,
@@ -1008,6 +1062,19 @@ function PageIcons({
 }) {
   return (
     <>
+      {!hideNone && (
+        <NonePageIcon
+          data={data}
+          dataTip="None"
+          iconMargin={iconMargin}
+          isActive={checkActiveVar === ""}
+          isProductPage={isProductPage}
+          leftPageData={leftPageData}
+          rightPageData={rightPageData}
+          setData={setData}
+          showLabels={showLabels}
+        />
+      )}
       <BlankPageIcon
         data={data}
         dataTip="Blank"

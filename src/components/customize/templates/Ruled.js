@@ -1,32 +1,33 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Ruled({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
   const [lines, setLines] = useState([])
-  const { thickness, spacing, opacity, rows } = pageData
+  const { strokeWidth, spacing, opacity, rows } = pageData
   const { width, height } = maxSvgSize
-  const lineThickness = convertToPx(thickness)
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
   const lineSpacing = convertToPx(spacing)
+  const maxRows = Math.floor((height + lineSpacing) / (lineStrokeWidth + lineSpacing))
 
   function createLines() {
     const linesArray = []
 
-    for (let i = 0; i < rows; i++) {
+    for (let row = 0; row < rows; row++) {
       // calculations and conversions to px
-      const halfLineThickness = lineThickness / 2
-      const spaceBtwnLines = i === 0 ? halfLineThickness : lineThickness * i + halfLineThickness
+      const spaceBtwnLines = row === 0 ? halfLineStrokeWidth : lineStrokeWidth * row + halfLineStrokeWidth
       const lineX1 = 0
       const lineX2 = width
-      const lineY = i * lineSpacing + spaceBtwnLines
+      const lineY = row * lineSpacing + spaceBtwnLines
       // line object
       const line = {
-        fill: "none",
-        stroke: "#000",
-        strokeWidth: lineThickness,
+        stroke: "currentcolor",
+        strokeWidth: lineStrokeWidth,
         opacity: opacity,
         x1: convertFloatFixed(lineX1, 3),
         x2: convertFloatFixed(lineX2, 3),
@@ -35,11 +36,11 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > height) {
+      if (lineY + halfLineStrokeWidth > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
-          rows: i,
+          rows: row,
         })
         break
       }
@@ -53,14 +54,16 @@ function Ruled({
 
   useEffect(() => {
     createLines()
-  }, [pageData, maxSvgSize])
+    setMax({
+      rows: maxRows,
+    })
+  }, [pageData])
 
   return (
     <>
       {lines.map((line, index) => (
         <line
           key={index}
-          fill={line.fill}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
           opacity={line.opacity}
@@ -68,6 +71,7 @@ function Ruled({
           x2={line.x2}
           y1={line.y1}
           y2={line.y2}
+          id={`svg_${index + 1}`}
         >
         </line>
       ))}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { Check, CaretDown } from "phosphor-react"
+import { Check, CaretDown } from "@phosphor-icons/react"
 
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"

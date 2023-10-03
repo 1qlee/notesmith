@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
-import { CircleNotch } from "phosphor-react"
+import { CircleNotch } from "@phosphor-icons/react"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, set, push } from "firebase/database"
 

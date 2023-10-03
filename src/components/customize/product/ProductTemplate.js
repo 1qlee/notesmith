@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react"
-import { pageMargins, convertToPx, colors } from "../../../styles/variables"
+import { pageMargins, colors } from "../../../styles/variables"
+import { convertToPx } from "../../../utils/helper-functions"
 import { ScreenClassRender } from "react-grid-system"
 
 import Holes from "../pageComponents/Holes"
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
-import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
@@ -22,6 +22,7 @@ function ProductTemplate({
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
+  setMax,
 }) {
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const minimumMargin = pageMargins.minimum
@@ -150,16 +151,14 @@ function ProductTemplate({
               fill="#fff"
             >
               {pageData.template === "blank" && (
-                <Blank
-                  maxSvgSize={maxSvgSize}
-                  pageData={pageData}
-                />
+                null
               )}
               {pageData.template === "ruled" && (
                 <Ruled
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "dot" && (
@@ -167,6 +166,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "graph" && (
@@ -174,6 +174,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "hexagon" && (
@@ -181,6 +182,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "isometric" && (
@@ -188,6 +190,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "seyes" && (
@@ -195,6 +198,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "music" && (
@@ -202,6 +206,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "handwriting" && (
@@ -209,6 +214,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "cross" && (
@@ -216,6 +222,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
               {pageData.template === "calligraphy" && (
@@ -223,6 +230,7 @@ function ProductTemplate({
                   maxSvgSize={maxSvgSize}
                   pageData={pageData}
                   setPageData={setPageData}
+                  setMax={setMax}
                 />
               )}
             </svg>

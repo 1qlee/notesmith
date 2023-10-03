@@ -7,11 +7,12 @@ import OpacityControls from "./components/OpacityControls"
 import SpacingControls from "./components/SpacingControls"
 import StaffSpacingControls from "./components/StaffSpacingControls"
 import StavesControls from "./components/StavesControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 
 function MusicControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -31,6 +32,7 @@ function MusicControls({
       />
       <ControlWrapper>
         <StavesControls
+          max={max.staves}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -48,7 +50,7 @@ function MusicControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls
+      <StrokeWidthControls
         pageData={pageData}
         setPageData={setPageData}
       />

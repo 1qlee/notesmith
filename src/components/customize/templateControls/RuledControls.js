@@ -6,11 +6,12 @@ import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
-import ThicknessControls from "./components/ThicknessControls"
+import StrokeWidthControls from "./components/StrokeWidthControls"
 
 function RuledControls({
   maximumMarginHeight,
   maximumMarginWidth,
+  max,
   pageData,
   setPageData,
   svgSize,
@@ -30,6 +31,7 @@ function RuledControls({
       />
       <ControlWrapper>
         <RowControls
+          max={max.rows}
           pageData={pageData}
           setPageData={setPageData}
         />
@@ -42,7 +44,7 @@ function RuledControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <ThicknessControls 
+      <StrokeWidthControls 
         pageData={pageData}
         setPageData={setPageData}
       />

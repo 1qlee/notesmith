@@ -14,7 +14,6 @@ import ColorPicker from "./ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import ProductInfoBox from "./ProductInfoBox"
-import Tag from "../ui/Tag"
 
 const ProductInfo = ({
   bookData,
@@ -139,6 +138,7 @@ const ProductInfo = ({
           data={pageData}
           iconMargin="0 24px 24px 0"
           isProductPage={true}
+          hideNone
           leftPageData={leftPageData}
           rightPageData={rightPageData}
           setData={setPageData}

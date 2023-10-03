@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { colors } from "../../styles/variables"
-import { WarningCircle, CircleNotch } from "phosphor-react"
+import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
 import validatePassword from "../../functions/validatePassword"
 
 import { StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "./FormComponents"

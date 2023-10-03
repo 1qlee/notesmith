@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import Button from "../ui/Button"
 import { colors, fonts } from "../../styles/variables"
-import { CircleNotch, PaperPlaneRight, Check } from "phosphor-react"
+import { CircleNotch, PaperPlaneRight, Check } from "@phosphor-icons/react"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, set, push, get, query, orderByChild, equalTo } from "firebase/database"
 

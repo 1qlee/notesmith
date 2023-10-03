@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { ArrowLeft, Warning, CircleNotch } from "phosphor-react"
+import { ArrowLeft, Warning, CircleNotch } from "@phosphor-icons/react"
 import { colors, fonts, pageMargins } from "../../../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"

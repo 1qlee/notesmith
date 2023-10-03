@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from '../../hooks/useShoppingCart'
 
-import { Plus, Minus } from "phosphor-react"
+import { Plus, Minus } from "@phosphor-icons/react"
 import { QuantityWrapper, QuantityButton, Counter } from "../form/FormComponents"
 import Icon from "../ui/Icon"
 

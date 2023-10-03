@@ -35,15 +35,10 @@ const gradient = `linear-gradient(90deg,
 const StyledDemoTemplate = styled.div`
   position: absolute;
   top: 12px;
-  left: 62px;
+  left: 56px;
   z-index: 5;
-  height: 560px;
-  width: 400px;
-  @media only screen and (max-width: 1548px) {
-    height: 428px;
-    width: 306px;
-    left: 47px;
-  }
+  width: calc(100% - 28px);
+  height: calc(100% - 24px);
 `
 
 const initAnimation = keyframes`
@@ -208,17 +203,10 @@ function Book3d({
               <>
                 <Measure
                   bounds
-                  onResize={contentRect => {
-                    setPageData({
-                      ...pageData,
-                      rows: 100,
-                      columns: 100,
-                    })
-                    setPageDimensions({
-                      height: contentRect.bounds.height,
-                      width: contentRect.bounds.width,
-                    })
-                  }}
+                  onResize={contentRect => setPageDimensions({
+                    height: contentRect.bounds.height - 24,
+                    width: contentRect.bounds.width,
+                  })}
                 >
                   {({ measureRef }) => (
                     <StyledDemoTemplate
@@ -235,7 +223,7 @@ function Book3d({
                 <StaticImage
                   className="image"
                   src="../../images/index/blank-page.jpg"
-                  alt="Notesmith logo image"
+                  alt="Notebook opened to blank page"
                   quality={100}
                 />
               </>
@@ -245,7 +233,7 @@ function Book3d({
                   <StaticImage
                     className="image"
                     src="../../images/index/front-cover-white.jpg"
-                    alt="Notesmith logo image"
+                    alt="White colored cover custom wired notebook, front"
                     quality={100}
                   />
                 )}
@@ -253,7 +241,7 @@ function Book3d({
                   <StaticImage
                     className="image"
                     src="../../images/index/front-cover-black.jpg"
-                    alt="Notesmith logo image"
+                    alt="Black colored cover custom wired notebook, front"
                     quality={100}
                   />
                 )}
@@ -269,7 +257,7 @@ function Book3d({
               <StaticImage
                 className="image"
                 src="../../images/index/back-cover-white.jpg"
-                alt="Notesmith logo image"
+                alt="White colored cover custom wired notebook, back"
                 quality={100}
               />
             )}
@@ -277,7 +265,7 @@ function Book3d({
               <StaticImage
                 className="image"
                 src="../../images/index/back-cover-black.jpg"
-                alt="Notesmith logo image"
+                alt="Black colored cover custom wired notebook, back"
                 quality={100}
               />
             )}

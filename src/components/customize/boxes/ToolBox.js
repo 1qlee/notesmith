@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "phosphor-react"
+import { Cursor, Pencil, Rectangle, Circle, TextT, LineSegment } from "@phosphor-icons/react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"
@@ -46,7 +46,7 @@ function ToolBox() {
           />
         </Icon>
       </ToolItem>
-      <ToolItem
+      {/* <ToolItem
         data-tool="pencil"
         onClick={e => selectTool(e)}
         className={selectedTool === "pencil" ? "is-active" : null}
@@ -110,7 +110,7 @@ function ToolBox() {
             color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
-      </ToolItem>
+      </ToolItem> */}
     </Flexbox>
   )
 }

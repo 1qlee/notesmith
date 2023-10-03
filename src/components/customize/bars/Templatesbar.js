@@ -1,15 +1,23 @@
 import React from "react"
-import { colors } from "../../../styles/variables"
 import PageIcons from "../PageIcons"
+import { useEditorDispatch } from "../context/editorContext"
 
-import { ControlsContent, ControlsFooter } from "../Controls"
-import Button from "../../ui/Button"
+import { ControlsContent } from "../Controls"
 
 function Templatesbar({
   pageData,
   setPageData,
-  handleApplyTemplateButton,
 }) {
+  const dispatch = useEditorDispatch()
+
+  function handleTemplateChange(data) {
+    dispatch({
+      type: "ungroup-selection",
+      id: "selection-group",
+    })
+    return setPageData(data)
+  }
+
   return (
     <>
       <ControlsContent>
@@ -23,24 +31,12 @@ function Templatesbar({
           <PageIcons
             checkActiveVar={pageData.template}
             isProductPage={false}
-            setData={setPageData}
+            setData={handleTemplateChange}
             data={pageData}
             showLabels={true}
           />
         </div>
       </ControlsContent>
-      <ControlsFooter>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.gray.oneHundred}
-          padding="16px"
-          width="100%"
-          disabled={!pageData.template}
-          onClick={() => handleApplyTemplateButton()}
-        >
-          Apply template
-        </Button>
-      </ControlsFooter>
     </>
   )
 }

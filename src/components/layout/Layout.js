@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import useIsClient from "../../hooks/checkClient"
+import useIsClient from "../../hooks/useIsClient"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 

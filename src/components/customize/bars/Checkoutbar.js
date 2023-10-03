@@ -3,7 +3,7 @@ import { colors } from "../../../styles/variables"
 import { useShoppingCart } from '../../../hooks/useShoppingCart'
 import { useFirebaseContext } from "../../../utils/auth"
 import { navigate } from "gatsby"
-import { CircleNotch } from "phosphor-react"
+import { CircleNotch } from "@phosphor-icons/react"
 import { update, ref } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
 

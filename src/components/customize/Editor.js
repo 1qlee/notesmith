@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
+import { pageDataConfig } from "../../styles/variables"
 import { navigate } from "gatsby"
 import { pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
@@ -7,6 +8,7 @@ import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/databa
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { isBrowser } from "../../utils/helper-functions"
+import { EditorProvider } from "./context/editorContext"
 
 import { Controls } from "./Controls"
 import Toastify from "../ui/Toastify"
@@ -17,12 +19,11 @@ import CreateBookModal from "./modals/CreateBookModal"
 import Functionsbar from "./bars/Functionsbar"
 import Loader from "../misc/Loader"
 import Pagebar from "./bars/Pagebar"
-import Seo from "../layout/Seo"
 import Book404 from "./Book404"
 
 const StyledEditor = styled.div`
   display: flex;
-  height: calc(100% - 58px);
+  height: calc(100% - 59px);
   justify-content: space-between;
   width: 100%;
   overflow-y: hidden;
@@ -45,51 +46,11 @@ const Editor = ({
     title: "",
   })
   const [pageData, setPageData] = useState({
-    alignmentHorizontal: "center",
-    alignmentVertical: "top",
-    angle: 30,
-    ascSpacing: 5,
-    borderData: {
-      sync: true,
-      toggle: true,
-      thickness: 0.088,
-      opacity: 1,
-    },
-    columns: 27,
-    columnSpacing: 5,
-    dashedLineData: {
-      sync: true,
-      thickness: 0.088,
-      opacity: 1,
-      dashArray: "2 4 4 2",
-      dashOffset: 0,
-    },
-    dscSpacing: 5,
-    hexagonRadius: 1,
-    lineWidth: 100,
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 0,
     maxContentHeight: bookData.heightPixel - pageMargins.vertical,
     maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
-    opacity: 1,
-    radius: 0.1,
-    rows: 42,
-    rowSpacing: 5,
-    show: false,
-    crossSize: 1,
-    slantAngle: 55,
-    slants: 20,
-    slantSpacing: 5,
-    spacing: 5,
-    staffSpacing: 5,
-    staves: 9,
     svgHeight: bookData.heightPixel,
     svgWidth: bookData.widthPixel,
-    template: "",
-    thickness: 0.088,
-    xHeight: 5,
+    ...pageDataConfig
   })
   const [svgSize, setSvgSize] = useState({
     height: bookData.heightPixel - pageMargins.vertical,
@@ -102,14 +63,10 @@ const Editor = ({
   const [noExistingBook, setNoExistingBook] = useState(null)
   const [initializing, setInitializing] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
-  const [config, setConfig] = useState({
-    debug: true,
-    i18n: 'fr',
-    saveHandler: null,
-    onCloseHandler: null,
-    debugPrefix: 'editor',
-  });
-  const [svgContent, setSvgContent] = useState(`<svg width="${pageData.svgWidth}" height="${pageData.svgHeight}" xmlns="http://www.w3.org/2000/svg"></svg>`);
+  const [max, setMax] = useState({
+    rows: 200,
+    columns: 200,
+  })
 
   useEffect(() => {
     // queries db for the book by bookId
@@ -214,7 +171,7 @@ const Editor = ({
   }, [bookId, loading])
 
   // creates blank svgs
-  function createBlankSvgs() {
+  const createBlankSvgs = () => {
     // create a unique id for a blank page
     const blankPageId = uuidv4()
     // create a page object id:svg(string) pair
@@ -237,49 +194,20 @@ const Editor = ({
     setInitializing(false)
   }
 
-  const svgUpdate = (content) => {
-    logDebugData('svgUpdate', config.saveHandler !== null);
-    setSvgContent(content);
-    if (config.saveHandler !== null) {
-      config.saveHandler(content);
-    }
-  }
-
-  const getSvg = () => {
-    logDebugData('getSvg');
-    return svgContent;
-  };
-
-  const configure = (name, value) => {
-    logDebugData('configure', { name, value });
-    if (typeof config[name] === 'undefined') {
-      throw new Error(`${name} is not a valid configuration`);
-    }
-    const newConfig = { ...config, [name]: value };
-    setConfig(newConfig);
-    return newConfig;
-  };
-
-  const logDebugData = (functionName, args) => {
-    if (config.debug) {
-      console.info(
-        '%c%s',
-        'color:green',
-        config.debugPrefix,
-        functionName,
-        args,
-        new Error().stack.split(/\n/)[2]
-      );
-    }
-  };
-
   if (loading || initializing) {
     return <Loader />
   }
 
   return (
-    <>
-      <Seo title={`${bookData.title}`} />
+    <EditorProvider
+      bookDimensions={{
+        width: bookData.widthPixel,
+        height: bookData.heightPixel,
+      }}
+      setSelectedPageSvg={setSelectedPageSvg}
+      setPageData={setPageData}
+      pageData={pageData}
+    >
       {noExistingBook ? (
         <Book404 />
       ) : (
@@ -311,12 +239,11 @@ const Editor = ({
               pageData={pageData}
               setSvgSize={setSvgSize}
               selectedPage={selectedPage}
+              selectedPageSvg={selectedPageSvg}
+              setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
-              svgContent={svgContent}
-              locale={config.i18n}
-              svgUpdate={svgUpdate}
-              log={logDebugData}
+              svgSize={svgSize}
             />
             <Controls
               activeTab={activeTab}
@@ -325,6 +252,7 @@ const Editor = ({
               pageData={pageData}
               productData={productData}
               productImages={productImages}
+              max={max}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}
@@ -362,6 +290,7 @@ const Editor = ({
               selectedPageSvg={selectedPageSvg}
               setCanvasPages={setCanvasPages}
               setCanvasPageTemplates={setCanvasPageTemplates}
+              setPageData={setPageData}
               setShowModal={setShowModal}
               toast={toast}
               user={user}
@@ -370,7 +299,7 @@ const Editor = ({
         </>
       )}
       <Toastify />
-    </>
+    </EditorProvider>
   )
 }
 

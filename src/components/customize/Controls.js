@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
+import { useEditorContext, useEditorDispatch } from "./context/editorContext"
 
-import Controlsbar from "./bars/Controlsbar"
+import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
 import Checkoutbar from "./bars/Checkoutbar"
+import Button from "../ui/Button"
 
 const StyledControls = styled.div`
   border-left: ${colors.borders.black};
@@ -21,7 +23,7 @@ const ControlsContent = styled.div`
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 32px 16px;
+  padding: 16px;
   width: 100%;
   &::-webkit-scrollbar {
     height: 0.5rem;
@@ -44,7 +46,7 @@ const ControlsTabs = styled.ul`
 const ControlsTab = styled.li`
   background-color: ${colors.white};
   color: ${colors.gray.sixHundred};
-  padding: 1rem 0;
+  padding: 16px 0;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
   font-size: 0.875rem;
@@ -74,6 +76,7 @@ function Controls({
   pageData,
   productData,
   productImages,
+  max,
   setBookData,
   setPageData,
   setShowModal,
@@ -82,18 +85,40 @@ function Controls({
   toast,
   user,
 }) {
-  function handleApplyTemplateButton() {
-    // don't show the modal if no template is selected
-    if (!pageData.template) {
-      toast.error("Click and select a template first!")
+  const dispatch = useEditorDispatch()
+  const canvasState = useEditorContext()
+  const [showDesignbar, setShowDesignbar] = useState(false)
+
+  const handleShowModal = () => {
+    dispatch({
+      type: "ungroup-selection",
+    })
+    
+    setShowModal({
+      show: true,
+      type: "template"
+    })
+  }
+
+  useEffect(() => {
+    // if we are displaying a template, show the design bar
+    if (pageData.template && pageData.template !== "blank") {
+      // show design bar
+      setActiveTab(1)
+      setShowDesignbar(true)
+    }
+    // else if user is currently drag selecting or done drag selecting elements, show design bar
+    else if (canvasState.selectionBbox && canvasState.selectionPath) {
+      // show design bar
+      setActiveTab(1)
+      setShowDesignbar(true)
     }
     else {
-      setShowModal({
-        show: true,
-        type: "template"
-      })
+      // show templates bar
+      setShowDesignbar(false)
+      setActiveTab(0)
     }
-  }
+  }, [pageData.template, canvasState.tempSelectedElements, canvasState.selectedElements])
 
   return (
     <StyledControls>
@@ -104,7 +129,7 @@ function Controls({
         >
           Templates
         </ControlsTab>
-        {pageData.template && (
+        {showDesignbar && (
           <ControlsTab
             className={activeTab === 1 && "is-active"}
             onClick={() => setActiveTab(1)}
@@ -125,16 +150,17 @@ function Controls({
         <Templatesbar
           pageData={pageData}
           setPageData={setPageData}
-          handleApplyTemplateButton={handleApplyTemplateButton}
+          setShowModal={setShowModal}
+          toast={toast}
         />
       )}
       {activeTab === 1 && (
-        <Controlsbar
+        <Designbar
           pageData={pageData}
+          max={max}
           setPageData={setPageData}
           setShowModal={setShowModal}
           svgSize={svgSize}
-          handleApplyTemplateButton={handleApplyTemplateButton}
         />
       )}
       {activeTab === 2 && (
@@ -148,6 +174,17 @@ function Controls({
           toast={toast}
         />
       )}
+      <ControlsFooter>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          padding="16px"
+          width="100%"
+          onClick={() => handleShowModal()}
+        >
+          Apply changes
+        </Button>
+      </ControlsFooter>
     </StyledControls>
   )
 }

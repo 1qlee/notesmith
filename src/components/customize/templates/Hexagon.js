@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Hexagon({
   maxSvgSize,
   pageData,
   setPageData,
+  setMax,
 }) {
-  const { hexagonRadius, thickness, rows, opacity } = pageData
+  const { hexagonRadius, strokeWidth, rows, opacity, columns } = pageData
   const { width, height } = maxSvgSize
   const hexRadius = convertToPx(hexagonRadius)
-  const hexThickness = convertToPx(thickness)
-  const hexWidth = Math.sqrt(3) * hexRadius
+  const hexStrokeWidth = convertToPx(strokeWidth)
+  const halfHexStrokeWidth = hexStrokeWidth / 2
+  const coeff = Math.sqrt(3)
+  const apothem = coeff * hexRadius * 0.5
+  const hexWidth = apothem * 2
+  const hexHeight = coeff * hexWidth
+  const halfHexHeight = hexHeight / 2
+  const offset = hexWidth / 2
+  const realHexHeight = hexRadius * 2
+  const avgHexHeight = (realHexHeight + hexRadius) / 2
+  const maxColumns = Math.floor((width) / ((hexWidth)) * 2)
+  const maxRows = Math.floor((height - halfHexStrokeWidth) / avgHexHeight)
   const [hexagons, setHexagons] = useState([])
 
   useEffect(() => {
     function createHexagons() {
       // creates the shape of the hexagon by generating its points
-      function createPoints(x, y, radius, row) {
+      function createPoints(x, y, radius, col, row) {
         const pointsArray = []
 
         for (let theta = 0; theta < Math.PI * 2; theta += Math.PI / 3) {
@@ -25,35 +36,42 @@ function Hexagon({
           const pointY = convertFloatFixed(y + radius * Math.cos(theta), 2)
 
           if (pointX > width) {
-            return { row: null }
+            return { col: col }
           }
           if (pointY > height) {
             return { row: row }
           }
           else {
-            pointsArray.push(pointX + ',' + pointY)
+            if (theta === 0) {
+              pointsArray.push(`M${pointX} ${pointY}`)
+            }
+            else {
+              pointsArray.push(`L${pointX} ${pointY}`)
+            }
           }
         }
 
-        return pointsArray.join(' ')
+        const joinedPoints = pointsArray.join(' ')
+
+        return joinedPoints
       }
 
       const hexagonsArray = []
 
-      for (let row = 0; row < rows; row++) {
-        const numOfCols = Math.floor(width / hexWidth)
-        const halfHexThickness = hexThickness / 2
+      for (let column = 0; column < columns; column++) {
+        for (let row = 0; row < rows; row++) {
+          let x = offset * column + halfHexStrokeWidth + offset
+          let y = halfHexHeight * row + halfHexStrokeWidth + hexRadius
+          let points = ""
 
-        for (let col = 0; col < numOfCols; col++) {
-          const offset = hexWidth / 2
-          let x = offset + offset * col * 2 + halfHexThickness
-          let y = hexRadius + offset * row * Math.sqrt(3) + halfHexThickness
-
-          if (row % 2 !== 0) {
-            x += offset
+          // if col is even and row is even
+          if (column % 2 === 0 && row % 2 === 0) {
+            points = createPoints(x, y, hexRadius, column, row)
           }
-
-          const points = createPoints(x, y, hexRadius, row)
+          // if col is odd and row is odd
+          if (column % 2 !== 0 && row % 2 !== 0) {
+            points = createPoints(x, y, hexRadius, column, row)
+          }
 
           if (points.row) {
             return setPageData({
@@ -61,15 +79,23 @@ function Hexagon({
               rows: row,
             })
           }
+          else if (points.col) {
+            return setPageData({
+              ...pageData,
+              columns: column,
+            })
+          }
           else {
-            const hexagon = {
-              stroke: "#000",
-              strokeWidth: hexThickness,
-              points: points,
-              opacity: opacity,
-            }
+            if (points) {
+              const hexagon = {
+                stroke: "#000000",
+                strokeWidth: hexStrokeWidth,
+                points: points,
+                opacity: opacity,
+              }
 
-            hexagonsArray.push(hexagon)
+              hexagonsArray.push(hexagon)
+            }
           }
         }
       }
@@ -78,18 +104,23 @@ function Hexagon({
     }
 
     createHexagons()
-  }, [pageData, maxSvgSize])
+    setMax({
+      columns: maxColumns,
+      rows: maxRows,
+    })
+  }, [pageData])
 
   return (
     <>
       {hexagons.map((hex, index) => (
-        <polygon
+        <path
           key={index}
           fill={hex.fill}
           stroke={hex.stroke}
           strokeWidth={hex.strokeWidth}
-          points={hex.points}
+          d={hex.points}
           opacity={hex.opacity}
+          id={`svg_${index + 1}`}
         />
       ))}
     </>

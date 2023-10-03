@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { convertToPx, convertFloatFixed } from "../../../styles/variables"
+import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Isometric({
   pageData,
@@ -8,19 +8,25 @@ function Isometric({
 }) {
   const [linesTop, setLinesTop] = useState([])
   const [linesSides, setLinesSides] = useState([])
-  const { thickness, opacity, spacing, borderData } = pageData
+  const { strokeWidth, opacity, spacing, borderData } = pageData
   const { width, height } = maxSvgSize
   const contentHeight = height
   const contentWidth = width
-  const lineThickness = convertToPx(thickness)
-  const halfLineThickness = lineThickness / 2
-  const borderThickness = convertToPx(borderData.thickness)
-  const halfBorderThickness = borderThickness / 2
-  const lineSpacing = convertToPx(spacing) + lineThickness
+  const lineStrokeWidth = convertToPx(strokeWidth)
+  const halfLineStrokeWidth = lineStrokeWidth / 2
+  const borderStrokeWidth = convertToPx(borderData.strokeWidth)
+  const halfBorderStrokeWidth = borderStrokeWidth / 2
+  const syncedBorderWidth = borderData.sync ? halfLineStrokeWidth : halfBorderStrokeWidth
+  const lineSpacing = convertToPx(spacing) + lineStrokeWidth
   const angle = parseInt(pageData.angle)
   const complementaryAngle = 90 - angle
-  const rectPosition = borderData.sync ? halfLineThickness : halfBorderThickness
-  const adjustedWidth = contentWidth - halfLineThickness
+  const borderPosition = {
+    x: syncedBorderWidth,
+    y: syncedBorderWidth,
+    x2: contentWidth - syncedBorderWidth,
+    y2: contentHeight - syncedBorderWidth,
+  }
+  const adjustedWidth = contentWidth - halfLineStrokeWidth
 
   useEffect(() => {
     function getTan(angle) {
@@ -43,7 +49,7 @@ function Isometric({
         const spacing = lineSpacingTop * realNumOfLines
         // the starting x position of the line
         const posX1 = convertFloatFixed(spacing, 3)
-        const posX2 = convertFloatFixed(adjacentSide * getTan(angle), 3) - halfLineThickness
+        const posX2 = convertFloatFixed(adjacentSide * getTan(angle), 3) - halfLineStrokeWidth
         const invertedPosX1 = convertFloatFixed(contentWidth - posX1, 3)
         let adjustedPosY2
 
@@ -59,9 +65,8 @@ function Isometric({
           y1: 0,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -69,11 +74,10 @@ function Isometric({
         const lineCoordsTwo = {
           x1: invertedPosX1,
           y1: 0,
-          x2: adjustedPosY2 ? halfLineThickness : contentWidth - posX2,
+          x2: adjustedPosY2 ? halfLineStrokeWidth : contentWidth - posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -94,7 +98,7 @@ function Isometric({
         // the side adjacent to the angle of our "triangle" used to calculate the line's x2 position
         const adjacentSide = contentHeight - posY1
         // ending point of the line on the X-axis
-        let posX2 = convertFloatFixed(adjacentSide * Math.tan(angle * Math.PI / 180), 3) - halfLineThickness
+        let posX2 = convertFloatFixed(adjacentSide * Math.tan(angle * Math.PI / 180), 3) - halfLineStrokeWidth
         let adjustedPosY2
 
         if (posY1 > contentHeight) {
@@ -112,9 +116,8 @@ function Isometric({
           y1: posY1,
           x2: adjustedPosY2 ? adjustedWidth : posX2,
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -122,11 +125,10 @@ function Isometric({
         const lineCoordsTwo = {
           x1: adjustedWidth,
           y1: posY1,
-          x2: adjustedPosY2 ? halfLineThickness : convertFloatFixed(contentWidth - posX2, 3),
+          x2: adjustedPosY2 ? halfLineStrokeWidth : convertFloatFixed(contentWidth - posX2, 3),
           y2: adjustedPosY2 || contentHeight,
-          fill: "none",
-          stroke: "#000",
-          strokeWidth: lineThickness,
+          stroke: "#000000",
+          strokeWidth: lineStrokeWidth,
           opacity: opacity,
         }
 
@@ -138,47 +140,55 @@ function Isometric({
 
     createLinesTop()
     createLinesSides()
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>
       {linesTop.map((line, index) => (
-        <line
-          fill={line.fill}
+        <path
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
+          d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
         />
       ))}
       {linesSides.map((line, index) => (
-        <line
-          fill={line.fill}
+        <path
           key={index}
           opacity={line.opacity}
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
+          d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
         />
       ))}
       {borderData.toggle && (
-        <rect
-          width={borderData.sync ? contentWidth - lineThickness : contentWidth - borderThickness}
-          height={borderData.sync ? contentHeight - lineThickness : contentHeight - borderThickness}
-          x={rectPosition}
-          y={rectPosition}
-          strokeWidth={borderData.sync ? lineThickness : borderThickness}
-          strokeOpacity={borderData.sync ? opacity : borderData.opacity}
-          fill="none"
-          stroke="#000"
-        />
+        <>
+          <path 
+            d={`M 0,${borderPosition.y} L ${contentWidth},${borderPosition.y} z`}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000000"
+          />
+          <path
+            d={`M ${borderPosition.x2},0 L ${borderPosition.x2},${contentHeight} z`}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000000"
+          />
+          <path
+            d={`M ${contentWidth},${borderPosition.y2} L 0,${borderPosition.y2} z`}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000000"
+          />
+          <path
+            d={`M ${borderPosition.x},${contentHeight} L ${borderPosition.x},0 z`}
+            strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
+            strokeOpacity={borderData.sync ? opacity : borderData.opacity}
+            stroke="#000000"
+          />
+        </>
       )}
     </>
   )

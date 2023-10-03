@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useRef } from "react"
+import { useEditorDispatch } from "../context/editorContext"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
 import Graph from "../templates/Graph"
-import Blank from "../templates/Blank"
 import Hexagon from "../templates/Hexagon"
 import Isometric from "../templates/Isometric"
 import Seyes from "../templates/Seyes"
@@ -12,61 +12,64 @@ import Handwriting from "../templates/Handwriting"
 import CrossGrid from "../templates/CrossGrid"
 import Calligraphy from "../templates/Calligraphy"
 
-function Template({
+const Template = ({
   currentPageSide,
   maxSvgSize,
   pageData,
   pagePosition,
+  setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
-}) {
-  const [node, setNode] = useState()
-
-  const templateRef = useCallback(node => {
-    if (node !== null) {
-      setNode(node)
-    }
-  }, [])
+  setSvgLoaded,
+}) => {
+  const dispatch = useEditorDispatch()
+  const ref = useRef(null)
 
   useEffect(() => {
-    if (node) {
-      setSelectedPageSvg(node)
+    setSvgLoaded(null)
+
+    if (ref && ref.current) {
+      const template = ref.current
+      setSelectedPageSvg(template)
+
+      dispatch({
+        type: "initialize",
+        canvas: template,
+      })
       
       setTimeout(() => {
-        const dimensions = node.getBBox()
-        setSvgSize({
-          height: dimensions.height,
-          width: dimensions.width,
-        })
-      }, 10)
-    }
+        const { height, width } = template.getBBox()
 
-  }, [pageData, pagePosition, node, maxSvgSize])
+        setSvgSize({
+          height: height,
+          width: width,
+        })
+      }, 1)
+    }
+  }, [ref, pageData])
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      ref={templateRef}
+      ref={ref}
       id={currentPageSide === "left" ? "left-page" : "right-page"}
-      x={currentPageSide === "left" ? pagePosition.leftX : pagePosition.rightX}
-      y={pagePosition.bothY}
+      x={pagePosition.x}
+      y={pagePosition.y}
       width={pageData.maxContentWidth}
       height={pageData.maxContentHeight}
       viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
       fill="#fff"
     >
       {pageData.template === "blank" && (
-        <Blank
-          pageData={pageData}
-          maxSvgSize={maxSvgSize}
-        />
+        null
       )}
       {pageData.template === "ruled" && (
         <Ruled
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "dot" && (
@@ -74,6 +77,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "graph" && (
@@ -81,6 +85,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "hexagon" && (
@@ -88,6 +93,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "isometric" && (
@@ -95,6 +101,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "seyes" && (
@@ -102,6 +109,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "music" && (
@@ -109,6 +117,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "handwriting" && (
@@ -116,6 +125,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "cross" && (
@@ -123,6 +133,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
       {pageData.template === "calligraphy" && (
@@ -130,6 +141,7 @@ function Template({
           maxSvgSize={maxSvgSize}
           pageData={pageData}
           setPageData={setPageData}
+          setMax={setMax}
         />
       )}
     </svg>

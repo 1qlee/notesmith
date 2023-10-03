@@ -1,5 +1,6 @@
 import React from "react"
-import { colors, convertToPx } from "../../styles/variables"
+import { colors } from "../../styles/variables"
+import { convertToPx } from "../../utils/helper-functions"
 
 function PageSvg({ children, pageData, bookData }) {
   return (
@@ -38,7 +39,7 @@ function Lined({ pageData, bookData }) {
     const line = {
       fill: "none",
       stroke: "#000",
-      strokeWidth: pageData.thickness,
+      strokeWidth: pageData.strokeWidth,
       opacity: pageData.opacity,
       x1: linePos.x,
       x2: bookData.width + linePos.x,
@@ -100,7 +101,7 @@ function Dots({ pageData, bookData }) {
       }
       const dot = {
         fill: "#000",
-        radius: pageData.thickness,
+        radius: pageData.strokeWidth,
         opacity: pageData.opacity,
         cx: dotPos.x,
         cy: dotPos.y

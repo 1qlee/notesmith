@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors, fonts } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
 import { set, ref, push, query, remove, get, orderByChild, equalTo } from "firebase/database"
-import { WarningCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "phosphor-react"
+import { WarningCircle, Circle, ArrowsHorizontal, CircleNotch, RadioButton } from "@phosphor-icons/react"
 import { v4 as uuidv4 } from 'uuid'
 
 import { StyledFieldset, StyledLabel, RadioInput, StyledInput } from "../../form/FormComponents"
@@ -64,6 +64,7 @@ function ApplyTemplateModal({
   selectedPageSvg,
   setCanvasPages,
   setCanvasPageTemplates,
+  setPageData,
   setShowModal,
   toast,
   user,
@@ -218,7 +219,11 @@ function ApplyTemplateModal({
 
     // update canvasPages with the updated array clone
     updatePagesDb(canvasPagesClone)
-    toast.success("Succesfully updated pages!")
+    setPageData({
+      ...pageData,
+      template: ""
+    })
+    toast.success("Updated pages.")
 
     setLoading(false)
     setShowModal({

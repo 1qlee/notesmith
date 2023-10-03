@@ -1,3 +1,5 @@
+import { convertToPx } from "../utils/helper-functions"
+
 const colors = {
   gray: {
     oneHundred: "#F5F5F5",
@@ -162,27 +164,6 @@ const regex = {
   password: RegExp(/^.{8,256}$/)
 }
 
-const convertToDecimal = (num, places) => {
-
-  return ((num * 1.0) / 100).toFixed(places)
-}
-
-const convertToMM = pixels => {
-  return parseFloat((pixels * .2645833333).toFixed(3))
-}
-
-const convertToPx = mm => {
-  return parseFloat((mm * 3.7795275591).toFixed(3))
-}
-
-const convertToIn = pixels => {
-  return parseFloat((pixels * .0104166667).toFixed(2))
-}
-
-const convertFloatFixed = (number, places) => {
-  return parseFloat(number.toFixed(places))
-}
-
 const pageMargins = {
   vertical: convertToPx(6.35),
   horizontal: convertToPx(13.335),
@@ -190,16 +171,56 @@ const pageMargins = {
   minimum: convertToPx(3.175),
 }
 
+const pageDataConfig = {
+  alignmentHorizontal: "center",
+  alignmentVertical: "top",
+  angle: 30,
+  ascSpacing: 5,
+  borderData: {
+    sync: true,
+    toggle: true,
+    thickness: 0.088,
+    opacity: 1,
+  },
+  columns: 27,
+  columnSpacing: 5,
+  dashedLineData: {
+    sync: true,
+    thickness: 0.088,
+    opacity: 1,
+    dashArray: "2 4 4 2",
+    dashOffset: 0,
+  },
+  crossSize: 1,
+  dscSpacing: 5,
+  hexagonRadius: 1,
+  lineWidth: 100,
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  opacity: 1,
+  radius: 0.1,
+  rows: 42,
+  rowSpacing: 5,
+  show: false,
+  slantAngle: 55,
+  slants: 20,
+  slantSpacing: 5,
+  spacing: 5,
+  staffSpacing: 5,
+  staves: 9,
+  template: "",
+  thickness: 0.088,
+  xHeight: 5,
+}
+
 export { 
   breakpoints,
   colors, 
-  convertFloatFixed, 
-  convertToDecimal, 
-  convertToMM, 
-  convertToIn,
-  convertToPx, 
   fonts,
   pageMargins,
+  pageDataConfig,
   regex, 
   spacing, 
   widths, 

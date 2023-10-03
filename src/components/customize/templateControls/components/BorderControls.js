@@ -1,5 +1,5 @@
 import React from "react"
-import { CheckSquare, Square } from "phosphor-react"
+import { CheckSquare, Square } from "@phosphor-icons/react"
 import { colors } from "../../../../styles/variables"
 
 import { NumberInput, StyledLabel, StyledCheckbox, RangeInput } from "../../../form/FormComponents"
@@ -20,7 +20,7 @@ function BorderControls({
           ...borderData,
           sync: true,
           opacity: 1,
-          thickness: 0.088,
+          strokeWidth: 0.088,
         }
       })
     }
@@ -125,21 +125,21 @@ function BorderControls({
               />
             </ControlFlexChild>
           </ControlFlexWrapper>
-          <StyledLabel>Thickness</StyledLabel>
+          <StyledLabel>Stroke Width</StyledLabel>
           <ControlFlexWrapper>
             <ControlFlexChild
               flex={1}
               margin="0 8px 0 0"
             >
               <NumberInput
-                value={borderData.thickness}
+                value={borderData.strokeWidth}
                 min={0.088}
                 max={3}
                 onChange={value => setPageData({
                   ...pageData,
                   borderData: {
                     ...borderData,
-                    thickness: value,
+                    strokeWidth: value,
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
@@ -154,12 +154,12 @@ function BorderControls({
                 min="0.088"
                 step="0.001"
                 max="3"
-                value={borderData.thickness}
+                value={borderData.strokeWidth}
                 onChange={e => setPageData({
                   ...pageData,
                   borderData: {
                     ...borderData,
-                    thickness: parseFloat(e.target.value),
+                    strokeWidth: parseFloat(e.target.value),
                   }
                 })}
               />
