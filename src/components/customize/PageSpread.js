@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
 import { convertToPx, convertFloatFixed, findIndexOfElementInArray } from "../../utils/helper-functions"
 import { pageMargins, colors } from "../../styles/variables"
-import { set, throttle } from "lodash"
+import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, parseSelection } from "./editor/editor-functions"
 import * as d3 from "d3"
 import drag from "./editor/drag"
-import svgDragSelect from "svg-drag-select"
+import dragSelector from "svg-drag-select"
 
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
@@ -36,7 +36,6 @@ function PageSpread({
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
-  let allSelectedElements = []
   const pageIsLeft = selectedPage % 2 === 0
   const spreadPosition = {
     x: (canvasSize.width - svgWidth * 2) / 2,
@@ -342,7 +341,7 @@ function PageSpread({
               .style("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
               .style("pointer-events", "none")
 
-            setHoverClone(groupRect.node())
+            setHoverClone(subject)
           }
           else {
             const nodeClone = node.clone()
@@ -353,7 +352,7 @@ function PageSpread({
               .attr("stroke", colors.blue.sixHundred)
               .style("pointer-events", "none")
 
-            setHoverClone(nodeClone.node())
+            setHoverClone(subject)
           }
         }
         // else if the node is the selection group
@@ -404,6 +403,8 @@ function PageSpread({
         clientX: 0,
         clientY: 0,
       }
+      let allSelectedElements = []
+      const allCanvasElements = Array.from(referenceElement.children)
 
       const {
         cancel,           // cleanup function.
@@ -411,7 +412,7 @@ function PageSpread({
         dragAreaOverlay,  // a div element overlaying dragging area.
         // you can customize the style of this element.
         // this element has "svg-drag-select-area-overlay" class by default.
-      } = svgDragSelect({
+      } = dragSelector({
         // the svg element (required).
         svg: canvasRef.current,
         // followings are optional parameters with default values.
@@ -427,18 +428,17 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           cancel,                   // cancel() cancels.
         }) {
-          coords = {
-            clientX: pointerEvent.clientX,
-            clientY: pointerEvent.clientY,
-          }
           // for example: handles mouse left button only.
           if (pointerEvent.button !== 0) {
             cancel()
             return
           }
 
-          // remove any existing hover clones before starting selection
-          d3.selectAll("#hover-clone").remove()
+          coords = {
+            clientX: pointerEvent.clientX,
+            clientY: pointerEvent.clientY,
+          }
+          allSelectedElements = []
 
           dispatch({
             type: "ungroup-selection",
@@ -463,9 +463,8 @@ function PageSpread({
           // calculate if the current clientX and clientY are greater than previous in `coords`
           // if so, we are moving right/down, otherwise we are moving left/up
           const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
-          const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY 
+          const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY
           const numOfElements = selectedElements.length
-          const allCanvasElements = Array.from(referenceElement.children)
 
           // remove data-selected from newly deselected elements
           if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
@@ -497,30 +496,28 @@ function PageSpread({
           // parse newlySelectedElements and add them to state
           // including their position in the canvas for reordering later
           newlySelectedElements.forEach((element) => {
+            console.log("🚀 ~ file: PageSpread.js:500 ~ newlySelectedElements.forEach ~ element:", element)
             const node = d3.select(element)
             const nodeId = node.attr("id")
             const parentNode = element.parentNode
             const isGrouped = parentNode && parentNode instanceof SVGGElement
+            console.log("🚀 ~ file: PageSpread.js:508 ~ newlySelectedElements.forEach ~ allCanvasElements:", allCanvasElements)
             const elePosition = allCanvasElements.indexOf(element)
 
-            // add data-selected to newly selected elements
-            if (!isGrouped && nodeId !== "selection-group") {
-              node.attr('data-selected', '')
-            }
+            node.attr('data-selected', '')
 
             // check if the element already exists in state
             const indexExists = findIndexOfElementInArray(allSelectedElements, "element", element)
 
             // if the element is not saved in state, add it to state
             if (indexExists === -1) {
-              const orderedElements = allSelectedElements.length > 0 && allSelectedElements || []
+              const orderedElements = (allSelectedElements.length > 0 && allSelectedElements) || []
               orderedElements.push({
                 element: element,
                 position: elePosition,
               })
               // sort the elements saved to state by their position in the canvas
               orderedElements.sort((a, b) => a.position - b.position)
-              console.log("🚀 ~ file: PageSpread.js:523 ~ newlySelectedElements.forEach ~ orderedElements:", orderedElements)
 
               allSelectedElements = orderedElements
             }
@@ -531,26 +528,26 @@ function PageSpread({
             d3.select("#selection-group").remove()
 
             let fragment = document.createDocumentFragment()
-            let selectionGroup = null
-
-            console.log(allSelectedElements)
 
             allSelectedElements.forEach((ele, index) => {
               if (index === numOfElements - 1) {
                 const nextSibling = ele.element.nextSibling
 
                 if (nextSibling) {
-                  selectionGroup = d3.select(referenceElement).insert("g", `#${ele.element.id}`).attr("id", "selection-group")
+                  const nodeToInsert = d3.select(referenceElement).append("g").attr("id", "selection-group").node()
+                  d3.select(referenceElement.insertBefore(nodeToInsert, nextSibling))
                 }
                 else {
-                  selectionGroup = d3.select(referenceElement).append("g").attr("id", "selection-group")
+                  d3.select(referenceElement).append("g").attr("id", "selection-group")
                 }
               }
 
               fragment.appendChild(ele.element)
             })
 
+            const selectionGroup = d3.select("#selection-group")
             selectionGroup.node().appendChild(fragment)
+            console.log("🚀 ~ file: PageSpread.js:549 ~ useEffect ~ selectionGroup:", selectionGroup)
 
             const results = parseSelection(selectedElements)
 
@@ -561,6 +558,7 @@ function PageSpread({
                 selectionAttributes: results.selectionAttributes,
                 selectionBbox: results.selectionBbox,
                 selectionPath: results.selectionPath,
+                selectionGroup: selectionGroup,
               }
             })
             console.log(allSelectedElements)
@@ -577,13 +575,18 @@ function PageSpread({
               })
 
               selectionGroup.remove()
+              allSelectedElements = []
             }
 
             dispatch({
-              selectedElements: [],
-              selectionAttributes: [],
-              selectionBbox: {},
-              selectionPath: "",
+              type: "bulk-update",
+              state: {
+                selectedElements: [],
+                selectionAttributes: [],
+                selectionBbox: {},
+                selectionPath: "",
+                selectionGroup: null,
+              }
             })
           }
         },

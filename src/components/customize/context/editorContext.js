@@ -98,14 +98,19 @@ const setCanvasState = (state, action) => {
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
-      const { selectedElements, canvas } = state
+      const { selectedElements, selectionGroup, canvas } = state
 
       d3.selectAll("[data-selected]").attr("data-selected", null)
+      d3.selectAll("#hover-clone").remove()
       
+
+      console.log(selectionGroup)
       // if we already have a selection group that means elements are currently selected
       if (selectedElements && selectedElements.length > 0) {
         const selectionGroup = d3.select("#selection-group")
+        console.log("🚀 ~ file: editorContext.js:108 ~ setCanvasState ~ selectionGroup:", selectionGroup)
         const nextNode = d3.select("#selection-group").node().nextSibling
+        console.log("🚀 ~ file: editorContext.js:109 ~ setCanvasState ~ nextNode:", nextNode)
         const groupedElements = Array.from(d3.select("#selection-group").node().children)
 
         groupedElements.forEach(ele => {
@@ -118,6 +123,7 @@ const setCanvasState = (state, action) => {
       return {
         ...state,
         selectedElements: [],
+        selectionAttributes: [],
         selectionBbox: {},
         selectionGroup: null,
         selectionPath: "",

@@ -145,6 +145,12 @@ function drag(referenceElement, dispatch, canvasState) {
   function dragend(event, d) {
     console.log("drag end")
     const { subject } = event
+    const { children } = subject
+
+    // loop each child of #selection-group and remove data-selected
+    for (let i = 0; i < children.length; i++) {
+      d3.select(children[i]).attr("data-selected", "")
+    }
 
     dispatch({
       type: "change-mode",

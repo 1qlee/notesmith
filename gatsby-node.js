@@ -1,14 +1,13 @@
-exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
-  if (stage === "build-html" || stage === 'develop-html') {
-    actions.setWebpackConfig({
-      module: {
-        rules: [
-          {
-            test: /@svgedit/,
-            use: loaders.null(),
-          },
-        ],
-      },
-    })
-  }
-}
+// const { ProvidePlugin } = require('webpack')
+
+// exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
+//   if (stage === "build-html" || stage === 'develop-html') {
+//     actions.setWebpackConfig({
+//       plugins: [
+//         new ProvidePlugin({
+//           window: 'global/window',
+//         }),
+//       ],
+//     })
+//   }
+// }
