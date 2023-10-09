@@ -19,15 +19,6 @@ const collectElements = function (into, svg, ancestor, filter) {
 
 const inRange = function (x, min, max) { return (min <= x && x <= max); }
 
-const enclosures = function (areaInSvgCoordinate, bbox) {
-  let left = areaInSvgCoordinate.x;
-  let right = left + areaInSvgCoordinate.width;
-  let top = areaInSvgCoordinate.y;
-  let bottom = top + areaInSvgCoordinate.height;
-  return (inRange(bbox.x, left, right) && inRange(bbox.x + bbox.width, left, right) &&
-    inRange(bbox.y, top, bottom) && inRange(bbox.y + bbox.height, top, bottom));
-}
-
 const intersects = function (areaInSvgCoordinate, bbox) {
   let left = areaInSvgCoordinate.x;
   let right = left + areaInSvgCoordinate.width;
@@ -35,12 +26,6 @@ const intersects = function (areaInSvgCoordinate, bbox) {
   let bottom = top + areaInSvgCoordinate.height;
   return ((inRange(bbox.x, left, right) || inRange(bbox.x + bbox.width, left, right) || inRange(left, bbox.x, bbox.x + bbox.width)) &&
     (inRange(bbox.y, top, bottom) || inRange(bbox.y + bbox.height, top, bottom) || inRange(top, bbox.y, bbox.y + bbox.height)));
-}
-
-export const getEnclosures = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
-  return svg.getEnclosureList
-    ? Array.prototype.slice.call(svg.getEnclosureList(areaInInitialSvgCoordinate, referenceElement))
-    : collectElements([], svg, referenceElement || svg, function (element) { return enclosures(areaInSvgCoordinate, element.getBBox()); });
 }
 
 export const getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {

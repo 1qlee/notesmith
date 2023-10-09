@@ -141,6 +141,7 @@ const parseSelection = (elements) => {
         pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
         break
       case isLine:
+        pathBbox.y = convertFloatFixed(pathBbox.y - strokeOffset, 3)
         pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
         break
     }
@@ -178,11 +179,51 @@ const parseSelection = (elements) => {
     selectionBbox: convertedSelectionBbox,
     selectionAttributes: selectionAttributes,
     selectionPath: path,
+    selectionGroup: selectionPath,
   }
+}
+
+function findNodeInSelection(array, propertyName, node) {
+  for (let i = 0; i < array.length; i++) {
+    console.log(array[i][propertyName])
+    if (array[i][propertyName].isSameNode(node)) {
+      return i; // Return the index of the element if found.
+    }
+  }
+  return -1; // Return -1 if the element is not found.
+}
+
+const detectMouseInSelection = (coords, box) => {
+  let { clientX, clientY } = coords
+  let { left, top, right, bottom } = box
+  const distance = 3
+
+  let adjustedLeft = left - distance
+  let adjustedRight = right + distance
+  let adjustedTop = top - distance 
+  let adjustedBottom = bottom + distance 
+
+  // Check if the cursor is within the adjusted bounding box.
+  if (
+    clientX >= adjustedLeft &&
+    clientX <= adjustedRight &&
+    clientY >= adjustedTop &&
+    clientY <= adjustedBottom
+  ) {
+    console.log("inside")
+    // Mouse is within the element's bounds
+    return true
+  } else {
+    // Mouse is outside the element's bounds
+    return false
+  }
+
 }
 
 export {
   findClosestNode,
+  findNodeInSelection,
   parseBbox,
   parseSelection,
+  detectMouseInSelection,
 }

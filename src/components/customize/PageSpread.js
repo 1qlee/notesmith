@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
-import { convertToPx, convertFloatFixed, findIndexOfElementInArray } from "../../utils/helper-functions"
+import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
 import { pageMargins, colors } from "../../styles/variables"
 import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
-import { findClosestNode, parseSelection } from "./editor/editor-functions"
+import { findClosestNode, detectMouseInSelection } from "./editor/editor-functions"
 import * as d3 from "d3"
 import drag from "./editor/drag"
-import dragSelector from "svg-drag-select"
+import dragSelector from "./editor/drag-selector"
 
 import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
@@ -118,10 +118,6 @@ function PageSpread({
 
     const collectElements = function (into, svg, ancestor, filter) {
       for (let element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
-        if (element instanceof SVGGElement && element.getAttribute("id") === "selection-group") {
-          collectElements(into, svg, element, filter);
-          continue;
-        }
         for (let _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
           let elementType = svgDragSelectElementTypes_1[_i];
           if (element instanceof elementType && filter(element)) {
@@ -135,6 +131,10 @@ function PageSpread({
 
     // Updated intersects function to check cursor distance.
     const intersects = function (areaInSvgCoordinate, element) {
+      if (element.getAttribute("id") === "hover-clone") {
+        return false
+      }
+
       let bbox = element.getBBox()
       let convertedStrokeWidth = 0
 
@@ -295,6 +295,20 @@ function PageSpread({
         clientX: e.clientX,
         clientY: e.clientY,
       }
+      const selectionPath = d3.select("#selection-path")
+      
+      if (!selectionPath.empty()) {
+        const pathBox = selectionPath.node().getBoundingClientRect()
+        const isMouseInSelection = detectMouseInSelection(coords, pathBox)
+
+        if (isMouseInSelection) {
+          return dispatch({
+            type: "change-mode",
+            mode: "drag",
+          })
+        }
+      }
+
       let subject = null
       let nodes = d3.select(canvasPageRef.current).selectChildren()
 
@@ -308,12 +322,12 @@ function PageSpread({
         const node = d3.select(subject)
 
         // don't work with hover clone node
-        if (node.attr("id") === "hover-clone") return
+        if (node.attr("id") === "hover-clone" || node.attr("[data-selected]")) return
 
         // if the node is not our cloned hover node, create one
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
-        if (node.attr("data-selected") === null && node.attr("id") !== "selection-group") {
+        if (node.attr("data-selected") === null) {
           d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
           // exit if we are hovering the same node
@@ -330,7 +344,7 @@ function PageSpread({
           // if the node is a group, add an invisible rectangle to the cloned node
           if (node.node() instanceof SVGGElement) {
             const nodeBBox = node.node().getBBox()
-            const groupRect = d3.select(canvasPageRef.current).append("rect")
+            d3.select(canvasPageRef.current).append("rect")
               .raise()
               .attr("id", "hover-clone")
               .attr("stroke-width", nodeStrokeWidth)
@@ -344,7 +358,7 @@ function PageSpread({
             setHoverClone(subject)
           }
           else {
-            const nodeClone = node.clone()
+            node.clone()
               .raise()
               .attr("id", "hover-clone")
               .attr("stroke-width", nodeStrokeWidth)
@@ -354,13 +368,6 @@ function PageSpread({
 
             setHoverClone(subject)
           }
-        }
-        // else if the node is the selection group
-        else if (node.attr("id") === "selection-group") {
-          dispatch({
-            type: "change-mode",
-            mode: "drag",
-          })
         }
       }
       else {
@@ -403,8 +410,6 @@ function PageSpread({
         clientX: 0,
         clientY: 0,
       }
-      let allSelectedElements = []
-      const allCanvasElements = Array.from(referenceElement.children)
 
       const {
         cancel,           // cleanup function.
@@ -438,7 +443,6 @@ function PageSpread({
             clientX: pointerEvent.clientX,
             clientY: pointerEvent.clientY,
           }
-          allSelectedElements = []
 
           dispatch({
             type: "ungroup-selection",
@@ -460,135 +464,20 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          coords.clientX = pointerEvent.clientX
+          coords.clientY = pointerEvent.clientY
           // calculate if the current clientX and clientY are greater than previous in `coords`
           // if so, we are moving right/down, otherwise we are moving left/up
           const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
           const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY
           const numOfElements = selectedElements.length
 
-          // remove data-selected from newly deselected elements
-          if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
-            newlyDeselectedElements.forEach(element => {
-              // if the deselected element is part of selection group, remove it from the group
-              if (element.parentNode && element.parentNode.getAttribute("id") === "selection-group") {
-                const nextNode = d3.select("#selection-group").node().nextSibling
-
-                // reappend to canvas
-                referenceElement.insertBefore(element, nextNode)
-
-                // if the element is in the allSelectedElements array, remove it
-                const indexToRemove = findIndexOfElementInArray(allSelectedElements, "element", element)
-
-                if (indexToRemove > -1) {
-                  // remove the element from the array and reattach the array
-                  const beforeElement = allSelectedElements.slice(0, indexToRemove)
-                  const afterElement = allSelectedElements.slice(indexToRemove + 1)
-                  const modifiedElements = beforeElement.concat(afterElement)
-
-                  allSelectedElements = modifiedElements
-                }
-              }
-
-              d3.select(element).attr("data-selected", null)
-            })
-          }
-
-          // parse newlySelectedElements and add them to state
-          // including their position in the canvas for reordering later
-          newlySelectedElements.forEach((element) => {
-            console.log("🚀 ~ file: PageSpread.js:500 ~ newlySelectedElements.forEach ~ element:", element)
-            const node = d3.select(element)
-            const nodeId = node.attr("id")
-            const parentNode = element.parentNode
-            const isGrouped = parentNode && parentNode instanceof SVGGElement
-            console.log("🚀 ~ file: PageSpread.js:508 ~ newlySelectedElements.forEach ~ allCanvasElements:", allCanvasElements)
-            const elePosition = allCanvasElements.indexOf(element)
-
-            node.attr('data-selected', '')
-
-            // check if the element already exists in state
-            const indexExists = findIndexOfElementInArray(allSelectedElements, "element", element)
-
-            // if the element is not saved in state, add it to state
-            if (indexExists === -1) {
-              const orderedElements = (allSelectedElements.length > 0 && allSelectedElements) || []
-              orderedElements.push({
-                element: element,
-                position: elePosition,
-              })
-              // sort the elements saved to state by their position in the canvas
-              orderedElements.sort((a, b) => a.position - b.position)
-
-              allSelectedElements = orderedElements
-            }
+          dispatch({
+            type: "change-selection",
+            selectedElements: selectedElements,
+            newlySelectedElements: newlySelectedElements,
+            newlyDeselectedElements: newlyDeselectedElements,
           })
-
-          // if there are selected elements, parse them to create the selection box and attributes for designbar
-          if (numOfElements > 0) {
-            d3.select("#selection-group").remove()
-
-            let fragment = document.createDocumentFragment()
-
-            allSelectedElements.forEach((ele, index) => {
-              if (index === numOfElements - 1) {
-                const nextSibling = ele.element.nextSibling
-
-                if (nextSibling) {
-                  const nodeToInsert = d3.select(referenceElement).append("g").attr("id", "selection-group").node()
-                  d3.select(referenceElement.insertBefore(nodeToInsert, nextSibling))
-                }
-                else {
-                  d3.select(referenceElement).append("g").attr("id", "selection-group")
-                }
-              }
-
-              fragment.appendChild(ele.element)
-            })
-
-            const selectionGroup = d3.select("#selection-group")
-            selectionGroup.node().appendChild(fragment)
-            console.log("🚀 ~ file: PageSpread.js:549 ~ useEffect ~ selectionGroup:", selectionGroup)
-
-            const results = parseSelection(selectedElements)
-
-            dispatch({
-              type: "bulk-update",
-              state: {
-                selectedElements: selectedElements,
-                selectionAttributes: results.selectionAttributes,
-                selectionBbox: results.selectionBbox,
-                selectionPath: results.selectionPath,
-                selectionGroup: selectionGroup,
-              }
-            })
-            console.log(allSelectedElements)
-          }
-          else {
-            const selectionGroup = d3.select("#selection-group")
-            const isGroupEmpty = selectionGroup && selectionGroup.empty()
-
-            if (!isGroupEmpty) {
-              const nextNode = selectionGroup.node().nextSibling
-
-              Array.from(selectionGroup.node().children).forEach(ele => {
-                referenceElement.insertBefore(ele, nextNode)
-              })
-
-              selectionGroup.remove()
-              allSelectedElements = []
-            }
-
-            dispatch({
-              type: "bulk-update",
-              state: {
-                selectedElements: [],
-                selectionAttributes: [],
-                selectionBbox: {},
-                selectionPath: "",
-                selectionGroup: null,
-              }
-            })
-          }
         },
 
         onSelectionEnd({
@@ -607,7 +496,7 @@ function PageSpread({
 
       if (canvasRef.current && referenceElement) {
         d3.select(canvasRef.current)
-          .call(drag(referenceElement, dispatch, canvasState))
+          .call(drag(referenceElement, dispatch, canvasState, coords))
       }
 
       return () => {

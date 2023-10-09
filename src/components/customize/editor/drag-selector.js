@@ -1,4 +1,4 @@
-import { getEnclosures, getIntersections } from './selector'
+import { getIntersections } from './selector'
 
 const exclude = function (source, values) {
     return source.filter(function (element) { return values.indexOf(element) === -1; });
@@ -44,7 +44,6 @@ export default (function (options) {
             let dragAreaInSvgCoordinate_1 = transformSvgRect(this, this.getScreenCTM().inverse(), dragAreaInClientCoordinate);
             let dragAreaInInitialSvgCoordinate_1 = transformSvgRect(this, this.getCTM(), dragAreaInSvgCoordinate_1);
             let referenceElement_1 = options.referenceElement || null;
-            let _getEnclosures = function () { return getEnclosures(_this, referenceElement_1, dragAreaInSvgCoordinate_1, dragAreaInInitialSvgCoordinate_1); };
             let _getIntersections = function () { return getIntersections(_this, referenceElement_1, dragAreaInSvgCoordinate_1, dragAreaInInitialSvgCoordinate_1); };
             let newSelectedElements = typeof options.selector === 'function' ? options.selector({
                 svg: this,
@@ -53,9 +52,8 @@ export default (function (options) {
                 dragAreaInClientCoordinate: dragAreaInClientCoordinate,
                 dragAreaInSvgCoordinate: dragAreaInSvgCoordinate_1,
                 dragAreaInInitialSvgCoordinate: dragAreaInInitialSvgCoordinate_1,
-                getEnclosures: _getEnclosures,
                 getIntersections: _getIntersections,
-            }) : options.selector === 'intersection' ? _getIntersections() : _getEnclosures();
+            }) : _getIntersections();
             let newlySelectedElements = exclude(newSelectedElements, selectedElements);
             let newlyDeselectedElements = exclude(selectedElements, newSelectedElements);
             dragAreaOverlayStyle.left = dragAreaInClientCoordinate.x + 'px';
