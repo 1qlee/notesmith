@@ -210,7 +210,6 @@ const detectMouseInSelection = (coords, box) => {
     clientY >= adjustedTop &&
     clientY <= adjustedBottom
   ) {
-    console.log("inside")
     // Mouse is within the element's bounds
     return true
   } else {

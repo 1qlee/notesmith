@@ -110,7 +110,6 @@ const setCanvasState = (state, action) => {
         const nodeId = node.attr("id")
 
         if (nodeId !== "hover-clone") {
-          console.log(element)
           node.attr('data-selected', '')
         }
       })

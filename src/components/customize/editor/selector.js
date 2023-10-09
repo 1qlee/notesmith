@@ -1,11 +1,11 @@
-export const svgDragSelectElementTypes = window !== undefined ? [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement, SVGGElement] : []
+export const svgDragSelectElementTypes = typeof window !== "undefined" ? [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement, SVGGElement] : []
 
 const collectElements = function (into, svg, ancestor, filter) {
   for (let element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
-    if (element instanceof SVGGElement) {
-      collectElements(into, svg, element, filter);
-      continue;
-    }
+    // if (element instanceof SVGGElement) {
+    //   collectElements(into, svg, element, filter);
+    //   continue;
+    // }
     for (let _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
       let elementType = svgDragSelectElementTypes_1[_i];
 

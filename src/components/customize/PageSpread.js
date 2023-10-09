@@ -515,7 +515,7 @@ function PageSpread({
       x={spreadPosition.x}
       y={spreadPosition.y}
       onMouseMove={e => handleMouseMove(e)}
-      onPointerUp={e => handleMouseClick(e)}
+      onClick={e => handleMouseClick(e)}
     >
       <CoverPage
         bookData={bookData}

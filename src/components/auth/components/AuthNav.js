@@ -13,29 +13,33 @@ function AuthNav({
         className={page === "Dashboard" ? "is-active" : null}
         as={Link}
         to="/account/dashboard"
+        borderwidth="0 1px 1px 1px"
       >
-        Dashboard
+        <b>Dashboard</b>
       </StyledTab>
       <StyledTab
         className={page === "Books" ? "is-active" : null}
         as={Link}
         to="/account/books"
+        borderwidth="0 1px 1px 1px"
       >
-        Books
+        <b>Books</b>
       </StyledTab>
-      <StyledTab
+      {/* <StyledTab
         className={page === "Templates" ? "is-active" : null}
         as={Link}
         to="/account/templates"
+        borderwidth="0 1px 1px 1px"
       >
         Templates
-      </StyledTab>
+      </StyledTab> */}
       <StyledTab
         className={page === "Settings" ? "is-active" : null}
         as={Link}
         to="/account/settings"
+        borderwidth="0 1px 1px 1px"
       >
-        Settings
+        <b>Settings</b>
       </StyledTab>
     </StyledTabs>
   )

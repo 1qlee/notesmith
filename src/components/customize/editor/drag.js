@@ -122,7 +122,12 @@ function drag(referenceElement, dispatch, canvasState, coords) {
   function dragstart(event, d) {
     console.log("drag start")
     const { subject } = event
-    console.log("🚀 ~ file: drag.js:124 ~ dragstart ~ subject:", subject)
+
+    dispatch({
+      type: "toggle",
+      setting: "selecting",
+      value: false,
+    })
 
     // loop each child of #selection-group and remove data-selected
     for (let i = 0, length = subject.length; i < length; i++) {
@@ -155,7 +160,6 @@ function drag(referenceElement, dispatch, canvasState, coords) {
     console.log("drag end")
     const { subject } = event
 
-    // loop each child of #selection-group and remove data-selected
     for (let i = 0, length = subject.length; i < length; i++) {
       d3.select(subject[i]).attr("data-selected", "")
     }

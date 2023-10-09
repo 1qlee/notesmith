@@ -91,6 +91,7 @@ const SigninForm = () => {
         >
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <StyledInput
+            fontsize="1rem"
             onChange={(e) => setEmail(e.currentTarget.value)}
             onFocus={() => setAuthError({
               msg: ""
@@ -121,6 +122,7 @@ const SigninForm = () => {
             </Content>
           </Flexbox>
           <StyledInput
+            fontsize="1rem"
             onChange={(e) => setPassword(e.currentTarget.value)}
             onFocus={() => setAuthError({
               msg: ""
