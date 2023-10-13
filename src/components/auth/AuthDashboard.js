@@ -1,30 +1,137 @@
-import React, { useEffect } from "react"
-import { Link } from "gatsby"
-import { toast } from 'react-toastify'
+import React, { useEffect, useState, useRef } from "react"
 import { colors, widths } from "../../styles/variables"
 import { daysUntilDate } from "../../utils/helper-functions"
+import { useFirebaseContext } from "../../utils/auth"
+import { ArrowLeft, Check } from "@phosphor-icons/react"
+import { get, ref, set, push, query, orderByChild, equalTo } from "firebase/database"
 
-import { Row, Col } from "react-grid-system"
-import Toastify from "../ui/Toastify"
-import Layout from "../layout/Layout"
-import Content from "../ui/Content"
 import AuthLayout from "./components/AuthLayout"
-import sendEmailVerification from "../../functions/sendEmailVerification"
 import Button from "../ui/Button"
+import Content from "../ui/Content"
+import Icon from "../ui/Icon"
+import Layout from "../layout/Layout"
+import Loader from "../misc/Loader"
 import Notification from "../ui/Notification"
+import Toastify from "../ui/Toastify"
+import TextLink from "../ui/TextLink"
+import { Flexbox } from "../layout/Flexbox"
+import { Row, Col } from "react-grid-system"
+import { StyledInput, StyledLabel } from "../form/FormComponents"
 
 const UserDashboard = () => {
-  const launchDate = new Date("2023-11-01")
+  const { loading, user, firebaseDb } = useFirebaseContext()
+  const [referralCode, setReferralCode] = useState("")
+  const [generating, setGenerating] = useState(false)
+  const [copied, setCopied] = useState({
+    status: false,
+    text: "Copy",
+  })
+  const launchDate = new Date("2023-11-25")
+  const singleRef = useRef(null)
 
-  async function handleSendEmail(email) {
-    const emailFailed = await sendEmailVerification(email)
-    // true if there is an error message
-    if (emailFailed) {
-      toast.error("There was an error sending the verification email, please try again.")
+  useEffect(() => {
+    if (user) {
+      const { uid } = user
+
+      get(ref(firebaseDb, 'users/' + uid)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const { referralCodes } = snapshot.val()
+
+          if (referralCodes) {
+            // get the last referralCode (array)
+            get(query(ref(firebaseDb, `referrals`), orderByChild('userId'), equalTo(uid))).then(snapshot => {
+              if (snapshot.exists()) {
+                const referrals = Object.values(snapshot.val())
+                const unclaimedReferrals = referrals.filter(referral => !referral.redeemed)
+
+                if (unclaimedReferrals.length > 0) {
+                  // sort referrals by dateCreated where claimed is false
+                  unclaimedReferrals.sort((a, b) => {
+                    return b.dateCreated - a.dateCreated
+                  })
+
+                  // get the most recent referralCode
+                  const mostRecentReferral = unclaimedReferrals[0].id
+
+                  setReferralCode(`notesmithbooks.com/invites/${mostRecentReferral}`)
+                }
+                else {
+                  createSingleRefferalCode(uid, true)
+                }
+              }
+            })
+          }
+          else {
+            createSingleRefferalCode(uid, true)
+          }
+        }
+      })
+    }
+  }, [user])
+
+  const createSingleRefferalCode = (uid) => {
+    // create a new referralCode
+    saveReferralCodeDb(uid)
+    setGenerating(true)
+
+    setTimeout(() => {
+      // prevents code from being generated too many times in a row
+      setGenerating(false)
+      singleRef.current.style.cursor = "pointer"
+      singleRef.current.style.opacity = "1"
+    }, 3000)
+  }
+
+  const saveReferralCodeDb = async (uid) => {
+    const referralsRef = ref(firebaseDb, "referrals/")
+    const newReferralKey = push(referralsRef).key
+    // create a new referralCode
+    set(ref(firebaseDb, `referrals/${newReferralKey}`), {
+      id: newReferralKey,
+      userId: uid,
+      redeemed: false,
+      dateCreated: new Date().valueOf(),
+    }).then(() => {
+      set(ref(firebaseDb, `users/${uid}/referralCodes/${newReferralKey}`), true)
+      setReferralCode(`notesmithbooks.com/invites/${newReferralKey}`)
+    })
+  }
+
+  const handleSingleCode = () => {
+    if (generating) {
+      return
     }
     else {
-      toast.success("Email has been successfully sent.")
+      createSingleRefferalCode(user.uid, true)
+      singleRef.current.style.cursor = "not-allowed"
+      singleRef.current.style.opacity = "0.5"
     }
+  }
+
+  const handleReferral = (e) => {
+    const { target } = e
+    target.select()
+    copyToClipboard()
+  }
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(referralCode)
+      .then(() => {
+        setCopied({
+          status: true,
+          text: "Copied!",
+        })
+        setTimeout(() => {
+          setCopied({
+            status: false,
+            text: "Copy",
+          })
+        }, 2000)
+      })
+  }
+
+  if (loading || !user) {
+    return <Loader />
   }
 
   return (
@@ -38,29 +145,76 @@ const UserDashboard = () => {
               linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
-              <h1>Start by creating a custom book</h1>
               <p>
                 Click on the "Books" tab above to get started. When you create a book you will be able to give it a name, after which it will appear in your Books table. Double-click on any book in the table to open it in the editor.
               </p>
               <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
             </Content>
-            <Notification
-              backgroundcolor={colors.yellow.twoHundred}
-              color={colors.yellow.nineHundred}
-              display="inline-flex"
-              margin="0"
-            >
-              <p>There are currently <b>{daysUntilDate(launchDate)} days</b> left until pre-orders will close.</p>
-            </Notification>
+            <Content>
+              <p>The pre-order sale will conclude on <b>November 25th</b>. There are currently <b>{daysUntilDate(launchDate)} days left</b> to participate in the pre-order sale.</p>
+            </Content>
           </Col>
           <Col md={6}>
+            <Notification
+              backgroundcolor={colors.green.twoHundred}
+              color={colors.green.nineHundred}
+              display="inline-flex"
+              margin="32px 0 0"
+            >
+              <p>Reminder: All notebooks purchased during the pre-order sale are <b>20% off</b> and <b>shipping is also free</b> (for U.S. only).</p>
+            </Notification>
             <Content
-              h2fontsize="2rem"
+              h3fontsize="1.5rem"
+              h3margin="0 0 16px"
               margin="32px 0"
             >
-              <h2>Exclusive referrals</h2>
-              <p>Only you </p>
+              <h3>Invite someone to early access</h3>
+              <p>Anyone you invite to early access will be able to bypass the wailist and gain access to Notesmith instantly. This is an exclusive perk for early users like you - but don't worry, you can invite as many people as you wish!</p>
             </Content>
+            {referralCode && (
+              <>
+                <Flexbox
+                  justifycontent="space-between"
+                >
+                  <StyledLabel htmlFor="single-link">Invite link (single use)</StyledLabel>
+                  <TextLink
+                    ref={singleRef}
+                    fontsize="0.875rem"
+                    margin="0 0 8px"
+                    fontweight="400"
+                    onClick={(e) => handleSingleCode(e)}
+                  >
+                    Generate new
+                  </TextLink>
+                </Flexbox>
+                <Flexbox
+                  margin="0 0 32px"
+                >
+                  <StyledInput
+                    id="single-link"
+                    value={referralCode}
+                    onClick={e => handleReferral(e)}
+                    fontsize="1rem"
+                    borderradius="4px 0 0 4px"
+                  />
+                  <Button
+                    borderradius="0 4px 4px 0"
+                    onClick={() => copyToClipboard()}
+                  >
+                    <Icon
+                      margin="0 4px 0 0"
+                    >
+                      {copied.status ? (
+                        <Check />
+                      ) : (
+                        <ArrowLeft />
+                      )}
+                    </Icon>
+                    <span>{copied.text}</span>
+                  </Button>
+                </Flexbox>
+              </>
+            )}
           </Col>
         </Row>
       </AuthLayout>

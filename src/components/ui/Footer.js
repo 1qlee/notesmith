@@ -31,11 +31,11 @@ const Footer = ({ screenClass }) => {
                   <Col md={4} push={{ md: 2 }}>
                     <Content
                       paragraphcolor={colors.gray.oneHundred}
-                      h4color={colors.gray.oneHundred}
-                      h4fontweight="400"
-                      h4margin={isMobile ? "0 0 16px" : "0"}
+                      h5color={colors.gray.oneHundred}
+                      h5fontweight="400"
+                      h5margin={isMobile ? "0 0 16px" : "0"}
                     >
-                      <h4>Sign up to join the waitlist for early access to all our features and notebooks</h4>
+                      <h5>Sign up to join the waitlist for early access to all our features and notebooks</h5>
                     </Content>
                   </Col>
                   <Col md={4} push={{ md: 2 }}>

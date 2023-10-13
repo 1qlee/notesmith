@@ -6,7 +6,6 @@ import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
 import { get, ref, set, query, orderByChild, equalTo } from "firebase/database"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
-import { v4 as uuidv4 } from 'uuid'
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
 import Button from "../ui/Button"
@@ -40,7 +39,6 @@ const SignupForm = () => {
             email: user.email,
             id: user.uid,
             referrer: true,
-            referrerCode: uuidv4(),
           })
 
           return user
