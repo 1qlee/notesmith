@@ -12,7 +12,6 @@ import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
 import Loader from "../misc/Loader"
 import Notification from "../ui/Notification"
-import Toastify from "../ui/Toastify"
 import TextLink from "../ui/TextLink"
 import { Flexbox } from "../layout/Flexbox"
 import { Row, Col } from "react-grid-system"
@@ -35,34 +34,36 @@ const UserDashboard = () => {
 
       get(ref(firebaseDb, 'users/' + uid)).then((snapshot) => {
         if (snapshot.exists()) {
-          const { referralCodes } = snapshot.val()
+          const { referralCodes, referrer } = snapshot.val()
 
-          if (referralCodes) {
-            // get the last referralCode (array)
-            get(query(ref(firebaseDb, `referrals`), orderByChild('userId'), equalTo(uid))).then(snapshot => {
-              if (snapshot.exists()) {
-                const referrals = Object.values(snapshot.val())
-                const unclaimedReferrals = referrals.filter(referral => !referral.redeemed)
+          if (referrer) {
+            if (referralCodes) {
+              // get the last referralCode (array)
+              get(query(ref(firebaseDb, `referrals`), orderByChild('userId'), equalTo(uid))).then(snapshot => {
+                if (snapshot.exists()) {
+                  const referrals = Object.values(snapshot.val())
+                  const unclaimedReferrals = referrals.filter(referral => !referral.redeemed)
 
-                if (unclaimedReferrals.length > 0) {
-                  // sort referrals by dateCreated where claimed is false
-                  unclaimedReferrals.sort((a, b) => {
-                    return b.dateCreated - a.dateCreated
-                  })
+                  if (unclaimedReferrals.length > 0) {
+                    // sort referrals by dateCreated where claimed is false
+                    unclaimedReferrals.sort((a, b) => {
+                      return b.dateCreated - a.dateCreated
+                    })
 
-                  // get the most recent referralCode
-                  const mostRecentReferral = unclaimedReferrals[0].id
+                    // get the most recent referralCode
+                    const mostRecentReferral = unclaimedReferrals[0].id
 
-                  setReferralCode(`notesmithbooks.com/invites/${mostRecentReferral}`)
+                    setReferralCode(`notesmithbooks.com/invites/${mostRecentReferral}`)
+                  }
+                  else {
+                    createSingleRefferalCode(uid, true)
+                  }
                 }
-                else {
-                  createSingleRefferalCode(uid, true)
-                }
-              }
-            })
-          }
-          else {
-            createSingleRefferalCode(uid, true)
+              })
+            }
+            else {
+              createSingleRefferalCode(uid, true)
+            }
           }
         }
       })
@@ -161,7 +162,7 @@ const UserDashboard = () => {
               display="inline-flex"
               margin="32px 0 0"
             >
-              <p>Reminder: All notebooks purchased during the pre-order sale are <b>20% off</b> and <b>shipping is also free</b> (for U.S. only).</p>
+              <p>All notebooks purchased during the pre-order sale are <b>20% off</b> and <b>shipping is also free</b> (to the U.S. only).</p>
             </Notification>
             <Content
               h3fontsize="1.5rem"
@@ -218,7 +219,6 @@ const UserDashboard = () => {
           </Col>
         </Row>
       </AuthLayout>
-      <Toastify />
     </Layout>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useFirebaseContext } from "../../utils/auth"
 import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth"
+import sendEmailVerification from "../../functions/sendEmailVerification"
 
 import { Link } from "gatsby"
 import { AuthFormWrapper } from "../../components/form/FormComponents"
@@ -25,7 +26,6 @@ function Auth({ location }) {
 
   useEffect(() => {
     setLoading(true)
-    console.log(mode)
 
     switch (mode) {
       case 'resetPassword':
@@ -156,7 +156,7 @@ function Auth({ location }) {
                     {authMode === "verifyEmail" && (
                       <>
                         <h1>Something went wrong</h1>
-                        <p>Either the credentials in your link have expired, or your account is already verified. Please try refreshing the page or <Link to="/account/dashboard">try accessing your dashboard</Link>.</p>
+                        <p>Either the credentials in your link have expired, or your account is already verified. Please try refreshing the page or <Link to="/signin">try signing in again</Link>.</p>
                       </>
                     )}
                   </Content>

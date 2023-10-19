@@ -7,7 +7,6 @@ import { convertToPx } from "../../../../utils/helper-functions"
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
-import Toastify from "../../../../components/ui/Toastify"
 import ProductImages from "../../../../components/shop/ProductImages"
 import ProductInfo from "../../../../components/shop/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
@@ -203,7 +202,6 @@ const ProductPage = ({ data, params }) => {
           bookData={bookData}
         />
       </SectionMain>
-      <Toastify />
     </Layout>
   )
 }

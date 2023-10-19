@@ -8,34 +8,6 @@ exports.handler = async (event) => {
   const { lists, email } = body;
 
   try {
-    const templateData = {
-      template_id: "d-020a38ac87c448e2b597184d5c98c3ac",
-      from: {
-        email: "general@notesmithbooks.com",
-        name: "Notesmith"
-      },
-      reply_to: {
-        email: "general@notesmithbooks.com",
-        name: "Notesmith"
-      },
-      personalizations: [
-        {
-          to: [
-            {
-              email: email
-            }
-          ]
-        }
-      ],
-      asm: {
-        group_id: 17004,
-        groups_to_display: [
-          17004,
-          22999
-        ]
-      }
-    }
-
     const request = {
       method: 'PUT',
       url: '/v3/marketing/contacts',
@@ -56,12 +28,10 @@ exports.handler = async (event) => {
     const [response] = await sendgridClient.request(request)
 
     if (response.statusCode === 202) {
-      await sendgridMail.send(templateData)
-
       return {
         statusCode: 200,
         body: JSON.stringify({
-          msg: "You are now subscribed to our mailing list!."
+          msg: "Successfully added email to lists."
         })
       }
     }

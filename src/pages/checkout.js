@@ -20,7 +20,6 @@ import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
 import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
-import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
@@ -415,7 +414,6 @@ const Checkout = () => {
           ) : (
             <Loader msg="Processing payment... Do not refresh or close this page!" />
           )}
-          <Toastify />
           {showModal.show && (
             <ValidateAddressModal
               address={address}
