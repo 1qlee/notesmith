@@ -5,9 +5,9 @@ import Content from "../ui/Content"
 
 const StyledProductInfoBox = styled.div`
   align-items: flex-start;
-  border-top: ${colors.borders.black};
+  border-bottom: ${colors.borders.black};
   display: flex;
-  padding: 16px 0;
+  padding: ${props => props.index === 0 ? "0 0 16px" : "16px 0"};
 `
 
 const InfoBoxItem = styled.div`
@@ -16,24 +16,30 @@ const InfoBoxItem = styled.div`
 
 function ProductInfoBox({
   heading,
+  index,
   text,
 }) {
   return (
-    <StyledProductInfoBox>
+    <StyledProductInfoBox
+      index={index}
+    >
       <InfoBoxItem
         flex="1"
       >
         <Content
           margin="0"
-          paragraphfontweight="700"
+          h5fontsize="1.25rem"
+          h5margin="0 8px 0 0"
         >
-          <p>{heading}</p>
+          <h5>{heading}</h5>
         </Content>
       </InfoBoxItem>
       <InfoBoxItem
         flex="2"
       >
-        <Content>
+        <Content
+          paragraphfontsize="1.25rem"
+        >
           <p>{text}</p>
         </Content>
       </InfoBoxItem>

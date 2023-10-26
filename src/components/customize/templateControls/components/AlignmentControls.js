@@ -44,6 +44,8 @@ function AlignmentControls({
   const { maxContentHeight, maxContentWidth, strokeWidth, radius } = pageData
   const contentHeight = svgSize.height
   const contentWidth = svgSize.width
+  console.log("contentHeight", contentHeight)
+  console.log("contentWidth", contentWidth)
   let verticalTrim, horizontalTrim = 0
 
   switch(pageData.template) {

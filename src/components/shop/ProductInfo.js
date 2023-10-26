@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import { colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../../hooks/useShoppingCart'
 import { v4 as uuidv4 } from 'uuid'
@@ -13,7 +12,6 @@ import Button from "../ui/Button"
 import ColorPicker from "./ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
-import ProductInfoBox from "./ProductInfoBox"
 
 const ProductInfo = ({
   bookData,
@@ -25,7 +23,6 @@ const ProductInfo = ({
   setPageData,
   toast,
 }) => {
-  // <s><span style={{color: colors.gray.sixHundred}}>${bookData.price / 100}</span></s> ${bookData.preorderPrice / 100}
   const { user } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const showWarningMsg = !rightPageData.template || !leftPageData.template
@@ -185,7 +182,7 @@ const ProductInfo = ({
           </Button>
         </Flexbox>
       )}
-      {showWarningMsg ? (
+      {showWarningMsg && (
         <Notification
           backgroundcolor={colors.red.twoHundred}
         >
@@ -198,28 +195,7 @@ const ProductInfo = ({
             <p>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</p>
           </Content>
         </Notification>
-      ) : (
-          <Notification
-            backgroundcolor={colors.red.twoHundred}
-          >
-            <Content
-              margin="0 0 0 8px"
-              paragraphmargin="0"
-              paragraphcolor={colors.red.nineHundred}
-              paragraphfontsize="0.875rem"
-              linktextdecoration="underline"
-            >
-              <p>Only users who have been granted early access may purchase notebooks at this time. If you would like to get early access please <Link to="/waitlist">sign up here</Link>.</p>
-          </Content>
-        </Notification>
       )}
-      {bookData.infoBoxes.map((box, index) => (
-        <ProductInfoBox 
-          heading={box.heading}
-          text={box.text}
-          key={index}
-        />
-      ))}
     </>
   )
 }

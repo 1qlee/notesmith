@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "gatsby"
-import { colors, widths } from "../../../styles/variables"
-import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
-import validatePassword from "../../../functions/validatePassword"
-import { set, get, ref, update } from "firebase/database"
 import sendEmailVerification from "../../../functions/sendEmailVerification"
-import { useFirebaseContext } from "../../../utils/auth"
+import validatePassword from "../../../functions/validatePassword"
+import { Link } from "gatsby"
+import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
+import { colors, widths, marketingLists } from "../../../styles/variables"
+import { set, get, ref, update } from "firebase/database"
 import { toast } from "react-toastify"
+import { useFirebaseContext } from "../../../utils/auth"
 
-import Layout from "../../layout/Layout"
-import { SectionMain, Section, SectionContent } from "../../layout/Section"
-import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "../../form/FormComponents"
-import Notification from "../../ui/Notification"
-import Content from "../../ui/Content"
 import Box from "../../ui/Box"
 import Button from "../../ui/Button"
+import Content from "../../ui/Content"
 import Icon from "../../ui/Icon"
+import Layout from "../../layout/Layout"
 import Loader from "../../misc/Loader"
+import Notification from "../../ui/Notification"
 import TextLink from "../../ui/TextLink"
+import addEmailToLists from "../../../functions/addEmailToLists"
 import { Flexbox } from "../../layout/Flexbox"
+import { SectionMain, Section, SectionContent } from "../../layout/Section"
+import { StyledInput, StyledLabel, StyledFieldset, ErrorLine } from "../../form/FormComponents"
 
 const Invite = ({ inviteId }) => {
   const { firebaseDb, signUp, loading } = useFirebaseContext()
@@ -73,6 +74,7 @@ const Invite = ({ inviteId }) => {
             })
             // Send the user a verification email
             await sendEmailVerification(user.email)
+            await addEmailToLists(user.email, marketingLists)
 
             toast("Success! Check your email for a verification link.")
 

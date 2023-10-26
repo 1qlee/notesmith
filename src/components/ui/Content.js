@@ -24,9 +24,11 @@ const Content = styled.div`
     margin: 0 0 32px;
     font-weight: 400;
     text-rendering: optimizeLegibility;
-    line-height: 1.3;
+    line-height: ${props => props.headinglineheight || "1.3"};
     text-align: ${props => props.headingtextalign};
     font-family: ${props => props.headingfontfamily};
+    text-transform: ${props => props.headingtexttransform};
+    letter-spacing: ${props => props.headingletterspacing};
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4.209rem"};

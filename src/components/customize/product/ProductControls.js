@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { colors, widths, breakpoints, pageMargins } from "../../../styles/variables"
-import { convertFloatFixed, convertToPx, convertToMM } from "../../../utils/helper-functions"
-import { CircleNotch, ArrowSquareUp, ArrowSquareDown } from "@phosphor-icons/react"
+import { colors, widths, breakpoints } from "../../../styles/variables"
+import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
+import { CircleNotch, CaretCircleDown, CaretCircleUp, XCircle } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"
@@ -26,11 +26,9 @@ const StyledTemplatesBar = styled.div`
   width: ${widths.sidebar};
   z-index: 2;
   &.is-collapsed {
-    transform: translateY(calc(-100% - 4px));
-    transition: transform 0.2s;
-    top: 62px;
+    top: 0px;
   }
-  @media only screen and (max-width: ${breakpoints.md}) {
+  @media only screen and (max-width: ${breakpoints.lg}) {
     position: absolute;
     left: 32px;
     top: 0;
@@ -54,9 +52,9 @@ const TemplatesContent = styled.div`
 const TemplatesHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   border-bottom: ${colors.borders.black};
-  font-size: 0.875rem;
   &.is-collapsed {
     border-bottom: none;
   }
@@ -116,12 +114,6 @@ function ProductControls({
   toast,
 }) {
   const [loading, setLoading] = useState(false)
-  const { marginTop, marginLeft } = pageData
-  const margin = {
-    top: convertToPx(marginTop),
-    left: convertToPx(marginLeft),
-  }
-  const minimumMargin = pageMargins.minimum
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
@@ -163,30 +155,39 @@ function ProductControls({
   return (
     <ScreenClassRender
       render={screenClass => {
-        const isMobile = ["xs", "sm", "md"].includes(screenClass)
+        const isMobile = ["xs", "sm", "md", "lg"].includes(screenClass)
         const showCollapsed = !showControls && isMobile
 
         return (
           <StyledTemplatesBar
             className={showCollapsed ? "is-collapsed" : null}
           >
-            {isMobile && (
+            {isMobile ? (
               <TemplatesHeader
                 onClick={() => setShowControls(!showControls)}
                 className={!showControls ? "is-collapsed" : null}
               >
-                {showControls ? (
-                  <Icon margin="0 4px 0 0">
-                    <ArrowSquareUp size={20} />
-                  </Icon>
-                ) : (
-                  <Icon margin="0 4px 0 0">
-                    <ArrowSquareDown size={20} />
-                  </Icon>
-                )}
                 <span>
                   {showControls ? "Hide" : "Show"} controls
                 </span>
+                {showControls ? (
+                  <Icon margin="0 4px 0 0">
+                    <CaretCircleUp size={20} weight="fill" />
+                  </Icon>
+                ) : (
+                  <Icon margin="0 4px 0 0">
+                    <CaretCircleDown size={20} weight="fill" />
+                  </Icon>
+                )}
+              </TemplatesHeader>
+            ) : (
+              <TemplatesHeader
+                onClick={() => setPageData({ ...pageData, show: false })}
+              >
+                <span>Template controls</span>
+                <Icon margin="0 4px 0 0">
+                  <XCircle size={20} weight="fill" />
+                </Icon>
               </TemplatesHeader>
             )}
             {!showCollapsed && (

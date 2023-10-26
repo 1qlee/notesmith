@@ -115,8 +115,8 @@ function ProductTemplate({
         render={screenClass => (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            height={calculateSvgHeight(screenClass)}
-            width={calculateSvgWidth(screenClass)}
+            height={svgHeight}
+            width={svgWidth}
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           >
             <svg

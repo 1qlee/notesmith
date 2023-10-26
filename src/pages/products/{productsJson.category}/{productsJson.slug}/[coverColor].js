@@ -122,10 +122,10 @@ const ProductPage = ({ data, params }) => {
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
             <Container xs sm md lg xl>
-              <Row justify="start">
+              <Row justify="start" gutterWidth={32}>
                 {pageData.show ? (
                   <>
-                    <Col md="content" >
+                    <Col md="content">
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
@@ -185,7 +185,6 @@ const ProductPage = ({ data, params }) => {
         </Section>
         <ProductDescription 
           bookData={bookData}
-          headingText="High quality materials"
         />
         {sortedHalfandhalfImages.map((image, index) => (
           <ProductHalfandHalf

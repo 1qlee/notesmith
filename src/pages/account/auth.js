@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useFirebaseContext } from "../../utils/auth"
 import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth"
-import sendEmailVerification from "../../functions/sendEmailVerification"
 
 import { Link } from "gatsby"
 import { AuthFormWrapper } from "../../components/form/FormComponents"
