@@ -88,7 +88,6 @@ const ProductPage = ({ data, params }) => {
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
-  const [showControls, setShowControls] = useState(false)
   const [max, setMax] = useState({
     rows: 200,
     columns: 200,
@@ -125,14 +124,12 @@ const ProductPage = ({ data, params }) => {
               <Row justify="start" gutterWidth={32}>
                 {pageData.show ? (
                   <>
-                    <Col md="content">
+                    <Col md="content" id="product-controls">
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
                         max={max}
-                        showControls={showControls}
                         selectedPageSvg={selectedPageSvg}
-                        setShowControls={setShowControls}
                         setCurrentPageSide={setCurrentPageSide}
                         setLeftPageData={setLeftPageData}
                         setPageData={setPageData}
@@ -141,7 +138,7 @@ const ProductPage = ({ data, params }) => {
                         toast={toast}
                       />
                     </Col>
-                    <Col md="content">
+                    <Col id="product-template">
                       <ProductTemplate
                         bookData={bookData}
                         maxSvgSize={maxSvgSize}
@@ -164,7 +161,7 @@ const ProductPage = ({ data, params }) => {
                     />
                   </Col>
                 )}
-                <Col>
+                <Col lg={4}>
                   <ProductInfo
                     bookData={bookData}
                     cartThumbnail={cartThumbnail}
@@ -224,8 +221,6 @@ export const pageQuery = graphql`
       paperColor
       paperTooth
       paperWeight
-      preorderPrice
-      stripePreorderPriceId
       infoList
       price
       size

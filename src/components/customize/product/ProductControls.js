@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, breakpoints } from "../../../styles/variables"
 import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
-import { CircleNotch, CaretCircleDown, CaretCircleUp, XCircle } from "@phosphor-icons/react"
+import { CircleNotch, CaretCircleDown, CaretCircleRight, CaretCircleLeft, CaretCircleUp, XCircle } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"
@@ -22,25 +22,48 @@ import CalligraphyControls from "../templateControls/CalligraphyControls"
 const StyledTemplatesBar = styled.div`
   background-color: ${colors.white};
   border: ${colors.borders.black};
-  max-height: 812px;
+  max-height: 816px;
   width: ${widths.sidebar};
   z-index: 2;
   &.is-collapsed {
     top: 0px;
+    border: none;
+    width: 0;
+    height: 0;
   }
-  @media only screen and (max-width: ${breakpoints.lg}) {
+  @media only screen and (max-width: 1388px) {
     position: absolute;
-    left: 32px;
+    left: 48px;
+    top: 0;
+    box-shadow: ${colors.shadow.drawer};
+  }
+  @media only screen and (max-width: ${breakpoints.md}) {
+    position: absolute;
+    left: 16px;
     top: 0;
     box-shadow: ${colors.shadow.drawer};
   }
 `
+
+const TemplatesButton = styled(Button)`
+  position: absolute;
+  right: calc(100% - 16px);
+  top: -1px;
+  height: 57px;
+  padding: 4px 8px;
+  z-index: 9;
+  &.is-active {
+    right: calc(100% - 48px);
+  }
+  @media only screen and (max-width: 1388px) {
+    right: 100% !important;
+  }
+`
+
 const TemplatesContent = styled.div`
   overflow-y: auto;
   padding: 1rem;
-  height: 600px;
-  min-height: 600px;
-  max-height: 600px;
+  max-height: 677px;
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -57,10 +80,6 @@ const TemplatesHeader = styled.div`
   border-bottom: ${colors.borders.black};
   &.is-collapsed {
     border-bottom: none;
-  }
-  &:hover {
-    cursor: pointer;
-    background-color: ${colors.gray.twoHundred};
   }
 `
 
@@ -103,17 +122,16 @@ function ProductControls({
   currentPageSide,
   pageData,
   max,
-  showControls,
   selectedPageSvg,
   setCurrentPageSide,
   setLeftPageData,
   setPageData,
   setRightPageData,
-  setShowControls,
   svgSize,
   toast,
 }) {
   const [loading, setLoading] = useState(false)
+  const [showControls, setShowControls] = useState(false)
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
@@ -156,42 +174,35 @@ function ProductControls({
     <ScreenClassRender
       render={screenClass => {
         const isMobile = ["xs", "sm", "md", "lg"].includes(screenClass)
-        const showCollapsed = !showControls && isMobile
 
         return (
           <StyledTemplatesBar
-            className={showCollapsed ? "is-collapsed" : null}
+            className={!showControls ? "is-collapsed" : null}
           >
-            {isMobile ? (
-              <TemplatesHeader
-                onClick={() => setShowControls(!showControls)}
-                className={!showControls ? "is-collapsed" : null}
-              >
-                <span>
-                  {showControls ? "Hide" : "Show"} controls
-                </span>
-                {showControls ? (
-                  <Icon margin="0 4px 0 0">
-                    <CaretCircleUp size={20} weight="fill" />
-                  </Icon>
-                ) : (
-                  <Icon margin="0 4px 0 0">
-                    <CaretCircleDown size={20} weight="fill" />
-                  </Icon>
-                )}
-              </TemplatesHeader>
-            ) : (
-              <TemplatesHeader
-                onClick={() => setPageData({ ...pageData, show: false })}
-              >
-                <span>Template controls</span>
-                <Icon margin="0 4px 0 0">
-                  <XCircle size={20} weight="fill" />
+            <TemplatesButton
+              borderradius="4px 0 0 4px"
+              onClick={() => setShowControls(!showControls)}
+              className={!showControls && !isMobile ? "is-active" : null}
+            >
+              {showControls ? (
+                <Icon>
+                  <CaretCircleLeft size={16} weight="bold" />
                 </Icon>
-              </TemplatesHeader>
-            )}
-            {!showCollapsed && (
+              ) : (
+                <Icon>
+                  <CaretCircleRight size={16} weight="bold" />
+                </Icon>
+              )}
+            </TemplatesButton>
+            {showControls && (
               <>
+                <TemplatesHeader
+                  className={!showControls ? "is-collapsed" : null}
+                >
+                  <span>
+                    Template controls
+                  </span>
+                </TemplatesHeader>
                 <TemplatesContent>
                   <Content
                     h5fontsize="0.875rem"

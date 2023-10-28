@@ -46,7 +46,7 @@ const DemoImageCaption = styled.article`
 `
 
 function PageDemoCarousel() {
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [currentProgress, setCurrentProgress] = useState(0)
   const [pause, setPause] = useState(false)
 
@@ -82,23 +82,13 @@ function PageDemoCarousel() {
         onMouseEnter={() => setPause(true)}
         onMouseLeave={() => setPause(false)}
       >
-        {currentPage === 0 ? (
-          <StaticImage
-            src="../../images/index/splash-image.jpg"
-            alt="Ink on paper"
-            loading="eager"
-            placeholder="none"
-            quality={100}
-          />
-        ) : (
-          <StaticImage
-            src="../../images/index/splash-image-blank.png"
-            alt="Ink on paper"
-            loading="eager"
-            placeholder="none"
-            quality={100}
-          />
-        )}
+        <StaticImage
+          src="../../images/index/splash-image-blank.png"
+          alt="Ink on paper"
+          loading="eager"
+          placeholder="none"
+          quality={100}
+        />
         <DemoImage>
           {currentPage === 1 && (
             <PageDemo1
@@ -132,16 +122,13 @@ function PageDemoCarousel() {
           )}
         </DemoImage>
         <DemoImageCaption>
-          <Progress
+          {/* <Progress
             height="2px"
             width="100%"
             completion={currentProgress}
             barcolor={colors.gray.nineHundred}
             wrappercolor={colors.gray.threeHundred}
-          />
-          {currentPage === 0 && (
-            <p>A5 (5.5 x 8.5") wired notebook in white with custom page layouts.</p>
-          )}
+          /> */}
           {currentPage === 1 && (
             <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
           )}

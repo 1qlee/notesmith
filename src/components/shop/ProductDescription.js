@@ -26,7 +26,7 @@ const ProductDescription = ({
         padding={`${spacing.large} 0`}
         className="has-border-top"
       >
-        <Container xs sm>
+        <Container xs sm md lg xl>
           {headingText && (
             <Row>
               <Col>

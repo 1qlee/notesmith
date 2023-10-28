@@ -25,12 +25,10 @@ export const pageQuery = graphql`
         paperColor
         paperTooth
         paperWeight
-        preorderPrice
         price
         size
         slug
         stripePriceId
-        stripePreorderPriceId
         widthInch
         widthPixel
         colors {

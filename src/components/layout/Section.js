@@ -30,7 +30,7 @@ const SectionContent = styled.div`
   padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
   position: relative;
   &.has-border-top {
-    border-top: 2px solid ${colors.gray.nineHundred};
+    border-top: 1px solid ${colors.gray.nineHundred};
   }
 `
 
@@ -38,11 +38,13 @@ const StyledSectionHeading = styled.div`
   margin: ${props => props.margin || "0 0 32px 0"};
   display: inline-block;
   position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   h3 {
-    font-size: 1rem;
+    font-size: 0.75rem;
     padding-bottom: 4px;
-    color: ${props => props.color || colors.gray.sixHundred};
-    font-weight: ${props => props.fontweight || 400};
+    color: ${props => props.color || colors.gray.fourHundred};
+    font-weight: ${props => props.fontweight || 700};
     font-family: ${fonts.secondary};
   }
 `

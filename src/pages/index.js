@@ -4,6 +4,7 @@ import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col, setConfiguration } from 'react-grid-system'
+import RandomLine from "../components/misc/Lines" 
 
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
@@ -111,7 +112,7 @@ const IndexPage = ({ data }) => {
                     h1margin="0 0 32px"
                     style={{ clipPath: `url(#pattern-26)` }}
                   >
-                    <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
+                    <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
                   <Content
@@ -159,7 +160,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Signature custom notebook
+                    Our signature
                   </SectionHeading>
                 </Col>
               </Row>
@@ -168,15 +169,14 @@ const IndexPage = ({ data }) => {
                   <Content
                     h2margin="0 0 2rem 0"
                     h2fontsize="3rem"
-                    h2fontweight="400"
                     h5fontsize="0.75rem"
                     paragraphfontsize="1.25rem"
                     paragraphmargin="0 0 16px"
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
-                    <h2>Your custom layouts on <b>every single page</b></h2>
-                    <p>With Notesmith, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                    <h2>Custom layouts on <i>every single page</i></h2>
+                    <p>With Notesmith, you can customize every single page to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
                   <Flexbox
                     flex="flex"
@@ -325,20 +325,19 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    High quality materials
+                    Materials
                   </SectionHeading>
                 </Col>
               </Row>
               <Row>
                 <Col lg={4}>
                   <Content
-                    h2fontweight="400"
                     h2margin="0 0 2rem"
                     paragraphfontsize="1.25rem"
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>We use only the best materials, guaranteed</h2>
+                    <h2>Only the best, guaranteed</h2>
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
                 </Col>
@@ -379,7 +378,6 @@ const IndexPage = ({ data }) => {
                 <Col md={5} push={{ md: 1 }}>
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
-                    margin="16px 0 0"
                   >
                     <p>
                       In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access in batches.
@@ -422,7 +420,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Fountain pen friendly
+                    Paper
                   </SectionHeading>
                 </Col>
               </Row>
@@ -433,8 +431,8 @@ const IndexPage = ({ data }) => {
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
                   >
-                    <h2>Smooth, ink-loving paper</h2>
-                    <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
+                    <h2>Fountain pen friendly paper</h2>
+                    <p>After conducting tests on more than 50 types of paper, we chose the one that exhibited the best performance with various inks. Our white, ultra-smooth paper received top ratings from early users in bleeding, ghosting, and feathering assessments.</p>
                   </Content>
                   <Box>
                     <Flexbox
@@ -587,7 +585,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Early reviews
+                    Reviews
                   </SectionHeading>
                 </Col>
               </Row>
@@ -595,11 +593,10 @@ const IndexPage = ({ data }) => {
                 <Col md={6} lg={6} xl={4}>
                   <Content
                     h2margin="0 0 2rem"
-                    h2fontweight="400"
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h2>Feedback from our early users</h2>
+                    <h2>Feedback from early users</h2>
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />

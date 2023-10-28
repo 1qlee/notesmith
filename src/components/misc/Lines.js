@@ -13,7 +13,7 @@ function RandomLine() {
     position: "absolute",
     fill: colors.gray.nineHundred,
     stroke: colors.gray.sixHundred,
-    top: "100%",
+    top: "36px",
     left: 0,
     width: "100%",
     height: "100%"

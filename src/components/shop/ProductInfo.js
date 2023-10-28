@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../../hooks/useShoppingCart'
 import { v4 as uuidv4 } from 'uuid'
-import { useFirebaseContext } from "../../utils/auth"
 import 'react-tooltip/dist/react-tooltip.css';
 
 import Notification from "../ui/Notification"
@@ -23,7 +22,10 @@ const ProductInfo = ({
   setPageData,
   toast,
 }) => {
-  const { user } = useFirebaseContext()
+  const usdPrice = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(bookData.price / 100)
   const { addItem } = useShoppingCart()
   const showWarningMsg = !rightPageData.template || !leftPageData.template
   const [itemQuantity, setItemQuantity] = useState(1)
@@ -53,8 +55,8 @@ const ProductInfo = ({
         height: bookData.heightPixel,
         name: bookData.name,
         numOfPages: bookData.numOfPages,
-        price_id: bookData.stripePreorderPriceId,
-        price: bookData.preorderPrice,
+        price_id: bookData.stripePriceId,
+        price: bookData.price,
         printed: false,
         rightPageData: rightPageData,
         slug: bookData.slug,
@@ -142,46 +144,44 @@ const ProductInfo = ({
           showLabels={false}
         />
       </Flexbox>
-      {user && (
-        <Flexbox
-          flex="flex"
-          alignitems="flex-end"
-          margin="0 0 16px"
-        >
-          <div>
-            <StyledLabel
-              htmlFor="quantity-tracker"
-              margin="0 0 8px"
-              fontsize="1rem"
-              fontweight="700"
-            >
-              Quantity
-            </StyledLabel>
-            <QuantityTracker
-              id="quantity-tracker"
-              buttonwidth="1rem"
-              buttonheight="1rem"
-              counterwidth="100%"
-              counterpadding="1rem"
-              counterfontsize="0.825rem"
-              iconsize="0.625rem"
-              setItemQuantity={setItemQuantity}
-            />
-          </div>
-          <Button
-            backgroundcolor={colors.gray.nineHundred}
-            border={`1px solid ${colors.gray.nineHundred}`}
-            color={colors.gray.oneHundred}
-            disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
-            margin="0 0 0 1rem"
-            padding="1rem"
-            onClick={() => handleAddCartButton(bookData)}
-            width="100%"
+      <Flexbox
+        flex="flex"
+        alignitems="flex-end"
+        margin="0 0 16px"
+      >
+        <div>
+          <StyledLabel
+            htmlFor="quantity-tracker"
+            margin="0 0 8px"
+            fontsize="1rem"
+            fontweight="700"
           >
-            Add to cart
-          </Button>
-        </Flexbox>
-      )}
+            Quantity
+          </StyledLabel>
+          <QuantityTracker
+            id="quantity-tracker"
+            buttonwidth="1rem"
+            buttonheight="1rem"
+            counterwidth="100%"
+            counterpadding="1rem"
+            counterfontsize="0.825rem"
+            iconsize="0.625rem"
+            setItemQuantity={setItemQuantity}
+          />
+        </div>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          border={`1px solid ${colors.gray.nineHundred}`}
+          color={colors.gray.oneHundred}
+          disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
+          margin="0 0 0 1rem"
+          padding="1rem"
+          onClick={() => handleAddCartButton(bookData)}
+          width="100%"
+        >
+          Add to cart - {usdPrice}
+        </Button>
+      </Flexbox>
       {showWarningMsg && (
         <Notification
           backgroundcolor={colors.red.twoHundred}
