@@ -1,16 +1,16 @@
 import React, { useState } from "react"
-import { colors,  } from "../../styles/variables"
-import { useShoppingCart } from '../../hooks/useShoppingCart'
+import { colors,  } from "../../../styles/variables"
+import { useShoppingCart } from '../../../hooks/useShoppingCart'
 import { v4 as uuidv4 } from 'uuid'
 import 'react-tooltip/dist/react-tooltip.css';
 
-import Notification from "../ui/Notification"
-import { Flexbox } from "../layout/Flexbox"
-import { QuantityTracker, StyledLabel } from "../form/FormComponents"
-import Button from "../ui/Button"
-import ColorPicker from "./ColorPicker"
-import Content from "../ui/Content"
-import PageIcons from "../customize/PageIcons"
+import Notification from "../../ui/Notification"
+import { Flexbox } from "../../layout/Flexbox"
+import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
+import Button from "../../ui/Button"
+import ColorPicker from "../../shop/ColorPicker"
+import Content from "../../ui/Content"
+import PageIcons from "../PageIcons"
 
 const ProductInfo = ({
   bookData,

@@ -1,10 +1,10 @@
 import React from "react"
-import { spacing, widths } from "../../styles/variables"
+import { spacing, widths } from "../../../styles/variables"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent } from "../layout/Section"
-import Content from "../ui/Content"
-import { Flexbox } from "../layout/Flexbox"
+import { Section, SectionContent } from "../../layout/Section"
+import Content from "../../ui/Content"
+import { Flexbox } from "../../layout/Flexbox"
 
 const ProductDescription = ({
   bookData

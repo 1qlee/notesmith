@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 const StyledProductImages = styled.div`

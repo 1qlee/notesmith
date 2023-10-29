@@ -1,29 +1,22 @@
 import React from "react"
-import styled from "styled-components"
-import { spacing, fonts, breakpoints } from "../../styles/variables"
+import { spacing, fonts } from "../../../styles/variables"
+import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent } from "../layout/Section"
-import Content from "../ui/Content"
+import { Section, SectionContent } from "../../layout/Section"
+import Content from "../../ui/Content"
 import ProductInfoBox from "./ProductInfoBox"
-
-const InfoListItem = styled.li`
-  padding-bottom: 8px;
-  margin: 0 0 8px;
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    margin: 16px 0 0;
-    margin-left: 16px;
-  }
-`
+import ProductImagesGrid from "./ProductImagesGrid"
 
 const ProductDescription = ({
   bookData,
   headingText,
+  images,
 }) => {
   return (
     <Section>
       <SectionContent
-        padding={`${spacing.large} 0`}
+        padding={`${spacing.section} 0`}
         className="has-border-top"
       >
         <Container xs sm md lg xl>
@@ -40,6 +33,9 @@ const ProductDescription = ({
           )}
           <Row>
             <Col sm={6}>
+              <ProductImagesGrid 
+                images={images}
+              />
             </Col>
             <Col sm={6}>
               <Content

@@ -1,10 +1,10 @@
 import React from "react"
-import { spacing } from "../../styles/variables"
+import { spacing } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent } from "../layout/Section"
-import { Flexbox } from "../layout/Flexbox"
+import { Section, SectionContent } from "../../layout/Section"
+import { Flexbox } from "../../layout/Flexbox"
 
 const ProductSplash = ({ image, backgroundcolor }) => {
   const splashImage = image.nodes[0]

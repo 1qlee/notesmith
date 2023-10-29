@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
-import Content from "../ui/Content"
+import { colors } from "../../../styles/variables"
+import Content from "../../ui/Content"
 
 const StyledProductInfoBox = styled.div`
   align-items: flex-start;
@@ -30,6 +30,7 @@ function ProductInfoBox({
           margin="0"
           h5fontsize="1.25rem"
           h5margin="0 8px 0 0"
+          headinglineheight="1.75"
         >
           <h5>{heading}</h5>
         </Content>

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, breakpoints } from "../../../styles/variables"
 import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
-import { CircleNotch, CaretCircleDown, CaretCircleRight, CaretCircleLeft, CaretCircleUp, XCircle } from "@phosphor-icons/react"
+import { CircleNotch, SlidersHorizontal, CaretCircleLeft } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"
@@ -131,7 +131,7 @@ function ProductControls({
   toast,
 }) {
   const [loading, setLoading] = useState(false)
-  const [showControls, setShowControls] = useState(false)
+  const [showControls, setShowControls] = useState(true)
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
 
@@ -190,7 +190,7 @@ function ProductControls({
                 </Icon>
               ) : (
                 <Icon>
-                  <CaretCircleRight size={16} weight="bold" />
+                  <SlidersHorizontal size={16} weight="bold" />
                 </Icon>
               )}
             </TemplatesButton>

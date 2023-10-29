@@ -54,6 +54,7 @@ main,
 menu,
 nav,
 section,
+dialog,
 summary {
   display: block;
 }
@@ -97,6 +98,11 @@ strong {
 }
 dfn {
   font-style: italic;
+}
+dialog {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 h1 {
   font-size: 2em;

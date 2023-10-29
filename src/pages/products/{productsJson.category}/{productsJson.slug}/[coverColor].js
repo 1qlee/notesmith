@@ -7,18 +7,18 @@ import { convertToPx } from "../../../../utils/helper-functions"
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
-import ProductImages from "../../../../components/shop/ProductImages"
-import ProductInfo from "../../../../components/shop/ProductInfo"
+import ProductImages from "../../../../components/customize/product/ProductImages"
+import ProductInfo from "../../../../components/customize/product/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
-import ProductDescription from "../../../../components/shop/ProductDescription"
-import ProductSplash from "../../../../components/shop/ProductSplash"
-import ProductHalfandHalf from "../../../../components/shop/ProductHalfandHalf"
-import ProductHero from "../../../../components/shop/ProductHero"
+import ProductDescription from "../../../../components/customize/product/ProductDescription"
+import ProductSplash from "../../../../components/customize/product/ProductSplash"
+import ProductHalfandHalf from "../../../../components/customize/product/ProductHalfandHalf"
+import ProductHero from "../../../../components/customize/product/ProductHero"
 import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, productThumbnails, splashImage, halfandhalfImages } = data
+  const { productData, productImages, descriptionImages, productThumbnails, splashImage, halfandhalfImages } = data
   const sortedHalfandhalfImages = halfandhalfImages.nodes.sort((a, b) => {
     return a.name > b.name ? 1 : -1
   })
@@ -182,6 +182,7 @@ const ProductPage = ({ data, params }) => {
         </Section>
         <ProductDescription 
           bookData={bookData}
+          images={descriptionImages}
         />
         {sortedHalfandhalfImages.map((image, index) => (
           <ProductHalfandHalf
@@ -243,12 +244,21 @@ export const pageQuery = graphql`
         slug
       }
     }
+    descriptionImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "description*" }}) {
+      nodes {
+        name
+        childImageSharp {
+          gatsbyImageData(
+            quality: 100
+          )
+        }
+      }
+    }
     productImages: allFile(filter: { relativeDirectory: { eq: $slug }}) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 800
             quality: 100
           )
         }
