@@ -13,15 +13,12 @@ import ProductTemplate from "../../../../components/customize/product/ProductTem
 import ProductControls from "../../../../components/customize/product/ProductControls"
 import ProductDescription from "../../../../components/customize/product/ProductDescription"
 import ProductSplash from "../../../../components/customize/product/ProductSplash"
-import ProductHalfandHalf from "../../../../components/customize/product/ProductHalfandHalf"
+import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
 import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, descriptionImages, productThumbnails, splashImage, halfandhalfImages } = data
-  const sortedHalfandhalfImages = halfandhalfImages.nodes.sort((a, b) => {
-    return a.name > b.name ? 1 : -1
-  })
+  const { productData, productImages, descriptionImages, productThumbnails, splashImage, galleryImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = productData
   const svgHeight = heightPixel
@@ -184,13 +181,10 @@ const ProductPage = ({ data, params }) => {
           bookData={bookData}
           images={descriptionImages}
         />
-        {sortedHalfandhalfImages.map((image, index) => (
-          <ProductHalfandHalf
-            image={image}
-            bookData={bookData}
-            direction={index % 2 === 0 ? "left" : "right"}
-          />
-        ))}
+        <ProductGallery 
+          images={galleryImages}
+          heading="Features"
+        />
         <ProductSplash 
           image={splashImage}
           backgroundcolor={colors.gray.oneHundred}
@@ -275,12 +269,11 @@ export const pageQuery = graphql`
         }
       }
     }
-    halfandhalfImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "halfandhalf*" }}) {
+    galleryImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "gallery*" }}) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 500
             quality: 100
           )
         }

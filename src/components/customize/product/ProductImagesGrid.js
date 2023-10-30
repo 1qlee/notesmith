@@ -35,6 +35,7 @@ const ImageCloseButton = styled(Button)`
 ` 
 
 const ProductImagesGrid = ({ images }) => {
+  const sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
   const [modalImage, setModalImage] = useState(null)
   const modalRef = useRef(null)
   const buttonRef = useRef(null)
@@ -48,56 +49,57 @@ const ProductImagesGrid = ({ images }) => {
   }
 
   useEffect(() => {
-    let tabKeyPressListener = null
-
-    if (modalImage) {
-      const handleTabKeyPress = (event) => {
-        if (event.key === "Tab") {
-          event.preventDefault()
-          buttonRef.current.focus()
-        }
-      }
-
-      tabKeyPressListener = handleTabKeyPress
-      document.addEventListener('keydown', handleTabKeyPress)
-    }
-
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalImage(null)
       }
     }
 
-    const handleEscapeKeyPress = (event) => {
-      if (event.key === "Escape") {
-        setModalImage(null)
+    const handleKeyPress = (event) => {
+      switch(event.key) {
+        case "Tab":
+          if (modalImage) {
+            event.preventDefault()
+            buttonRef.current.focus()
+          }
+          break
+        case "ArrowLeft":
+          if (modalImage) {
+            setModalImage(images.nodes[images.nodes.indexOf(modalImage) - 1])
+          }
+          break
+        case "ArrowRight":
+          if (modalImage) {
+            setModalImage(images.nodes[images.nodes.indexOf(modalImage) + 1])
+          }
+          break
+        case "Escape":
+          setModalImage(null)
+        default:
+          break
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener("keydown", handleEscapeKeyPress)
+    document.addEventListener("keydown", handleKeyPress)
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener("keydown", handleEscapeKeyPress)
-
-      if (tabKeyPressListener) {
-        document.removeEventListener('keydown', tabKeyPressListener)
-      }
+      document.removeEventListener("keydown", handleKeyPress)
     }
   }, [modalRef, modalImage])
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-      {images.nodes.map((image, index) => (
+      {sortedImages.map((image, index) => (
         <div key={index} onClick={() => handleImageClick(image)}>
-          <GatsbyImage image={getImage(image)} alt={`Product Image ${index + 1}`} style={{ width: '100%', height: 'auto', cursor: 'pointer' }} />
+          <GatsbyImage image={getImage(image)} alt={`pro wired notebook a5 close-up ${index + 1}`} style={{ width: '100%', height: 'auto', cursor: 'pointer' }} />
         </div>
       ))}
       {modalImage && (
         <ImageModalBackground>
           <ImageModal ref={modalRef} role="dialog" aria-modal="true">
-            <GatsbyImage image={getImage(modalImage)} alt="Full-sized Product Image" style={{ width: '100%', height: '100%' }} />
+            <GatsbyImage image={getImage(modalImage)} alt={`pro wired notebook a5 close-up`} style={{ width: '100%', height: '100%' }} />
             <ImageCloseButton 
               onClick={handleCloseModal}
               backgroundcolor={colors.white}
