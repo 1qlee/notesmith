@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { colors, regex } from "../../styles/variables"
 import { CircleNotch } from "@phosphor-icons/react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
@@ -26,6 +26,7 @@ function AddressForm({
   shippingValidated,
   toast,
 }) {
+  const allowedCountries = ['US', 'CA']
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
@@ -43,6 +44,7 @@ function AddressForm({
         required: "always",
       }
     },
+    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -64,6 +66,7 @@ function AddressForm({
     fields: {
       phone: "never",
     },
+    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -148,8 +151,8 @@ function AddressForm({
       color: colors.red.oneHundred,
       background: colors.red.sixHundred,
     })
-
     setAddress(address)
+
     if (isInternational) {
       setCustomer({
         ...customer,
@@ -261,6 +264,7 @@ function AddressForm({
           onChange={e => handleEmailChange(e.target.value)}
           placeholder="address@email.com"
           required
+          fontsize="1rem"
           type="email"
           value={customer.email}
         />
@@ -274,6 +278,7 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement
         options={isInternational ? intlAddressOptions : domesticAddressOptions}
+        allowedCountries={['US', 'CA']}
         onChange={e => handleAddressChange(e)}
       />
       <Flexbox

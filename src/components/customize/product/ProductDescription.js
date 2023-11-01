@@ -1,6 +1,5 @@
 import React from "react"
 import { spacing, fonts } from "../../../styles/variables"
-import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Container, Row, Col } from "react-grid-system"
 import { Section, SectionContent } from "../../layout/Section"

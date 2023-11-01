@@ -93,4 +93,4 @@ function ShippingInfo({
   )
 }
 
-export default ShippingInfo
+export { ShippingInfo, InfoItem, InfoItemHeading, InfoItemText, Infobox}

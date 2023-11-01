@@ -1,13 +1,14 @@
 import React from "react"
-import { spacing, widths } from "../../../styles/variables"
+import { spacing, widths, colors } from "../../../styles/variables"
 
 import { Container, Row, Col } from "react-grid-system"
 import { Section, SectionContent } from "../../layout/Section"
-import Content from "../../ui/Content"
 import { Flexbox } from "../../layout/Flexbox"
+import Content from "../../ui/Content"
 
-const ProductDescription = ({
-  bookData
+const ProductHero = ({
+  bookData,
+  backgroundColor,
 }) => {
   const { hero } = bookData
   const { heading, text } = hero
@@ -15,7 +16,8 @@ const ProductDescription = ({
   return (
     <Section>
       <SectionContent
-        padding={`${spacing.large} 0`}
+        padding={`${spacing.section} 0`}
+        backgroundcolor={backgroundColor}
       >
         <Container xs sm>
           <Row>
@@ -31,6 +33,8 @@ const ProductDescription = ({
                   paragraphfontsize="1.25rem"
                   maxwidth={widths.content.normal}
                   h3margin="0 0 32px"
+                  h3color={colors.gray.oneHundred}
+                  paragraphcolor={colors.gray.oneHundred}
                 >
                   <h3>{heading}</h3>
                   <p>{text}</p>
@@ -44,4 +48,4 @@ const ProductDescription = ({
   )
 }
 
-export default ProductDescription
+export default ProductHero

@@ -6,12 +6,16 @@ import { spacing } from "../../../styles/variables"
 import { Container, Col, Row } from "react-grid-system"
 import { Section, SectionContent, SectionHeading } from "../../layout/Section"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
+import Content from "../../ui/Content"
+import Box from "../../ui/Box"
 
 const ProductGallery = ({ 
   images,
   heading,
+  bookData,
  }) => {
   const sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
+  const { galleryTexts } = bookData
 
   return (
     <Section>
@@ -23,19 +27,36 @@ const ProductGallery = ({
           <SectionHeading>
             {heading}
           </SectionHeading>
-          <Row>
-            {sortedImages.map((image, index) => (
-              <Col>
-                <GatsbyImage
-                  image={getImage(image)}
-                  alt={image.name}
-                  transformOptions={{fit: "fitInside"}}
-                  width={400}
-                  height={500}
-                />
-              </Col>
-            ))}
-          </Row>
+            <Carousel
+              centerMode={true}
+              autoPlay={false}
+              showArrows={false}
+              showStatus={false}
+              showIndicators={false}
+              showThumbs={false}
+              infiniteLoop={false}
+              swipeable={true}
+              swipeScrollTolerance={200}
+              emulateTouch={true}
+            >
+              {sortedImages.map((image, index) => (
+                <Box
+                  margin="0 32px 0 0"
+                  key={image.name}
+                >
+                  <GatsbyImage
+                    image={getImage(image)}
+                    alt={galleryTexts[index].alt}
+                  />
+                  <Content
+                    paragraphtextalign="left"
+                    margin="16px 0"
+                  >
+                    <p>{galleryTexts[index].text}</p>
+                  </Content>
+                </Box>
+              ))}
+            </Carousel>
         </Container>
       </SectionContent>
     </Section>

@@ -223,23 +223,21 @@ const ShippingForm = ({
               width="100%"
             >
               <Content
-                paragraphfontfamily={fonts.secondary}
-                paragraphfontsize="0.875rem"
-                paragraphmargin="0"
-                paragraphfontweight="700"
-                paragraphcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
+                h5fontsize="1rem"
+                h5margin="0"
+                h5color={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
                 smallcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
                 smallfontfamily={fonts.secondary}
-                smallfontsize="0.75rem"
+                smallfontsize="0.875rem"
                 smallmargin="0"
               >
-                <p>
+                <h5>
                   {shippingRate.international ? (
                     "International shipping"
                   ) : (
                     "Ground shipping"
                   )}
-                </p>
+                </h5>
                 {shippingRate.delivery_days ? (
                   <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
                 ) : (
@@ -247,11 +245,11 @@ const ShippingForm = ({
                 )}
               </Content>
               <Tag
-                color={selectedRate ? colors.gray.nineHundred : colors.gray.oneHundred}
-                backgroundcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
-                fontfamily={fonts.secondary}
+                color={colors.gray.nineHundred}
+                backgroundcolor={colors.white}
+                border={`1px solid ${selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}`}
                 fontweight="400"
-                fontsize="0.875rem"
+                fontsize="1rem"
               >
                 ${convertToDecimal(shippingRate.rate, 2)}
               </Tag>

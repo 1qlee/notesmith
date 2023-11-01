@@ -97,13 +97,13 @@ const Checkout = () => {
     clientSecret: clientSecret,
     fonts: [
       {
-        cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,700"
+        cssSrc: "https://fonts.googleapis.com/css?family=Jost:400,700"
       }
     ],
     appearance: {
       theme: "stripe",
       variables: {
-        fontFamily: fonts.secondary,
+        fontFamily: fonts.text,
         fontWeightNormal: "400",
         fontSizeBase: "16px",
         colorPrimary: colors.gray.nineHundred,
@@ -116,7 +116,7 @@ const Checkout = () => {
           padding: "16px",
           boxShadow: "none",
           border: `1px solid ${colors.gray.nineHundred}`,
-          fontSize: "0.875rem",
+          fontSize: "1rem",
         },
         ".Input:focus": {
           boxShadow: colors.shadow.focus,
@@ -129,20 +129,19 @@ const Checkout = () => {
           boxShadow: "none"
         },
         ".Error": {
-          fontSize: "0.75rem",
+          fontSize: "0.875rem",
           marginTop: "8px",
         },
         ".Label": {
           marginBottom: "8px",
           fontWeight: "700",
-          fontSize: "0.75rem",
+          fontSize: "0.875rem",
         }
       }
     }
   }
 
   useEffect(() => {
-    console.log(cartItems)
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen
@@ -320,9 +319,18 @@ const Checkout = () => {
                               onClick={setActiveAccordionTab}
                               prereq={true}
                               summaries={[
-                                customer.email,
-                                customer.name,
-                                `${address.line1 || address.street1 || ""} ${address.line2 || address.street2 ||""}, ${address.city || ""}, ${address.state || ""}, ${address.postal_code || address.zip || ""}, ${address.country || ""}`
+                                {
+                                  heading: "Email",
+                                  text: customer.email,
+                                },
+                                {
+                                  heading: "Name",
+                                  text: customer.name,
+                                },
+                                {
+                                  heading: "Address",
+                                  text: `${address.line1}, ${address.line2 ? address.line2 + "," : ""} ${address.city}, ${address.state} ${address.postal_code}`
+                                }
                               ]}
                               tabName="shipping"
                               text="Shipping information"
@@ -352,8 +360,10 @@ const Checkout = () => {
                               onClick={setActiveAccordionTab}
                               prereq={shippingValidated}
                               summaries={selectedRate && [
-                                `${selectedRate.international ? "International shipping" : "Ground shipping"}`,
-                                `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                                {
+                                  heading: `${selectedRate.international ? "International shipping" : "Ground shipping"}`,
+                                  text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                                }
                               ]}
                               tabName="method"
                               text="Shipping method"

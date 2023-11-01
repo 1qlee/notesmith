@@ -29,6 +29,14 @@
 
   --toastify-spinner-color: #616161;
   --toastify-spinner-color-empty-area: #e0e0e0;
+
+  --rt-color-white: #fff;
+  --rt-color-dark: #222;
+  --rt-color-success: #38A169;
+  --rt-color-error: #E53E3E;
+  --rt-color-warning: #f1c40f;
+  --rt-color-info: #3498db;
+  --rt-opacity: 0.9;
 }
 html {
   font-family: sans-serif;

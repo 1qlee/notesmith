@@ -27,7 +27,7 @@ const BreadcrumbItem = styled.li`
   display: flex;
   align-items: center;
   &.is-active {
-    p {
+    span {
       font-weight: 700;
       color: ${colors.gray.nineHundred};
     }
@@ -42,7 +42,7 @@ const BreadcrumbItem = styled.li`
   }
 `
 
-const BreadcrumbText = styled.p`
+const BreadcrumbText = styled.span`
   color: ${colors.gray.sixHundred};
 `
 

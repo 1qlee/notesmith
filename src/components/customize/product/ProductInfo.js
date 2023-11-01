@@ -2,15 +2,20 @@ import React, { useState } from "react"
 import { colors,  } from "../../../styles/variables"
 import { useShoppingCart } from '../../../hooks/useShoppingCart'
 import { v4 as uuidv4 } from 'uuid'
-import 'react-tooltip/dist/react-tooltip.css';
+import { useFirebaseContext } from "../../../utils/auth"
+import { Tooltip } from "react-tooltip"
 
-import Notification from "../../ui/Notification"
-import { Flexbox } from "../../layout/Flexbox"
-import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
 import Button from "../../ui/Button"
 import ColorPicker from "../../shop/ColorPicker"
 import Content from "../../ui/Content"
+import Icon from "../../ui/Icon"
+import Notification from "../../ui/Notification"
 import PageIcons from "../PageIcons"
+import TextLink from "../../ui/TextLink"
+import { Flexbox } from "../../layout/Flexbox"
+import { Info } from "@phosphor-icons/react"
+import { Link } from "gatsby"
+import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
 
 const ProductInfo = ({
   bookData,
@@ -22,13 +27,14 @@ const ProductInfo = ({
   setPageData,
   toast,
 }) => {
+  const { user } = useFirebaseContext()
   const usdPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
   }).format(bookData.price / 100)
   const { addItem } = useShoppingCart()
-  const showWarningMsg = !rightPageData.template || !leftPageData.template
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [itemAdded, setItemAdded] = useState(false)
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -44,6 +50,7 @@ const ProductInfo = ({
       toast.error("Apply a template to right pages.")
     }
     else {
+      handleItemAdded()
       addItem({
         category: bookData.category,
         coverColor: bookData.coverColor,
@@ -65,6 +72,32 @@ const ProductInfo = ({
         width: bookData.widthPixel,
       }, { count: itemQuantity })
     }
+  }
+
+  function handleHoverCartButton(e) {
+    const button = e.target
+
+    if (validateCartButton()) {
+      button.disabled = false
+    }
+    else {
+      button.disabled = true
+    }
+  }
+
+  function validateCartButton() {
+    if (!leftPageData.template || !rightPageData.template || !itemQuantity || !bookData.coverColor) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  function handleItemAdded() {
+    setItemAdded(true)
+    setTimeout(() => {
+      setItemAdded(false)
+    }, 1000)
   }
 
   return (
@@ -173,28 +206,53 @@ const ProductInfo = ({
           backgroundcolor={colors.gray.nineHundred}
           border={`1px solid ${colors.gray.nineHundred}`}
           color={colors.gray.oneHundred}
-          disabled={!bookData.coverColor || !itemQuantity || !leftPageData.template || !rightPageData.template}
+          id="cart-button"
           margin="0 0 0 1rem"
           padding="1rem"
           onClick={() => handleAddCartButton(bookData)}
+          onMouseOver={(e) => handleHoverCartButton(e)}
           width="100%"
         >
-          Add to cart - {usdPrice}
+          {itemAdded ? (
+            <span>Done!</span>
+          ) : (
+            <span>Add to cart - {usdPrice}</span>
+          )}
         </Button>
       </Flexbox>
-      {showWarningMsg && (
-        <Notification
-          backgroundcolor={colors.red.twoHundred}
+      <Notification
+        backgroundcolor={colors.yellow.twoHundred}
+      >
+        <Icon
+          className="is-pulsating"
+          margin="2px 0 0"
+          pulseColor={colors.yellow.sixHundred}
         >
-          <Content
-            margin="0 0 0 8px"
-            paragraphmargin="0"
-            paragraphcolor={colors.red.nineHundred}
-            paragraphfontsize="0.875rem"
-          >
-            <p>You must apply a template to both page sides in order to add this item to your cart. Click on a page layout above and use the controls to apply them accordingly.</p>
-          </Content>
-        </Notification>
+          <Info
+            color={colors.yellow.nineHundred}
+            size={20}
+          />
+        </Icon>
+        <Content
+          margin="0 0 0 8px"
+          paragraphmargin="0"
+          paragraphcolor={colors.yellow.nineHundred}
+          paragraphfontsize="1rem"
+        >
+          {user ? (
+            <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.yellow.nineHundred}>accounts page</TextLink></Link>.</p>
+          ) : (
+            "Sign up for a Notesmith account and get access to more advanced editing features."
+          )}
+        </Content>
+      </Notification>
+      {!validateCartButton() && (
+        <Tooltip
+          anchorSelect="#cart-button"
+          content="You must apply templates to both left and right pages before adding to cart."
+          place="top"
+          variant="error"
+        />
       )}
     </>
   )

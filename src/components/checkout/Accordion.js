@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
-import { CaretDown, CaretUp, CheckCircle } from "@phosphor-icons/react"
+import { colors } from "../../styles/variables"
+import { CaretDown, CaretUp } from "@phosphor-icons/react"
 import { useCollapse } from "react-collapsed"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -59,14 +59,15 @@ const AccordionTab = ({
         >
           <Content
             h5margin="0"
-            h5fontweight='800'
+            h5fontweight='400'
           >
             <h5>{text}</h5>
           </Content>
           {status && status.msg && !isExpanded && (
             <Tag
-              backgroundcolor={status.background}
-              color={status.color}
+              backgroundcolor={colors.white}
+              color={status.background}
+              border={`1px solid ${status.background}`}
               fontweight="700"
               padding="4px 8px"
               margin="0 0 0 8px"
@@ -83,15 +84,16 @@ const AccordionTab = ({
           )}
         </Icon>
       </StyledAccordionTab>
-      <Content>
-        {!isExpanded && summaries && (
-          <>
-            {summaries.map((summary, index) => (
-              <p key={index}>{summary}</p>
-            ))}
-          </>
-        )}
-      </Content>
+      {!isExpanded && summaries && (
+        <>
+          {summaries.map((summary, index) => (
+            <Flexbox key={index}>
+              <h5>{summary.heading}</h5>
+              <p>{summary.text}</p>
+            </Flexbox>
+          ))}
+        </>
+      )}
       <div
         {...getCollapseProps()}
       >

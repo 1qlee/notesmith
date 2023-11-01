@@ -12,13 +12,12 @@ import ProductInfo from "../../../../components/customize/product/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
 import ProductDescription from "../../../../components/customize/product/ProductDescription"
-import ProductSplash from "../../../../components/customize/product/ProductSplash"
 import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
 import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, descriptionImages, productThumbnails, splashImage, galleryImages } = data
+  const { productData, productImages, descriptionImages, productThumbnails, galleryImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = productData
   const svgHeight = heightPixel
@@ -181,16 +180,14 @@ const ProductPage = ({ data, params }) => {
           bookData={bookData}
           images={descriptionImages}
         />
+        <ProductHero
+          bookData={bookData}
+          backgroundColor={colors.gray.nineHundred}
+        />
         <ProductGallery 
           images={galleryImages}
-          heading="Features"
-        />
-        <ProductSplash 
-          image={splashImage}
-          backgroundcolor={colors.gray.oneHundred}
-        />
-        <ProductHero 
           bookData={bookData}
+          heading="Gallery"
         />
       </SectionMain>
     </Layout>
@@ -205,10 +202,6 @@ export const pageQuery = graphql`
       custom
       description
       longDescription
-      halfandhalf {
-        heading
-        text
-      }
       heightInch
       heightPixel
       name
@@ -224,6 +217,11 @@ export const pageQuery = graphql`
       weight
       widthInch
       widthPixel
+      galleryTexts {
+        heading
+        text
+        alt
+      }
       hero {
         heading
         text
@@ -243,7 +241,8 @@ export const pageQuery = graphql`
         name
         childImageSharp {
           gatsbyImageData(
-            quality: 100
+            width: 1500
+            quality: 80
           )
         }
       }
@@ -253,18 +252,8 @@ export const pageQuery = graphql`
         name
         childImageSharp {
           gatsbyImageData(
-            quality: 100
-          )
-        }
-      }
-    }
-    splashImage: allFile(filter: { relativeDirectory: { eq: $slug } name: { eq: "splash" }}) {
-      nodes {
-        name
-        childImageSharp {
-          gatsbyImageData(
-            width: 1200
-            quality: 100
+            width: 870
+            quality: 80
           )
         }
       }
@@ -274,7 +263,8 @@ export const pageQuery = graphql`
         name
         childImageSharp {
           gatsbyImageData(
-            quality: 100
+            quality: 80
+            width: 1400,
           )
         }
       }
@@ -286,7 +276,7 @@ export const pageQuery = graphql`
           gatsbyImageData(
             width: 80
             height: 80
-            quality: 100
+            quality: 80
           )
         }
       }
