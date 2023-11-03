@@ -244,15 +244,13 @@ const ShippingForm = ({
                   <small>Delivery time varies</small>
                 )}
               </Content>
-              <Tag
-                color={colors.gray.nineHundred}
-                backgroundcolor={colors.white}
-                border={`1px solid ${selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}`}
-                fontweight="400"
-                fontsize="1rem"
+              <Content
+                paragraphcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
               >
-                ${convertToDecimal(shippingRate.rate, 2)}
-              </Tag>
+                <p>
+                  ${convertToDecimal(shippingRate.rate, 2)}
+                </p>
+              </Content>
             </Flexbox>
           </ShippingItem>
         )}

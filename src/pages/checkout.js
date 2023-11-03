@@ -142,6 +142,7 @@ const Checkout = () => {
   }
 
   useEffect(() => {
+    console.log(address)
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen

@@ -99,7 +99,7 @@ function ShoppingCart() {
                           <Link
                             to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
                           >
-                            <p><b>{item.name}</b></p>
+                            <p>{item.name}</p>
                           </Link>
                         </Content>
                         <Flexbox
@@ -309,24 +309,30 @@ function ShoppingCart() {
           </Table>
           <Flexbox
             flex="flex"
+            alignitems="center"
             justifycontent="flex-end"
           >
-            <Content
-              paragraphfontsize="1rem"
-              paragraphfontfamily={fonts.secondary}
+            <Flexbox
+              alignitems="flex-end"
+              flex="flex"
+              justifycontent="space-between"
+              margin="2rem 1rem 2rem 0"
+              width="12rem"
             >
-              <Flexbox
-                width="12rem"
-                flex="flex"
-                justifycontent="space-between"
-                margin="2rem 1rem 2rem 0"
+              <Content
                 h5margin="0"
-                alignitems="center"
+                headinglineheight="1"
               >
                 <h5>Subtotal</h5>
-                <h4>{formattedTotalPrice}</h4>
-              </Flexbox>
-            </Content>
+              </Content>
+              <Content
+                paragraphmargin="0"
+                paragraphfontsize="1.25rem"
+                paragraphlineheight="1"
+              >
+                <p>{formattedTotalPrice}</p>
+              </Content>
+            </Flexbox>
           </Flexbox>
           <Flexbox
             width="100%"

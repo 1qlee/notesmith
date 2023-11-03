@@ -14,9 +14,6 @@ const Orders = styled.div`
   border: ${colors.borders.black};
   margin-bottom: 16px;
   padding: 0 16px;
-  p {
-    font-size: 1rem;
-  }
   small {
     font-size: 0.75rem;
   }
@@ -24,7 +21,7 @@ const Orders = styled.div`
 
 const OrderSection = styled.div`
   padding: 16px 0 ;
-  border-bottom: 2px solid ${colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
 `
 
 const OrderContent = styled.div`
@@ -62,6 +59,7 @@ function OrderSummary({
         <OrderSection>
           <Content
             h5margin="0"
+            h5fontweight="400"
           >
             <h5>Order Summary</h5>
           </Content>
@@ -77,7 +75,8 @@ function OrderSummary({
                 <Tag
                   padding="3px 6px"
                   margin="0 4px 0 0"
-                  backgroundcolor={colors.gray.twoHundred}
+                  backgroundcolor={colors.white}
+                  border={colors.borders.black}
                   color={colors.gray.nineHundred}
                 >x{item.quantity}</Tag>
                 <GatsbyImage
@@ -154,10 +153,16 @@ function OrderSummary({
           padding="16px 0"
           flex="flex"
           justifycontent="space-between"
-          alignitems="flex-end"
+          alignitems="center"
         >
           <p>Total</p>
-          <h3>${calculateTotalPrice()}</h3>
+          <Content
+            paragraphmargin="0"
+            paragraphfontsize="1.25rem"
+            paragraphlineheight="1"
+          >
+            <p>${calculateTotalPrice()}</p>
+          </Content>
         </Flexbox>
       </Orders>
     </>

@@ -5,6 +5,7 @@ import { CaretDown, CaretUp } from "@phosphor-icons/react"
 import { useCollapse } from "react-collapsed"
 
 import { Flexbox } from "../layout/Flexbox"
+import { Infobox, InfoItemHeading, InfoItemText, InfoItem } from "../shop/ShippingInfo"
 import Icon from "../ui/Icon"
 import Content from "../ui/Content"
 import Tag from "../ui/Tag"
@@ -85,14 +86,14 @@ const AccordionTab = ({
         </Icon>
       </StyledAccordionTab>
       {!isExpanded && summaries && (
-        <>
+        <Infobox>
           {summaries.map((summary, index) => (
-            <Flexbox key={index}>
-              <h5>{summary.heading}</h5>
-              <p>{summary.text}</p>
-            </Flexbox>
+            <InfoItem key={index}>
+              <InfoItemHeading>{summary.heading}</InfoItemHeading>
+              <InfoItemText>{summary.text}</InfoItemText>
+            </InfoItem>
           ))}
-        </>
+        </Infobox>
       )}
       <div
         {...getCollapseProps()}

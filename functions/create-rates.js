@@ -30,6 +30,7 @@ function parseCartItems(cartItems) {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { cartItems, address, customer } = body;
+  console.log("🚀 ~ file: create-rates.js:33 ~ exports.handler= ~ address:", address)
   const cartDetails = parseCartItems(cartItems);
   const totalWeight = cartDetails.weight;
   const isInternational = address.country !== "US";

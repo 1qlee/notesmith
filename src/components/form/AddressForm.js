@@ -180,8 +180,8 @@ function AddressForm({
         setShippingValidated(true)
         setAddressStatus({
           msg: "Done",
-          color: colors.gray.oneHundred,
-          background: colors.gray.nineHundred,
+          color: colors.green.oneHundred,
+          background: colors.green.sixHundred,
         })
       }
       setLoading(false)
