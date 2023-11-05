@@ -8,7 +8,7 @@ import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
 import { isBrowser, convertToDecimal } from "../utils/helper-functions"
 
-import { AccordionTab } from "../components/checkout/Accordion"
+import CheckoutSteps from "../components/checkout/CheckoutSteps"
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { OrderSummary } from "../components/shop/OrderSummary"
@@ -48,7 +48,7 @@ const Checkout = () => {
       index: 1,
     }
   ]
-  const [activeAccordionTab, setActiveAccordionTab] = useState("shipping")
+  const [activeCheckoutSteps, setActiveCheckoutSteps] = useState("shipping")
   const [addressStatus, setAddressStatus] = useState({
     msg: "Incomplete",
     color: colors.red.oneHundred,
@@ -265,7 +265,7 @@ const Checkout = () => {
         throw data.error
       }
 
-      setActiveAccordionTab("method")
+      setActiveCheckoutSteps("method")
       setShippingValidated(true)
       setAddressStatus({
         msg: "Done",
@@ -314,10 +314,10 @@ const Checkout = () => {
                             <Breadcrumb
                               items={breadcrumbItems}
                             />
-                            <AccordionTab
-                              activeAccordionTab={activeAccordionTab}
+                            <CheckoutSteps
+                              activeCheckoutSteps={activeCheckoutSteps}
                               status={addressStatus}
-                              onClick={setActiveAccordionTab}
+                              onClick={setActiveCheckoutSteps}
                               prereq={true}
                               summaries={[
                                 {
@@ -340,7 +340,7 @@ const Checkout = () => {
                                 address={address}
                                 customer={customer}
                                 pid={pid}
-                                setActiveAccordionTab={setActiveAccordionTab}
+                                setActiveCheckoutSteps={setActiveCheckoutSteps}
                                 setAddress={setAddress}
                                 setAddressError={setAddressError}
                                 setAddressStatus={setAddressStatus}
@@ -354,11 +354,11 @@ const Checkout = () => {
                                 shippingValidated={shippingValidated}
                                 toast={toast}
                               />
-                            </AccordionTab>
-                            <AccordionTab
-                              activeAccordionTab={activeAccordionTab}
+                            </CheckoutSteps>
+                            <CheckoutSteps
+                              activeCheckoutSteps={activeCheckoutSteps}
                               status={methodStatus}
-                              onClick={setActiveAccordionTab}
+                              onClick={setActiveCheckoutSteps}
                               prereq={shippingValidated}
                               summaries={selectedRate && [
                                 {
@@ -370,13 +370,13 @@ const Checkout = () => {
                               text="Shipping method"
                             >
                               <ShippingForm
-                                activeAccordionTab={activeAccordionTab}
+                                activeCheckoutSteps={activeCheckoutSteps}
                                 address={address}
                                 cartItems={cartItems}
                                 customer={customer}
                                 pid={pid}
                                 selectedRate={selectedRate}
-                                setActiveAccordionTab={setActiveAccordionTab}
+                                setActiveCheckoutSteps={setActiveCheckoutSteps}
                                 setAddress={setAddress}
                                 setAuthKey={setAuthKey}
                                 setMethodValidated={setMethodValidated}
@@ -385,13 +385,13 @@ const Checkout = () => {
                                 setTax={setTax}
                                 toast={toast}
                               />
-                            </AccordionTab>
-                            <AccordionTab
+                            </CheckoutSteps>
+                            <CheckoutSteps
                               tabName="payment"
                               text="Payment information"
                               prereq={methodValidated}
-                              onClick={setActiveAccordionTab}
-                              activeAccordionTab={activeAccordionTab}
+                              onClick={setActiveCheckoutSteps}
+                              activeCheckoutSteps={activeCheckoutSteps}
                             >
                               <CheckoutForm
                                 address={address}
@@ -404,7 +404,7 @@ const Checkout = () => {
                                 tax={tax}
                                 toast={toast}
                               />
-                            </AccordionTab>
+                            </CheckoutSteps>
                           </Box>
                         </Col>
                         <Col sm={4}>

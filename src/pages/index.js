@@ -112,7 +112,7 @@ const IndexPage = ({ data }) => {
                     h1margin="0 0 32px"
                     style={{ clipPath: `url(#pattern-26)` }}
                   >
-                    <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
+                    <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks.</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
                   <Content
@@ -175,7 +175,7 @@ const IndexPage = ({ data }) => {
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
-                    <h2>Custom layouts on <i>every single page</i></h2>
+                    <h2>Custom layouts on <i>every single page.</i></h2>
                     <p>With Notesmith, you can customize every single page to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
                   <Flexbox
@@ -337,7 +337,7 @@ const IndexPage = ({ data }) => {
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>Only the best, guaranteed</h2>
+                    <h2>Only the best, guaranteed.</h2>
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
                 </Col>
@@ -431,7 +431,7 @@ const IndexPage = ({ data }) => {
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
                   >
-                    <h2>Fountain pen friendly paper</h2>
+                    <h2>Fountain pen friendly paper.</h2>
                     <p>After conducting tests on more than 50 types of paper, we chose the one that exhibited the best performance with various inks. Our white, ultra-smooth paper received top ratings from early users in bleeding, ghosting, and feathering assessments.</p>
                   </Content>
                   <Box>
@@ -596,7 +596,7 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h2>Feedback from early users</h2>
+                    <h2>Feedback from early users.</h2>
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />

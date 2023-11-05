@@ -13,7 +13,7 @@ const NotFoundPage = () => {
       >
         <Section>
           <SectionContent>
-            <Content headingtextalign="center" h1fontsize="3rem">
+            <Content headingtextalign="center">
               <h1>Page not found</h1>
             </Content>
           </SectionContent>

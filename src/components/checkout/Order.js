@@ -219,28 +219,16 @@ const Order = ({ location, orderId }) => {
                       <Content
                         margin="0 0 32px"
                         h1margin="0 0 16px"
-                        h1fontweight="400"
-                        h1fontsize="3rem"
+                        paragraphfontsize="1.25rem"
                       >
-                        <h1>Order Summary</h1>
-                        <p>Here is the summary for your order. We accept returns within 14 days of purchase. If you would like to return your order, please&nbsp;
-                          <TextLink
-                            as="button"
-                            padding="0"
-                            fontfamily={fonts.primary}
-                            fontsize="1rem"
-                            fontweight="700"
-                            color={colors.gray.nineHundred}
-                            onClick={() => createReturnLabel()}
-                          >
-                            submit a return request
-                          </TextLink>.  If you have any other questions regarding this order please feel free to&nbsp;
+                        <h1>Order summary</h1>
+                        <p>Here is the summary for your order. If you have any questions regarding this order please feel free to&nbsp;
                           <TextLink
                             href={`mailto:general@notesmithbooks.com?subject=[Orders] (${orderId})`}
                             target="_blank"
                             rel="noopener noreferrer"
                             fontfamily={fonts.primary}
-                            fontsize="1rem"
+                            fontsize="1.25rem"
                             fontweight="700"
                             color={colors.gray.nineHundred}
                           >
@@ -271,8 +259,9 @@ const Order = ({ location, orderId }) => {
                             <h5>Shipping address</h5>
                             {showInfo ? (
                               <>
-                                <p>{orderInfo.address.line1 || orderInfo.address.street1} {orderInfo.address.line2 || orderInfo.address.street2}</p>
-                                <p>{orderInfo.address.city}, {orderInfo.address.state} {orderInfo.address.postal_code || orderInfo.address.zip}</p>
+                                <p>{orderInfo.address.line1 || orderInfo.address.street1} {orderInfo.address.line2 || orderInfo.address.street2}
+                                <span>{orderInfo.address.city}, {orderInfo.address.state} {orderInfo.address.postal_code || orderInfo.address.zip}</span>
+                                </p>
                               </>
                             ) : (
                               <>
@@ -331,10 +320,11 @@ const Order = ({ location, orderId }) => {
                                   <Tag
                                     padding="3px 6px"
                                     margin="0 4px 0 0"
-                                    backgroundcolor={colors.gray.twoHundred}
+                                    backgroundcolor={colors.white}
+                                    border={colors.borders.black}
                                     color={colors.gray.nineHundred}
                                   >
-                                    x{item.quantity}
+                                    {item.quantity}
                                   </Tag>
                                   <GatsbyImage
                                     image={getImage(item.image)}
@@ -387,9 +377,11 @@ const Order = ({ location, orderId }) => {
                             >
                               <p>Total</p>
                               <Content
-                                h4margin="0"
+                                  paragraphmargin="0"
+                                  paragraphfontsize="1.25rem"
+                                  paragraphlineheight="1"
                               >
-                                <h4>${convertToDecimal(orderInfo.amount, 2)}</h4>
+                                <p>${convertToDecimal(orderInfo.amount, 2)}</p>
                               </Content>
                             </Flexbox>
                           </>

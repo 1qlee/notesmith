@@ -22,7 +22,6 @@ const Content = styled.div`
   }
   h1,h2,h3,h4,h5,h6 {
     margin: 0 0 32px;
-    font-weight: 400;
     text-rendering: optimizeLegibility;
     line-height: ${props => props.headinglineheight || "1.3"};
     text-align: ${props => props.headingtextalign};

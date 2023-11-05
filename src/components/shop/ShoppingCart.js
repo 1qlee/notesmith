@@ -354,18 +354,14 @@ function ShoppingCart() {
           </Flexbox>
         </>
       ) : (
-        <Flexbox
-          flex="flex"
-          justifycontent="center"
-          alignitems="center"
-          flexdirection="column"
-        >
+        <Box>
           <Content
-            textalign="center"
-            h1fontsize="3rem"
-            maxwidth={widths.content.index}
+            paragraphfontsize="1.25rem"
+            margin="0 0 32px"
+            maxwidth={widths.content.normal}
           >
-            <h1>Your cart is empty</h1>
+            <h1>Your cart is empty.</h1>
+            <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
           <Link
             to="/products/notebooks/pro-wired-notebook-a5-custom"
@@ -379,7 +375,7 @@ function ShoppingCart() {
               Shop notebooks
             </Button>
           </Link>
-        </Flexbox>
+        </Box>
       )}
     </>
   )

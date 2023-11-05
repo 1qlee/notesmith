@@ -39,7 +39,9 @@ const Footer = ({ screenClass }) => {
                     </Content>
                   </Col>
                   <Col md={4} push={{ md: 2 }}>
-                    <RegisterForm />
+                    <RegisterForm 
+                      fontsize="1rem"
+                    />
                   </Col>
                 </Row>
                 <Row>
@@ -56,8 +58,17 @@ const Footer = ({ screenClass }) => {
                         <Logo color={colors.gray.oneHundred} />
                       </Link>
                       <p>
-                        © {getDate()} Notesmith LLC.
+                        © {getDate()} Notesmith LLC
                       </p>
+                    </Content>
+                  </Col>
+                  <Col lg={4}>
+                    <Content
+                      linkcolor={colors.gray.oneHundred}
+                    >
+                      <Link to="/faq">
+                        FAQ
+                      </Link>
                     </Content>
                   </Col>
                 </Row>

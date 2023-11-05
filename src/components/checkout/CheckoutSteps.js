@@ -10,7 +10,7 @@ import Icon from "../ui/Icon"
 import Content from "../ui/Content"
 import Tag from "../ui/Tag"
 
-const StyledAccordionTab = styled.div`
+const StyledCheckoutSteps = styled.div`
   padding: ${props => props.padding || "16px 0"};
   margin-bottom: 16px;
   display: flex;
@@ -24,8 +24,8 @@ const StyledAccordionTab = styled.div`
   }
 `
 
-const AccordionTab = ({ 
-  activeAccordionTab,
+const CheckoutSteps = ({ 
+  activeCheckoutSteps,
   children,
   onClick,
   prereq,
@@ -34,7 +34,7 @@ const AccordionTab = ({
   tabName,
   text,
 }) => {
-  const isActive = activeAccordionTab === tabName
+  const isActive = activeCheckoutSteps === tabName
   const { getToggleProps, getCollapseProps, isExpanded, defaultExpanded } = useCollapse({ 
     isExpanded: isActive, 
     defaultExpanded: isActive,
@@ -48,7 +48,7 @@ const AccordionTab = ({
 
   return (
     <>
-      <StyledAccordionTab
+      <StyledCheckoutSteps
         {...getToggleProps({
           onClick: () => onClick(name => name === tabName ? null : tabName)
         })}
@@ -84,7 +84,7 @@ const AccordionTab = ({
             <CaretDown size={16} />
           )}
         </Icon>
-      </StyledAccordionTab>
+      </StyledCheckoutSteps>
       {!isExpanded && summaries && (
         <Infobox>
           {summaries.map((summary, index) => (
@@ -104,4 +104,4 @@ const AccordionTab = ({
   )
 }
 
-export { AccordionTab }
+export default CheckoutSteps
