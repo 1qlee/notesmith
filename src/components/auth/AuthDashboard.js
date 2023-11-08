@@ -25,7 +25,7 @@ const UserDashboard = () => {
     status: false,
     text: "Copy",
   })
-  const launchDate = new Date("2023-11-25")
+  const launchDate = new Date("2023-12-1")
   const singleRef = useRef(null)
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const UserDashboard = () => {
               <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
             </Content>
             <Content>
-              <p>The pre-order sale will conclude on <b>November 25th</b>. There are currently <b>{daysUntilDate(launchDate)} days left</b> to participate in the pre-order sale.</p>
+              <p>The pre-order sale will conclude on <b>December 1st</b>.</p>
             </Content>
           </Col>
           <Col md={6}>
@@ -162,7 +162,7 @@ const UserDashboard = () => {
               display="inline-flex"
               margin="32px 0 0"
             >
-              <p>All notebooks purchased during the pre-order sale are <b>20% off</b> and <b>shipping is also free</b> (to the U.S. only).</p>
+              <p>All notebooks purchased during the pre-order sale are <b>25% off</b> and <b>shipping is also free</b> (to the U.S. only).</p>
             </Notification>
             <Content
               h3fontsize="1.5rem"

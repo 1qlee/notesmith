@@ -125,9 +125,9 @@ const breakpoints = {
 }
 
 const fonts = {
-  heading: "'Jost', Georgia, serif", // "'Nanum Myeongjo', Georgia, serif",
+  heading: "'Nanum Myeongjo', Georgia, serif",
   text: "'Jost', Georgia, serif",
-  primary: "'Jost', Georgia, serif", // "'Nanum Myeongjo', Georgia, serif",
+  primary: "'Nanum Myeongjo', Georgia, serif",
   secondary: "'Jost', Georgia, serif",
 }
 

@@ -16,16 +16,17 @@ function DemoTemplate({
   pageData,
   setPageData,
 }) {
+  console.log(pageDimensions)
   const [max, setMax] = useState({
-    rows: 20,
-    columns: 20,
+    rows: 200,
+    columns: 200,
   })
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      height={pageDimensions.height}
-      width={pageDimensions.width}
+      height="100%"
+      width="100%"
       fill="#fff"
       x="0"
       y="0"

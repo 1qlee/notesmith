@@ -37,7 +37,7 @@ const StyledDemoTemplate = styled.div`
   top: 12px;
   left: 56px;
   z-index: 5;
-  width: calc(100% - 28px);
+  width: calc(100% - 68px);
   height: calc(100% - 24px);
 `
 
@@ -205,12 +205,12 @@ function Book3d({
                   bounds
                   onResize={contentRect => setPageDimensions({
                     height: contentRect.bounds.height - 24,
-                    width: contentRect.bounds.width,
+                    width: contentRect.bounds.width + 45,
                   })}
                 >
                   {({ measureRef }) => (
                     <StyledDemoTemplate
-                      ref={measureRef} 
+                      ref={measureRef}
                     >
                       <DemoTemplate
                         pageDimensions={pageDimensions}
