@@ -3,6 +3,7 @@ import { colors } from "../../styles/variables"
 
 const Box = styled.div`
   border-radius: ${props => props.borderradius};
+  border-bottom: ${props => props.borderbottom};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   margin: ${props => props.margin};

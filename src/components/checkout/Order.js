@@ -12,7 +12,6 @@ import { Container, Col, Row } from "react-grid-system"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
-import { Orders, OrderSection } from "../shop/OrderSummary"
 import Button from "../ui/Button"
 import TextLink from "../ui/TextLink"
 import Content from "../ui/Content"
@@ -20,6 +19,7 @@ import Notification from "../ui/Notification"
 import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
 import Tag from "../ui/Tag"
+import Box from "../ui/Box"
 
 const PlaceholderLine = styled.div`
   background-color: ${colors.gray.threeHundred};
@@ -188,9 +188,9 @@ const Order = ({ location, orderId }) => {
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.section} 0`}
           >
-            <Container xs sm md lg xl>
+            <Container xl lg md sm xs>
               {orderNotFound ? (
                 <Row justify="center">
                   <Col xl={6} lg={6} xxl={6} md={6}>
@@ -218,7 +218,6 @@ const Order = ({ location, orderId }) => {
                     <>
                       <Content
                         margin="0 0 32px"
-                        h1margin="0 0 16px"
                         paragraphfontsize="1.25rem"
                       >
                         <h1>Order summary</h1>
@@ -236,8 +235,10 @@ const Order = ({ location, orderId }) => {
                           </TextLink>.
                         </p>
                       </Content>
-                      <Orders>
-                        <OrderSection>
+                      <Box>
+                        <Box
+                          margin="0 0 32px"
+                        >
                           <Content
                             h5fontweight="800"
                             h5margin="0 0 8px"
@@ -301,9 +302,17 @@ const Order = ({ location, orderId }) => {
                               </>
                             )}
                           </Content>
-                        </OrderSection>
+                        </Box>
                         {showInfo ? (
-                          <OrderSection>
+                          <Box
+                            borderbottom={colors.borders.black}
+                            padding="0 0 16px"
+                          >
+                            <Content
+                              h5margin="0 0 8px"
+                            >
+                              <h5>Items</h5>
+                            </Content>
                             {orderItems.map(item => (
                               <Flexbox
                                 flex="flex"
@@ -318,11 +327,11 @@ const Order = ({ location, orderId }) => {
                                   alignitems="center"
                                 >
                                   <Tag
-                                    padding="3px 6px"
+                                    padding={item.quantity > 9 ? "4px 6px" : "4px 10px"}
                                     margin="0 4px 0 0"
-                                    backgroundcolor={colors.white}
-                                    border={colors.borders.black}
-                                    color={colors.gray.nineHundred}
+                                    backgroundcolor={colors.black.nineHundred}
+                                    color={colors.gray.oneHundred}
+                                    borderradius="100%"
                                   >
                                     {item.quantity}
                                   </Tag>
@@ -337,13 +346,17 @@ const Order = ({ location, orderId }) => {
                                 <p>{item.formattedValue}</p>
                               </Flexbox>
                             ))}
-                          </OrderSection>
+                          </Box>
                         ) : (
                           <PlaceholderLine width="12rem" />
                         )}
                         {showInfo ? (
                           <>
-                            <OrderSection>
+                            <Box
+                              margin="32px 0 0"
+                              borderbottom={colors.borders.black}
+                              padding="0 0 32px"
+                            >
                               <Flexbox
                                 margin="0 0 16px"
                                 flex="flex"
@@ -367,13 +380,13 @@ const Order = ({ location, orderId }) => {
                                 <p>Tax</p>
                                 <p>${convertToDecimal(orderInfo.tax, 2)}</p>
                               </Flexbox>
-                            </OrderSection>
+                            </Box>
                             <Flexbox
                               flex="flex"
                               justifycontent="space-between"
                               alignitems="center"
                               paragraphmargin="0"
-                              padding="16px 0"
+                              margin="32px 0"
                             >
                               <p>Total</p>
                               <Content
@@ -394,7 +407,7 @@ const Order = ({ location, orderId }) => {
                             <PlaceholderLine width="6rem" />
                           </Content>
                         )}
-                      </Orders>
+                      </Box>
                       {!showInfo && (
                         <Notification
                           backgroundcolor={colors.gray.oneHundred}

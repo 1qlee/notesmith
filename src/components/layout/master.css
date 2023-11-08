@@ -314,7 +314,7 @@ dd {
 }
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
-  font-family: "Nanum Myeongjo", Georgia, serif;
+  font-family: 'Jost', Georgia, serif;
 }
 p {
   font-size: 1rem;

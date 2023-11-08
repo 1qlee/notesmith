@@ -9,6 +9,7 @@ import Divider from "../layout/Divider"
 import RegisterForm from "../form/RegisterForm"
 import Content from "../ui/Content"
 import Logo from "../misc/Logo"
+import Box from "./Box"
 
 function getDate() {
   const d = new Date()
@@ -31,11 +32,9 @@ const Footer = ({ screenClass }) => {
                   <Col md={4} push={{ md: 2 }}>
                     <Content
                       paragraphcolor={colors.gray.oneHundred}
-                      h5color={colors.gray.oneHundred}
-                      h5fontweight="400"
-                      h5margin={isMobile ? "0 0 16px" : "0"}
+                      paragraphfontsize="1.25rem"
                     >
-                      <h5>Sign up to join the waitlist for early access to all our features and notebooks</h5>
+                      <p>Sign up for our newsletter to get access to discounts, updates, and more</p>
                     </Content>
                   </Col>
                   <Col md={4} push={{ md: 2 }}>
@@ -66,9 +65,16 @@ const Footer = ({ screenClass }) => {
                     <Content
                       linkcolor={colors.gray.oneHundred}
                     >
-                      <Link to="/faq">
-                        FAQ
-                      </Link>
+                      <Box>
+                        <Link to="/faq">
+                          FAQ
+                        </Link>
+                      </Box>
+                      <Box>
+                        <Link to="/return-policy">
+                          Return Policy
+                        </Link>
+                      </Box>
                     </Content>
                   </Col>
                 </Row>

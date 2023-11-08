@@ -242,7 +242,7 @@ const ProductInfo = ({
           {user ? (
             <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.yellow.nineHundred}>accounts page</TextLink></Link>.</p>
           ) : (
-            "Sign up for a Notesmith account and get access to more advanced editing features."
+            <p>Sign up for a Notesmith account and get access to more advanced customization features.</p>
           )}
         </Content>
       </Notification>

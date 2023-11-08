@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { breakpoints, colors, widths } from "../../styles/variables"
+import { breakpoints, widths } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
 import PageDemo1 from "../../assets/index/page-demo-1.svg"
@@ -8,7 +8,6 @@ import PageDemo2 from "../../assets/index/page-demo-2.svg"
 import PageDemo3 from "../../assets/index/page-demo-3.svg"
 import PageDemo4 from "../../assets/index/page-demo-4.svg"
 import PageDemo5 from "../../assets/index/page-demo-5.svg"
-import Progress from "../ui/Progress"
 
 const StyledPageDemo = styled.div`
   position: relative;
@@ -23,7 +22,7 @@ const DemoImageWrapper = styled.div`
 const DemoImage = styled.div`
   position: absolute;
   top: 0;
-  left: 0;
+  left: -16px;
   height: 100%;
   width: 100%;
 `

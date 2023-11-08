@@ -15,21 +15,21 @@ const Waitlist = () => {
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.section} 0`}
           >
             <Container xl lg md sm xs>
-              <Row justify="center">
-                <Col sm={5}>
+              <Row>
+                <Col sm={6}>
                   <Content
-                    h1fontsize="3rem"
                     paragraphfontsize="1.25rem"
-                    textalign="center"
                     margin="0 0 32px"
                   >
-                    <h1>Your custom notebook awaits you!</h1>
-                    <p>Join the waitlist to get early access to the Notesmith platform where you can create custom notebook layouts. Additionally, all early access users will enjoy discounted notebook pricing.</p>
+                    <h1>Early access signup</h1>
+                    <p>Join the waitlist to get early access to the Notesmith platform where you can create custom notebook layouts. Additionally, all early access users will enjoy 25% discounted notebook pricing and free shipping.</p>
                   </Content>
-                  <StyledLabel>
+                  <StyledLabel
+                    htmlFor="register-form-input"
+                  >
                     Best email to reach you at
                   </StyledLabel>
                   <RegisterForm 

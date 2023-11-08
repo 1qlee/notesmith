@@ -96,10 +96,10 @@ const Nav = ({ auth, hideNavbar }) => {
   return (
     <StyledNav>
       <Banner 
-        text="Join the waitlist to get access to our pre-order sale!"
+        text="Get 25% off during the pre-order sale, live now!"
         link={{
-          to: "/waitlist",
-          text: "Join now"
+          to: "/products/notebooks/pro-wired-notebook-a5-custom/white",
+          text: "Shop now"
         }}
       />
       <Container xl lg md sm xs>

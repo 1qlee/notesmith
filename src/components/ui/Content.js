@@ -106,8 +106,11 @@ const Content = styled.div`
   }
   a {
     color: ${props => props.linkcolor};
+    display: ${props => props.linkdisplay};
+    line-height: ${props => props.linklineheight};
     font-size: ${props => props.linkfontsize};
     font-family: ${props => props.linkfontfamily};
+    margin: ${props => props.linkmargin};
     text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;

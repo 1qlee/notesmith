@@ -8,10 +8,11 @@ import Content from "../components/ui/Content"
 import { Section, SectionMain, SectionContent } from "../components/layout/Section"
 import Accordion from "../components/ui/Accordion"
 import Box from "../components/ui/Box"
+import { Link } from "gatsby"
 
 const faqs = [
   {
-    title: "Contact information",
+    title: "Contact us",
     items: [
       {
         question: "Send us an email.",
@@ -20,6 +21,23 @@ const faqs = [
           "For media, press, wholesale inquiries, etc: general@notesmithbooks.com"
         ]
       },
+    ]
+  },
+  {
+    title: "Shipping / Delivery",
+    items: [
+      {
+        question: "What countries do we ship to?",
+        answer: "We currently only ship to the United States and Canada. We are working on expanding our shipping capabilities to other countries. If you would like to be notified when we ship to your country, please sign up for our newsletter."
+      },
+      {
+        question: "How much does shipping cost?",
+        answer: "Shipping is free for all orders over $50. For orders under $50, shipping costs to your address will be calculated during checkout."
+      },
+      {
+        question: "What about tracking?",
+        answer: "We will send you a tracking number via email when your order ships."
+      }
     ]
   },
   {
@@ -43,7 +61,11 @@ const faqs = [
       },
       {
         question: "Can I return my order?",
-        answer: "If you are not satisfied with your purchase, you may return it for a refund within 14 days after your order is delivered. To be eligible for a refund, the item(s) must be returned in new, unworn condition and in its original packaging with all of the packaging materials included."
+        answer: "If you are not satisfied with your purchase, you may return it for a refund within 14 days after your order is delivered. To be eligible for a refund, the item(s) must be returned in new, unused condition and in its original packaging with all of the packaging materials included.",
+        link: {
+          text: "Read our full return policy here.",
+          url: "/return-policy"
+        }
       }
     ]
   }
@@ -57,13 +79,13 @@ const FaqPage = () => {
       >
         <Section>
           <SectionContent
-            padding={spacing.section}
+            padding={`${spacing.section} 0`}
           >
             <Container xl lg md sm xs>
               <Row>
                 <Col>
                   <Content>
-                    <h1>FAQ.</h1>
+                    <h1>FAQ</h1>
                   </Content>
                 </Col>
               </Row>
@@ -77,12 +99,22 @@ const FaqPage = () => {
                         h5fontsize="1.25rem"
                         h5margin="0 0 16px"
                         paragraphfontsize="1.25rem"
+                        linkfontsize="1.25rem"
+                        linklineheight="1.75"
+                        linkmargin="0 0 16px"
+                        linktextdecoration="underline"
+                        linkdisplay="inline-block"
                       >
                         {faq.items.map((refund, index) => (
                           <Box
                             margin="32px 0"
                           >
                             <h5>{refund.question}</h5>
+                            {refund.link && (
+                              <Link to={refund.link.url}>
+                                {refund.link.text}
+                              </Link>
+                            )}
                             {Array.isArray(refund.answer) ? (
                               <>
                                 {refund.answer.map(line => (
