@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Measure from "react-measure"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
-import { breakpoints, colors } from "../../styles/variables"
+import { breakpoints, colors, pageDataConfig } from "../../styles/variables"
 
 import { Flexbox } from "../layout/Flexbox"
 import ColorPicker from "../shop/ColorPicker"
@@ -203,10 +203,17 @@ function Book3d({
               <>
                 <Measure
                   bounds
-                  onResize={contentRect => setPageDimensions({
-                    height: contentRect.bounds.height - 24,
-                    width: contentRect.bounds.width + 45,
-                  })}
+                  onResize={contentRect => {
+                    setPageData({
+                      ...pageData,
+                      rows: 200,
+                      columns: 200,
+                    })
+                    setPageDimensions({
+                      height: contentRect.bounds.height - 24,
+                      width: contentRect.bounds.width + 45,
+                    })
+                  }}
                 >
                   {({ measureRef }) => (
                     <StyledDemoTemplate

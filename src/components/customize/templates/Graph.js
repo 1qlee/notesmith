@@ -128,7 +128,7 @@ function Graph({
       rows: maxRows,
       columns: maxCols,
     })
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

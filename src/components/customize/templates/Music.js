@@ -64,7 +64,7 @@ function Music({
     setMax({
       staves: maxStaves,
     })
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

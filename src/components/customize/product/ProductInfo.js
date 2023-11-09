@@ -28,13 +28,45 @@ const ProductInfo = ({
   toast,
 }) => {
   const { user } = useFirebaseContext()
-  const usdPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(bookData.price / 100)
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
+  const cartPrice = bookData.price * itemQuantity
+  let discount = getDiscountedPrice(cartPrice)
+  let discountedPrice = discount.price
+  let amountSaved = discount.saved
+  let discountPct = discount.percent
+  let amount = discount.amount
+
+  function getDiscountedPrice(cartPrice) {
+    let discount = 0
+    let amountSaved = 0
+
+    if (itemQuantity > 1 && itemQuantity < 10) {
+      discount = 0.10
+    } else if (itemQuantity >= 10 && itemQuantity < 20) {
+      discount = 0.15
+    } else if (itemQuantity >= 20) {
+      discount = 0.20
+    }
+
+    amountSaved = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(cartPrice * discount / 100)
+
+    const newPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format((1 - discount) * parseFloat(cartPrice / 100))
+
+    return {
+      price: newPrice,
+      saved: amountSaved,
+      amount: cartPrice * (1 - discount),
+      percent: (discount * 100),
+    }
+  }
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -63,7 +95,7 @@ const ProductInfo = ({
         name: bookData.name,
         numOfPages: bookData.numOfPages,
         price_id: bookData.stripePriceId,
-        price: bookData.price,
+        price: amount || bookData.price,
         printed: false,
         rightPageData: rightPageData,
         slug: bookData.slug,
@@ -179,29 +211,40 @@ const ProductInfo = ({
       </Flexbox>
       <Flexbox
         flex="flex"
-        alignitems="flex-end"
+        justifycontent="space-between"
+      >
+        <StyledLabel
+          htmlFor="quantity-tracker"
+          margin="0 0 8px"
+          fontsize="1rem"
+          fontweight="700"
+        >
+          Quantity
+        </StyledLabel>
+        {amountSaved !== "$0.00" && (
+          <Content
+            paragraphmargin="0 0 8px"
+            paragraphcolor={colors.green.sixHundred}
+            paragraphfontweight="700"
+          >
+            <p id="discount-text">Get {amountSaved} off.</p>
+          </Content>
+        )}
+      </Flexbox>
+      <Flexbox
+        flex="flex"
         margin="0 0 16px"
       >
-        <div>
-          <StyledLabel
-            htmlFor="quantity-tracker"
-            margin="0 0 8px"
-            fontsize="1rem"
-            fontweight="700"
-          >
-            Quantity
-          </StyledLabel>
-          <QuantityTracker
-            id="quantity-tracker"
-            buttonwidth="1rem"
-            buttonheight="1rem"
-            counterwidth="100%"
-            counterpadding="1rem"
-            counterfontsize="0.825rem"
-            iconsize="0.625rem"
-            setItemQuantity={setItemQuantity}
-          />
-        </div>
+        <QuantityTracker
+          id="quantity-tracker"
+          buttonwidth="1rem"
+          buttonheight="1rem"
+          counterwidth="100%"
+          counterpadding="1rem"
+          counterfontsize="1rem"
+          iconsize="0.625rem"
+          setItemQuantity={setItemQuantity}
+        />
         <Button
           backgroundcolor={colors.gray.nineHundred}
           border={`1px solid ${colors.gray.nineHundred}`}
@@ -216,7 +259,7 @@ const ProductInfo = ({
           {itemAdded ? (
             <span>Done!</span>
           ) : (
-            <span>Add to cart - {usdPrice}</span>
+            <span>Add to cart - {discountedPrice}</span>
           )}
         </Button>
       </Flexbox>
@@ -246,6 +289,12 @@ const ProductInfo = ({
           )}
         </Content>
       </Notification>
+      <Tooltip 
+        anchorSelect="#discount-text"
+        content={`${discountPct}% discount.`}
+        place="top"
+        variant="success"
+      />
       {!validateCartButton() && (
         <Tooltip
           anchorSelect="#cart-button"

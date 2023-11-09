@@ -13,7 +13,8 @@ function Ruled({
   const lineStrokeWidth = convertToPx(strokeWidth)
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const lineSpacing = convertToPx(spacing)
-  const maxRows = Math.floor((height + lineSpacing) / (lineStrokeWidth + lineSpacing))
+  const maxRows = Math.floor((height + lineSpacing) / (lineSpacing))
+  console.log("🚀 ~ file: Ruled.js:17 ~ maxRows:", maxRows)
 
   function createLines() {
     const linesArray = []
@@ -36,7 +37,7 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY + halfLineStrokeWidth > height) {
+      if (lineY > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
@@ -57,7 +58,7 @@ function Ruled({
     setMax({
       rows: maxRows,
     })
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>

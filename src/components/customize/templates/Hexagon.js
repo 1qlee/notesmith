@@ -108,7 +108,7 @@ function Hexagon({
       columns: maxColumns,
       rows: maxRows,
     })
-  }, [pageData])
+  }, [pageData, maxSvgSize])
 
   return (
     <>
