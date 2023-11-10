@@ -72,9 +72,11 @@ function OrderSummary({
                 key={item.id}
               >
                 <Tag
-                  padding={item.quantity > 9 ? "4px 6px" : "4px 10px"}
+                  height="24px"
+                  width="32px"
+                  padding="0"
                   margin="0 4px 0 0"
-                  backgroundcolor={colors.black.nineHundred}
+                  backgroundcolor={colors.gray.nineHundred}
                   color={colors.gray.oneHundred}
                   borderradius="100%"
                 >{item.quantity}</Tag>

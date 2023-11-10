@@ -51,13 +51,11 @@ const Checkout = () => {
   const [activeCheckoutSteps, setActiveCheckoutSteps] = useState("shipping")
   const [addressStatus, setAddressStatus] = useState({
     msg: "Incomplete",
-    color: colors.red.oneHundred,
-    background: colors.red.sixHundred,
+    color: colors.red.sixHundred,
   })
   const [methodStatus, setMethodStatus] = useState({
-    msg: "Selection required",
-    color: colors.red.oneHundred,
-    background: colors.red.sixHundred,
+    msg: "Required",
+    color: colors.red.sixHundred,
   })
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
@@ -269,8 +267,7 @@ const Checkout = () => {
       setShippingValidated(true)
       setAddressStatus({
         msg: "Done",
-        color: colors.gray.oneHundred,
-        background: colors.gray.nineHundred,
+        color: colors.green.sixHundred,
       })
       setProcessing(false)
       setShowModal({ show: false })

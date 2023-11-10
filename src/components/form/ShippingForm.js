@@ -8,7 +8,6 @@ import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
-import Tag from "../ui/Tag"
 
 const rotate = keyframes`
   from {
@@ -31,19 +30,20 @@ const ShippingItem = styled(Flexbox)`
   border-radius: 8px;
   border: ${colors.borders.black};
   transition: background-color 0.2s;
-  background-color: ${colors.gray.twoHundred};
+  background-color: ${colors.white};
   &:not(:last-child) {
     margin-bottom: 8px;
   }
   &:hover {
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.oneHundred};
     cursor: pointer;
   }
   &.is-selected {
-    background-color: ${colors.gray.nineHundred};
+    background-color: ${colors.gray.threeHundred};
+    color: ${colors.gray.nineHundred};
   }
   &.is-loading {
-    background-color: ${colors.gray.oneHundred};
+    background-color: ${colors.white};
   }
   svg {
     &.is-loading {
@@ -161,8 +161,7 @@ const ShippingForm = ({
       setMethodValidated(true)
       setMethodStatus({
         msg: "Done",
-        color: colors.gray.oneHundred,
-        background: colors.gray.nineHundred,
+        color: colors.green.sixHundred,
       })
       setLoading(false)
       setProcessing(false)
@@ -175,6 +174,15 @@ const ShippingForm = ({
       toast.error(error)
       setProcessing(false)
     })
+  }
+
+  const handleSelectRate = () => {
+    if (selectedRate) {
+      setSelectedRate(null)
+    }
+    else {
+      setSelectedRate(shippingRate)
+    }
   }
 
   // handles the submit of shipping rate
@@ -209,7 +217,7 @@ const ShippingForm = ({
         )}
         {shippingRate && !loading && (
           <ShippingItem
-            onClick={() => setSelectedRate(shippingRate)}
+            onClick={() => handleSelectRate()}
             className={selectedRate && "is-selected"}
             justifycontent="flex-start"
             alignitems="flex-start"
@@ -225,8 +233,6 @@ const ShippingForm = ({
               <Content
                 h5fontsize="1rem"
                 h5margin="0"
-                h5color={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
-                smallcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
                 smallfontfamily={fonts.secondary}
                 smallfontsize="0.875rem"
                 smallmargin="0"
@@ -244,9 +250,7 @@ const ShippingForm = ({
                   <small>Delivery time varies</small>
                 )}
               </Content>
-              <Content
-                paragraphcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
-              >
+              <Content>
                 <p>
                   ${convertToDecimal(shippingRate.rate, 2)}
                 </p>

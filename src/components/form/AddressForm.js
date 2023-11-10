@@ -147,9 +147,8 @@ function AddressForm({
     setTax({})
     setMethodValidated(false)
     setMethodStatus({
-      msg: "Submit required",
-      color: colors.red.oneHundred,
-      background: colors.red.sixHundred,
+      msg: "Required",
+      color: colors.red.sixHundred,
     })
     setAddress(address)
 
@@ -180,8 +179,7 @@ function AddressForm({
         setShippingValidated(true)
         setAddressStatus({
           msg: "Done",
-          color: colors.green.oneHundred,
-          background: colors.green.sixHundred,
+          color: colors.green.sixHundred,
         })
       }
       setLoading(false)
@@ -189,9 +187,8 @@ function AddressForm({
     else {
       setShippingValidated(false)
       setAddressStatus({
-        msg: "Submit required",
-        color: colors.red.oneHundred,
-        background: colors.red.sixHundred,
+        msg: "Required",
+        color: colors.red.sixHundred,
       })
       setLoading(false)
     }
@@ -236,16 +233,14 @@ function AddressForm({
       else {
         setAddressStatus({
           msg: "Done",
-          color: colors.green.oneHundred,
-          background: colors.green.sixHundred,
+          color: colors.green.sixHundred,
         })
       }
 
       if (!shippingValidated) {
         setAddressStatus({
-          msg: "Submit required",
-          color: colors.red.oneHundred,
-          background: colors.red.sixHundred,
+          msg: "Required",
+          color: colors.red.sixHundred,
         })
       }
     }

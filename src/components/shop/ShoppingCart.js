@@ -7,6 +7,7 @@ import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "@phosphor-icons/react
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"
+import Loader from "../misc/Loader"
 import CartQuantityTracker from "./CartQuantityTracker"
 import Box from "../ui/Box"
 import Table from "../ui/Table"
@@ -21,19 +22,25 @@ function ShoppingCart() {
     removeItem,
     formattedTotalPrice
   } = useShoppingCart()
+  const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
 
   useEffect(() => {
-    console.log(cartDetails)
-    // array to store cartItems
-    const cartItemsArray = []
-    // push all product objects in cartDetails to an array
-    for (const cartItem in cartDetails) {
-      cartItemsArray.push(cartDetails[cartItem])
-    }
+    if (cartDetails) {
+      // array to store cartItems
+      const cartItemsArray = []
+      // push all product objects in cartDetails to an array
+      for (const cartItem in cartDetails) {
+        cartItemsArray.push(cartDetails[cartItem])
+      }
 
-    setCartItems(cartItemsArray)
+      setCartItems(cartItemsArray)
+      setLoading(false)
+    }
+    else {
+      setLoading(false)
+    }
   }, [cartDetails])
 
   function handleViewDetails(itemId) {
@@ -51,6 +58,10 @@ function ShoppingCart() {
        [itemId]: itemId,
      })
    }
+  }
+
+  if (loading) {
+    return <Loader />
   }
 
   return (

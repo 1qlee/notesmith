@@ -326,24 +326,14 @@ const Order = ({ location, orderId }) => {
                                   flex="flex"
                                   alignitems="center"
                                 >
-                                  <Tag
-                                    padding={item.quantity > 9 ? "4px 6px" : "4px 10px"}
-                                    margin="0 4px 0 0"
-                                    backgroundcolor={colors.black.nineHundred}
-                                    color={colors.gray.oneHundred}
-                                    borderradius="100%"
-                                  >
-                                    {item.quantity}
-                                  </Tag>
                                   <GatsbyImage
                                     image={getImage(item.image)}
                                     alt="product thumbnail"
                                   />
-                                  <div>
-                                    <p>{item.name}</p>
-                                  </div>
+                                  <p>{item.name}</p>
                                 </Flexbox>
-                                <p>{item.formattedValue}</p>
+                                <p>x {item.quantity}</p>
+                                <p>{item.formattedPrice}</p>
                               </Flexbox>
                             ))}
                           </Box>

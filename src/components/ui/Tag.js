@@ -11,8 +11,9 @@ const Tag = styled.span`
   font-family: ${props => props.fontfamily || fonts.secondary};
   font-size: ${props => props.fontsize ? props.fontsize : "0.75rem"};
   font-weight: ${props => props.fontweight || "700"};
-  height: fit-content;
+  height: ${props => props.height || "fit-content"};
   justify-content: center;
+  line-height: 1;
   letter-spacing: ${props => props.letterspacing};
   margin: ${props => props.margin};
   padding: ${props => props.padding ? props.padding : "3px 6px"};

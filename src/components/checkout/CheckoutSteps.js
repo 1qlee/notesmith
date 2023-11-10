@@ -57,6 +57,8 @@ const CheckoutSteps = ({
       >
         <Flexbox
           alignitems="center"
+          justifycontent="space-between"
+          width="100%"
         >
           <Content
             h5margin="0"
@@ -67,11 +69,11 @@ const CheckoutSteps = ({
           {status && status.msg && !isExpanded && (
             <Tag
               backgroundcolor={colors.white}
-              color={status.background}
-              border={`1px solid ${status.background}`}
+              color={status.color}
+              border={`1px solid ${status.color}`}
               fontweight="700"
-              padding="4px 8px"
-              margin="0 0 0 8px"
+              padding="2px"
+              margin="0 8px"
             >
               {status.msg}
             </Tag>
