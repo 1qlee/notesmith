@@ -9,7 +9,8 @@ const calcOrderAmount = async (cartItems) => {
     // retrieve product from stripe by using id
     const stripeProduct = await stripe.prices.retrieve(price_id);
 
-    totalAmount += stripeProduct.unit_amount * quantity;
+    // 25% discount for pre-orders
+    totalAmount += stripeProduct.unit_amount * quantity * .75; 
   }
 
   console.log(`[Stripe] The total amount for this order is: ${totalAmount}.`)

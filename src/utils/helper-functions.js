@@ -163,6 +163,13 @@ function daysUntilDate(targetDate) {
   return daysLeft;
 }
 
+function formatDollars(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(value)
+}
+
 
 export {
   consolidateMixedObjects,
@@ -176,6 +183,7 @@ export {
   createAttributes,
   daysUntilDate,
   findIndexOfElementInArray,
+  formatDollars,
   isBrowser,
   processStringNumbers,
   svgToObjects,

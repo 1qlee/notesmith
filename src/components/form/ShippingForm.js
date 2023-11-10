@@ -53,13 +53,13 @@ const ShippingItem = styled(Flexbox)`
 `
 
 const ShippingForm = ({
-  activeAccordionTab,
+  activeCheckoutSteps,
   address,
   cartItems,
   customer,
   pid,
   selectedRate,
-  setActiveAccordionTab,
+  setActiveCheckoutSteps,
   setAuthKey,
   setMethodValidated,
   setMethodStatus,
@@ -105,10 +105,10 @@ const ShippingForm = ({
       })
     }
 
-    if (activeAccordionTab === "method" && !selectedRate) {
+    if (activeCheckoutSteps === "method" && !selectedRate) {
       createRates()
     }
-  }, [address, customer, activeAccordionTab])
+  }, [address, customer, activeCheckoutSteps])
 
   const setShippingInfo = async () => {
     await fetch("/.netlify/functions/set-shipping-info", {
@@ -157,7 +157,7 @@ const ShippingForm = ({
 
       // we will get back tax and taxId
       setTax(data)
-      setActiveAccordionTab("payment")
+      setActiveCheckoutSteps("payment")
       setMethodValidated(true)
       setMethodStatus({
         msg: "Done",

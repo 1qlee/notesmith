@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { colors,  } from "../../../styles/variables"
 import { useShoppingCart } from '../../../hooks/useShoppingCart'
+import { formatDollars } from "../../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { useFirebaseContext } from "../../../utils/auth"
 import { Tooltip } from "react-tooltip"
@@ -31,40 +32,33 @@ const ProductInfo = ({
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
-  const cartPrice = bookData.price * itemQuantity
-  let discount = getDiscountedPrice(cartPrice)
-  let discountedPrice = discount.price
-  let amountSaved = discount.saved
-  let discountPct = discount.percent
-  let amount = discount.amount
+  let discount = applyDiscounts(bookData.price, +itemQuantity)
+  let discountPrice = discount.price
+  let discountSaved = discount.saved
+  let discountPct = discount.pct
+  let discountAmount = discount.amount
 
-  function getDiscountedPrice(cartPrice) {
-    let discount = 0
-    let amountSaved = 0
+  function applyDiscounts(price, quantity) {
+    let totalAmount = price * quantity
+    let discountRate = 0.25
+    let discountPrice = price * (1 - discountRate)
+    let discountPct = discountRate * 100
+    let discountAmount = discountPrice * quantity
+    let discountSaved = totalAmount * discountRate
 
-    if (itemQuantity > 1 && itemQuantity < 10) {
-      discount = 0.10
-    } else if (itemQuantity >= 10 && itemQuantity < 20) {
-      discount = 0.15
-    } else if (itemQuantity >= 20) {
-      discount = 0.20
-    }
-
-    amountSaved = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(cartPrice * discount / 100)
-
-    const newPrice = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format((1 - discount) * parseFloat(cartPrice / 100))
+    // if (itemQuantity > 1 && itemQuantity < 10) {
+    //   discount = 0.10
+    // } else if (itemQuantity >= 10 && itemQuantity < 20) {
+    //   discount = 0.15
+    // } else if (itemQuantity >= 20) {
+    //   discount = 0.20
+    // }
 
     return {
-      price: newPrice,
-      saved: amountSaved,
-      amount: cartPrice * (1 - discount),
-      percent: (discount * 100),
+      price: discountPrice,
+      saved: discountSaved,
+      amount: discountAmount,
+      pct: discountPct,
     }
   }
 
@@ -95,7 +89,7 @@ const ProductInfo = ({
         name: bookData.name,
         numOfPages: bookData.numOfPages,
         price_id: bookData.stripePriceId,
-        price: amount || bookData.price,
+        price: discountPrice || bookData.price,
         printed: false,
         rightPageData: rightPageData,
         slug: bookData.slug,
@@ -221,13 +215,13 @@ const ProductInfo = ({
         >
           Quantity
         </StyledLabel>
-        {amountSaved !== "$0.00" && (
+        {discountSaved !== 0 && (
           <Content
             paragraphmargin="0 0 8px"
             paragraphcolor={colors.green.sixHundred}
             paragraphfontweight="700"
           >
-            <p id="discount-text">Get {amountSaved} off.</p>
+            <p id="discount-text">Get {formatDollars(discountSaved / 100)} off.</p>
           </Content>
         )}
       </Flexbox>
@@ -253,13 +247,13 @@ const ProductInfo = ({
           margin="0 0 0 1rem"
           padding="1rem"
           onClick={() => handleAddCartButton(bookData)}
-          onMouseOver={(e) => handleHoverCartButton(e)}
+          disabled={!validateCartButton()}
           width="100%"
         >
           {itemAdded ? (
             <span>Done!</span>
           ) : (
-            <span>Add to cart - {discountedPrice}</span>
+            <span>Add to cart - {formatDollars(discountAmount / 100)}</span>
           )}
         </Button>
       </Flexbox>

@@ -12,7 +12,7 @@ function AddressForm({
   address,
   customer,
   pid,
-  setActiveAccordionTab,
+  setActiveCheckoutSteps,
   setAddress,
   setAddressError,
   setAddressStatus,
@@ -176,7 +176,7 @@ function AddressForm({
 
       if (isAddressValid.isValid) {
         await updateAddress()
-        setActiveAccordionTab("method")
+        setActiveCheckoutSteps("method")
         setShippingValidated(true)
         setAddressStatus({
           msg: "Done",

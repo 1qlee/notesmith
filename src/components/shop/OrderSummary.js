@@ -59,7 +59,6 @@ function OrderSummary({
         <OrderSection>
           <Content
             h5margin="0"
-            h5fontweight="400"
           >
             <h5>Order Summary</h5>
           </Content>
@@ -73,12 +72,12 @@ function OrderSummary({
                 key={item.id}
               >
                 <Tag
-                  padding="3px 6px"
+                  padding={item.quantity > 9 ? "4px 6px" : "4px 10px"}
                   margin="0 4px 0 0"
-                  backgroundcolor={colors.white}
-                  border={colors.borders.black}
-                  color={colors.gray.nineHundred}
-                >x{item.quantity}</Tag>
+                  backgroundcolor={colors.black.nineHundred}
+                  color={colors.gray.oneHundred}
+                  borderradius="100%"
+                >{item.quantity}</Tag>
                 <GatsbyImage
                   image={getImage(item.image)}
                   alt="product thumbnail"
@@ -110,7 +109,7 @@ function OrderSummary({
                       )}
                     </Content>
                   </Box>
-                  <p>${convertToDecimal(item.price * item.quantity, 2)}</p>
+                  <p>${convertToDecimal(item.price, 2)}</p>
                 </Flexbox>
               </Flexbox>
             ))}
