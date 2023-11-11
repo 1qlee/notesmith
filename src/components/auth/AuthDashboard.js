@@ -25,7 +25,7 @@ const UserDashboard = () => {
     status: false,
     text: "Copy",
   })
-  const launchDate = new Date("2023-12-1")
+  const launchDate = new Date("2023-12-15")
   const singleRef = useRef(null)
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const UserDashboard = () => {
               <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
             </Content>
             <Content>
-              <p>The pre-order sale will conclude on <b>December 1st</b>.</p>
+              <p>The pre-order sale will conclude on <b>December 15th</b>.</p>
             </Content>
             <Notification
               backgroundcolor={colors.green.twoHundred}
