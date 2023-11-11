@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { breakpoints, colors, widths } from "../../styles/variables"
+import { breakpoints, widths } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
 import PageDemo1 from "../../assets/index/page-demo-1.svg"
@@ -8,7 +8,6 @@ import PageDemo2 from "../../assets/index/page-demo-2.svg"
 import PageDemo3 from "../../assets/index/page-demo-3.svg"
 import PageDemo4 from "../../assets/index/page-demo-4.svg"
 import PageDemo5 from "../../assets/index/page-demo-5.svg"
-import Progress from "../ui/Progress"
 
 const StyledPageDemo = styled.div`
   position: relative;
@@ -23,7 +22,7 @@ const DemoImageWrapper = styled.div`
 const DemoImage = styled.div`
   position: absolute;
   top: 0;
-  left: 0;
+  left: -16px;
   height: 100%;
   width: 100%;
 `
@@ -46,7 +45,7 @@ const DemoImageCaption = styled.article`
 `
 
 function PageDemoCarousel() {
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [currentProgress, setCurrentProgress] = useState(0)
   const [pause, setPause] = useState(false)
 
@@ -82,23 +81,13 @@ function PageDemoCarousel() {
         onMouseEnter={() => setPause(true)}
         onMouseLeave={() => setPause(false)}
       >
-        {currentPage === 0 ? (
-          <StaticImage
-            src="../../images/index/splash-image.jpg"
-            alt="Ink on paper"
-            loading="eager"
-            placeholder="none"
-            quality={100}
-          />
-        ) : (
-          <StaticImage
-            src="../../images/index/splash-image-blank.png"
-            alt="Ink on paper"
-            loading="eager"
-            placeholder="none"
-            quality={100}
-          />
-        )}
+        <StaticImage
+          src="../../images/index/splash-image-blank.png"
+          alt="Ink on paper"
+          loading="eager"
+          placeholder="none"
+          quality={100}
+        />
         <DemoImage>
           {currentPage === 1 && (
             <PageDemo1
@@ -132,16 +121,13 @@ function PageDemoCarousel() {
           )}
         </DemoImage>
         <DemoImageCaption>
-          <Progress
+          {/* <Progress
             height="2px"
             width="100%"
             completion={currentProgress}
             barcolor={colors.gray.nineHundred}
             wrappercolor={colors.gray.threeHundred}
-          />
-          {currentPage === 0 && (
-            <p>A5 (5.5 x 8.5") wired notebook in white with custom page layouts.</p>
-          )}
+          /> */}
           {currentPage === 1 && (
             <p>8mm spaced lines with a vertical divider in the center and a large top margin.</p>
           )}

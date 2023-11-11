@@ -7,12 +7,14 @@ import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "@phosphor-icons/react
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 import { Flexbox } from "../layout/Flexbox"
+import Loader from "../misc/Loader"
 import CartQuantityTracker from "./CartQuantityTracker"
 import Box from "../ui/Box"
 import Table from "../ui/Table"
 import Button from "../ui/Button"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
+import StrikeText from "./StrikeText"
 
 function ShoppingCart() {
   const {
@@ -21,19 +23,27 @@ function ShoppingCart() {
     removeItem,
     formattedTotalPrice
   } = useShoppingCart()
+  const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
 
   useEffect(() => {
-    console.log(cartDetails)
-    // array to store cartItems
-    const cartItemsArray = []
-    // push all product objects in cartDetails to an array
-    for (const cartItem in cartDetails) {
-      cartItemsArray.push(cartDetails[cartItem])
-    }
+    if (cartDetails) {
+      // array to store cartItems
+      const cartItemsArray = []
+      // push all product objects in cartDetails to an array
+      for (const cartItem in cartDetails) {
+        const item = cartDetails[cartItem]
 
-    setCartItems(cartItemsArray)
+        cartItemsArray.push(item)
+      }
+
+      setCartItems(cartItemsArray)
+      setLoading(false)
+    }
+    else {
+      setLoading(false)
+    }
   }, [cartDetails])
 
   function handleViewDetails(itemId) {
@@ -51,6 +61,10 @@ function ShoppingCart() {
        [itemId]: itemId,
      })
    }
+  }
+
+  if (loading) {
+    return <Loader />
   }
 
   return (
@@ -99,7 +113,7 @@ function ShoppingCart() {
                           <Link
                             to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
                           >
-                            <p><b>{item.name}</b></p>
+                            <p>{item.name}</p>
                           </Link>
                         </Content>
                         <Flexbox
@@ -270,9 +284,19 @@ function ShoppingCart() {
                       <Content
                         paragraphmargin="0"
                       >
-                        <p>
-                          ${convertToDecimal(item.price, 2)}
-                        </p>
+                        {item.discount ? (
+                          <p>
+                            <StrikeText
+                              color={colors.green.nineHundred}
+                              backgroundcolor={colors.green.oneHundred}
+                            >
+                              ${convertToDecimal(item.originalPrice, 2)}
+                            </StrikeText>
+                            <span>${convertToDecimal(item.price, 2)}</span>
+                          </p>
+                        ) : (
+                          <p>${convertToDecimal(item.price, 2)}</p>
+                        )}
                       </Content>
                     </Flexbox>
                   </td>
@@ -309,24 +333,30 @@ function ShoppingCart() {
           </Table>
           <Flexbox
             flex="flex"
+            alignitems="center"
             justifycontent="flex-end"
           >
-            <Content
-              paragraphfontsize="1rem"
-              paragraphfontfamily={fonts.secondary}
+            <Flexbox
+              alignitems="flex-end"
+              flex="flex"
+              justifycontent="space-between"
+              margin="2rem 1rem 2rem 0"
+              width="12rem"
             >
-              <Flexbox
-                width="12rem"
-                flex="flex"
-                justifycontent="space-between"
-                margin="2rem 1rem 2rem 0"
+              <Content
                 h5margin="0"
-                alignitems="center"
+                headinglineheight="1"
               >
                 <h5>Subtotal</h5>
-                <h4>{formattedTotalPrice}</h4>
-              </Flexbox>
-            </Content>
+              </Content>
+              <Content
+                paragraphmargin="0"
+                paragraphfontsize="1.25rem"
+                paragraphlineheight="1"
+              >
+                <p>{formattedTotalPrice}</p>
+              </Content>
+            </Flexbox>
           </Flexbox>
           <Flexbox
             width="100%"
@@ -348,18 +378,14 @@ function ShoppingCart() {
           </Flexbox>
         </>
       ) : (
-        <Flexbox
-          flex="flex"
-          justifycontent="center"
-          alignitems="center"
-          flexdirection="column"
-        >
+        <Box>
           <Content
-            textalign="center"
-            h1fontsize="3rem"
-            maxwidth={widths.content.index}
+            paragraphfontsize="1.25rem"
+            margin="0 0 32px"
+            maxwidth={widths.content.normal}
           >
             <h1>Your cart is empty</h1>
+            <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
           <Link
             to="/products/notebooks/pro-wired-notebook-a5-custom"
@@ -373,7 +399,7 @@ function ShoppingCart() {
               Shop notebooks
             </Button>
           </Link>
-        </Flexbox>
+        </Box>
       )}
     </>
   )

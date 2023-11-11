@@ -7,22 +7,17 @@ import { convertToPx } from "../../../../utils/helper-functions"
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
-import Toastify from "../../../../components/ui/Toastify"
-import ProductImages from "../../../../components/shop/ProductImages"
-import ProductInfo from "../../../../components/shop/ProductInfo"
+import ProductImages from "../../../../components/customize/product/ProductImages"
+import ProductInfo from "../../../../components/customize/product/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
-import ProductDescription from "../../../../components/shop/ProductDescription"
-import ProductSplash from "../../../../components/shop/ProductSplash"
-import ProductHalfandHalf from "../../../../components/shop/ProductHalfandHalf"
-import ProductHero from "../../../../components/shop/ProductHero"
+import ProductDescription from "../../../../components/customize/product/ProductDescription"
+import ProductGallery from "../../../../components/customize/product/ProductGallery"
+import ProductHero from "../../../../components/customize/product/ProductHero"
 import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, productThumbnails, splashImage, halfandhalfImages } = data
-  const sortedHalfandhalfImages = halfandhalfImages.nodes.sort((a, b) => {
-    return a.name > b.name ? 1 : -1
-  })
+  const { productData, productImages, descriptionImages, productThumbnails, galleryImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = productData
   const svgHeight = heightPixel
@@ -89,7 +84,6 @@ const ProductPage = ({ data, params }) => {
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
-  const [showControls, setShowControls] = useState(false)
   const [max, setMax] = useState({
     rows: 200,
     columns: 200,
@@ -123,17 +117,15 @@ const ProductPage = ({ data, params }) => {
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
             <Container xs sm md lg xl>
-              <Row justify="start">
+              <Row justify="start" gutterWidth={32}>
                 {pageData.show ? (
                   <>
-                    <Col md="content" >
+                    <Col md="content" id="product-controls">
                       <ProductControls
                         currentPageSide={currentPageSide}
                         pageData={pageData}
                         max={max}
-                        showControls={showControls}
                         selectedPageSvg={selectedPageSvg}
-                        setShowControls={setShowControls}
                         setCurrentPageSide={setCurrentPageSide}
                         setLeftPageData={setLeftPageData}
                         setPageData={setPageData}
@@ -142,7 +134,7 @@ const ProductPage = ({ data, params }) => {
                         toast={toast}
                       />
                     </Col>
-                    <Col md="content">
+                    <Col id="product-template">
                       <ProductTemplate
                         bookData={bookData}
                         maxSvgSize={maxSvgSize}
@@ -165,7 +157,7 @@ const ProductPage = ({ data, params }) => {
                     />
                   </Col>
                 )}
-                <Col>
+                <Col lg={4}>
                   <ProductInfo
                     bookData={bookData}
                     cartThumbnail={cartThumbnail}
@@ -186,24 +178,18 @@ const ProductPage = ({ data, params }) => {
         </Section>
         <ProductDescription 
           bookData={bookData}
-          headingText="High quality materials"
+          images={descriptionImages}
         />
-        {sortedHalfandhalfImages.map((image, index) => (
-          <ProductHalfandHalf
-            image={image}
-            bookData={bookData}
-            direction={index % 2 === 0 ? "left" : "right"}
-          />
-        ))}
-        <ProductSplash 
-          image={splashImage}
-          backgroundcolor={colors.gray.oneHundred}
-        />
-        <ProductHero 
+        <ProductHero
           bookData={bookData}
+          backgroundColor={colors.gray.nineHundred}
+        />
+        <ProductGallery 
+          images={galleryImages}
+          bookData={bookData}
+          heading="Gallery"
         />
       </SectionMain>
-      <Toastify />
     </Layout>
   )
 }
@@ -216,10 +202,6 @@ export const pageQuery = graphql`
       custom
       description
       longDescription
-      halfandhalf {
-        heading
-        text
-      }
       heightInch
       heightPixel
       name
@@ -227,8 +209,6 @@ export const pageQuery = graphql`
       paperColor
       paperTooth
       paperWeight
-      preorderPrice
-      stripePreorderPriceId
       infoList
       price
       size
@@ -237,6 +217,11 @@ export const pageQuery = graphql`
       weight
       widthInch
       widthPixel
+      galleryTexts {
+        heading
+        text
+        alt
+      }
       hero {
         heading
         text
@@ -251,35 +236,35 @@ export const pageQuery = graphql`
         slug
       }
     }
+    descriptionImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "description*" }}) {
+      nodes {
+        name
+        childImageSharp {
+          gatsbyImageData(
+            width: 1500
+            quality: 80
+          )
+        }
+      }
+    }
     productImages: allFile(filter: { relativeDirectory: { eq: $slug }}) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 800
-            quality: 100
+            width: 870
+            quality: 80
           )
         }
       }
     }
-    splashImage: allFile(filter: { relativeDirectory: { eq: $slug } name: { eq: "splash" }}) {
+    galleryImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "gallery*" }}) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 1200
-            quality: 100
-          )
-        }
-      }
-    }
-    halfandhalfImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "halfandhalf*" }}) {
-      nodes {
-        name
-        childImageSharp {
-          gatsbyImageData(
-            width: 500
-            quality: 100
+            quality: 80
+            width: 1400,
           )
         }
       }
@@ -291,7 +276,7 @@ export const pageQuery = graphql`
           gatsbyImageData(
             width: 80
             height: 80
-            quality: 100
+            quality: 80
           )
         }
       }

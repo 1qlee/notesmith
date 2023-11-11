@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { fonts, widths, colors } from "../../styles/variables"
+import { widths, colors } from "../../styles/variables"
+import { toast } from "react-toastify"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, update, remove, onValue, get, set, push } from "firebase/database"
-import { ToastContainer, toast } from 'react-toastify'
 
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
@@ -333,24 +333,6 @@ const UserBooks = ({ allProducts }) => {
             </>
           )}
         </AuthLayout>
-        <ToastContainer
-          autoClose={3000}
-          closeOnClick
-          draggable
-          draggablePercent={50}
-          hideProgressBar={false}
-          limit={3}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          position="bottom-center"
-          rtl={false}
-          theme="colored"
-          style={{
-            fontFamily: fonts.secondary,
-            fontSize: "0.75rem",
-          }}
-        />
       </Layout>
     )
   }

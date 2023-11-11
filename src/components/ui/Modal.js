@@ -2,17 +2,18 @@ import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
 import { colors, fonts, widths } from "../../styles/variables"
 
-const StyledModal = styled.div`
+const StyledModal = styled.dialog`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
   border: ${colors.borders.black};
+  box-shadow: ${props => props.boxshadow ? props.boxshadow : colors.shadow.layered};
+  display: block;
   left: 50%;
-  width: ${widths.modal};
+  margin: 0;
+  padding: 0 16px;
   position: absolute;
   top: 25%;
   transform: translate(-50%, -25%);
-  width: ${props => props.width};
-  padding: 0 16px;
+  width: ${props => props.width || widths.modal};
   z-index: 9001;
 `
 

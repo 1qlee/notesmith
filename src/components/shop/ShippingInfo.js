@@ -8,32 +8,31 @@ import { Flexbox } from "../layout/Flexbox"
 
 const Infobox = styled.div`
   background-color: ${colors.white};
-  padding: ${props => props.padding ? props.padding : "0 16px"};
-  border: ${colors.borders.black};
   margin-bottom: 2rem;
 `
 
 const InfoItem = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: ${colors.borders.black};
-  padding: 1rem 0;
-  &:last-child {
-    border-bottom: none;
+  align-items: center;
+  &:not(:last-child) {
+    margin-bottom: 16px;
   }
 `
 
 const InfoItemHeading = styled.h3`
   color: ${colors.gray.nineHundred};
   font-family: ${fonts.secondary};
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
   flex: 1;
+  line-height: 1.5;
 `
 
 const InfoItemText = styled.p`
   color: ${colors.gray.nineHundred};
   flex: 5;
+  line-height: 1.5;
 `
 
 function ShippingInfo({
@@ -85,7 +84,7 @@ function ShippingInfo({
         {shippingMethod && (
           <InfoItem>
             <InfoItemHeading>Shipping</InfoItemHeading>
-            <InfoItemText>Ground shipping</InfoItemText>
+            <InfoItemText>Ground</InfoItemText>
           </InfoItem>
         )}
       </Infobox>
@@ -93,4 +92,4 @@ function ShippingInfo({
   )
 }
 
-export default ShippingInfo
+export { ShippingInfo, InfoItem, InfoItemHeading, InfoItemText, Infobox}

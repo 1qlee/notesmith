@@ -1,7 +1,7 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { throttle } from "lodash"
-import { findClosestNode } from "./editor-functions"
+import { findClosestNode, detectMouseInSelection } from "./editor-functions"
 
 function parseDragElements(nodes, event) {
   const eventX = convertFloatFixed(event.x, 3)
@@ -99,24 +99,39 @@ function parseDragElements(nodes, event) {
 // }
 
 
-function drag(referenceElement, dispatch, canvasState) {
+function drag(referenceElement, dispatch, canvasState, coords) {
   function dragsubject(event) {
     // all the child nodes of the canvas page
-    const nodes = d3.select(referenceElement).selectAll("*")._groups[0]
+    const selectionPath = d3.select("#selection-path")
     const { sourceEvent } = event
+    const coords = {
+      clientX: sourceEvent.clientX,
+      clientY: sourceEvent.clientY,
+    }
 
-    // every subject will be inside #selection-group
-    return findClosestNode(nodes, sourceEvent, 3)
+    if (!selectionPath.empty()) {
+      const pathBox = d3.select("#selection-path").node().getBoundingClientRect()
+      const isMouseInSelection = detectMouseInSelection(coords, pathBox)
+
+      if (isMouseInSelection) {
+        return d3.selectAll("[data-selected]").nodes()
+      }
+    }
   }
 
   function dragstart(event, d) {
     console.log("drag start")
     const { subject } = event
-    const { children } = subject
+
+    dispatch({
+      type: "toggle",
+      setting: "selecting",
+      value: false,
+    })
 
     // loop each child of #selection-group and remove data-selected
-    for (let i = 0; i < children.length; i++) {
-      d3.select(children[i]).attr("data-selected", null)
+    for (let i = 0, length = subject.length; i < length; i++) {
+      d3.select(subject[i]).attr("data-selected", null)
     }
   }
 
@@ -127,9 +142,8 @@ function drag(referenceElement, dispatch, canvasState) {
     })
 
     const { subject } = event
-    const { children } = subject
 
-    parseDragElements(children, event)
+    parseDragElements(subject, event)
 
     dispatch({
       type: "parse-selection"
@@ -145,6 +159,10 @@ function drag(referenceElement, dispatch, canvasState) {
   function dragend(event, d) {
     console.log("drag end")
     const { subject } = event
+
+    for (let i = 0, length = subject.length; i < length; i++) {
+      d3.select(subject[i]).attr("data-selected", "")
+    }
 
     dispatch({
       type: "change-mode",

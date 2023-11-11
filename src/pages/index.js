@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import { graphql } from "gatsby"
+import { Link, graphql } from "gatsby"
 import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col, setConfiguration } from 'react-grid-system'
+import RandomLine from "../components/misc/Lines" 
 
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
@@ -11,7 +12,6 @@ import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
 import Box from "../components/ui/Box"
 import Button from "../components/ui/Button"
-import CircledText from "../components/misc/CircledText"
 import Content from "../components/ui/Content"
 import DemoControls from "../components/index/DemoControls"
 import Icon from "../components/ui/Icon"
@@ -21,7 +21,6 @@ import PageIcons from "../components/customize/PageIcons"
 import { Patterns, Pattern } from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
-import RegisterForm from "../components/form/RegisterForm"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
@@ -108,43 +107,49 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
                     margin="0 0 32px"
+                    padding="0 0 32px"
                     h1margin="0 0 32px"
+                    className="has-border-bottom"
                     style={{ clipPath: `url(#pattern-26)` }}
                   >
-                    <h1>Design <b><CircledText text="custom" /></b> notebooks</h1>
+                    <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
                   <Content
+                    backgroundcolor={colors.gray.nineHundred}
+                    paragraphcolor={colors.gray.oneHundred}
                     paragraphmargin="0"
                     h5margin="8px 0"
-                    h5fontweight="800"
-                    className="has-border-top"
-                    padding="32px 0 0"
-                    margin="0"
+                    h5fontsize="1.25rem"
+                    h5color={colors.gray.oneHundred}
+                    padding="16px"
                   >
                     <Flexbox
                       alignitems="center"
                       justifycontent="space-between"
                     >
-                      <h5>Pre-order sale</h5>
+                      <h5>The pre-order sale is now live!</h5>
                       <Tag
                         padding="3px 6px"
-                        backgroundcolor={colors.white}
+                        backgroundcolor={colors.yellow.twoHundred}
                         border={colors.borders.black}
                         color={colors.gray.nineHundred}
                       >
-                        Announcement
+                        SALE
                       </Tag>
                     </Flexbox>
-                    <p>You can now sign up for the waitlist to join the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
+                    <p>Our notebooks are be 25% off during this time and will ship for free to customers in the U.S.</p>
+                    <Button
+                      as={Link}
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white"
+                      backgroundcolor={colors.gray.oneHundred}
+                      color={colors.gray.nineHundred}
+                      padding="16px"
+                      width="100%"
+                    >
+                      Shop now
+                    </Button>
                   </Content>
-                  <RegisterForm 
-                    border
-                    fontsize="1rem"
-                    margin="16px 0 0"
-                    top="12px"
-                    color={colors.gray.nineHundred}
-                  />
                 </Col>
                 <Col xl={8} lg={8}>
                   <PageDemoCarousel />
@@ -159,7 +164,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Signature custom notebook
+                    Our signature
                   </SectionHeading>
                 </Col>
               </Row>
@@ -168,15 +173,14 @@ const IndexPage = ({ data }) => {
                   <Content
                     h2margin="0 0 2rem 0"
                     h2fontsize="3rem"
-                    h2fontweight="400"
                     h5fontsize="0.75rem"
                     paragraphfontsize="1.25rem"
                     paragraphmargin="0 0 16px"
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
-                    <h2>Your custom layouts on <b>every single page</b></h2>
-                    <p>With Notesmith, you can <i>customize every single page</i> to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                    <h2>Custom layouts on <i>every single page</i></h2>
+                    <p>With Notesmith, you can customize every single page to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
                   <Flexbox
                     flex="flex"
@@ -186,11 +190,10 @@ const IndexPage = ({ data }) => {
                       className="has-icon"
                       color={colors.gray.nineHundred}
                       fontweight="700"
-                      href="/waitlist"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      fontsize="1.25rem"
+                      as={Link}
                     >
-                      <span>Join the waitlist</span>
+                      <span>Shop now</span>
                       <Icon
                         margin="0 0 0 4px"
                       >
@@ -208,7 +211,8 @@ const IndexPage = ({ data }) => {
                 <Col lg={4}>
                   <Content
                     margin="0 0 32px"
-                    paragraphfontsize="1rem"
+                    paragraphfontsize="1.25rem"
+                    h5fontsize="1.25rem"
                     h5margin="0"
                     h5fontweight="700"
                   >
@@ -235,12 +239,13 @@ const IndexPage = ({ data }) => {
                     alignitems="flex-end"
                   >
                     <Content
-                      paragraphfontweight="700"
+                      h5fontsize="1.25rem"
+                      h5margin="0"
                     >
-                      <p>Try it out</p>
+                      <h5>Try it out</h5>
                     </Content>
                     <Icon margin="0 0 0 4px">
-                      <ArrowBendRightDown size="1rem" weight="bold" color={colors.gray.nineHundred} />
+                      <ArrowBendRightDown size={20} weight="bold" color={colors.gray.nineHundred} />
                     </Icon>
                   </Flexbox>
                   <Flexbox
@@ -274,8 +279,8 @@ const IndexPage = ({ data }) => {
                       backgroundcolor={colors.white}
                       color={colors.gray.nineHundred}
                       border={`1px solid ${colors.gray.nineHundred}`}
-                      padding="1rem"
-                      margin="0 1rem 0 0"
+                      padding="16px"
+                      margin="0 16px 0 0"
                       width="50%"
                       onClick={() => setPageData({
                         ...pageData,
@@ -304,12 +309,13 @@ const IndexPage = ({ data }) => {
                     alignitems="flex-start"
                     margin="16px 0 0" 
                   >
-                    <Icon>
-                      <WarningCircle color={colors.gray.sixHundred} />
+                    <Icon margin="4px 0 0">
+                      <WarningCircle color={colors.gray.nineHundred} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"
                       smallmargin="0"
+                      smallfontsize="1rem"
                     >
                       <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
                     </Content>
@@ -325,20 +331,19 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    High quality materials
+                    Materials
                   </SectionHeading>
                 </Col>
               </Row>
               <Row>
                 <Col lg={4}>
                   <Content
-                    h2fontweight="400"
                     h2margin="0 0 2rem"
                     paragraphfontsize="1.25rem"
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>We use only the best materials, guaranteed</h2>
+                    <h2>Only the best, guaranteed</h2>
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
                 </Col>
@@ -368,21 +373,20 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col md={5} push={{md: 1}}>
                   <Content
-                    h3fontweight="400"
                     h3fontsize="2rem"
                     h3color={colors.gray.oneHundred}
                     h3margin="0 0 16px"
                   >
-                    <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
+                    <h3>Create a Notesmith account to get access to all customization tools and features</h3>
                   </Content>
                 </Col>
                 <Col md={5} push={{ md: 1 }}>
                   <Content
                     paragraphcolor={colors.gray.oneHundred}
-                    margin="16px 0 0"
+                    paragraphfontsize="1.25rem"
                   >
                     <p>
-                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access in batches.
+                      Sign up to get access to the Notesmith platform where you can create custom notebook layouts. All users will enjoy 25% discounted notebook pricing and free shipping during the pre-order sale.
                     </p>
                   </Content>
                   <Flexbox
@@ -393,13 +397,13 @@ const IndexPage = ({ data }) => {
                     <TextLink
                       className="has-icon"
                       color={colors.gray.oneHundred}
+                      fontsize="1.25rem"
                       underlinecolor={colors.gray.oneHundred}
                       hovercolor={colors.gray.nineHundred}
-                      href="/waitlist"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      as={Link}
+                      to="/signup"
                     >
-                      <span>Join the waitlist</span>
+                      <span>Sign up</span>
                       <Icon
                         margin="0 0 0 8px"
                       >
@@ -422,7 +426,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Fountain pen friendly
+                    Paper
                   </SectionHeading>
                 </Col>
               </Row>
@@ -433,8 +437,8 @@ const IndexPage = ({ data }) => {
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
                   >
-                    <h2>Smooth, ink-loving paper</h2>
-                    <p>After testing over 50 kinds of paper, we settled on the one that had the best results with multiple inks. This white, super-smooth paper scored high marks on bleeding, ghosting, and feathering tests among early users.</p>
+                    <h2>Fountain pen friendly paper</h2>
+                    <p>After conducting tests on more than 50 types of paper, we chose the one that exhibited the best performance with various inks. Our white, ultra-smooth paper received top ratings from early users in bleeding, ghosting, and feathering assessments.</p>
                   </Content>
                   <Box>
                     <Flexbox
@@ -551,15 +555,16 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="flex-start"
+                    center="flex-start"
                     margin="16px 0"
                   >
                     <Icon>
-                      <WarningCircle color={colors.gray.sixHundred} />
+                      <WarningCircle color={colors.gray.nineHundred} size={16} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"
                       smallmargin="0"
+                      smallfontsize="1rem"
                     >
                       <small>Results are from a survey conducted on early test users.</small>
                     </Content>
@@ -587,7 +592,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Early reviews
+                    Reviews
                   </SectionHeading>
                 </Col>
               </Row>
@@ -595,25 +600,25 @@ const IndexPage = ({ data }) => {
                 <Col md={6} lg={6} xl={4}>
                   <Content
                     h2margin="0 0 2rem"
-                    h2fontweight="400"
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h2>Feedback from our early users</h2>
+                    <h2>Feedback from early users</h2>
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="flex-start"
+                    alignitems="center"
                     margin="16px 0"
                   >
                     <Icon>
-                      <NoteBlank color={colors.gray.sixHundred} />
+                      <NoteBlank color={colors.gray.nineHundred} size={16} />
                     </Icon>
                     <Content
                       margin="0 0 0 4px"
                       smallmargin="0"
+                      smallfontsize="1rem"
                     >
                       <small>Quotes represent real words from real users with fake names.</small>
                     </Content>

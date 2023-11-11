@@ -10,21 +10,28 @@ import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 import Notification from "../ui/Notification"
+import { StyledFieldset, StyledInput, StyledLabel } from "../form/FormComponents"
 
 function CheckoutForm({
   address,
   authKey,
   cartItems,
   clientSecret,
+  coupon,
   customer,
   pid,
+  setCoupon,
   setPaymentProcessing,
+  setSelectedRate,
+  setSubtotal,
+  setTax,
   tax,
   toast,
 }) {
   const stripe = useStripe()
   const elements = useElements()
   const [processing, setProcessing] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
@@ -197,7 +204,6 @@ function CheckoutForm({
         })
       }).then(() => {
         setError(null)
-        setPaymentProcessing(false)
 
         // redirect the user to the orders summary page
         navigate(
@@ -211,7 +217,6 @@ function CheckoutForm({
         )
       }).catch(async error => {
         setError(null)
-        setPaymentProcessing(false)
         // send the team an email to notify them of the error
         await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database.")
 
@@ -260,6 +265,44 @@ function CheckoutForm({
     })
   }
 
+  const handleCoupon = async () => {
+    setLoading(true)
+
+    fetch("/.netlify/functions/apply-coupon", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pid: pid,
+        cartItems: cartItems,
+        coupon: coupon.code,
+      })
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      const pi = data.paymentIntent
+
+      setSelectedRate({
+        rateId: pi.metadata.rateId,
+        rate: pi.metadata.shipping,
+      })
+      setTax({
+        amount: pi.metadata.tax,
+        id: pi.metadata.taxId,
+      })
+      setSubtotal(pi.amount)
+      setCoupon({
+        ...coupon,
+        applied: true,
+        text: data.secretCoupon && "Super mega discount",
+      })
+      setLoading(false)
+    }).catch(err => {
+      setLoading(false)
+    })
+  }
+
   return (
     <form
       onSubmit={submitPaymentForm}
@@ -278,6 +321,51 @@ function CheckoutForm({
         options={paymentOptions}
         onChange={() => setError("")}
       />
+      <StyledLabel
+        htmlFor="coupon-input"
+        margin="16px 0 8px"
+      >
+        Coupon
+      </StyledLabel>
+      <Flexbox
+        justifycontent="space-between"
+        alignitems="flex-start"
+        width="100%"
+      >
+        <StyledFieldset
+          margin="0 8px 0 0"
+        >
+          <StyledInput
+            id="coupon-input"
+            onChange={e => setCoupon({
+              ...coupon,
+              code: e.target.value.trim(),
+            })}
+            placeholder="Coupon code"
+            type="text"
+            value={coupon.code}
+            fontsize="1rem"
+            margin="0 8px 0 0"
+          />
+        </StyledFieldset>
+        <Button
+          padding="20px"
+          width="100px"
+          htmlFor="coupon-input"
+          type="button"
+          onClick={() => handleCoupon()}
+          className={loading ? "is-loading" : null}
+          disabled={loading}
+        >
+          {loading ? (
+            <Icon>
+              <CircleNotch size={16} color={colors.white} />
+            </Icon>
+          ) : (
+            "Apply"
+          )}
+        </Button>
+      </Flexbox>
       <Flexbox
         flex="flex"
         justifycontent="flex-end"

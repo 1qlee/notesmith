@@ -400,7 +400,7 @@ const AuthFormWrapper = styled.div`
   border: ${colors.borders.black};
   border-top-width: 0;
   padding: 64px;
-  margin: 0 auto;
+  margin: 0 auto 64px;
   max-width: ${widths.form};
 `
 

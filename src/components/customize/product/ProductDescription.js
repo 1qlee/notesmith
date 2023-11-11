@@ -1,31 +1,24 @@
 import React from "react"
-import styled from "styled-components"
-import { spacing, colors, fonts, breakpoints } from "../../styles/variables"
+import { spacing, fonts } from "../../../styles/variables"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent, SectionHeading } from "../layout/Section"
-import Content from "../ui/Content"
-
-const InfoListItem = styled.li`
-  padding-bottom: 8px;
-  margin: 0 0 8px;
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    margin: 16px 0 0;
-    margin-left: 16px;
-  }
-`
+import { Section, SectionContent } from "../../layout/Section"
+import Content from "../../ui/Content"
+import ProductInfoBox from "./ProductInfoBox"
+import ProductImagesGrid from "./ProductImagesGrid"
 
 const ProductDescription = ({
   bookData,
   headingText,
+  images,
 }) => {
   return (
     <Section>
       <SectionContent
-        padding={`${spacing.large} 0`}
+        padding={`${spacing.section} 0`}
         className="has-border-top"
       >
-        <Container xs sm>
+        <Container xs sm md lg xl>
           {headingText && (
             <Row>
               <Col>
@@ -39,20 +32,26 @@ const ProductDescription = ({
           )}
           <Row>
             <Col sm={6}>
+              <ProductImagesGrid 
+                images={images}
+              />
+            </Col>
+            <Col sm={6}>
               <Content
                 headingfontfamily={fonts.secondary}
-                h3fontsize="1rem"
                 paragraphfontsize="1.25rem"
+                margin="0 0 32px"
               >
                 <p>{bookData.longDescription}</p>
               </Content>
-            </Col>
-            <Col sm={6}>
-              <ul>
-                {bookData.infoList.map((item, index) => (
-                  <InfoListItem key={index}>{item}</InfoListItem>
-                ))}
-              </ul>
+              {bookData.infoBoxes.map((box, index) => (
+                <ProductInfoBox
+                  heading={box.heading}
+                  text={box.text}
+                  key={index}
+                  index={index}
+                />
+              ))}
             </Col>
           </Row>
         </Container>

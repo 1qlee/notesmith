@@ -23,10 +23,8 @@ exports.handler = async (event) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    console.log(paymentIntent)
     const { rateId, shipmentId, authKey, tax, taxId, shipping } = paymentIntent.metadata;
     const amount = paymentIntent.amount;
-    console.log(amount)
     // retrieve the existing shipment by its ID
     const userShipment = await easypost.Shipment.retrieve(shipmentId);
     const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);

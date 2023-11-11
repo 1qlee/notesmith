@@ -79,6 +79,7 @@ function Reviews() {
             <Holes />
             <Content
               padding="16px"
+              paragraphfontsize="1.25rem"
             >
               <p>"Literally the best writing experience I have ever experienced."</p>
             </Content>
@@ -98,6 +99,7 @@ function Reviews() {
             <Holes />
             <Content
               padding="16px"
+              paragraphfontsize="1.25rem"
             >
               <p>"Everything about this notebook; the quality, craftsmanship, and customer service was totally great."</p>
             </Content>
@@ -119,6 +121,7 @@ function Reviews() {
             <Holes />
             <Content
               padding="16px"
+              paragraphfontsize="1.25rem"
             >
               <p>"The paper is smooth and very pleasant to write on! I am super impressed!"</p>
             </Content>
@@ -138,6 +141,7 @@ function Reviews() {
             <Holes />
             <Content
               padding="16px"
+              paragraphfontsize="1.25rem"
             >
               <p>"I’m really very satisfied with the paper. It helps my writing look far more smooth and precise."</p>
             </Content>

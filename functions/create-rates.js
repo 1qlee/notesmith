@@ -30,6 +30,7 @@ function parseCartItems(cartItems) {
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { cartItems, address, customer } = body;
+  console.log("🚀 ~ file: create-rates.js:33 ~ exports.handler= ~ address:", address)
   const cartDetails = parseCartItems(cartItems);
   const totalWeight = cartDetails.weight;
   const isInternational = address.country !== "US";
@@ -38,9 +39,6 @@ exports.handler = async (event) => {
   try {
     // physical package size
     const parcel = await easypost.Parcel.create({
-      width: 9,
-      length: 6,
-      height: 2,
       weight: totalWeight,  // assumption that there is only one product
     });
     const userAddress = {
@@ -82,13 +80,13 @@ exports.handler = async (event) => {
           zip: '11530',
           email: "general@notesmithbooks.com",
           phone: "9175754958",
-          name: "Won Kyu Lee",
+          name: "Notesmith",
         },
         parcel: parcel,
         customs_info: customsInfo,
         carrier_accounts: [
           "ca_4e24400a695c4f3dae90c0d45f465436", // UPS
-          "ca_c1a5ccb5ccca4344b654fb98612fa8a9", // DHL
+          // DHL ca_c1a5ccb5ccca4344b654fb98612fa8a9
         ]
       });
 

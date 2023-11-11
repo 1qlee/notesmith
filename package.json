@@ -45,20 +45,21 @@
     "react-image-gallery": "^1.2.7",
     "react-inlinesvg": "^3.0.2",
     "react-measure": "^2.5.2",
+    "react-responsive-carousel": "^3.2.23",
     "react-toastify": "^9.1.2",
-    "react-tooltip": "^5.10.4",
+    "react-tooltip": "^5.21.6",
     "react-transition-group": "^4.4.2",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.6",
     "stripe": "^12.5.0",
     "styled-components": "^5.3.0",
-    "svg-drag-select": "^0.4.2",
     "svg2pdf.js": "^2.2.0",
     "use-shopping-cart": "^3.1.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "svg-url-loader": "^8.0.0"
   },
   "keywords": [
     "gatsby"

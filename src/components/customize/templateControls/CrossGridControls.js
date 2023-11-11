@@ -61,6 +61,9 @@ function CrossGridControls({
         setPageData={setPageData}
       />
       <CrossControls 
+        step={0.1}
+        max={56}
+        min={1}
         pageData={pageData}
         setPageData={setPageData}
       />

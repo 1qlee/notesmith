@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import { colors } from "../../styles/variables"
+import { colors, marketingLists } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
-import { ref, set, onValue, query, orderByChild, equalTo } from "firebase/database"
+import { get, ref, set, query, orderByChild, equalTo } from "firebase/database"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
+import addEmailToLists from "../../functions/addEmailToLists"
 
 import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } from "../form/FormComponents"
 import Button from "../ui/Button"
@@ -26,58 +27,51 @@ const SignupForm = () => {
     e.preventDefault()
     setLoading(true)
     
-    const validated = await validateEmail(email)
-
-    if (validated) {
-      console.log('validated')
-      signUp(email, password).then(async userObject => {
-        const { user } = userObject
-        console.log(userObject)
-        // Record new user in the db
-        await set(ref(firebaseDb, 'users/' + user.uid), {
-          email: user.email
-        })
-
-        return user
-      }).then(async user => {
-        console.log("sending verification email")
-        // Send the user a verification email
-        await sendEmailVerification(user.email)
-        setLoading(false)
-      }).catch(error => {
-        setLoading(false)
-
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            setEmailError("This email is already in use.")
-            break
-          case "auth/invalid-email":
-            setEmailError("Email was in an invalid format.")
-            break
-          case "auth/operation-not-allowed":
-            setEmailError("Sorry, our server is busy.")
-            break
-          default:
-            setEmailError("Something went wrong.")
-        }
-      })
-    }
-    else {
-      console.log("you aint ready!")
-      setLoading(false)
-    }
-  }
-
-  // check the db to see if this user has an early access email
-  async function validateEmail(email) {
-    await onValue(query(ref(firebaseDb, "earlyAccess"), orderByChild('email'), equalTo(email)), (snapshot) => {
-      console.log(snapshot.val())
+    get(query(ref(firebaseDb, "earlyAccess"), orderByChild('email'), equalTo(email))).then((snapshot) => {
       if (snapshot.exists()) {
         setEmailError(null)
+
+        signUp(email, password).then(async userObject => {
+          const { user } = userObject
+          // Record new user in the db
+          await set(ref(firebaseDb, 'users/' + user.uid), {
+            dateCreated: new Date().valueOf(),
+            earlyAccess: true,
+            email: user.email,
+            id: user.uid,
+            referrer: true,
+          })
+
+          return user
+        }).then(async user => {
+          // Send the user a verification email
+          await sendEmailVerification(user.email)
+          await addEmailToLists(user.email, marketingLists)
+
+          setLoading(false)
+        }).catch(error => {
+          setLoading(false)
+
+          switch (error.code) {
+            case "auth/email-already-in-use":
+              setEmailError("This email is already in use.")
+              break
+            case "auth/invalid-email":
+              setEmailError("Email was in an invalid format.")
+              break
+            case "auth/operation-not-allowed":
+              setEmailError("Sorry, our server is busy.")
+              break
+            default:
+              setEmailError("Something went wrong.")
+          }
+        })
+
         return true
       }
       else {
         setEmailError("This email does not have early access yet!")
+        setLoading(false)
         return false
       }
     })
@@ -127,6 +121,7 @@ const SignupForm = () => {
             onChange={e => setEmail(e.currentTarget.value)}
             onFocus={() => setEmailError(null)}
             className={emailError && "is-error"}
+            fontsize="1rem"
             id="email"
             type="email"
             name="email"
@@ -149,6 +144,7 @@ const SignupForm = () => {
             onChange={(e) => handlePasswordOnChange(e.currentTarget.value)}
             onBlur={(e) => handlePasswordOnBlur(e.currentTarget.value)}
             className={passwordError && "is-error"}
+            fontsize="1rem"
             id="password"
             type="password"
             name="password"

@@ -8,7 +8,7 @@ import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
 import { isBrowser, convertToDecimal } from "../utils/helper-functions"
 
-import { AccordionTab } from "../components/checkout/Accordion"
+import CheckoutSteps from "../components/checkout/CheckoutSteps"
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import { OrderSummary } from "../components/shop/OrderSummary"
@@ -20,7 +20,6 @@ import Layout from "../components/layout/Layout"
 import Loader from "../components/misc/Loader"
 import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
-import Toastify from "../components/ui/Toastify"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
@@ -49,17 +48,16 @@ const Checkout = () => {
       index: 1,
     }
   ]
-  const [activeAccordionTab, setActiveAccordionTab] = useState("shipping")
+  const [activeCheckoutSteps, setActiveCheckoutSteps] = useState("shipping")
   const [addressStatus, setAddressStatus] = useState({
     msg: "Incomplete",
-    color: colors.red.oneHundred,
-    background: colors.red.sixHundred,
+    color: colors.red.sixHundred,
   })
   const [methodStatus, setMethodStatus] = useState({
-    msg: "Selection required",
-    color: colors.red.oneHundred,
-    background: colors.red.sixHundred,
+    msg: "Required",
+    color: colors.red.sixHundred,
   })
+  const [subtotal, setSubtotal] = useState(totalPrice)
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
   const [processing, setProcessing] = useState(false)
@@ -68,6 +66,10 @@ const Checkout = () => {
   const [addressError, setAddressError] = useState("")
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [authKey, setAuthKey] = useState(null)
+  const [coupon, setCoupon] = useState({
+    code: "",
+    applied: false,
+  })
   const [serverError, setServerError] = useState({
     msg: "",
     show: false,
@@ -98,13 +100,13 @@ const Checkout = () => {
     clientSecret: clientSecret,
     fonts: [
       {
-        cssSrc: "https://fonts.googleapis.com/css?family=Inter:400,700"
+        cssSrc: "https://fonts.googleapis.com/css?family=Jost:400,700"
       }
     ],
     appearance: {
       theme: "stripe",
       variables: {
-        fontFamily: fonts.secondary,
+        fontFamily: fonts.text,
         fontWeightNormal: "400",
         fontSizeBase: "16px",
         colorPrimary: colors.gray.nineHundred,
@@ -117,7 +119,7 @@ const Checkout = () => {
           padding: "16px",
           boxShadow: "none",
           border: `1px solid ${colors.gray.nineHundred}`,
-          fontSize: "0.875rem",
+          fontSize: "1rem",
         },
         ".Input:focus": {
           boxShadow: colors.shadow.focus,
@@ -130,20 +132,19 @@ const Checkout = () => {
           boxShadow: "none"
         },
         ".Error": {
-          fontSize: "0.75rem",
+          fontSize: "0.875rem",
           marginTop: "8px",
         },
         ".Label": {
           marginBottom: "8px",
           fontWeight: "700",
-          fontSize: "0.75rem",
+          fontSize: "0.875rem",
         }
       }
     }
   }
 
   useEffect(() => {
-    console.log(cartItems)
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen
@@ -266,12 +267,11 @@ const Checkout = () => {
         throw data.error
       }
 
-      setActiveAccordionTab("method")
+      setActiveCheckoutSteps("method")
       setShippingValidated(true)
       setAddressStatus({
         msg: "Done",
-        color: colors.gray.oneHundred,
-        background: colors.gray.nineHundred,
+        color: colors.green.sixHundred,
       })
       setProcessing(false)
       setShowModal({ show: false })
@@ -315,15 +315,24 @@ const Checkout = () => {
                             <Breadcrumb
                               items={breadcrumbItems}
                             />
-                            <AccordionTab
-                              activeAccordionTab={activeAccordionTab}
+                            <CheckoutSteps
+                              activeCheckoutSteps={activeCheckoutSteps}
                               status={addressStatus}
-                              onClick={setActiveAccordionTab}
+                              onClick={setActiveCheckoutSteps}
                               prereq={true}
                               summaries={[
-                                customer.email,
-                                customer.name,
-                                `${address.line1 || address.street1 || ""} ${address.line2 || address.street2 ||""}, ${address.city || ""}, ${address.state || ""}, ${address.postal_code || address.zip || ""}, ${address.country || ""}`
+                                {
+                                  heading: "Email",
+                                  text: customer.email,
+                                },
+                                {
+                                  heading: "Name",
+                                  text: customer.name,
+                                },
+                                {
+                                  heading: "Address",
+                                  text: `${address.line1}, ${address.line2 ? address.line2 + "," : ""} ${address.city}, ${address.state} ${address.postal_code}`
+                                }
                               ]}
                               tabName="shipping"
                               text="Shipping information"
@@ -332,7 +341,7 @@ const Checkout = () => {
                                 address={address}
                                 customer={customer}
                                 pid={pid}
-                                setActiveAccordionTab={setActiveAccordionTab}
+                                setActiveCheckoutSteps={setActiveCheckoutSteps}
                                 setAddress={setAddress}
                                 setAddressError={setAddressError}
                                 setAddressStatus={setAddressStatus}
@@ -346,27 +355,29 @@ const Checkout = () => {
                                 shippingValidated={shippingValidated}
                                 toast={toast}
                               />
-                            </AccordionTab>
-                            <AccordionTab
-                              activeAccordionTab={activeAccordionTab}
+                            </CheckoutSteps>
+                            <CheckoutSteps
+                              activeCheckoutSteps={activeCheckoutSteps}
                               status={methodStatus}
-                              onClick={setActiveAccordionTab}
+                              onClick={setActiveCheckoutSteps}
                               prereq={shippingValidated}
                               summaries={selectedRate && [
-                                `${selectedRate.international ? "International shipping" : "Ground shipping"}`,
-                                `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                                {
+                                  heading: `${selectedRate.international ? "International" : "Ground"}`,
+                                  text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                                }
                               ]}
                               tabName="method"
                               text="Shipping method"
                             >
                               <ShippingForm
-                                activeAccordionTab={activeAccordionTab}
+                                activeCheckoutSteps={activeCheckoutSteps}
                                 address={address}
                                 cartItems={cartItems}
                                 customer={customer}
                                 pid={pid}
                                 selectedRate={selectedRate}
-                                setActiveAccordionTab={setActiveAccordionTab}
+                                setActiveCheckoutSteps={setActiveCheckoutSteps}
                                 setAddress={setAddress}
                                 setAuthKey={setAuthKey}
                                 setMethodValidated={setMethodValidated}
@@ -375,35 +386,41 @@ const Checkout = () => {
                                 setTax={setTax}
                                 toast={toast}
                               />
-                            </AccordionTab>
-                            <AccordionTab
+                            </CheckoutSteps>
+                            <CheckoutSteps
                               tabName="payment"
                               text="Payment information"
                               prereq={methodValidated}
-                              onClick={setActiveAccordionTab}
-                              activeAccordionTab={activeAccordionTab}
+                              onClick={setActiveCheckoutSteps}
+                              activeCheckoutSteps={activeCheckoutSteps}
                             >
                               <CheckoutForm
                                 address={address}
                                 authKey={authKey}
                                 cartItems={cartItems}
                                 clientSecret={clientSecret}
+                                coupon={coupon}
                                 customer={customer}
                                 pid={pid}
+                                setCoupon={setCoupon}
                                 setPaymentProcessing={setPaymentProcessing}
+                                setSelectedRate={setSelectedRate}
+                                setSubtotal={setSubtotal}
+                                setTax={setTax}
                                 tax={tax}
                                 toast={toast}
                               />
-                            </AccordionTab>
+                            </CheckoutSteps>
                           </Box>
                         </Col>
                         <Col sm={4}>
                           <OrderSummary
                             cartItems={cartItems}
+                            coupon={coupon}
                             hideButton={true}
                             selectedRate={selectedRate}
+                            subtotal={subtotal}
                             tax={tax}
-                            totalPrice={totalPrice}
                           />
                         </Col>
                       </Row>
@@ -415,7 +432,6 @@ const Checkout = () => {
           ) : (
             <Loader msg="Processing payment... Do not refresh or close this page!" />
           )}
-          <Toastify />
           {showModal.show && (
             <ValidateAddressModal
               address={address}

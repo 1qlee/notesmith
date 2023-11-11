@@ -53,7 +53,7 @@ exports.handler = async (event) => {
       })
     };
 
-    const [response, body] = await sendgridClient.request(request)
+    const [response] = await sendgridClient.request(request)
 
     if (response.statusCode === 202) {
       await sendgridMail.send(templateData)

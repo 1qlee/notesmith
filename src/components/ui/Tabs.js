@@ -11,6 +11,7 @@ const StyledTabs = styled.ul`
 
 const StyledTab = styled.li`
   border: ${colors.borders.black};
+  border-width: ${props => props.borderwidth};
   color: ${colors.gray.sixHundred};
   font-weight: 400;
   flex: 1;

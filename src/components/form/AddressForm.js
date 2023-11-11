@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { colors, regex } from "../../styles/variables"
 import { CircleNotch } from "@phosphor-icons/react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
@@ -12,7 +12,7 @@ function AddressForm({
   address,
   customer,
   pid,
-  setActiveAccordionTab,
+  setActiveCheckoutSteps,
   setAddress,
   setAddressError,
   setAddressStatus,
@@ -26,6 +26,7 @@ function AddressForm({
   shippingValidated,
   toast,
 }) {
+  const allowedCountries = ['US', 'CA']
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
@@ -43,6 +44,7 @@ function AddressForm({
         required: "always",
       }
     },
+    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -64,6 +66,7 @@ function AddressForm({
     fields: {
       phone: "never",
     },
+    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -144,12 +147,11 @@ function AddressForm({
     setTax({})
     setMethodValidated(false)
     setMethodStatus({
-      msg: "Submit required",
-      color: colors.red.oneHundred,
-      background: colors.red.sixHundred,
+      msg: "Required",
+      color: colors.red.sixHundred,
     })
-
     setAddress(address)
+
     if (isInternational) {
       setCustomer({
         ...customer,
@@ -173,12 +175,11 @@ function AddressForm({
 
       if (isAddressValid.isValid) {
         await updateAddress()
-        setActiveAccordionTab("method")
+        setActiveCheckoutSteps("method")
         setShippingValidated(true)
         setAddressStatus({
           msg: "Done",
-          color: colors.gray.oneHundred,
-          background: colors.gray.nineHundred,
+          color: colors.green.sixHundred,
         })
       }
       setLoading(false)
@@ -186,9 +187,8 @@ function AddressForm({
     else {
       setShippingValidated(false)
       setAddressStatus({
-        msg: "Submit required",
-        color: colors.red.oneHundred,
-        background: colors.red.sixHundred,
+        msg: "Required",
+        color: colors.red.sixHundred,
       })
       setLoading(false)
     }
@@ -233,16 +233,14 @@ function AddressForm({
       else {
         setAddressStatus({
           msg: "Done",
-          color: colors.green.oneHundred,
-          background: colors.green.sixHundred,
+          color: colors.green.sixHundred,
         })
       }
 
       if (!shippingValidated) {
         setAddressStatus({
-          msg: "Submit required",
-          color: colors.red.oneHundred,
-          background: colors.red.sixHundred,
+          msg: "Required",
+          color: colors.red.sixHundred,
         })
       }
     }
@@ -261,6 +259,7 @@ function AddressForm({
           onChange={e => handleEmailChange(e.target.value)}
           placeholder="address@email.com"
           required
+          fontsize="1rem"
           type="email"
           value={customer.email}
         />
@@ -274,6 +273,7 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement
         options={isInternational ? intlAddressOptions : domesticAddressOptions}
+        allowedCountries={['US', 'CA']}
         onChange={e => handleAddressChange(e)}
       />
       <Flexbox

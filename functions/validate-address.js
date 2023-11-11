@@ -22,7 +22,12 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        address: addressToVerify
+        address: {
+          ...addressToVerify,
+          line1: addressToVerify.street1,
+          line2: addressToVerify.street2,
+          postal_code: addressToVerify.zip,
+        }
       })
     }
   }

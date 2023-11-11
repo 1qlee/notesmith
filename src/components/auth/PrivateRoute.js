@@ -73,7 +73,7 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
                     </>
                   ) : (
                     <>
-                      <h1>Please validate your email address</h1>
+                      <h1>Validate your email address</h1>
                       <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
                     </>
                   )}

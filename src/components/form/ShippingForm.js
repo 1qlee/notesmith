@@ -8,7 +8,6 @@ import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
-import Tag from "../ui/Tag"
 
 const rotate = keyframes`
   from {
@@ -31,19 +30,20 @@ const ShippingItem = styled(Flexbox)`
   border-radius: 8px;
   border: ${colors.borders.black};
   transition: background-color 0.2s;
-  background-color: ${colors.gray.twoHundred};
+  background-color: ${colors.white};
   &:not(:last-child) {
     margin-bottom: 8px;
   }
   &:hover {
-    background-color: ${colors.gray.threeHundred};
+    background-color: ${colors.gray.oneHundred};
     cursor: pointer;
   }
   &.is-selected {
-    background-color: ${colors.gray.nineHundred};
+    box-shadow: ${colors.shadow.focus};
+    color: ${colors.gray.nineHundred};
   }
   &.is-loading {
-    background-color: ${colors.gray.oneHundred};
+    background-color: ${colors.white};
   }
   svg {
     &.is-loading {
@@ -53,13 +53,13 @@ const ShippingItem = styled(Flexbox)`
 `
 
 const ShippingForm = ({
-  activeAccordionTab,
+  activeCheckoutSteps,
   address,
   cartItems,
   customer,
   pid,
   selectedRate,
-  setActiveAccordionTab,
+  setActiveCheckoutSteps,
   setAuthKey,
   setMethodValidated,
   setMethodStatus,
@@ -105,10 +105,10 @@ const ShippingForm = ({
       })
     }
 
-    if (activeAccordionTab === "method" && !selectedRate) {
+    if (activeCheckoutSteps === "method" && !selectedRate) {
       createRates()
     }
-  }, [address, customer, activeAccordionTab])
+  }, [address, customer, activeCheckoutSteps])
 
   const setShippingInfo = async () => {
     await fetch("/.netlify/functions/set-shipping-info", {
@@ -157,12 +157,11 @@ const ShippingForm = ({
 
       // we will get back tax and taxId
       setTax(data)
-      setActiveAccordionTab("payment")
+      setActiveCheckoutSteps("payment")
       setMethodValidated(true)
       setMethodStatus({
         msg: "Done",
-        color: colors.gray.oneHundred,
-        background: colors.gray.nineHundred,
+        color: colors.green.sixHundred,
       })
       setLoading(false)
       setProcessing(false)
@@ -175,6 +174,15 @@ const ShippingForm = ({
       toast.error(error)
       setProcessing(false)
     })
+  }
+
+  const handleSelectRate = () => {
+    if (selectedRate) {
+      setSelectedRate(null)
+    }
+    else {
+      setSelectedRate(shippingRate)
+    }
   }
 
   // handles the submit of shipping rate
@@ -209,7 +217,7 @@ const ShippingForm = ({
         )}
         {shippingRate && !loading && (
           <ShippingItem
-            onClick={() => setSelectedRate(shippingRate)}
+            onClick={() => handleSelectRate()}
             className={selectedRate && "is-selected"}
             justifycontent="flex-start"
             alignitems="flex-start"
@@ -223,38 +231,30 @@ const ShippingForm = ({
               width="100%"
             >
               <Content
-                paragraphfontfamily={fonts.secondary}
-                paragraphfontsize="0.875rem"
-                paragraphmargin="0"
-                paragraphfontweight="700"
-                paragraphcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
-                smallcolor={selectedRate ? colors.gray.twoHundred : colors.gray.nineHundred}
+                h5fontsize="1rem"
+                h5margin="0"
                 smallfontfamily={fonts.secondary}
-                smallfontsize="0.75rem"
+                smallfontsize="0.875rem"
                 smallmargin="0"
               >
-                <p>
+                <h5>
                   {shippingRate.international ? (
-                    "International shipping"
+                    "International"
                   ) : (
-                    "Ground shipping"
+                    "Ground"
                   )}
-                </p>
+                </h5>
                 {shippingRate.delivery_days ? (
                   <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
                 ) : (
                   <small>Delivery time varies</small>
                 )}
               </Content>
-              <Tag
-                color={selectedRate ? colors.gray.nineHundred : colors.gray.oneHundred}
-                backgroundcolor={selectedRate ? colors.gray.oneHundred : colors.gray.nineHundred}
-                fontfamily={fonts.secondary}
-                fontweight="400"
-                fontsize="0.875rem"
-              >
-                ${convertToDecimal(shippingRate.rate, 2)}
-              </Tag>
+              <Content>
+                <p>
+                  ${convertToDecimal(shippingRate.rate, 2)}
+                </p>
+              </Content>
             </Flexbox>
           </ShippingItem>
         )}
@@ -280,7 +280,7 @@ const ShippingForm = ({
               <CircleNotch size={16} color={colors.white} />
             </Icon>
           ) : (
-            "Submit"
+            "Select"
           )}
         </Button>
       </Flexbox>

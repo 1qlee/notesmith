@@ -28,11 +28,11 @@ const Forgot = () => {
         className="has-max-height"
       >
         <Section>
-              <SectionContent
-                padding={spacing.normal}
-              >
-                <ForgotForm />
-              </SectionContent>
+          <SectionContent
+            padding={spacing.normal}
+          >
+            <ForgotForm />
+          </SectionContent>
         </Section>
       </SectionMain>
     </Layout>

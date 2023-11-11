@@ -19,7 +19,7 @@ const InputLabel = styled.label`
   border: ${props => props.border && colors.borders.black};
   display: block;
   font-family: ${fonts.secondary};
-  font-size: 0.875rem;
+  font-size: 1rem;
   border-radius: 4px;
   width: 100%;
   &:hover {

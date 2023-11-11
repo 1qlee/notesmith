@@ -12,7 +12,6 @@ const initialState = {
   lastNode: null,
   mode: 'select',
   multiselected: false,
-  selectionGroup: null,
   selectedElements: [],
   selectionAttributes: [],
   selectionBbox: {},
@@ -82,7 +81,6 @@ const setCanvasState = (state, action) => {
     case "reset":
       log("Resetting...")
 
-      d3.selectAll("#selection-group").remove()
       d3.selectAll("[data-selected]").attr("data-selected", null)
       d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
@@ -92,42 +90,77 @@ const setCanvasState = (state, action) => {
         mode: "select",
         selectedElements: [],
         selectionBbox: {},
-        selectionGroup: null,
         selectionPath: "",
       }
+    case "change-selection": {
+      log("changing selection...")
+      const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
+      const numOfElements = selectedElements.length
+
+      // remove data-selected from newly deselected elements
+      if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
+        newlyDeselectedElements.forEach(element => {
+          d3.select(element).attr("data-selected", null)
+        })
+      }
+
+      // add data-selected to newly selected elements
+      newlySelectedElements.forEach((element) => {
+        const node = d3.select(element)
+        const nodeId = node.attr("id")
+
+        if (nodeId !== "hover-clone") {
+          node.attr('data-selected', '')
+        }
+      })
+
+      // if there are selected elements, parse them to create the selection box and attributes for designbar
+      if (numOfElements > 0) {
+        const results = parseSelection(selectedElements)
+        const { selectionBbox, selectionAttributes, selectionPath, selectionGroup } = results
+
+        return {
+          ...state,
+          selectedElements: selectedElements,
+          selectionAttributes: selectionAttributes,
+          selectionBbox: selectionBbox,
+          selectionPath: selectionPath,
+          selectionGroup: selectionGroup,
+        }
+      }
+      else {
+        d3.selectAll("[data-selected]").attr("data-selected", null)
+
+        return {
+          ...state,
+          selectedElements: [],
+          selectionAttributes: [],
+          selectionBbox: {},
+          selectionPath: "",
+          selectionGroup: null,
+        }
+      }
+    }
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
-      const { selectedElements, canvas } = state
-
       d3.selectAll("[data-selected]").attr("data-selected", null)
-      
-      // if we already have a selection group that means elements are currently selected
-      if (selectedElements && selectedElements.length > 0) {
-        const selectionGroup = d3.select("#selection-group")
-        const nextNode = d3.select("#selection-group").node().nextSibling
-        const groupedElements = Array.from(d3.select("#selection-group").node().children)
-
-        groupedElements.forEach(ele => {
-          canvas.insertBefore(ele, nextNode)
-        })
-
-        selectionGroup.remove()
-      }
+      d3.selectAll("#hover-clone").remove()
 
       return {
         ...state,
         selectedElements: [],
+        selectionAttributes: [],
         selectionBbox: {},
-        selectionGroup: null,
         selectionPath: "",
+        selectionGroup: null,
       }
     }
     case "parse-selection": {
       log("parsing selection...")
 
       const results = parseSelection(state.selectedElements)
-      const { selectionBbox, selectionAttributes, selectionPath } = results
+      const { selectionBbox, selectionAttributes, selectionPath, selectionGroup } = results
 
       return {
         ...state,

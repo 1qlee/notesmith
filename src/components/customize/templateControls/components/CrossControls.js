@@ -2,6 +2,9 @@ import React from "react"
 import RangeControls from "./RangeControls"
 
 function CrossControls({
+  step,
+  max,
+  min,
   pageData,
   setPageData,
 }) {
@@ -14,9 +17,9 @@ function CrossControls({
         alignmentHorizontal: "",
       }}
       inputProps={{
-        min: 1,
-        max: 122,
-        step: 0.1,
+        min: min,
+        max: max,
+        step: step,
       }}
       pageData={pageData}
       setPageData={setPageData}

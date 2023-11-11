@@ -13,7 +13,7 @@ const Cart = () => {
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.section} 0`}
           >
             <Container xs sm md lg xl>
               <ShoppingCart />

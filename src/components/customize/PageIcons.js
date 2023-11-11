@@ -152,7 +152,13 @@ function Page({
     <StyledPage
       onClick={() => setData(data)}
       className={isActive ? `is-active ${className}` : className}
+      onKeyDown={e => {
+        if (e.key === 'Enter') {
+          setData(data)
+        }
+      }}
       margin={margin}
+      tabIndex="0"
     >
       {(isProductPage && leftPageData.template === data.template) && (
         <PageBadge
@@ -256,18 +262,20 @@ function DotPageIcon({
     ...data,
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
-    show: isProductPage ? true : false,
-    template: "dot",
-    spacing: 5,
-    opacity: 1,
-    strokeWidth: 0.175,
-    radius: 0.1,
-    rows: 41,
+    columnSpacing: 5,
     columns: 25,
-    marginTop: 0.672,
     marginBottom: 0,
     marginLeft: 0.681,
     marginRight: 0,
+    marginTop: 0.672,
+    opacity: 1,
+    radius: 0.1,
+    rowSpacing: 5,
+    rows: 41,
+    show: isProductPage ? true : false,
+    spacing: 5,
+    strokeWidth: 0.175,
+    template: "dot",
     width: 1,
   }
 
@@ -351,17 +359,19 @@ function GraphPageIcon({
     ...data,
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
-    show: isProductPage ? true : false,
-    template: "graph",
-    spacing: 5,
-    opacity: 1,
-    strokeWidth: 0.088,
-    rows: 41,
+    columnSpacing: 5,
     columns: 24,
-    marginTop: 0.379,
     marginBottom: 0,
     marginLeft: 2.036,
     marginRight: 0,
+    marginTop: 0.379,
+    opacity: 1,
+    rowSpacing: 5,
+    rows: 41,
+    show: isProductPage ? true : false,
+    spacing: 5,
+    strokeWidth: 0.088,
+    template: "graph",
     width: 127,
   }
 
@@ -535,6 +545,12 @@ function IsometricPageIcon({
     ...data,
     alignmentHorizontal: "center",
     alignmentVertical: "middle",
+    borderData: {
+      sync: true,
+      toggle: false,
+      thickness: 0.088,
+      opacity: 1,
+    },
     show: isProductPage ? true : false,
     template: "isometric",
     opacity: 1,
@@ -1085,6 +1101,7 @@ function PageIcons({
         rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
+        tabindex="1"
       />
       <RuledPageIcon
         data={data}

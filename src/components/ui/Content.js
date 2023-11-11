@@ -22,11 +22,12 @@ const Content = styled.div`
   }
   h1,h2,h3,h4,h5,h6 {
     margin: 0 0 32px;
-    font-weight: 400;
     text-rendering: optimizeLegibility;
-    line-height: 1.3;
+    line-height: ${props => props.headinglineheight || "1.3"};
     text-align: ${props => props.headingtextalign};
     font-family: ${props => props.headingfontfamily};
+    text-transform: ${props => props.headingtexttransform};
+    letter-spacing: ${props => props.headingletterspacing};
   }
   h1 {
     font-size: ${props => props.h1fontsize || "4.209rem"};
@@ -76,6 +77,7 @@ const Content = styled.div`
   }
   ul {
     padding-left: 1.125rem;
+    margin: ${props => props.ulmargin};
   }
   li {
     margin: ${props => props.limargin || "4px 0"};
@@ -105,8 +107,11 @@ const Content = styled.div`
   }
   a {
     color: ${props => props.linkcolor};
+    display: ${props => props.linkdisplay};
+    line-height: ${props => props.linklineheight};
     font-size: ${props => props.linkfontsize};
     font-family: ${props => props.linkfontfamily};
+    margin: ${props => props.linkmargin};
     text-decoration: ${props => props.linktextdecoration};
     &:hover {
       cursor: pointer;

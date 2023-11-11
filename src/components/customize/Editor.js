@@ -11,7 +11,6 @@ import { isBrowser } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
 
 import { Controls } from "./Controls"
-import Toastify from "../ui/Toastify"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import CheckLoginModal from "./modals/CheckLoginModal"
@@ -298,7 +297,6 @@ const Editor = ({
           )}
         </>
       )}
-      <Toastify />
     </EditorProvider>
   )
 }

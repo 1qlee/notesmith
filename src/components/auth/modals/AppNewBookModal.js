@@ -128,56 +128,40 @@ function NewBookModal({
     <Modal
       setShowModal={setShowModal}
     >
-      <ModalHeader>Create a new book</ModalHeader>
+      <ModalHeader>
+        {step === 1 && (
+          "Select type of book"
+        )}
+        {step === 2 && (
+          "Select cover color"
+        )}
+        {step === 3 && (
+          "Enter a title for your new book"
+        )}
+      </ModalHeader>
       <ModalContent
         backgroundcolor={colors.white}
       >
-        <Content
-          h3fontsize="0.875rem"
-          h3margin="0"
-          h3fontweight="700"
-          margin="0 0 16px"
-        >
-          <p>We'll guide you through the creation of your new notebook using the interactive steps below.</p>
-        </Content>
         <Flexbox
           margin="0 0 8px"
           alignitems="center"
           justifycontent="space-between"
         >
+          <Content>
+            <p>Step {step} of 3</p>
+          </Content>
           <Content
-            h5margin="0"
+            linktextdecoration="underline"
+            margin="0 4px 0 0"
           >
-            {step === 1 && (
-              <h5>Select type of book</h5>
-            )}
-            {step === 2 && (
-              <h5>Select cover color</h5>
-            )}
-            {step === 3 && (
-              <h5>Enter a title</h5>
+            {step > 1 && (
+              <a
+                onClick={() => setStep(step - 1)}
+              >
+                Back
+              </a>
             )}
           </Content>
-          <Flexbox
-            flex="flex"
-            alignitems="center"
-          >
-            <Content
-              linktextdecoration="underline"
-              margin="0 4px 0 0"
-            >
-              {step > 1 && (
-                <a
-                  onClick={() => setStep(step - 1)}
-                >
-                  Back
-                </a>
-              )}
-            </Content>
-            <Content>
-              <p>(Step {step} of 3)</p>
-            </Content>
-          </Flexbox>
         </Flexbox>
         {step === 1 && (
           <StepContent>
@@ -197,7 +181,6 @@ function NewBookModal({
                 >
                   <Content
                     h5margin="0 0 4px"
-                    h5fontweight="400"
                   >
                     <h5>{product.name}</h5>
                   </Content>
@@ -214,7 +197,7 @@ function NewBookModal({
                   paragraphfontsize="0.875rem"
                   paragraphcolor={colors.gray.sixHundred}
                 >
-                  <p>{product.numOfPages} pages</p>
+                  <p>{product.numOfPages} total pages</p>
                 </Content>
               </BookRadio>
             ))}

@@ -150,6 +150,27 @@ function findIndexOfElementInArray(array, propertyName, targetValue) {
   return -1; // Return -1 if the element is not found.
 }
 
+function daysUntilDate(targetDate) {
+  // Get the current date and time
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = targetDate - currentDate;
+
+  // Convert milliseconds to days and round up to the nearest whole number
+  const daysLeft = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  return daysLeft;
+}
+
+function formatDollars(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(value)
+}
+
+
 export {
   consolidateMixedObjects,
   consolidateObjectProps,
@@ -160,7 +181,9 @@ export {
   convertToPx,
   convertUnix,
   createAttributes,
+  daysUntilDate,
   findIndexOfElementInArray,
+  formatDollars,
   isBrowser,
   processStringNumbers,
   svgToObjects,

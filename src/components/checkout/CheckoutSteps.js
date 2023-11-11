@@ -1,15 +1,16 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts } from "../../styles/variables"
-import { CaretDown, CaretUp, CheckCircle } from "@phosphor-icons/react"
+import { colors } from "../../styles/variables"
+import { CaretDown, CaretUp } from "@phosphor-icons/react"
 import { useCollapse } from "react-collapsed"
 
 import { Flexbox } from "../layout/Flexbox"
+import { Infobox, InfoItemHeading, InfoItemText, InfoItem } from "../shop/ShippingInfo"
 import Icon from "../ui/Icon"
 import Content from "../ui/Content"
 import Tag from "../ui/Tag"
 
-const StyledAccordionTab = styled.div`
+const StyledCheckoutSteps = styled.div`
   padding: ${props => props.padding || "16px 0"};
   margin-bottom: 16px;
   display: flex;
@@ -23,8 +24,8 @@ const StyledAccordionTab = styled.div`
   }
 `
 
-const AccordionTab = ({ 
-  activeAccordionTab,
+const CheckoutSteps = ({ 
+  activeCheckoutSteps,
   children,
   onClick,
   prereq,
@@ -33,7 +34,7 @@ const AccordionTab = ({
   tabName,
   text,
 }) => {
-  const isActive = activeAccordionTab === tabName
+  const isActive = activeCheckoutSteps === tabName
   const { getToggleProps, getCollapseProps, isExpanded, defaultExpanded } = useCollapse({ 
     isExpanded: isActive, 
     defaultExpanded: isActive,
@@ -47,7 +48,7 @@ const AccordionTab = ({
 
   return (
     <>
-      <StyledAccordionTab
+      <StyledCheckoutSteps
         {...getToggleProps({
           onClick: () => onClick(name => name === tabName ? null : tabName)
         })}
@@ -56,20 +57,24 @@ const AccordionTab = ({
       >
         <Flexbox
           alignitems="center"
+          justifycontent="space-between"
+          width="100%"
         >
           <Content
             h5margin="0"
-            h5fontweight='800'
+            h5fontweight='400'
+            h5fontsize="1.25rem"
           >
             <h5>{text}</h5>
           </Content>
           {status && status.msg && !isExpanded && (
             <Tag
-              backgroundcolor={status.background}
-              color={status.color}
+              backgroundcolor={status.color}
+              color={colors.white}
+              border={`1px solid ${status.color}`}
               fontweight="700"
-              padding="4px 8px"
-              margin="0 0 0 8px"
+              padding="2px"
+              margin="0 8px"
             >
               {status.msg}
             </Tag>
@@ -82,16 +87,17 @@ const AccordionTab = ({
             <CaretDown size={16} />
           )}
         </Icon>
-      </StyledAccordionTab>
-      <Content>
-        {!isExpanded && summaries && (
-          <>
-            {summaries.map((summary, index) => (
-              <p key={index}>{summary}</p>
-            ))}
-          </>
-        )}
-      </Content>
+      </StyledCheckoutSteps>
+      {!isExpanded && summaries && (
+        <Infobox>
+          {summaries.map((summary, index) => (
+            <InfoItem key={index}>
+              <InfoItemHeading>{summary.heading}</InfoItemHeading>
+              <InfoItemText>{summary.text}</InfoItemText>
+            </InfoItem>
+          ))}
+        </Infobox>
+      )}
       <div
         {...getCollapseProps()}
       >
@@ -101,4 +107,4 @@ const AccordionTab = ({
   )
 }
 
-export { AccordionTab }
+export default CheckoutSteps
