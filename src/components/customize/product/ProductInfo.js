@@ -33,10 +33,11 @@ const ProductInfo = ({
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
   let discount = applyDiscounts(bookData.price, +itemQuantity)
-  let discountPrice = discount.price
-  let discountSaved = discount.saved
-  let discountPct = discount.pct
-  let discountAmount = discount.amount
+  let discountRate = discount.rate || 0
+  let discountPrice = discount.price || 0
+  let discountSaved = discount.saved || 0
+  let discountPct = discount.pct || 0
+  let discountAmount = discount.amount || 0
 
   function applyDiscounts(price, quantity) {
     let totalAmount = price * quantity
@@ -59,6 +60,7 @@ const ProductInfo = ({
       saved: discountSaved,
       amount: discountAmount,
       pct: discountPct,
+      rate: discountRate,
     }
   }
 
@@ -82,6 +84,7 @@ const ProductInfo = ({
         coverColor: bookData.coverColor,
         currency: "USD",
         custom: bookData.custom,
+        discount: discountSaved,
         id: uuidv4(), // unique cart item id
         image: cartThumbnail,
         leftPageData: leftPageData,
@@ -91,6 +94,7 @@ const ProductInfo = ({
         price_id: bookData.stripePriceId,
         price: discountPrice || bookData.price,
         printed: false,
+        originalPrice: bookData.price,
         rightPageData: rightPageData,
         slug: bookData.slug,
         size: bookData.size,
@@ -221,7 +225,7 @@ const ProductInfo = ({
             paragraphcolor={colors.green.sixHundred}
             paragraphfontweight="700"
           >
-            <p id="discount-text">Get {formatDollars(discountSaved / 100)} off.</p>
+            <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
           </Content>
         )}
       </Flexbox>
@@ -251,7 +255,7 @@ const ProductInfo = ({
           width="100%"
         >
           {itemAdded ? (
-            <span>Done!</span>
+            <span>Added to cart!</span>
           ) : (
             <span>Add to cart - {formatDollars(discountAmount / 100)}</span>
           )}

@@ -7,7 +7,6 @@ import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Box from "../ui/Box"
-import Tag from "../ui/Tag"
 
 const Orders = styled.div`
   background-color: ${colors.white};
@@ -35,13 +34,14 @@ const CapitalizedWord = styled.span`
 
 function OrderSummary({ 
   cartItems,
+  coupon,
   selectedRate, 
+  subtotal,
   tax,
-  totalPrice,
 }) {
   // calculate the total price of the user's cart incl shipping
   function calculateTotalPrice() {
-    let calculatedPrice = totalPrice
+    let calculatedPrice = subtotal
 
     if (selectedRate) {
       calculatedPrice += parseFloat(selectedRate.rate)
@@ -59,6 +59,8 @@ function OrderSummary({
         <OrderSection>
           <Content
             h5margin="0"
+            h5fontweight="400"
+            h5fontsize="1.25rem"
           >
             <h5>Order Summary</h5>
           </Content>
@@ -71,20 +73,12 @@ function OrderSummary({
                 flex="flex"
                 key={item.id}
               >
-                <Tag
-                  height="24px"
-                  width="32px"
-                  padding="0"
-                  margin="0 4px 0 0"
-                  backgroundcolor={colors.gray.nineHundred}
-                  color={colors.gray.oneHundred}
-                  borderradius="100%"
-                >{item.quantity}</Tag>
                 <GatsbyImage
                   image={getImage(item.image)}
                   alt="product thumbnail"
                 />
                 <Flexbox
+                  margin="0 0 0 8px"
                   flex="flex"
                   justifycontent="space-between"
                   width="100%"
@@ -111,6 +105,7 @@ function OrderSummary({
                       )}
                     </Content>
                   </Box>
+                  <p>x {item.quantity}</p>
                   <p>${convertToDecimal(item.price, 2)}</p>
                 </Flexbox>
               </Flexbox>
@@ -124,7 +119,7 @@ function OrderSummary({
             justifycontent="space-between"
           >
             <p>Subtotal</p>
-            <p>${convertToDecimal(totalPrice, 2)}</p>
+            <p>${convertToDecimal(subtotal, 2)}</p>
           </Flexbox>
           <Flexbox
             margin="0 0 16px"
@@ -139,6 +134,7 @@ function OrderSummary({
             )}
           </Flexbox>
           <Flexbox
+            margin="0 0 16px"
             flex="flex"
             justifycontent="space-between"
           >
@@ -149,6 +145,17 @@ function OrderSummary({
               <p>---</p>
             )}
           </Flexbox>
+          {coupon.applied && (
+            <Flexbox
+              flex="flex"
+              justifycontent="space-between"
+            >
+              <p>Coupon ({coupon.code})</p>
+              {coupon.text && (
+                <p>{coupon.text}</p>
+              )}
+            </Flexbox>
+          )}
         </OrderSection>
         <Flexbox
           padding="16px 0"

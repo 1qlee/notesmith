@@ -14,6 +14,7 @@ import Table from "../ui/Table"
 import Button from "../ui/Button"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
+import StrikeText from "./StrikeText"
 
 function ShoppingCart() {
   const {
@@ -32,7 +33,9 @@ function ShoppingCart() {
       const cartItemsArray = []
       // push all product objects in cartDetails to an array
       for (const cartItem in cartDetails) {
-        cartItemsArray.push(cartDetails[cartItem])
+        const item = cartDetails[cartItem]
+
+        cartItemsArray.push(item)
       }
 
       setCartItems(cartItemsArray)
@@ -281,9 +284,19 @@ function ShoppingCart() {
                       <Content
                         paragraphmargin="0"
                       >
-                        <p>
-                          ${convertToDecimal(item.price, 2)}
-                        </p>
+                        {item.discount ? (
+                          <p>
+                            <StrikeText
+                              color={colors.green.nineHundred}
+                              backgroundcolor={colors.green.oneHundred}
+                            >
+                              ${convertToDecimal(item.originalPrice, 2)}
+                            </StrikeText>
+                            <span>${convertToDecimal(item.price, 2)}</span>
+                          </p>
+                        ) : (
+                          <p>${convertToDecimal(item.price, 2)}</p>
+                        )}
                       </Content>
                     </Flexbox>
                   </td>

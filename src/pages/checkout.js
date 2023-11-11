@@ -57,6 +57,7 @@ const Checkout = () => {
     msg: "Required",
     color: colors.red.sixHundred,
   })
+  const [subtotal, setSubtotal] = useState(totalPrice)
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
   const [processing, setProcessing] = useState(false)
@@ -65,6 +66,10 @@ const Checkout = () => {
   const [addressError, setAddressError] = useState("")
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [authKey, setAuthKey] = useState(null)
+  const [coupon, setCoupon] = useState({
+    code: "",
+    applied: false,
+  })
   const [serverError, setServerError] = useState({
     msg: "",
     show: false,
@@ -140,7 +145,6 @@ const Checkout = () => {
   }
 
   useEffect(() => {
-    console.log(address)
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen
@@ -359,7 +363,7 @@ const Checkout = () => {
                               prereq={shippingValidated}
                               summaries={selectedRate && [
                                 {
-                                  heading: `${selectedRate.international ? "International shipping" : "Ground shipping"}`,
+                                  heading: `${selectedRate.international ? "International" : "Ground"}`,
                                   text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
                                 }
                               ]}
@@ -395,9 +399,14 @@ const Checkout = () => {
                                 authKey={authKey}
                                 cartItems={cartItems}
                                 clientSecret={clientSecret}
+                                coupon={coupon}
                                 customer={customer}
                                 pid={pid}
+                                setCoupon={setCoupon}
                                 setPaymentProcessing={setPaymentProcessing}
+                                setSelectedRate={setSelectedRate}
+                                setSubtotal={setSubtotal}
+                                setTax={setTax}
                                 tax={tax}
                                 toast={toast}
                               />
@@ -407,10 +416,11 @@ const Checkout = () => {
                         <Col sm={4}>
                           <OrderSummary
                             cartItems={cartItems}
+                            coupon={coupon}
                             hideButton={true}
                             selectedRate={selectedRate}
+                            subtotal={subtotal}
                             tax={tax}
-                            totalPrice={totalPrice}
                           />
                         </Col>
                       </Row>

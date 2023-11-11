@@ -152,7 +152,13 @@ function Page({
     <StyledPage
       onClick={() => setData(data)}
       className={isActive ? `is-active ${className}` : className}
+      onKeyDown={e => {
+        if (e.key === 'Enter') {
+          setData(data)
+        }
+      }}
       margin={margin}
+      tabIndex="0"
     >
       {(isProductPage && leftPageData.template === data.template) && (
         <PageBadge
@@ -1095,6 +1101,7 @@ function PageIcons({
         rightPageData={rightPageData}
         setData={setData}
         showLabels={showLabels}
+        tabindex="1"
       />
       <RuledPageIcon
         data={data}

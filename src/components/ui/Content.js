@@ -77,6 +77,7 @@ const Content = styled.div`
   }
   ul {
     padding-left: 1.125rem;
+    margin: ${props => props.ulmargin};
   }
   li {
     margin: ${props => props.limargin || "4px 0"};

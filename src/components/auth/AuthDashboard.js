@@ -142,7 +142,7 @@ const UserDashboard = () => {
           <Col md={6}>
             <Content
               h1fontsize="2rem"
-              margin="32px 0"
+              margin="32px 0 16px"
               linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
@@ -154,17 +154,16 @@ const UserDashboard = () => {
             <Content>
               <p>The pre-order sale will conclude on <b>December 1st</b>.</p>
             </Content>
-          </Col>
-          <Col md={6}>
             <Notification
               backgroundcolor={colors.green.twoHundred}
               color={colors.green.nineHundred}
-              display="inline-flex"
-              margin="32px 0 0"
+              margin="16px 0"
             >
-              <p>All notebooks purchased during the pre-order sale are <b>25% off</b> and <b>shipping is also free</b> (to the U.S. only).</p>
+              <p>All notebooks purchased during the pre-order sale are <b>25% off</b> and <b>shipping is also free</b> to addresses in the U.S.</p>
             </Notification>
-            <Content
+          </Col>
+          <Col md={6}>
+            {/* <Content
               h3fontsize="1.5rem"
               h3margin="0 0 16px"
               margin="32px 0"
@@ -215,7 +214,7 @@ const UserDashboard = () => {
                   </Button>
                 </Flexbox>
               </>
-            )}
+            )} */}
           </Col>
         </Row>
       </AuthLayout>

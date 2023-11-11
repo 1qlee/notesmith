@@ -63,13 +63,14 @@ const CheckoutSteps = ({
           <Content
             h5margin="0"
             h5fontweight='400'
+            h5fontsize="1.25rem"
           >
             <h5>{text}</h5>
           </Content>
           {status && status.msg && !isExpanded && (
             <Tag
-              backgroundcolor={colors.white}
-              color={status.color}
+              backgroundcolor={status.color}
+              color={colors.white}
               border={`1px solid ${status.color}`}
               fontweight="700"
               padding="2px"

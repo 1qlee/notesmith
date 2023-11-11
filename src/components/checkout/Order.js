@@ -77,9 +77,7 @@ const Order = ({ location, orderId }) => {
     async function retrieveOrder() {
       // retrieve order info from the db based on orderId
       get(ref(firebaseDb, `orders/${orderId}`)).then(async snapshot => {
-        console.log(orderId)
         const value = snapshot.val()
-        console.log(value)
 
         if (!value) {
           setOrderNotFound(true)
@@ -370,6 +368,16 @@ const Order = ({ location, orderId }) => {
                                 <p>Tax</p>
                                 <p>${convertToDecimal(orderInfo.tax, 2)}</p>
                               </Flexbox>
+                              {orderInfo.coupon && (
+                                <Flexbox
+                                  flex="flex"
+                                  justifycontent="space-between"
+                                  margin="16px 0 0"
+                                >
+                                  <p>Coupon</p>
+                                  <p>${convertToDecimal(orderInfo.coupon, 2)}</p>
+                                </Flexbox>
+                              )}
                             </Box>
                             <Flexbox
                               flex="flex"

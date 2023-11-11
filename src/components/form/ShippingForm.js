@@ -39,7 +39,7 @@ const ShippingItem = styled(Flexbox)`
     cursor: pointer;
   }
   &.is-selected {
-    background-color: ${colors.gray.threeHundred};
+    box-shadow: ${colors.shadow.focus};
     color: ${colors.gray.nineHundred};
   }
   &.is-loading {
@@ -239,9 +239,9 @@ const ShippingForm = ({
               >
                 <h5>
                   {shippingRate.international ? (
-                    "International shipping"
+                    "International"
                   ) : (
-                    "Ground shipping"
+                    "Ground"
                   )}
                 </h5>
                 {shippingRate.delivery_days ? (
@@ -280,7 +280,7 @@ const ShippingForm = ({
               <CircleNotch size={16} color={colors.white} />
             </Icon>
           ) : (
-            "Submit"
+            "Select"
           )}
         </Button>
       </Flexbox>

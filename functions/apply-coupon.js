@@ -19,31 +19,34 @@ const calcOrderAmount = async (cartItems) => {
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { pid, cartItems, updatePaymentIntent } = body;
+  const { pid, cartItems, coupon } = body;
 
   try {
-    const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    // if a charge exists on this paymentIntent, return it to the client
-    // the client will then create a new paymentIntent instead
-    const isPaymentPaid = paymentIntent.status === "succeeded"
+    let paymentIntent = await stripe.paymentIntents.retrieve(pid);
 
-    if (!isPaymentPaid && updatePaymentIntent) {
-      const totalAmount = await calcOrderAmount(cartItems);
+    if (coupon === process.env.GATSBY_SECRET_COUPON) {
+      // const totalAmount = await calcOrderAmount(cartItems);
 
       await stripe.paymentIntents.update(pid, {
-        amount: totalAmount,
+        amount: 50,
         metadata: {
-          subtotal: totalAmount,
+          subtotal: 50,
+          tax: 0,
+          shipping: 0,
+          coupon: coupon,
         }
       });
     }
 
-    console.log(`[Stripe] Found and retrieved paymentIntent: ${pid}`);
+    // refresh
+    paymentIntent = await stripe.paymentIntents.retrieve(pid);
+
+    console.log(`[Stripe] Applied coupon successfully to paymentIntent: ${pid}`);
     return {
       statusCode: 200,
       body: JSON.stringify({
-        isPaymentPaid: isPaymentPaid,
         paymentIntent: paymentIntent,
+        secretCoupon: true,
       })
     }
   } catch (error) {

@@ -8,8 +8,6 @@ import { Flexbox } from "../layout/Flexbox"
 
 const Infobox = styled.div`
   background-color: ${colors.white};
-  padding: ${props => props.padding ? props.padding : "0 16px"};
-  border: ${colors.borders.black};
   margin-bottom: 2rem;
 `
 
@@ -17,10 +15,8 @@ const InfoItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: ${colors.borders.black};
-  padding: 1rem 0;
-  &:last-child {
-    border-bottom: none;
+  &:not(:last-child) {
+    margin-bottom: 16px;
   }
 `
 
@@ -88,7 +84,7 @@ function ShippingInfo({
         {shippingMethod && (
           <InfoItem>
             <InfoItemHeading>Shipping</InfoItemHeading>
-            <InfoItemText>Ground shipping</InfoItemText>
+            <InfoItemText>Ground</InfoItemText>
           </InfoItem>
         )}
       </Infobox>
