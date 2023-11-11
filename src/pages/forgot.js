@@ -6,15 +6,11 @@ import { useFirebaseContext } from "../utils/auth"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
-import Loader from "../components/misc/Loader"
 import Seo from "../components/layout/Seo"
 
 const Forgot = () => {
   const { user, loading } = useFirebaseContext()
 
-  if (loading) {
-    return <Loader />
-  }
   if (user) {
     navigate(`/account/dashboard`, { replace: true })
     return null
@@ -23,6 +19,7 @@ const Forgot = () => {
   return (
     <Layout 
       className="is-full-height"
+      loading={loading}
     >
       <SectionMain
         className="has-max-height"

@@ -8,6 +8,7 @@ import { ScreenClassRender } from "react-grid-system"
 import Icon from "../../ui/Icon"
 import Content from "../../ui/Content"
 import Button from "../../ui/Button"
+import { Flexbox } from "../../layout/Flexbox"
 import DotControls from "../templateControls/DotControls"
 import RuledControls from "../templateControls/RuledControls"
 import GraphControls from "../templateControls/GraphControls"
@@ -208,6 +209,12 @@ function ProductControls({
                   </span>
                 </TemplatesHeader>
                 <TemplatesContent>
+                  <Flexbox
+                    justifycontent="flex-end"
+                    margin="0 0 4px 0"
+                  >
+                    <small>All values shown in mm</small>
+                  </Flexbox>
                   <Content
                     h5fontsize="0.875rem"
                     h5margin="0 0 8px 0"

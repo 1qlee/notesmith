@@ -21,7 +21,7 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ loading, children, className, backgroundcolor }) => {
+const Layout = ({ loading, children, className, backgroundcolor, loaderClassName, loaderMsg }) => {
   const { isClient, key } = useIsClient()
   if (!isClient) return null;
 
@@ -34,7 +34,10 @@ const Layout = ({ loading, children, className, backgroundcolor }) => {
       <Nav />
       {children}
       {loading && (
-        <Loader />
+        <Loader 
+          msg={loaderMsg}
+          className={loaderClassName}
+        />
       )}
       <Footer />
       <Toastify />

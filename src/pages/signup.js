@@ -5,14 +5,11 @@ import { useFirebaseContext } from "../utils/auth"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import SignupForm from "../components/form/SignupForm"
 import Layout from "../components/layout/Layout"
-import Loader from "../components/misc/Loader"
+import Seo from "../components/layout/Seo"
 
 const SignUp = () => {
   const { user, loading } = useFirebaseContext()
 
-  if (loading) {
-    return <Loader />
-  }
   if (user) {
     navigate(`/account/dashboard`, { replace: true })
     return null
@@ -20,8 +17,8 @@ const SignUp = () => {
 
   return (
     <Layout 
-      title="Sign up for an account"
       className="is-full-height"
+      loading={loading}
     >
       <SectionMain
         className="has-max-height"
@@ -37,3 +34,7 @@ const SignUp = () => {
 }
 
 export default SignUp
+
+export const Head = () => (
+  <Seo title="Sign up for an account" />
+)

@@ -17,7 +17,6 @@ import Breadcrumb from "../components/ui/Breadcrumb"
 import CheckoutForm from "../components/form/CheckoutForm"
 import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
-import Loader from "../components/misc/Loader"
 import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
@@ -284,154 +283,151 @@ const Checkout = () => {
 
   return (
     <Layout 
-      loading={loading}
+      loading={loading || paymentProcessing}
+      loaderMsg={paymentProcessing && "Processing payment... Do not refresh or close this page!"}
     >
       {clientSecret && (
         <Elements
           stripe={stripePromise}
           options={elementsOptions}
         >
-          {!paymentProcessing ? (
-            <SectionMain className="has-max-height">
-              <Section>
-                <SectionContent padding={`${spacing.large} 0`}>
-                  <Container xs sm md lg xl>
-                    {serverError.show ? (
-                      <Flexbox
-                        flex="flex"
-                        alignitems="center"
-                        justifycontent="center"
-                        width="100%"
-                        height="100%"
-                      >
-                        {serverError.msg}
-                      </Flexbox>
-                    ) : (
-                      <Row>
-                        <Col sm={8}>
-                          <Box
-                            width="600px"
-                          >
-                            <Breadcrumb
-                              items={breadcrumbItems}
-                            />
-                            <CheckoutSteps
-                              activeCheckoutSteps={activeCheckoutSteps}
-                              status={addressStatus}
-                              onClick={setActiveCheckoutSteps}
-                              prereq={true}
-                              summaries={[
-                                {
-                                  heading: "Email",
-                                  text: customer.email,
-                                },
-                                {
-                                  heading: "Name",
-                                  text: customer.name,
-                                },
-                                {
-                                  heading: "Address",
-                                  text: `${address.line1}, ${address.line2 ? address.line2 + "," : ""} ${address.city}, ${address.state} ${address.postal_code}`
-                                }
-                              ]}
-                              tabName="shipping"
-                              text="Shipping information"
-                            >
-                              <AddressForm
-                                address={address}
-                                customer={customer}
-                                pid={pid}
-                                setActiveCheckoutSteps={setActiveCheckoutSteps}
-                                setAddress={setAddress}
-                                setAddressError={setAddressError}
-                                setAddressStatus={setAddressStatus}
-                                setCustomer={setCustomer}
-                                setMethodValidated={setMethodValidated}
-                                setMethodStatus={setMethodStatus}
-                                setSelectedRate={setSelectedRate}
-                                setShippingValidated={setShippingValidated}
-                                setShowModal={setShowModal}
-                                setTax={setTax}
-                                shippingValidated={shippingValidated}
-                                toast={toast}
-                              />
-                            </CheckoutSteps>
-                            <CheckoutSteps
-                              activeCheckoutSteps={activeCheckoutSteps}
-                              status={methodStatus}
-                              onClick={setActiveCheckoutSteps}
-                              prereq={shippingValidated}
-                              summaries={selectedRate && [
-                                {
-                                  heading: `${selectedRate.international ? "International" : "Ground"}`,
-                                  text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
-                                }
-                              ]}
-                              tabName="method"
-                              text="Shipping method"
-                            >
-                              <ShippingForm
-                                activeCheckoutSteps={activeCheckoutSteps}
-                                address={address}
-                                cartItems={cartItems}
-                                customer={customer}
-                                pid={pid}
-                                selectedRate={selectedRate}
-                                setActiveCheckoutSteps={setActiveCheckoutSteps}
-                                setAddress={setAddress}
-                                setAuthKey={setAuthKey}
-                                setMethodValidated={setMethodValidated}
-                                setMethodStatus={setMethodStatus}
-                                setSelectedRate={setSelectedRate}
-                                setTax={setTax}
-                                toast={toast}
-                              />
-                            </CheckoutSteps>
-                            <CheckoutSteps
-                              tabName="payment"
-                              text="Payment information"
-                              prereq={methodValidated}
-                              onClick={setActiveCheckoutSteps}
-                              activeCheckoutSteps={activeCheckoutSteps}
-                            >
-                              <CheckoutForm
-                                address={address}
-                                authKey={authKey}
-                                cartItems={cartItems}
-                                clientSecret={clientSecret}
-                                coupon={coupon}
-                                customer={customer}
-                                pid={pid}
-                                setCoupon={setCoupon}
-                                setPaymentProcessing={setPaymentProcessing}
-                                setSelectedRate={setSelectedRate}
-                                setSubtotal={setSubtotal}
-                                setTax={setTax}
-                                tax={tax}
-                                toast={toast}
-                              />
-                            </CheckoutSteps>
-                          </Box>
-                        </Col>
-                        <Col sm={4}>
-                          <OrderSummary
-                            cartItems={cartItems}
-                            coupon={coupon}
-                            hideButton={true}
-                            selectedRate={selectedRate}
-                            subtotal={subtotal}
-                            tax={tax}
+          <SectionMain className="has-max-height">
+            <Section>
+              <SectionContent padding={`${spacing.large} 0`}>
+                <Container xs sm md lg xl>
+                  {serverError.show ? (
+                    <Flexbox
+                      flex="flex"
+                      alignitems="center"
+                      justifycontent="center"
+                      width="100%"
+                      height="100%"
+                    >
+                      {serverError.msg}
+                    </Flexbox>
+                  ) : (
+                    <Row>
+                      <Col sm={8}>
+                        <Box
+                          width="600px"
+                        >
+                          <Breadcrumb
+                            items={breadcrumbItems}
                           />
-                        </Col>
-                      </Row>
-                    )}
-                  </Container>
-                </SectionContent>
-              </Section>
-            </SectionMain>
-          ) : (
-            <Loader msg="Processing payment... Do not refresh or close this page!" />
-          )}
+                          <CheckoutSteps
+                            activeCheckoutSteps={activeCheckoutSteps}
+                            status={addressStatus}
+                            onClick={setActiveCheckoutSteps}
+                            prereq={true}
+                            summaries={[
+                              {
+                                heading: "Email",
+                                text: customer.email,
+                              },
+                              {
+                                heading: "Name",
+                                text: customer.name,
+                              },
+                              {
+                                heading: "Address",
+                                text: `${address.line1}, ${address.line2 ? address.line2 + "," : ""} ${address.city}, ${address.state} ${address.postal_code}`
+                              }
+                            ]}
+                            tabName="shipping"
+                            text="Shipping information"
+                          >
+                            <AddressForm
+                              address={address}
+                              customer={customer}
+                              pid={pid}
+                              setActiveCheckoutSteps={setActiveCheckoutSteps}
+                              setAddress={setAddress}
+                              setAddressError={setAddressError}
+                              setAddressStatus={setAddressStatus}
+                              setCustomer={setCustomer}
+                              setMethodValidated={setMethodValidated}
+                              setMethodStatus={setMethodStatus}
+                              setSelectedRate={setSelectedRate}
+                              setShippingValidated={setShippingValidated}
+                              setShowModal={setShowModal}
+                              setTax={setTax}
+                              shippingValidated={shippingValidated}
+                              toast={toast}
+                            />
+                          </CheckoutSteps>
+                          <CheckoutSteps
+                            activeCheckoutSteps={activeCheckoutSteps}
+                            status={methodStatus}
+                            onClick={setActiveCheckoutSteps}
+                            prereq={shippingValidated}
+                            summaries={selectedRate && [
+                              {
+                                heading: `${selectedRate.international ? "International" : "Ground"}`,
+                                text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                              }
+                            ]}
+                            tabName="method"
+                            text="Shipping method"
+                          >
+                            <ShippingForm
+                              activeCheckoutSteps={activeCheckoutSteps}
+                              address={address}
+                              cartItems={cartItems}
+                              customer={customer}
+                              pid={pid}
+                              selectedRate={selectedRate}
+                              setActiveCheckoutSteps={setActiveCheckoutSteps}
+                              setAddress={setAddress}
+                              setAuthKey={setAuthKey}
+                              setMethodValidated={setMethodValidated}
+                              setMethodStatus={setMethodStatus}
+                              setSelectedRate={setSelectedRate}
+                              setTax={setTax}
+                              toast={toast}
+                            />
+                          </CheckoutSteps>
+                          <CheckoutSteps
+                            tabName="payment"
+                            text="Payment information"
+                            prereq={methodValidated}
+                            onClick={setActiveCheckoutSteps}
+                            activeCheckoutSteps={activeCheckoutSteps}
+                          >
+                            <CheckoutForm
+                              address={address}
+                              authKey={authKey}
+                              cartItems={cartItems}
+                              clientSecret={clientSecret}
+                              coupon={coupon}
+                              customer={customer}
+                              pid={pid}
+                              setCoupon={setCoupon}
+                              setPaymentProcessing={setPaymentProcessing}
+                              setSelectedRate={setSelectedRate}
+                              setSubtotal={setSubtotal}
+                              setTax={setTax}
+                              tax={tax}
+                              toast={toast}
+                            />
+                          </CheckoutSteps>
+                        </Box>
+                      </Col>
+                      <Col sm={4}>
+                        <OrderSummary
+                          cartItems={cartItems}
+                          coupon={coupon}
+                          hideButton={true}
+                          selectedRate={selectedRate}
+                          subtotal={subtotal}
+                          tax={tax}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                </Container>
+              </SectionContent>
+            </Section>
+          </SectionMain>
           {showModal.show && (
             <ValidateAddressModal
               address={address}

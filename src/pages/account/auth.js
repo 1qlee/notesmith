@@ -92,79 +92,77 @@ function Auth({ location }) {
   // }
 
   return (
-    <Layout>
-      {loading ? (
-        <Loader />
-      ) : (
-        <SectionMain
-          className="has-max-height"
-        >
-          <Section>
-            {success ? (
-              <AuthFormWrapper>
-                <Content
-                  h1fontsize="2rem"
-                  margin="0 0 32px"
-                  linktextdecoration="underline"
-                >
-                  <h1>Succesfully changed</h1>
-                  <p>You may <Link to="/signin">sign in</Link> now with your new password.</p>
-                </Content>
-              </AuthFormWrapper>
-            ) : (
-              <AuthFormWrapper>
-                {authModeVerified ? (
-                  <>
-                    <Content
-                      h1fontsize="2rem"
-                      margin="0 0 32px"
-                      linktextdecoration="underline"
-                    >
-                      {authMode === "resetPassword" && (
-                        <h1>Reset your password</h1>
-                      )}
-                      {authMode === "verifyEmail" && (
-                        <>
-                          <h1>Your email is now verified</h1>
-                          <p>You may now <Link to="/account/dashboard">access your account</Link> or <Link to="/signin">sign in</Link>.</p>
-                        </>
-                      )}
-                      {error && (
-                        <p>{error}</p>
-                      )}
-                    </Content>
-                    {authMode === "resetPassword" && (
-                      <ResetPwForm
-                        processing={processing}
-                        actionCode={actionCode}
-                        handleSubmit={handleResetPassword}
-                      />
-                    )}
-                  </>
-                ) : (
+    <Layout
+      loading={loading}
+    >
+      <SectionMain
+        className="has-max-height"
+      >
+        <Section>
+          {success ? (
+            <AuthFormWrapper>
+              <Content
+                h1fontsize="2rem"
+                margin="0 0 32px"
+                linktextdecoration="underline"
+              >
+                <h1>Succesfully changed</h1>
+                <p>You may <Link to="/signin">sign in</Link> now with your new password.</p>
+              </Content>
+            </AuthFormWrapper>
+          ) : (
+            <AuthFormWrapper>
+              {authModeVerified ? (
+                <>
                   <Content
                     h1fontsize="2rem"
+                    margin="0 0 32px"
                     linktextdecoration="underline"
                   >
                     {authMode === "resetPassword" && (
-                      <>
-                        <h1>Code expired</h1>
-                        <p>You can request another email to reset your password by <Link to="/forgot">clicking here</Link>.</p>
-                      </>
+                      <h1>Reset your password</h1>
                     )}
                     {authMode === "verifyEmail" && (
                       <>
-                        <h1>Something went wrong</h1>
-                        <p>Either the credentials in your link have expired, or your account is already verified. Please try refreshing the page or <Link to="/signin">try signing in again</Link>.</p>
+                        <h1>Your email is now verified</h1>
+                        <p>You may now <Link to="/account/dashboard">access your account</Link> or <Link to="/signin">sign in</Link>.</p>
                       </>
                     )}
+                    {error && (
+                      <p>{error}</p>
+                    )}
                   </Content>
-                )}
-              </AuthFormWrapper>
-            )}
-          </Section>
-        </SectionMain>
-      )}
+                  {authMode === "resetPassword" && (
+                    <ResetPwForm
+                      processing={processing}
+                      actionCode={actionCode}
+                      handleSubmit={handleResetPassword}
+                    />
+                  )}
+                </>
+              ) : (
+                <Content
+                  h1fontsize="2rem"
+                  linktextdecoration="underline"
+                >
+                  {authMode === "resetPassword" && (
+                    <>
+                      <h1>Code expired</h1>
+                      <p>You can request another email to reset your password by <Link to="/forgot">clicking here</Link>.</p>
+                    </>
+                  )}
+                  {authMode === "verifyEmail" && (
+                    <>
+                      <h1>Something went wrong</h1>
+                      <p>Either the credentials in your link have expired, or your account is already verified. Please try refreshing the page or <Link to="/signin">try signing in again</Link>.</p>
+                    </>
+                  )}
+                </Content>
+              )}
+            </AuthFormWrapper>
+          )}
+        </Section>
+      </SectionMain>
     </Layout>
   )
 }

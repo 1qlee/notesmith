@@ -1,21 +1,13 @@
 import React, { useEffect, useState, useRef } from "react"
 import { colors, widths } from "../../styles/variables"
-import { daysUntilDate } from "../../utils/helper-functions"
 import { useFirebaseContext } from "../../utils/auth"
-import { ArrowLeft, Check } from "@phosphor-icons/react"
 import { get, ref, set, push, query, orderByChild, equalTo } from "firebase/database"
 
 import AuthLayout from "./components/AuthLayout"
-import Button from "../ui/Button"
 import Content from "../ui/Content"
-import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
-import Loader from "../misc/Loader"
 import Notification from "../ui/Notification"
-import TextLink from "../ui/TextLink"
-import { Flexbox } from "../layout/Flexbox"
 import { Row, Col } from "react-grid-system"
-import { StyledInput, StyledLabel } from "../form/FormComponents"
 
 const UserDashboard = () => {
   const { loading, user, firebaseDb } = useFirebaseContext()
@@ -25,7 +17,7 @@ const UserDashboard = () => {
     status: false,
     text: "Copy",
   })
-  const launchDate = new Date("2023-12-15")
+  // const launchDate = new Date("2023-12-15")
   const singleRef = useRef(null)
 
   useEffect(() => {
@@ -131,12 +123,8 @@ const UserDashboard = () => {
       })
   }
 
-  if (loading || !user) {
-    return <Loader />
-  }
-
   return (
-    <Layout>
+    <Layout loading={loading || !user}>
       <AuthLayout page="Dashboard">
         <Row>
           <Col md={6}>
