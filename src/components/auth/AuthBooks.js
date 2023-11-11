@@ -11,7 +11,6 @@ import AuthLayout from "./components/AuthLayout"
 import BooksContainer from "./books/BooksContainer"
 import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
-import Loader from "../misc/Loader"
 import NewBookModal from "./modals/AppNewBookModal"
 
 const UserBooks = ({ allProducts }) => {
@@ -264,78 +263,75 @@ const UserBooks = ({ allProducts }) => {
     })
   }
 
-  if (processing || loading) {
-    return <Loader />
-  }
-  else {
-    return (
-      <Layout>
-        <AuthLayout page="Books">
-          {userBooks.length > 0 ? (
-            <BooksContainer
-              duplicateBook={duplicateBook}
-              getLocalStorage={getLocalStorage}
-              handleBookDelete={handleBookDelete}
-              processing={processing}
-              renameBook={renameBook}
-              userBooks={userBooks}
-              setShowModal={setShowModal}
-              sortBooks={sortBooks}
-            />
-          ) : (
-            <Flexbox
-              alignitems="center"
-              justifycontent="center"
-              width="100%"
-              height="500px"
+  return (
+    <Layout
+      loading={processing || loading}
+    >
+      <AuthLayout page="Books">
+        {userBooks.length > 0 ? (
+          <BooksContainer
+            duplicateBook={duplicateBook}
+            getLocalStorage={getLocalStorage}
+            handleBookDelete={handleBookDelete}
+            processing={processing}
+            renameBook={renameBook}
+            userBooks={userBooks}
+            setShowModal={setShowModal}
+            sortBooks={sortBooks}
+          />
+        ) : (
+          <Flexbox
+            alignitems="center"
+            justifycontent="center"
+            width="100%"
+            height="500px"
+          >
+            <Content
+              textalign="center"
+              h1fontsize="3rem"
+              maxwidth={widths.content.index}
             >
-              <Content
-                textalign="center"
-                h1fontsize="3rem"
-                maxwidth={widths.content.index}
+              <h1>Create your own notebook now</h1>
+              <p>It's easy to get started with creating your own notebook. Simply press the button below to begin!</p>
+              <Button
+                color={colors.gray.oneHundred}
+                backgroundcolor={colors.gray.nineHundred}
+                margin="16px 0 0 0"
+                padding="16px 24px"
+                fontsize="1rem"
+                onClick={() => setShowModal({
+                  show: true,
+                  type: "createbook",
+                })}
               >
-                <h1>Create your own notebook now</h1>
-                <p>It's easy to get started with creating your own notebook. Simply press the button below to begin!</p>
-                <Button
-                  color={colors.gray.oneHundred}
-                  backgroundcolor={colors.gray.nineHundred}
-                  margin="16px 0 0 0"
-                  padding="16px 24px"
-                  fontsize="1rem"
-                  onClick={() => setShowModal({
-                    show: true,
-                    type: "createbook",
-                  })}
-                >
-                  New book
-                </Button>
-              </Content>
-            </Flexbox>
-          )}
-          {showModal.show && (
-            <>
-              {showModal.type === "createbook" && (
-                <NewBookModal
-                  bookData={bookData}
-                  allProducts={allProducts}
-                  setBookData={setBookData}
-                  setShowModal={setShowModal}
-                  toast={toast}
-                />
-              )}
-              {showModal.type === "deletebook" && (
-                <DeleteBookModal
-                  bookToBeDeleted={bookToBeDeleted}
-                  deleteBook={deleteBook}
-                  setShowModal={setShowModal}
-                />
-              )}
-            </>
-          )}
-        </AuthLayout>
-      </Layout>
-    )
-  }
+                New book
+              </Button>
+            </Content>
+          </Flexbox>
+        )}
+        {showModal.show && (
+          <>
+            {showModal.type === "createbook" && (
+              <NewBookModal
+                bookData={bookData}
+                allProducts={allProducts}
+                setBookData={setBookData}
+                setShowModal={setShowModal}
+                toast={toast}
+              />
+            )}
+            {showModal.type === "deletebook" && (
+              <DeleteBookModal
+                bookToBeDeleted={bookToBeDeleted}
+                deleteBook={deleteBook}
+                setShowModal={setShowModal}
+              />
+            )}
+          </>
+        )}
+      </AuthLayout>
+    </Layout>
+  )
 }
 
 export default UserBooks
