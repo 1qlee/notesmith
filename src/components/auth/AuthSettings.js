@@ -20,7 +20,7 @@ const UserSettings = () => {
       loading={loading || !user}
     >
       <AuthLayout page="Settings">
-        {!user.emailVerified && (
+        {user && !user.emailVerified && (
           <Notification 
             color={colors.yellow.nineHundred} 
             backgroundcolor={colors.yellow.twoHundred}
