@@ -657,7 +657,3 @@ export const pageQuery = graphql`
 `
 
 export default IndexPage
-
-export const Head = () => (
-  <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
-)
