@@ -148,6 +148,7 @@ function Controls({
       </ControlsTabs>
       {activeTab === 0 && (
         <Templatesbar
+          handleShowModal={handleShowModal}
           pageData={pageData}
           setPageData={setPageData}
           setShowModal={setShowModal}
@@ -156,6 +157,7 @@ function Controls({
       )}
       {activeTab === 1 && (
         <Designbar
+          handleShowModal={handleShowModal}
           pageData={pageData}
           max={max}
           setPageData={setPageData}
@@ -174,17 +176,6 @@ function Controls({
           toast={toast}
         />
       )}
-      <ControlsFooter>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.gray.oneHundred}
-          padding="16px"
-          width="100%"
-          onClick={() => handleShowModal()}
-        >
-          Apply changes
-        </Button>
-      </ControlsFooter>
     </StyledControls>
   )
 }

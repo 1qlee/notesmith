@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { colors, regex, widths } from "../../styles/variables"
+import { colors, regex } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { Warning, CircleNotch } from "@phosphor-icons/react"
 import { reauthenticateWithCredential, updateEmail as fbUpdateEmail, updatePassword as fbUpdatePassword } from "firebase/auth"
@@ -10,6 +10,7 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
+import sendEmailVerification from "../../functions/sendEmailVerification"
 
 function SettingsForm() {
   const { user, getAuthCredential } = useFirebaseContext()
@@ -203,9 +204,38 @@ function SettingsForm() {
     if (regex.password.test(newPassword)) {
       updatePassword()
     }
-    else {
-      console.log("bad password")
-    }
+  }
+
+  async function handleChangeEmailSubmit(e) {
+    e.preventDefault()
+
+    await fetch("/.netlify/functions/send-email-generic", {
+      method: "post",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        to: newEmail,
+        button_text: "Verify email change",
+        button_url: "https://notesmithbooks.com/account/verify-email-change",
+        templateId: "d-c306eb61b4914abca8a73f23265649be",
+        heading: "Verify your new email address",
+        subject: "Verify your new email address",
+        preheader: "Verify your new email address",
+        text: "You are receiving this email because you requested a change to your email address. Please click the button below to verify your new email address.",
+      })
+    }).then(res => {
+      return res.json()
+    }).then(async data => {
+      if (data.error) {
+        return data.error || "There was an error sending the verification email, please try again."
+      }
+      else {
+        return null
+      }
+    }).catch(error => {
+      return error || "There was an error sending the verification email, please try again."
+    })
   }
 
   return (
@@ -278,27 +308,23 @@ function SettingsForm() {
             <p>This email is used for communication and for logging into your account.</p>
           </Content>
           {showSettingsForm ? (
-            <StyledFieldset 
-              className="is-vertical"
-              flex="0"
+            <Button
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
+              onClick={e => {
+                e.preventDefault()
+                setShowModal({
+                  show: true,
+                  type: "email"
+                })
+              }}
             >
-              <StyledInput
-                padding="8px"
-                placeholder={user.email}
-                onChange={e => validateEmail(e.currentTarget.value)}
-                width={widths.input}
-              />
-              {emailError.msg && (
-                <ErrorLine color={emailError.color}>
-                  <Icon>
-                    <Warning weight="fill" color={emailError.color} size={16} />
-                  </Icon>
-                  <span>{emailError.msg}</span>
-                </ErrorLine>
-              )}
-            </StyledFieldset>
+              Change email
+            </Button>
           ) : (
-            <p>{user.email}</p>
+            <Content>
+              <p>{user.email}</p>
+            </Content>
           )}
         </Flexbox>
         <Flexbox
@@ -328,13 +354,17 @@ function SettingsForm() {
               Change password
             </Button>
           ) : (
-            <p>••••••••</p>
+            <Content
+              paragraphfontsize="1.25rem"
+            >
+              <p>••••••••</p>
+            </Content>
           )}
         </Flexbox>
       </form>
       {showModal.show && (
         <Modal setShowModal={setShowModal}>
-          {showModal.type === "reauthentication" ? (
+          {showModal.type === "reauthentication" && (
             <>
               <ModalHeader>
                 Please confirm your password to continue
@@ -386,7 +416,63 @@ function SettingsForm() {
                 </Button>
               </ModalFooter>
             </>
-          ) : (
+          )}
+          {showModal.type === "email" && (
+            <>
+              <ModalHeader>
+                Change your email
+              </ModalHeader>
+              <ModalContent>
+                <Content>
+                  <p>We will send an email to your new email address for verification. Your account's email will not change until you verify your new email.</p>
+                  <form 
+                    id="change-email" 
+                    noValidate 
+                    onSubmit={e => handleChangeEmailSubmit(e)}
+                  >
+                    <StyledFieldset>
+                      <StyledInput
+                        placeholder={user.email}
+                        onChange={e => validateEmail(e.currentTarget.value)}
+                        fontsize="1rem"
+                      />
+                      {emailError.msg && (
+                        <ErrorLine color={emailError.color}>
+                          <Icon>
+                            <Warning weight="fill" color={emailError.color} size={16} />
+                          </Icon>
+                          <span>{emailError.msg}</span>
+                        </ErrorLine>
+                      )}
+                    </StyledFieldset>
+                  </form>
+                </Content>
+              </ModalContent>
+              <ModalFooter>
+                <Button
+                  backgroundcolor={colors.gray.nineHundred}
+                  color={colors.gray.oneHundred}
+                  width="100%"
+                  form="change-email"
+                  type="submit"
+                  padding="16px"
+                  disabled={!emailValidated || loading}
+                  className={loading && "is-loading"}
+                >
+                  {loading ? (
+                    <Icon>
+                      <CircleNotch size="1rem" />
+                    </Icon>
+                  ) : (
+                    <span>
+                      Send verification email
+                    </span>
+                  )}
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+          {showModal.type === "password" && (
             <>
               <ModalHeader>
                 Change your password
@@ -398,7 +484,7 @@ function SettingsForm() {
                       className="is-vertical"
                       margin="0"
                     >
-                      <StyledLabel htmlFor="new-password">New Password (min. 8 characters)</StyledLabel>
+                      <StyledLabel htmlFor="new-password">New password (min. 8 characters)</StyledLabel>
                       <StyledInput
                         id="new-password"
                         type="password"

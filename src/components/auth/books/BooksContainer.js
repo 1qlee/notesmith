@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { colors } from "../../../styles/variables"
-import { navigate } from "gatsby"
+import { navigate, Link } from "gatsby"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { StyledInput } from "../../form/FormComponents"
@@ -144,6 +144,7 @@ function BooksContainer({
           <tr>
             <th>Title</th>
             <th>Date created</th>
+            <th></th>
           </tr>
         </thead>
         <tbody style={{position: 'relative'}}>
@@ -180,6 +181,14 @@ function BooksContainer({
                 )}
               </td>
               <td>{convertTime(book.dateCreated)}</td>
+              <td>
+                <Button
+                  as={Link}
+                  to={`/customize/${book.slug}/${book.id}`}
+                >
+                  Edit
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>

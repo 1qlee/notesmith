@@ -14,6 +14,8 @@ import ColorPicker from "../../shop/ColorPicker"
 import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
 import Content from "../../ui/Content"
+import StrikeText from "../../misc/StrikeText"
+import { convertToDecimal } from "../../../utils/helper-functions"
 
 const StepContent = styled.div`
   min-height: 36px;
@@ -143,11 +145,14 @@ function NewBookModal({
         backgroundcolor={colors.white}
       >
         <Flexbox
-          margin="0 0 8px"
+          margin="0 0 4px"
           alignitems="center"
           justifycontent="space-between"
         >
-          <Content>
+          <Content
+            paragraphfontsize="0.75rem"
+            paragraphmargin="0"
+          >
             <p>Step {step} of 3</p>
           </Content>
           <Content
@@ -181,6 +186,7 @@ function NewBookModal({
                 >
                   <Content
                     h5margin="0 0 4px"
+                    h5fontweight="400"
                   >
                     <h5>{product.name}</h5>
                   </Content>
@@ -190,7 +196,10 @@ function NewBookModal({
                     paragraphtextalign="right"
                     paragraphlineheight="1"
                   >
-                    <p>${product.price / 100}</p>
+                    <p>
+                      <StrikeText>${convertToDecimal(product.price, 0)}</StrikeText>
+                      <span>${convertToDecimal(product.price * .75)}</span>
+                    </p>
                   </Content>
                 </Flexbox>
                 <Content

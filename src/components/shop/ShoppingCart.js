@@ -14,7 +14,7 @@ import Table from "../ui/Table"
 import Button from "../ui/Button"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
-import StrikeText from "./StrikeText"
+import StrikeText from "../misc/StrikeText"
 
 function ShoppingCart() {
   const {

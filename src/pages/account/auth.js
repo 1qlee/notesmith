@@ -8,7 +8,6 @@ import { Section, SectionMain } from "../../components/layout/Section"
 import ResetPwForm from "../../components/form/ResetPwForm"
 import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
-import Loader from "../../components/misc/Loader"
 import Seo from "../../components/layout/Seo"
 
 function Auth({ location }) {

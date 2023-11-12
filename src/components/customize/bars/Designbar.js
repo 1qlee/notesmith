@@ -1,11 +1,14 @@
 import React from "react"
+import { colors } from "../../../styles/variables"
 import { convertToMM, convertFloatFixed } from "../../../utils/helper-functions"
 
-import { ControlsContent } from "../Controls"
+import { ControlsContent, ControlsFooter } from "../Controls"
 import TemplateControls from "../controls/TemplateControls"
 import DesignControls from "../controls/DesignControls"
+import Button from "../../ui/Button"
 
 function Designbar({
+  handleShowModal,
   pageData,
   max,
   setPageData,
@@ -30,6 +33,17 @@ function Designbar({
           <DesignControls />
         )}
       </ControlsContent>
+      <ControlsFooter>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          padding="16px"
+          width="100%"
+          onClick={() => handleShowModal()}
+        >
+          Apply changes
+        </Button>
+      </ControlsFooter>
     </>
   )
 }

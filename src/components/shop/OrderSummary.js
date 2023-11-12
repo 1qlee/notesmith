@@ -81,15 +81,16 @@ function OrderSummary({
                   margin="0 0 0 8px"
                   flex="flex"
                   justifycontent="space-between"
+                  alignitems="center"
                   width="100%"
                 >
                   <Box>
-                    <p>{item.name}</p>
                     <Content
                       smallcolor={colors.gray.sevenHundred}
-                      margin="4px 0 0"
                       smallmargin="0"
+                      paragraphmarginbottom="0 0 4px"
                     >
+                      <p>{item.name}</p>
                       {item.category === "notebooks" && (
                         <>
                           {item.bookId ? (
@@ -105,7 +106,7 @@ function OrderSummary({
                       )}
                     </Content>
                   </Box>
-                  <p>x {item.quantity}</p>
+                  <p style={{ whiteSpace: "nowrap", margin: "0 8px" }}>x {item.quantity}</p>
                   <p>${convertToDecimal(item.price, 2)}</p>
                 </Flexbox>
               </Flexbox>

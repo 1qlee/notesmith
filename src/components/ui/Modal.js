@@ -13,7 +13,8 @@ const StyledModal = styled.dialog`
   position: absolute;
   top: 25%;
   transform: translate(-50%, -25%);
-  width: ${props => props.width || widths.modal};
+  max-width: ${props => props.width || widths.modal};
+  width: inherit;
   z-index: 9001;
 `
 
@@ -37,7 +38,7 @@ const ModalHeader = styled.div`
 `
 
 const ModalContent = styled.div`
-  padding: 32px 0;
+  padding: 16px 0;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
   font-size: 1rem;
 `

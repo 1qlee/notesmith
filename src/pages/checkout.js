@@ -307,9 +307,9 @@ const Checkout = () => {
                     </Flexbox>
                   ) : (
                     <Row>
-                      <Col sm={8}>
+                      <Col sm={7}>
                         <Box
-                          width="600px"
+                          maxwidth="600px"
                         >
                           <Breadcrumb
                             items={breadcrumbItems}
@@ -412,7 +412,7 @@ const Checkout = () => {
                           </CheckoutSteps>
                         </Box>
                       </Col>
-                      <Col sm={4}>
+                      <Col sm={5}>
                         <OrderSummary
                           cartItems={cartItems}
                           coupon={coupon}

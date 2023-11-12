@@ -67,7 +67,7 @@ function CheckoutForm({
       clientSecret,
       confirmParams: {
         // Return URL where the customer should be redirected after the authorization
-        return_url: `https://www.notesmithbooks.com/checkout/`
+        return_url: `https://www.notesmithbooks.com/checkout/payment`
       },
       redirect: "if_required",
     })

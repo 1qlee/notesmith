@@ -1,14 +1,16 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "../../hooks/useShoppingCart"
 import { isBrowser } from "../../utils/helper-functions"
+import { List } from "@phosphor-icons/react"
 
-import { Container, setConfiguration } from "react-grid-system"
+import { Container } from "react-grid-system"
 import Banner from "../ui/Banner"
 import Logo from "../misc/Logo"
+import Icon from "../ui/Icon"
 
 const StyledNav = styled.nav`
   width: 100%;
@@ -34,6 +36,25 @@ const NavSection = styled.div`
   flex: 1 1 0;
   justify-content: ${props => props.justifycontent};
   height: 100%;
+  &.nav-items {
+    @media only screen and (max-width: 520px) {
+      flex-direction: column;
+      position: absolute;
+      justify-content: flex-start;
+      align-items: flex-end;
+      top: 100%;
+      height: auto;
+      flex: 1;
+      right: 0;
+      display: none;
+      background-color: ${colors.white};
+      border: ${colors.borders.black};
+      z-index: 99;
+      &.is-active {
+        display: flex;
+      }
+    }
+  }
 `
 
 const NavItem = styled.div`
@@ -41,14 +62,17 @@ const NavItem = styled.div`
   font-weight: 400;
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.825rem;
+  padding: 8px 16px;
+  font-size: 1rem;
   &:last-child {
-    padding: 1rem 0 1rem 1rem;
+    padding: 16px 0 16px 16px;
+    @media only screen and (max-width: 520px) {
+      padding: 8px 16px;
+    }
   }
 `
 
-const HorizontalNav = styled.div`
+const Navbar = styled.div`
   background-color: ${colors.white};
   display: ${props => props.hideNavbar ? "none" : "flex"};
   align-items: center;
@@ -68,7 +92,15 @@ const CartCounter = styled.span`
   margin-left: 0.25rem;
 `
 
+const NavMenu = styled.div`
+  display: none;
+  @media (max-width: 520px) {
+    display: block;
+  }
+`
+
 const Nav = ({ auth, hideNavbar }) => {
+  const [showMenu, setShowMenu] = useState(false)
   let hideDashboard = false
 
   if (isBrowser) {
@@ -84,7 +116,6 @@ const Nav = ({ auth, hideNavbar }) => {
     }
   }
 
-  setConfiguration({ gutterWidth: 64 })
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount, clearCart } = useShoppingCart()
 
@@ -103,7 +134,7 @@ const Nav = ({ auth, hideNavbar }) => {
         }}
       />
       <Container xl lg md sm xs>
-        <HorizontalNav hideNavbar={hideNavbar}>
+        <Navbar hideNavbar={hideNavbar}>
           <NavSection>
             <Link to="/">
               <NavLogo>
@@ -111,8 +142,19 @@ const Nav = ({ auth, hideNavbar }) => {
               </NavLogo>
             </Link>
           </NavSection>
+          <Icon
+            as={NavMenu}
+            onClick={() => setShowMenu(!showMenu)}
+            size={20}
+            padding="4px"
+          >
+            <List />
+          </Icon>
           {!loading && (
-            <>
+            <NavSection
+              justifycontent="flex-end"
+              className={`nav-items ${showMenu ? "is-active " : ""}`}
+            >
               <NavItem>
                 <NavLink
                   to="/products/notebooks/pro-wired-notebook-a5-custom/white"
@@ -122,71 +164,66 @@ const Nav = ({ auth, hideNavbar }) => {
                 </NavLink>
               </NavItem>
               {user ? (
-                  <>
-                    {!hideDashboard && (
-                      <NavItem>
-                        <NavLink
-                          to="/account/dashboard"
-                          color={colors.gray.nineHundred}
-                        >
-                          Dashboard
-                        </NavLink>
-                      </NavItem>
-                    )}
+                <>
+                  {!hideDashboard && (
                     <NavItem>
                       <NavLink
-                        as="a"
-                        tabIndex={0}
-                        onClick={() => handleSignOut()}
+                        to="/account/dashboard"
                         color={colors.gray.nineHundred}
                       >
-                        Sign out
+                        Dashboard
                       </NavLink>
                     </NavItem>
-                  </>
-                ) : (
-                  <>
-                    <NavItem>
-                      <NavLink
-                        to="/signin"
-                        color={colors.gray.nineHundred}
-                      >
-                        Sign in
-                      </NavLink>
-                    </NavItem>
-                    <NavItem
-                      className="last-item"
+                  )}
+                  <NavItem>
+                    <NavLink
+                      as="a"
+                      tabIndex={0}
+                      onClick={() => handleSignOut()}
+                      color={colors.gray.nineHundred}
                     >
-                      <NavLink
-                        to="/signup"
-                        color={colors.gray.nineHundred}
-                      >
-                        Sign up
-                      </NavLink>
-                    </NavItem>
-                  </>
-                )
-              }
-              <NavSection
-                justifycontent="flex-end"
-              >
-                <NavItem>
-                  <NavLink
-                    to="/cart"
-                    color={colors.gray.nineHundred}
+                      Sign out
+                    </NavLink>
+                  </NavItem>
+                </>
+              ) : (
+                <>
+                  <NavItem>
+                    <NavLink
+                      to="/signin"
+                      color={colors.gray.nineHundred}
+                    >
+                      Sign in
+                    </NavLink>
+                  </NavItem>
+                  <NavItem
+                    className="last-item"
                   >
-                    Cart
-                    {cartCount > 0 && (
-                      <CartCounter>
-                        ({cartCount})
-                      </CartCounter>
-                    )}
-                  </NavLink>
-                </NavItem>
-              </NavSection>
-            </>
+                    <NavLink
+                      to="/signup"
+                      color={colors.gray.nineHundred}
+                    >
+                      Sign up
+                    </NavLink>
+                  </NavItem>
+                </>
+              )}
+              <NavItem>
+                <NavLink
+                  to="/cart"
+                  color={colors.gray.nineHundred}
+                >
+                  Cart
+                  {cartCount > 0 && (
+                    <CartCounter>
+                      ({cartCount})
+                    </CartCounter>
+                  )}
+                </NavLink>
+              </NavItem>
+            </NavSection>
           )}
-        </HorizontalNav>
+        </Navbar>
       </Container>
     </StyledNav>
   )

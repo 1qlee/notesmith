@@ -3,6 +3,7 @@ sendgridMail.setApiKey(process.env.GATSBY_SENDGRID_API_KEY);
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
+  console.log("🚀 ~ file: send-email-generic.js:6 ~ exports.handler= ~ body:", body)
   const { templateId, from, to } = body;
 
   try {

@@ -15,6 +15,7 @@ const StyledLayout = styled.div`
   height: 100%;
   overflow-x: hidden;
   position: relative;
+  min-height: 600px;
   width: 100%;
   &.is-full-height {
     min-height: 100vh;

@@ -238,7 +238,7 @@ const Order = ({ location, orderId }) => {
                           margin="0 0 32px"
                         >
                           <Content
-                            h5fontweight="800"
+                            h5fontweight="700"
                             h5margin="0 0 8px"
                             margin="0 0 16px"
                           >
@@ -250,7 +250,7 @@ const Order = ({ location, orderId }) => {
                             )}
                           </Content>
                           <Content
-                            h5fontweight="800"
+                            h5fontweight="700"
                             h5margin="0 0 8px"
                             margin="0 0 16px"
                             paragraphmargin="0"
@@ -264,15 +264,12 @@ const Order = ({ location, orderId }) => {
                               </>
                             ) : (
                               <>
-                                <PlaceholderLine width="4rem" />
-                                <PlaceholderLine width="8rem" />
-                                <PlaceholderLine width="5rem" />
-                                <PlaceholderLine width="8rem" />
+                                <PlaceholderLine width="12rem" />
                               </>
                             )}
                           </Content>
                           <Content
-                            h5fontweight="800"
+                            h5fontweight="700"
                             h5margin="0 0 8px"
                           >
                             <h5>Tracking</h5>
@@ -295,13 +292,12 @@ const Order = ({ location, orderId }) => {
                               </Button>
                             ) : (
                               <>
-                                <PlaceholderLine width="4rem" />
-                                <PlaceholderLine width="8rem" />
+                                <PlaceholderLine width="16rem" />
                               </>
                             )}
                           </Content>
                         </Box>
-                        {showInfo ? (
+                        {showInfo && (
                           <Box
                             borderbottom={colors.borders.black}
                             padding="0 0 16px"
@@ -335,8 +331,6 @@ const Order = ({ location, orderId }) => {
                               </Flexbox>
                             ))}
                           </Box>
-                        ) : (
-                          <PlaceholderLine width="12rem" />
                         )}
                         {showInfo ? (
                           <>
@@ -399,17 +393,20 @@ const Order = ({ location, orderId }) => {
                         ) : (
                           <Content
                             margin="16px 0"
+                            h5fontweight="700"
+                            h5margin="0 0 8px"
                           >
+                            <h5>Items</h5>
                             <PlaceholderLine width="6rem" />
                             <PlaceholderLine width="8rem" />
                             <PlaceholderLine width="6rem" />
+                            <PlaceholderLine width="8rem" />
                           </Content>
                         )}
                       </Box>
                       {!showInfo && (
                         <Notification
-                          backgroundcolor={colors.gray.oneHundred}
-                          bordercolor={colors.primary.sixHundred}
+                          backgroundcolor={colors.yellow.oneHundred}
                           margin="0 0 2rem"
                           padding="16px"
                         >
@@ -430,13 +427,12 @@ const Order = ({ location, orderId }) => {
                                 >
                                   <StyledInput
                                     placeholder="Email address associated with this order"
-                                    borderradius="0"
-                                    bordercolor={colors.primary.sixHundred}
                                     className={error.success ? null : "is-error"}
                                     id="email"
                                     type="email"
                                     name="email"
                                     autocomplete="email"
+                                    fontsize="1rem"
                                     required
                                     onChange={e => {
                                       setError({
@@ -451,9 +447,6 @@ const Order = ({ location, orderId }) => {
                                   />
                                   <Button
                                     form="email-resend"
-                                    color={colors.white}
-                                    backgroundcolor={colors.primary.sixHundred}
-                                    borderradius="0"
                                     padding="16px"
                                     margin="0 0 0 8px"
                                     type="submit"

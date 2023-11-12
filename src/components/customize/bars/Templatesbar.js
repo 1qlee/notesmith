@@ -1,12 +1,15 @@
 import React from "react"
-import PageIcons from "../PageIcons"
+import { colors } from "../../../styles/variables"
 import { useEditorDispatch } from "../context/editorContext"
 
-import { ControlsContent } from "../Controls"
+import PageIcons from "../PageIcons"
+import { ControlsContent, ControlsFooter } from "../Controls"
+import Button from "../../ui/Button"
 
 function Templatesbar({
   pageData,
   setPageData,
+  handleShowModal,
 }) {
   const dispatch = useEditorDispatch()
 
@@ -37,6 +40,17 @@ function Templatesbar({
           />
         </div>
       </ControlsContent>
+      <ControlsFooter>
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
+          padding="16px"
+          width="100%"
+          onClick={() => handleShowModal()}
+        >
+          Apply changes
+        </Button>
+      </ControlsFooter>
     </>
   )
 }

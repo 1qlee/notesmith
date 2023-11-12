@@ -50,8 +50,8 @@ function Checkoutbar({
       name: productData.name,
       numOfPages: productData.numOfPages,
       pages: [...canvasPages],
-      price_id: productData.stripePreorderPriceId,
-      price: productData.preorderPrice,
+      price_id: productData.stripePriceId,
+      price: productData.price,
       printed: false,
       size: productData.size,
       slug: productData.slug,
@@ -177,10 +177,11 @@ function Checkoutbar({
               <Content
                 padding="0"
                 margin="0"
-                h4margin="0"
-                h4fontweight="700"
+                h5margin="0"
+                h5fontsize="1.25rem"
+                h5fontweight="400"
               >
-                <h4>{calculateTotalPrice(productData.preorderPrice)}</h4>
+                <h5>{calculateTotalPrice(productData.price)}</h5>
               </Content>
             </Flexbox>
           </Box>

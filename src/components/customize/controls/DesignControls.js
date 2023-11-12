@@ -14,7 +14,7 @@ import Icon from "../../ui/Icon"
 const StyledTag = ({ children }) => {
   return (
     <Tag
-      padding="2px 8px"
+      padding="4px 8px"
       fontsize="0.625rem"
       letterspacing="1px"
       fontweight='700'

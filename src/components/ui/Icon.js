@@ -34,6 +34,7 @@ const StyledIcon = styled.span`
   display: inline-flex;
   justify-content: center;
   position: relative;
+  padding: ${props => props.padding};
   margin: ${props => props.margin};
   height: ${props => props.height};
   width: ${props => props.width};
