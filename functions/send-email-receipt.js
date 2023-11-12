@@ -19,13 +19,13 @@ exports.handler = async ({ body, headers }) => {
     // we're only checking for the event where payment intent succeeded (aka was paid for)
     if (stripeEvent.type === 'payment_intent.succeeded') {
       console.log("[Stripe Webhook] Payment Intent succeeded... Calling webhook...")
-      const data = stripeEvent.data.object;
-      const { id, receipt_email, metadata, amount, charges } = data;
+      const { data } = stripeEvent;
+      const { object } = data;
+      const { amount, id, receipt_email, metadata, created } = object;
       const { tax, authKey, shipping, subtotal } = metadata;
       const { address } = data.shipping;
       // the date the payment was succeeded
-      const date = new Date(charges.data[0].created * 1000);
-      const { last4 } = charges.data[0].payment_method_details.card;
+      const date = new Date(created * 1000);
 
       const templateData = {
         template_id: "d-abcd18cd57cd41aa8d857ccdfd01da92",
@@ -53,7 +53,7 @@ exports.handler = async ({ body, headers }) => {
               taxRate: tax ? convertToDecimal(tax, 2) : "0",
               totalAmount: convertToDecimal(amount, 2),
               authKey: authKey,
-              last4: last4,
+              last4: last4 || "****",
               english: true
             }
           }
