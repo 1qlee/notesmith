@@ -10,7 +10,6 @@ import { Modal, ModalHeader, ModalContent, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
-import sendEmailVerification from "../../functions/sendEmailVerification"
 
 function SettingsForm() {
   const { user, getAuthCredential } = useFirebaseContext()
@@ -209,6 +208,7 @@ function SettingsForm() {
   async function handleChangeEmailSubmit(e) {
     e.preventDefault()
 
+
     await fetch("/.netlify/functions/send-email-generic", {
       method: "post",
       headers: {
@@ -294,7 +294,7 @@ function SettingsForm() {
         </FlexboxButtons>
       </Flexbox>
       <form id="settings-form" name="settings-form" onSubmit={e => handleSettingsFormSubmit(e)}>
-        <Flexbox
+        {/* <Flexbox
           flex="flex"
           alignitems="flex-start"
           justifycontent="space-between"
@@ -326,7 +326,7 @@ function SettingsForm() {
               <p>{user.email}</p>
             </Content>
           )}
-        </Flexbox>
+        </Flexbox> */}
         <Flexbox
           flex="flex"
           alignitems="flex-start"
