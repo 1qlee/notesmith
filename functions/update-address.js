@@ -9,7 +9,9 @@ exports.handler = async (event) => {
     await stripe.paymentIntents.update(
       pid,
       {
-        receipt_email: email,
+        metadata: {
+          email: email
+        }
       }
     )
 

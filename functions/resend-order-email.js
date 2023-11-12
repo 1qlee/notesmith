@@ -16,8 +16,8 @@ exports.handler = async (event) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    const { id, receipt_email, metadata, shipping, amount, charges } = paymentIntent;
-    const { quantity, price, priceId, authKey, shipmentId, rateId, tracking } = metadata;
+    const { id, metadata, shipping, amount, charges } = paymentIntent;
+    const { quantity, price, priceId, authKey, shipmentId, rateId, tracking, email } = metadata;
     const shippingRate = metadata.shipping
     const taxRate = metadata.tax
     // get information regarding the product's price
@@ -44,7 +44,7 @@ exports.handler = async (event) => {
         {
           to: [
             {
-              email: receipt_email
+              email: email
             }
           ],
           dynamic_template_data: {

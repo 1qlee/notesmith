@@ -21,9 +21,9 @@ exports.handler = async ({ body, headers }) => {
       console.log("[Stripe Webhook] Payment Intent succeeded... Calling webhook...")
       const { data } = stripeEvent;
       const { object } = data;
-      const { amount, id, receipt_email, metadata, created } = object;
-      const { tax, authKey, shipping, subtotal } = metadata;
-      const { address } = data.shipping;
+      const { amount, id, metadata, created } = object;
+      const { tax, authKey, shipping, subtotal, email } = metadata;
+      const { address } = object.shipping;
       // the date the payment was succeeded
       const date = new Date(created * 1000);
 
@@ -41,7 +41,7 @@ exports.handler = async ({ body, headers }) => {
           {
             to: [
               {
-                email: receipt_email
+                email: email
               }
             ],
             dynamic_template_data: {
