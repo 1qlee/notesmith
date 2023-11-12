@@ -47,6 +47,7 @@ function CheckoutForm({
   const submitPaymentForm = async e => {
     e.preventDefault()
     setProcessing(true)
+    setPaymentProcessing(true)
     // show loading UI state
 
     if (!stripe || !elements) {
@@ -116,8 +117,6 @@ function CheckoutForm({
   // fetch easypost api to purchase a shipping label
   // takes options arg to save to orders (database)
   const purchaseShippingLabel = (createdDate) => {
-    // shows loader
-    setPaymentProcessing(true)
 
     // all purchase info is in the paymentIntent, so just send pid
     fetch("/.netlify/functions/create-shipment", {

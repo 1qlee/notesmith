@@ -58,6 +58,9 @@ const LoaderWrapper = styled.div`
     top: 70px;
     left: 0;
   }
+  &.has-banner {
+    top: 120px;
+  }
   .mask {
     fill: none;
     stroke: #fff;
@@ -94,6 +97,17 @@ const LoaderWrapper = styled.div`
   }
 `
 
+const LoaderContent = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  &.has-banner {
+    top: -120px;
+  }
+`
+
 // const StyledLoader = styled.div`
 //   animation-name: ${moving};
 //   animation-duration: 2s;
@@ -126,15 +140,17 @@ const LoaderWrapper = styled.div`
 function Loader({ className, msg }) {
   return (
     <LoaderWrapper className={className}>
-      <Logo height="96" width="300" />
-      {msg && (
-        <Notification
-          backgroundcolor={colors.gray.twoHundred}
-          color={colors.gray.nineHundred}
-        >
-          <p>{msg}</p>
-        </Notification>
-      )}
+      <LoaderContent className={className}>
+        <Logo height="96" width="300" />
+        {msg && (
+          <Notification
+            backgroundcolor={colors.yellow.oneHundred}
+            color={colors.yellow.nineHundred}
+          >
+            <p>{msg}</p>
+          </Notification>
+        )}
+      </LoaderContent>
     </LoaderWrapper>
   )
 }

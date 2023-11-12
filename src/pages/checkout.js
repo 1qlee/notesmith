@@ -285,6 +285,7 @@ const Checkout = () => {
     <Layout 
       loading={loading || paymentProcessing}
       loaderMsg={paymentProcessing && "Processing payment... Do not refresh or close this page!"}
+      loaderClassName="has-banner"
     >
       {clientSecret && (
         <Elements

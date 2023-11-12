@@ -53,7 +53,7 @@ exports.handler = async ({ body, headers }) => {
               taxRate: tax ? convertToDecimal(tax, 2) : "0",
               totalAmount: convertToDecimal(amount, 2),
               authKey: authKey,
-              last4: last4 || "****",
+              last4: "****",
               english: true
             }
           }
