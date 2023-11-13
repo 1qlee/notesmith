@@ -139,9 +139,6 @@ const UserDashboard = () => {
               </p>
               <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
             </Content>
-            <Content>
-              <p>The pre-order sale will conclude on <b>December 15th</b>.</p>
-            </Content>
             <Notification
               backgroundcolor={colors.green.twoHundred}
               color={colors.green.nineHundred}

@@ -138,7 +138,7 @@ const IndexPage = ({ data }) => {
                         SALE
                       </Tag>
                     </Flexbox>
-                    <p>Our notebooks are be 25% off during this time and will ship for free to customers in the U.S.</p>
+                    <p>Our notebooks are 25% off during this time and will ship for free to customers in the U.S.</p>
                     <Button
                       as={Link}
                       to="/products/notebooks/pro-wired-notebook-a5-custom/white"
