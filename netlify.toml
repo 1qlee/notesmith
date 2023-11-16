@@ -9,6 +9,6 @@
 
 [[redirects]]
   from = "/products/notebooks/pro-wired-notebook-a5-custom/*"
-  to = "products/notebooks/pro-wired-notebook-a5-custom/white"
+  to = "/products/notebooks/pro-wired-notebook-a5-custom/white"
   status = 200
   force = true

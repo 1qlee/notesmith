@@ -86,6 +86,7 @@ const Editor = ({
           }
           else {
             // else redirect the user to the generic editor page (based on the product they had selected)
+            setInitializing(false)
             isBrowser() && navigate(`/customize/${productData.slug}`)
           }
         }
