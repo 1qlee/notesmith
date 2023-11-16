@@ -3,7 +3,7 @@ import { Link, graphql } from "gatsby"
 import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
-import { Container, Row, Col, setConfiguration } from 'react-grid-system'
+import { Container, Row, Col } from 'react-grid-system'
 import RandomLine from "../components/misc/Lines" 
 
 import { Flexbox } from "../components/layout/Flexbox"
@@ -27,10 +27,9 @@ import TextLink from "../components/ui/TextLink"
 import Seo from "../components/layout/Seo"
 
 const IndexPage = ({ data }) => {
-  setConfiguration({ gutterWidth: 64 })
   const { tabImages } = data
   const [activeTab, setActiveTab] = useState(0)
-  const config = {
+  const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
     alignmentVertical: "top",
     angle: 60,
@@ -74,8 +73,7 @@ const IndexPage = ({ data }) => {
     template: "",
     strokeWidth: 0.088,
     xHeight: 5,
-  }
-  const [pageData, setPageData] = useState(config)
+  })
   const leftPageData = {
     template: ""
   }
@@ -658,6 +656,12 @@ export const pageQuery = graphql`
 
 export default IndexPage
 
-export const Head = () => (
-  <Seo title="Made-to-order notebooks crafted with your unique, custom printed pages" />
+export const Head = ({ location, params, data, pageContext }) => (
+  <Seo 
+    title="Made-to-order notebooks crafted with your unique, custom printed pages" 
+    location={location}
+    params={params}
+    data={data}
+    pageContext={pageContext}
+  />
 )
