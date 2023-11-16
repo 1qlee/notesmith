@@ -3,7 +3,6 @@ import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 
 function Seo({ title, description, pathname, children, location, params, data, pageContext }) {
   const { title: defaultTitle, description: defaultDescription, image, url, username } = useSiteMetadata()
-  console.log(location)
 
   const seo = {
     title: title || defaultTitle,
