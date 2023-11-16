@@ -12,8 +12,6 @@ function Seo({ title, description, pathname, children, location, params, data, p
     username,
   }
 
-  console.log("Hey!")
-
   return (
     <>
       <title>{seo.title} | Notesmith</title>

@@ -32,7 +32,6 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
       if (canvasState.deletionAllowed) {
         // if key pressed is delete or backspace
         if (e.key === "Delete" || e.key === "Backspace") {
-          console.log("Deleting")
           canvasState.selectedElements.forEach(ele => {
             ele.remove()
           })

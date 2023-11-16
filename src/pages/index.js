@@ -656,7 +656,7 @@ export default IndexPage
 
 export const Head = ({ location, params, data, pageContext }) => (
   <Seo 
-    title="Made-to-order notebooks crafted with your unique, custom printed pages" 
+    title="Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts." 
     location={location}
     params={params}
     data={data}

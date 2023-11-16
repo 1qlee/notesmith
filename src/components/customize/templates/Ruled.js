@@ -14,7 +14,6 @@ function Ruled({
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const lineSpacing = convertToPx(spacing)
   const maxRows = Math.floor((height + lineSpacing) / (lineSpacing))
-  console.log("🚀 ~ file: Ruled.js:17 ~ maxRows:", maxRows)
 
   function createLines() {
     const linesArray = []
