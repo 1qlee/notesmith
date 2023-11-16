@@ -114,13 +114,13 @@ const IndexPage = ({ data }) => {
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
                   <Content
-                    backgroundcolor={colors.gray.nineHundred}
-                    paragraphcolor={colors.gray.oneHundred}
                     paragraphmargin="0"
                     h5margin="8px 0"
                     h5fontsize="1.25rem"
-                    h5color={colors.gray.oneHundred}
+                    paragraphfontsize="1.25rem"
                     padding="16px"
+                    border={colors.borders.black}
+                    boxshadow={colors.shadow.layered}
                   >
                     <Flexbox
                       alignitems="center"
@@ -136,12 +136,10 @@ const IndexPage = ({ data }) => {
                         SALE
                       </Tag>
                     </Flexbox>
-                    <p>Our notebooks are 25% off during this time and will ship for free to customers in the U.S.</p>
+                    <p>All custom notebooks are 25% off during this time.</p>
                     <Button
                       as={Link}
                       to="/products/notebooks/pro-wired-notebook-a5-custom/white"
-                      backgroundcolor={colors.gray.oneHundred}
-                      color={colors.gray.nineHundred}
                       padding="16px"
                       width="100%"
                     >

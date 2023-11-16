@@ -144,7 +144,7 @@ const UserDashboard = () => {
               color={colors.green.nineHundred}
               margin="16px 0"
             >
-              <p>All notebooks purchased during the pre-order sale are <b>25% off</b> and <b>shipping is also free</b> to addresses in the U.S.</p>
+              <p>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
             </Notification>
           </Col>
           <Col md={6}>

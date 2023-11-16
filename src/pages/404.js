@@ -1,9 +1,11 @@
 import React from "react"
+import { spacing } from "../styles/variables"
 
 import Seo from "../components/layout/Seo"
 import Layout from "../components/layout/Layout"
 import Content from "../components/ui/Content"
 import { Section, SectionMain, SectionContent } from "../components/layout/Section"
+import { Container, Row, Col } from "react-grid-system"
 
 const NotFoundPage = () => {
   return (
@@ -12,10 +14,18 @@ const NotFoundPage = () => {
         className="has-max-height"
       >
         <Section>
-          <SectionContent>
-            <Content headingtextalign="center">
-              <h1>Page not found</h1>
-            </Content>
+          <SectionContent
+            padding={`${spacing.section} 0`}
+          >
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <Content>
+                    <h1>Page not found</h1>
+                  </Content>
+                </Col>
+              </Row>
+            </Container>
           </SectionContent>
         </Section>
       </SectionMain>

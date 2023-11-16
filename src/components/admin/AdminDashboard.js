@@ -27,7 +27,7 @@ const notebookSizes = [
 const AdminDashboard = () => {
   const abortRef = useRef(false)
   const { firebaseDb } = useFirebaseContext()
-  const [activeOrderType, setActiveOrderType] = useState("unprinted")
+  // const [activeOrderType, setActiveOrderType] = useState("unprinted")
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [downloaded, setDownloaded] = useState(0)
   const [toBeDownloaded, setToBeDownloaded] = useState(0)
@@ -50,6 +50,8 @@ const AdminDashboard = () => {
       switch(type) {
         case "unprinted":
           break
+        default:
+          console.log("?")
       }
     })
   }
@@ -334,10 +336,10 @@ const AdminDashboard = () => {
     return svgNode
   }
 
-  const handleGetOrders = (child, value, type) => {
-    setActiveOrderType(type)
-    getOrders(child, value, type)
-  }
+  // const handleGetOrders = (child, value, type) => {
+  //   setActiveOrderType(type)
+  //   getOrders(child, value, type)
+  // }
   
   const addToEarlyAccess = () => {
     const email = prompt("Enter user's email")

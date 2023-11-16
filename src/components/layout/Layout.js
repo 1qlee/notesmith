@@ -26,8 +26,6 @@ const Layout = ({ loading, children, className, backgroundcolor, loaderClassName
   const { isClient, key } = useIsClient()
   if (!isClient) return null;
 
-  console.log("Layout initialized.")
-
   return (
     <StyledLayout 
       key={key} 

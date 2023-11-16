@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-grid-system'
 import { Section, SectionContent, SectionMain } from "../components/layout/Section"
 import Content from "../components/ui/Content"
 import Layout from "../components/layout/Layout"
+import Seo from "../components/layout/Seo"
 
 const ReturnsPage = () => {
   return (
@@ -56,3 +57,9 @@ const ReturnsPage = () => {
 }
 
 export default ReturnsPage
+
+export const Head = () => (
+  <Seo 
+    title="Return policy" 
+  />
+)
