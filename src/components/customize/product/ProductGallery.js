@@ -36,7 +36,7 @@ const ProductGallery = ({
               showThumbs={false}
               infiniteLoop={false}
               swipeable={true}
-              swipeScrollTolerance={200}
+              swipeScrollTolerance={50}
               emulateTouch={true}
             >
               {sortedImages.map((image, index) => (
