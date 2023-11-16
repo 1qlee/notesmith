@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
+import { isBrowser } from "../../utils/helper-functions"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
@@ -22,23 +23,25 @@ const StyledLayout = styled.div`
 `
 
 const Layout = ({ loading, children, className, backgroundcolor, loaderClassName, loaderMsg }) => {
-  return (
-    <StyledLayout 
-      className={className} 
-      backgroundcolor={backgroundcolor}
-    >
-      <Nav />
-      {children}
-      {loading && (
-        <Loader 
-          msg={loaderMsg}
-          className={loaderClassName}
-        />
-      )}
-      <Footer />
-      <Toastify />
-    </StyledLayout>
-  )
+  if (isBrowser) {
+    return (
+      <StyledLayout
+        className={className}
+        backgroundcolor={backgroundcolor}
+      >
+        <Nav />
+        {children}
+        {loading && (
+          <Loader
+            msg={loaderMsg}
+            className={loaderClassName}
+          />
+        )}
+        <Footer />
+        <Toastify />
+      </StyledLayout>
+    )
+  }
 }
 
 export default Layout
