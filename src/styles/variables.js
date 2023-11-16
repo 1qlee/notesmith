@@ -133,6 +133,7 @@ const fonts = {
 
 const widths = {
   logo: "160px",
+  dropdown: "240px",
   sidebar: "300px",
   caption: "300px",
   input: "300px",
