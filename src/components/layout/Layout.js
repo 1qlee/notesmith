@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import { isBrowser } from "../../utils/helper-functions"
+import useIsClient from "../../hooks/useIsClient"
 import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
@@ -23,25 +23,29 @@ const StyledLayout = styled.div`
 `
 
 const Layout = ({ loading, children, className, backgroundcolor, loaderClassName, loaderMsg }) => {
-  if (isBrowser) {
-    return (
-      <StyledLayout
-        className={className}
-        backgroundcolor={backgroundcolor}
-      >
-        <Nav />
-        {children}
-        {loading && (
-          <Loader
-            msg={loaderMsg}
-            className={loaderClassName}
-          />
-        )}
-        <Footer />
-        <Toastify />
-      </StyledLayout>
-    )
-  }
+  const { isClient, key } = useIsClient()
+  if (!isClient) return null;
+
+  console.log("Layout initialized.")
+
+  return (
+    <StyledLayout 
+      key={key} 
+      className={className} 
+      backgroundcolor={backgroundcolor}
+    >
+      <Nav />
+      {children}
+      {loading && (
+        <Loader 
+          msg={loaderMsg}
+          className={loaderClassName}
+        />
+      )}
+      <Footer />
+      <Toastify />
+    </StyledLayout>
+  )
 }
 
 export default Layout
