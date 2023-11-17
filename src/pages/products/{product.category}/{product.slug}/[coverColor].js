@@ -17,13 +17,13 @@ import ProductHero from "../../../../components/customize/product/ProductHero"
 import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
-  const { productData, productImages, descriptionImages, productThumbnails, galleryImages } = data
+  const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
   const { coverColor } = params
-  const { heightPixel, widthPixel } = productData
+  const { heightPixel, widthPixel } = product
   const svgHeight = heightPixel
   const svgWidth = widthPixel
   const [bookData, setBookData] = useState({
-    ...productData,
+    ...product,
     coverColor: coverColor,
   })
   const defaultPageData = {
@@ -96,7 +96,7 @@ const ProductPage = ({ data, params }) => {
       // redirect the user to the first color by default
       navigate(`/products/${bookData.category}/${bookData.slug}/${defaultCoverColor}`, { replace: true })
       setBookData({
-        ...productData,
+        ...product,
         coverColor: defaultCoverColor
       })
     }
@@ -109,7 +109,7 @@ const ProductPage = ({ data, params }) => {
       height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
       width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
     })
-  }, [productData, bookData, coverColor, pageData])
+  }, [product, bookData, coverColor, pageData])
 
   return (
     <Layout>
@@ -196,7 +196,7 @@ const ProductPage = ({ data, params }) => {
 
 export const pageQuery = graphql`
   query ProductPageQuery($id: String!, $slug: String!) {
-    productData: productsJson(id: { eq: $id }) {
+    product(id: { eq: $id }) {
       camelName
       category
       custom
@@ -287,5 +287,5 @@ export const pageQuery = graphql`
 export default ProductPage
 
 export const Head = ({ data }) => (
-  <Seo title={data.productData.name} />
+  <Seo title={data.product.name} />
 )

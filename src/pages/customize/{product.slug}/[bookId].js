@@ -4,19 +4,22 @@ import Editor from "../../../components/customize/Editor"
 
 import Seo from "../../../components/layout/Seo"
 
-const DefaultEditorPage = ({ data }) => {
+const EditorPage = ({ data, params }) => {
   return (
     <Editor
-      productData={data.productData}
+      bookId={params.bookId}
+      productData={data.product}
+      productImages={data.productImages}
     />
   )
 }
 
 export const pageQuery = graphql`
-  query DefaultEditorPageQuery($slug: String!) {
-    productData: productsJson(slug: { eq: $slug }) {
+  query EditorPageQuery($slug: String!) {
+    product(slug: { eq: $slug }) {
       camelName
       category
+      custom
       description
       heightInch
       heightPixel
@@ -31,16 +34,30 @@ export const pageQuery = graphql`
       stripePriceId
       widthInch
       widthPixel
+      weight
       colors {
         name
         hex
         slug
       }
     }
+    productImages: allFile(filter: { relativeDirectory: { eq: $slug}}) {
+      nodes {
+        name
+        childImageSharp {
+          gatsbyImageData(
+            width: 80
+            height: 80
+            quality: 100
+          )
+        }
+      }
+    }
+    
   }
 `
 
-export default DefaultEditorPage
+export default EditorPage
 
 export const Head = () => (
   <Seo title="Book editor" />

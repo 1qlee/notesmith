@@ -6,14 +6,14 @@ import AuthBooks from "../../components/auth/AuthBooks"
 import Seo from "../../components/layout/Seo"
 
 function BooksPage({ data }) {
-  return <PrivateRoute component={AuthBooks} allProducts={data.allProductsJson} />
+  return <PrivateRoute component={AuthBooks} allProducts={data.allProductn} />
 }
 
 export default BooksPage
 
 export const pageQuery = graphql`
-  query allProductsData {
-    allProductsJson {
+  query allProduct {
+    allProduct {
       nodes {
         camelName
         category

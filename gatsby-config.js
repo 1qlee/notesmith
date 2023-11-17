@@ -6,7 +6,7 @@ module.exports = {
   siteMetadata: {
     title: `Notesmith`,
     description: `Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts.`,
-    username: `@notesmith`,
+    username: `@notesmithbooks`,
     url: `https://www.notesmithbooks.com`,
     image: "/stacked-books.jpg"
   },
@@ -41,15 +41,6 @@ module.exports = {
       }
     },
     {
-      resolve: `gatsby-plugin-google-fonts`,
-      options: {
-        fonts: [
-          `Nanum Myeongjo\:400,700`,
-          `Jost\:400,400i,700,700i`,
-        ]
-      },
-    },
-    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `Notesmith`,
@@ -78,6 +69,18 @@ module.exports = {
         }
       }
     },
+    {
+      resolve: `gatsby-plugin-netlify`,
+      options: {
+        headers: {
+          '/fonts/*': [
+            'Cache-Control: public',
+            'Cache-Control: max-age=365000000',
+            'Cache-Control: immutable',
+          ],
+        }
+      }
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
@@ -86,6 +89,5 @@ module.exports = {
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-plugin-styled-components`,
-    `gatsby-plugin-netlify`
   ],
 }

@@ -3,9 +3,9 @@ import { graphql, navigate } from "gatsby"
 import { isBrowser } from "../../../../utils/helper-functions"
 
 const DefaultProductPage = ({ data }) => {
-  const { products } = data
+  const { product } = data
 
-  isBrowser() && navigate(`/products/${products.category}/${products.slug}/${products.colors[0].slug}`, { replace: true })
+  isBrowser() && navigate(`/product/${product.category}/${product.slug}/${product.colors[0].slug}`, { replace: true })
 
   return (
     <div>
@@ -16,7 +16,7 @@ const DefaultProductPage = ({ data }) => {
 
 export const pageQuery = graphql`
   query DefaultPageQuery($id: String!) {
-    products: productsJson(id: { eq: $id }) {
+    product(id: { eq: $id }) {
       name
       size
       slug

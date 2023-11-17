@@ -585,3 +585,53 @@ rect.overlay {
     margin-bottom: 32px;
   }
 }
+/* FONTS */
+/* @font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../static/fonts/jost-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../static/fonts/jost-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../static/fonts/jost-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../static/fonts/jost-700-italic.woff2') format('woff2');
+} */
+@font-face {
+  font-family: 'Jost';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('/fonts/jost-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nanum Myeongjo';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/nm-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nanum Myeongjo';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('/fonts/nm-700-normal.woff2') format('woff2');
+}

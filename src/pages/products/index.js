@@ -5,7 +5,7 @@ function Products({ data }) {
   return (
     <div>
       <div>Notebooks</div>
-      {data.allProductsJson.nodes.map(product => (
+      {data.allProduct.nodes.map(product => (
         <Link key={product.name} to={`/products/${product.category}/${product.slug}`}>
           {product.name}
         </Link>
@@ -16,7 +16,7 @@ function Products({ data }) {
 
 export const query = graphql`
   query {
-    allProductsJson {
+    allProduct {
       nodes {
         name
         slug
