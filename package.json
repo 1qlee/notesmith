@@ -5,8 +5,7 @@
   "version": "1.0.2",
   "author": "Notesmith",
   "dependencies": {
-    "@easypost/api": "^6.1.0",
-    "@gatsbyjs/reach-router": "^2.0.1",
+    "@easypost/api": "^6.1.0", 
     "@phosphor-icons/react": "^2.0.10",
     "@sendgrid/client": "^7.4.6",
     "@sendgrid/mail": "^7.4.6",
@@ -21,9 +20,7 @@
     "firebase": "^9.18.0",
     "firebase-admin": "^11.0.1",
     "gatsby": "^5.12.9",
-    "gatsby-core-utils": "^4.11.0",
     "gatsby-plugin-firebase-v9.0": "^1.0.3",
-    "gatsby-plugin-google-fonts": "^1.0.1",
     "gatsby-plugin-image": "^3.7.0",
     "gatsby-plugin-manifest": "^5.9.0",
     "gatsby-plugin-netlify": "^5.1.1",
@@ -57,6 +54,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.32",
     "prettier": "^2.3.2",
     "svg-url-loader": "^8.0.0"
   },

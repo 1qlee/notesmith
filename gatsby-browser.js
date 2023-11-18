@@ -1,9 +1,4 @@
 import React from "react"
-import "firebase/auth"
-import "firebase/database"
-import "firebase/firestore"
-import "firebase/functions"
-import "@stripe/stripe-js"
 import { FirebaseProvider } from "./src/utils/auth"
 import { CartProvider } from "use-shopping-cart"
 

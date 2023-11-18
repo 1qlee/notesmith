@@ -82,5 +82,6 @@ module.exports = {
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-plugin-styled-components`,
+    `gatsby-plugin-webpack-bundle-analyser-v2`,
   ],
 }
