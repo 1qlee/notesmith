@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword, 
   getAuth, 
   onAuthStateChanged, 
+  initializeApp,
   initializeAuth,
   signInWithEmailAndPassword, 
   signOut, 
@@ -34,12 +35,9 @@ export const FirebaseProvider = ({
 
   useEffect(() => {
     const initFirebase = () => {
-      const auth = initializeAuth(firebase, {
-        persistence: [
-          indexedDBLocalPersistence,
-          browserLocalPersistence,
-          browserSessionPersistence
-        ],
+      const app = initializeApp(firebase)
+      const auth = initializeAuth(app, {
+        persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
       })
       const db = getDatabase(firebase)
       setFirebaseAuth(auth)
