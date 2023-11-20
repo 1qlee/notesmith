@@ -1,24 +1,12 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 
 import Content from "../ui/Content"
-import Review1 from "../../assets/peeps/review-1.svg"
-import Review2 from "../../assets/peeps/review-2.svg"
-import Review4 from "../../assets/peeps/review-4.svg"
-import Review5 from "../../assets/peeps/review-5.svg"
 
 import { Flexbox } from "../layout/Flexbox"
 import { Container, Row, Col } from "react-grid-system"
 
-const ReviewProfile = styled.div`
-  margin-right: 8px;
-  h5 {
-    margin: 8px 0;
-    font-size: 1rem;
-    font-weight: 800;
-  }
-`
 
 const ReviewBox = styled.div`
   position: relative;
@@ -26,13 +14,6 @@ const ReviewBox = styled.div`
   border: ${colors.borders.black};
   border-radius: 8px;
   margin-bottom: 32px;
-`
-
-const ReviewProfileImg = styled.div`
-  height: 64px;
-  width: 64px;
-  border-radius: 24px 12px / 12px 24px;
-  background-color: ${colors.gray.twoHundred};
 `
 
 const NoteHoles = styled.div`

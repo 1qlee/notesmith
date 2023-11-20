@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react"
 import firebase from "gatsby-plugin-firebase-v9.0"
 import { 
-  createUserWithEmailAndPassword, 
   EmailAuthProvider, 
+  createUserWithEmailAndPassword, 
   getAuth, 
   onAuthStateChanged, 
+  initializeAuth,
   signInWithEmailAndPassword, 
   signOut, 
 } from "firebase/auth"
@@ -33,7 +34,13 @@ export const FirebaseProvider = ({
 
   useEffect(() => {
     const initFirebase = () => {
-      const auth = getAuth(firebase)
+      const auth = initializeAuth(firebase, {
+        persistence: [
+          indexedDBLocalPersistence,
+          browserLocalPersistence,
+          browserSessionPersistence
+        ],
+      })
       const db = getDatabase(firebase)
       setFirebaseAuth(auth)
       setFirebaseDb(db)

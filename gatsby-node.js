@@ -12,7 +12,7 @@ const products = [
     paperColor: "Bright white",
     paperTooth: "Ultra smooth",
     paperWeight: "70lb",
-    price: 2950,
+    price: 3000,
     size: "A5",
     slug: "pro-wired-notebook-a5-custom",
     stripePriceId: "price_1NzQ0pIN24Fw2SWdKJJKETku",
