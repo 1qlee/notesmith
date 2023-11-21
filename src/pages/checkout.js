@@ -299,8 +299,8 @@ const Checkout = () => {
                   {serverError.show ? (
                     <Flexbox
                       flex="flex"
-                      alignitems="center"
-                      justifycontent="center"
+                      align="center"
+                      justify="center"
                       width="100%"
                       height="100%"
                     >

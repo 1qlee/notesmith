@@ -2,14 +2,14 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const Flexbox = styled.div`
-  align-items: ${props => props.alignitems};
+  align-items: ${props => props.align};
   background-color: ${props => props.backgroundcolor};
   border: ${props => props.border};
   border-width: ${props => props.borderwidth};
   border-radius: ${props => props.borderradius};
   box-shadow: ${props => props.boxshadow};
   display: ${props => props.flex || "flex"};
-  justify-content: ${props => props.justifycontent};
+  justify-content: ${props => props.justify};
   flex-direction: ${props => props.flexdirection};
   flex-wrap: ${props => props.flexwrap};
   flex: ${props => props.flexprop};

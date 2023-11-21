@@ -107,8 +107,8 @@ const SigninForm = () => {
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-between"
+            align="center"
+            justify="space-between"
             width="100%"
           >
             <StyledLabel htmlFor="password">Password</StyledLabel>

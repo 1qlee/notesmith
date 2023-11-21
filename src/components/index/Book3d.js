@@ -281,8 +281,8 @@ function Book3d({
       </Book3dWrapper>
       <Flexbox
         flex="flex"
-        alignitems="center"
-        justifycontent="center"
+        align="center"
+        justify="center"
         margin="32px 0"
         flexwrap="wrap"
       >

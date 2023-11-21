@@ -56,8 +56,8 @@ const CheckoutSteps = ({
         onKeyDown={e => handleKeyDown(e)}
       >
         <Flexbox
-          alignitems="center"
-          justifycontent="space-between"
+          align="center"
+          justify="space-between"
           width="100%"
         >
           <Content

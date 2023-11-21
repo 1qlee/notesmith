@@ -46,8 +46,8 @@ function ShippingInfo({
     <>
       <Flexbox
         flex="flex"
-        alignitems="center"
-        justifycontent="space-between"
+        align="center"
+        justify="space-between"
       >
         <Content
           headingfontfamily={fonts.secondary}

@@ -63,7 +63,7 @@ function DashedLineControls({
             <StyledLabel>
               <Flexbox
                 flex="flex"
-                alignitems="center"
+                align="center"
               >
                 <span>Dash / gap size</span>
                 <Icon

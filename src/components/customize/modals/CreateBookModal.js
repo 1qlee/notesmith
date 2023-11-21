@@ -143,7 +143,7 @@ function CreateBookModal({
         </Flexbox>
       </ModalContent>
       <ModalFooter
-        justifycontent="flex-end"
+        justify="flex-end"
       >
         <Link
           to={`/products/${productData.category}/${productData.slug}`}

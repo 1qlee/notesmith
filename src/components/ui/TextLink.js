@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const TextLink = styled.a`
-  align-items: ${props => props.alignitems};
+  align-items: ${props => props.align};
   background-color: transparent;
   border: none;
   box-shadow: 0 -1px 0 0 ${props => props.underlinecolor || colors.gray.nineHundred} inset;
@@ -10,7 +10,7 @@ const TextLink = styled.a`
   display: ${props => props.flex || "inline-flex"};
   font-size: ${props => props.fontsize || "1rem"};
   font-weight: ${props => props.fontweight || "700"};
-  justify-content: ${props => props.justifycontent};
+  justify-content: ${props => props.justify};
   line-height: 1;
   margin: ${props => props.margin};
   padding: ${props => props.padding};

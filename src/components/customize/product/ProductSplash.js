@@ -19,8 +19,8 @@ const ProductSplash = ({ image, backgroundcolor }) => {
           <Row>
             <Col>
               <Flexbox
-                justifycontent="center"
-                alignitems="center"
+                justify="center"
+                align="center"
                 width="100%"
               >
                 <GatsbyImage image={getImage(splashImage)} alt="Product splash image" />

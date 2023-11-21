@@ -93,7 +93,7 @@ function ShoppingCart() {
                   <td>
                     <Flexbox
                       flex="flex"
-                      alignitems="center"
+                      align="center"
                       height="100%"
                     >
                       <Link
@@ -118,8 +118,8 @@ function ShoppingCart() {
                         </Content>
                         <Flexbox
                           flex="flex"
-                          alignitems="center"
-                          justifycontent="space-between"
+                          align="center"
+                          justify="space-between"
                         >
                           {item.category === "notebooks" && (
                             <Button
@@ -161,8 +161,8 @@ function ShoppingCart() {
                               <>
                                 <Flexbox
                                   flex="flex"
-                                  alignitems="center"
-                                  justifycontent="space-between"
+                                  align="center"
+                                  justify="space-between"
                                   margin="0 0 4px 0"
                                 >
                                   <Content
@@ -184,8 +184,8 @@ function ShoppingCart() {
                                 {item.bookId && (
                                   <Flexbox
                                     flex="flex"
-                                    alignitems="center"
-                                    justifycontent="space-between"
+                                    align="center"
+                                    justify="space-between"
                                     margin="0 0 0.25rem 0"
                                   >
                                     <Content
@@ -224,8 +224,8 @@ function ShoppingCart() {
                                   <>
                                     <Flexbox
                                       flex="flex"
-                                      alignitems="center"
-                                      justifycontent="space-between"
+                                      align="center"
+                                      justify="space-between"
                                       margin="0 0 0.25rem 0"
                                     >
                                       <Content
@@ -246,8 +246,8 @@ function ShoppingCart() {
                                     </Flexbox>
                                     <Flexbox
                                       flex="flex"
-                                      alignitems="center"
-                                      justifycontent="space-between"
+                                      align="center"
+                                      justify="space-between"
                                       margin="0 0 0.25rem 0"
                                     >
                                       <Content
@@ -278,7 +278,7 @@ function ShoppingCart() {
                   <td>
                     <Flexbox
                       flex="flex"
-                      alignitems="center"
+                      align="center"
                       height="100%"
                     >
                       <Content
@@ -316,8 +316,8 @@ function ShoppingCart() {
                   <td>
                     <Flexbox
                       flex="flex"
-                      alignitems="center"
-                      justifycontent="flex-end"
+                      align="center"
+                      justify="flex-end"
                       height="100%"
                     >
                       <Content
@@ -333,13 +333,13 @@ function ShoppingCart() {
           </Table>
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="flex-end"
+            align="center"
+            justify="flex-end"
           >
             <Flexbox
-              alignitems="flex-end"
+              align="flex-end"
               flex="flex"
-              justifycontent="space-between"
+              justify="space-between"
               margin="2rem 1rem 2rem 0"
               width="12rem"
             >
@@ -361,7 +361,7 @@ function ShoppingCart() {
           <Flexbox
             width="100%"
             flex="flex"
-            justifycontent="flex-end"
+            justify="flex-end"
             margin="0 0 2rem"
           >
             <Button

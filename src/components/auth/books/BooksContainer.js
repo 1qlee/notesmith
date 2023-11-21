@@ -118,7 +118,7 @@ function BooksContainer({
     >
       <Flexbox
         flex="flex"
-        alignitems="center"
+        align="center"
         margin="32px 0 16px"
       >
         <Button

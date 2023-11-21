@@ -210,7 +210,7 @@ function ProductControls({
                 </TemplatesHeader>
                 <TemplatesContent>
                   <Flexbox
-                    justifycontent="flex-end"
+                    justify="flex-end"
                     margin="0 0 4px 0"
                   >
                     <small>All values shown in mm</small>

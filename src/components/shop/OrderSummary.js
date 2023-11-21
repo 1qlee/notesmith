@@ -69,7 +69,7 @@ function OrderSummary({
           <OrderContent>
             {cartItems.length > 0 && cartItems.map(item => (
               <Flexbox
-                alignitems="center"
+                align="center"
                 flex="flex"
                 key={item.id}
               >
@@ -80,8 +80,8 @@ function OrderSummary({
                 <Flexbox
                   margin="0 0 0 8px"
                   flex="flex"
-                  justifycontent="space-between"
-                  alignitems="center"
+                  justify="space-between"
+                  align="center"
                   width="100%"
                 >
                   <Box>
@@ -117,7 +117,7 @@ function OrderSummary({
           <Flexbox
             margin="0 0 16px"
             flex="flex"
-            justifycontent="space-between"
+            justify="space-between"
           >
             <p>Subtotal</p>
             <p>${convertToDecimal(subtotal, 2)}</p>
@@ -125,7 +125,7 @@ function OrderSummary({
           <Flexbox
             margin="0 0 16px"
             flex="flex"
-            justifycontent="space-between"
+            justify="space-between"
           >
             <p>Shipping</p>
             {selectedRate ? (
@@ -137,7 +137,7 @@ function OrderSummary({
           <Flexbox
             margin="0 0 16px"
             flex="flex"
-            justifycontent="space-between"
+            justify="space-between"
           >
             <p>Taxes</p>
             {tax.amount ? (
@@ -149,7 +149,7 @@ function OrderSummary({
           {coupon.applied && (
             <Flexbox
               flex="flex"
-              justifycontent="space-between"
+              justify="space-between"
             >
               <p>Coupon ({coupon.code})</p>
               {coupon.text && (
@@ -161,8 +161,8 @@ function OrderSummary({
         <Flexbox
           padding="16px 0"
           flex="flex"
-          justifycontent="space-between"
-          alignitems="center"
+          justify="space-between"
+          align="center"
         >
           <p>Total</p>
           <Content

@@ -30,7 +30,7 @@ function ToolBox() {
   return (
     <Flexbox
       flex="flex"
-      alignitems="center"
+      align="center"
       flexprop="1 1 33%"
     >
       <ToolItem

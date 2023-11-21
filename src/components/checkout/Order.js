@@ -311,14 +311,14 @@ const Order = ({ location, orderId }) => {
                               <Flexbox
                                 flex="flex"
                                 borderradius="0"
-                                justifycontent="space-between"
+                                justify="space-between"
                                 backgroundcolor={colors.white}
-                                alignitems="center"
+                                align="center"
                                 key={item.id}
                               >
                                 <Flexbox
                                   flex="flex"
-                                  alignitems="center"
+                                  align="center"
                                 >
                                   <GatsbyImage
                                     image={getImage(item.image)}
@@ -342,7 +342,7 @@ const Order = ({ location, orderId }) => {
                               <Flexbox
                                 margin="0 0 16px"
                                 flex="flex"
-                                justifycontent="space-between"
+                                justify="space-between"
                               >
                                 <p>Subtotal</p>
                                 <p>${convertToDecimal((orderInfo.amount - orderInfo.shipping - orderInfo.tax), 2)}</p>
@@ -350,14 +350,14 @@ const Order = ({ location, orderId }) => {
                               <Flexbox
                                 margin="0 0 16px"
                                 flex="flex"
-                                justifycontent="space-between"
+                                justify="space-between"
                               >
                                 <p>Shipping</p>
                                 <p>${convertToDecimal(orderInfo.shipping, 2)}</p>
                               </Flexbox>
                               <Flexbox
                                 flex="flex"
-                                justifycontent="space-between"
+                                justify="space-between"
                               >
                                 <p>Tax</p>
                                 <p>${convertToDecimal(orderInfo.tax, 2)}</p>
@@ -365,7 +365,7 @@ const Order = ({ location, orderId }) => {
                               {orderInfo.coupon && (
                                 <Flexbox
                                   flex="flex"
-                                  justifycontent="space-between"
+                                  justify="space-between"
                                   margin="16px 0 0"
                                 >
                                   <p>Coupon</p>
@@ -375,8 +375,8 @@ const Order = ({ location, orderId }) => {
                             </Box>
                             <Flexbox
                               flex="flex"
-                              justifycontent="space-between"
-                              alignitems="center"
+                              justify="space-between"
+                              align="center"
                               paragraphmargin="0"
                               margin="32px 0"
                             >

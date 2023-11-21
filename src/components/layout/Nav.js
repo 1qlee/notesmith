@@ -65,7 +65,7 @@ const NavSection = styled.div`
   align-items: center;
   display: flex;
   flex: 1 1 0;
-  justify-content: ${props => props.justifycontent};
+  justify-content: ${props => props.justify};
   height: 100%;
   &.remove-on-mobile {
     @media only screen and (max-width: ${breakpoints.xs}) {
@@ -292,7 +292,7 @@ const Nav = ({ auth, hideNavbar }) => {
             </Link>
           </NavSection>
           <NavSection
-            justifycontent="center"
+            justify="center"
             className="remove-on-mobile"
           >
             <NavItem>
@@ -306,7 +306,7 @@ const Nav = ({ auth, hideNavbar }) => {
           </NavSection>
           {!loading && (
             <NavSection
-              justifycontent="flex-end"
+              justify="flex-end"
             >
               <NavGroup
                 className="remove-on-mobile"

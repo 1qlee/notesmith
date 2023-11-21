@@ -49,7 +49,7 @@ const ModalFooter = styled.div`
   border-top: ${props => props.border ? props.border : `${colors.borders.black}`};
   border-radius: 0 0 8px 8px;
   display: flex;
-  justify-content: ${props => props.justifycontent};
+  justify-content: ${props => props.justify};
   padding: 16px 0;
 `
 

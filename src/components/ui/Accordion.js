@@ -29,7 +29,7 @@ const Accordion = ({ title, children }) => {
       <AccordionTab onClick={toggleAccordion}>
         <Flexbox
           flex="flex"
-          justifycontent="space-between"
+          justify="space-between"
           width="100%"
         >
           <Content

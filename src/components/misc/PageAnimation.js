@@ -240,8 +240,8 @@ const PageAnimation = () => {
         </Flexbox>
         <Flexbox
           flex="flex"
-          alignitems="center"
-          justifycontent="flex-end"
+          align="center"
+          justify="flex-end"
         >
           <Content
             paragraphfontsize="1rem"
@@ -250,7 +250,7 @@ const PageAnimation = () => {
           >
             <Flexbox
               flex="flex"
-              alignitems="center"
+              align="center"
             >
               <Icon>
                 <ArrowBendLeftUp size="1rem" color={colors.primary.whiteLight} />
@@ -290,7 +290,7 @@ const PageAnimation = () => {
                 className="is-active"
               >
                 <p>Today was a:</p>
-                <Flexbox flex="flex" justifycontent="center">
+                <Flexbox flex="flex" justify="center">
                   <Icon>
                     <Smiley size="2rem" />
                   </Icon>

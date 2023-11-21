@@ -2,11 +2,10 @@ import React from "react"
 import { colors } from "../../styles/variables"
 import styled from "styled-components"
 
-const StyledTabs = styled.ul`
+import { Flexbox } from "../layout/Flexbox"
+
+const StyledTabs = styled(Flexbox)`
   list-style-type: none;
-  display: flex;
-  justify-content: flex-start;
-  font-size: ${props => props.fontsize || "1rem"};
 `
 
 const StyledTab = styled.li`
@@ -44,7 +43,12 @@ function Tabs({
   setActiveTab,
 }) {
   return (
-    <StyledTabs>
+    <StyledTabs
+      as="ul"
+      justify="flex-start"
+      align="center"
+      fontsize={fontsize}
+    >
       {tabList.map((tab, index) => (
         <StyledTab
           key={index}

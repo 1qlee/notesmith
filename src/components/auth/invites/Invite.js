@@ -188,7 +188,7 @@ const Invite = ({ inviteId }) => {
             {referralError.status ? (
                 <Flexbox
                   flexdirection="column"
-                  alignitems="flex-end"
+                  align="flex-end"
                 >
                   <Notification
                     backgroundcolor={colors.red.twoHundred}

@@ -278,8 +278,8 @@ function AddressForm({
       />
       <Flexbox
         flex="flex"
-        justifycontent="flex-end"
-        alignitems="center"
+        justify="flex-end"
+        align="center"
         margin="32px 0 0"
       >
         <Button

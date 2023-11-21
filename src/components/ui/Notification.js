@@ -23,14 +23,14 @@ const loading = keyframes`
 `
 
 const StyledNotification = styled.div`
-  align-items: ${props => props.alignitems || "flex-start"};
+  align-items: ${props => props.align || "flex-start"};
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor};
   border: ${props => props.border};
   border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
   display: ${props => props.display || "flex"};
-  justify-content: ${props => props.justifycontent || "space-between"};
+  justify-content: ${props => props.justify || "space-between"};
   margin: ${props => props.margin || "1rem 0"};
   padding: ${props => props.padding || "16px"};
   transition: background-color 0.2s, color 0.2s;

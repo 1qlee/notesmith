@@ -404,14 +404,14 @@ function InformationForm({
       </StyledFieldset>
       <Flexbox
         flex="flex"
-        justifycontent="space-between"
-        alignitems="center"
+        justify="space-between"
+        align="center"
       >
         <TextLink
           color={colors.link.normal}
           hovercolor={colors.link.hover}
           className="has-icon"
-          alignitems="flex-end"
+          align="flex-end"
           as={Link}
           to="/cart"
         >

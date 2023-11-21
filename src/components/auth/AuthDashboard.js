@@ -159,7 +159,7 @@ const UserDashboard = () => {
             {referralCode && (
               <>
                 <Flexbox
-                  justifycontent="space-between"
+                  justify="space-between"
                 >
                   <StyledLabel htmlFor="single-link">Invite link (single use)</StyledLabel>
                   <TextLink

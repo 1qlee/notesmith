@@ -25,7 +25,7 @@ const UserSettings = () => {
             color={colors.yellow.nineHundred} 
             backgroundcolor={colors.yellow.twoHundred}
             margin="32px 0"
-            alignitems="center"
+            align="center"
           >
             <Icon>
               <WarningCircle size="24px" weight="duotone" color={colors.yellow.nineHundred} />

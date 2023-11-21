@@ -242,8 +242,8 @@ function SettingsForm() {
     <>
       <Flexbox
         flex="flex"
-        alignitems="center"
-        justifycontent="space-between"
+        align="center"
+        justify="space-between"
         className="has-border-bottom"
         margin="32px 0"
         padding="0 0 16px"
@@ -296,8 +296,8 @@ function SettingsForm() {
       <form id="settings-form" name="settings-form" onSubmit={e => handleSettingsFormSubmit(e)}>
         {/* <Flexbox
           flex="flex"
-          alignitems="flex-start"
-          justifycontent="space-between"
+          align="flex-start"
+          justify="space-between"
           margin="16px 0"
           width="100%"
         >
@@ -329,8 +329,8 @@ function SettingsForm() {
         </Flexbox> */}
         <Flexbox
           flex="flex"
-          alignitems="flex-start"
-          justifycontent="space-between"
+          align="flex-start"
+          justify="space-between"
           margin="16px 0"
         >
           <Content

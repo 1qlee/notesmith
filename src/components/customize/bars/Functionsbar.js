@@ -31,8 +31,8 @@ function Functionsbar({
       <Flexbox
         flexprop="1 1 33%"
         flex="flex"
-        justifycontent="flex-end"
-        alignitems="center"
+        justify="flex-end"
+        align="center"
       >
       </Flexbox>
     </StyledFunctionsBar>

@@ -22,7 +22,7 @@ const DemoImageWrapper = styled.div`
 const DemoImage = styled.div`
   position: absolute;
   top: 0;
-  left: -16px;
+  left: -32px;
   height: 100%;
   width: 100%;
 `

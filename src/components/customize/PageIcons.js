@@ -222,9 +222,9 @@ function RuledPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          justifycontent="space-around"
+          justify="space-around"
           flexdirection="column"
-          alignitems="center"
+          align="center"
           width="100%"
           height="100%"
         >
@@ -294,15 +294,15 @@ function DotPageIcon({
         <Flexbox
           flex="flex"
           flexwrap="wrap"
-          justifycontent="space-around"
-          alignitems="center"
+          justify="space-around"
+          align="center"
           width="100%"
           height="100%"
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-around"
+            align="center"
+            justify="space-around"
             width="100%"
           >
             <Dot />
@@ -311,8 +311,8 @@ function DotPageIcon({
           </Flexbox>
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-around"
+            align="center"
+            justify="space-around"
             width="100%"
           >
             <Dot />
@@ -321,8 +321,8 @@ function DotPageIcon({
           </Flexbox>
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-around"
+            align="center"
+            justify="space-around"
             width="100%"
           >
             <Dot />
@@ -507,8 +507,8 @@ function HexagonPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          alignitems="center"
-          justifycontent="center"
+          align="center"
+          justify="center"
           height="100%"
           width="100%"
         >
@@ -577,8 +577,8 @@ function IsometricPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          alignitems="center"
-          justifycontent="center"
+          align="center"
+          justify="center"
           height="100%"
           width="100%"
         >
@@ -644,8 +644,8 @@ function SeyesPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          alignitems="center"
-          justifycontent="center"
+          align="center"
+          justify="center"
           width="100%"
           height="100%"
         >
@@ -704,7 +704,7 @@ function MusicPageIcon({
         <Flexbox
           flex="flex"
           flexdirection="column"
-          alignitems="center"
+          align="center"
           height="12px"
           width="100%"
           margin="6px 0 0"
@@ -718,7 +718,7 @@ function MusicPageIcon({
         <Flexbox
           flex="flex"
           flexdirection="column"
-          alignitems="center"
+          align="center"
           height="12px"
           width="100%"
         >
@@ -784,15 +784,15 @@ function HandwritingPageIcon({
         <Flexbox
           flex="flex"
           flexdirection="column"
-          alignitems="center"
-          justifycontent="space-between"
+          align="center"
+          justify="space-between"
           height="8px"
           margin="8px 0"
         >
           <HorizontalLine width="80%" />
           <Flexbox
             flex="flex"
-            justifycontent="space-around"
+            justify="space-around"
             width="80%"
           >
             <HorizontalLine width="1px" />
@@ -809,15 +809,15 @@ function HandwritingPageIcon({
         <Flexbox
           flex="flex"
           flexdirection="column"
-          alignitems="center"
-          justifycontent="space-between"
+          align="center"
+          justify="space-between"
           height="8px"
           margin="0.25rem 0"
         >
           <HorizontalLine width="80%" />
           <Flexbox
             flex="flex"
-            justifycontent="space-around"
+            justify="space-around"
             width="80%"
           >
             <HorizontalLine width="1px" />
@@ -887,8 +887,8 @@ function CalligraphyPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          alignitems="center"
-          justifycontent="center"
+          align="center"
+          justify="center"
           width="100%"
           height="100%"
         >
@@ -951,7 +951,7 @@ function CrossGridPageIcon({
       <PageOutline className="page-outline">
         <Flexbox
           flex="flex"
-          alignitems="center"
+          align="center"
           margin="6px 0 0 "
         >
           <Icon width="100%" height="100%">
@@ -969,7 +969,7 @@ function CrossGridPageIcon({
         </Flexbox>
         <Flexbox
           flex="flex"
-          alignitems="center"
+          align="center"
         >
           <Icon width="100%" height="100%">
             <Plus
@@ -986,7 +986,7 @@ function CrossGridPageIcon({
         </Flexbox>
         <Flexbox
           flex="flex"
-          alignitems="center"
+          align="center"
         >
           <Icon width="100%" height="100%">
             <Plus

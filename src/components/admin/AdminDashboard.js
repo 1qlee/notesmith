@@ -424,7 +424,7 @@ const AdminDashboard = () => {
                   </Content>
                 )}
                 <ModalFooter
-                  justifycontent="flex-end"
+                  justify="flex-end"
                 >
                   <Button
                     onClick={() => {

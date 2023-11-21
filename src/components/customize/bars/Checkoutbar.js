@@ -103,7 +103,7 @@ function Checkoutbar({
       <ControlsContent>
         <Flexbox
           flexdirection="column"
-          justifycontent="space-between"
+          justify="space-between"
           height="100%"
         >
           <Box>
@@ -134,8 +134,8 @@ function Checkoutbar({
           </Box>
           <Box>
             <Flexbox
-              alignitems="center"
-              justifycontent="space-between"
+              align="center"
+              justify="space-between"
               margin="0 0 16px"
               padding="32px 0 0"
               className="has-border-top"
@@ -161,8 +161,8 @@ function Checkoutbar({
             </Flexbox>
             <Flexbox
               flex="flex"
-              alignitems="flex-end"
-              justifycontent="space-between"
+              align="flex-end"
+              justify="space-between"
               margin="0.5rem 0"
             >
               <Content

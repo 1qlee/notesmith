@@ -10,7 +10,6 @@ import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
-import Box from "../components/ui/Box"
 import Button from "../components/ui/Button"
 import Content from "../components/ui/Content"
 import DemoControls from "../components/index/DemoControls"
@@ -123,8 +122,8 @@ const IndexPage = ({ data }) => {
                     boxshadow={colors.shadow.layered}
                   >
                     <Flexbox
-                      alignitems="center"
-                      justifycontent="space-between"
+                      align="center"
+                      justify="space-between"
                     >
                       <h5>The pre-order sale is now live!</h5>
                       <Tag
@@ -180,7 +179,7 @@ const IndexPage = ({ data }) => {
                   </Content>
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
+                    align="center"
                   >
                     <TextLink
                       className="has-icon"
@@ -214,8 +213,8 @@ const IndexPage = ({ data }) => {
                   >
                     <Flexbox
                       margin="0 0 16px"
-                      alignitems="flex-start"
-                      justifycontent="space-between"
+                      align="flex-start"
+                      justify="space-between"
                     >
                       <h5>Choose from a template below</h5>
                       <Tag
@@ -232,7 +231,7 @@ const IndexPage = ({ data }) => {
                   </Content>
                   <Flexbox
                     margin="0 0 16px"
-                    alignitems="flex-end"
+                    align="flex-end"
                   >
                     <Content
                       h5fontsize="1.25rem"
@@ -267,8 +266,8 @@ const IndexPage = ({ data }) => {
                   />
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
-                    justifycontent="center"
+                    align="center"
+                    justify="center"
                     margin="0 0 32px"
                   >
                     <Button
@@ -302,7 +301,7 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="flex-start"
+                    align="flex-start"
                     margin="16px 0 0" 
                   >
                     <Icon margin="4px 0 0">
@@ -387,7 +386,7 @@ const IndexPage = ({ data }) => {
                   </Content>
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
+                    align="center"
                     margin="16px 0 0"
                   >
                     <TextLink
@@ -436,12 +435,12 @@ const IndexPage = ({ data }) => {
                     <h2>Fountain pen friendly paper</h2>
                     <p>After conducting tests on more than 50 types of paper, we chose the one that exhibited the best performance with various inks. Our white, ultra-smooth paper received top ratings from early users in bleeding, ghosting, and feathering assessments.</p>
                   </Content>
-                  <Box>
+                  <div>
                     <Flexbox
                       padding="16px 0"
                       flex="flex"
-                      alignitems="center"
-                      justifycontent="space-between"
+                      align="center"
+                      justify="space-between"
                       bordercolor={colors.gray.nineHundred}
                     >
                       <Content
@@ -476,8 +475,8 @@ const IndexPage = ({ data }) => {
                     <Flexbox
                       padding="16px 0"
                       flex="flex"
-                      alignitems="center"
-                      justifycontent="space-between"
+                      align="center"
+                      justify="space-between"
                       className="has-border-top"
                       bordercolor={colors.gray.nineHundred}
                     >
@@ -513,8 +512,8 @@ const IndexPage = ({ data }) => {
                     <Flexbox
                       padding="16px 0"
                       flex="flex"
-                      alignitems="center"
-                      justifycontent="space-between"
+                      align="center"
+                      justify="space-between"
                       className="has-border-top"
                       margin="0 0 16px"
                     >
@@ -547,7 +546,7 @@ const IndexPage = ({ data }) => {
                         <span>3.8</span>
                       </Tag>
                     </Flexbox>
-                  </Box>
+                  </div>
                   <hr />
                   <Flexbox
                     flex="flex"
@@ -568,12 +567,13 @@ const IndexPage = ({ data }) => {
                 </Col>
                 <Col lg={8}>
                   <Flexbox
-                    justifycontent="center"
+                    justify="center"
                   >
                     <StaticImage
                       src="../images/index/writing-closeup.jpg"
                       alt="Ink on paper"
                       loading="eager"
+                      width={996}
                       quality={100}
                     />
                   </Flexbox>
@@ -605,7 +605,7 @@ const IndexPage = ({ data }) => {
                   <hr />
                   <Flexbox
                     flex="flex"
-                    alignitems="center"
+                    align="center"
                     margin="16px 0"
                   >
                     <Icon>

@@ -131,8 +131,8 @@ function BoxList({
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-between"
+            align="center"
+            justify="space-between"
             margin="0 0 16px"
           >
             <h3>Paper</h3>
@@ -154,8 +154,8 @@ function BoxList({
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-between"
+            align="center"
+            justify="space-between"
             margin="0 0 16px"
           >
             <h3>Cover</h3>
@@ -177,8 +177,8 @@ function BoxList({
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-between"
+            align="center"
+            justify="space-between"
             margin="0 0 16px"
           >
             <h3>Lamination</h3>
@@ -200,8 +200,8 @@ function BoxList({
         >
           <Flexbox
             flex="flex"
-            alignitems="center"
-            justifycontent="space-between"
+            align="center"
+            justify="space-between"
             margin="0 0 16px"
           >
             <h3>Binding</h3>

@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 export default function InPortal({ node, children }) {
   const [hasMounted, setHasMounted] = React.useState(false)

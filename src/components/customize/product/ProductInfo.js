@@ -160,7 +160,7 @@ const ProductInfo = ({
         />
       </Content>
       <Flexbox
-        justifycontent="space-between"
+        justify="space-between"
         margin="0 0 16px"
       >
         <Content
@@ -173,7 +173,7 @@ const ProductInfo = ({
           linktextdecoration="underline"
         >
           <a
-            alignitems="center"
+            align="center"
             fontweight="400"
             onClick={() => setPageData({
               ...pageData,
@@ -191,8 +191,8 @@ const ProductInfo = ({
       <Flexbox
         flex="flex"
         flexwrap="wrap"
-        justifycontent="flex-start"
-        alignitems="center"
+        justify="flex-start"
+        align="center"
         margin="0 0 16px"
       >
         <PageIcons
@@ -209,7 +209,7 @@ const ProductInfo = ({
       </Flexbox>
       <Flexbox
         flex="flex"
-        justifycontent="space-between"
+        justify="space-between"
       >
         <StyledLabel
           htmlFor="quantity-tracker"

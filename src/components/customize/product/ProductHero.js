@@ -24,8 +24,8 @@ const ProductHero = ({
             <Col>
               <Flexbox
                 flexdirection="column"
-                justifycontent="center"
-                alignitems="center"
+                justify="center"
+                align="center"
                 width="100%"
               >
                 <Content

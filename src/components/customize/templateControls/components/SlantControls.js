@@ -13,7 +13,7 @@ function SlantControls({
 
   return (
     <ControlFlexWrapper
-      alignitems="flex-end"
+      align="flex-end"
     >
       <ControlFlexChild
         flex={1}

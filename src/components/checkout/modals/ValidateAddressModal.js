@@ -29,8 +29,8 @@ function ValidateAddressModal({
           bordercolor={colors.red.twoHundred}
           margin="0 0 16px"
           padding="1rem"
-          justifycontent="flex-start"
-          alignitems="flex-start"
+          justify="flex-start"
+          align="flex-start"
         >
           <Icon
             backgroundcolor={colors.red.twoHundred}
@@ -66,7 +66,7 @@ function ValidateAddressModal({
         </Content>
       </ModalContent>
       <ModalFooter
-        justifycontent="flex-end"
+        justify="flex-end"
       >
         {!processing && (
           <Button

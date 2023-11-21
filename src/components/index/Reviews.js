@@ -16,17 +16,11 @@ const ReviewBox = styled.div`
   margin-bottom: 32px;
 `
 
-const NoteHoles = styled.div`
-  padding: 16px 10px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 100%;
+const NoteHoles = styled(Flexbox)`
   border-bottom: 1px dashed ${colors.gray.nineHundred};
 `
 
 const NoteHole = styled.div`
-  display: block;
   height: 12px;
   width: 12px;
   border: ${colors.borders.black};
@@ -40,7 +34,12 @@ const NoteHole = styled.div`
 
 function Holes() {
   return (
-    <NoteHoles>
+    <NoteHoles
+      padding="16px 10px"
+      justify="space-around"
+      align="center"
+      height="100%"
+    >
       <NoteHole />
       <NoteHole />
       <NoteHole />
@@ -68,7 +67,7 @@ function Reviews() {
               padding="0 16px 16px"
             >
               <Flexbox
-                justifycontent="flex-end"
+                justify="flex-end"
               >
                 <p><i>Ruled Ryder</i></p>
               </Flexbox>
@@ -88,7 +87,7 @@ function Reviews() {
               padding="0 16px 16px"
             >
               <Flexbox
-                justifycontent="flex-end"
+                justify="flex-end"
               >
                 <p><i>Penny Paperweight</i></p>
               </Flexbox>
@@ -110,7 +109,7 @@ function Reviews() {
               padding="0 16px 16px"
             >
               <Flexbox
-                justifycontent="flex-end"
+                justify="flex-end"
               >
                 <p><i>Pat Papyrophiliac</i></p>
               </Flexbox>
@@ -130,7 +129,7 @@ function Reviews() {
               padding="0 16px 16px"
             >
               <Flexbox
-                justifycontent="flex-end"
+                justify="flex-end"
               >
                 <p><i>Callie Grapher</i></p>
               </Flexbox>

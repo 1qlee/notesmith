@@ -15,7 +15,7 @@ const ControlWrapper = styled.div`
 
 const ControlFlexWrapper = styled.div`
   display: flex;
-  align-items: ${props => props.alignitems || "center"};
+  align-items: ${props => props.align || "center"};
   position: relative;
   &:not(:last-child) {
     margin-bottom: 16px;

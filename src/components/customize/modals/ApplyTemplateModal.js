@@ -351,7 +351,7 @@ function ApplyTemplateModal({
       <ModalHeader>Apply template to pages</ModalHeader>
       <ModalContent>
         <Notification
-          alignitems="flex-start"
+          align="flex-start"
           margin="0 0 1rem"
           className="has-no-style"
           backgroundcolor={colors.gray.oneHundred}
@@ -566,7 +566,7 @@ function ApplyTemplateModal({
         </Row>
       </ModalContent>
       <ModalFooter
-        justifycontent="flex-end"
+        justify="flex-end"
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}

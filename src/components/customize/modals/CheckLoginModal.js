@@ -18,7 +18,7 @@ function CheckLoginModal({ setShowModal }) {
       <ModalHeader>Sign in or create an account</ModalHeader>
       <ModalContent>
         <Notification
-          alignitems="flex-start"
+          align="flex-start"
           backgroundcolor={colors.gray.oneHundred}
           bordercolor={colors.gray.oneHundred}
           margin="0 0 1rem"
@@ -46,7 +46,7 @@ function CheckLoginModal({ setShowModal }) {
         </Content>
       </ModalContent>
       <ModalFooter
-        justifycontent="flex-end"
+        justify="flex-end"
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}

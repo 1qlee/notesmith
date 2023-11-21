@@ -327,8 +327,8 @@ function CheckoutForm({
         Coupon
       </StyledLabel>
       <Flexbox
-        justifycontent="space-between"
-        alignitems="flex-start"
+        justify="space-between"
+        align="flex-start"
         width="100%"
       >
         <StyledFieldset
@@ -367,8 +367,8 @@ function CheckoutForm({
       </Flexbox>
       <Flexbox
         flex="flex"
-        justifycontent="flex-end"
-        alignitems="center"
+        justify="flex-end"
+        align="center"
         margin="2rem 0 0"
       >
         <Button

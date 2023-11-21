@@ -146,8 +146,8 @@ function NewBookModal({
       >
         <Flexbox
           margin="0 0 4px"
-          alignitems="center"
-          justifycontent="space-between"
+          align="center"
+          justify="space-between"
         >
           <Content
             paragraphfontsize="0.75rem"
@@ -181,7 +181,7 @@ function NewBookModal({
               >
                 <Flexbox
                   flex="flex"
-                  justifycontent="space-between"
+                  justify="space-between"
                   width="100%"
                 >
                   <Content
@@ -216,7 +216,7 @@ function NewBookModal({
           <StepContent>
             <Flexbox
               flex="flex"
-              alignitems="center"
+              align="center"
               padding="4px 0 0 4px"
               width="100%"
             >

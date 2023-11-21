@@ -26,7 +26,7 @@ function DeleteBookModal({
         </Content>
       </ModalContent>
       <ModalFooter
-        justifycontent="flex-end"
+        justify="flex-end"
       >
         <Button
           backgroundcolor={colors.gray.oneHundred}

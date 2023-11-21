@@ -204,8 +204,8 @@ const ShippingForm = ({
         {loading && (
           <ShippingItem
             className="is-loading"
-            justifycontent="flex-start"
-            alignitems="center"
+            justify="flex-start"
+            align="center"
             padding="1rem"
             flex="flex"
           >
@@ -219,15 +219,15 @@ const ShippingForm = ({
           <ShippingItem
             onClick={() => handleSelectRate()}
             className={selectedRate && "is-selected"}
-            justifycontent="flex-start"
-            alignitems="flex-start"
+            justify="flex-start"
+            align="flex-start"
             padding="1rem"
             flex="flex"
           >
             <Flexbox
               flex="flex"
-              justifycontent="space-between"
-              alignitems="center"
+              justify="space-between"
+              align="center"
               width="100%"
             >
               <Content
@@ -261,8 +261,8 @@ const ShippingForm = ({
       </ShippingItemsContainer>
       <Flexbox
         flex="flex"
-        justifycontent="flex-end"
-        alignitems="center"
+        justify="flex-end"
+        align="center"
       >
         <Button
           disabled={!selectedRate || loading || processing}

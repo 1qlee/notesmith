@@ -18,7 +18,7 @@ function DemoInput({
   return (
     <Flexbox
       flex="flex"
-      alignitems="center"
+      align="center"
       margin="0 0 1rem"
       width="100%"
     >
