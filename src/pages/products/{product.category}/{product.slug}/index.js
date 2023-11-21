@@ -5,7 +5,7 @@ import { isBrowser } from "../../../../utils/helper-functions"
 const DefaultProductPage = ({ data }) => {
   const { product } = data
 
-  isBrowser() && navigate(`/product/${product.category}/${product.slug}/${product.colors[0].slug}`, { replace: true })
+  isBrowser() && navigate(`/products/${product.category}/${product.slug}/${product.colors[0].slug}`, { replace: true })
 
   return (
     <div>

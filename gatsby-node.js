@@ -15,7 +15,7 @@ const products = [
     price: 3000,
     size: "A5",
     slug: "pro-wired-notebook-a5-custom",
-    stripePriceId: "price_1NzQ0pIN24Fw2SWdKJJKETku",
+    stripePriceId: process.env.NODE_ENV === "production" ? "price_1NzQ0pIN24Fw2SWdKJJKETku" : "price_1IbAlnIN24Fw2SWdOVRXdimr",
     weight: 9.6,
     widthInch: "5.5",
     widthPixel: 528,
