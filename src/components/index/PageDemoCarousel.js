@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, lazy, Suspense } from "react"
 import styled from "styled-components"
 import { breakpoints, widths } from "../../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 
-import PageDemo1 from "../../assets/index/page-demo-1.svg"
-import PageDemo2 from "../../assets/index/page-demo-2.svg"
-import PageDemo3 from "../../assets/index/page-demo-3.svg"
-import PageDemo4 from "../../assets/index/page-demo-4.svg"
-import PageDemo5 from "../../assets/index/page-demo-5.svg"
-
 const StyledPageDemo = styled.div`
   position: relative;
   margin-top: 32px;
+  svg {
+    height: 100%;
+    width: 100%;
+  }
 `
 
 const DemoImageWrapper = styled.div`
@@ -44,36 +42,30 @@ const DemoImageCaption = styled.article`
   }
 `
 
+
+const PageDemos = lazy(() => import("./PageDemos"))
+
 function PageDemoCarousel() {
   const [currentPage, setCurrentPage] = useState(1)
-  const [currentProgress, setCurrentProgress] = useState(0)
   const [pause, setPause] = useState(false)
 
   useEffect(() => {
-    function advanceCarousel() {
-      if (currentPage === 5) {
-        return setCurrentPage(1)
-      }
-      return setCurrentPage(currentPage + 1)
+    let timer
+    
+    if (!pause) {
+      timer = setInterval(() => {
+        setCurrentPage((prevPage) => {
+          if (prevPage === 5) {
+            return 1
+          } else {
+            return prevPage + 1
+          }
+        })
+      }, 1000)
     }
 
-    const timer = setInterval(() => {
-      if (pause) {
-        return clearInterval(timer)
-      }
-      else {
-        setCurrentProgress((prev) => prev + 1)
-      }
-    }, 10)
-
-    if (currentProgress === 101) {
-      clearInterval(timer)
-      setCurrentProgress(0)
-      advanceCarousel()
-    }
-
-    return () => clearInterval(timer)
-  }, [currentProgress, currentPage, pause])
+    return () => clearInterval(timer);
+  }, [pause])
 
   return (
     <StyledPageDemo>
@@ -89,36 +81,13 @@ function PageDemoCarousel() {
           quality={100}
         />
         <DemoImage>
-          {currentPage === 1 && (
-            <PageDemo1
-              width="100%"
-              height="100%"
+          <Suspense
+            fallback={<span></span>}
+          >
+            <PageDemos
+              currentPage={currentPage}
             />
-          )}
-          {currentPage === 2 && (
-            <PageDemo2
-              width="100%"
-              height="100%"
-            />
-          )}
-          {currentPage === 3 && (
-            <PageDemo3
-              width="100%"
-              height="100%"
-            />
-          )}
-          {currentPage === 4 && (
-            <PageDemo4
-              width="100%"
-              height="100%"
-            />
-          )}
-          {currentPage === 5 && (
-            <PageDemo5
-              width="100%"
-              height="100%"
-            />
-          )}
+          </Suspense>
         </DemoImage>
         <DemoImageCaption>
           {/* <Progress
