@@ -1,20 +1,35 @@
 import React, { useState, useEffect, useContext } from "react"
-import firebase from "gatsby-plugin-firebase-v9.0"
 import { 
   EmailAuthProvider, 
   createUserWithEmailAndPassword, 
-  getAuth, 
   onAuthStateChanged, 
-  initializeApp,
-  initializeAuth,
+  initializeAuth, 
+  indexedDBLocalPersistence, 
+  browserLocalPersistence, 
+  browserSessionPersistence,
   signInWithEmailAndPassword, 
   signOut, 
 } from "firebase/auth"
+import {
+  initializeApp,
+} from "firebase/app"
 import { 
   enableLogging,
   getDatabase, 
 } from "firebase/database"
 
+const firebaseConfig = {
+  apiKey: process.env.GATSBY_FIREBASE_API_KEY,
+  authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL,
+  projectId: process.env.GATSBY_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.GATSBY_FIREBASE_APP_ID,
+  measurementId: process.env.GATSBY_FIREBASE_MEASUREMENT_ID,
+  privateKey: process.env.GATSBY_FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  clientEmail: process.env.GATSBY_FIREBASE_CLIENT_EMAIL,
+}
 
 const defaultContext = {
   loading: false,
@@ -34,23 +49,21 @@ export const FirebaseProvider = ({
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const initFirebase = () => {
-      const app = initializeApp(firebase)
-      const auth = initializeAuth(app, {
-        persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
-      })
-      const db = getDatabase(firebase)
-      setFirebaseAuth(auth)
-      setFirebaseDb(db)
-      enableLogging(false, false)
+    const app = initializeApp(firebaseConfig)
+    const auth = initializeAuth(app, {
+      persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
+    })
+    const db = getDatabase(app)
 
-      onAuthStateChanged(auth, user => {
-        setUser(user)
-        setLoading(false)
-      })
-    }
+    setFirebaseAuth(auth)
+    setFirebaseDb(db)
+    enableLogging(false, false)
 
-    initFirebase()
+    onAuthStateChanged(auth, user => {
+      setUser(user)
+      setLoading(false)
+    })
+
   }, [user])
 
   return (
