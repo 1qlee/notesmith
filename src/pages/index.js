@@ -571,9 +571,8 @@ const IndexPage = ({ data }) => {
                   >
                     <StaticImage
                       src="../images/index/writing-closeup.jpg"
-                      alt="Ink on paper"
+                      alt="Close up of writing done with black ink on our paper"
                       loading="eager"
-                      width={996}
                       quality={100}
                     />
                   </Flexbox>
