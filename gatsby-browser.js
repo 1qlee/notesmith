@@ -2,10 +2,8 @@ import React from "react"
 import { Script } from "gatsby"
 import { FirebaseProvider } from "./src/utils/auth"
 import { CartProvider } from "use-shopping-cart"
-import getStripe from "./src/utils/stripejs"
 
 export const wrapRootElement = ({ element, props }) => {
-  const stripe = getStripe()
 
   return (
     <CartProvider
@@ -14,7 +12,6 @@ export const wrapRootElement = ({ element, props }) => {
       currency="USD"
       mode="client-session"
       successUrl="stripe.com"
-      stripe={stripe}
     >
       <FirebaseProvider {...props}>
         {element}
