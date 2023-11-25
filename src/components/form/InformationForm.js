@@ -1,17 +1,13 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
-import { useShoppingCart, formatCurrencyString } from "use-shopping-cart"
-import { useFirebaseContext } from "../../utils/auth"
+import { useShoppingCart } from "../cart/context/cartContext"
 import { ArrowLeft, CaretDown } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledFloatingLabel, SelectWrapper, SelectIcon, StyledSelect, ErrorLine } from "../form/FormComponents"
 import Button from "../Button"
-import Content from "../Content"
 import Icon from "../Icon"
-import Loader from "../Loader"
 import Loading from "../../assets/loading.svg"
 import TextLink from "../TextLink"
 
@@ -22,13 +18,10 @@ function InformationForm({
   setProcessing,
   setAddress,
   setCustomer,
-  setLoading,
   processing,
   customer,
   address,
-  loading
 }) {
-  const { user } = useFirebaseContext()
   const { cartDetails } = useShoppingCart()
   const [nameError, setNameError] = useState("")
   const [emailError, setEmailError] = useState("")
@@ -44,7 +37,7 @@ function InformationForm({
     setProcessing(true)
 
     // validate the user's inputted address using easypost's API
-    const validateAddress = await fetch("/.netlify/functions/validate-address", {
+    await fetch("/.netlify/functions/validate-address", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -65,7 +58,7 @@ function InformationForm({
         else {
           return obj
         }
-      }).then(data => {
+      }).then(() => {
         // call the function to update paymentIntent with the user's information
         updatePaymentInfo()
       }).catch(err => {
@@ -82,7 +75,7 @@ function InformationForm({
 
   async function updatePaymentInfo() {
     // update the paymentIntent with shipping form data
-    const payment = await fetch("/.netlify/functions/create-payment", {
+    await fetch("/.netlify/functions/create-payment", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -99,10 +92,10 @@ function InformationForm({
         msg: ""
       })
       return res.json()
-    }).then(data => {
+    }).then(() => {
       setProcessing(false)
       setActiveTab(2)
-    }).catch(err => {
+    }).catch(() => {
       setProcessing(false)
       setFormError({
         msg: "Something went wrong processing your information."

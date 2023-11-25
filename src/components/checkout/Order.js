@@ -6,20 +6,20 @@ import { ArrowSquareOut, CircleNotch } from "@phosphor-icons/react"
 import { convertUnix, convertToDecimal } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { get, ref } from "firebase/database"
-import { useShoppingCart } from "../../hooks/useShoppingCart"
+import { useShoppingCart } from "../cart/context/cartContext"
 import { Container, Col, Row } from "react-grid-system"
 
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
+import Box from "../ui/Box"
 import Button from "../ui/Button"
-import TextLink from "../ui/TextLink"
 import Content from "../ui/Content"
-import Notification from "../ui/Notification"
 import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
-import Tag from "../ui/Tag"
-import Box from "../ui/Box"
+import Notification from "../ui/Notification"
+import Seo from "../layout/Seo"
+import TextLink from "../ui/TextLink"
 
 const PlaceholderLine = styled.div`
   background-color: ${colors.gray.threeHundred};
@@ -35,8 +35,9 @@ const Order = ({ location, orderId }) => {
   const { clearCart } = useShoppingCart()
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
-  const { state } = location
-  const { loading, firebaseDb } = useFirebaseContext()
+  const {state} = location
+  const {loading, firebaseDb} = useFirebaseContext()
+  const [retrieving, setRetrieving] = useState(true)
   const [orderInfo, setOrderInfo] = useState({
     address: {
       line1: "",
@@ -75,12 +76,14 @@ const Order = ({ location, orderId }) => {
     }
 
     async function retrieveOrder() {
+      setRetrieving(true)
       // retrieve order info from the db based on orderId
       get(ref(firebaseDb, `orders/${orderId}`)).then(async snapshot => {
         const value = snapshot.val()
 
         if (!value) {
           setOrderNotFound(true)
+          setRetrieving(false)
         }
         else {
           // check if authkeys match, and show info if it does
@@ -97,8 +100,10 @@ const Order = ({ location, orderId }) => {
             }
 
             setOrderItems(orderItemsArray)
+            setRetrieving(false)
           }
           else {
+            setRetrieving(false)
             setShowInfo(false)
             setOrderInfo({})
           }
@@ -160,28 +165,9 @@ const Order = ({ location, orderId }) => {
     })
   }
 
-  function createReturnLabel() {
-    console.log("create return label")
-    fetch("/.netlify/functions/create-return-label", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        address: orderInfo.address,
-      })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
-      console.log(data)
-    }).catch(error => {
-      console.log(error)
-    })
-  }
-
   return (
     <Layout 
-      title="Order Summary" 
+      loading={retrieving}
     >
       <SectionMain className="has-max-height">
         <Section>
@@ -190,24 +176,17 @@ const Order = ({ location, orderId }) => {
           >
             <Container xl lg md sm xs>
               {orderNotFound ? (
-                <Row justify="center">
+                <Row>
                   <Col xl={6} lg={6} xxl={6} md={6}>
                     <Content
-                      headingtextalign="center"
-                      paragraphtextalign="center"
+                      margin="0 0 32px"
+                      paragraphfontsize="1.25rem"
                     >
-                      <h3>Order not found</h3>
+                      <h1>Order not found</h1>
+                      <p>We couldn't find this order for you. Please try following the link in your email receipt again.
+                      </p>
+                      <p>If you require further assistance please <b><TextLink fontsize="1.25rem" href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId ? orderId : "Unknown order ID"}`}>send us an email</TextLink></b>.</p>
                     </Content>
-                    <Notification
-                      backgroundcolor={colors.gray.twoHundred}
-                      color={colors.gray.sixHundred}
-                      display="block"
-                      margin="0 auto"
-                      maxwidth={widths.notification}
-                    >
-                      <p>We couldn't find this order for you. Please make sure the order ID you entered is correct.</p>
-                      <p>If you require further assistance please <b><TextLink fontsize="0.75rem" href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId ? orderId : "Unknown order ID"}`}>send us an email</TextLink></b>.</p>
-                    </Notification>
                   </Col>
                 </Row>
               ) : (
@@ -451,7 +430,7 @@ const Order = ({ location, orderId }) => {
                                     margin="0 0 0 8px"
                                     type="submit"
                                     disabled={processing}
-                                    className={processing ? "is-loading" : null}
+                                    className={processing ? "is-retrieving" : null}
                                   >
                                     {processing ? (
                                       <Icon width="46px">
@@ -485,3 +464,9 @@ const Order = ({ location, orderId }) => {
 }
 
 export default Order
+
+export const Head = () => {
+  <Seo
+    title="Your order"
+  />
+}

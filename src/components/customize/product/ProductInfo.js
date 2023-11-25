@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { colors,  } from "../../../styles/variables"
-import { useShoppingCart } from '../../../hooks/useShoppingCart'
+import { useShoppingCart } from '../../cart/context/cartContext'
 import { formatDollars } from "../../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { useFirebaseContext } from "../../../utils/auth"

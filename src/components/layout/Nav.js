@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { colors, fonts, widths, breakpoints } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
-import { useShoppingCart } from "../../hooks/useShoppingCart"
+import { useShoppingCart } from "../cart/context/cartContext"
 import { isBrowser } from "../../utils/helper-functions"
 import { ShoppingCartSimple, User } from "@phosphor-icons/react"
 

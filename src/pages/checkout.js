@@ -3,7 +3,7 @@ import { navigate } from "gatsby"
 import { colors, fonts, spacing } from "../styles/variables"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js'
-import { useShoppingCart } from "../hooks/useShoppingCart"
+import { useShoppingCart } from "../components/cart/context/cartContext"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
 import { isBrowser, convertToDecimal } from "../utils/helper-functions"

@@ -1,5 +1,9 @@
 import * as React from "react"
 
+import wrapProvider from "./wrap-provider"
+
+export const wrapRootElement = wrapProvider
+
 export const onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
     <link

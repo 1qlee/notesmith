@@ -7,6 +7,7 @@
   "dependencies": {
     "@easypost/api": "^6.1.0",
     "@phosphor-icons/react": "^2.0.10",
+    "@reduxjs/toolkit": "^1.5.0",
     "@sendgrid/client": "^7.4.6",
     "@sendgrid/mail": "^7.4.6",
     "@stripe/react-stripe-js": "^2.4.0",
@@ -16,6 +17,7 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "d3": "^7.8.5",
+    "date-fns": "^2.30.0",
     "file-saver": "^2.0.5",
     "firebase": "^9.18.0",
     "firebase-admin": "^11.0.1",
@@ -41,15 +43,16 @@
     "react-image-gallery": "^1.2.7",
     "react-inlinesvg": "^3.0.2",
     "react-measure": "^2.5.2",
+    "react-redux": "^7.2.2",
     "react-responsive-carousel": "^3.2.23",
     "react-toastify": "^9.1.2",
     "react-tooltip": "^5.21.6",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.6",
+    "redux-persist": "^6.0.0",
     "stripe": "^14.5.0",
     "styled-components": "^5.3.0",
     "svg2pdf.js": "^2.2.0",
-    "use-shopping-cart": "^3.1.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

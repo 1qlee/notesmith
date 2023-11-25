@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { colors, fonts, widths } from "../../styles/variables"
 import { convertToDecimal } from "../../utils/helper-functions"
-import { useShoppingCart } from "../../hooks/useShoppingCart"
+import { useShoppingCart } from "../cart/context/cartContext"
 import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "@phosphor-icons/react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 

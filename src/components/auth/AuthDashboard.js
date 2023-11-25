@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { colors, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { get, ref, set, push, query, orderByChild, equalTo } from "firebase/database"
+import { isBrowser } from "../../utils/helper-functions"
 
 import AuthLayout from "./components/AuthLayout"
 import Content from "../ui/Content"
@@ -108,7 +109,7 @@ const UserDashboard = () => {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(referralCode)
+    isBrowser() && navigator.clipboard.writeText(referralCode)
       .then(() => {
         setCopied({
           status: true,
