@@ -7,6 +7,7 @@ import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Box from "../ui/Box"
+import StrikeText from "../misc/StrikeText"
 
 const Orders = styled.div`
   background-color: ${colors.white};
@@ -107,7 +108,12 @@ function OrderSummary({
                     </Content>
                   </Box>
                   <p style={{ whiteSpace: "nowrap", margin: "0 8px" }}>x {item.quantity}</p>
-                  <p>${convertToDecimal(item.price, 2)}</p>
+                  <p>
+                    {item.originalPrice > item.price && (
+                      <StrikeText>${convertToDecimal(item.originalPrice, 2)}</StrikeText>
+                    )}
+                    {item.formattedPrice}
+                  </p>
                 </Flexbox>
               </Flexbox>
             ))}
@@ -135,7 +141,7 @@ function OrderSummary({
             )}
           </Flexbox>
           <Flexbox
-            margin="0 0 16px"
+            margin="0"
             flex="flex"
             justify="space-between"
           >

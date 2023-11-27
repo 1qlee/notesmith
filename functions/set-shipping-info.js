@@ -5,8 +5,10 @@ const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, shipmentId, rateId } = body;
+  const { pid, rate } = body;
   const authKey = cryptojs.MD5(pid);
+  const rateId = rate.id;
+  const shipmentId = rate.shipment_id
   // retrieve pre-existing Shipment from Easypost
   console.log(`[Netlify] Retrieving user's shipment from Easypost: ${shipmentId}`);
   const userShipment = await easypost.Shipment.retrieve(shipmentId);
@@ -14,10 +16,16 @@ exports.handler = async (event) => {
   // usershipment.rates is an array containing all rate objects
   console.log(`[Netlify] Finding user's selected rate from all shipment's rates: ${rateId}`);
   const userRate = userShipment.rates.find(rate => rate.id === rateId);
-  console.log("USER RATE: " + userRate)
-  const shippingCost = ((Math.ceil(userRate.rate) * 100) / 100) * 100;
-  const shippingRateId = userRate.id;
-  const shippingRateCarrier = userRate.carrier;
+  let shippingCost = rate.rate;
+  let shippingRateId = "";
+  let shippingRateCarrier = "";
+
+  if (userRate) {
+    console.log(`[Netlify] Found user's selected rate: ${userRate}`)
+    shippingCost = ((Math.ceil(userRate.rate) * 100) / 100) * 100;
+    shippingRateId = userRate.id;
+    shippingRateCarrier = userRate.carrier;
+  }
 
    try {
      console.log("[Netlify] Updating paymentIntent with the selected shipping information.");

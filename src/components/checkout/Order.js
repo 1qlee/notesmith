@@ -20,6 +20,7 @@ import Layout from "../layout/Layout"
 import Notification from "../ui/Notification"
 import Seo from "../layout/Seo"
 import TextLink from "../ui/TextLink"
+import StrikeText from "../misc/StrikeText"
 
 const PlaceholderLine = styled.div`
   background-color: ${colors.gray.threeHundred};
@@ -306,7 +307,12 @@ const Order = ({ location, orderId }) => {
                                   <p>{item.name}</p>
                                 </Flexbox>
                                 <p>x {item.quantity}</p>
-                                <p>{item.formattedPrice}</p>
+                                <p>
+                                  {item.originalPrice > item.price && (
+                                    <StrikeText>${convertToDecimal(item.originalPrice, 2)}</StrikeText>
+                                  )}
+                                  {item.formattedPrice}
+                                </p>
                               </Flexbox>
                             ))}
                           </Box>

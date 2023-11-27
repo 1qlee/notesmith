@@ -144,8 +144,9 @@ function Loader({ className, msg }) {
         <Logo height="96" width="300" />
         {msg && (
           <Notification
-            backgroundcolor={colors.yellow.oneHundred}
-            color={colors.yellow.nineHundred}
+            backgroundcolor={colors.white}
+            color={colors.gray.nineHundred}
+            border={colors.borders.black}
           >
             <p>{msg}</p>
           </Notification>

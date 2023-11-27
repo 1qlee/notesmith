@@ -1,21 +1,5 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
-
-// calculate total order amount using inventory data
-const calcOrderAmount = async (cartItems) => {
-  let totalAmount = 0;
-  // iterate through all cart items in cart
-  for (let i = 0; i < cartItems.length; i++) {
-    const { quantity, price_id } = cartItems[i];
-    // retrieve product from stripe by using id
-    const stripeProduct = await stripe.prices.retrieve(price_id);
-
-    // 25% discount for pre-orders
-    totalAmount += stripeProduct.unit_amount * quantity * .75; 
-  }
-
-  console.log(`[Stripe] The total amount for this order is: ${totalAmount}.`)
-  return totalAmount;
-};
+const { validateCartItems } = require('./validate-cart-items');
 
 exports.handler = async (event) => {
   // product data we received from the client
@@ -38,7 +22,7 @@ exports.handler = async (event) => {
 
   try {
     // save subtotal
-    const subtotal = await calcOrderAmount(cartItems);
+    const subtotal = await validateCartItems(cartItems);
     console.log(`[Stripe] Creating new paymentIntent...`)
     // else create a new paymentIntent
     paymentIntent = await stripe.paymentIntents.create({

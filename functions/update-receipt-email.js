@@ -11,7 +11,8 @@ exports.handler = async (event) => {
       {
         metadata: {
           email: email
-        }
+        },
+        receipt_email: email,
       }
     )
 
@@ -23,7 +24,7 @@ exports.handler = async (event) => {
         message: "Address updated successfully."
       })
     }
-  } catch(error) {
+  } catch (error) {
     console.error(`[Stripe] Could not update paymentIntent's address: ${error}`)
 
     return {

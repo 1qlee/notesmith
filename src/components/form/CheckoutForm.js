@@ -10,7 +10,7 @@ import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 import Notification from "../ui/Notification"
-import { StyledFieldset, StyledInput, StyledLabel } from "../form/FormComponents"
+import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 
 function CheckoutForm({
   address,
@@ -31,7 +31,6 @@ function CheckoutForm({
   const stripe = useStripe()
   const elements = useElements()
   const [processing, setProcessing] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { firebaseDb } = useFirebaseContext()
   const paymentOptions = {
@@ -47,7 +46,6 @@ function CheckoutForm({
   const submitPaymentForm = async e => {
     e.preventDefault()
     setProcessing(true)
-    setPaymentProcessing(true)
     // show loading UI state
 
     if (!stripe || !elements) {
@@ -56,7 +54,7 @@ function CheckoutForm({
     }
 
     // Trigger form validation and wallet collection
-    const { error: submitError } = await elements.submit();
+    const { error: submitError } = await elements.submit()
 
     if (submitError) {
       // form errors will be handled by PaymentElement component so we don't have to explicitly set them here
@@ -81,6 +79,8 @@ function CheckoutForm({
       setError(error.message)
       setProcessing(false)
     } else {
+      setPaymentProcessing(true)
+      
       if (tax.amount) {
         createTaxRecord()
       }
@@ -264,42 +264,79 @@ function CheckoutForm({
     })
   }
 
+  const handleChangeCoupon = (value) => {
+    setCoupon({
+      ...coupon,
+      loading: false,
+      code: value.trim(),
+      error: "",
+    })
+  }
+
   const handleCoupon = async () => {
-    setLoading(true)
-
-    fetch("/.netlify/functions/apply-coupon", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
-        cartItems: cartItems,
-        coupon: coupon.code,
-      })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
-      const pi = data.paymentIntent
-
-      setSelectedRate({
-        rateId: pi.metadata.rateId,
-        rate: pi.metadata.shipping,
-      })
-      setTax({
-        amount: pi.metadata.tax,
-        id: pi.metadata.taxId,
-      })
-      setSubtotal(pi.amount)
+    if (!coupon.code) {
       setCoupon({
         ...coupon,
-        applied: true,
-        text: data.secretCoupon && "Super mega discount",
+        loading: false,
+        error: "Please enter a coupon code.",
       })
-      setLoading(false)
-    }).catch(err => {
-      setLoading(false)
-    })
+    }
+    else {
+      setCoupon({
+        ...coupon,
+        loading: true,
+        error: "",
+      })
+
+      fetch("/.netlify/functions/apply-coupon", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          pid: pid,
+          cartItems: cartItems,
+          coupon: coupon.code,
+        })
+      }).then(res => {
+        return res.json()
+      }).then(data => {
+
+        if (data.error) {
+          throw data.error
+        }
+
+        const pi = data.paymentIntent
+        const coupon = data.coupon
+
+        if (pi) {
+          setSelectedRate({
+            rateId: pi.metadata.rateId,
+            rate: pi.metadata.shipping,
+          })
+          setTax({
+            amount: pi.metadata.tax,
+            id: pi.metadata.taxId,
+          })
+          setSubtotal(pi.amount)
+        }
+
+        if (coupon) {
+          setCoupon({
+            ...coupon,
+            applied: true,
+            text: data.coupon && "Super mega discount",
+            loading: false,
+          })
+        }
+      }).catch(error => {
+        setCoupon({
+          ...coupon,
+          loading: false,
+          error: error,
+        })
+      })
+    }
   }
 
   return (
@@ -336,27 +373,34 @@ function CheckoutForm({
         >
           <StyledInput
             id="coupon-input"
-            onChange={e => setCoupon({
-              ...coupon,
-              code: e.target.value.trim(),
-            })}
+            onChange={e => handleChangeCoupon(e.target.value)}
             placeholder="Coupon code"
+            className={coupon.error && "is-error"}
             type="text"
             value={coupon.code}
             fontsize="1rem"
             margin="0 8px 0 0"
           />
+          {coupon.error && (
+            <ErrorLine
+              color={colors.red.sixHundred}
+            >
+              {coupon.error}
+            </ErrorLine>
+          )}
         </StyledFieldset>
         <Button
+          backgroundcolor={colors.gray.nineHundred}
+          color={colors.gray.oneHundred}
           padding="20px"
           width="100px"
           htmlFor="coupon-input"
           type="button"
           onClick={() => handleCoupon()}
-          className={loading ? "is-loading" : null}
-          disabled={loading}
+          className={coupon.loading ? "is-loading" : null}
+          disabled={coupon.loading}
         >
-          {loading ? (
+          {coupon.loading ? (
             <Icon>
               <CircleNotch size={16} color={colors.white} />
             </Icon>
@@ -383,7 +427,7 @@ function CheckoutForm({
         >
           {processing ? (
             <Icon>
-              <CircleNotch size="1rem" color={colors.white} />
+              <CircleNotch size={16} color={colors.white} />
             </Icon>
           ) : (
             "Pay now"

@@ -21,9 +21,8 @@ import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
-const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
-
 const Checkout = () => {
+  const [stripe, setStripe] = useState(null)
   const { cartDetails, totalPrice } = useShoppingCart()
   // array to store cartItems
   const cartItems = []
@@ -68,6 +67,8 @@ const Checkout = () => {
   const [coupon, setCoupon] = useState({
     code: "",
     applied: false,
+    error : "",
+    loading: false,
   })
   const [serverError, setServerError] = useState({
     msg: "",
@@ -119,6 +120,7 @@ const Checkout = () => {
           boxShadow: "none",
           border: `1px solid ${colors.gray.nineHundred}`,
           fontSize: "1rem",
+          lineHeight: "23px",
         },
         ".Input:focus": {
           boxShadow: colors.shadow.focus,
@@ -144,6 +146,7 @@ const Checkout = () => {
   }
 
   useEffect(() => {
+    setStripe(loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY))
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {
       // show loading screen
@@ -168,7 +171,7 @@ const Checkout = () => {
         }
 
         const { isPaymentPaid } = data
-        const { shipping, client_secret } = data.paymentIntent
+        const { shipping, client_secret, metadata } = data.paymentIntent
 
         setClientSecret(client_secret)
 
@@ -184,10 +187,11 @@ const Checkout = () => {
 
           // if shipping information exists, fill the form
           if (shipping) {
-            const { receipt_email } = data.paymentIntent
+            console.log("🚀 ~ file: checkout.js:187 ~ retrievePaymentIntent ~ shipping:", shipping)
+            const { email } = metadata.paymentIntent
 
             setAddress(shipping.address)
-            setCustomer({ ...customer, name: shipping.name, email: receipt_email })
+            setCustomer({ ...customer, name: shipping.name, email: email })
           }
         }
       }).catch(error => {
@@ -289,7 +293,7 @@ const Checkout = () => {
     >
       {clientSecret && (
         <Elements
-          stripe={stripePromise}
+          stripe={stripe}
           options={elementsOptions}
         >
           <SectionMain className="has-max-height">
@@ -364,7 +368,7 @@ const Checkout = () => {
                             summaries={selectedRate && [
                               {
                                 heading: `${selectedRate.international ? "International" : "Ground"}`,
-                                text: `$${selectedRate.rate !== undefined && convertToDecimal(selectedRate.rate, 2)}`
+                                text: `$${selectedRate.formattedRate && selectedRate.formattedRate}`
                               }
                             ]}
                             tabName="method"

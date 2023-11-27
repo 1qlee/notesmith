@@ -58,6 +58,7 @@ function ColorPicker({
       {data.map(color => (
         <ColorOption
           data-tip={color.name}
+          aria-label={`Select ${color.name} colored cover`}
           key={color.name}
           color={color.hex}
           className={color.slug === selectedColor && "is-active"}

@@ -1,14 +1,18 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
-const parseCartItems = (cartItems) => {
-  const parsedCartItems = cartItems.map(item => {
-    return {
-      amount: item.value,
-      reference: item.id,
-    }
-  })
+const parseCartItems = async (cartItems) => {
+  const parsedCartItems = await Promise.all(cartItems.map(async (item) => {
+    const { price_id, id } = item;
+    const itemPrice = await stripe.prices.retrieve(price_id);
+    const discountedPrice = +itemPrice.unit_amount * .75;
 
-  return parsedCartItems
+    return {
+      amount: discountedPrice,
+      reference: id,
+    }
+  }));
+
+  return parsedCartItems;
 }
 
 exports.handler = async (event) => {
@@ -18,11 +22,12 @@ exports.handler = async (event) => {
   const { metadata } = paymentIntent;
   const { shipping, subtotal } = metadata;
   const amountBeforeTax = parseInt(subtotal) + parseInt(shipping)
+  const parsedCartItems = await parseCartItems(cartItems);
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
       currency: 'usd',
-      line_items: parseCartItems(cartItems),
+      line_items: parsedCartItems,
       customer_details: {
         address: {
           line1: address.line1 || address.street1,

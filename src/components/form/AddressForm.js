@@ -114,16 +114,14 @@ function AddressForm({
     }
   }
 
-  async function updateAddress() {
-    const response = await fetch("/.netlify/functions/update-address", {
+  async function updateReceiptEmail() {
+    const response = await fetch("/.netlify/functions/update-receipt-email", {
       method: "POST",
       headers: {
         "Content-type": "application/json"
       },
       body: JSON.stringify({
         pid: pid,
-        address: address,
-        name: customer.name,
         email: customer.email,
       })
     })
@@ -174,7 +172,7 @@ function AddressForm({
       const isAddressValid = await validateAddress(address, name, phone)
 
       if (isAddressValid.isValid) {
-        await updateAddress()
+        await updateReceiptEmail()
         setActiveCheckoutSteps("method")
         setShippingValidated(true)
         setAddressStatus({

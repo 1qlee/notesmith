@@ -4,7 +4,8 @@ import wrapProvider from "./wrap-provider"
 
 export const wrapRootElement = wrapProvider
 
-export const onRenderBody = ({ setHeadComponents }) => {
+export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
+  setHtmlAttributes({ lang: "en" })
   setHeadComponents([
     <link
       rel="preload"

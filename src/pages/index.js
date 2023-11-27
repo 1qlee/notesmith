@@ -114,8 +114,8 @@ const IndexPage = ({ data }) => {
                   </Content>
                   <Content
                     paragraphmargin="0"
-                    h5margin="8px 0"
-                    h5fontsize="1.25rem"
+                    h2margin="8px 0"
+                    h2fontsize="1.25rem"
                     paragraphfontsize="1.25rem"
                     padding="16px"
                     border={colors.borders.black}
@@ -125,7 +125,7 @@ const IndexPage = ({ data }) => {
                       align="center"
                       justify="space-between"
                     >
-                      <h5>The pre-order sale is now live!</h5>
+                      <h2>The pre-order sale is now live!</h2>
                       <Tag
                         padding="3px 6px"
                         backgroundcolor={colors.yellow.twoHundred}
@@ -573,7 +573,6 @@ const IndexPage = ({ data }) => {
                       src="../images/index/writing-closeup.jpg"
                       alt="Close up of writing done with black ink on our paper"
                       loading="eager"
-                      quality={100}
                     />
                   </Flexbox>
                 </Col>
@@ -641,9 +640,7 @@ export const pageQuery = graphql`
             originalName
           }
           gatsbyImageData(
-            width: 996
             placeholder: BLURRED
-            quality: 100
           )
         }
       }

@@ -48,16 +48,19 @@ const StyledTemplatesBar = styled.div`
 
 const TemplatesButton = styled(Button)`
   position: absolute;
-  right: calc(100% - 16px);
-  top: -1px;
-  height: 57px;
+  top: -24px;
+  left: 16px;
   padding: 4px 8px;
+  height: 24px;
+  border-radius: 4px 4px 0 0;
+  font-size: 0.875rem;
+  width: 64px;
   z-index: 9;
   &.is-active {
-    right: calc(100% - 48px);
+    left: 48px;
   }
   @media only screen and (max-width: 1388px) {
-    right: 100% !important;
+    left: -1px;
   }
 `
 
@@ -185,18 +188,13 @@ function ProductControls({
             className={!showControls ? "is-collapsed" : null}
           >
             <TemplatesButton
-              borderradius="4px 0 0 4px"
               onClick={() => setShowControls(!showControls)}
               className={!showControls && !isMobile ? "is-active" : null}
             >
               {showControls ? (
-                <Icon>
-                  <CaretCircleLeft size={16} weight="bold" />
-                </Icon>
+                "Hide"
               ) : (
-                <Icon>
-                  <SlidersHorizontal size={16} weight="bold" />
-                </Icon>
+                "Edit"
               )}
             </TemplatesButton>
             {showControls && (
@@ -205,7 +203,7 @@ function ProductControls({
                   className={!showControls ? "is-collapsed" : null}
                 >
                   <span>
-                    Template controls
+                    Edit template
                   </span>
                 </TemplatesHeader>
                 <TemplatesContent>

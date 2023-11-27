@@ -122,6 +122,7 @@ const NavMenuIcon = styled.span`
   top: 16px;
   left: 4px;
   transition: width 0.2s, background-color 0.2s;
+  pointer-events: none;
   &::before {
     transition-duration: 0.2s;
     position: absolute;
@@ -191,7 +192,6 @@ const NavMenu = styled.ul`
   align-items: flex-end;
   background-color: ${colors.white};
   border: ${colors.borders.black};
-  border-top-width: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -209,6 +209,7 @@ const NavMenu = styled.ul`
   visibility: hidden;
   width: 85vw;
   z-index: 23;
+  will-change: transform;
   a {
     font-size: 1.25rem;
     padding: 8px 16px;
@@ -254,12 +255,14 @@ const Nav = ({ auth, hideNavbar }) => {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+      const { target } = event
+
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
         setShowUserMenu(false)
       }
 
-      if (navMenuRef.current && !navMenuRef.current.contains(event.target)) {
-        if (event.target.getAttribute("id") === "nav-menu-button") {
+      if (navMenuRef.current && !navMenuRef.current.contains(target)) {
+        if (target.getAttribute("id") === "nav-menu-button") {
           return
         }
         setShowMenu(false)
@@ -285,9 +288,16 @@ const Nav = ({ auth, hideNavbar }) => {
       <Container xl lg md sm xs>
         <Navbar hideNavbar={hideNavbar}>
           <NavSection>
-            <Link to="/">
+            <Link 
+              to="/"
+              aria-label="Go to home page"
+            >
               <NavLogo>
-                <Logo width="100%" height="100%" color={colors.gray.nineHundred} />
+                <Logo 
+                  width="100%" 
+                  height="100%" 
+                  color={colors.gray.nineHundred} 
+                />
               </NavLogo>
             </Link>
           </NavSection>
@@ -400,6 +410,7 @@ const Nav = ({ auth, hideNavbar }) => {
                 <NavButton
                   as={Link}
                   to="/cart"
+                  aria-label="Go to cart"
                 >
                   <Icon>
                     <ShoppingCartSimple size={20} weight="bold" />
@@ -418,10 +429,14 @@ const Nav = ({ auth, hideNavbar }) => {
               </NavGroup>
               <NavMenuButton
                 id="nav-menu-button"
+                aria-label="Toggle nav menu"
                 onClick={() => setShowMenu(!showMenu)}
                 showMenu={showMenu}
               >
-                <NavMenuIcon showMenu={showMenu} />
+                <NavMenuIcon 
+                  showMenu={showMenu} 
+                  onClick={e => e.stopPropagation()}
+                />
               </NavMenuButton>
               <NavMenu
                 className={showMenu ? "is-active" : ""}

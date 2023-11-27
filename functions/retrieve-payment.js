@@ -1,20 +1,5 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
-
-// calculate total order amount using inventory data
-const calcOrderAmount = async (cartItems) => {
-  let totalAmount = 0;
-  // iterate through all cart items in cart
-  for (let i = 0; i < cartItems.length; i++) {
-    const { quantity, price_id } = cartItems[i];
-    // retrieve product from stripe by using id
-    const stripeProduct = await stripe.prices.retrieve(price_id);
-
-    totalAmount += stripeProduct.unit_amount * quantity * .75;
-  }
-
-  console.log(`[Stripe] The total amount for this order is: ${totalAmount}.`)
-  return totalAmount;
-};
+const { validateCartItems } = require('./validate-cart-items');
 
 exports.handler = async (event) => {
   // product data we received from the client
@@ -28,7 +13,7 @@ exports.handler = async (event) => {
     const isPaymentPaid = paymentIntent.status === "succeeded"
 
     if (!isPaymentPaid && updatePaymentIntent) {
-      const totalAmount = await calcOrderAmount(cartItems);
+      const totalAmount = await validateCartItems(cartItems);
 
       await stripe.paymentIntents.update(pid, {
         amount: totalAmount,
@@ -47,7 +32,6 @@ exports.handler = async (event) => {
       })
     }
   } catch (error) {
-    console.error(error);
     console.error(`[Stripe] Could not find paymentIntent: ${pid}`);
     return {
       statusCode: 400,

@@ -19,7 +19,7 @@ const calcOrderAmount = async (cartItems) => {
 exports.handler = async (event) => {
   // product data we received from the client
   const body = JSON.parse(event.body);
-  const { pid, cartItems, coupon } = body;
+  const { pid, coupon } = body;
 
   try {
     let paymentIntent = await stripe.paymentIntents.retrieve(pid);
@@ -36,18 +36,28 @@ exports.handler = async (event) => {
           coupon: coupon,
         }
       });
+
+      paymentIntent = await stripe.paymentIntents.retrieve(pid);
+
+      console.log(`[Stripe] Applied coupon successfully to paymentIntent: ${pid}`);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          paymentIntent: paymentIntent,
+          coupon: true,
+        })
+      }
     }
+    else {
+      console.log(`[Stripe] Coupon code is invalid: ${coupon}`);
 
-    // refresh
-    paymentIntent = await stripe.paymentIntents.retrieve(pid);
-
-    console.log(`[Stripe] Applied coupon successfully to paymentIntent: ${pid}`);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        paymentIntent: paymentIntent,
-        secretCoupon: true,
-      })
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          coupon: false,
+          error: "The coupon code you entered is invalid."
+        })
+      }
     }
   } catch (error) {
     console.error(error);

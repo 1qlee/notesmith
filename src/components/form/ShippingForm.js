@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors, fonts } from "../../styles/variables"
-import { convertToDecimal } from "../../utils/helper-functions"
 import { CircleNotch } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -68,8 +67,12 @@ const ShippingForm = ({
   toast,
 }) => {
   const [loading, setLoading] = useState(false)
-  const [shipmentId, setShipmentId] = useState("")
-  const [shippingRate, setShippingRate] = useState({})
+  const [rate, setRate] = useState({
+    rate: null,
+    carrier: "",
+    isInternational: false,
+    id: null,
+  })
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
@@ -94,12 +97,13 @@ const ShippingForm = ({
         if (data.error) {
           throw data.error
         }
-        // save the rate to state
-        setShippingRate(data.rate)
-        // save the shipment id to state
-        setShipmentId(data.shipmentId)
-        setLoading(false)
+        else {
+          // save the rate to state
+          setRate(data.rate)
+          setLoading(false)
+        }
       }).catch(error => {
+        setRate({})
         setLoading(false)
         toast.error(error)
       })
@@ -118,8 +122,7 @@ const ShippingForm = ({
       },
       body: JSON.stringify({
         pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        shipmentId: shipmentId,
-        rateId: selectedRate.id,
+        rate: selectedRate,
       })
     }).then(res => {
       return res.json()
@@ -181,7 +184,13 @@ const ShippingForm = ({
       setSelectedRate(null)
     }
     else {
-      setSelectedRate(shippingRate)
+      setSelectedRate(rate)
+    }
+  }
+
+  const handleSelectRateKey = (e) => {
+    if (e.key === "Enter") {
+      handleSelectRate()
     }
   }
 
@@ -215,14 +224,16 @@ const ShippingForm = ({
             <p>Calculating shipping rates...</p>
           </ShippingItem>
         )}
-        {shippingRate && !loading && (
+        {(rate.rate && !loading) && (
           <ShippingItem
             onClick={() => handleSelectRate()}
+            onKeyDown={e => handleSelectRateKey(e)}
             className={selectedRate && "is-selected"}
             justify="flex-start"
             align="flex-start"
             padding="1rem"
             flex="flex"
+            tabIndex={0}
           >
             <Flexbox
               flex="flex"
@@ -238,21 +249,21 @@ const ShippingForm = ({
                 smallmargin="0"
               >
                 <h5>
-                  {shippingRate.international ? (
+                  {rate.international ? (
                     "International"
                   ) : (
                     "Ground"
                   )}
                 </h5>
-                {shippingRate.delivery_days ? (
-                  <small>{shippingRate.delivery_days} to {shippingRate.delivery_days + 3} business days</small>
+                {rate.delivery_days ? (
+                  <small>{rate.delivery_days} to {rate.delivery_days + 3} business days</small>
                 ) : (
                   <small>Delivery time varies</small>
                 )}
               </Content>
               <Content>
                 <p>
-                  ${convertToDecimal(shippingRate.rate, 2)}
+                  ${rate.formattedRate}
                 </p>
               </Content>
             </Flexbox>
@@ -269,13 +280,13 @@ const ShippingForm = ({
           id="submit"
           backgroundcolor={colors.gray.nineHundred}
           color={colors.white}
-          className={(loading || processing)? "is-loading" : null}
+          className={processing ? "is-loading" : null}
           padding="16px"
           form="checkout-shipping-form"
           onClick={() => submitShippingInfo()}
           width="200px"
         >
-          {(loading || processing) ? (
+          {processing ? (
             <Icon>
               <CircleNotch size={16} color={colors.white} />
             </Icon>

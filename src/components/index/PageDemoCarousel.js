@@ -20,9 +20,7 @@ const DemoImageWrapper = styled.div`
 const DemoImage = styled.div`
   position: absolute;
   top: 0;
-  left: -32px;
-  height: 100%;
-  width: 100%;
+  left: 0;
 `
 
 const DemoImageCaption = styled.article`
@@ -75,10 +73,10 @@ function PageDemoCarousel() {
       >
         <StaticImage
           src="../../images/index/splash-image-blank.png"
-          alt="Ink on paper"
+          alt="Blank custom notebook in A5"
           loading="eager"
           placeholder="none"
-          quality={100}
+          quality={80}
         />
         <DemoImage>
           <Suspense
