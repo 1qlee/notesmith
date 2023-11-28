@@ -1,4 +1,5 @@
 import React from "react"
+import Helmet from "react-helmet"
 import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 
 function Seo({ details }) {
@@ -13,19 +14,58 @@ function Seo({ details }) {
   }
 
   return (
-    <>
-      <title>{seo.title} | Notesmith</title>
-      <meta name="description" content={description}></meta>
-      <meta name="og:title" content={`${title} | Notesmith`}></meta>
-      <meta name="og:url" content={seo.url}></meta>
-      <meta name="og:description" content={description}></meta>
-      <meta name="og:image" content={`${seo.url}${image}`}></meta>
-      <meta name="twitter:card" content="summary"></meta>
-      <meta name="twitter:url" content={seo.url}></meta>
-      <meta name="twitter:image" content={`${seo.url}${image}`}></meta>
-      <meta name="twitter:title" content={`${title} | Notesmith`}></meta>
-      <meta name="twitter:description" content={description}></meta>
-    </>
+    <Helmet
+      htmlAttributes={{
+        lang: "en",
+      }}
+      title={`${title} | Notesmith`}
+      meta={[
+        {
+          name: `description`,
+          content: seo.description,
+        },
+        {
+          property: `og:title`,
+          content: seo.title,
+        },
+        {
+          property: `og:url`,
+          content: `${seo.url}`,
+        },
+        {
+          property: `og:description`,
+          content: seo.description,
+        },
+        {
+          property: `og:type`,
+          content: `website`,
+        },
+        {
+          property: `og:image`,
+          content: `${seo.url}${image}`,
+        },
+        {
+          name: `twitter:card`,
+          content: `summary`,
+        },
+        {
+          name: `twitter:url`,
+          content: `${seo.url}`,
+        },
+        {
+          name: `twitter:image`,
+          content: `${seo.url}${image}`,
+        },
+        {
+          name: `twitter:title`,
+          content: seo.title,
+        },
+        {
+          name: `twitter:description`,
+          content: seo.description,
+        },
+      ]}
+    />
   )
 }
 

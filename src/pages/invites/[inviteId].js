@@ -1,7 +1,6 @@
 import React from "react"
 
 import Invite from "../../components/auth/invites/Invite"
-import Seo from "../../components/layout/Seo"
 
 const InvitesPage = ({ params, location }) => {
   return (
