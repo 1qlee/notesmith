@@ -12,6 +12,29 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://www.notesmithbooks.com',
+        sitemap: 'https://www.notesmithbooks.com/sitemap-0.xml',
+        resolveEnv: () => process.env.NODE_ENV,
+        env: {
+          production: {
+            policy: [{ userAgent: '*', allow: '/' }]
+          },
+          'branch-deploy': {
+            policy: [{ userAgent: '*', disallow: ['/'] }],
+            sitemap: null,
+            host: null
+          },
+          'deploy-preview': {
+            policy: [{ userAgent: '*', disallow: ['/'] }],
+            sitemap: null,
+            host: null
+          }
+        },
+      }
+    },
+    {
       resolve: 'gatsby-plugin-sitemap',
       options: {
         excludes: ['/admin*', '/admin/*', '/account*', '/account/*', '/orders*', '/orders/*', '/forgot', '/subscription', '/cart', '/customize*', '/customize/*', '/customize/*/*', '/invites', '/invites/*'],
@@ -20,6 +43,7 @@ module.exports = {
             allSitePage {
               nodes {
                 path
+                pageContext
               }
             }
           }
@@ -53,7 +77,13 @@ module.exports = {
           return allPages.map(page => {
             return { ...page }
           })
-        }
+        },
+        serialize: ({ path, pageContext }) => {
+          return {
+            url: path,
+            lastmod: pageContext?.lastMod,
+          }
+        },
       },
     },
     {
@@ -111,5 +141,6 @@ module.exports = {
     `gatsby-plugin-sharp`,
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-webpack-bundle-analyser-v2`,
+    `gatsby-plugin-git-lastmod`,
   ],
 }
