@@ -1,15 +1,15 @@
 import React from "react"
 import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 
-function Seo({ title, description, pathname, children, location, params, data, pageContext }) {
-  const { title: defaultTitle, description: defaultDescription, image, siteUrl, username } = useSiteMetadata()
+function Seo({ details }) {
+  const { title: defaultTitle, description: defaultDescription, image: defaultImage, siteUrl: defaultUrl } = useSiteMetadata()
+  const { title, description, image, url } = details || {}
 
   const seo = {
     title: title || defaultTitle,
     description: description || defaultDescription,
-    image: `${siteUrl}${image}`,
-    url: `${siteUrl}${pathname || ``}`,
-    username,
+    image: `${url}${image}` || defaultImage,
+    url: `${url}` || defaultUrl,
   }
 
   return (
@@ -17,15 +17,14 @@ function Seo({ title, description, pathname, children, location, params, data, p
       <title>{seo.title} | Notesmith</title>
       <meta name="description" content={description}></meta>
       <meta name="og:title" content={`${title} | Notesmith`}></meta>
-      <meta name="og:url" content={siteUrl}></meta>
+      <meta name="og:url" content={seo.url}></meta>
       <meta name="og:description" content={description}></meta>
-      <meta name="og:image" content={`${siteUrl}${image}`}></meta>
+      <meta name="og:image" content={`${seo.url}${image}`}></meta>
       <meta name="twitter:card" content="summary"></meta>
-      <meta name="twitter:url" content={siteUrl}></meta>
-      <meta name="twitter:image" content={`${siteUrl}${image}`}></meta>
+      <meta name="twitter:url" content={seo.url}></meta>
+      <meta name="twitter:image" content={`${seo.url}${image}`}></meta>
       <meta name="twitter:title" content={`${title} | Notesmith`}></meta>
       <meta name="twitter:description" content={description}></meta>
-      {children}
     </>
   )
 }

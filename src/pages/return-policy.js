@@ -9,7 +9,11 @@ import Seo from "../components/layout/Seo"
 
 const ReturnsPage = () => {
   return (
-    <Layout>
+    <Layout
+      seoDetails={{
+        title: "Return policy",
+      }}
+    >
       <SectionMain
         className="has-max-height"
       >
@@ -57,9 +61,3 @@ const ReturnsPage = () => {
 }
 
 export default ReturnsPage
-
-export const Head = () => (
-  <Seo 
-    title="Return policy" 
-  />
-)

@@ -18,7 +18,6 @@ import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
 import Notification from "../ui/Notification"
-import Seo from "../layout/Seo"
 import TextLink from "../ui/TextLink"
 import StrikeText from "../misc/StrikeText"
 
@@ -169,6 +168,9 @@ const Order = ({ location, orderId }) => {
   return (
     <Layout 
       loading={retrieving}
+      seoDetails={{
+        title: "Order summary",
+      }}
     >
       <SectionMain className="has-max-height">
         <Section>
@@ -470,9 +472,3 @@ const Order = ({ location, orderId }) => {
 }
 
 export default Order
-
-export const Head = () => {
-  <Seo
-    title="Your order"
-  />
-}

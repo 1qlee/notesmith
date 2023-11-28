@@ -13,7 +13,3 @@ const OrdersPage = ({ params, location }) => {
 }
 
 export default OrdersPage
-
-export const Head = () => (
-  <Seo title="Your order" />
-)

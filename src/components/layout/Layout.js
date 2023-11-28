@@ -9,6 +9,7 @@ import Nav from "./Nav"
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
 import Toastify from "../ui/Toastify"
+import Seo from "./Seo"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
@@ -22,7 +23,7 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ loading, children, className, backgroundcolor, loaderClassName, loaderMsg }) => {
+const Layout = ({ loading, children, className, backgroundcolor, loaderClassName, loaderMsg, seoDetails }) => {
   const { isClient, key } = useIsClient()
   if (!isClient) return null;
 
@@ -32,6 +33,9 @@ const Layout = ({ loading, children, className, backgroundcolor, loaderClassName
       className={className} 
       backgroundcolor={backgroundcolor}
     >
+      <Seo 
+        details={seoDetails}
+      />
       <Nav />
       {children}
       {loading && (

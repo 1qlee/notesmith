@@ -19,6 +19,9 @@ const SignUp = () => {
     <Layout 
       className="is-full-height"
       loading={loading}
+      seoDetails={{
+        title: "Sign up for Notesmith",
+      }}
     >
       <SectionMain
         className="has-max-height"
@@ -34,7 +37,3 @@ const SignUp = () => {
 }
 
 export default SignUp
-
-export const Head = () => (
-  <Seo title="Sign up for an account" />
-)

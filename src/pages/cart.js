@@ -9,7 +9,11 @@ import { Container } from "react-grid-system"
 
 const Cart = () => {
   return (
-    <Layout>
+    <Layout
+      seoDetails={{
+        title: "Shopping Cart",
+      }}
+    >
       <SectionMain className="has-max-height">
         <Section>
           <SectionContent
@@ -26,7 +30,3 @@ const Cart = () => {
 }
 
 export default Cart
-
-export const Head = () => (
-  <Seo title="Your cart" />
-)

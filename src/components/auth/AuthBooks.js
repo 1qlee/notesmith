@@ -266,6 +266,9 @@ const UserBooks = ({ allProducts }) => {
   return (
     <Layout
       loading={processing || loading}
+      seoDetails={{
+        title: "Books",
+      }}
     >
       <AuthLayout page="Books">
         {userBooks.length > 0 ? (

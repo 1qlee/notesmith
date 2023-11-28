@@ -8,7 +8,3 @@ function AdminDashboardPage() {
 }
 
 export default AdminDashboardPage
-
-export const Head = () => (
-  <Seo title="Admin" />
-)

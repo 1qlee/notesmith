@@ -58,7 +58,3 @@ export const pageQuery = graphql`
 `
 
 export default EditorPage
-
-export const Head = () => (
-  <Seo title="Book editor" />
-)

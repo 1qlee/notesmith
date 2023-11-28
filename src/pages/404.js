@@ -11,7 +11,11 @@ import { Container, Row, Col } from "react-grid-system"
 const NotFoundPage = () => {
   if (isBrowser()) {
     return (
-      <Layout>
+      <Layout
+        seoDetails={{
+          title: "Page not found",
+        }}
+      >
         <SectionMain
           className="has-max-height"
         >
@@ -37,7 +41,3 @@ const NotFoundPage = () => {
 }
 
 export default NotFoundPage
-
-export const Head = () => (
-  <Seo title="Page not found" />
-)

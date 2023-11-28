@@ -112,7 +112,13 @@ const ProductPage = ({ data, params }) => {
   }, [product, bookData, coverColor, pageData])
 
   return (
-    <Layout>
+    <Layout
+      seoDetails={{
+        title: `${product.name}`,
+        description: product.description,
+        image: productImages.nodes[0].childImageSharp.gatsbyImageData.images.fallback.src,
+      }}
+    >
       <SectionMain>
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
@@ -285,7 +291,3 @@ export const pageQuery = graphql`
 `
 
 export default ProductPage
-
-export const Head = ({ data }) => (
-  <Seo title={data.product.name} />
-)

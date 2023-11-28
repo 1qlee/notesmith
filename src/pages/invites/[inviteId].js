@@ -13,7 +13,3 @@ const InvitesPage = ({ params, location }) => {
 }
 
 export default InvitesPage
-
-export const Head = () => (
-  <Seo title="You've been invited to join Notesmith's early access!" />
-)

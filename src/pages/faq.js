@@ -73,7 +73,11 @@ const faqs = [
 
 const FaqPage = () => {
   return (
-    <Layout>
+    <Layout
+      seoDetails={{
+        title: "FAQ",
+      }}
+    >
       <SectionMain
         className="has-max-height"
       >
@@ -140,7 +144,3 @@ const FaqPage = () => {
 }
 
 export default FaqPage
-
-export const Head = () => (
-  <Seo title="FAQ" />
-)

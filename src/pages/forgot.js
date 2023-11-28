@@ -20,6 +20,9 @@ const Forgot = () => {
     <Layout 
       className="is-full-height"
       loading={loading}
+      seoDetails={{
+        title: "Forgot your password?",
+      }}
     >
       <SectionMain
         className="has-max-height"
@@ -37,7 +40,3 @@ const Forgot = () => {
 }
 
 export default Forgot
-
-export const Head = () => (
-  <Seo title="Recover your password" />
-)

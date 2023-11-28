@@ -8,7 +8,6 @@ import { Section, SectionMain } from "../../components/layout/Section"
 import ResetPwForm from "../../components/form/ResetPwForm"
 import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
-import Seo from "../../components/layout/Seo"
 
 function Auth({ location }) {
   const { firebaseAuth } = useFirebaseContext()
@@ -93,6 +92,9 @@ function Auth({ location }) {
   return (
     <Layout
       loading={loading}
+      seoDetails={{
+        title: authMode === "resetPassword" ? "Reset your password" : "Verify your email",
+      }}
     >
       <SectionMain
         className="has-max-height"
@@ -167,7 +169,3 @@ function Auth({ location }) {
 }
 
 export default Auth
-
-export const Head = () => (
-  <Seo title="Account verification and recovery" />
-)

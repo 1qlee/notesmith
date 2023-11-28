@@ -16,6 +16,8 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
     success: null,
     msg: "",
   })
+  console.log(Component)
+  console.log(location)
 
   async function handleSendVerificationEmail() {
     setProcessing(true)
@@ -47,42 +49,40 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
   }
   if (user && !user.emailVerified) {
     return (
-      <Layout>
-        <SectionMain
-          className="has-max-height"
-        >
-          <Section>
-            <AuthFormWrapper>
-              {verification.success ? (
-                <Content
-                  h1fontsize="2rem"
-                  linktextdecoration="underline"
-                >
-                  <h1>Email was successfully sent</h1>
-                  <p>{verification.msg}</p>
-                </Content>
-              ) : (
-                <Content
-                  h1fontsize="2rem"
-                  linktextdecoration="underline"
-                >
-                  {processing ? (
-                    <>
-                      <h1>Sending email...</h1>
-                      <p>Please do not refresh this page.</p>
-                    </>
-                  ) : (
-                    <>
-                      <h1>Validate your email address</h1>
-                      <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
-                    </>
-                  )}
-                </Content>
-              )}
-            </AuthFormWrapper>
-          </Section>
-        </SectionMain>
-      </Layout>
+      <SectionMain
+        className="has-max-height"
+      >
+        <Section>
+          <AuthFormWrapper>
+            {verification.success ? (
+              <Content
+                h1fontsize="2rem"
+                linktextdecoration="underline"
+              >
+                <h1>Email was successfully sent</h1>
+                <p>{verification.msg}</p>
+              </Content>
+            ) : (
+              <Content
+                h1fontsize="2rem"
+                linktextdecoration="underline"
+              >
+                {processing ? (
+                  <>
+                    <h1>Sending email...</h1>
+                    <p>Please do not refresh this page.</p>
+                  </>
+                ) : (
+                  <>
+                    <h1>Validate your email address</h1>
+                    <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
+                  </>
+                )}
+              </Content>
+            )}
+          </AuthFormWrapper>
+        </Section>
+      </SectionMain>
     )
   }
 

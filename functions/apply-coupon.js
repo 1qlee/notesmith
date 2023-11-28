@@ -60,7 +60,6 @@ exports.handler = async (event) => {
       }
     }
   } catch (error) {
-    console.error(error);
     console.error(`[Stripe] Could not find paymentIntent: ${pid}`);
     return {
       statusCode: 400,

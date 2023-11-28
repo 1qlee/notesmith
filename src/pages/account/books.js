@@ -40,7 +40,3 @@ export const pageQuery = graphql`
     }
   }
 `
-
-export const Head = () => (
-  <Seo title="Edit book" />
-)

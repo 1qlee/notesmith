@@ -9,7 +9,3 @@ function SettingsPage() {
 }
 
 export default SettingsPage
-
-export const Head = () => (
-  <Seo title="Account settings" />
-)

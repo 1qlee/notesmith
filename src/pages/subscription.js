@@ -9,7 +9,6 @@ import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
 import Box from "../components/ui/Box"
 import Content from "../components/ui/Content"
-import Seo from "../components/layout/Seo"
 
 const Subscription = ({ location }) => {
   const params = new URLSearchParams(location.search)
@@ -88,6 +87,9 @@ const Subscription = ({ location }) => {
     <Layout 
       loading={processing} 
       className="is-full-height"
+      seoDetails={{
+        title: "Subscribe to Notesmith",
+      }}
     >
       <SectionMain
         className="has-max-height"
@@ -142,7 +144,3 @@ const Subscription = ({ location }) => {
 }
 
 export default Subscription
-
-export const Head = () => (
-  <Seo title="Subscribe to Notesmith" />
-)

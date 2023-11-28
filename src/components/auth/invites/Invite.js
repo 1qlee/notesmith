@@ -172,6 +172,9 @@ const Invite = ({ inviteId }) => {
     <Layout
       title="Sign up for an account"
       className="is-full-height"
+      seoDetails={{
+        title: "You've been invited to join Notesmith!",
+      }}
     >
       <SectionMain
         className="has-max-height"

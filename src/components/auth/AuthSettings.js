@@ -18,6 +18,9 @@ const UserSettings = () => {
   return (
     <Layout
       loading={loading || !user}
+      seoDetails={{
+        title: "Settings",
+      }}
     >
       <AuthLayout page="Settings">
         {user && !user.emailVerified && (

@@ -290,6 +290,9 @@ const Checkout = () => {
       loading={loading || paymentProcessing}
       loaderMsg={paymentProcessing && "Processing payment... Do not refresh or close this page!"}
       loaderClassName="has-banner"
+      seoDetails={{
+        title: "Checkout",
+      }}
     >
       {clientSecret && (
         <Elements
@@ -449,7 +452,3 @@ const Checkout = () => {
 }
 
 export default Checkout
-
-export const Head = () => (
-  <Seo title="Checkout" />
-)

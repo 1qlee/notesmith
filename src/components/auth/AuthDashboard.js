@@ -125,7 +125,12 @@ const UserDashboard = () => {
   }
 
   return (
-    <Layout loading={loading || !user}>
+    <Layout 
+      loading={loading || !user}
+      seoDetails={{
+        title: "Dashboard",
+      }}
+    >
       <AuthLayout page="Dashboard">
         <Row>
           <Col md={6}>

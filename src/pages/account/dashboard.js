@@ -9,7 +9,3 @@ function DashboardPage() {
 }
 
 export default DashboardPage
-
-export const Head = () => (
-  <Seo title="Account dashboard" />
-)

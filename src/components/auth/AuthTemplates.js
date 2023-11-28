@@ -5,7 +5,11 @@ import AuthLayout from "./components/AuthLayout"
 
 const AuthTemplates = () => {
   return (
-    <Layout>
+    <Layout
+      seoDetails={{
+        title: "Templates",
+      }}
+    >
       <AuthLayout page="Templates">
 
       </AuthLayout>

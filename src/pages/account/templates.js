@@ -9,7 +9,3 @@ function TemplatesPage() {
 }
 
 export default TemplatesPage
-
-export const Head = () => (
-  <Seo title="Templates" />
-)
