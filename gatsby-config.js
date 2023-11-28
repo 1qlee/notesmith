@@ -7,10 +7,55 @@ module.exports = {
     title: `Notesmith`,
     description: `Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts.`,
     username: `@notesmithbooks`,
-    url: `https://www.notesmithbooks.com`,
+    siteUrl: `https://www.notesmithbooks.com`,
     image: "/stacked-books.jpg"
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-sitemap',
+      options: {
+        excludes: ['/admin*', '/admin/*', '/account*', '/account/*', '/orders*', '/orders/*', '/forgot', '/subscription', '/cart', '/customize*', '/customize/*', '/customize/*/*', '/invites', '/invites/*'],
+        query: `
+          {
+            allSitePage {
+              nodes {
+                path
+              }
+            }
+          }
+        `,
+        resolveSiteUrl: () => `https://www.notesmithbooks.com`,
+        resolvePages: ({
+          allSitePage: { nodes: allPages },
+        }) => {
+
+          // allPages.forEach(page => {
+          //   const pathElements = page.path.split('/');
+          //   const lastElement = pathElements[pathElements.length - 1];
+          //   const regex = /\[(.*?)\]$/;
+          //   const match = lastElement.match(regex);
+          //   const extractedString = match ? match[1].replace(/\[|\]/g, '') : null;
+          //   const newPage = { ...page, path: extractedString ? extractedString : page.path }
+
+          //   switch (extractedString) {
+          //     case "name":
+          //       newPage.path = "/name/"
+          //       break
+          //     case "coverColor":
+
+          //       break
+          //   }
+          //   console.log(newPage)
+          //   // Use the extractedString variable as needed
+          //   return newPage
+          // });
+
+          return allPages.map(page => {
+            return { ...page }
+          })
+        }
+      },
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
