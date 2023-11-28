@@ -76,7 +76,7 @@ function PageDemoCarousel() {
           alt="Blank custom notebook in A5"
           loading="eager"
           placeholder="none"
-          quality={80}
+          quality={50}
         />
         <DemoImage>
           <Suspense

@@ -22,10 +22,10 @@ function TabImagesCaption({
   return (
     <StyledCaption>
       {activeTab === 0 && (
-        <p>70 sheets (140 total pages) of ultra-smooth, bright white 70lb text paper.</p>
+        <p>70 sheets (140 total pages) of ultra-smooth, bright white 70# text paper.</p>
       )}
       {activeTab === 1 && (
-        <p>Double mounted 130lb cover stock.</p>
+        <p>Double mounted 125# cover stock.</p>
       )}
       {activeTab === 2 && (
         <p>Lamination film on both sides of each cover.</p>

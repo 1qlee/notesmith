@@ -23,10 +23,11 @@ import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
-import Seo from "../components/layout/Seo"
+import Materials from "../components/index/Materials"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
+  const tabList = ["Paper", "Cover", "Lamination", "Binding"]
   const [activeTab, setActiveTab] = useState(0)
   const [pageData, setPageData] = useState({
     alignmentHorizontal: "center",
@@ -87,7 +88,7 @@ const IndexPage = ({ data }) => {
       }}
     >
       <Patterns 
-        color={colors.gray.twoHundred} 
+        color={colors.gray.oneHundred} 
       />
       <SectionMain>
         <Section>
@@ -96,10 +97,10 @@ const IndexPage = ({ data }) => {
           >
             <Pattern
               pattern={26}
-              height="100%"
-              width={200}
-              top={12}
-              left={0}
+              height="calc(100% - 32px)"
+              width="calc(100% - 32px)"
+              top={32}
+              left={32}
             />
             <Container xl lg md sm xs>
               <Row>
@@ -124,6 +125,7 @@ const IndexPage = ({ data }) => {
                     padding="16px"
                     border={colors.borders.black}
                     boxshadow={colors.shadow.layered}
+                    backgroundcolor={colors.white}
                   >
                     <Flexbox
                       align="center"
@@ -345,10 +347,13 @@ const IndexPage = ({ data }) => {
                     <h2>Only the best, guaranteed</h2>
                     <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
                   </Content>
+                  <Materials 
+                    tab={tabList[activeTab]}
+                  />
                 </Col>
                 <Col lg={8}>
                   <Tabs 
-                    tabList={["Paper", "Cover", "Lamination", "Binding"]}
+                    tabList={tabList}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     fontsize="1rem"
@@ -577,6 +582,7 @@ const IndexPage = ({ data }) => {
                       src="../images/index/writing-closeup.jpg"
                       alt="Close up of writing done with black ink on our paper"
                       loading="eager"
+                      quality={50}
                     />
                   </Flexbox>
                 </Col>
@@ -645,6 +651,7 @@ export const pageQuery = graphql`
           }
           gatsbyImageData(
             placeholder: BLURRED
+            quality: 90
           )
         }
       }

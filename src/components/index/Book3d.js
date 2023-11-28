@@ -149,6 +149,7 @@ const StyledBook3d = styled.div`
   height: 100%;
   transform: rotate3d(0,1,0,-30deg);
   width: 100%;
+  will-change: transform;
   &:not(.is-active) {
     transform: ${props => props.hovered ? "rotate3d(0,0,0,0)" : null};
   }
@@ -231,7 +232,7 @@ function Book3d({
                   className="image"
                   src="../../images/index/blank-page.jpg"
                   alt="Notebook opened to blank page"
-                  quality={100}
+                  quality={80}
                 />
               </>
             ) : (
@@ -241,7 +242,7 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-white.jpg"
                     alt="White colored cover custom wired notebook, front"
-                    quality={100}
+                    quality={80}
                   />
                 )}
                 {coverColor === "black" && (
@@ -249,7 +250,7 @@ function Book3d({
                     className="image"
                     src="../../images/index/front-cover-black.jpg"
                     alt="Black colored cover custom wired notebook, front"
-                    quality={100}
+                    quality={80}
                   />
                 )}
               </>
@@ -265,7 +266,7 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-white.jpg"
                 alt="White colored cover custom wired notebook, back"
-                quality={100}
+                quality={80}
               />
             )}
             {coverColor === "black" && (
@@ -273,7 +274,7 @@ function Book3d({
                 className="image"
                 src="../../images/index/back-cover-black.jpg"
                 alt="Black colored cover custom wired notebook, back"
-                quality={100}
+                quality={80}
               />
             )}
           </BackCover>

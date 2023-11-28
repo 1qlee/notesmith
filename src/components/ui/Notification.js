@@ -1,5 +1,6 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
+import { colors } from "../../styles/variables"
 
 const slideInDown = keyframes`
   from {
@@ -25,7 +26,7 @@ const loading = keyframes`
 const StyledNotification = styled.div`
   align-items: ${props => props.align || "flex-start"};
   animation: ${slideInDown} 0.2s ease-out;
-  background-color: ${props => props.backgroundcolor};
+  background-color: ${props => props.backgroundcolor || colors.white};
   border: ${props => props.border};
   border-radius: ${props => props.borderradius || "0"};
   color: ${props => props.color};
