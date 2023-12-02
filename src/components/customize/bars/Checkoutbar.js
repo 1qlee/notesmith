@@ -6,6 +6,7 @@ import { navigate } from "gatsby"
 import { CircleNotch } from "@phosphor-icons/react"
 import { update, ref } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
+import { formatDollars, applyDiscounts } from "../../../utils/helper-functions"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
@@ -15,6 +16,7 @@ import Button from "../../ui/Button"
 import Content from "../../ui/Content"
 import ColorPicker from "../../shop/ColorPicker"
 import Box from "../../ui/Box"
+import StrikeText from "../../misc/StrikeText"
 
 function Checkoutbar({
   bookData,
@@ -28,6 +30,12 @@ function Checkoutbar({
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
+  let discount = applyDiscounts(bookData.price, +itemQuantity)
+  let discountRate = discount.rate || 0
+  let discountPrice = discount.price || 0
+  let discountSaved = discount.saved || 0
+  let discountPct = discount.pct || 0
+  let discountAmount = discount.amount || 0
 
   function getImageThumbnail() {
     // this is an exact match for "color-0"
@@ -50,8 +58,9 @@ function Checkoutbar({
       name: productData.name,
       numOfPages: productData.numOfPages,
       pages: [...canvasPages],
+      price: discountPrice || productData.price,
       price_id: productData.stripePriceId,
-      price: productData.price,
+      originalPrice: productData.price,
       printed: false,
       size: productData.size,
       slug: productData.slug,
@@ -109,7 +118,7 @@ function Checkoutbar({
           <Box>
             <Content
               padding="0"
-              margin="0 0 32px"
+              margin="0 0 16px"
               h5margin="0 0 16px"
             >
               <h5>{productData.name}</h5>
@@ -157,32 +166,7 @@ function Checkoutbar({
                 iconsize="0.625rem"
                 setItemQuantity={setItemQuantity}
                 counterpadding="0.5rem"
-                />
-            </Flexbox>
-            <Flexbox
-              flex="flex"
-              align="flex-end"
-              justify="space-between"
-              margin="0.5rem 0"
-            >
-              <Content
-                padding="0"
-                margin="0"
-                h5margin="0"
-                h5fontweight="700"
-                h5fontsize="1rem"
-              >
-                <h5>Subtotal</h5>
-              </Content>
-              <Content
-                padding="0"
-                margin="0"
-                h5margin="0"
-                h5fontsize="1.25rem"
-                h5fontweight="400"
-              >
-                <h5>{calculateTotalPrice(productData.price)}</h5>
-              </Content>
+              />
             </Flexbox>
           </Box>
         </Flexbox>
@@ -202,7 +186,7 @@ function Checkoutbar({
               <CircleNotch size="1rem" />
             </Icon>
           ) : (
-            "Add to cart"
+            <span>Add to cart - <StrikeText color={colors.gray.threeHundred}>{formatDollars(productData.price / 100)}</StrikeText>{formatDollars(discountAmount / 100)}</span>
           )}
         </Button>
       </ControlsFooter>

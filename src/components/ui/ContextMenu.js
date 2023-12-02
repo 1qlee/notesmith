@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
@@ -7,7 +7,7 @@ const StyledContextMenu = styled.article`
   box-shadow: ${colors.shadow.layeredSmall};
   font-size: 0.875rem;
   padding: 0.5rem 0;
-  position: absolute;
+  position: fixed;
   border: ${colors.borders.black};
 `
 
@@ -38,23 +38,35 @@ const ContextMenuDivider = styled.hr`
   margin: 0.5rem 0;
 `
 
-const ContextMenu = (
+const ContextMenu = forwardRef((
   {
+    id,
     selectedBookId,
     selectedBook,
     duplicateBook,
     handleBookDelete,
     coordinates,
     showContextMenu,
+    setShowContextMenu,
     setShowBookTitleInput
-  }
+  },
+  ref
 ) => {
 
+  function handleContextItem(cb) {
+    setShowContextMenu(false)
+    return cb
+  }
+
   return showContextMenu && (
-    <StyledContextMenu style={{
-      top: coordinates.y,
-      left: coordinates.x
-    }}>
+    <StyledContextMenu 
+      ref={ref}
+      id={id}
+      style={{
+        top: coordinates.y,
+        left: coordinates.x
+      }}
+    >
       <ContextMenuLink
         href={`/customize/${selectedBook.slug}/${selectedBookId}`}
       >
@@ -73,7 +85,7 @@ const ContextMenu = (
       </ContextMenuLink>
       <ContextMenuDivider />
       <ContextMenuLink
-        onClick={() => duplicateBook(selectedBook)}
+        onClick={() => handleContextItem(duplicateBook(selectedBook))}
         tabindex="0"
       >
         <ContextMenuItem>
@@ -81,7 +93,7 @@ const ContextMenu = (
         </ContextMenuItem>
       </ContextMenuLink>
       <ContextMenuLink
-        onClick={() => setShowBookTitleInput(true)}
+        onClick={() => handleContextItem(setShowBookTitleInput(true))}
         tabindex="0"
       >
         <ContextMenuItem>
@@ -90,7 +102,7 @@ const ContextMenu = (
       </ContextMenuLink>
       <ContextMenuDivider />
       <ContextMenuLink
-        onClick={() => handleBookDelete(selectedBook)}
+        onClick={() => handleContextItem(handleBookDelete(selectedBook))}
         tabindex="0"
       >
         <ContextMenuItem>
@@ -99,6 +111,6 @@ const ContextMenu = (
       </ContextMenuLink>
     </StyledContextMenu>
   )
-}
+})
 
 export default ContextMenu

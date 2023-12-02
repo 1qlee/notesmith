@@ -16,7 +16,7 @@ const StyledCanvas = styled.div`
 `
 
 function Canvas({
-  bookData,
+  productData,
   canvasPages,
   canvasPageTemplates,
   pageData,
@@ -41,7 +41,7 @@ function Canvas({
           width={canvasSize.width}
         >
           <PageSpread
-            bookData={bookData}
+            productData={productData}
             canvasSize={canvasSize}
             canvasPages={canvasPages}
             canvasPageTemplates={canvasPageTemplates}

@@ -11,7 +11,7 @@ const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
 
 function CanvasPage({
-  bookData,
+  productData,
   canvasPageRef,
   currentPageSide,
   isSelected,
@@ -55,7 +55,7 @@ function CanvasPage({
   if (selectedPage === 1 && pageSide === "left") {
     return null
   }
-  else if (selectedPage === bookData.numOfPages && pageSide === "right") {
+  else if (selectedPage === productData.numOfPages && pageSide === "right") {
     return null
   }
   else {
@@ -71,7 +71,6 @@ function CanvasPage({
         />
         {pageData.template && isSelected ? (
           <Template
-            bookData={bookData}
             currentPageSide={currentPageSide}
             maxSvgSize={maxSvgSize}
             pageData={pageData}

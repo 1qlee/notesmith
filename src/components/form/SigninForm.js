@@ -9,7 +9,6 @@ import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import Seo from "../layout/Seo"
 
 const SigninForm = () => {
   const { login } = useFirebaseContext()
@@ -74,7 +73,6 @@ const SigninForm = () => {
 
   return (
     <AuthFormWrapper>
-      <Seo title="Sign In" />
       <Content
         h1fontsize="2rem"
         margin="0 0 32px"

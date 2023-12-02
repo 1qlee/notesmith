@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import { ArrowLeft, Warning, CircleNotch } from "@phosphor-icons/react"
-import { colors, fonts, pageMargins } from "../../../styles/variables"
+import { Warning, CircleNotch } from "@phosphor-icons/react"
+import { colors, pageMargins, fonts } from "../../../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../../../utils/auth"
 import { ref, set, push } from "firebase/database"
@@ -16,11 +16,13 @@ import Button from "../../ui/Button"
 import Content from "../../ui/Content"
 import StrikeText from "../../misc/StrikeText"
 import { convertToDecimal } from "../../../utils/helper-functions"
+import TextLink from "../../ui/TextLink"
 
 const StepContent = styled.div`
   min-height: 36px;
   max-height: 300px;
   overflow-y: auto;
+  overflow-x: auto;
   padding: 2px;
 `
 
@@ -66,7 +68,7 @@ function NewBookModal({
       await set(ref(firebaseDb, `pages/${newPageKey}`), {
         bookId: newBookKey,
         id: newPageKey,
-        svg: `<svg><rect width="${pageWidth}" height="${pageHeight}" fill="#fff"></rect></svg>`,
+        svg: `<svg></svg>`,
         uid: user.uid,
         marginTop: 0,
         marginRight: 0,
@@ -86,26 +88,27 @@ function NewBookModal({
       }
       // write the new book into the db
       await set(ref(firebaseDb, `books/${newBookKey}`), { 
+        camelName: bookData.camelName,
+        category: bookData.category,
         coverColor: bookData.coverColor,
         dateCreated: new Date().valueOf(),
-        heightPixel: bookData.heightPixel,
-        heightInch: bookData.heightInch,
         id: newBookKey,
         name: bookData.name,
         numOfPages: bookData.numOfPages,
         pages: pagesArray,
-        size: bookData.size,
+        price: bookData.price,
+        price_id: bookData.stripePriceId,
+        slug: bookData.slug,
         title: bookData.title,
         uid: user.uid,
-        slug: bookData.slug,
-        widthPixel: bookData.widthPixel,
-        widthInch: bookData.widthInch,
       }).then(async () => {
         // afterwards, log that book id into 'users/userId/books/bookId'
         await set(ref(firebaseDb, `users/${user.uid}/books/${newBookKey}`), true)
         setProcessing(false)
-        // redirect the user to the book creation page
-        navigate(`/customize/${bookData.slug}/${newBookKey}`)
+        setShowModal({
+          show: false,
+          type: "createbook",
+        })
       }).catch(() => {
         toast.error("Error creating book. Please try again.")
         setShowModal({
@@ -131,15 +134,24 @@ function NewBookModal({
       setShowModal={setShowModal}
     >
       <ModalHeader>
-        {step === 1 && (
-          "Select type of book"
-        )}
-        {step === 2 && (
-          "Select cover color"
-        )}
-        {step === 3 && (
-          "Enter a title for your new book"
-        )}
+        <Content
+          h3fontsize="1.25rem"
+          h3fontweight="700"
+          h3margin="0"
+          headingfontfamily={fonts.secondary}
+        >
+          <h3>
+            {step === 1 && (
+              "Select type of book"
+            )}
+            {step === 2 && (
+              "Select cover color"
+            )}
+            {step === 3 && (
+              "Enter a title for your new book"
+            )}
+          </h3>
+        </Content>
       </ModalHeader>
       <ModalContent
         backgroundcolor={colors.white}
@@ -150,66 +162,64 @@ function NewBookModal({
           justify="space-between"
         >
           <Content
-            paragraphfontsize="0.75rem"
-            paragraphmargin="0"
+            h5margin="0"
           >
-            <p>Step {step} of 3</p>
+            <h5>
+              {step === 2 && (
+                "Color"
+              )}
+              {step === 3 && (
+                "Title"
+              )}
+            </h5>
           </Content>
-          <Content
-            linktextdecoration="underline"
-            margin="0 4px 0 0"
-          >
-            {step > 1 && (
-              <a
-                onClick={() => setStep(step - 1)}
-              >
-                Back
-              </a>
-            )}
-          </Content>
+          {step > 1 && (
+            <TextLink
+              onClick={() => setStep(step - 1)}
+              color={colors.gray.sevenHundred}
+            >
+              Go back
+            </TextLink>
+          )}
         </Flexbox>
         {step === 1 && (
           <StepContent>
-            {allProducts.nodes.map((product, index) => (
-              <BookRadio
-                onClick={() => handleClick({
-                  ...product,
-                  coverColor: "",
-                }, 2, index)}
-                isActive={bookData.name === product.name}
-                key={product.name}
-              >
-                <Flexbox
-                  flex="flex"
-                  justify="space-between"
-                  width="100%"
+            <Flexbox
+              flexwrap="wrap"
+              width="100%"
+            >
+              {allProducts.nodes.map((product, index) => (
+                <BookRadio
+                  onClick={() => handleClick({
+                    ...product,
+                    coverColor: "",
+                  }, 2, index)}
+                  isActive={bookData.name === product.name}
+                  key={product.name}
                 >
                   <Content
-                    h5margin="0 0 4px"
+                    h4fontsize="1rem"
+                    h4margin="0 0 8px"
                     h5fontweight="400"
+                    h5margin="0 0 4px"
+                    headingfontfamily={fonts.secondary}
+                    paragraphfontsize="0.875rem"
+                    paragraphcolor={colors.gray.sixHundred}
+                    ulmargin="16px 0 0"
+                    licolor={colors.gray.sevenHundred}
                   >
-                    <h5>{product.name}</h5>
+                    <h4>{product.name}</h4>
+                    <h5>
+                      <StrikeText>${convertToDecimal(product.price, 2)}</StrikeText>
+                      <span>${convertToDecimal(product.price * .75, 2)}</span>
+                    </h5>
+                    <ul>
+                      <li>{product.numOfPages} total pages</li>
+                    </ul>
                   </Content>
-                  <Content
-                    paragraphfontsize="1.25rem"
-                    paragraphmargin="0"
-                    paragraphtextalign="right"
-                    paragraphlineheight="1"
-                  >
-                    <p>
-                      <StrikeText>${convertToDecimal(product.price, 0)}</StrikeText>
-                      <span>${convertToDecimal(product.price * .75)}</span>
-                    </p>
-                  </Content>
-                </Flexbox>
-                <Content
-                  paragraphfontsize="0.875rem"
-                  paragraphcolor={colors.gray.sixHundred}
-                >
-                  <p>{product.numOfPages} total pages</p>
-                </Content>
-              </BookRadio>
-            ))}
+                </BookRadio>
+              ))}
+            </Flexbox>
           </StepContent>
         )}
         {step === 2 && (
@@ -243,6 +253,7 @@ function NewBookModal({
                 name="new-book-title"
                 autocomplete="false"
                 placeholder="Name your new book"
+                fontsize="1rem"
                 onChange={e => setBookData({
                   ...bookData,
                   title: e.target.value.trim(),

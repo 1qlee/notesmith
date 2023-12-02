@@ -15,15 +15,17 @@ import Content from "../components/ui/Content"
 import DemoControls from "../components/index/DemoControls"
 import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
+import Materials from "../components/index/Materials"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
-import { Patterns, Pattern } from "../components/misc/Patterns"
 import Progress from "../components/ui/Progress"
+import RegisterForm from "../components/form/RegisterForm"
 import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
-import Materials from "../components/index/Materials"
+import { Patterns, Pattern } from "../components/misc/Patterns"
+import { StyledLabel } from "../components/form/FormComponents"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -119,8 +121,9 @@ const IndexPage = ({ data }) => {
                   </Content>
                   <Content
                     paragraphmargin="0"
-                    h2margin="8px 0"
+                    h2margin="0"
                     h2fontsize="1.25rem"
+                    headingfontfamily={fonts.secondary}
                     paragraphfontsize="1.25rem"
                     padding="16px"
                     border={colors.borders.black}
@@ -130,26 +133,32 @@ const IndexPage = ({ data }) => {
                     <Flexbox
                       align="center"
                       justify="space-between"
+                      margin="0 0 16px"
                     >
-                      <h2>The pre-order sale is now live!</h2>
+                      <h2>Join the early access and pre-order sale!</h2>
                       <Tag
                         padding="3px 6px"
                         backgroundcolor={colors.yellow.twoHundred}
                         border={colors.borders.black}
                         color={colors.gray.nineHundred}
                       >
-                        SALE
+                        New
                       </Tag>
                     </Flexbox>
-                    <p>All custom notebooks are 25% off during this time.</p>
-                    <Button
-                      as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white"
-                      padding="16px"
-                      width="100%"
+                    <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
+                    <StyledLabel
+                      htmlFor="register-form-input"
+                      margin="0"
                     >
-                      Shop now
-                    </Button>
+                      Sign up to join
+                    </StyledLabel>
+                    <RegisterForm
+                      border
+                      fontsize="1rem"
+                      margin="8px 0 0"
+                      top="12px"
+                      color={colors.gray.nineHundred}
+                    />
                   </Content>
                 </Col>
                 <Col xl={8} lg={8}>
@@ -193,8 +202,9 @@ const IndexPage = ({ data }) => {
                       fontweight="700"
                       fontsize="1.25rem"
                       as={Link}
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
                     >
-                      <span>Shop now</span>
+                      <span>Browse</span>
                       <Icon
                         margin="0 0 0 4px"
                       >
@@ -381,7 +391,7 @@ const IndexPage = ({ data }) => {
                     h3color={colors.gray.oneHundred}
                     h3margin="0 0 16px"
                   >
-                    <h3>Create a Notesmith account to get access to all customization tools and features</h3>
+                    <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
                   </Content>
                 </Col>
                 <Col md={5} push={{ md: 1 }}>
@@ -390,7 +400,7 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                   >
                     <p>
-                      Sign up to get access to the Notesmith platform where you can create custom notebook layouts. All users will enjoy 25% discounted notebook pricing and free shipping during the pre-order sale.
+                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access in batches.
                     </p>
                   </Content>
                   <Flexbox
@@ -405,9 +415,9 @@ const IndexPage = ({ data }) => {
                       underlinecolor={colors.gray.oneHundred}
                       hovercolor={colors.gray.nineHundred}
                       as={Link}
-                      to="/signup"
+                      to="/waitlist"
                     >
-                      <span>Sign up</span>
+                      <span>Join the waitlist</span>
                       <Icon
                         margin="0 0 0 8px"
                       >

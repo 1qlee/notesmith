@@ -71,7 +71,9 @@ const EmailInput = styled(StyledInput)`
   }
 `
 
-function RegisterForm({ border, margin, fontsize, top, color }) {
+function RegisterForm({ id, border, margin, fontsize, top, color }) {
+  const formId = id ? `${id}` : "register-form"
+  const inputId = id ? `${id}-input` : "register-form-input"
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -120,6 +122,10 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
         })
         setTimeout(() => {
           setEmailCd(false)
+          setEmailError({
+            ...emailError,
+            msg: "",
+          })
         }, 5000)
       }
     }
@@ -185,14 +191,14 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
 
   return (
     <form 
-      id="register-form"
+      id={formId}
       onSubmit={e => registerEmail(e)}
     >
       <InputWrapper
         margin={margin}
       >
         <InputLabel 
-          htmlFor="register-form-input"
+          htmlFor={inputId}
           border={border}
         >
           <EmailInput
@@ -202,7 +208,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
             })}
             onChange={e => setEmail(e.currentTarget.value)}
             className={email && "has-value"}
-            id="register-form-input"
+            id={inputId}
             type="email"
             name="email"
             margin="0"
@@ -211,7 +217,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
           />
           <label
             className={email && "has-value"}
-            htmlFor="register-form-input"
+            htmlFor={inputId}
           >
             Email address
           </label>
@@ -221,7 +227,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
               backgroundcolor={colors.gray.nineHundred}
               padding="8px"
               type="submit"
-              form="register-form"
+              form={formId}
               className={loading ? "is-loading" : null}
               disabled={loading || emailCd}
               margin="0 0 0 2px"
@@ -233,7 +239,7 @@ function RegisterForm({ border, margin, fontsize, top, color }) {
                 ) : (
                   <>
                     {emailSent && emailCd ? (
-                      <Check size={16} weight="fill" />
+                      <Check size={16} weight="bold" />
                     ) : (
                       <PaperPlaneRight size={16} color={colors.gray.oneHundred} weight="fill" />
                     )}

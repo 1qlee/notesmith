@@ -5,10 +5,10 @@ const BookRadio = styled.button`
   display: block;
   background-color: ${colors.white};
   transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
-  border-radius: 4px;
+  border-radius: 8px;
   border: 1px solid ${colors.gray.nineHundred};
   padding: 1rem;
-  width: 100%;
+  width: 50%;
   text-align: left;
   &:hover,
   &:focus {

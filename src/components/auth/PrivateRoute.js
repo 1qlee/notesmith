@@ -16,8 +16,6 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
     success: null,
     msg: "",
   })
-  console.log(Component)
-  console.log(location)
 
   async function handleSendVerificationEmail() {
     setProcessing(true)

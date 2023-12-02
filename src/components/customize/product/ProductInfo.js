@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { colors,  } from "../../../styles/variables"
 import { useShoppingCart } from '../../cart/context/cartContext'
-import { formatDollars } from "../../../utils/helper-functions"
+import { applyDiscounts, formatDollars } from "../../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { useFirebaseContext } from "../../../utils/auth"
 import { Tooltip } from "react-tooltip"
@@ -38,31 +38,6 @@ const ProductInfo = ({
   let discountSaved = discount.saved || 0
   let discountPct = discount.pct || 0
   let discountAmount = discount.amount || 0
-
-  function applyDiscounts(price, quantity) {
-    let totalAmount = price * quantity
-    let discountRate = 0.25
-    let discountPrice = price * (1 - discountRate)
-    let discountPct = discountRate * 100
-    let discountAmount = discountPrice * quantity
-    let discountSaved = totalAmount * discountRate
-
-    // if (itemQuantity > 1 && itemQuantity < 10) {
-    //   discount = 0.10
-    // } else if (itemQuantity >= 10 && itemQuantity < 20) {
-    //   discount = 0.15
-    // } else if (itemQuantity >= 20) {
-    //   discount = 0.20
-    // }
-
-    return {
-      price: discountPrice,
-      saved: discountSaved,
-      amount: discountAmount,
-      pct: discountPct,
-      rate: discountRate,
-    }
-  }
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -207,86 +182,109 @@ const ProductInfo = ({
           showLabels={false}
         />
       </Flexbox>
-      <Flexbox
-        flex="flex"
-        justify="space-between"
-      >
-        <StyledLabel
-          htmlFor="quantity-tracker"
-          margin="0 0 8px"
-          fontsize="1rem"
-          fontweight="700"
-        >
-          Quantity
-        </StyledLabel>
-        {discountSaved !== 0 && (
-          <Content
-            paragraphmargin="0 0 8px"
-            paragraphcolor={colors.green.sixHundred}
-            paragraphfontweight="700"
+      {user ? (
+        <>
+          <Flexbox
+            flex="flex"
+            justify="space-between"
           >
-            <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
+            <StyledLabel
+              htmlFor="quantity-tracker"
+              margin="0 0 8px"
+              fontsize="1rem"
+              fontweight="700"
+            >
+              Quantity
+            </StyledLabel>
+            {discountSaved !== 0 && (
+              <Content
+                paragraphmargin="0 0 8px"
+                paragraphcolor={colors.green.sixHundred}
+                paragraphfontweight="700"
+              >
+                <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
+              </Content>
+            )}
+          </Flexbox>
+          <Flexbox
+            flex="flex"
+            margin="0 0 16px"
+          >
+            <QuantityTracker
+              id="quantity-tracker"
+              buttonwidth="1rem"
+              buttonheight="1rem"
+              counterwidth="100%"
+              counterpadding="1rem"
+              counterfontsize="1rem"
+              iconsize="0.625rem"
+              setItemQuantity={setItemQuantity}
+            />
+            <Button
+              backgroundcolor={colors.gray.nineHundred}
+              border={`1px solid ${colors.gray.nineHundred}`}
+              color={colors.gray.oneHundred}
+              id="cart-button"
+              margin="0 0 0 1rem"
+              padding="1rem"
+              onClick={() => handleAddCartButton(bookData)}
+              disabled={!validateCartButton()}
+              width="100%"
+            >
+              {itemAdded ? (
+                <span>Added to cart!</span>
+              ) : (
+                <span>Add to cart - {formatDollars(discountAmount / 100)}</span>
+              )}
+            </Button>
+          </Flexbox>
+          <Notification
+            backgroundcolor={colors.yellow.twoHundred}
+          >
+            <Icon
+              className="is-pulsating"
+              margin="2px 0 0"
+              pulseColor={colors.yellow.sixHundred}
+            >
+              <Info
+                color={colors.yellow.nineHundred}
+                size={20}
+              />
+            </Icon>
+            <Content
+              margin="0 0 0 8px"
+              paragraphmargin="0"
+              paragraphcolor={colors.yellow.nineHundred}
+              paragraphfontsize="1rem"
+            >
+              <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.yellow.nineHundred}>accounts page</TextLink></Link>.</p>
+            </Content>
+          </Notification>
+        </>
+      ) : (
+        <Notification
+          backgroundcolor={colors.yellow.twoHundred}
+        >
+          <Icon
+            className="is-pulsating"
+            margin="2px 0 0"
+            pulseColor={colors.yellow.sixHundred}
+          >
+            <Info
+              color={colors.yellow.nineHundred}
+              size={20}
+            />
+          </Icon>
+          <Content
+            margin="0 0 0 8px"
+            paragraphmargin="0"
+            paragraphcolor={colors.yellow.nineHundred}
+            paragraphfontsize="1rem"
+          >
+              <p>Purchases are currently only available to users in our early access. If you would like to join us, please <Link to="/waitlist"><TextLink color={colors.yellow.nineHundred}>sign up</TextLink></Link> for the waitlist.</p>
           </Content>
-        )}
-      </Flexbox>
-      <Flexbox
-        flex="flex"
-        margin="0 0 16px"
-      >
-        <QuantityTracker
-          id="quantity-tracker"
-          buttonwidth="1rem"
-          buttonheight="1rem"
-          counterwidth="100%"
-          counterpadding="1rem"
-          counterfontsize="1rem"
-          iconsize="0.625rem"
-          setItemQuantity={setItemQuantity}
-        />
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          border={`1px solid ${colors.gray.nineHundred}`}
-          color={colors.gray.oneHundred}
-          id="cart-button"
-          margin="0 0 0 1rem"
-          padding="1rem"
-          onClick={() => handleAddCartButton(bookData)}
-          disabled={!validateCartButton()}
-          width="100%"
-        >
-          {itemAdded ? (
-            <span>Added to cart!</span>
-          ) : (
-            <span>Add to cart - {formatDollars(discountAmount / 100)}</span>
-          )}
-        </Button>
-      </Flexbox>
-      <Notification
-        backgroundcolor={colors.yellow.twoHundred}
-      >
-        <Icon
-          className="is-pulsating"
-          margin="2px 0 0"
-          pulseColor={colors.yellow.sixHundred}
-        >
-          <Info
-            color={colors.yellow.nineHundred}
-            size={20}
-          />
-        </Icon>
-        <Content
-          margin="0 0 0 8px"
-          paragraphmargin="0"
-          paragraphcolor={colors.yellow.nineHundred}
-          paragraphfontsize="1rem"
-        >
-          {user ? (
-            <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.yellow.nineHundred}>accounts page</TextLink></Link>.</p>
-          ) : (
-            <p>Sign up for a Notesmith account and get access to more advanced customization features.</p>
-          )}
-        </Content>
-      </Notification>
+        </Notification>
+      )}
       <Tooltip 
         anchorSelect="#discount-text"
         content={`${discountPct}% discount.`}

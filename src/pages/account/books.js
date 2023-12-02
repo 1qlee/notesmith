@@ -3,10 +3,8 @@ import { graphql } from "gatsby"
 import PrivateRoute from "../../components/auth/PrivateRoute"
 import AuthBooks from "../../components/auth/AuthBooks"
 
-import Seo from "../../components/layout/Seo"
-
 function BooksPage({ data }) {
-  return <PrivateRoute component={AuthBooks} allProducts={data.allProductn} />
+  return <PrivateRoute component={AuthBooks} allProducts={data.allProduct} />
 }
 
 export default BooksPage
@@ -17,6 +15,7 @@ export const pageQuery = graphql`
       nodes {
         camelName
         category
+        custom
         description
         heightInch
         heightPixel
@@ -31,6 +30,7 @@ export const pageQuery = graphql`
         stripePriceId
         widthInch
         widthPixel
+        weight
         colors {
           name
           hex

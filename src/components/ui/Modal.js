@@ -11,7 +11,7 @@ const StyledModal = styled.dialog`
   margin: 0;
   padding: 0 16px;
   position: absolute;
-  top: 25%;
+  top: 20%;
   transform: translate(-50%, -25%);
   max-width: ${props => props.width || widths.modal};
   width: inherit;
@@ -30,11 +30,12 @@ const ModalBackground = styled.div`
 
 const ModalHeader = styled.div`
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.white};
-  color: ${props => props.color || colors.primary.nineHundred};
+  color: ${props => props.color || colors.gray.nineHundred};
+  border-bottom: ${colors.borders.black};
   font-size: 1.25rem;
-  font-weight: 400;
-  font-family: ${props => fonts.secondary};
-  padding: 16px 0 0;
+  font-weight: 700;
+  font-family: ${props => props.fontfamily || fonts.secondary};
+  padding: 16px 0;
 `
 
 const ModalContent = styled.div`

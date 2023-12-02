@@ -170,8 +170,33 @@ function formatDollars(value) {
   }).format(value)
 }
 
+function applyDiscounts(price, quantity) {
+  let totalAmount = price * quantity
+  let discountRate = 0.25
+  let discountPrice = price * (1 - discountRate)
+  let discountPct = discountRate * 100
+  let discountAmount = discountPrice * quantity
+  let discountSaved = totalAmount * discountRate
+
+  // if (itemQuantity > 1 && itemQuantity < 10) {
+  //   discount = 0.10
+  // } else if (itemQuantity >= 10 && itemQuantity < 20) {
+  //   discount = 0.15
+  // } else if (itemQuantity >= 20) {
+  //   discount = 0.20
+  // }
+
+  return {
+    price: discountPrice,
+    saved: discountSaved,
+    amount: discountAmount,
+    pct: discountPct,
+    rate: discountRate,
+  }
+}
 
 export {
+  applyDiscounts,
   consolidateMixedObjects,
   consolidateObjectProps,
   convertFloatFixed,

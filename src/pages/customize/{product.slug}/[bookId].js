@@ -2,8 +2,6 @@ import React from "react"
 import { graphql } from "gatsby"
 import Editor from "../../../components/customize/Editor"
 
-import Seo from "../../../components/layout/Seo"
-
 const EditorPage = ({ data, params }) => {
   return (
     <Editor

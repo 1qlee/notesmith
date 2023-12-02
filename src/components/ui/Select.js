@@ -147,7 +147,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentDbValue === "title" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
+                  <Check weight="bold" color={colors.gray.nineHundred} size={14} />
                 </Icon>
               </SelectIcon>
             )}
@@ -162,7 +162,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentDbValue === "dateCreated" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
+                  <Check weight="bold" color={colors.gray.nineHundred} size={14} />
                 </Icon>
               </SelectIcon>
             )}
@@ -176,7 +176,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "ascending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
+                  <Check weight="bold" color={colors.gray.nineHundred} size={12} />
                 </Icon>
               </SelectIcon>
             )}
@@ -188,7 +188,7 @@ function Select({ initialSortOrder, initialOption, initialDbValue, mainFunction 
             {currentSortOrder === "descending" && (
               <SelectIcon>
                 <Icon>
-                  <Check weight="fill" color={colors.gray.nineHundred} size="0.8rem" />
+                  <Check weight="bold" color={colors.gray.nineHundred} size={12} />
                 </Icon>
               </SelectIcon>
             )}

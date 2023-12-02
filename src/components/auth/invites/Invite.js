@@ -230,7 +230,7 @@ const Invite = ({ inviteId }) => {
                       >
                         <h1>You've been invited to join early access!</h1>
                         <p>We're thrilled to have you on board as one of our valued pioneers, getting a sneak peek into the exciting platform we're building. Your feedback and insights will play a crucial role in shaping what's to come.</p>
-                        <p>Additionally, enjoy <b>20% off</b> notebooks and <b>free shipping</b> (to the U.S. only) during our pre-order period lasting until late-November.</p>
+                        <p>Additionally, enjoy <b>25% off</b> notebooks and <b>free shipping</b> (to the U.S. only) during our pre-order period.</p>
                       </Content>
                       <form
                         id="signup-form"

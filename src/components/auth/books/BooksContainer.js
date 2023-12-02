@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback, useRef } from "react"
 import { colors } from "../../../styles/variables"
 import { navigate, Link } from "gatsby"
 
@@ -8,6 +8,8 @@ import { Select } from "../../ui/Select"
 import Table from "../../ui/Table"
 import Button from "../../ui/Button"
 import ContextMenu from "../../ui/ContextMenu"
+import Content from "../../ui/Content"
+import Box from "../../ui/Box"
 
 // should export this function to utils
 function convertTime(time) {
@@ -37,25 +39,55 @@ function BooksContainer({
     x: 0,
     y: 0,
   })
+  const contextMenuRef = useRef(null)
+  const booksTableRef = useRef(null)
 
   useEffect(() => {
-    document.addEventListener('click', closeContextMenu)
+    const handleOutsideClick = (event) => {
+      const { target } = event
 
-    return function cleanup() {
-      document.removeEventListener('click', closeContextMenu)
+      // any clicks that occur outside of the table
+      if (booksTableRef.current && !booksTableRef.current.contains(target)) {
+        setShowContextMenu(false)
+        setShowBookTitleInput(false)
+
+        if (selectedBookDOM) {
+          selectedBookDOM.classList.remove("is-selected")
+          setSelectedBookDOM(null)
+        }
+      }
     }
 
-  }, [userBooks])
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape") {
+        setShowContextMenu(false)
+      }
+    }
 
-  function closeContextMenu() {
-    setShowContextMenu(false)
-  }
+    window.addEventListener('mousedown', handleOutsideClick)
+    window.addEventListener('keydown', handleEscapeKey)
+
+    return () => {
+      window.removeEventListener('mousedown', handleOutsideClick)
+      window.removeEventListener('keydown', handleEscapeKey)
+    }
+  }, [userBooks, contextMenuRef, showContextMenu])
 
   function handleRenameBook(e) {
     e.preventDefault()
-    // db function from props
-    renameBook(newBookTitle, selectedBookId)
-    setShowBookTitleInput(false)
+    console.log(newBookTitle, selectedBookTitle)
+
+    if (newBookTitle) {
+      // db function from props
+      renameBook(newBookTitle, selectedBookId)
+      setShowBookTitleInput(false)
+    }
+    else if (newBookTitle === selectedBookTitle) {
+      setShowBookTitleInput(false)
+    }
+    else if (!newBookTitle) {
+      setShowBookTitleInput(false)
+    }
   }
 
   function handleBookSelect(e, book) {
@@ -79,30 +111,25 @@ function BooksContainer({
     setSelectedBookId(book.id)
   }
 
+  function handleBookDoubleClick(e, book) {
+    if (e.target.nodeName !== "INPUT") {
+      navigate(`/customize/${book.slug}/${book.id}`)
+    }
+  }
+
   function handleShowContextMenu(e, book) {
+    const { clientX, clientY } = e
+    
     e.preventDefault()
     // to display the menu on cursor
     setCoordinates({
-      x: e.clientX - 180,
-      y: e.clientY
+      x: clientX,
+      y: clientY,
     })
     // show in DOM
     setShowContextMenu(true)
     // save book title to state
     setSelectedBookTitle(book.title)
-  }
-
-  function handleClickOutside(e) {
-    // anything with data-clickoutside
-    if (e.target.dataset.clickoutside) {
-      // if a book is currently selected, remove it
-      if (selectedBookDOM) {
-        selectedBookDOM.classList.remove("is-selected")
-        setShowBookTitleInput(false)
-        setSelectedBookDOM(null)
-        setSelectedBookTitle(null)
-      }
-    }
   }
 
   const renameBookTitleRef = useCallback(node => {
@@ -112,14 +139,16 @@ function BooksContainer({
   }, [])
 
   return (
-    <div
-      data-clickoutside={true}
-      onClick={e => handleClickOutside(e)}
-    >
+    <>
+      <Content
+        margin="32px 0 16px"
+      >
+        Right click on any row in the table below to see more options.
+      </Content>
       <Flexbox
         flex="flex"
         align="center"
-        margin="32px 0 16px"
+        margin="16px 0"
       >
         <Button
           color={colors.gray.oneHundred}
@@ -139,70 +168,80 @@ function BooksContainer({
           mainFunction={sortBooks}
         />
       </Flexbox>
-      <Table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Date created</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody style={{position: 'relative'}}>
-          {userBooks && userBooks.map(book => (
-            <tr
-              data-title={book.title}
-              key={book.id}
-              onClick={e => handleBookSelect(e, book)}
-              onDoubleClick={() => navigate(`/customize/${book.slug}/${book.id}`)}
-              tabIndex="0"
-              onContextMenu={e => {
-                handleBookSelect(e, book)
-                handleShowContextMenu(e, book)
-              }}
-            >
-              <td>
-                {selectedBookId === book.id && showBookTitleInput ? (
-                  <form onSubmit={e => handleRenameBook(e)}>
-                    <StyledInput
-                      type="text"
-                      id="new-book-title"
-                      name="new-book-title"
-                      autocomplete="chrome-off"
-                      defaultValue={selectedBookTitle}
-                      onChange={e => setNewBookTitle(e.target.value.trim())}
-                      padding="4px"
-                      ref={renameBookTitleRef}
-                    />
-                  </form>
-                ) : (
-                  <p>
-                    {book.title}
-                  </p>
-                )}
-              </td>
-              <td>{convertTime(book.dateCreated)}</td>
-              <td>
-                <Button
-                  as={Link}
-                  to={`/customize/${book.slug}/${book.id}`}
-                >
-                  Edit
-                </Button>
-              </td>
+      <Box 
+        position="relative"
+        ref={booksTableRef}
+      >
+        <Table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date created</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-      <ContextMenu
-        selectedBook={selectedBook}
-        selectedBookId={selectedBookId}
-        duplicateBook={duplicateBook}
-        handleBookDelete={handleBookDelete}
-        coordinates={coordinates}
-        showContextMenu={showContextMenu}
-        setShowBookTitleInput={setShowBookTitleInput}
-      />
-    </div>
+          </thead>
+          <tbody style={{ position: 'relative' }}>
+            {userBooks && userBooks.map(book => (
+              <tr
+                data-title={book.title}
+                key={book.id}
+                onClick={e => handleBookSelect(e, book)}
+                onDoubleClick={e => handleBookDoubleClick(e, book)}
+                tabIndex="0"
+                onContextMenu={e => {
+                  handleBookSelect(e, book)
+                  handleShowContextMenu(e, book)
+                }}
+              >
+                <td>
+                  {selectedBookId === book.id && showBookTitleInput ? (
+                    <form onSubmit={e => handleRenameBook(e)}>
+                      <StyledInput
+                        autocomplete="chrome-off"
+                        defaultValue={selectedBookTitle}
+                        fontsize="1rem"
+                        id="new-book-title"
+                        name="new-book-title"
+                        onChange={e => setNewBookTitle(e.target.value.trim())}
+                        onKeyDown={e => e.key === "Escape" && setShowBookTitleInput(false)}
+                        padding="4px"
+                        ref={renameBookTitleRef}
+                        type="text"
+                      />
+                    </form>
+                  ) : (
+                    <p>
+                      {book.title}
+                    </p>
+                  )}
+                </td>
+                <td>{convertTime(book.dateCreated)}</td>
+                <td>
+                  <Button
+                    as={Link}
+                    to={`/customize/${book.slug}/${book.id}`}
+                  >
+                    Edit
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <ContextMenu
+          ref={contextMenuRef}
+          id="user-book-table-menu"
+          selectedBook={selectedBook}
+          selectedBookId={selectedBookId}
+          duplicateBook={duplicateBook}
+          handleBookDelete={handleBookDelete}
+          coordinates={coordinates}
+          showContextMenu={showContextMenu}
+          setShowContextMenu={setShowContextMenu}
+          setShowBookTitleInput={setShowBookTitleInput}
+        />
+      </Box>
+    </>
   )
 }
 

@@ -6,7 +6,6 @@ import { useEditorContext, useEditorDispatch } from "./context/editorContext"
 import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
 import Checkoutbar from "./bars/Checkoutbar"
-import Button from "../ui/Button"
 
 const StyledControls = styled.div`
   border-left: ${colors.borders.black};

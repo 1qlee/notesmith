@@ -40,7 +40,7 @@ const IconWrapper = styled.div`
 `
 
 function PageBox({
-  bookData,
+  productData,
   handleScrollToItem,
   setSelectedPage,
   selectedPage,
@@ -55,8 +55,8 @@ function PageBox({
     if (pageNumber <= 0) {
       return changePage(1)
     }
-    else if (pageNumber > bookData.numOfPages) {
-      return changePage(bookData.numOfPages)
+    else if (pageNumber > productData.numOfPages) {
+      return changePage(productData.numOfPages)
     }
     else {
       return changePage(pageNumber)
@@ -115,7 +115,7 @@ function PageBox({
         onFocus={e => e.target.select()}
         defaultValue={selectedPage}
         min="1"
-        max={bookData.numOfPages}
+        max={productData.numOfPages}
         step="1"
       />
       <IconWrapper

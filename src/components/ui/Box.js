@@ -6,6 +6,7 @@ const Box = styled.div`
   border-bottom: ${props => props.borderbottom};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
+  position: ${props => props.position};
   margin: ${props => props.margin};
   width: ${props => props.width};
   max-width: ${props => props.maxwidth};

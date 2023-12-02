@@ -4,7 +4,7 @@ import { colors } from "../../../styles/variables"
 import Holes from "./Holes"
 
 function CoverPage({
-  bookData,
+  productData,
   pageHeight,
   pageWidth,
   selectedPage,
@@ -44,7 +44,7 @@ function CoverPage({
       </svg>
     )
   }
-  else if (selectedPage === bookData.numOfPages) {
+  else if (selectedPage === productData.numOfPages) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"

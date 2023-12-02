@@ -123,7 +123,7 @@ const createItemData = memoizeOne((canvasPages, canvasPageTemplates, pageData, s
 }))
 
 function Pagebar({
-  bookData,
+  productData,
   canvasPages,
   canvasPageTemplates,
   pageData,
@@ -142,7 +142,7 @@ function Pagebar({
   return (
     <PagebarWrapper>
       <PageBox
-        bookData={bookData}
+        productData={productData}
         handleScrollToItem={handleScrollToItem}
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}

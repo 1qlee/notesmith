@@ -16,11 +16,11 @@ const minimumMargin = pageMargins.minimum
 const holesMargin = pageMargins.holes
 
 function PageSpread({
-  bookData,
-  canvasPages,
   canvasPageTemplates,
+  canvasPages,
   canvasSize,
   pageData,
+  productData,
   selectedPage,
   selectedPageSvg,
   setMax,
@@ -50,7 +50,7 @@ function PageSpread({
     currentPageSide = "left"
 
     // if it's the last page, show only the left page
-    if (selectedPage === bookData.numOfPages) {
+    if (selectedPage === productData.numOfPages) {
       leftPage = (canvasPages[selectedPage - 1].pageId)
       rightPage = (null)
     }
@@ -91,7 +91,7 @@ function PageSpread({
     bottom: convertToPx(leftPageTemplate.marginBottom),
     left: convertToPx(leftPageTemplate.marginLeft),
   }
-  const rightPageMargins = selectedPage !== bookData.numOfPages && {
+  const rightPageMargins = selectedPage !== productData.numOfPages && {
     top: convertToPx(rightPageTemplate.marginTop),
     right: convertToPx(rightPageTemplate.marginRight),
     bottom: convertToPx(rightPageTemplate.marginBottom),
@@ -137,32 +137,44 @@ function PageSpread({
 
       let bbox = element.getBBox()
       let convertedStrokeWidth = 0
+      const rightPageMargins = (svgWidth + holesMargin)
+
+      console.log(areaInSvgCoordinate)
 
       // If the element is a line, check the last child node for a stroke width
       if (element instanceof SVGLineElement) {
         convertedStrokeWidth = convertFloatFixed(element.getAttribute("stroke-width") / 2, 3)
       }
 
-      // bbox for the selection box/rect
-      let rectX = areaInSvgCoordinate.x
-      let rectY = areaInSvgCoordinate.y
-      let rectWidth = areaInSvgCoordinate.width
-      let rectHeight = areaInSvgCoordinate.height
+      // bbox for the selection box
+      const selectionBox = {
+        x1: pageIsLeft ? areaInSvgCoordinate.x - 15 : areaInSvgCoordinate.x - rightPageMargins - 3,
+        y1: areaInSvgCoordinate.y - 15,
+        x2: areaInSvgCoordinate.width === 0 ? 
+          (pageIsLeft ? 
+            areaInSvgCoordinate.x - 9 
+            : areaInSvgCoordinate.x - rightPageMargins + 3) 
+          : (pageIsLeft ? 
+            areaInSvgCoordinate.x + areaInSvgCoordinate.width + 3
+            : areaInSvgCoordinate.x + areaInSvgCoordinate.width - rightPageMargins + 3),
+        y2: areaInSvgCoordinate.height === 0 ? areaInSvgCoordinate.y - 9 : areaInSvgCoordinate.y + areaInSvgCoordinate.height - 9,
+      }
 
-      if (pageIsLeft) {
-        rectX -= 12
-        rectY -= 12
+      const elementBox = {
+        x1: bbox.x,
+        y1: bbox.y - convertedStrokeWidth,
+        x2: bbox.x + bbox.width,
+        y2: bbox.y + bbox.height + convertedStrokeWidth,
       }
-      else {
-        rectX -= (svgWidth + holesMargin)
-        rectY -= 12
-      }
+
+      console.log(selectionBox)
+      console.log(elementBox)
 
       if (
-        bbox.x + bbox.width + 3 >= rectX &&
-        bbox.x - 3 <= rectX + rectWidth &&
-        bbox.y + bbox.height + 3 + convertedStrokeWidth >= rectY &&
-        bbox.y - 3 - convertedStrokeWidth <= rectY + rectHeight
+        selectionBox.x2 >= elementBox.x1 &&
+        selectionBox.x1 <= elementBox.x2 &&
+        selectionBox.y2 >= elementBox.y1 &&
+        selectionBox.y1 <= elementBox.y2
       ) {
         return true
       }
@@ -181,7 +193,7 @@ function PageSpread({
 
     var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
       return collectElements([], svg, referenceElement || svg, function (element) {
-        return intersects(areaInSvgCoordinate, element)
+        return intersects(areaInSvgCoordinate, element, areaInInitialSvgCoordinate)
       })
     };
 
@@ -464,13 +476,14 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
+          console.log(selectedElements)
           coords.clientX = pointerEvent.clientX
           coords.clientY = pointerEvent.clientY
           // calculate if the current clientX and clientY are greater than previous in `coords`
           // if so, we are moving right/down, otherwise we are moving left/up
-          const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
-          const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY
-          const numOfElements = selectedElements.length
+          // const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
+          // const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY
+          // const numOfElements = selectedElements.length
 
           dispatch({
             type: "change-selection",
@@ -518,13 +531,12 @@ function PageSpread({
       onClick={e => handleMouseClick(e)}
     >
       <CoverPage
-        bookData={bookData}
+        productData={productData}
         selectedPage={selectedPage}
         pageHeight={svgHeight}
         pageWidth={svgWidth}
       />
       <CanvasPage
-        bookData={bookData}
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
@@ -534,6 +546,7 @@ function PageSpread({
         pagePosition={pagePosition}
         pageSide="left"
         pageTemplate={leftPageTemplate}
+        productData={productData}
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
         setMax={setMax}
@@ -544,7 +557,6 @@ function PageSpread({
         svgSize={svgSize}
       />
       <CanvasPage
-        bookData={bookData}
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
@@ -554,13 +566,14 @@ function PageSpread({
         pagePosition={pagePosition}
         pageSide="right"
         pageTemplate={rightPageTemplate}
+        productData={productData}
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
         setMax={setMax}
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
-        setSvgSize={setSvgSize}
         setSvgLoaded={setSvgLoaded}
+        setSvgSize={setSvgSize}
         svgSize={svgSize}
       />
       {canvasState.selectedElements.length > 0 && canvasState.selectionPath && (

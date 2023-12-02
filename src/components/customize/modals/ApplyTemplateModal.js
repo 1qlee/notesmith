@@ -55,11 +55,11 @@ const PageRangeInput = styled.input`
 `
 
 function ApplyTemplateModal({
-  bookData,
   bookId,
   canvasPages,
   canvasPageTemplates,
   pageData,
+  productData,
   selectedPage,
   selectedPageSvg,
   setCanvasPages,
@@ -70,7 +70,7 @@ function ApplyTemplateModal({
   user,
 }) {
   const { firebaseDb } = useFirebaseContext()
-  const totalPages = parseInt(bookData.numOfPages)
+  const totalPages = productData.numOfPages
   const [selectedApply, setSelectedApply] = useState("apply-current")
   const [frequency, setFrequency] = useState("")
   const [frequencyNum, setFrequencyNum] = useState(2)

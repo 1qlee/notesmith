@@ -3,12 +3,19 @@ import { colors, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { get, ref, set, push, query, orderByChild, equalTo } from "firebase/database"
 import { isBrowser } from "../../utils/helper-functions"
+import { ArrowLeft, Check } from "@phosphor-icons/react"
 
+import { Row, Col } from "react-grid-system"
 import AuthLayout from "./components/AuthLayout"
 import Content from "../ui/Content"
 import Layout from "../layout/Layout"
 import Notification from "../ui/Notification"
-import { Row, Col } from "react-grid-system"
+import { Flexbox } from "../layout/Flexbox"
+import { StyledLabel, StyledInput } from "../form/FormComponents"
+import TextLink from "../ui/TextLink"
+import Button from "../ui/Button"
+import Icon from "../ui/Icon"
+
 
 const UserDashboard = () => {
   const { loading, user, firebaseDb } = useFirebaseContext()
@@ -134,36 +141,37 @@ const UserDashboard = () => {
       <AuthLayout page="Dashboard">
         <Row>
           <Col md={6}>
+            <Notification
+              backgroundcolor={colors.green.twoHundred}
+              color={colors.green.nineHundred}
+              margin="32px 0 16px"
+            >
+              <p>Join the subreddit! Come over to <TextLink href="https://www.reddit.com/r/notesmith" target="_blank" rel="noopener noreferrer">/r/notesmith</TextLink> and share any thoughts, suggestion, and feedback.</p>
+            </Notification>
             <Content
               h1fontsize="2rem"
-              margin="32px 0 16px"
+              margin="16px 0"
               linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
               <p>
                 Click on the "Books" tab above to get started. When you create a book you will be able to give it a name, after which it will appear in your Books table. Double-click on any book in the table to open it in the editor.
               </p>
-              <p>If you have any questions or suggestions, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
-            </Content>
-            <Notification
-              backgroundcolor={colors.green.twoHundred}
-              color={colors.green.nineHundred}
-              margin="16px 0"
-            >
               <p>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
-            </Notification>
+              <p><b>Reminder:</b> Notesmith is in active development. New features are continuously being added. Now is the best time to make any suggestions or provide your feedback! If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a> or drop a post on the subreddit.</p>
+            </Content>
           </Col>
           <Col md={6}>
-            {/* <Content
-              h3fontsize="1.5rem"
-              h3margin="0 0 16px"
-              margin="32px 0"
-            >
-              <h3>Invite someone to early access</h3>
-              <p>Anyone you invite to early access will be able to bypass the wailist and gain access to Notesmith instantly. This is an exclusive perk for early users like you - but don't worry, you can invite as many people as you wish!</p>
-            </Content>
             {referralCode && (
               <>
+                <Content
+                  h3fontsize="1.5rem"
+                  h3margin="0 0 16px"
+                  margin="32px 0"
+                >
+                  <h3>Invite someone to early access</h3>
+                  <p>Anyone you invite to early access will be able to bypass the wailist and gain access to Notesmith instantly. This is an exclusive perk for early users like you - but don't worry, you can invite as many people as you wish!</p>
+                </Content>
                 <Flexbox
                   justify="space-between"
                 >
@@ -205,7 +213,7 @@ const UserDashboard = () => {
                   </Button>
                 </Flexbox>
               </>
-            )} */}
+            )}
           </Col>
         </Row>
       </AuthLayout>

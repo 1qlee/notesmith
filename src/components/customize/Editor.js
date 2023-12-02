@@ -13,12 +13,11 @@ import { EditorProvider } from "./context/editorContext"
 import { Controls } from "./Controls"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
-import CheckLoginModal from "./modals/CheckLoginModal"
-import CreateBookModal from "./modals/CreateBookModal"
 import Functionsbar from "./bars/Functionsbar"
 import Loader from "../misc/Loader"
 import Pagebar from "./bars/Pagebar"
 import Book404 from "./Book404"
+import Seo from "../layout/Seo"
 
 const StyledEditor = styled.div`
   display: flex;
@@ -40,20 +39,19 @@ const Editor = ({
     type: "",
   })
   const [bookData, setBookData] = useState({
-    ...productData,
     coverColor: "",
     title: "",
   })
   const [pageData, setPageData] = useState({
-    maxContentHeight: bookData.heightPixel - pageMargins.vertical,
-    maxContentWidth: bookData.widthPixel - pageMargins.horizontal,
-    svgHeight: bookData.heightPixel,
-    svgWidth: bookData.widthPixel,
+    maxContentHeight: productData.heightPixel - pageMargins.vertical,
+    maxContentWidth: productData.widthPixel - pageMargins.horizontal,
+    svgHeight: productData.heightPixel,
+    svgWidth: productData.widthPixel,
     ...pageDataConfig
   })
   const [svgSize, setSvgSize] = useState({
-    height: bookData.heightPixel - pageMargins.vertical,
-    width: bookData.widthPixel - pageMargins.horizontal,
+    height: productData.heightPixel - pageMargins.vertical,
+    width: productData.widthPixel - pageMargins.horizontal,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -182,7 +180,7 @@ const Editor = ({
     // blank array holds the svgs
     const pagesArray = []
 
-    for (let i = 0; i < bookData.numOfPages; i++) {
+    for (let i = 0; i < productData.numOfPages; i++) {
       pagesArray.push({
         pageId: blankPageId,
         pageNumber: i + 1,
@@ -197,17 +195,24 @@ const Editor = ({
   if (loading || initializing) {
     return <Loader />
   }
-
-  return (
+  else if (!user) {
+    navigate("/signin")
+  }
+  else return (
     <EditorProvider
       bookDimensions={{
-        width: bookData.widthPixel,
-        height: bookData.heightPixel,
+        width: productData.widthPixel,
+        height: productData.heightPixel,
       }}
       setSelectedPageSvg={setSelectedPageSvg}
       setPageData={setPageData}
       pageData={pageData}
     >
+      <Seo
+        details={{
+          title: `${bookData.title}`,
+        }}
+      />
       {noExistingBook ? (
         <Book404 />
       ) : (
@@ -223,81 +228,66 @@ const Editor = ({
           <StyledEditor>
             <Pagebar
               activeTab={activeTab}
-              bookData={bookData}
-              canvasPages={canvasPages}
               canvasPageTemplates={canvasPageTemplates}
+              canvasPages={canvasPages}
               pageData={pageData}
+              productData={productData}
               selectedPage={selectedPage}
               setActiveTab={setActiveTab}
               setPageData={setPageData}
               setSelectedPage={setSelectedPage}
             />
             <Canvas
-              bookData={bookData}
-              canvasPages={canvasPages}
               canvasPageTemplates={canvasPageTemplates}
+              canvasPages={canvasPages}
               pageData={pageData}
-              setSvgSize={setSvgSize}
+              productData={productData}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
               setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
+              setSvgSize={setSvgSize}
               svgSize={svgSize}
             />
             <Controls
               activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
+              max={max}
               pageData={pageData}
               productData={productData}
               productImages={productImages}
-              max={max}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}
               setShowModal={setShowModal}
               svgSize={svgSize}
-              user={user}
               toast={toast}
+              user={user}
             />
           </StyledEditor>
         </>
       )}
-      {showModal.show && (
-        <>
-          {showModal.type === "notSignedIn" && (
-            <CheckLoginModal setShowModal={setShowModal} />
-          )}
-          {showModal.type === "signedIn" && (
-            <CreateBookModal
-              bookData={bookData}
-              pageData={pageData}
-              productData={productData}
-              setBookData={setBookData}
-              setShowModal={setShowModal}
-              toast={toast}
-            />
-          )}
-          {showModal.type === "template" && (
-            <ApplyTemplateModal
-              bookData={bookData}
-              bookId={bookId}
-              canvasPages={canvasPages}
-              canvasPageTemplates={canvasPageTemplates}
-              pageData={pageData}
-              selectedPage={selectedPage}
-              selectedPageSvg={selectedPageSvg}
-              setCanvasPages={setCanvasPages}
-              setCanvasPageTemplates={setCanvasPageTemplates}
-              setPageData={setPageData}
-              setShowModal={setShowModal}
-              toast={toast}
-              user={user}
-            />
-          )}
-        </>
-      )}
+      <>
+        {(showModal.show && showModal.type === "template") && (
+          <ApplyTemplateModal
+            bookId={bookId}
+            canvasPages={canvasPages}
+            canvasPageTemplates={canvasPageTemplates}
+            pageData={pageData}
+            productData={productData}
+            selectedPage={selectedPage}
+            selectedPageSvg={selectedPageSvg}
+            setCanvasPages={setCanvasPages}
+            setCanvasPageTemplates={setCanvasPageTemplates}
+            setPageData={setPageData}
+            setShowModal={setShowModal}
+            toast={toast}
+            user={user}
+          />
+        )}
+      </>
     </EditorProvider>
   )
 }

@@ -5,7 +5,6 @@ import { useFirebaseContext } from "../utils/auth"
 import { SectionMain, Section } from "../components/layout/Section"
 import SigninForm from "../components/form/SigninForm"
 import Layout from "../components/layout/Layout"
-import Seo from "../components/layout/Seo"
 
 const Signin = () => {
   const { user, loading } = useFirebaseContext()

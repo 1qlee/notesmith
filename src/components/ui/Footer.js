@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { colors, spacing } from "../../styles/variables"
-import { ScreenClassRender } from "react-grid-system"
+import { useFirebaseContext } from "../../utils/auth"
 
 import { Section, SectionContent } from "../layout/Section"
 import { Container, Row, Col } from 'react-grid-system'
@@ -17,73 +17,126 @@ function getDate() {
   return d.getFullYear()
 }
 
-const Footer = ({ screenClass }) => {
-  
-  return (
-    <ScreenClassRender
-      render={screenClass => {
-        const isMobile = ["xs", "sm"].includes(screenClass)
+const Footer = () => {
+  const { user } = useFirebaseContext()
 
-        return (
-          <Section backgroundcolor={colors.gray.nineHundred}>
-            <SectionContent padding={`${spacing.medium} 0`}>
-              <Container xs sm md lg xl>
-                <Row>
-                  <Col md={4} push={{ md: 2 }}>
-                    <Content
-                      paragraphcolor={colors.gray.oneHundred}
-                      paragraphfontsize="1.25rem"
-                    >
-                      <p>Sign up for our newsletter to get access to discounts, updates, and more</p>
-                    </Content>
-                  </Col>
-                  <Col md={4} push={{ md: 2 }}>
-                    <RegisterForm 
-                      fontsize="1rem"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Divider margin="32px" backgroundcolor={colors.gray.sixHundred} />
-                </Row>
-                <Row>
-                  <Col lg={4}>
-                    <Content
-                      paragraphcolor={colors.gray.oneHundred}
-                    >
-                      <Link
-                        to="/"
-                      >
-                        <Logo color={colors.gray.oneHundred} />
+  return (
+    <Section backgroundcolor={colors.gray.nineHundred}>
+      <SectionContent padding={`${spacing.medium} 0`}>
+        <Container xs sm md lg xl>
+          <Row>
+            <Col md={4} push={{ md: 2 }}>
+              <Content
+                paragraphcolor={colors.gray.oneHundred}
+                paragraphfontsize="1.25rem"
+              >
+                <p>Join the waitlist to get early access to all of Notesmith's features and notebooks</p>
+              </Content>
+            </Col>
+            <Col md={4} push={{ md: 2 }}>
+              <RegisterForm 
+                fontsize="1rem"
+                id="footer-register-form"
+                color={colors.gray.oneHundred}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Divider margin="32px" backgroundcolor={colors.gray.sixHundred} />
+          </Row>
+          <Row>
+            <Col lg={4}>
+              <Content
+                paragraphcolor={colors.gray.oneHundred}
+              >
+                <Link
+                  to="/"
+                >
+                  <Logo color={colors.gray.oneHundred} />
+                </Link>
+                <p>
+                  © {getDate()} Notesmith LLC
+                </p>
+              </Content>
+            </Col>
+            <Col lg={2}>
+              <Content
+                linkcolor={colors.gray.oneHundred}
+                h5margin="0 0 8px"
+                h5color={colors.gray.oneHundred}
+              >
+                <h5>Support</h5>
+                <Box>
+                  <Link to="/faq">
+                    FAQ
+                  </Link>
+                </Box>
+                <Box>
+                  <Link to="/return-policy">
+                    Return Policy
+                  </Link>
+                </Box>
+              </Content>
+            </Col>
+            <Col lg={2}>
+              <Content
+                linkcolor={colors.gray.oneHundred}
+                h5margin="0 0 8px"
+                h5color={colors.gray.oneHundred}
+              >
+                <h5>Products</h5>
+                <Box>
+                  <Link to="/products/notebooks/pro-wired-notebook-a5-custom/white/">
+                    Custom notebooks
+                  </Link>
+                </Box>
+                <Box>
+                  <Link to="/waitlist">
+                    Early access
+                  </Link>
+                </Box>
+              </Content>
+            </Col>
+            <Col lg={2}>
+              <Content
+                linkcolor={colors.gray.oneHundred}
+                h5margin="0 0 8px"
+                h5color={colors.gray.oneHundred}
+              >
+                <h5>Account</h5>
+                {user ? (
+                  <>
+                    <Box>
+                      <Link to="/account/dashboard">
+                        Dashboard
                       </Link>
-                      <p>
-                        © {getDate()} Notesmith LLC
-                      </p>
-                    </Content>
-                  </Col>
-                  <Col lg={4}>
-                    <Content
-                      linkcolor={colors.gray.oneHundred}
-                    >
-                      <Box>
-                        <Link to="/faq">
-                          FAQ
-                        </Link>
-                      </Box>
-                      <Box>
-                        <Link to="/return-policy">
-                          Return Policy
-                        </Link>
-                      </Box>
-                    </Content>
-                  </Col>
-                </Row>
-              </Container>
-            </SectionContent>
-          </Section>
-        )
-      }} 
-    />
+                    </Box>
+                    <Box>
+                      <Link to="/account/books">
+                        Books
+                      </Link>
+                    </Box>
+                  </>
+                ) : (
+                  <>
+                    <Box>
+                      <Link to="/signin">
+                        Sign in
+                      </Link>
+                    </Box>
+                    <Box>
+                      <Link to="/signin">
+                        Sign up
+                      </Link>
+                    </Box>
+                  </>
+                )}
+              </Content>
+            </Col>
+          </Row>
+        </Container>
+      </SectionContent>
+    </Section>
   )
 }
 

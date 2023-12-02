@@ -13,7 +13,7 @@ import DeleteBookModal from "./modals/DeleteBookModal"
 import Layout from "../layout/Layout"
 import NewBookModal from "./modals/AppNewBookModal"
 
-const UserBooks = ({ allProducts }) => {
+const AuthBooks = ({ allProducts }) => {
   const isBrowser = typeof window !== "undefined"
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [processing, setProcessing] = useState(true)
@@ -294,7 +294,7 @@ const UserBooks = ({ allProducts }) => {
               h1fontsize="3rem"
               maxwidth={widths.content.index}
             >
-              <h1>Create your own notebook now</h1>
+              <h1>Create a notebook to get started</h1>
               <p>It's easy to get started with creating your own notebook. Simply press the button below to begin!</p>
               <Button
                 color={colors.gray.oneHundred}
@@ -337,4 +337,4 @@ const UserBooks = ({ allProducts }) => {
   )
 }
 
-export default UserBooks
+export default AuthBooks
