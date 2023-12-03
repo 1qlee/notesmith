@@ -130,16 +130,13 @@ function PageSpread({
     };
 
     // Updated intersects function to check cursor distance.
-    const intersects = function (areaInSvgCoordinate, element) {
+    const intersects = function (areaInSvgCoordinate, element, distance) {
       if (element.getAttribute("id") === "hover-clone") {
         return false
       }
 
       let bbox = element.getBBox()
       let convertedStrokeWidth = 0
-      const rightPageMargins = (svgWidth + holesMargin)
-
-      console.log(areaInSvgCoordinate)
 
       // If the element is a line, check the last child node for a stroke width
       if (element instanceof SVGLineElement) {
@@ -148,104 +145,38 @@ function PageSpread({
 
       // bbox for the selection box
       const selectionBox = {
-        x1: pageIsLeft ? areaInSvgCoordinate.x - 15 : areaInSvgCoordinate.x - rightPageMargins - 3,
-        y1: areaInSvgCoordinate.y - 15,
-        x2: areaInSvgCoordinate.width === 0 ? 
-          (pageIsLeft ? 
-            areaInSvgCoordinate.x - 9 
-            : areaInSvgCoordinate.x - rightPageMargins + 3) 
-          : (pageIsLeft ? 
-            areaInSvgCoordinate.x + areaInSvgCoordinate.width + 3
-            : areaInSvgCoordinate.x + areaInSvgCoordinate.width - rightPageMargins + 3),
-        y2: areaInSvgCoordinate.height === 0 ? areaInSvgCoordinate.y - 9 : areaInSvgCoordinate.y + areaInSvgCoordinate.height - 9,
+        x1: convertFloatFixed(areaInSvgCoordinate.x - pagePosition.x, 3),
+        y1: convertFloatFixed(areaInSvgCoordinate.y - pagePosition.y, 3),
+        x2: convertFloatFixed(areaInSvgCoordinate.width === 0 ? 
+          areaInSvgCoordinate.x - pagePosition.x 
+          : areaInSvgCoordinate.x + areaInSvgCoordinate.width - pagePosition.x, 3),
+        y2: convertFloatFixed(areaInSvgCoordinate.height === 0 ? 
+          areaInSvgCoordinate.y - pagePosition.y  
+          : areaInSvgCoordinate.y + areaInSvgCoordinate.height - pagePosition.y, 3),
       }
 
       const elementBox = {
-        x1: bbox.x,
-        y1: bbox.y - convertedStrokeWidth,
-        x2: bbox.x + bbox.width,
-        y2: bbox.y + bbox.height + convertedStrokeWidth,
+        x1: convertFloatFixed(bbox.x - distance, 2),
+        y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 2),
+        x2: convertFloatFixed(bbox.x + bbox.width + distance, 2),
+        y2: convertFloatFixed(bbox.y + bbox.height + convertedStrokeWidth + distance, 2),
       }
 
-      console.log(selectionBox)
-      console.log(elementBox)
-
       if (
-        selectionBox.x2 >= elementBox.x1 &&
-        selectionBox.x1 <= elementBox.x2 &&
-        selectionBox.y2 >= elementBox.y1 &&
-        selectionBox.y1 <= elementBox.y2
+        elementBox.x2 >= selectionBox.x1 &&
+        elementBox.x1 <= selectionBox.x2 &&
+        elementBox.y2 >= selectionBox.y1 &&
+        elementBox.y1 <= selectionBox.y2
       ) {
         return true
       }
     }
 
-    // function expandSVGRect(rect, margin) {
-    //   console.log("yo")
-    //   // Create a new SVGRect object using createSVGRect.
-    //   rect.x = rect.x - margin
-    //   rect.y = rect.y - margin
-    //   rect.width = rect.width + 2 * margin
-    //   rect.height = rect.height + 2 * margin
-
-    //   return rect
-    // }
-
     var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
       return collectElements([], svg, referenceElement || svg, function (element) {
-        return intersects(areaInSvgCoordinate, element, areaInInitialSvgCoordinate)
+        return intersects(areaInSvgCoordinate, element, 2)
       })
     };
-
-    // returns an array of selected elements
-    // const getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
-    //   const ref = referenceElement || svg
-    //   const nodes = d3.select(ref).selectChildren()
-    //   let selectedElements = []
-
-    //   for (const node of nodes) {
-    //     // skip selection group <g> element
-    //     if (node.getAttribute("id") === "selection-group") {
-    //       getIntersections(node, node, areaInSvgCoordinate, areaInInitialSvgCoordinate)
-    //       continue
-    //     }
-
-    //     let bbox = node.getBBox()
-    //     let convertedStrokeWidth = 0
-
-    //     // If the element is a line, check the last child node for a stroke width
-    //     if (node instanceof SVGLineElement) {
-    //       convertedStrokeWidth = convertFloatFixed(node.getAttribute("stroke-width") / 2, 3)
-    //     }
-
-    //     // bbox for the selection box/rect
-    //     let rectX = areaInSvgCoordinate.x
-    //     let rectY = areaInSvgCoordinate.y
-    //     let rectWidth = areaInSvgCoordinate.width
-    //     let rectHeight = areaInSvgCoordinate.height
-
-    //     if (pageIsLeft) {
-    //       rectX -= 12
-    //       rectY -= 12
-    //     }
-    //     else {
-    //       rectX -= (svgWidth + holesMargin)
-    //       rectY -= 12
-    //     }
-
-    //     if (
-    //       bbox.x + bbox.width + 3 >= rectX &&
-    //       bbox.x - 3 <= rectX + rectWidth &&
-    //       bbox.y + bbox.height + 3 + convertedStrokeWidth >= rectY &&
-    //       bbox.y - 3 - convertedStrokeWidth <= rectY + rectHeight
-    //     ) {
-    //       selectedElements.push(node)
-    //     }
-    //   }
-
-
-    //   return selectedElements
-    // }
 
     return getIntersections(
       svg,
@@ -325,7 +256,7 @@ function PageSpread({
       let nodes = d3.select(canvasPageRef.current).selectChildren()
 
       if (nodes) {
-        subject = findClosestNode(nodes, coords, 3)
+        subject = findClosestNode(nodes, coords, 2)
       }
 
       // create a hover-clone element which sits on top of the hovered element
@@ -394,10 +325,6 @@ function PageSpread({
       }
     }
   }, 10)
-
-  const handleMouseClick = (e) => {
-    console.log("Click")
-  }
 
   useEffect(() => {
     let referenceElement = null
@@ -476,7 +403,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          console.log(selectedElements)
           coords.clientX = pointerEvent.clientX
           coords.clientY = pointerEvent.clientY
           // calculate if the current clientX and clientY are greater than previous in `coords`
@@ -528,7 +454,6 @@ function PageSpread({
       x={spreadPosition.x}
       y={spreadPosition.y}
       onMouseMove={e => handleMouseMove(e)}
-      onClick={e => handleMouseClick(e)}
     >
       <CoverPage
         productData={productData}
