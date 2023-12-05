@@ -259,7 +259,7 @@ const DesignControls = () => {
                   <option value="#000000">Yes</option>
                 </StyledSelect>
                 <SelectIcon
-                  top="8px"
+                  top="10px"
                   right="4px"
                 >
                   <CaretDown size="0.875rem" />

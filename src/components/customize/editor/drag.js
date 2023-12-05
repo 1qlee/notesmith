@@ -1,7 +1,7 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { throttle } from "lodash"
-import { findClosestNode, detectMouseInSelection } from "./editor-functions"
+import { detectMouseInSelection } from "./editor-functions"
 
 function parseDragElements(nodes, event) {
   const eventX = convertFloatFixed(event.x, 3)
@@ -13,6 +13,7 @@ function parseDragElements(nodes, event) {
     const isCircle = currentNode instanceof SVGCircleElement || currentNode instanceof SVGEllipseElement
     const isLine = currentNode instanceof SVGLineElement
     const isGroup = currentNode instanceof SVGGElement
+    const isPath = currentNode instanceof SVGPathElement
     
     switch (true) {
       case isCircle:
@@ -36,6 +37,19 @@ function parseDragElements(nodes, event) {
           .attr("x2", x2)
           .attr("y1", y1)
           .attr("y2", y2)
+        break
+      case isPath:
+        let path = node
+        let d = path.attr("d") // Get the current path data
+        // Modify the path data to move the element
+        // Example: Move the path by adding event.dx to the x-coordinate and event.dy to the y-coordinate
+        let modifiedD = d.replace(/([MmLlHhVvCcSsQqTtAaZz])\s*([-+]?\d*\.?\d+)\s*([-+]?\d*\.?\d+)/g, (match, command, x, y) => {
+          let newX = convertFloatFixed(parseFloat(x) + event.dx, 3)
+          let newY = convertFloatFixed(parseFloat(y) + event.dy, 3)
+          return `${command} ${newX} ${newY}`
+        })
+
+        node.attr("d", modifiedD) // Set the modified path data
         break
       case isGroup:
         parseDragElements(currentNode.childNodes, event)
@@ -99,19 +113,19 @@ function parseDragElements(nodes, event) {
 // }
 
 
-function drag(referenceElement, dispatch, canvasState, coords) {
+function drag(dispatch, coords) {
   function dragsubject(event) {
     // all the child nodes of the canvas page
     const selectionPath = d3.select("#selection-path")
     const { sourceEvent } = event
     const coords = {
-      clientX: sourceEvent.clientX,
-      clientY: sourceEvent.clientY,
+      x: sourceEvent.clientX,
+      y: sourceEvent.clientY,
     }
 
     if (!selectionPath.empty()) {
       const pathBox = d3.select("#selection-path").node().getBoundingClientRect()
-      const isMouseInSelection = detectMouseInSelection(coords, pathBox)
+      const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
 
       if (isMouseInSelection) {
         return d3.selectAll("[data-selected]").nodes()

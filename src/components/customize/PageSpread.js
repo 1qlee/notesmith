@@ -135,15 +135,66 @@ function PageSpread({
         return false
       }
 
+      let elementBox = {}
       let bbox = element.getBBox()
       let convertedStrokeWidth = 0
 
-      // If the element is a line, check the last child node for a stroke width
+      // If the element is a line, check it for a stroke width
       if (element instanceof SVGLineElement) {
-        convertedStrokeWidth = convertFloatFixed(element.getAttribute("stroke-width") / 2, 3)
+        const strokeWidth = element.getAttribute("stroke-width")
+        convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
+        
+        if (bbox.height === 0) {
+          bbox.height = strokeWidth
+        }
+      }
+      else if (element instanceof SVGPathElement) {
+        // check if there is at least one enclosed point in the path.
+        for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+          let { x, y } = element.getPointAtLength(i)
+
+          // create a box around the point where the element is "targetable"
+          const areaAroundPoint = {
+            x1: x - 2,
+            x2: x + 2,
+            y1: y - 2,
+            y2: y + 2,
+          }
+          const { x1, x2, y1, y2 } = areaAroundPoint
+
+          // account for page margins in cursor position
+          let dragCoords = {
+            x: dragAreaInSvgCoordinate.x - pagePosition.x,
+            y: dragAreaInSvgCoordinate.y - pagePosition.y,
+          }
+
+          // when the drag area is a single point, check if the point is within the element's box
+          if (dragAreaInSvgCoordinate.width === 0 || dragAreaInSvgCoordinate.height === 0) {
+            if (
+              dragCoords.x >= x1 &&
+              dragCoords.x <= x2 &&
+              dragCoords.y >= y1 &&
+              dragCoords.y <= y2
+            ) {
+              return true
+            }
+          }
+
+          // when the drag area is a box, check if the box is within the element's box
+          if (
+            dragCoords.x <= x &&
+            x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+            dragCoords.y <= y &&
+            y <= dragCoords.y + dragAreaInSvgCoordinate.height
+          ) {
+            return true
+          }
+        }
+        return false
       }
 
-      // bbox for the selection box
+      // bbox for the selection's box
+      // with conditions where selection was just a click (a single point)
       const selectionBox = {
         x1: convertFloatFixed(areaInSvgCoordinate.x - pagePosition.x, 3),
         y1: convertFloatFixed(areaInSvgCoordinate.y - pagePosition.y, 3),
@@ -155,13 +206,16 @@ function PageSpread({
           : areaInSvgCoordinate.y + areaInSvgCoordinate.height - pagePosition.y, 3),
       }
 
-      const elementBox = {
+      // bbox for the element's box
+      elementBox = {
         x1: convertFloatFixed(bbox.x - distance, 2),
         y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 2),
         x2: convertFloatFixed(bbox.x + bbox.width + distance, 2),
-        y2: convertFloatFixed(bbox.y + bbox.height + convertedStrokeWidth + distance, 2),
+        y2: convertFloatFixed(bbox.y + bbox.height + distance, 2),
       }
 
+
+      // check if the element's box is within the selection's box
       if (
         elementBox.x2 >= selectionBox.x1 &&
         elementBox.x1 <= selectionBox.x2 &&
@@ -183,66 +237,27 @@ function PageSpread({
       referenceElement,
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
-    ).filter(element => {
-      // the element that the pointer event raised is considered to intersect.
-      if (pointerEvent.target === element) {
-        return true
-      }
-      // strictly check only <path>s.
-      if (!(element instanceof SVGPathElement)) {
-        return true
-      }
-
-      // check if there is at least one enclosed point in the path.
-      for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
-        let { x, y } = element.getPointAtLength(i)
-
-        let dragCoords = {
-          x: dragAreaInSvgCoordinate.x - 12,
-          y: dragAreaInSvgCoordinate.y - 12,
-        }
-        if (pageData.template) {
-          dragCoords.x = dragCoords.x - templateMargins.left
-          dragCoords.y = dragCoords.y - templateMargins.top
-        }
-        else {
-          if (pageIsLeft) {
-            dragCoords.x = dragCoords.x - leftPageMargins.left
-            dragCoords.y = dragCoords.y - leftPageMargins.top
-          }
-          else {
-            dragCoords.x = dragCoords.x - rightPageMargins.left
-            dragCoords.y = dragCoords.y - rightPageMargins.top
-          }
-        }
-
-        if (!pageIsLeft) {
-          dragCoords.x = dragCoords.x - svgWidth - holesMargin + 12
-        }
-
-        if (
-          dragCoords.x <= x && x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-          dragCoords.y <= y && y <= dragCoords.y + dragAreaInSvgCoordinate.height
-        ) {
-          return true
-        }
-      }
-      return false
-    })
+    )
   }
 
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
     if (!canvasState.selecting) {
+      const rect = e.target.getBoundingClientRect()
       let coords = {
-        clientX: e.clientX,
-        clientY: e.clientY,
+        x: e.clientX,
+        y: e.clientY,
+      }
+      let adjustedCoords = {
+        x: e.clientX - rect.x - pagePosition.x,
+        y: e.clientY - rect.y - pagePosition.y,
       }
       const selectionPath = d3.select("#selection-path")
       
+      // if there is a selection path, check if the mouse is within the path so that we can drag the entire group
       if (!selectionPath.empty()) {
         const pathBox = selectionPath.node().getBoundingClientRect()
-        const isMouseInSelection = detectMouseInSelection(coords, pathBox)
+        const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
 
         if (isMouseInSelection) {
           return dispatch({
@@ -256,7 +271,8 @@ function PageSpread({
       let nodes = d3.select(canvasPageRef.current).selectChildren()
 
       if (nodes) {
-        subject = findClosestNode(nodes, coords, 2)
+        // find the closest node to the current position of the cursor
+        subject = findClosestNode(nodes, coords, 2, adjustedCoords)
       }
 
       // create a hover-clone element which sits on top of the hovered element
@@ -435,7 +451,7 @@ function PageSpread({
 
       if (canvasRef.current && referenceElement) {
         d3.select(canvasRef.current)
-          .call(drag(referenceElement, dispatch, canvasState, coords))
+          .call(drag(dispatch, coords))
       }
 
       return () => {

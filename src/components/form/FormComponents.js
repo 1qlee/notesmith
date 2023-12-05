@@ -632,6 +632,7 @@ const StyledSelect = styled.select`
   font-size: ${props => props.fontsize || "0.875rem"};
   padding: ${props => props.padding || "16px 64px 16px 16px"};
   height: ${props => props.height};
+  line-height: ${props => props.lineheight || "21px"};
   width: ${props => props.width};
   appearance: none;
   &.is-error {

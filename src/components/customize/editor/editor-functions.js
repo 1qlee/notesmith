@@ -2,9 +2,36 @@ import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { convertToMM, consolidateMixedObjects, convertToPx, processStringNumbers } from "../../../utils/helper-functions"
 
-const findClosestNode = (nodes, coords, distance) => {
-  const mouseX = coords.clientX
-  const mouseY = coords.clientY
+const findEnclosedPoint = (node, coords, distance) => {
+  // check if there is at least one enclosed point in the path.
+  for (let i = 0, len = node.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+    let { x, y } = node.getPointAtLength(i)
+
+    // Create an object representing the space around the point
+    const areaAroundPoint = {
+      x1: x - distance,
+      x2: x + distance,
+      y1: y - distance,
+      y2: y + distance,
+    }
+    const { x1, x2, y1, y2 } = areaAroundPoint
+
+    // Check if the cursor is within `distance` of the point
+    if (
+      coords.x >= x1 &&
+      coords.x <= x2 &&
+      coords.y >= y1 &&
+      coords.y <= y2
+    ) {
+      return node
+    }
+  }
+  return false
+}
+
+// finds the closest node to the current cursor position
+// used primarily to find the closest node to the cursor when the user moves the mouse
+const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
   let closestNode = null
 
   // Iterate through nodes and calculate the distance to each node.
@@ -27,22 +54,27 @@ const findClosestNode = (nodes, coords, distance) => {
       }
     }
 
-    // Adjust the bounding box to consider the stroke width as well as distance
-    // distance is the amount of pixels (leeway) to add to the bounding box
-    let adjustedLeft = rect.left - distance
-    let adjustedRight = rect.right + distance
-    let adjustedTop = rect.top - distance - convertedStrokeWidth
-    let adjustedBottom = rect.bottom + distance + convertedStrokeWidth
+    if (node instanceof SVGPathElement) {
+      // check if there is at least one enclosed point in the path.
+      const foundNode = findEnclosedPoint(node, adjustedCoords, distance)
 
-    // Check if the cursor is within the adjusted bounding box.
-    if (
-      mouseX >= adjustedLeft &&
-      mouseX <= adjustedRight &&
-      mouseY >= adjustedTop &&
-      mouseY <= adjustedBottom
-    ) {
-      closestNode = node
-      break // Break early if a valid subject is found.
+      if (foundNode) {
+        closestNode = foundNode
+      }
+    }
+    else {
+      const nodeBox = {
+        left: rect.left,
+        right: rect.right,
+        top: rect.top - convertedStrokeWidth,
+        bottom: rect.bottom + convertedStrokeWidth,
+      }
+
+      const isMouseInSelection = detectMouseInSelection(coords, nodeBox, distance)
+
+      if (isMouseInSelection) {
+        closestNode = node
+      }
     }
   }
 
@@ -77,11 +109,11 @@ const parseBbox = (element, path) => {
   const bboxY = convertFloatFixed(bbox.y, 3)
   const bboxWidth = convertFloatFixed(bbox.width, 3)
   const bboxHeight = convertFloatFixed(bbox.height, 3)
-  let pathBbox = {}
+  let eleBbox = {}
 
   if (path) {
     // for selection path
-    pathBbox = {
+    eleBbox = {
       x: bboxX,
       y: bboxY,
       x2: bboxX,
@@ -91,7 +123,7 @@ const parseBbox = (element, path) => {
     }
   }
   else {
-    pathBbox = {
+    eleBbox = {
       x: bboxX,
       y: bboxY,
       width: bboxWidth,
@@ -99,8 +131,15 @@ const parseBbox = (element, path) => {
     }
   }
 
-  return pathBbox
+  return eleBbox
 }
+
+const createPath = (startPoint, endPoint) => {
+  const path = `M ${startPoint.x} ${startPoint.y} L ${endPoint.x} ${endPoint.y}`
+
+  return path
+};
+
 
 const parseSelection = (elements) => {
   // coords for the selection path box
@@ -114,6 +153,7 @@ const parseSelection = (elements) => {
   let selectionBbox = {}
   let selectionAttributes = {}
   let convertedSelectionBbox = {}
+  let path = ""
 
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
@@ -124,25 +164,40 @@ const parseSelection = (elements) => {
     // get the bbox of the element
     const strokeOffset = convertToPx(nodeAttributes.strokeWidth / 2)
     // for selection path
-    let pathBbox = parseBbox(ele, true)
+    let eleBbox = parseBbox(ele, true)
     // for positioning attributes
     let positioningBbox = parseBbox(ele, false)
     const isCircle = ele instanceof SVGCircleElement || ele instanceof SVGEllipseElement
     const isLine = ele instanceof SVGLineElement
+    const isPath = ele instanceof SVGPathElement
 
     // adjust selection bbox values for different svg elements
     switch (true) {
       case isCircle:
         positioningBbox.x = convertFloatFixed(element.attr("cx"), 3)
         positioningBbox.y = convertFloatFixed(element.attr("cy"), 3)
-        pathBbox.x = convertFloatFixed(pathBbox.x - strokeOffset, 3)
-        pathBbox.y = convertFloatFixed(pathBbox.y - strokeOffset, 3)
-        pathBbox.x2 = convertFloatFixed(pathBbox.x2 + strokeOffset, 3)
-        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
+        eleBbox.x = convertFloatFixed(eleBbox.x - strokeOffset, 3)
+        eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
+        eleBbox.x2 = convertFloatFixed(eleBbox.x2 + strokeOffset, 3)
+        eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
       case isLine:
-        pathBbox.y = convertFloatFixed(pathBbox.y - strokeOffset, 3)
-        pathBbox.y2 = convertFloatFixed(pathBbox.y2 + strokeOffset, 3)
+        const x1 = convertFloatFixed(element.attr("x1"), 3)
+        const x2 = convertFloatFixed(element.attr("x2"), 3)
+        const y1 = convertFloatFixed(element.attr("y1"), 3)
+        const y2 = convertFloatFixed(element.attr("y2"), 3)
+
+        // if there is only one line element selected and it is diagonal
+        // give it a different selection path
+        if (elements.length === 1 && y1 !== y2) {
+          path = createPath({ x: x1, y: y1 }, { x: x2, y: y2 })
+        }
+        else {
+          eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
+          eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
+        }
+        break
+      case isPath:
         break
     }
 
@@ -158,15 +213,17 @@ const parseSelection = (elements) => {
     selectionAttributes = consolidateMixedObjects(nodeAttributes, selectionAttributes)
 
     // create coords for the selection path
-    selectionPath.x = Math.min(selectionPath.x, pathBbox.x)
-    selectionPath.y = Math.min(selectionPath.y, pathBbox.y)
-    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(pathBbox.x2 + pathBbox.width, 3))
-    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(pathBbox.y2 + pathBbox.height, 3))
+    selectionPath.x = Math.min(selectionPath.x, eleBbox.x)
+    selectionPath.y = Math.min(selectionPath.y, eleBbox.y)
+    selectionPath.x2 = Math.max(selectionPath.x2, convertFloatFixed(eleBbox.x2 + eleBbox.width, 3))
+    selectionPath.y2 = Math.max(selectionPath.y2, convertFloatFixed(eleBbox.y2 + eleBbox.height, 3))
   })
 
   // create the selection path based on coords
   // coords are top-left (x,y), top-right (x2,y), bottom-right (x2,y2), bottom-left (x,y2)
-  const path = `M ${selectionPath.x},${selectionPath.y} L ${selectionPath.x2},${selectionPath.y} ${selectionPath.x2},${selectionPath.y2} ${selectionPath.x},${selectionPath.y2} Z`
+  if (!path) {
+    path = `M ${selectionPath.x},${selectionPath.y} L ${selectionPath.x2},${selectionPath.y} ${selectionPath.x2},${selectionPath.y2} ${selectionPath.x},${selectionPath.y2} Z`
+  }
 
   convertedSelectionBbox = {
     x: typeof selectionBbox.x === "number" ? convertToMM(selectionBbox.x) : selectionBbox.x,
@@ -193,10 +250,9 @@ function findNodeInSelection(array, propertyName, node) {
   return -1; // Return -1 if the element is not found.
 }
 
-const detectMouseInSelection = (coords, box) => {
-  let { clientX, clientY } = coords
+const detectMouseInSelection = (coords, box, distance) => {
+  let { x, y } = coords
   let { left, top, right, bottom } = box
-  const distance = 3
 
   let adjustedLeft = left - distance
   let adjustedRight = right + distance
@@ -205,10 +261,10 @@ const detectMouseInSelection = (coords, box) => {
 
   // Check if the cursor is within the adjusted bounding box.
   if (
-    clientX >= adjustedLeft &&
-    clientX <= adjustedRight &&
-    clientY >= adjustedTop &&
-    clientY <= adjustedBottom
+    x >= adjustedLeft &&
+    x <= adjustedRight &&
+    y >= adjustedTop &&
+    y <= adjustedBottom
   ) {
     // Mouse is within the element's bounds
     return true
@@ -221,6 +277,7 @@ const detectMouseInSelection = (coords, box) => {
 
 export {
   findClosestNode,
+  findEnclosedPoint,
   findNodeInSelection,
   parseBbox,
   parseSelection,
