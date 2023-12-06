@@ -3,7 +3,7 @@ import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
 import { pageMargins, colors } from "../../styles/variables"
 import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
-import { findClosestNode, detectMouseInSelection } from "./editor/editor-functions"
+import { findClosestNode, detectMouseInSelection, getAttributes, findEnclosedPoint } from "./editor/editor-functions"
 import * as d3 from "d3"
 import drag from "./editor/drag"
 import dragSelector from "./editor/drag-selector"
@@ -138,14 +138,31 @@ function PageSpread({
       let elementBox = {}
       let bbox = element.getBBox()
       let convertedStrokeWidth = 0
+      // account for page margins in cursor position
+      let dragCoords = {
+        x: dragAreaInSvgCoordinate.x - pagePosition.x,
+        y: dragAreaInSvgCoordinate.y - pagePosition.y,
+      }
 
       // If the element is a line, check it for a stroke width
       if (element instanceof SVGLineElement) {
-        const strokeWidth = element.getAttribute("stroke-width")
+        const attributes = getAttributes(element)
+        const strokeWidth = attributes["stroke-width"]
+        const { x1, x2, y1, y2 } = attributes
         convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
         
         if (bbox.height === 0) {
           bbox.height = strokeWidth
+        }
+
+        // if the line is diagonal change the selection method to point-based not box-based
+        if (y1 !== y2) {
+          const node = findEnclosedPoint(element, dragCoords, 2)
+          console.log("🚀 ~ file: PageSpread.js:161 ~ intersects ~ node:", node)
+
+          if (node) {
+            return true
+          }
         }
       }
       else if (element instanceof SVGPathElement) {
@@ -161,12 +178,6 @@ function PageSpread({
             y2: y + 2,
           }
           const { x1, x2, y1, y2 } = areaAroundPoint
-
-          // account for page margins in cursor position
-          let dragCoords = {
-            x: dragAreaInSvgCoordinate.x - pagePosition.x,
-            y: dragAreaInSvgCoordinate.y - pagePosition.y,
-          }
 
           // when the drag area is a single point, check if the point is within the element's box
           if (dragAreaInSvgCoordinate.width === 0 || dragAreaInSvgCoordinate.height === 0) {
@@ -208,12 +219,11 @@ function PageSpread({
 
       // bbox for the element's box
       elementBox = {
-        x1: convertFloatFixed(bbox.x - distance, 2),
-        y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 2),
-        x2: convertFloatFixed(bbox.x + bbox.width + distance, 2),
-        y2: convertFloatFixed(bbox.y + bbox.height + distance, 2),
+        x1: convertFloatFixed(bbox.x - distance, 3),
+        y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 3),
+        x2: convertFloatFixed(bbox.x + bbox.width + distance, 3),
+        y2: convertFloatFixed(bbox.y + bbox.height - convertedStrokeWidth + distance, 3),
       }
-
 
       // check if the element's box is within the selection's box
       if (
@@ -237,7 +247,9 @@ function PageSpread({
       referenceElement,
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
-    )
+    ).filter(element => {
+
+    })
   }
 
   // give hover "effect" to elements to aid with selection

@@ -54,6 +54,10 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
       }
     }
 
+    if (node instanceof SVGLineElement) {
+    
+    }
+
     if (node instanceof SVGPathElement) {
       // check if there is at least one enclosed point in the path.
       const foundNode = findEnclosedPoint(node, adjustedCoords, distance)
@@ -82,7 +86,8 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
   return closestNode
 }
 
-const parseAttributes = (element) => {
+const parseAttributes = (ele) => {
+  const element = d3.select(ele)
   const fill = element.attr("fill") || "none"
   const stroke = element.attr("stroke") || "none"
   const strokeOpacity = element.attr("stroke-opacity") || 1
@@ -140,6 +145,25 @@ const createPath = (startPoint, endPoint) => {
   return path
 };
 
+const getAttributes = (element) => {
+  const attributes = {}
+
+  d3.select(element).each(function() {
+    const node = d3.select(this)
+    const attrNames = node.node().getAttributeNames()
+
+    attrNames.forEach((name) => {
+      const value = node.attr(name)
+      if (!isNaN(value)) {
+        attributes[name] = convertFloatFixed(value, 3)
+      } else {
+        attributes[name] = value
+      }
+    })
+  })
+
+  return attributes
+}
 
 const parseSelection = (elements) => {
   // coords for the selection path box
@@ -157,10 +181,10 @@ const parseSelection = (elements) => {
 
   // for each selected element, get the bbox and attributes
   elements.forEach((ele, index) => {
-    const element = d3.select(ele)
+    const attributes = getAttributes(ele)
 
     // get the attribute values of the element
-    let nodeAttributes = parseAttributes(element)
+    let nodeAttributes = parseAttributes(ele)
     // get the bbox of the element
     const strokeOffset = convertToPx(nodeAttributes.strokeWidth / 2)
     // for selection path
@@ -174,18 +198,15 @@ const parseSelection = (elements) => {
     // adjust selection bbox values for different svg elements
     switch (true) {
       case isCircle:
-        positioningBbox.x = convertFloatFixed(element.attr("cx"), 3)
-        positioningBbox.y = convertFloatFixed(element.attr("cy"), 3)
+        positioningBbox.x = attributes.cx
+        positioningBbox.y = attributes.cy
         eleBbox.x = convertFloatFixed(eleBbox.x - strokeOffset, 3)
         eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
         eleBbox.x2 = convertFloatFixed(eleBbox.x2 + strokeOffset, 3)
         eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
       case isLine:
-        const x1 = convertFloatFixed(element.attr("x1"), 3)
-        const x2 = convertFloatFixed(element.attr("x2"), 3)
-        const y1 = convertFloatFixed(element.attr("y1"), 3)
-        const y2 = convertFloatFixed(element.attr("y2"), 3)
+        const { x1, x2, y1, y2 } = attributes
 
         // if there is only one line element selected and it is diagonal
         // give it a different selection path
@@ -279,6 +300,7 @@ export {
   findClosestNode,
   findEnclosedPoint,
   findNodeInSelection,
+  getAttributes,
   parseBbox,
   parseSelection,
   detectMouseInSelection,
