@@ -54,10 +54,6 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
       }
     }
 
-    if (node instanceof SVGLineElement) {
-    
-    }
-
     if (node instanceof SVGPathElement) {
       // check if there is at least one enclosed point in the path.
       const foundNode = findEnclosedPoint(node, adjustedCoords, distance)
@@ -210,7 +206,7 @@ const parseSelection = (elements) => {
 
         // if there is only one line element selected and it is diagonal
         // give it a different selection path
-        if (elements.length === 1 && y1 !== y2) {
+        if (elements.length === 1 && (y1 !== y2)) {
           path = createPath({ x: x1, y: y1 }, { x: x2, y: y2 })
         }
         else {
@@ -293,13 +289,33 @@ const detectMouseInSelection = (coords, box, distance) => {
     // Mouse is outside the element's bounds
     return false
   }
+}
 
+function findClosestSVG(svgElements, x, y) {
+  let closestDistance = Infinity;
+  let closestSVG = null;
+
+  svgElements.forEach(svg => {
+    const rect = svg.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestSVG = svg;
+    }
+  });
+
+  return closestSVG;
 }
 
 export {
   findClosestNode,
   findEnclosedPoint,
   findNodeInSelection,
+  findClosestSVG,
   getAttributes,
   parseBbox,
   parseSelection,
