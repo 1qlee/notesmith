@@ -35,6 +35,7 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
+  const [closestNode, setClosestNode] = useState(null)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
   const spreadPosition = {
@@ -160,46 +161,6 @@ function PageSpread({
           bbox.height = strokeWidth
         }
       }
-      else if (element instanceof SVGPathElement) {
-        // check if there is at least one enclosed point in the path.
-        for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
-          let { x, y } = element.getPointAtLength(i)
-
-          // create a box around the point where the element is "targetable"
-          const areaAroundPoint = {
-            x1: x - 2,
-            x2: x + 2,
-            y1: y - 2,
-            y2: y + 2,
-          }
-          const { x1, x2, y1, y2 } = areaAroundPoint
-
-          // when the drag area is a single point, check if the point is within the element's box
-          if (singleClick) {
-            if (
-              dragCoords.x >= x1 &&
-              dragCoords.x <= x2 &&
-              dragCoords.y >= y1 &&
-              dragCoords.y <= y2
-            ) {
-              return {
-
-              }
-            }
-          }
-
-          // when the drag area is a box, check if the box is within the element's box
-          if (
-            dragCoords.x <= x &&
-            x <= dragCoords.x + areaInSvgCoordinate.width &&
-            dragCoords.y <= y &&
-            y <= dragCoords.y + areaInSvgCoordinate.height
-          ) {
-            return true
-          }
-        }
-        return false
-      }
 
       // bbox for the selection's box
       // with conditions where selection was just a click (a single point)
@@ -239,25 +200,61 @@ function PageSpread({
       })
     };
 
-    const selectedElements = getIntersections(
+    return getIntersections(
       svg,
       referenceElement,
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
-    )
+    ).filter(element => {
+      // the element that the pointer event raised is considered to intersect.
+      if (pointerEvent.target === element) {
+        return true
+      }
 
-    if (singleClick && selectedElements.length > 0) {
-      // find the closest node to the current position of the cursor
-      const closestNode = findClosestNode(selectedElements, mouseCoords, 2, dragCoords)
-      let nodeArray = []
-      nodeArray.push(closestNode)
-      console.log("🚀 ~ file: PageSpread.js:254 ~ nodeArray:", nodeArray)
+      // strictly check only <path>s.
+      if (!(element instanceof SVGPathElement)) {
+        return true
+      }
 
-      return nodeArray
-    }
-    else {
-      return selectedElements
-    }
+      // check if there is at least one enclosed point in the path.
+      for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
+        let { x, y } = element.getPointAtLength(i)
+
+        // create a box around the point where the element is "targetable"
+        const areaAroundPoint = {
+          x1: x - 2,
+          x2: x + 2,
+          y1: y - 2,
+          y2: y + 2,
+        }
+        const { x1, x2, y1, y2 } = areaAroundPoint
+
+        // when the drag area is a single point, check if the point is within the element's box
+        if (singleClick) {
+          console.log('ey')
+          if (
+            dragCoords.x >= x1 &&
+            dragCoords.x <= x2 &&
+            dragCoords.y >= y1 &&
+            dragCoords.y <= y2
+          ) {
+            return true
+          }
+        }
+
+        // when the drag area is a box, check if the box is within the element's box
+        if (
+          dragCoords.x <= x &&
+          x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+          dragCoords.y <= y &&
+          y <= dragCoords.y + dragAreaInSvgCoordinate.height
+        ) {
+          return true
+        }
+      }
+      return false
+    })
+
   }
 
   // give hover "effect" to elements to aid with selection
@@ -347,6 +344,8 @@ function PageSpread({
 
             setHoverClone(subject)
           }
+
+          setClosestNode(subject)
         }
       }
       else {
@@ -360,7 +359,7 @@ function PageSpread({
         d3.select("#hover-clone").remove()
       }
     }
-  }, 10)
+  }, 50)
 
   useEffect(() => {
     let referenceElement = null

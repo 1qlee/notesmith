@@ -118,6 +118,7 @@ function Hexagon({
           fill={hex.fill}
           stroke={hex.stroke}
           strokeWidth={hex.strokeWidth}
+          strokeLinecap="round"
           d={hex.points}
           opacity={hex.opacity}
           id={`svg_${index + 1}`}

@@ -159,10 +159,11 @@ const setCanvasState = (state, action) => {
       log("parsing selection...")
 
       const results = parseSelection(state.selectedElements)
-      const { selectionBbox, selectionAttributes, selectionPath, selectionGroup } = results
+      const { selectionBbox, selectionAttributes, selectionPath } = results
 
       return {
         ...state,
+        selecting: false,
         selectionBbox: selectionBbox,
         selectionAttributes: selectionAttributes,
         selectionPath: selectionPath,

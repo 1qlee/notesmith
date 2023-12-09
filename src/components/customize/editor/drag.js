@@ -63,74 +63,30 @@ function parseDragElements(nodes, event) {
   }
 }
 
-// function draggedMulti(event, d) {
-//   console.log("dragging multi")
-
-//   // change mode to drag if it is not already
-//   if (canvasState.mode !== "drag") {
-//     dispatch({
-//       type: "change-mode",
-//       mode: "drag",
-//     })
-//   }
-
-//   // all elements inside #selection-group <g>
-//   const childNodes = d3.select(this).selectAll("*")._groups[0]
-
-//   for (let i = 0; i < childNodes.length; i++) {
-//     const childNode = childNodes[i];
-//     const node = d3.select(childNode)
-//     const nodeName = childNode.nodeName
-//     // 'childNode' is the actual child DOM element
-//     parseDragElements(node, nodeName, event)
-//   }
-// }
-
-// function parseDragSubject(node, nodeName, event) {
-//   const subject = d3.select(node)
-//   // handle various node types (shapes, lines, text, etc.)
-//   switch (nodeName) {
-//     case "circle":
-//     case "ellipse":
-//       return {
-//         node: node,
-//         x: +subject.attr("cx"),
-//         y: +subject.attr("cy"),
-//       }
-//     case "line":
-//       return {
-//         node: node,
-//         x: +subject.attr("x1"),
-//         y: +subject.attr("y1"),
-//       }
-//     default:
-//       return {
-//         node: node,
-//         x: +subject.attr("x"),
-//         y: +subject.attr("y"),
-//       }
-//   }
-// }
-
-
 function drag(dispatch, coords) {
   function dragsubject(event) {
-    // all the child nodes of the canvas page
+
     const selectionPath = d3.select("#selection-path")
-    const { sourceEvent } = event
-    const coords = {
-      x: sourceEvent.clientX,
-      y: sourceEvent.clientY,
-    }
 
     if (!selectionPath.empty()) {
-      const pathBox = d3.select("#selection-path").node().getBoundingClientRect()
-      const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
-
-      if (isMouseInSelection) {
-        return d3.selectAll("[data-selected]").nodes()
-      }
+      return d3.selectAll("[data-selected]").nodes()
     }
+    // // all the child nodes of the canvas page
+    // const selectionPath = d3.select("#selection-path")
+    // const { sourceEvent } = event
+    // const coords = {
+    //   x: sourceEvent.clientX,
+    //   y: sourceEvent.clientY,
+    // }
+
+    // if (!selectionPath.empty()) {
+    //   const pathBox = d3.select("#selection-path").node().getBoundingClientRect()
+    //   const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
+
+    //   if (isMouseInSelection) {
+    //     return d3.selectAll("[data-selected]").nodes()
+    //   }
+    // }
   }
 
   function dragstart(event, d) {
@@ -181,6 +137,12 @@ function drag(dispatch, coords) {
     dispatch({
       type: "change-mode",
       mode: "select",
+    })
+
+    dispatch({
+      type: "toggle",
+      setting: "selecting",
+      value: false,
     })
 
     dispatch({

@@ -29,6 +29,11 @@ const findEnclosedPoint = (node, coords, distance) => {
   return false
 }
 
+const isLine = (path) => {
+  const d = path.getAttribute("d")
+  return d && d.toLowerCase().startsWith("m") && !d.toLowerCase().includes("c")
+}
+
 // finds the closest node to the current cursor position
 // used primarily to find the closest node to the cursor when the user moves the mouse
 const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
@@ -55,11 +60,21 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
     }
 
     if (node instanceof SVGPathElement) {
-      // check if there is at least one enclosed point in the path.
-      const foundNode = findEnclosedPoint(node, adjustedCoords, distance)
+      console.log("🚀 ~ file: editor-functions.js:63 ~ findClosestNode ~ node:", node)
+      
+      try {
+        const point = new DOMPoint([coords.x, coords.y])
+        console.log("🚀 ~ file: editor-functions.js:65 ~ findClosestNode ~ point:", point)
+        console.log(node.isPointInFill(point))
+      }
 
-      if (foundNode) {
-        closestNode = foundNode
+      catch (e) {
+        const point = document.getElementsByTagName("svg")[0].createSVGPoint()
+        point.x = coords.x
+        point.y = coords.y
+
+        console.log("🚀 ~ file: editor-functions.js:65 ~ findClosestNode ~ point:", point)
+        console.log(node.isPointInFill(point))
       }
     }
     else {
