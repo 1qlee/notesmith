@@ -29,9 +29,14 @@ const findEnclosedPoint = (node, coords, distance) => {
   return false
 }
 
-const isLine = (path) => {
-  const d = path.getAttribute("d")
-  return d && d.toLowerCase().startsWith("m") && !d.toLowerCase().includes("c")
+const isPathLine = (pathElement) => {
+  // Get the 'd' attribute value
+  const dAttribute = pathElement.getAttribute('d');
+
+  // Use regular expression to check for one 'M' and one 'L' command
+  const match = dAttribute.match(/[ML]\s*[\d\s,]+/g);
+
+  return match && match.length === 2;
 }
 
 // finds the closest node to the current cursor position
@@ -60,21 +65,10 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
     }
 
     if (node instanceof SVGPathElement) {
-      console.log("🚀 ~ file: editor-functions.js:63 ~ findClosestNode ~ node:", node)
-      
-      try {
-        const point = new DOMPoint([coords.x, coords.y])
-        console.log("🚀 ~ file: editor-functions.js:65 ~ findClosestNode ~ point:", point)
-        console.log(node.isPointInFill(point))
-      }
-
-      catch (e) {
-        const point = document.getElementsByTagName("svg")[0].createSVGPoint()
-        point.x = coords.x
-        point.y = coords.y
-
-        console.log("🚀 ~ file: editor-functions.js:65 ~ findClosestNode ~ point:", point)
-        console.log(node.isPointInFill(point))
+      const test = isCursorWithinPath(node, coords, 2)
+      console.log("🚀 ~ file: editor-functions.js:69 ~ findClosestNode ~ test:", test)
+      if (test.isWithinBounds || test.isWithinFillSpace) {
+        closestNode = node
       }
     }
     else {
@@ -281,6 +275,55 @@ function findNodeInSelection(array, propertyName, node) {
   }
   return -1; // Return -1 if the element is not found.
 }
+
+const isCursorWithinPath = (pathElement, coords, distance) => {
+  const { x, y } = coords
+  const pathBounds = pathElement.getBoundingClientRect();
+  const { left, top, right, bottom } = pathBounds;
+
+  const adjustedLeft = left - distance;
+  const adjustedRight = right + distance;
+  const adjustedTop = top - distance;
+  const adjustedBottom = bottom + distance;
+
+  // Check if the cursor is within the adjusted bounding box.
+  if (
+    x >= adjustedLeft &&
+    x <= adjustedRight &&
+    y >= adjustedTop &&
+    y <= adjustedBottom
+  ) {
+    const path = d3.path();
+    pathElement.getAttribute("d").split(/(?=[LMC])/).forEach(segment => {
+      const command = segment.charAt(0);
+      const points = segment.substring(1).split(",").map(Number);
+
+      if (command === "M") {
+        path.moveTo(points[0], points[1]);
+      } else if (command === "L") {
+        path.lineTo(points[0], points[1]);
+      } else if (command === "C") {
+        path.bezierCurveTo(points[0], points[1], points[2], points[3], points[4], points[5]);
+      }
+    });
+
+    const point = document.getElementById("left-page").createSVGPoint();
+
+    point.x = x
+    point.y = y
+    const isCursorWithinFillSpace = pathElement.isPointInFill(point);
+
+    return {
+      isWithinBounds: true,
+      isWithinFillSpace: isCursorWithinFillSpace
+    };
+  } else {
+    return {
+      isWithinBounds: false,
+      isWithinFillSpace: false
+    };
+  }
+};
 
 const detectMouseInSelection = (coords, box, distance) => {
   let { x, y } = coords

@@ -1,7 +1,6 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { throttle } from "lodash"
-import { detectMouseInSelection } from "./editor-functions"
 
 function parseDragElements(nodes, event) {
   const eventX = convertFloatFixed(event.x, 3)
@@ -101,7 +100,7 @@ function drag(dispatch, coords) {
 
     // loop each child of #selection-group and remove data-selected
     for (let i = 0, length = subject.length; i < length; i++) {
-      d3.select(subject[i]).attr("data-selected", null)
+      d3.select(subject[i]).attr("data-selected", null).raise()
     }
   }
 

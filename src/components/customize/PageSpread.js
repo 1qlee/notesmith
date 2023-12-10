@@ -35,7 +35,6 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
-  const [closestNode, setClosestNode] = useState(null)
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
   const pageIsLeft = selectedPage % 2 === 0
   const spreadPosition = {
@@ -206,6 +205,7 @@ function PageSpread({
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
     ).filter(element => {
+      console.log("🚀 ~ file: PageSpread.js:208 ~ element:", element)
       // the element that the pointer event raised is considered to intersect.
       if (pointerEvent.target === element) {
         return true
@@ -221,26 +221,26 @@ function PageSpread({
         let { x, y } = element.getPointAtLength(i)
 
         // create a box around the point where the element is "targetable"
-        const areaAroundPoint = {
-          x1: x - 2,
-          x2: x + 2,
-          y1: y - 2,
-          y2: y + 2,
-        }
-        const { x1, x2, y1, y2 } = areaAroundPoint
+        // const areaAroundPoint = {
+        //   x1: x - 2,
+        //   x2: x + 2,
+        //   y1: y - 2,
+        //   y2: y + 2,
+        // }
+        // const { x1, x2, y1, y2 } = areaAroundPoint
 
         // when the drag area is a single point, check if the point is within the element's box
-        if (singleClick) {
-          console.log('ey')
-          if (
-            dragCoords.x >= x1 &&
-            dragCoords.x <= x2 &&
-            dragCoords.y >= y1 &&
-            dragCoords.y <= y2
-          ) {
-            return true
-          }
-        }
+        // if (singleClick) {
+        //   console.log('ey')
+        //   if (
+        //     dragCoords.x >= x1 &&
+        //     dragCoords.x <= x2 &&
+        //     dragCoords.y >= y1 &&
+        //     dragCoords.y <= y2
+        //   ) {
+        //     return true
+        //   }
+        // }
 
         // when the drag area is a box, check if the box is within the element's box
         if (
@@ -260,14 +260,13 @@ function PageSpread({
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
     if (!canvasState.selecting) {
-      const rect = e.target.getBoundingClientRect()
       let coords = {
         x: e.clientX,
         y: e.clientY,
       }
       let adjustedCoords = {
-        x: e.clientX - rect.x - pagePosition.x,
-        y: e.clientY - rect.y - pagePosition.y,
+        x: coords.x - pagePosition.x,
+        y: coords.y - pagePosition.y,
       }
       const selectionPath = d3.select("#selection-path")
       
@@ -344,8 +343,6 @@ function PageSpread({
 
             setHoverClone(subject)
           }
-
-          setClosestNode(subject)
         }
       }
       else {
