@@ -62,7 +62,7 @@ function parseDragElements(nodes, event) {
   }
 }
 
-function drag(dispatch, coords) {
+function drag(dispatch) {
   function dragsubject(event) {
 
     const selectionPath = d3.select("#selection-path")
@@ -93,6 +93,10 @@ function drag(dispatch, coords) {
     const { subject } = event
 
     dispatch({
+      type: "change-mode",
+      mode: "drag",
+    })
+    dispatch({
       type: "toggle",
       setting: "selecting",
       value: false,
@@ -100,15 +104,11 @@ function drag(dispatch, coords) {
 
     // loop each child of #selection-group and remove data-selected
     for (let i = 0, length = subject.length; i < length; i++) {
-      d3.select(subject[i]).attr("data-selected", null).raise()
+      d3.select(subject[i]).attr("data-selected", null)
     }
   }
 
   const dragged = throttle((event, d) => {
-    dispatch({
-      type: "change-mode",
-      mode: "drag",
-    })
 
     const { subject } = event
 
@@ -145,7 +145,7 @@ function drag(dispatch, coords) {
     })
 
     dispatch({
-      type: "parse-selection"
+      type: "parse-selection",
     })
   }
 

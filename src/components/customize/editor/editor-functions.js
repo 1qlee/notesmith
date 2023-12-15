@@ -2,17 +2,17 @@ import { convertFloatFixed } from "../../../utils/helper-functions"
 import * as d3 from "d3"
 import { convertToMM, consolidateMixedObjects, convertToPx, processStringNumbers } from "../../../utils/helper-functions"
 
-const findEnclosedPoint = (node, coords, distance) => {
+const findEnclosedPoint = (node, coords, distance, stroke) => {
   // check if there is at least one enclosed point in the path.
   for (let i = 0, len = node.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
     let { x, y } = node.getPointAtLength(i)
 
     // Create an object representing the space around the point
     const areaAroundPoint = {
-      x1: x - distance,
-      x2: x + distance,
-      y1: y - distance,
-      y2: y + distance,
+      x1: x - distance - stroke,
+      x2: x + distance + stroke,
+      y1: y - distance - stroke,
+      y2: y + distance + stroke,
     }
     const { x1, x2, y1, y2 } = areaAroundPoint
 
@@ -29,28 +29,40 @@ const findEnclosedPoint = (node, coords, distance) => {
   return false
 }
 
-const isPathLine = (pathElement) => {
-  // Get the 'd' attribute value
-  const dAttribute = pathElement.getAttribute('d');
+const isMouseInFill = (node, coords, canvas) => {
+  let isPointInFill = false;
 
-  // Use regular expression to check for one 'M' and one 'L' command
-  const match = dAttribute.match(/[ML]\s*[\d\s,]+/g);
-
-  return match && match.length === 2;
-}
+  try {
+    const pointObj = new DOMPoint(coords.x, coords.y);
+    isPointInFill = node.isPointInFill(pointObj);
+  } catch (e) {
+    // Fallback for browsers that don't support DOMPoint as an argument
+    const pointObj = canvas.createSVGPoint();
+    pointObj.x = coords.x;
+    pointObj.y = coords.y;
+    isPointInFill = node.isPointInFill(pointObj);
+  }
+  
+  return isPointInFill;
+};
 
 // finds the closest node to the current cursor position
 // used primarily to find the closest node to the cursor when the user moves the mouse
-const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
-  let closestNode = null
-
+const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
+  const nodesArray = Array.from(nodes).reverse()
+  
   // Iterate through nodes and calculate the distance to each node.
-  for (const node of nodes) {
+  for (const node of nodesArray) {
+    // don't return the hover-clone node ever
+    if (node.getAttribute("id") === "hover-clone") {
+      continue
+    }
     // calculate the targetable area for each node in the canvas
     // then detect if the mouse cursor is within that area
     let strokeWidth = node.getAttribute("stroke-width")
     let convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
     let rect = node.getBoundingClientRect()
+    const nodeIsNotLine = !(node instanceof SVGLineElement)
 
     // If the node is a group, check the last child node for a stroke width
     // this will create a better targetable area
@@ -65,16 +77,20 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
     }
 
     if (node instanceof SVGPathElement) {
-      const test = isCursorWithinPath(node, coords, 2)
-      console.log("🚀 ~ file: editor-functions.js:69 ~ findClosestNode ~ test:", test)
-      if (test.isWithinBounds || test.isWithinFillSpace) {
-        closestNode = node
+      // basically if the cursor is near the perimeter of the path
+      if (findEnclosedPoint(node, adjustedCoords, distance, convertedStrokeWidth)) {
+        return node
+      }
+
+      // otherwise, check if the cursor is inside the fill area of the path
+      if (isMouseInFill(node, adjustedCoords, canvas)) {
+        return node
       }
     }
     else {
-      const nodeBox = {
-        left: rect.left,
-        right: rect.right,
+      let nodeBox = {
+        left: nodeIsNotLine ? rect.left - convertedStrokeWidth : rect.left,
+        right: nodeIsNotLine ? rect.right + convertedStrokeWidth : rect.right,
         top: rect.top - convertedStrokeWidth,
         bottom: rect.bottom + convertedStrokeWidth,
       }
@@ -82,27 +98,26 @@ const findClosestNode = (nodes, coords, distance, adjustedCoords) => {
       const isMouseInSelection = detectMouseInSelection(coords, nodeBox, distance)
 
       if (isMouseInSelection) {
-        closestNode = node
+        return node
       }
     }
   }
-
-  // Return the closest node as the subject.
-  return closestNode
 }
 
 const parseAttributes = (ele) => {
   const element = d3.select(ele)
+  const type = element.node().tagName
   const fill = element.attr("fill") || "none"
-  const stroke = element.attr("stroke") || "none"
   const strokeOpacity = element.attr("stroke-opacity") || 1
   const fillOpacity = element.attr("fill-opacity") || 1
   const strokeWidth = convertToMM(element.attr("stroke-width")) || 0.088
+  const stroke = element.attr("stroke") || (type !== "line" ? "none" : "#000")
   const strokeDasharray = element.attr("stroke-dasharray") !== undefined ? processStringNumbers(element.attr("stroke-dasharray"), convertToMM) : ""
   const strokeStyle = element.attr("strokeStyle") || "Solid"
   const nodeAttributes = {
     fill,
     fillOpacity,
+    type,
     strokeOpacity,
     stroke,
     strokeWidth,
@@ -111,6 +126,26 @@ const parseAttributes = (ele) => {
   }
 
   return nodeAttributes
+}
+
+const getAttributes = (element) => {
+  const attributes = {}
+
+  d3.select(element).each(function () {
+    const node = d3.select(this)
+    const attrNames = node.node().getAttributeNames()
+
+    attrNames.forEach((name) => {
+      const value = node.attr(name)
+      if (!isNaN(value)) {
+        attributes[name] = convertFloatFixed(value, 3)
+      } else {
+        attributes[name] = value
+      }
+    })
+  })
+
+  return attributes
 }
 
 const parseBbox = (element, path) => {
@@ -142,32 +177,6 @@ const parseBbox = (element, path) => {
   }
 
   return eleBbox
-}
-
-const createPath = (startPoint, endPoint) => {
-  const path = `M ${startPoint.x} ${startPoint.y} L ${endPoint.x} ${endPoint.y}`
-
-  return path
-};
-
-const getAttributes = (element) => {
-  const attributes = {}
-
-  d3.select(element).each(function() {
-    const node = d3.select(this)
-    const attrNames = node.node().getAttributeNames()
-
-    attrNames.forEach((name) => {
-      const value = node.attr(name)
-      if (!isNaN(value)) {
-        attributes[name] = convertFloatFixed(value, 3)
-      } else {
-        attributes[name] = value
-      }
-    })
-  })
-
-  return attributes
 }
 
 const parseSelection = (elements) => {
@@ -211,19 +220,21 @@ const parseSelection = (elements) => {
         eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
       case isLine:
-        const { x1, x2, y1, y2 } = attributes
+        // const { x1, x2, y1, y2 } = attributes
 
         // if there is only one line element selected and it is diagonal
         // give it a different selection path
-        if (elements.length === 1 && (y1 !== y2)) {
-          path = createPath({ x: x1, y: y1 }, { x: x2, y: y2 })
-        }
-        else {
-          eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
-          eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
-        }
+        // if (elements.length === 1 && (y1 !== y2)) {
+        //   path = createPath({ x: x1, y: y1 }, { x: x2, y: y2 })
+        // }
+        eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
+        eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
       case isPath:
+        eleBbox.x = convertFloatFixed(eleBbox.x - strokeOffset, 3)
+        eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
+        eleBbox.x2 = convertFloatFixed(eleBbox.x2 + strokeOffset, 3)
+        eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
     }
 
@@ -268,62 +279,12 @@ const parseSelection = (elements) => {
 
 function findNodeInSelection(array, propertyName, node) {
   for (let i = 0; i < array.length; i++) {
-    console.log(array[i][propertyName])
     if (array[i][propertyName].isSameNode(node)) {
       return i; // Return the index of the element if found.
     }
   }
   return -1; // Return -1 if the element is not found.
 }
-
-const isCursorWithinPath = (pathElement, coords, distance) => {
-  const { x, y } = coords
-  const pathBounds = pathElement.getBoundingClientRect();
-  const { left, top, right, bottom } = pathBounds;
-
-  const adjustedLeft = left - distance;
-  const adjustedRight = right + distance;
-  const adjustedTop = top - distance;
-  const adjustedBottom = bottom + distance;
-
-  // Check if the cursor is within the adjusted bounding box.
-  if (
-    x >= adjustedLeft &&
-    x <= adjustedRight &&
-    y >= adjustedTop &&
-    y <= adjustedBottom
-  ) {
-    const path = d3.path();
-    pathElement.getAttribute("d").split(/(?=[LMC])/).forEach(segment => {
-      const command = segment.charAt(0);
-      const points = segment.substring(1).split(",").map(Number);
-
-      if (command === "M") {
-        path.moveTo(points[0], points[1]);
-      } else if (command === "L") {
-        path.lineTo(points[0], points[1]);
-      } else if (command === "C") {
-        path.bezierCurveTo(points[0], points[1], points[2], points[3], points[4], points[5]);
-      }
-    });
-
-    const point = document.getElementById("left-page").createSVGPoint();
-
-    point.x = x
-    point.y = y
-    const isCursorWithinFillSpace = pathElement.isPointInFill(point);
-
-    return {
-      isWithinBounds: true,
-      isWithinFillSpace: isCursorWithinFillSpace
-    };
-  } else {
-    return {
-      isWithinBounds: false,
-      isWithinFillSpace: false
-    };
-  }
-};
 
 const detectMouseInSelection = (coords, box, distance) => {
   let { x, y } = coords
@@ -349,31 +310,10 @@ const detectMouseInSelection = (coords, box, distance) => {
   }
 }
 
-function findClosestSVG(svgElements, x, y) {
-  let closestDistance = Infinity;
-  let closestSVG = null;
-
-  svgElements.forEach(svg => {
-    const rect = svg.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestSVG = svg;
-    }
-  });
-
-  return closestSVG;
-}
-
 export {
   findClosestNode,
   findEnclosedPoint,
   findNodeInSelection,
-  findClosestSVG,
   getAttributes,
   parseBbox,
   parseSelection,

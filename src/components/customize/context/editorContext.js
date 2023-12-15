@@ -2,6 +2,7 @@ import React, { useEffect, createContext, useContext, useReducer } from "react"
 import * as d3 from "d3"
 
 import { parseSelection } from "../editor/editor-functions"
+import Toastify from "../../ui/Toastify";
 
 const initialState = {
   canvas: null,
@@ -64,6 +65,7 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, s
       <EditorDispatchContext.Provider value={dispatch}>
         {children}
       </EditorDispatchContext.Provider>
+      <Toastify />
     </EditorContext.Provider>
   );
 }
@@ -144,7 +146,6 @@ const setCanvasState = (state, action) => {
       log("ungrouping all selections...")
 
       d3.selectAll("[data-selected]").attr("data-selected", null)
-      d3.selectAll("#hover-clone").remove()
 
       return {
         ...state,

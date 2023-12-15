@@ -117,10 +117,6 @@ function PageSpread({
     const svgDragSelectElementTypes = [SVGCircleElement, SVGEllipseElement, SVGImageElement, SVGLineElement, SVGPathElement, SVGPolygonElement, SVGPolylineElement, SVGRectElement, SVGTextElement, SVGUseElement, SVGGElement]
     // if the drag area is a single point, we are just clicking on the canvas without drag
     const singleClick = dragAreaInSvgCoordinate.width === 0 && dragAreaInSvgCoordinate.height === 0
-    let mouseCoords = {
-      x: pointerEvent.clientX,
-      y: pointerEvent.clientY,
-    }
     // account for page margins in cursor position
     let dragCoords = {
       x: dragAreaInSvgCoordinate.x - pagePosition.x,
@@ -131,31 +127,33 @@ function PageSpread({
     const collectElements = function (into, svg, ancestor, filter) {
       for (let element = ancestor.firstElementChild; element; element = element.nextElementSibling) {
         for (let _i = 0, svgDragSelectElementTypes_1 = svgDragSelectElementTypes; _i < svgDragSelectElementTypes_1.length; _i++) {
-          let elementType = svgDragSelectElementTypes_1[_i];
+          let elementType = svgDragSelectElementTypes_1[_i]
+
           if (element instanceof elementType && filter(element)) {
             into.push(element)
           }
         }
       }
 
-      return into;
-    };
+      return into
+    }
 
     // Updated intersects function to check cursor distance.
     const intersects = function (areaInSvgCoordinate, element, distance) {
+      let elementBox = {}
+      let bbox = element.getBBox()
+      const nodeIsLine = element instanceof SVGLineElement
+      const attributes = getAttributes(element)
+      const strokeWidth = attributes["stroke-width"]
+      convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
+      const offset = nodeIsLine ? 0 : convertedStrokeWidth
+
       if (element.getAttribute("id") === "hover-clone") {
         return false
       }
 
-      let elementBox = {}
-      let bbox = element.getBBox()
-
       // If the element is a line, check it for a stroke width
-      if (element instanceof SVGLineElement) {
-        const attributes = getAttributes(element)
-        const strokeWidth = attributes["stroke-width"]
-        convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
-        
+      if (nodeIsLine) {
         if (bbox.height === 0) {
           bbox.height = strokeWidth
         }
@@ -176,9 +174,9 @@ function PageSpread({
 
       // bbox for the element's box
       elementBox = {
-        x1: convertFloatFixed(bbox.x - distance, 3),
+        x1: convertFloatFixed(bbox.x - distance - offset, 3),
         y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 3),
-        x2: convertFloatFixed(bbox.x + bbox.width + distance, 3),
+        x2: convertFloatFixed(bbox.x + bbox.width + distance + offset, 3),
         y2: convertFloatFixed(bbox.y + bbox.height - convertedStrokeWidth + distance, 3),
       }
 
@@ -205,7 +203,22 @@ function PageSpread({
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
     ).filter(element => {
-      console.log("🚀 ~ file: PageSpread.js:208 ~ element:", element)
+      const isANodeHovered = !d3.select("#hover-clone").empty()
+      const hoveredNode = isANodeHovered ? d3.select("#hover-clone") : null
+
+      // if it isn't a drag select (single click event) and there is a hovered node
+      // check if the hovered node is the same as the element
+      if (singleClick && isANodeHovered) {
+        // all hovered nodes should have a data-for attribute with the id of the element it is hovering
+        if (hoveredNode.attr("data-for") === element.getAttribute("id")) {
+          d3.select("#hover-clone").remove()
+          return true
+        }
+        else {
+          return false
+        }
+      }
+
       // the element that the pointer event raised is considered to intersect.
       if (pointerEvent.target === element) {
         return true
@@ -216,38 +229,19 @@ function PageSpread({
         return true
       }
 
-      // check if there is at least one enclosed point in the path.
+      const attributes = getAttributes(element)
+      const strokeWidth = attributes["stroke-width"]
+      convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
+
+      // check if there is at least one point in the path that intersects with the selection box
       for (let i = 0, len = element.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
         let { x, y } = element.getPointAtLength(i)
 
-        // create a box around the point where the element is "targetable"
-        // const areaAroundPoint = {
-        //   x1: x - 2,
-        //   x2: x + 2,
-        //   y1: y - 2,
-        //   y2: y + 2,
-        // }
-        // const { x1, x2, y1, y2 } = areaAroundPoint
-
-        // when the drag area is a single point, check if the point is within the element's box
-        // if (singleClick) {
-        //   console.log('ey')
-        //   if (
-        //     dragCoords.x >= x1 &&
-        //     dragCoords.x <= x2 &&
-        //     dragCoords.y >= y1 &&
-        //     dragCoords.y <= y2
-        //   ) {
-        //     return true
-        //   }
-        // }
-
-        // when the drag area is a box, check if the box is within the element's box
         if (
-          dragCoords.x <= x &&
-          x <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-          dragCoords.y <= y &&
-          y <= dragCoords.y + dragAreaInSvgCoordinate.height
+          dragCoords.x <= x + 2 &&
+          x - 2 <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+          dragCoords.y <= y + 2 &&
+          y - 2 <= dragCoords.y + dragAreaInSvgCoordinate.height
         ) {
           return true
         }
@@ -265,8 +259,8 @@ function PageSpread({
         y: e.clientY,
       }
       let adjustedCoords = {
-        x: coords.x - pagePosition.x,
-        y: coords.y - pagePosition.y,
+        x: e.nativeEvent.offsetX - pagePosition.x,
+        y: e.nativeEvent.offsetY - pagePosition.y,
       }
       const selectionPath = d3.select("#selection-path")
       
@@ -281,6 +275,12 @@ function PageSpread({
             mode: "drag",
           })
         }
+        else {
+          dispatch({
+            type: "change-mode",
+            mode: "select",
+          })
+        }
       }
 
       let subject = null
@@ -288,7 +288,7 @@ function PageSpread({
 
       if (nodes) {
         // find the closest node to the current position of the cursor
-        subject = findClosestNode(nodes, coords, 2, adjustedCoords)
+        subject = findClosestNode(nodes, coords, 2, canvasPageRef.current, adjustedCoords)
       }
 
       // create a hover-clone element which sits on top of the hovered element
@@ -296,16 +296,13 @@ function PageSpread({
       if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
         const node = d3.select(subject)
 
-        // don't work with hover clone node
-        if (node.attr("id") === "hover-clone" || node.attr("[data-selected]")) return
-
         // if the node is not our cloned hover node, create one
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
         if (node.attr("data-selected") === null) {
           d3.selectAll("[data-hovered]").attr("data-hovered", null)
 
-          // exit if we are hovering the same node
+          // exit if we are hovering the same node repeatedly
           if (hoverClone && hoverClone.isSameNode(subject)) {
             return
           }
@@ -317,8 +314,8 @@ function PageSpread({
           const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
 
           // if the node is a group, add an invisible rectangle to the cloned node
-          if (node.node() instanceof SVGGElement) {
-            const nodeBBox = node.node().getBBox()
+          if (subject instanceof SVGGElement) {
+            const nodeBBox = subject.getBBox()
             d3.select(canvasPageRef.current).append("rect")
               .raise()
               .attr("id", "hover-clone")
@@ -327,6 +324,7 @@ function PageSpread({
               .attr("width", convertFloatFixed(nodeBBox.width, 3))
               .attr("height", convertFloatFixed(nodeBBox.height, 3))
               .attr("fill", "transparent")
+              .attr("data-for", node.attr("id"))
               .style("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
               .style("pointer-events", "none")
 
@@ -339,6 +337,7 @@ function PageSpread({
               .attr("stroke-width", nodeStrokeWidth)
               .attr("fill", "transparent")
               .attr("stroke", colors.blue.sixHundred)
+              .attr("data-for", node.attr("id"))
               .style("pointer-events", "none")
 
             setHoverClone(subject)
@@ -346,11 +345,6 @@ function PageSpread({
         }
       }
       else {
-        dispatch({
-          type: "change-mode",
-          mode: "select",
-        })
-
         setHoverClone(null)
         d3.selectAll("[data-hovered]").attr("data-hovered", null)
         d3.select("#hover-clone").remove()
@@ -377,11 +371,6 @@ function PageSpread({
     })
 
     if (canvasState.mode === "select" && referenceElement) {
-      let coords = {
-        clientX: 0,
-        clientY: 0,
-      }
-
       const {
         cancel,           // cleanup function.
         // please call `cancel()` when the select-on-drag behavior is no longer needed.
@@ -410,11 +399,6 @@ function PageSpread({
             return
           }
 
-          coords = {
-            clientX: pointerEvent.clientX,
-            clientY: pointerEvent.clientY,
-          }
-
           dispatch({
             type: "ungroup-selection",
           })
@@ -435,13 +419,6 @@ function PageSpread({
           newlySelectedElements,    // `selectedElements - previousSelectedElements`
           newlyDeselectedElements,  // `previousSelectedElements - selectedElements`
         }) {
-          coords.clientX = pointerEvent.clientX
-          coords.clientY = pointerEvent.clientY
-          // calculate if the current clientX and clientY are greater than previous in `coords`
-          // if so, we are moving right/down, otherwise we are moving left/up
-          // const isDescending = pointerEvent.clientX > coords.clientX && pointerEvent.clientY > coords.clientY
-          // const isAscending = pointerEvent.clientX < coords.clientX && pointerEvent.clientY < coords.clientY
-          // const numOfElements = selectedElements.length
 
           dispatch({
             type: "change-selection",
@@ -467,7 +444,7 @@ function PageSpread({
 
       if (canvasRef.current && referenceElement) {
         d3.select(canvasRef.current)
-          .call(drag(dispatch, coords))
+          .call(drag(dispatch))
       }
 
       return () => {

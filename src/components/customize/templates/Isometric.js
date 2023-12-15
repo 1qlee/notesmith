@@ -151,6 +151,7 @@ function Isometric({
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
           d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
+          id={`svg_${index + 1}_top`}
         />
       ))}
       {linesSides.map((line, index) => (
@@ -160,6 +161,7 @@ function Isometric({
           stroke={line.stroke}
           strokeWidth={line.strokeWidth}
           d={`M${line.x1} ${line.y1} L${line.x2} ${line.y2}`}
+          id={`svg_${index + 1}_side`}
         />
       ))}
       {borderData.toggle && (
@@ -169,24 +171,28 @@ function Isometric({
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000000"
+            id={`svg_1_border`}
           />
           <path
             d={`M ${borderPosition.x2},0 L ${borderPosition.x2},${contentHeight} z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000000"
+            id={`svg_2_border`}
           />
           <path
             d={`M ${contentWidth},${borderPosition.y2} L 0,${borderPosition.y2} z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000000"
+            id={`svg_3_border`}
           />
           <path
             d={`M ${borderPosition.x},${contentHeight} L ${borderPosition.x},0 z`}
             strokeWidth={borderData.sync ? lineStrokeWidth : borderStrokeWidth}
             strokeOpacity={borderData.sync ? opacity : borderData.opacity}
             stroke="#000000"
+            id={`svg_4_border`}
           />
         </>
       )}

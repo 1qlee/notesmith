@@ -102,14 +102,13 @@ const DesignControls = () => {
   }
 
   const handleUpdateAttr = (value, property) => {
+    console.log("🚀 ~ file: DesignControls.js:105 ~ handleUpdateAttr ~ value:", value)
     if (selectedElements) {
       // loop through selected elements and perform mutation
       selectedElements.forEach((ele) => {
         switch(property) {
           case "stroke":
             ele.setAttribute("stroke", value)
-            ele.setAttribute("stroke-width", convertToPx(0.088))
-            ele.setAttribute("stroke-opacity", 1)
             break
           case "strokeWidth":
             ele.setAttribute("stroke-width", convertToPx(value))
@@ -234,43 +233,45 @@ const DesignControls = () => {
           )}
         </ControlFlexWrapper>
       </ControlWrapper>
-      {selectionAttributes.strokeWidth && (
+      {selectionAttributes.stroke && (
         <ControlWrapper>
           <StyledTag>Stroke</StyledTag>
           <ControlFlexWrapper>
-            <ControlFlexChild
-              flex={1}
-            >
-              <StyledLabel>Stroke</StyledLabel>
-              <SelectWrapper>
-                <StyledSelect
-                  padding="0.5rem"
-                  borderradius="4px"
-                  width="100%"
-                  onChange={(e) => handleUpdateAttr(e.target.value, "stroke")}
-                  onFocus={() => handleDeletionAllowed(false)}
-                  onBlur={() => handleDeletionAllowed(true)}
-                  value={selectionAttributes.stroke}
-                >
-                  {selectionAttributes.stroke === "Mixed" && (
-                    <option value="Mixed" disabled>Mixed</option>
-                  )}
-                  <option value="none">None</option>
-                  <option value="#000000">Yes</option>
-                </StyledSelect>
-                <SelectIcon
-                  top="10px"
-                  right="4px"
-                >
-                  <CaretDown size="0.875rem" />
-                </SelectIcon>
-              </SelectWrapper>
-            </ControlFlexChild>
+            {selectionAttributes.type !== "line" && (
+              <ControlFlexChild
+                flex={1}
+              >
+                <StyledLabel>Stroke</StyledLabel>
+                <SelectWrapper>
+                  <StyledSelect
+                    padding="0.5rem"
+                    borderradius="4px"
+                    width="100%"
+                    onChange={(e) => handleUpdateAttr(e.target.value, "stroke")}
+                    onFocus={() => handleDeletionAllowed(false)}
+                    onBlur={() => handleDeletionAllowed(true)}
+                    value={selectionAttributes.stroke}
+                  >
+                    {selectionAttributes.stroke === "Mixed" && (
+                      <option value="Mixed" disabled>Mixed</option>
+                    )}
+                    <option value="none">None</option>
+                    <option value="#000">Yes</option>
+                  </StyledSelect>
+                  <SelectIcon
+                    top="10px"
+                    right="4px"
+                  >
+                    <CaretDown size="0.875rem" />
+                  </SelectIcon>
+                </SelectWrapper>
+              </ControlFlexChild>
+            )}
             {selectionAttributes.stroke !== "none" && (
               <>
                 <ControlFlexChild
                   flex={1}
-                  margin="0 0 0 8px"
+                  margin={selectionAttributes.type !== "line" ? "0 0 0 8px" : "0 0 0 0"}
                 >
                   <InputControls
                     handler={handleUpdateAttr}
