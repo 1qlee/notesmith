@@ -153,7 +153,7 @@ function Calligraphy({
       rows: maxRows,
       slants: maxSlants,
     })
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

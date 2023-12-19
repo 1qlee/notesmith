@@ -44,7 +44,7 @@ function CanvasPage({
     dispatch({
       type: "reset",
     })
-  }, [selectedPage, isSelected, pageTemplate, pageId])
+  }, [selectedPage, isSelected])
 
   const handleSvgLoad = (src) => {
     if (src && isSelected) {

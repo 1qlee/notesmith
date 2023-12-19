@@ -23,6 +23,7 @@ function PageSpread({
   productData,
   selectedPage,
   selectedPageSvg,
+  setCurrentPageMargins,
   setMax,
   setPageData,
   setSelectedPageSvg,
@@ -145,7 +146,7 @@ function PageSpread({
       const nodeIsLine = element instanceof SVGLineElement
       const attributes = getAttributes(element)
       const strokeWidth = attributes["stroke-width"]
-      convertedStrokeWidth = convertFloatFixed(strokeWidth / 2, 3)
+      convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
       const offset = nodeIsLine ? 0 : convertedStrokeWidth
 
       if (element.getAttribute("id") === "hover-clone") {
@@ -177,7 +178,7 @@ function PageSpread({
         x1: convertFloatFixed(bbox.x - distance - offset, 3),
         y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 3),
         x2: convertFloatFixed(bbox.x + bbox.width + distance + offset, 3),
-        y2: convertFloatFixed(bbox.y + bbox.height - convertedStrokeWidth + distance, 3),
+        y2: convertFloatFixed(bbox.y + bbox.height - convertedStrokeWidth + distance + offset * 2, 3),
       }
 
       // check if the element's box is within the selection's box
@@ -353,6 +354,23 @@ function PageSpread({
   }, 50)
 
   useEffect(() => {
+    if (pageIsLeft) {
+      setCurrentPageMargins({
+        marginTop: leftPageTemplate.marginTop,
+        marginRight: leftPageTemplate.marginRight,
+        marginBottom: leftPageTemplate.marginBottom,
+        marginLeft: leftPageTemplate.marginLeft,
+      })
+    }
+    else {
+      setCurrentPageMargins({
+        marginTop: rightPageTemplate.marginTop,
+        marginRight: rightPageTemplate.marginRight,
+        marginBottom: rightPageTemplate.marginBottom,
+        marginLeft: rightPageTemplate.marginLeft,
+      })
+    }
+
     let referenceElement = null
     // this is how we know we have the canvas page loaded
     const isCanvasPage = svgLoaded === selectedPage ? true : false

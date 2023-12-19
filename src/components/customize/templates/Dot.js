@@ -76,7 +76,7 @@ function Dot({
       rows: maxRows,
       columns: maxCols,
     })
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

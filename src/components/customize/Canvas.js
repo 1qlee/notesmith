@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
@@ -19,20 +19,16 @@ function Canvas({
   productData,
   canvasPages,
   canvasPageTemplates,
+  canvasSize,
   pageData,
   selectedPage,
   selectedPageSvg,
+  setCurrentPageMargins,
   setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgSize,
-  svgSize,
 }) {
-  const [canvasSize, setCanvasSize] = useState({
-    width: 1456,
-    height: 916,
-  })
-
   return (
     <>
       <Workspace>
@@ -48,11 +44,11 @@ function Canvas({
             pageData={pageData}
             selectedPage={selectedPage}
             selectedPageSvg={selectedPageSvg}
+            setCurrentPageMargins={setCurrentPageMargins}
             setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgSize={setSvgSize}
-            svgSize={svgSize}
           />
         </StyledCanvas>
       </Workspace>

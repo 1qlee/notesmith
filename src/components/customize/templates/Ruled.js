@@ -57,7 +57,7 @@ function Ruled({
     setMax({
       rows: maxRows,
     })
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

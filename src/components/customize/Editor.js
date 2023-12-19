@@ -49,9 +49,19 @@ const Editor = ({
     svgWidth: productData.widthPixel,
     ...pageDataConfig
   })
+  const [canvasSize, setCanvasSize] = useState({
+    width: 1456,
+    height: 916,
+  })
   const [svgSize, setSvgSize] = useState({
     height: productData.heightPixel - pageMargins.vertical,
     width: productData.widthPixel - pageMargins.horizontal,
+  })
+  const [currentPageMargins, setCurrentPageMargins] = useState({
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 0,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -240,10 +250,12 @@ const Editor = ({
             <Canvas
               canvasPageTemplates={canvasPageTemplates}
               canvasPages={canvasPages}
+              canvasSize={canvasSize}
               pageData={pageData}
               productData={productData}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
+              setCurrentPageMargins={setCurrentPageMargins}
               setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
@@ -254,12 +266,14 @@ const Editor = ({
               activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
+              currentPageMargins={currentPageMargins}
               max={max}
               pageData={pageData}
               productData={productData}
               productImages={productImages}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
+              setCurrentPageMargins={setCurrentPageMargins}
               setPageData={setPageData}
               setShowModal={setShowModal}
               svgSize={svgSize}

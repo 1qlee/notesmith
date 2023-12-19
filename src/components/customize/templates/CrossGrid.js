@@ -86,7 +86,7 @@ function CrossGrid({
       rows: maxRows,
       columns: maxCols,
     })
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

@@ -1,5 +1,9 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import * as d3 from "d3"
+import { SVG } from '@svgdotjs/svg.js'
+import '@svgdotjs/svg.draggable.js'
+import '../editor/selectize/svg.select.js'
+import '../editor/resize/svg.resize.js'
 
 import { parseSelection } from "../editor/editor-functions"
 import Toastify from "../../ui/Toastify";
@@ -112,6 +116,9 @@ const setCanvasState = (state, action) => {
 
         if (nodeId !== "hover-clone") {
           node.attr('data-selected', '')
+          // var rect = SVG(element).selectize().resize()
+
+          // rect.draggable()
         }
       })
 

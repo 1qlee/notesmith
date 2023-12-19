@@ -125,6 +125,10 @@ const convertToDecimal = (num, places) => {
 }
 
 const convertToMM = pixels => {
+  if (pixels === 0) {
+    return 0
+  }
+
   return parseFloat((pixels * .2645833333).toFixed(3))
 }
 

@@ -32,8 +32,8 @@ function Hexagon({
 
         for (let theta = 0; theta < Math.PI * 2; theta += Math.PI / 3) {
           // each point is a pair of x and y coordinates
-          const pointX = convertFloatFixed(x + radius * Math.sin(theta), 2)
-          const pointY = convertFloatFixed(y + radius * Math.cos(theta), 2)
+          const pointX = convertFloatFixed(x + radius * Math.sin(theta), 3)
+          const pointY = convertFloatFixed(y + radius * Math.cos(theta), 3)
 
           if (pointX > width) {
             return { col: col }
@@ -108,7 +108,7 @@ function Hexagon({
       columns: maxColumns,
       rows: maxRows,
     })
-  }, [pageData, maxSvgSize])
+  }, [pageData])
 
   return (
     <>

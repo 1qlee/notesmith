@@ -94,7 +94,7 @@ function Handwriting({
     setMax({
       rows: maxRows,
     })
-  }, [pageData, dashedLineData, maxSvgSize])
+  }, [pageData, dashedLineData])
 
   return (
     <>

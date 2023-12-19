@@ -635,3 +635,60 @@ rect.overlay {
   font-weight: 700;
   src: url('/fonts/nm-700-normal.woff2') format('woff2');
 }
+
+/* For selection */
+.selection_border {
+  fill: none;
+  stroke: black;
+  stroke-width: 1;
+}
+
+.selection_handle_shear {
+  fill: white;
+  stroke: black;
+  stroke-width: 1;
+}
+.selection_handle_lt {
+  cursor: nw-resize;
+}
+.selection_handle_rt {
+  cursor: ne-resize;
+}
+.selection_handle_rb {
+  cursor: se-resize;
+}
+.selection_handle_lb {
+  cursor: sw-resize;
+}
+.selection_handle_t {
+  cursor: n-resize;
+}
+.selection_handle_r {
+  cursor: e-resize;
+}
+.selection_handle_b {
+  cursor: s-resize;
+}
+.selection_handle_l {
+  cursor: w-resize;
+}
+
+.selection_handle_rot {
+  stroke-width:1;
+  stroke:#1a73e8;
+  fill: #F9FFED;
+}
+
+.svg_select_points_point {
+  cursor: move;
+}
+
+.selection_border {
+  stroke-width:1;
+  fill:gray;
+  stroke-dasharray:10 10;
+  stroke: #1a73e8;
+  stroke-opacity:0.8;
+  fill-opacity:0.1;
+  pointer-events:none;
+}

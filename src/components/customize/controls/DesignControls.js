@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { useEditorContext, useEditorDispatch } from "../context/editorContext"
 import { CaretDown, Question } from "@phosphor-icons/react"
 import { convertFloatFixed, convertToPx, processStringNumbers  } from "../../../utils/helper-functions"
@@ -7,6 +7,7 @@ import { Tooltip } from "react-tooltip"
 import { ControlWrapper, ControlFlexWrapper, ControlFlexChild } from "../templateControls/components/TemplateComponents"
 import { SelectWrapper, SelectIcon, StyledSelect, StyledLabel, StyledInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
+import MarginControls from "../templateControls/components/MarginControls"
 import InputControls from "../templateControls/components/InputControls"
 import Tag from "../../ui/Tag"
 import Icon from "../../ui/Icon"
@@ -25,7 +26,15 @@ const StyledTag = ({ children }) => {
   )
 }
 
-const DesignControls = () => {
+const DesignControls = ({
+  currentPageMargins,
+  maximumMarginHeight,
+  maximumMarginWidth,
+  pageData,
+  setCurrentPageMargins,
+  setPageData,
+}) => {
+  console.log("🚀 ~ file: DesignControls.js:37 ~ currentPageMargins:", currentPageMargins)
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
   const { selectedElements, selectionBbox, selectionAttributes } = canvasState
@@ -42,6 +51,7 @@ const DesignControls = () => {
         const isCircle = ele instanceof SVGCircleElement || ele instanceof SVGEllipseElement
         const isLine = ele instanceof SVGLineElement
         const isGroup = ele instanceof SVGGElement
+        const isPath = ele instanceof SVGPathElement
 
         switch(true) {
           case isCircle:
@@ -90,6 +100,36 @@ const DesignControls = () => {
           case isGroup:
             handleUpdateBbox(ele.childNodes, value, property)
             break
+          case isPath:
+            if (property === "width") {
+              const currentWidth = +ele.getBBox().width
+              const shift = Math.abs(convertFloatFixed(convertedValue - currentWidth, 3))
+              console.log("🚀 ~ file: DesignControls.js:98 ~ elements.forEach ~ shift:", shift)
+              const isAdding = shift > 0 ? true : false
+              const d = ele.getAttribute("d")
+              let leftMostX = Infinity
+
+              // find the left most x value
+              const points = d.match(/([MmLlHhVvCcSsQqTtAaZz])\s*([-+]?\d*\.?\d+)/g).forEach((point) => {
+                const x = +point.split(" ")[1]
+                
+                if (x < leftMostX) {
+                  leftMostX = x
+                }
+
+                return x
+              })
+
+              console.log(leftMostX)
+
+              let modifiedD = d.replace(/([MmLlHhVvCcSsQqTtAaZz])\s*([-+]?\d*\.?\d+)\s*([-+]?\d*\.?\d+)/g, (_, command, x, y) => {
+                console.log(x)
+                return `${command} ${x} ${y}`
+              })
+
+              ele.setAttribute("d", modifiedD)
+            }
+            break
           default:
             ele.setAttribute(`${property}`, convertedValue)
         }
@@ -101,6 +141,21 @@ const DesignControls = () => {
     }
   }
 
+  function findSmallestValue(arr) {
+    if (arr.length === 0) {
+      return undefined;
+    }
+
+    let smallest = arr[0];
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] < smallest) {
+        smallest = arr[i];
+      }
+    }
+
+    return smallest;
+  }
+  
   const handleUpdateAttr = (value, property) => {
     console.log("🚀 ~ file: DesignControls.js:105 ~ handleUpdateAttr ~ value:", value)
     if (selectedElements) {
@@ -108,7 +163,13 @@ const DesignControls = () => {
       selectedElements.forEach((ele) => {
         switch(property) {
           case "stroke":
-            ele.setAttribute("stroke", value)
+            if (value === "none") {
+              ele.removeAttribute("stroke-width")
+              ele.removeAttribute("stroke")
+            }
+            else {
+              ele.setAttribute("stroke", value)
+            }
             break
           case "strokeWidth":
             ele.setAttribute("stroke-width", convertToPx(value))
@@ -162,167 +223,250 @@ const DesignControls = () => {
 
   return (
     <>
-      <ControlWrapper>
-        <StyledTag>Positioning</StyledTag>
-        <ControlFlexWrapper>
-          <ControlFlexChild
-            margin="0 8px 0 0"
-            flex={1}
-          >
-            <InputControls
-              elements={selectedElements}
-              handler={handleUpdateBbox}
-              input="X"
-              max={1000}
-              min={0}
-              property="x"
-              step={1}
-              value={selectionBbox.x}
-              onFocus={handleDeletionAllowed}
-            />
-          </ControlFlexChild>
-          <ControlFlexChild
-            flex={1}
-          >
-            <InputControls
-              elements={selectedElements}
-              handler={handleUpdateBbox}
-              input="Y"
-              max={1000}
-              min={0}
-              property="y"
-              step={1}
-              value={selectionBbox.y}
-              onFocus={handleDeletionAllowed}
-            />
-          </ControlFlexChild>
-        </ControlFlexWrapper>
-        <ControlFlexWrapper>
-          <ControlFlexChild
-            flex={1}
-          >
-            <InputControls
-              elements={selectedElements}
-              handler={handleUpdateBbox}
-              input="Width"
-              max={1000}
-              min={0.088}
-              property="width"
-              step={1}
-              value={selectionBbox.width}
-              onFocus={handleDeletionAllowed}
-            />
-          </ControlFlexChild>
-          {selectionBbox.height !== 0 && (
-            <ControlFlexChild
-              margin="0 0 0 8px"
-              flex={1}
-            >
-              <InputControls
-                elements={selectedElements}
-                handler={handleUpdateBbox}
-                input="Height"
-                max={1000}
-                min={1}
-                property="height"
-                step={1}
-                value={selectionBbox.height}
-                onFocus={handleDeletionAllowed}
-              />
-            </ControlFlexChild>
-          )}
-        </ControlFlexWrapper>
-      </ControlWrapper>
-      {selectionAttributes.stroke && (
-        <ControlWrapper>
-          <StyledTag>Stroke</StyledTag>
-          <ControlFlexWrapper>
-            {selectionAttributes.type !== "line" && (
+      <MarginControls 
+        pageData={currentPageMargins}
+        setPageData={setCurrentPageMargins}
+        maximumMarginHeight={maximumMarginHeight}
+        maximumMarginWidth={maximumMarginWidth}
+      />
+      {selectedElements.length > 0 && (
+        <>
+          <ControlWrapper>
+            <StyledTag>Positioning</StyledTag>
+            <ControlFlexWrapper>
+              <ControlFlexChild
+                margin="0 8px 0 0"
+                flex={1}
+              >
+                <InputControls
+                  elements={selectedElements}
+                  handler={handleUpdateBbox}
+                  input="X"
+                  max={1000}
+                  min={0}
+                  property="x"
+                  step={1}
+                  value={selectionBbox.x}
+                  onFocus={handleDeletionAllowed}
+                />
+              </ControlFlexChild>
               <ControlFlexChild
                 flex={1}
               >
-                <StyledLabel>Stroke</StyledLabel>
-                <SelectWrapper>
-                  <StyledSelect
-                    padding="0.5rem"
-                    borderradius="4px"
-                    width="100%"
-                    onChange={(e) => handleUpdateAttr(e.target.value, "stroke")}
-                    onFocus={() => handleDeletionAllowed(false)}
-                    onBlur={() => handleDeletionAllowed(true)}
-                    value={selectionAttributes.stroke}
-                  >
-                    {selectionAttributes.stroke === "Mixed" && (
-                      <option value="Mixed" disabled>Mixed</option>
-                    )}
-                    <option value="none">None</option>
-                    <option value="#000">Yes</option>
-                  </StyledSelect>
-                  <SelectIcon
-                    top="10px"
-                    right="4px"
-                  >
-                    <CaretDown size="0.875rem" />
-                  </SelectIcon>
-                </SelectWrapper>
+                <InputControls
+                  elements={selectedElements}
+                  handler={handleUpdateBbox}
+                  input="Y"
+                  max={1000}
+                  min={0}
+                  property="y"
+                  step={1}
+                  value={selectionBbox.y}
+                  onFocus={handleDeletionAllowed}
+                />
               </ControlFlexChild>
-            )}
-            {selectionAttributes.stroke !== "none" && (
-              <>
-                <ControlFlexChild
-                  flex={1}
-                  margin={selectionAttributes.type !== "line" ? "0 0 0 8px" : "0 0 0 0"}
-                >
-                  <InputControls
-                    handler={handleUpdateAttr}
-                    input="Width"
-                    max={50}
-                    min={0.088}
-                    property="strokeWidth"
-                    step={0.01}
-                    value={selectionAttributes.strokeWidth}
-                    onFocus={handleDeletionAllowed}
-                  />
-                </ControlFlexChild>
+            </ControlFlexWrapper>
+            <ControlFlexWrapper>
+              <ControlFlexChild
+                flex={1}
+              >
+                <InputControls
+                  elements={selectedElements}
+                  handler={handleUpdateBbox}
+                  input="Width"
+                  max={1000}
+                  min={0.088}
+                  property="width"
+                  step={1}
+                  value={selectionBbox.width}
+                  onFocus={handleDeletionAllowed}
+                />
+              </ControlFlexChild>
+              {selectionBbox.height !== 0 && (
                 <ControlFlexChild
                   margin="0 0 0 8px"
                   flex={1}
                 >
                   <InputControls
-                    handler={handleUpdateAttr}
-                    input="Opacity"
-                    max={1}
-                    min={0.5}
-                    property="strokeOpacity"
-                    step={0.01}
-                    value={selectionAttributes.strokeOpacity}
+                    elements={selectedElements}
+                    handler={handleUpdateBbox}
+                    input="Height"
+                    max={1000}
+                    min={1}
+                    property="height"
+                    step={1}
+                    value={selectionBbox.height}
                     onFocus={handleDeletionAllowed}
                   />
                 </ControlFlexChild>
-              </>
+              )}
+            </ControlFlexWrapper>
+          </ControlWrapper>
+        {selectionAttributes.stroke && (
+          <ControlWrapper>
+            <StyledTag>Stroke</StyledTag>
+            <ControlFlexWrapper>
+              {selectionAttributes.type !== "line" && (
+                <ControlFlexChild
+                  flex={1}
+                >
+                  <StyledLabel>Stroke</StyledLabel>
+                  <SelectWrapper>
+                    <StyledSelect
+                      padding="0.5rem"
+                      borderradius="4px"
+                      width="100%"
+                      onChange={(e) => handleUpdateAttr(e.target.value, "stroke")}
+                      onFocus={() => handleDeletionAllowed(false)}
+                      onBlur={() => handleDeletionAllowed(true)}
+                      value={selectionAttributes.stroke}
+                    >
+                      {selectionAttributes.stroke === "Mixed" && (
+                        <option value="Mixed" disabled>Mixed</option>
+                      )}
+                      <option value="none">None</option>
+                      <option value="#000">Yes</option>
+                    </StyledSelect>
+                    <SelectIcon
+                      top="10px"
+                      right="4px"
+                    >
+                      <CaretDown size="0.875rem" />
+                    </SelectIcon>
+                  </SelectWrapper>
+                </ControlFlexChild>
+              )}
+              {selectionAttributes.stroke !== "none" && (
+                <>
+                  <ControlFlexChild
+                    flex={1}
+                    margin={selectionAttributes.type !== "line" ? "0 0 0 8px" : "0 0 0 0"}
+                  >
+                    <InputControls
+                      handler={handleUpdateAttr}
+                      input="Width"
+                      max={50}
+                      min={0.088}
+                      property="strokeWidth"
+                      step={0.01}
+                      value={selectionAttributes.strokeWidth}
+                      onFocus={handleDeletionAllowed}
+                    />
+                  </ControlFlexChild>
+                  <ControlFlexChild
+                    margin="0 0 0 8px"
+                    flex={1}
+                  >
+                    <InputControls
+                      handler={handleUpdateAttr}
+                      input="Opacity"
+                      max={1}
+                      min={0.5}
+                      property="strokeOpacity"
+                      step={0.01}
+                      value={selectionAttributes.strokeOpacity}
+                      onFocus={handleDeletionAllowed}
+                    />
+                  </ControlFlexChild>
+                </>
+              )}
+            </ControlFlexWrapper>
+            {selectionAttributes.stroke !== "none" && (
+              <ControlFlexWrapper>
+                <ControlFlexChild
+                  flex={1}
+                >
+                  <StyledLabel>Style</StyledLabel>
+                  <SelectWrapper>
+                    <StyledSelect
+                      padding="0.5rem"
+                      borderradius="4px"
+                      width="100%"
+                      onChange={(e) => handleUpdateAttr(e.target.value, "strokeStyle")}
+                      onFocus={() => handleDeletionAllowed(false)}
+                      onBlur={() => handleDeletionAllowed(true)}
+                      value={selectionAttributes.strokeStyle}
+                    >
+                      {selectionAttributes.strokeStyle === "Mixed" && (
+                        <option value="Mixed" disabled>Mixed</option>
+                      )}
+                      <option value="Solid">Solid</option>
+                      <option value="Dashed">Dashed</option>
+                    </StyledSelect>
+                    <SelectIcon
+                      top="8px"
+                      right="4px"
+                    >
+                      <CaretDown size="0.875rem" />
+                    </SelectIcon>
+                  </SelectWrapper>
+                </ControlFlexChild>
+                {(selectionAttributes.strokeStyle === "Dashed" || selectionAttributes.strokeStyle === "Mixed") && (
+                  <ControlFlexChild
+                    flex={1}
+                    margin="0 0 0 8px"
+                  >
+                    <Flexbox
+                      align="center"
+                      margin="0 0 8px"
+                    >
+                      <StyledLabel
+                        margin="0"
+                      >
+                        <span>Dashes</span>
+                      </StyledLabel>
+                      <Icon
+                        className="tooltip"
+                        margin="0 0 0 4px"
+                      >
+                        <Question size="0.875rem" />
+                      </Icon>
+                    </Flexbox>
+                    <StyledInput
+                      onChange={e => handleUpdateAttr(e.target.value, "strokeDasharray")}
+                      type="text"
+                      padding="8px 24px 8px 8px"
+                      value={selectionAttributes.strokeDasharray}
+                      onFocus={e => {
+                        e.target.select();
+                        handleDeletionAllowed(false)
+                      }}
+                      onBlur={() => {
+                        if (!selectionAttributes.strokeDasharray) {
+                          handleUpdateAttr("Solid", "strokeStyle")
+                        }
+                        handleDeletionAllowed(true)
+                      }}
+                    />
+                  </ControlFlexChild>
+                )}
+              </ControlFlexWrapper>
             )}
-          </ControlFlexWrapper>
-          {selectionAttributes.stroke !== "none" && (
+          </ControlWrapper>
+        )}
+        {selectionAttributes.fill && (
+          <ControlWrapper>
+            <StyledTag>Fill</StyledTag>
             <ControlFlexWrapper>
               <ControlFlexChild
                 flex={1}
               >
-                <StyledLabel>Style</StyledLabel>
+                <StyledLabel>Fill</StyledLabel>
                 <SelectWrapper>
                   <StyledSelect
                     padding="0.5rem"
                     borderradius="4px"
                     width="100%"
-                    onChange={(e) => handleUpdateAttr(e.target.value, "strokeStyle")}
-                    onFocus={() => handleDeletionAllowed(false)}
-                    onBlur={() => handleDeletionAllowed(true)}
-                    value={selectionAttributes.strokeStyle}
+                    onChange={(e) => handleUpdateAttr(e.target.value, "fill")}
+                    onFocus={() => handleDeletionAllowed(true)}
+                    onBlur={() => handleDeletionAllowed(false)}
+                    value={selectionAttributes.fill}
                   >
-                    {selectionAttributes.strokeStyle === "Mixed" && (
+                    {selectionAttributes.fill === "Mixed" && (
                       <option value="Mixed" disabled>Mixed</option>
                     )}
-                    <option value="Solid">Solid</option>
-                    <option value="Dashed">Dashed</option>
+                    <option value="none">None</option>
+                    <option value="#000000">Yes</option>
                   </StyledSelect>
                   <SelectIcon
                     top="8px"
@@ -332,100 +476,27 @@ const DesignControls = () => {
                   </SelectIcon>
                 </SelectWrapper>
               </ControlFlexChild>
-              {(selectionAttributes.strokeStyle === "Dashed" || selectionAttributes.strokeStyle === "Mixed") && (
+              {selectionAttributes.fill !== "none" && (
                 <ControlFlexChild
                   flex={1}
                   margin="0 0 0 8px"
                 >
-                  <Flexbox
-                    align="center"
-                    margin="0 0 8px"
-                  >
-                    <StyledLabel
-                      margin="0"
-                    >
-                      <span>Dashes</span>
-                    </StyledLabel>
-                    <Icon
-                      className="tooltip"
-                      margin="0 0 0 4px"
-                    >
-                      <Question size="0.875rem" />
-                    </Icon>
-                  </Flexbox>
-                  <StyledInput
-                    onChange={e => handleUpdateAttr(e.target.value, "strokeDasharray")}
-                    type="text"
-                    padding="8px 24px 8px 8px"
-                    value={selectionAttributes.strokeDasharray}
-                    onFocus={e => {
-                      e.target.select();
-                      handleDeletionAllowed(false)
-                    }}
-                    onBlur={() => {
-                      if (!selectionAttributes.strokeDasharray) {
-                        handleUpdateAttr("Solid", "strokeStyle")
-                      }
-                      handleDeletionAllowed(true)
-                    }}
+                  <InputControls
+                    handler={handleUpdateAttr}
+                    input="Opacity"
+                    max={1}
+                    min={0.5}
+                    property="fillOpacity"
+                    step={0.01}
+                    value={selectionAttributes.fillOpacity}
+                    onFocus={handleDeletionAllowed}
                   />
                 </ControlFlexChild>
               )}
             </ControlFlexWrapper>
-          )}
-        </ControlWrapper>
-      )}
-      {selectionAttributes.fill && (
-        <ControlWrapper>
-          <StyledTag>Fill</StyledTag>
-          <ControlFlexWrapper>
-            <ControlFlexChild
-              flex={1}
-            >
-              <StyledLabel>Fill</StyledLabel>
-              <SelectWrapper>
-                <StyledSelect
-                  padding="0.5rem"
-                  borderradius="4px"
-                  width="100%"
-                  onChange={(e) => handleUpdateAttr(e.target.value, "fill")}
-                  onFocus={() => handleDeletionAllowed(true)}
-                  onBlur={() => handleDeletionAllowed(false)}
-                  value={selectionAttributes.fill}
-                >
-                  {selectionAttributes.fill === "Mixed" && (
-                    <option value="Mixed" disabled>Mixed</option>
-                  )}        
-                  <option value="none">None</option>
-                  <option value="#000000">Yes</option>         
-                </StyledSelect>
-                <SelectIcon
-                  top="8px"
-                  right="4px"
-                >
-                  <CaretDown size="0.875rem" />
-                </SelectIcon>
-              </SelectWrapper>
-            </ControlFlexChild>
-            {selectionAttributes.fill !== "none" && (
-              <ControlFlexChild
-                flex={1}
-                margin="0 0 0 8px"
-              >
-                <InputControls
-                  handler={handleUpdateAttr}
-                  input="Opacity"
-                  max={1}
-                  min={0.5}
-                  property="fillOpacity"
-                  step={0.01}
-                  value={selectionAttributes.fillOpacity}
-                  onFocus={handleDeletionAllowed}
-                />
-              </ControlFlexChild>  
-            )}
-          </ControlFlexWrapper>
-        </ControlWrapper>
+          </ControlWrapper>
+        )}
+      </>
       )}
       <Tooltip
         anchorSelect=".tooltip"

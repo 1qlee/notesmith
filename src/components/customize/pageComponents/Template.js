@@ -47,7 +47,7 @@ const Template = ({
         })
       }, 1)
     }
-  }, [ref, pageData])
+  }, [ref])
 
   return (
     <svg

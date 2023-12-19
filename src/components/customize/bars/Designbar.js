@@ -8,12 +8,15 @@ import DesignControls from "../controls/DesignControls"
 import Button from "../../ui/Button"
 
 function Designbar({
+  currentPageMargins,
   handleShowModal,
   pageData,
   max,
+  setCurrentPageMargins,
   setPageData,
   svgSize,
 }) {
+  console.log("🚀 ~ file: Designbar.js:25 ~ pageMargins:", currentPageMargins)
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
  
@@ -30,7 +33,14 @@ function Designbar({
             svgSize={svgSize}
           />
         ) : (
-          <DesignControls />
+          <DesignControls
+            currentPageMargins={currentPageMargins}
+            maximumMarginHeight={maximumMarginHeight}
+            maximumMarginWidth={maximumMarginWidth}
+            pageData={pageData}
+            setCurrentPageMargins={setCurrentPageMargins}
+            setPageData={setPageData}
+          />
         )}
       </ControlsContent>
       <ControlsFooter>
