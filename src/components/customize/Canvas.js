@@ -23,11 +23,11 @@ function Canvas({
   pageData,
   selectedPage,
   selectedPageSvg,
-  setCurrentPageMargins,
   setMax,
   setPageData,
   setSelectedPageSvg,
-  setSvgSize,
+  setSvgData,
+  svgData,
 }) {
   return (
     <>
@@ -44,11 +44,11 @@ function Canvas({
             pageData={pageData}
             selectedPage={selectedPage}
             selectedPageSvg={selectedPageSvg}
-            setCurrentPageMargins={setCurrentPageMargins}
             setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
-            setSvgSize={setSvgSize}
+            setSvgData={setSvgData}
+            svgData={svgData}
           />
         </StyledCanvas>
       </Workspace>

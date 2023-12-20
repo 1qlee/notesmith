@@ -72,17 +72,15 @@ function Controls({
   activeTab,
   bookData,
   canvasPages,
-  currentPageMargins,
   pageData,
   productData,
   productImages,
   max,
   setBookData,
-  setCurrentPageMargins,
   setPageData,
   setShowModal,
   setActiveTab,
-  svgSize,
+  svgData,
   toast,
   user,
 }) {
@@ -152,14 +150,12 @@ function Controls({
       )}
       {activeTab === 1 && (
         <Designbar
-          currentPageMargins={currentPageMargins}
           handleShowModal={handleShowModal}
           max={max}
           pageData={pageData}
-          setCurrentPageMargins={setCurrentPageMargins}
           setPageData={setPageData}
           setShowModal={setShowModal}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {activeTab === 2 && (

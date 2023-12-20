@@ -74,7 +74,7 @@ const ProductPage = ({ data, params }) => {
     xHeight: 5,
   }
   const [pageData, setPageData] = useState(defaultPageData)
-  const [svgSize, setSvgSize] = useState({
+  const [svgSize, setSvgData] = useState({
     height: bookData.heightPixel - pageMargins.vertical,
     width: bookData.widthPixel - pageMargins.horizontal,
   })
@@ -149,7 +149,7 @@ const ProductPage = ({ data, params }) => {
                         setPageData={setPageData}
                         setMax={setMax}
                         setSelectedPageSvg={setSelectedPageSvg}
-                        setSvgSize={setSvgSize}
+                        setSvgData={setSvgData}
                       />
                     </Col>
                   </>

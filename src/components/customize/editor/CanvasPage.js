@@ -1,24 +1,19 @@
 import React, { useEffect } from "react"
 import SVG from "react-inlinesvg"
 import { pageMargins } from "../../../styles/variables"
-import { convertToPx } from "../../../utils/helper-functions"
+import { convertFloatFixed, convertToPx } from "../../../utils/helper-functions"
 
 import { useEditorDispatch } from "../context/editorContext"
 import Template from "../pageComponents/Template"
 import PageBackground from "../pageComponents/PageBackground"
-
-const minimumMargin = pageMargins.minimum
-const holesMargin = pageMargins.holes
 
 function CanvasPage({
   productData,
   canvasPageRef,
   currentPageSide,
   isSelected,
-  margins,
   pageData,
   pagePosition,
-  pageId,
   pageSide,
   pageTemplate,
   selectedPage,
@@ -26,13 +21,13 @@ function CanvasPage({
   setPageData,
   setSelectedPageSvg,
   setSvgLoaded,
-  setSvgSize,
+  setSvgData,
   setMax,
 }) {
   const dispatch = useEditorDispatch()
   const maxSvgSize = {
-    height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
-    width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
+    height: convertFloatFixed(pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom), 3),
+    width: convertFloatFixed(pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight), 3),
   }
   const isLeftPage = pageSide === "left"
 
@@ -79,7 +74,7 @@ function CanvasPage({
             setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
-            setSvgSize={setSvgSize}
+            setSvgData={setSvgData}
             setSvgLoaded={setSvgLoaded}
             suppressContentEditableWarning={true}
           />
@@ -90,10 +85,11 @@ function CanvasPage({
             onLoad={(src) => handleSvgLoad(src)}
             id={isLeftPage ? "left-page" : "right-page"}
             xmlns="http://www.w3.org/2000/svg"
-            x={isLeftPage ? minimumMargin + margins.left : pageData.svgWidth + holesMargin + margins.left}
-            y={minimumMargin + margins.top}
-            width={pageData.maxContentWidth}
-            height={pageData.maxContentHeight}
+            x={pageData.x}
+            y={pageData.y}
+            width={maxSvgSize.width}
+            height={maxSvgSize.height}
+            viewBox={`0 0 ${maxSvgSize.width} ${maxSvgSize.height}`}
             src={pageTemplate && pageTemplate.svg}
             suppressContentEditableWarning={true}
           />

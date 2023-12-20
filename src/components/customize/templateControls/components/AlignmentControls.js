@@ -39,11 +39,11 @@ const AlignmentButton = styled(Button)`
 function AlignmentControls({ 
   pageData, 
   setPageData,
-  svgSize,
+  svgData,
 }) {
   const { maxContentHeight, maxContentWidth, strokeWidth, radius } = pageData
-  const contentHeight = svgSize.height
-  const contentWidth = svgSize.width
+  const contentHeight = svgData.height
+  const contentWidth = svgData.width
   let verticalTrim, horizontalTrim = 0
 
   switch(pageData.template) {

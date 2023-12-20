@@ -21,7 +21,7 @@ function ProductTemplate({
   maxSvgSize,
   setPageData,
   setSelectedPageSvg,
-  setSvgSize,
+  setSvgData,
   setMax,
 }) {
   const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
@@ -42,7 +42,7 @@ function ProductTemplate({
 
       setTimeout(() => {
         const dimensions = node.getBBox()
-        setSvgSize({
+        setSvgData({
           height: dimensions.height,
           width: dimensions.width,
         })

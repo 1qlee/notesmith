@@ -17,7 +17,7 @@ const TemplateControls = ({
   max,
   pageData,
   setPageData,
-  svgSize,
+  svgData,
 }) => {
   return (
     <>
@@ -28,7 +28,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "dot" && (
@@ -38,7 +38,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "graph" && (
@@ -48,12 +48,12 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "hexagon" && (
         <HexagonControls
-          svgSize={svgSize}
+          svgData={svgData}
           maximumMarginHeight={maximumMarginHeight}
           maximumMarginWidth={maximumMarginWidth}
           max={max}
@@ -63,7 +63,7 @@ const TemplateControls = ({
       )}
       {pageData.template === "isometric" && (
         <IsometricControls
-          svgSize={svgSize}
+          svgData={svgData}
           maximumMarginHeight={maximumMarginHeight}
           maximumMarginWidth={maximumMarginWidth}
           max={max}
@@ -78,7 +78,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "music" && (
@@ -88,7 +88,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "handwriting" && (
@@ -98,7 +98,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "cross" && (
@@ -108,7 +108,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
       {pageData.template === "calligraphy" && (
@@ -118,7 +118,7 @@ const TemplateControls = ({
           max={max}
           pageData={pageData}
           setPageData={setPageData}
-          svgSize={svgSize}
+          svgData={svgData}
         />
       )}
     </>

@@ -20,7 +20,7 @@ const Template = ({
   setMax,
   setPageData,
   setSelectedPageSvg,
-  setSvgSize,
+  setSvgData,
   setSvgLoaded,
 }) => {
   const dispatch = useEditorDispatch()
@@ -41,7 +41,7 @@ const Template = ({
       setTimeout(() => {
         const { height, width } = template.getBBox()
 
-        setSvgSize({
+        setSvgData({
           height: height,
           width: width,
         })

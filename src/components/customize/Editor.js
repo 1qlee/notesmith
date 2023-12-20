@@ -53,15 +53,9 @@ const Editor = ({
     width: 1456,
     height: 916,
   })
-  const [svgSize, setSvgSize] = useState({
+  const [svgData, setSvgData] = useState({
     height: productData.heightPixel - pageMargins.vertical,
     width: productData.widthPixel - pageMargins.horizontal,
-  })
-  const [currentPageMargins, setCurrentPageMargins] = useState({
-    marginTop: 0,
-    marginRight: 0,
-    marginBottom: 0,
-    marginLeft: 0,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -255,28 +249,25 @@ const Editor = ({
               productData={productData}
               selectedPage={selectedPage}
               selectedPageSvg={selectedPageSvg}
-              setCurrentPageMargins={setCurrentPageMargins}
               setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
-              setSvgSize={setSvgSize}
-              svgSize={svgSize}
+              setSvgData={setSvgData}
+              svgData={svgData}
             />
             <Controls
               activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
-              currentPageMargins={currentPageMargins}
               max={max}
               pageData={pageData}
               productData={productData}
               productImages={productImages}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
-              setCurrentPageMargins={setCurrentPageMargins}
               setPageData={setPageData}
               setShowModal={setShowModal}
-              svgSize={svgSize}
+              svgData={svgData}
               toast={toast}
               user={user}
             />

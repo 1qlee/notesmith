@@ -27,14 +27,11 @@ const StyledTag = ({ children }) => {
 }
 
 const DesignControls = ({
-  currentPageMargins,
   maximumMarginHeight,
   maximumMarginWidth,
   pageData,
-  setCurrentPageMargins,
   setPageData,
 }) => {
-  console.log("🚀 ~ file: DesignControls.js:37 ~ currentPageMargins:", currentPageMargins)
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
   const { selectedElements, selectionBbox, selectionAttributes } = canvasState
@@ -224,8 +221,8 @@ const DesignControls = ({
   return (
     <>
       <MarginControls 
-        pageData={currentPageMargins}
-        setPageData={setCurrentPageMargins}
+        pageData={pageData}
+        setPageData={setPageData}
         maximumMarginHeight={maximumMarginHeight}
         maximumMarginWidth={maximumMarginWidth}
       />

@@ -15,14 +15,14 @@ function HexagonControls({
   max,
   pageData,
   setPageData,
-  svgSize,
+  svgData,
 }) {
   return (
     <>
       <AlignmentControls
         pageData={pageData}
         setPageData={setPageData}
-        svgSize={svgSize}
+        svgData={svgData}
       />
       <MarginControls 
         maximumMarginHeight={maximumMarginHeight}

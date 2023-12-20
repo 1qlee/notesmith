@@ -23,12 +23,11 @@ function PageSpread({
   productData,
   selectedPage,
   selectedPageSvg,
-  setCurrentPageMargins,
   setMax,
   setPageData,
   setSelectedPageSvg,
-  setSvgSize,
-  svgSize,
+  setSvgData,
+  svgData,
 }) {
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
@@ -355,7 +354,8 @@ function PageSpread({
 
   useEffect(() => {
     if (pageIsLeft) {
-      setCurrentPageMargins({
+      setPageData({
+        ...pageData,
         marginTop: leftPageTemplate.marginTop,
         marginRight: leftPageTemplate.marginRight,
         marginBottom: leftPageTemplate.marginBottom,
@@ -363,7 +363,8 @@ function PageSpread({
       })
     }
     else {
-      setCurrentPageMargins({
+      setPageData({
+        ...pageData,
         marginTop: rightPageTemplate.marginTop,
         marginRight: rightPageTemplate.marginRight,
         marginBottom: rightPageTemplate.marginBottom,
@@ -377,10 +378,11 @@ function PageSpread({
 
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
-      pagePosition = {
-        x: pageIsLeft ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
-        y: pageIsLeft ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
-      }
+      setPageData({
+        ...pageData,
+        x: pagePosition.x,
+        y: pagePosition.y,
+      })
     }
 
     dispatch({
@@ -492,7 +494,6 @@ function PageSpread({
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "left" ? true : false}
-        margins={leftPageMargins}
         pageData={pageData}
         pageId={leftPage}
         pagePosition={pagePosition}
@@ -505,14 +506,13 @@ function PageSpread({
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
-        setSvgSize={setSvgSize}
-        svgSize={svgSize}
+        setSvgData={setSvgData}
+        svgData={svgData}
       />
       <CanvasPage
         canvasPageRef={canvasPageRef}
         currentPageSide={currentPageSide}
         isSelected={currentPageSide === "right" ? true : false}
-        margins={rightPageMargins}
         pageData={pageData}
         pageId={rightPage}
         pagePosition={pagePosition}
@@ -525,8 +525,8 @@ function PageSpread({
         setPageData={setPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
-        setSvgSize={setSvgSize}
-        svgSize={svgSize}
+        setSvgData={setSvgData}
+        svgData={svgData}
       />
       {canvasState.selectedElements.length > 0 && canvasState.selectionPath && (
         <Selection

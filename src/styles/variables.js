@@ -214,6 +214,8 @@ const pageDataConfig = {
   template: "",
   thickness: 0.088,
   xHeight: 5,
+  x: 12,
+  y: 12,
 }
 
 const marketingLists = [
