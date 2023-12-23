@@ -29,7 +29,7 @@ function Dot({
         x: 0,
       }
       // loop will exit if the dots have passed the height of the page
-      if (dotPos.y + dotRadius / 2 > height) {
+      if (dotPos.y + dotRadius > height) {
         // this essentially caps the number of total rows at the "exceeding" value
         return setPageData({
           ...pageData,
@@ -53,7 +53,7 @@ function Dot({
         }
 
         // loop will exit if the dots have passed the width of the page
-        if (dotPos.x + dotRadius / 2 > width) {
+        if (dotPos.x + dotRadius > width) {
           // this essentially caps the number of dots in a row at the "exceeding" value
           return setPageData({
             ...pageData,

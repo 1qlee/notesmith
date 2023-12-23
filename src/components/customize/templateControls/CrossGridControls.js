@@ -2,7 +2,6 @@ import React from "react"
 
 import { ControlFlexWrapper, ControlFlexChild } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import ColumnControls from "./components/ColumnControls"
 import OpacityControls from "./components/OpacityControls"
@@ -11,8 +10,6 @@ import ColumnSpacingControls from "./components/ColumnSpacingControls"
 import CrossControls from "./components/CrossControls"
 
 function CrossGridControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -24,12 +21,6 @@ function CrossGridControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <ControlFlexWrapper>
         <ControlFlexChild

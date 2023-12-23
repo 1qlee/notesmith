@@ -5,11 +5,10 @@ import Holes from "./Holes"
 
 function CoverPage({
   productData,
-  pageHeight,
-  pageWidth,
   selectedPage,
-  x,
 }) {
+  const pageHeight = productData.heightPixel
+  const pageWidth = productData.widthPixel
 
   if (selectedPage === 1) {
     return (

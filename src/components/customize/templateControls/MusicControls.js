@@ -2,7 +2,6 @@ import React from "react"
 
 import { ControlWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import OpacityControls from "./components/OpacityControls"
 import SpacingControls from "./components/SpacingControls"
 import StaffSpacingControls from "./components/StaffSpacingControls"
@@ -10,8 +9,6 @@ import StavesControls from "./components/StavesControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
 
 function MusicControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -23,12 +20,6 @@ function MusicControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <ControlWrapper>
         <StavesControls

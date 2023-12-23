@@ -29,7 +29,7 @@ const initialState = {
 const EditorContext = createContext(null);
 const EditorDispatchContext = createContext(null);
 
-export function EditorProvider({ bookDimensions, children, setSelectedPageSvg, setPageData, pageData }) {
+export function EditorProvider({ bookDimensions, children, setSelectedPageSvg }) {
   const [canvasState, dispatch] = useReducer(setCanvasState, { ...initialState, bookWidth: bookDimensions.width, bookHeight: bookDimensions.height })
 
   useEffect(() => {

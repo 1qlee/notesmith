@@ -3,7 +3,6 @@ import React from "react"
 import { ControlFlexWrapper, ControlFlexChild } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
 import ColumnControls from "./components/ColumnControls"
-import MarginControls from "./components/MarginControls"
 import OpacityControls from "./components/OpacityControls"
 import RowControls from "./components/RowControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
@@ -11,8 +10,6 @@ import SpacingControls from "./components/SpacingControls"
 import RangeControls from "./components/RangeControls"
 
 function SeyesControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -24,12 +21,6 @@ function SeyesControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <ControlFlexWrapper>
         <ControlFlexChild

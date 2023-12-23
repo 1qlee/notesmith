@@ -1,7 +1,6 @@
 import React from "react"
 
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import AngleControls from "./components/AngleControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -9,8 +8,6 @@ import StrokeWidthControls from "./components/StrokeWidthControls"
 import BorderControls from "./components/BorderControls"
 
 function IsometricControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   pageData,
   setPageData,
   svgData,
@@ -21,12 +18,6 @@ function IsometricControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <BorderControls 
         pageData={pageData}

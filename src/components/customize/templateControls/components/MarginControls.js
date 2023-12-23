@@ -97,7 +97,6 @@ function MarginControls({
   maximumMarginWidth,
   pageData,
 }) {
-  console.log(pageData)
   const inputs = [
     {
       margin: "marginTop",

@@ -76,11 +76,11 @@ function Controls({
   productData,
   productImages,
   max,
+  selectedPageSvg,
   setBookData,
   setPageData,
   setShowModal,
   setActiveTab,
-  svgData,
   toast,
   user,
 }) {
@@ -153,9 +153,9 @@ function Controls({
           handleShowModal={handleShowModal}
           max={max}
           pageData={pageData}
+          selectedPageSvg={selectedPageSvg}
           setPageData={setPageData}
           setShowModal={setShowModal}
-          svgData={svgData}
         />
       )}
       {activeTab === 2 && (

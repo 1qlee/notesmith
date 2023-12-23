@@ -26,8 +26,10 @@ function Canvas({
   setMax,
   setPageData,
   setSelectedPageSvg,
-  setSvgData,
-  svgData,
+  leftPageData,
+  rightPageData,
+  setLeftPageData,
+  setRightPageData,
 }) {
   return (
     <>
@@ -47,8 +49,10 @@ function Canvas({
             setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
-            setSvgData={setSvgData}
-            svgData={svgData}
+            leftPageData={leftPageData}
+            rightPageData={rightPageData}
+            setLeftPageData={setLeftPageData}
+            setRightPageData={setRightPageData}
           />
         </StyledCanvas>
       </Workspace>

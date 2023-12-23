@@ -7,7 +7,6 @@ import { Tooltip } from "react-tooltip"
 import { ControlWrapper, ControlFlexWrapper, ControlFlexChild } from "../templateControls/components/TemplateComponents"
 import { SelectWrapper, SelectIcon, StyledSelect, StyledLabel, StyledInput } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
-import MarginControls from "../templateControls/components/MarginControls"
 import InputControls from "../templateControls/components/InputControls"
 import Tag from "../../ui/Tag"
 import Icon from "../../ui/Icon"
@@ -26,12 +25,7 @@ const StyledTag = ({ children }) => {
   )
 }
 
-const DesignControls = ({
-  maximumMarginHeight,
-  maximumMarginWidth,
-  pageData,
-  setPageData,
-}) => {
+const DesignControls = () => {
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
   const { selectedElements, selectionBbox, selectionAttributes } = canvasState
@@ -220,12 +214,6 @@ const DesignControls = ({
 
   return (
     <>
-      <MarginControls 
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
-      />
       {selectedElements.length > 0 && (
         <>
           <ControlWrapper>

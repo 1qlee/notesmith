@@ -1,7 +1,6 @@
 import React from "react"
 
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import CalligraphySpacingControls from "./components/CalligraphySpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -11,8 +10,6 @@ import StaffSpacingControls from "./components/StaffSpacingControls"
 import { ControlWrapper } from "./components/TemplateComponents"
 
 function CalligraphyControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -24,12 +21,6 @@ function CalligraphyControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <ControlWrapper>
         <RowControls

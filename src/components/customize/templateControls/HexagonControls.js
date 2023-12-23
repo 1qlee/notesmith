@@ -1,8 +1,7 @@
 import React from "react"
 
-import { ControlWrapper, ControlFlexChild, ControlFlexWrapper } from "./components/TemplateComponents"
+import { ControlFlexChild, ControlFlexWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import OpacityControls from "./components/OpacityControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
@@ -10,8 +9,6 @@ import RangeControls from "./components/RangeControls"
 import ColumnControls from "./components/ColumnControls"
 
 function HexagonControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -23,12 +20,6 @@ function HexagonControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls 
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
-        pageData={pageData}
-        setPageData={setPageData}
       />
       <ControlFlexWrapper>
         <ControlFlexChild

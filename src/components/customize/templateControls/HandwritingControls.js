@@ -2,7 +2,6 @@ import React from "react"
 
 import { ControlWrapper } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -11,8 +10,6 @@ import StaffSpacingControls from "./components/StaffSpacingControls"
 import DashedLineControls from "./components/DashedLineControls"
 
 function HandwritingControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -24,12 +21,6 @@ function HandwritingControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <DashedLineControls
         pageData={pageData}

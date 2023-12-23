@@ -2,7 +2,6 @@ import React from "react"
 
 import { ControlFlexWrapper, ControlFlexChild } from "./components/TemplateComponents"
 import AlignmentControls from "./components/AlignmentControls"
-import MarginControls from "./components/MarginControls"
 import RowControls from "./components/RowControls"
 import ColumnControls from "./components/ColumnControls"
 import OpacityControls from "./components/OpacityControls"
@@ -11,8 +10,6 @@ import RowSpacingControls from "./components/RowSpacingControls"
 import ColumnSpacingControls from "./components/ColumnSpacingControls"
 
 function GraphControls({
-  maximumMarginHeight,
-  maximumMarginWidth,
   max,
   pageData,
   setPageData,
@@ -24,12 +21,6 @@ function GraphControls({
         pageData={pageData}
         setPageData={setPageData}
         svgData={svgData}
-      />
-      <MarginControls
-        pageData={pageData}
-        setPageData={setPageData}
-        maximumMarginHeight={maximumMarginHeight}
-        maximumMarginWidth={maximumMarginWidth}
       />
       <ControlFlexWrapper>
         <ControlFlexChild

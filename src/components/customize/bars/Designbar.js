@@ -3,6 +3,7 @@ import { colors } from "../../../styles/variables"
 import { convertToMM, convertFloatFixed } from "../../../utils/helper-functions"
 
 import { ControlsContent, ControlsFooter } from "../Controls"
+import MarginControls from "../templateControls/components/MarginControls"
 import TemplateControls from "../controls/TemplateControls"
 import DesignControls from "../controls/DesignControls"
 import Button from "../../ui/Button"
@@ -11,8 +12,8 @@ function Designbar({
   handleShowModal,
   pageData,
   max,
+  selectedPageSvg,
   setPageData,
-  svgData,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.strokeWidth, 3)
   const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
@@ -20,14 +21,18 @@ function Designbar({
   return (
     <>
       <ControlsContent>
+        <MarginControls
+          pageData={pageData}
+          setPageData={setPageData}
+          maximumMarginHeight={maximumMarginHeight}
+          maximumMarginWidth={maximumMarginWidth}
+        />
         {pageData.template && pageData.template !== "blank" && pageData.template !== "none" ? (
           <TemplateControls 
-            maximumMarginHeight={maximumMarginHeight}
-            maximumMarginWidth={maximumMarginWidth}
             max={max}
             pageData={pageData}
+            selectedPageSvg={selectedPageSvg}
             setPageData={setPageData}
-            svgData={svgData}
           />
         ) : (
           <DesignControls

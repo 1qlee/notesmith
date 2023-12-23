@@ -146,19 +146,21 @@ const UserDashboard = () => {
               color={colors.green.nineHundred}
               margin="32px 0 16px"
             >
-              <p>Join the subreddit! Come over to <TextLink href="https://www.reddit.com/r/notesmith" target="_blank" rel="noopener noreferrer">/r/notesmith</TextLink> and share any thoughts, suggestion, and feedback.</p>
+              <Content
+                linktextdecoration="underline"
+              >
+                <p><b>Reminder:</b> Notesmith is in active development. New features are continuously being added. Now is the best time to make any suggestions or provide your feedback! If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
+              </Content>
             </Notification>
             <Content
               h1fontsize="2rem"
               margin="16px 0"
-              linktextdecoration="underline"
               maxwidth={widths.content.normal}
             >
               <p>
                 Click on the "Books" tab above to get started. When you create a book you will be able to give it a name, after which it will appear in your Books table. Double-click on any book in the table to open it in the editor.
               </p>
               <p>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
-              <p><b>Reminder:</b> Notesmith is in active development. New features are continuously being added. Now is the best time to make any suggestions or provide your feedback! If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a> or drop a post on the subreddit.</p>
             </Content>
           </Col>
           <Col md={6}>

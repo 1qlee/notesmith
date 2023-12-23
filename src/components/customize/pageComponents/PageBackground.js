@@ -5,10 +5,11 @@ import Holes from "./Holes"
 
 function PageBackground({
   isSelected,
-  pageHeight,
-  pageWidth,
+  productData,
   pageSide,
 }) {
+  const pageWidth = productData.widthPixel
+  const pageHeight = productData.heightPixel
 
   return (
     <svg

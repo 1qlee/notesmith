@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react"
 import { useEditorDispatch } from "../context/editorContext"
+import { convertFloatFixed, convertToPx } from "../../../utils/helper-functions"
+import { pageMargins } from "../../../styles/variables"
 
 import Ruled from "../templates/Ruled"
 import Dot from "../templates/Dot"
@@ -14,15 +16,42 @@ import Calligraphy from "../templates/Calligraphy"
 
 const Template = ({
   currentPageSide,
-  maxSvgSize,
   pageData,
-  pagePosition,
+  productData,
   setMax,
   setPageData,
   setSelectedPageSvg,
-  setSvgData,
   setSvgLoaded,
 }) => {
+  const dependencies = [
+    pageData.marginTop, 
+    pageData.marginRight,
+    pageData.marginBottom,
+    pageData.marginLeft,
+    pageData.rows, 
+    pageData.columns,
+    pageData.rowSpacing,
+    pageData.columnSpacing,
+    pageData.slantSpacing,
+    pageData.staffSpacing,
+  ]
+  const holesMargin = pageMargins.holes
+  const templateMargins = {
+    top: convertToPx(pageData.marginTop),
+    right: convertToPx(pageData.marginRight),
+    bottom: convertToPx(pageData.marginBottom),
+    left: convertToPx(pageData.marginLeft),
+  }
+  let templateData = {
+    position: {
+      x: currentPageSide === "left" ? pageMargins.minimum + templateMargins.left : convertFloatFixed(productData.widthPixel + holesMargin + templateMargins.left, 3),
+      y: convertFloatFixed(pageMargins.minimum + templateMargins.top, 3),
+    },
+    size: {
+      height: convertFloatFixed(pageData.maxContentHeight - (templateMargins.top + templateMargins.bottom), 3),
+      width: convertFloatFixed(pageData.maxContentWidth - (templateMargins.left + templateMargins.right), 3),
+    }
+  }
   const dispatch = useEditorDispatch()
   const ref = useRef(null)
 
@@ -32,33 +61,31 @@ const Template = ({
     if (ref && ref.current) {
       const template = ref.current
       setSelectedPageSvg(template)
+      setPageData({
+        ...pageData,
+        svgHeight: templateData.size.height,
+        svgWidth: templateData.size.width,
+        x: templateData.position.x,
+        y: templateData.position.y,
+      })
 
       dispatch({
         type: "initialize",
         canvas: template,
       })
-      
-      setTimeout(() => {
-        const { height, width } = template.getBBox()
-
-        setSvgData({
-          height: height,
-          width: width,
-        })
-      }, 1)
     }
-  }, [ref])
+  }, [...dependencies, ref])
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       ref={ref}
       id={currentPageSide === "left" ? "left-page" : "right-page"}
-      x={pagePosition.x}
-      y={pagePosition.y}
-      width={pageData.maxContentWidth}
-      height={pageData.maxContentHeight}
-      viewBox={`0 0 ${pageData.maxContentWidth} ${pageData.maxContentHeight}`}
+      x={templateData.position.x}
+      y={templateData.position.y}
+      width={templateData.size.width}
+      height={templateData.size.height}
+      viewBox={`0 0 ${templateData.size.width} ${templateData.size.height}`}
       fill="#fff"
     >
       {pageData.template === "blank" && (
@@ -66,7 +93,7 @@ const Template = ({
       )}
       {pageData.template === "ruled" && (
         <Ruled
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -74,7 +101,7 @@ const Template = ({
       )}
       {pageData.template === "dot" && (
         <Dot
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -82,7 +109,7 @@ const Template = ({
       )}
       {pageData.template === "graph" && (
         <Graph
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -90,7 +117,7 @@ const Template = ({
       )}
       {pageData.template === "hexagon" && (
         <Hexagon
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -98,7 +125,7 @@ const Template = ({
       )}
       {pageData.template === "isometric" && (
         <Isometric
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -106,7 +133,7 @@ const Template = ({
       )}
       {pageData.template === "seyes" && (
         <Seyes
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -114,7 +141,7 @@ const Template = ({
       )}
       {pageData.template === "music" && (
         <Music
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -122,7 +149,7 @@ const Template = ({
       )}
       {pageData.template === "handwriting" && (
         <Handwriting
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -130,7 +157,7 @@ const Template = ({
       )}
       {pageData.template === "cross" && (
         <CrossGrid
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
@@ -138,7 +165,7 @@ const Template = ({
       )}
       {pageData.template === "calligraphy" && (
         <Calligraphy
-          maxSvgSize={maxSvgSize}
+          maxSvgSize={templateData.size}
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}

@@ -42,20 +42,43 @@ const Editor = ({
     coverColor: "",
     title: "",
   })
+  // this is basically templateData - when user selects a template, this is the data that is used to create the page
   const [pageData, setPageData] = useState({
     maxContentHeight: productData.heightPixel - pageMargins.vertical,
     maxContentWidth: productData.widthPixel - pageMargins.horizontal,
-    svgHeight: productData.heightPixel,
-    svgWidth: productData.widthPixel,
     ...pageDataConfig
+  })
+  const [leftPageData, setLeftPageData] = useState({
+    margins: {
+      top: 12,
+      right: 12,
+      bottom: 12,
+      left: 12,
+    },
+    dimensions: {
+      height: productData.heightPixel - pageMargins.vertical,
+      width: productData.widthPixel - pageMargins.horizontal,
+      y: 12,
+      x: 12,
+    }
+  })
+  const [rightPageData, setRightPageData] = useState({
+    margins: {
+      top: 12,
+      right: 12,
+      bottom: 12,
+      left: 12,
+    },
+    dimensions: {
+      height: productData.heightPixel - pageMargins.vertical,
+      width: productData.widthPixel - pageMargins.horizontal,
+      y: 12,
+      x: 12,
+    }
   })
   const [canvasSize, setCanvasSize] = useState({
     width: 1456,
     height: 916,
-  })
-  const [svgData, setSvgData] = useState({
-    height: productData.heightPixel - pageMargins.vertical,
-    width: productData.widthPixel - pageMargins.horizontal,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -209,8 +232,6 @@ const Editor = ({
         height: productData.heightPixel,
       }}
       setSelectedPageSvg={setSelectedPageSvg}
-      setPageData={setPageData}
-      pageData={pageData}
     >
       <Seo
         details={{
@@ -245,6 +266,10 @@ const Editor = ({
               canvasPageTemplates={canvasPageTemplates}
               canvasPages={canvasPages}
               canvasSize={canvasSize}
+              leftPageData={leftPageData}
+              rightPageData={rightPageData}
+              setLeftPageData={setLeftPageData}
+              setRightPageData={setRightPageData}
               pageData={pageData}
               productData={productData}
               selectedPage={selectedPage}
@@ -252,8 +277,6 @@ const Editor = ({
               setMax={setMax}
               setPageData={setPageData}
               setSelectedPageSvg={setSelectedPageSvg}
-              setSvgData={setSvgData}
-              svgData={svgData}
             />
             <Controls
               activeTab={activeTab}
@@ -263,11 +286,11 @@ const Editor = ({
               pageData={pageData}
               productData={productData}
               productImages={productImages}
+              selectedPageSvg={selectedPageSvg}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}
               setShowModal={setShowModal}
-              svgData={svgData}
               toast={toast}
               user={user}
             />
