@@ -32,7 +32,6 @@ function PageSpread({
   setRightPageData,
 }) {
   // constants
-  const { svgWidth } = pageData
   const isLeftPage = selectedPage % 2 === 0
   const spreadPosition = {
     x: (canvasSize.width - productData.widthPixel * 2) / 2,
@@ -104,6 +103,8 @@ function PageSpread({
           bbox.height = strokeWidth
         }
       }
+
+      console.log(rightPageData)
 
       // bbox for the selection's box
       // with conditions where selection was just a click (a single point)
@@ -317,7 +318,7 @@ function PageSpread({
         rightPageDimensions = {
           height: convertFloatFixed(rightPageData.dimensions.height - rightPageMargins.top - rightPageMargins.bottom, 3),
           width: convertFloatFixed(rightPageData.dimensions.width - rightPageMargins.left - rightPageMargins.right, 3),
-          x: svgWidth + holesMargin + rightPageMargins.left,
+          x: productData.widthPixel + holesMargin + rightPageMargins.left,
           y: minimumMargin + rightPageMargins.top,
         }
         setRightPageData({
@@ -411,7 +412,7 @@ function PageSpread({
       const rightPageDimensions = {
         height: convertFloatFixed(rightPageData.dimensions.height - rightPageMargins.top - rightPageMargins.bottom, 3),
         width: convertFloatFixed(rightPageData.dimensions.width - rightPageMargins.left - rightPageMargins.right, 3),
-        x: svgWidth + holesMargin + rightPageMargins.left,
+        x: productData.widthPixel + holesMargin + rightPageMargins.left,
         y: minimumMargin + rightPageMargins.top,
       }
 
@@ -432,6 +433,7 @@ function PageSpread({
 
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
+      console.log("🚀 ~ file: PageSpread.js:435 ~ useEffect ~ referenceElement:", referenceElement)
       // pagePosition = {
       //   x: isLeftPage ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
       //   y: isLeftPage ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
@@ -442,8 +444,6 @@ function PageSpread({
       type: "initialize",
       canvas: referenceElement,
     })
-
-    console.log(canvasPageRef.current)
 
     if (canvasState.mode === "select" && referenceElement) {
       const {
