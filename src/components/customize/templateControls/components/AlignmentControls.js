@@ -44,8 +44,8 @@ function AlignmentControls({
   const { maxContentHeight, maxContentWidth, strokeWidth } = pageData
   let pageBbox = selectedPageSvg.getBBox()
 
-  const contentHeight = pageBbox.height
-  const contentWidth = pageBbox.width
+  const contentHeight = convertFloatFixed(pageBbox.height, 3)
+  const contentWidth = convertFloatFixed(pageBbox.width, 3)
   let verticalTrim, horizontalTrim = 0
 
   switch(pageData.template) {
@@ -73,6 +73,9 @@ function AlignmentControls({
     case "calligraphy":
       verticalTrim = 0.333
       horizontalTrim = 0
+      break
+    case "isometric":
+      horizontalTrim = strokeWidth / 2
       break
     default:
       verticalTrim = 0

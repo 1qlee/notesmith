@@ -1,7 +1,6 @@
 import React from "react"
 
 import { ControlWrapper } from "./components/TemplateComponents"
-import AlignmentControls from "./components/AlignmentControls"
 import RowControls from "./components/RowControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -17,11 +16,6 @@ function HandwritingControls({
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <DashedLineControls
         pageData={pageData}
         setPageData={setPageData}

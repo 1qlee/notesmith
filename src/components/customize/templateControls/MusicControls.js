@@ -1,7 +1,6 @@
 import React from "react"
 
 import { ControlWrapper } from "./components/TemplateComponents"
-import AlignmentControls from "./components/AlignmentControls"
 import OpacityControls from "./components/OpacityControls"
 import SpacingControls from "./components/SpacingControls"
 import StaffSpacingControls from "./components/StaffSpacingControls"
@@ -16,11 +15,6 @@ function MusicControls({
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <ControlWrapper>
         <StavesControls
           max={max.staves}

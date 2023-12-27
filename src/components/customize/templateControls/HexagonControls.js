@@ -1,7 +1,6 @@
 import React from "react"
 
 import { ControlFlexChild, ControlFlexWrapper } from "./components/TemplateComponents"
-import AlignmentControls from "./components/AlignmentControls"
 import RowControls from "./components/RowControls"
 import OpacityControls from "./components/OpacityControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
@@ -12,15 +11,9 @@ function HexagonControls({
   max,
   pageData,
   setPageData,
-  svgData,
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <ControlFlexWrapper>
         <ControlFlexChild
           margin="0 8px 0 0"

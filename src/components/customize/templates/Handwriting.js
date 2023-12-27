@@ -73,7 +73,7 @@ function Handwriting({
         }
 
         // break the loop if we are past the height of the page
-        if (posY1 + halfLineStrokeWidth > height) {
+        if (posY1 > height) {
           return setPageData({
             ...pageData,
             rows: row,

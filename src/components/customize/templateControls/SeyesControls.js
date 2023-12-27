@@ -1,7 +1,6 @@
 import React from "react"
 
 import { ControlFlexWrapper, ControlFlexChild } from "./components/TemplateComponents"
-import AlignmentControls from "./components/AlignmentControls"
 import ColumnControls from "./components/ColumnControls"
 import OpacityControls from "./components/OpacityControls"
 import RowControls from "./components/RowControls"
@@ -17,11 +16,6 @@ function SeyesControls({
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <ControlFlexWrapper>
         <ControlFlexChild
           margin="0 8px 0 0"

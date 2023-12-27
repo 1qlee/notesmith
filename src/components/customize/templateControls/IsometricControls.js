@@ -1,6 +1,5 @@
 import React from "react"
 
-import AlignmentControls from "./components/AlignmentControls"
 import AngleControls from "./components/AngleControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -14,11 +13,6 @@ function IsometricControls({
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <BorderControls 
         pageData={pageData}
         setPageData={setPageData}

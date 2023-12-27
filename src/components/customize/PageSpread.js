@@ -32,7 +32,7 @@ function PageSpread({
   setRightPageData,
 }) {
   // constants
-  const { svgWidth, svgHeight, marginTop, marginRight, marginBottom, marginLeft } = pageData
+  const { svgWidth } = pageData
   const isLeftPage = selectedPage % 2 === 0
   const spreadPosition = {
     x: (canvasSize.width - productData.widthPixel * 2) / 2,
@@ -46,12 +46,6 @@ function PageSpread({
   const dispatch = useEditorDispatch()
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
-  let templateMargins = {
-    top: convertToPx(marginTop),
-    right: convertToPx(marginRight),
-    bottom: convertToPx(marginBottom),
-    left: convertToPx(marginLeft),
-  }
   let coordsOffset = {
     x: isLeftPage ? leftPageData.dimensions.x : rightPageData.dimensions.x,
     y: isLeftPage ? leftPageData.dimensions.y : rightPageData.dimensions.y,
@@ -448,6 +442,8 @@ function PageSpread({
       type: "initialize",
       canvas: referenceElement,
     })
+
+    console.log(canvasPageRef.current)
 
     if (canvasState.mode === "select" && referenceElement) {
       const {

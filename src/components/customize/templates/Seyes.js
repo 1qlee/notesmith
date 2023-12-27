@@ -67,7 +67,6 @@ function Seyes({
 
       // loop will exit if the last line has passed the height of the page
       if (posY + currentLineStrokeWidth / 2 > height) {
-        console.log("🚀 ~ file: Seyes.js:71 ~ createHorizontalLines ~ row:", row)
         
         // change the number of rows displayed
         return setPageData({
@@ -125,7 +124,7 @@ function Seyes({
 
   return (
     <>
-      <g>
+      <>
         {horizontalLines.map((line, index) => (
           <line
             key={index}
@@ -138,8 +137,8 @@ function Seyes({
             y2={line.y2}
           />
         ))}
-      </g>
-      <g>
+      </>
+      <>
         {verticalLines.map((line, index) => (
           <line
             key={index}
@@ -152,7 +151,7 @@ function Seyes({
             y2={line.y2}
           />
         ))}
-      </g>
+      </>
     </>
   )
 }

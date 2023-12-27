@@ -212,7 +212,7 @@ const pageDataConfig = {
   staffSpacing: 5,
   staves: 9,
   template: "",
-  thickness: 0.088,
+  strokeWidth: 0.088,
   xHeight: 5,
   x: 12,
   y: 12,

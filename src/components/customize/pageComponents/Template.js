@@ -24,6 +24,7 @@ const Template = ({
   setSvgLoaded,
 }) => {
   const dependencies = [
+    pageData.template,
     pageData.marginTop, 
     pageData.marginRight,
     pageData.marginBottom,
@@ -34,6 +35,9 @@ const Template = ({
     pageData.columnSpacing,
     pageData.slantSpacing,
     pageData.staffSpacing,
+    pageData.spacing,
+    pageData.strokeWidth,
+    pageData.angle,
   ]
   const holesMargin = pageMargins.holes
   const templateMargins = {
@@ -74,7 +78,7 @@ const Template = ({
         canvas: template,
       })
     }
-  }, [...dependencies, ref])
+  }, [...dependencies, ref, ref.current])
 
   return (
     <svg

@@ -10,6 +10,7 @@ function Isometric({
   const [linesSides, setLinesSides] = useState([])
   const { strokeWidth, opacity, spacing, borderData } = pageData
   const { width, height } = maxSvgSize
+  console.log("🚀 ~ file: Isometric.js:13 ~ maxSvgSize:", maxSvgSize)
   const contentHeight = height
   const contentWidth = width
   const lineStrokeWidth = convertToPx(strokeWidth)

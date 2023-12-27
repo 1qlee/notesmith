@@ -192,8 +192,8 @@ function RuledPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "ruled",
     spacing: 5,
@@ -201,7 +201,7 @@ function RuledPageIcon({
     strokeWidth: 0.088,
     rows: 42,
     columns: 26,
-    marginTop: 0.379,
+    marginTop: 0,
     marginBottom: 0,
     marginLeft: 0,
     marginRight: 0,
@@ -260,14 +260,14 @@ function DotPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     columnSpacing: 5,
     columns: 25,
     marginBottom: 0,
-    marginLeft: 0.681,
+    marginLeft: 0,
     marginRight: 0,
-    marginTop: 0.672,
+    marginTop: 0,
     opacity: 1,
     radius: 0.1,
     rowSpacing: 5,
@@ -357,14 +357,14 @@ function GraphPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     columnSpacing: 5,
     columns: 24,
     marginBottom: 0,
-    marginLeft: 2.036,
+    marginLeft: 0,
     marginRight: 0,
-    marginTop: 0.379,
+    marginTop: 0,
     opacity: 1,
     rowSpacing: 5,
     rows: 41,
@@ -426,8 +426,8 @@ function BlankPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "blank",
     spacing: 5,
@@ -480,8 +480,8 @@ function HexagonPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "hexagon",
     opacity: 1,
@@ -491,6 +491,8 @@ function HexagonPageIcon({
     columns: 28,
     marginTop: 0,
     marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
   }
 
   return (
@@ -543,8 +545,8 @@ function IsometricPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     borderData: {
       sync: true,
       toggle: false,
@@ -557,10 +559,10 @@ function IsometricPageIcon({
     angle: 60,
     strokeWidth: 0.088,
     spacing: 5,
-    contentWidth: convertToMM(data.pageWidth),
-    contentHeight: convertToMM(data.pageHeight),
     marginTop: 0,
     marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
   }
 
   return (
@@ -678,8 +680,8 @@ function MusicPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "music",
     opacity: 1,
@@ -687,6 +689,10 @@ function MusicPageIcon({
     spacing: 2,
     staffSpacing: 7,
     staves: 14,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
   }
 
   return (
@@ -755,8 +761,8 @@ function HandwritingPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "handwriting",
     opacity: 1,
@@ -767,6 +773,7 @@ function HandwritingPageIcon({
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
+    marginBottom: 0,
   }
 
   return (
@@ -858,8 +865,8 @@ function CalligraphyPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "calligraphy",
     opacity: 1,
@@ -871,6 +878,7 @@ function CalligraphyPageIcon({
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
+    marginBottom: 0,
   }
 
   return (
@@ -921,8 +929,8 @@ function CrossGridPageIcon({
 }) {
   const newData = {
     ...data,
-    alignmentHorizontal: "center",
-    alignmentVertical: "middle",
+    alignmentHorizontal: "",
+    alignmentVertical: "",
     show: isProductPage ? true : false,
     template: "cross",
     crossSize: 1,
@@ -931,10 +939,10 @@ function CrossGridPageIcon({
     columnSpacing: 5,
     rows: 35,
     columns: 21,
-    marginTop: 2.104,
-    marginBottom: 2.104,
-    marginLeft: 2.592,
-    marginRight: 2.592,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
   }
 
   return (

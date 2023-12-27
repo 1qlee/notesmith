@@ -1,6 +1,5 @@
 import React from "react"
 
-import AlignmentControls from "./components/AlignmentControls"
 import RowControls from "./components/RowControls"
 import CalligraphySpacingControls from "./components/CalligraphySpacingControls"
 import OpacityControls from "./components/OpacityControls"
@@ -17,11 +16,6 @@ function CalligraphyControls({
 }) {
   return (
     <>
-      <AlignmentControls
-        pageData={pageData}
-        setPageData={setPageData}
-        svgData={svgData}
-      />
       <ControlWrapper>
         <RowControls
           max={max.rows}
