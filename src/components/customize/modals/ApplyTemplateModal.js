@@ -124,6 +124,8 @@ function ApplyTemplateModal({
         id: newPageKey,
         svg: newPageSvg,
         uid: user.uid,
+        svgHeight: pageData.maxContentHeight || pageData.dimensions.height,
+        svgWidth: pageData.maxContentWidth || pageData.dimensions.width, 
         marginTop: pageData.marginTop,
         marginRight: pageData.marginRight,
         marginBottom: pageData.marginBottom,
@@ -136,6 +138,8 @@ function ApplyTemplateModal({
         [newPageKey]: {
           id: newPageKey,
           svg: newPageSvg,
+          svgHeight: pageData.maxContentHeight || pageData.dimensions.height,
+          svgWidth: pageData.maxContentWidth || pageData.dimensions.width, 
           marginTop: pageData.marginTop,
           marginRight: pageData.marginRight,
           marginBottom: pageData.marginBottom,
@@ -221,7 +225,13 @@ function ApplyTemplateModal({
     updatePagesDb(canvasPagesClone)
     setPageData({
       ...pageData,
-      template: ""
+      template: "",
+      svgHeight: pageData.maxContentHeight || pageData.dimensions.height,
+      svgWidth: pageData.maxContentWidth || pageData.dimensions.width,
+      marginTop: pageData.marginTop,
+      marginRight: pageData.marginRight,
+      marginBottom: pageData.marginBottom,
+      marginLeft: pageData.marginLeft,
     })
     toast.success("Updated pages.")
 

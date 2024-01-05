@@ -145,6 +145,15 @@ const convertFloatFixed = (number, places) => {
   return parseFloat(convertedNum.toFixed(places))
 }
 
+function isNotEmpty(value) {
+  if (value !== undefined && value !== null && value !== "") {
+    // Check if the value is a number (including zero)
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function findIndexOfElementInArray(array, propertyName, targetValue) {
   for (let i = 0; i < array.length; i++) {
     if (array[i][propertyName] === targetValue) {
@@ -213,6 +222,7 @@ export {
   daysUntilDate,
   findIndexOfElementInArray,
   formatDollars,
+  isNotEmpty,
   isBrowser,
   processStringNumbers,
   svgToObjects,

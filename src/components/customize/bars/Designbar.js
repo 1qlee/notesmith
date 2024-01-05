@@ -16,7 +16,7 @@ function Designbar({
   setPageData,
 }) {
   const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.strokeWidth, 3)
-  const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.svgWidth), 3)
+  const maximumMarginWidth = convertToMM(pageData.svgWidth)
  
   return (
     <>
@@ -35,12 +35,7 @@ function Designbar({
             setPageData={setPageData}
           />
         ) : (
-          <DesignControls
-            maximumMarginHeight={maximumMarginHeight}
-            maximumMarginWidth={maximumMarginWidth}
-            pageData={pageData}
-            setPageData={setPageData}
-          />
+          <DesignControls />
         )}
       </ControlsContent>
       <ControlsFooter>

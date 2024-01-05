@@ -7,7 +7,7 @@ import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
-import { isBrowser } from "../../utils/helper-functions"
+import { isBrowser, convertToMM } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
 
 import { Controls } from "./Controls"
@@ -33,6 +33,7 @@ const Editor = ({
   productData, 
   productImages,
 }) => {
+  const minimumMargin = convertToMM(pageMargins.minimum)
   const { loading, user, firebaseDb } = useFirebaseContext()
   const [showModal, setShowModal] = useState({
     show: false,
@@ -49,32 +50,22 @@ const Editor = ({
     ...pageDataConfig
   })
   const [leftPageData, setLeftPageData] = useState({
-    margins: {
-      top: 12,
-      right: 12,
-      bottom: 12,
-      left: 12,
-    },
     dimensions: {
       height: productData.heightPixel - pageMargins.vertical,
       width: productData.widthPixel - pageMargins.horizontal,
-      y: 12,
-      x: 12,
-    }
+      y: minimumMargin,
+      x: minimumMargin,
+    },
+    side: "left",
   })
   const [rightPageData, setRightPageData] = useState({
-    margins: {
-      top: 12,
-      right: 12,
-      bottom: 12,
-      left: 12,
-    },
     dimensions: {
       height: productData.heightPixel - pageMargins.vertical,
       width: productData.widthPixel - pageMargins.horizontal,
-      y: 12,
-      x: 12,
-    }
+      y: minimumMargin,
+      x: minimumMargin,
+    },
+    side: "right",
   })
   const [canvasSize, setCanvasSize] = useState({
     width: 1456,
@@ -91,6 +82,8 @@ const Editor = ({
     rows: 200,
     columns: 200,
   })
+  const activePageData = selectedPage % 2 === 0 ? leftPageData : rightPageData
+  const setActivePageData = selectedPage % 2 === 0 ? setLeftPageData : setRightPageData
 
   useEffect(() => {
     // queries db for the book by bookId
@@ -140,6 +133,8 @@ const Editor = ({
             marginRight: pageValue.marginRight,
             marginBottom: pageValue.marginBottom,
             marginLeft: pageValue.marginLeft,
+            svgHeight: pageValue.svgHeight,
+            svgWidth: pageValue.svgWidth,
           }
 
           // insert into pageTemplates with id:svg pair
@@ -279,6 +274,7 @@ const Editor = ({
               setSelectedPageSvg={setSelectedPageSvg}
             />
             <Controls
+              activePageData={activePageData}
               activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
@@ -287,6 +283,7 @@ const Editor = ({
               productData={productData}
               productImages={productImages}
               selectedPageSvg={selectedPageSvg}
+              setActivePageData={setActivePageData}
               setActiveTab={setActiveTab}
               setBookData={setBookData}
               setPageData={setPageData}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
-import { pageMargins, colors } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, detectMouseInSelection, getAttributes } from "./editor/editor-functions"
@@ -12,24 +12,21 @@ import CoverPage from "./pageComponents/CoverPage"
 import Selection from "./Selection"
 import CanvasPage from "./editor/CanvasPage"
 
-const minimumMargin = pageMargins.minimum
-const holesMargin = pageMargins.holes
-
 function PageSpread({
   canvasPageTemplates,
   canvasPages,
   canvasSize,
+  leftPageData,
   pageData,
   productData,
+  rightPageData,
   selectedPage,
   selectedPageSvg,
+  setLeftPageData,
   setMax,
   setPageData,
-  setSelectedPageSvg,
-  leftPageData,
-  rightPageData,
-  setLeftPageData,
   setRightPageData,
+  setSelectedPageSvg,
 }) {
   // constants
   const isLeftPage = selectedPage % 2 === 0
@@ -37,8 +34,6 @@ function PageSpread({
     x: (canvasSize.width - productData.widthPixel * 2) / 2,
     y: (canvasSize.height - productData.heightPixel) / 2,
   }
-  const isFirstPage = selectedPage === 1
-  const isLastPage = selectedPage === productData.numOfPages
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
   const canvasState = useEditorContext()
@@ -46,8 +41,8 @@ function PageSpread({
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
   let coordsOffset = {
-    x: isLeftPage ? leftPageData.dimensions.x : rightPageData.dimensions.x,
-    y: isLeftPage ? leftPageData.dimensions.y : rightPageData.dimensions.y,
+    x: isLeftPage ? pageData.x + convertToPx(pageData.marginLeft) : pageData.x + convertToPx(pageData.marginLeft),
+    y: isLeftPage ? pageData.y + convertToPx(pageData.marginTop) : pageData.y + convertToPx(pageData.marginTop),
   }
 
   // custom selector function
@@ -103,8 +98,6 @@ function PageSpread({
           bbox.height = strokeWidth
         }
       }
-
-      console.log(rightPageData)
 
       // bbox for the selection's box
       // with conditions where selection was just a click (a single point)
@@ -300,144 +293,15 @@ function PageSpread({
   }, 50)
 
   useEffect(() => {
-    if (isLeftPage) {
-      const leftPageId = canvasPages[selectedPage - 1].pageId
-      const rightPageId = isLastPage ? null : canvasPages[selectedPage].pageId
-      const leftPageTemplate = canvasPageTemplates[leftPageId]
-      const rightPageTemplate = canvasPageTemplates[rightPageId]
-      let rightPageMargins = {}
-      let rightPageDimensions = {}
-
-      if (rightPageId) {
-        rightPageMargins = {
-          top: convertToPx(rightPageTemplate.marginTop),
-          right: convertToPx(rightPageTemplate.marginRight),
-          bottom: convertToPx(rightPageTemplate.marginBottom),
-          left: convertToPx(rightPageTemplate.marginLeft),
-        }
-        rightPageDimensions = {
-          height: convertFloatFixed(rightPageData.dimensions.height - rightPageMargins.top - rightPageMargins.bottom, 3),
-          width: convertFloatFixed(rightPageData.dimensions.width - rightPageMargins.left - rightPageMargins.right, 3),
-          x: productData.widthPixel + holesMargin + rightPageMargins.left,
-          y: minimumMargin + rightPageMargins.top,
-        }
-        setRightPageData({
-          ...rightPageData,
-          active: false,
-          dimensions: rightPageDimensions,
-          margins: rightPageMargins,
-          pageId: rightPageId,
-          side: "right",
-          svg: rightPageTemplate.svg,
-        })
-      }
-      else {
-        setRightPageData({
-          ...rightPageData,
-          active: false,
-          side: "right",
-        })
-      }
-
-      const leftPageMargins = {
-        top: convertToPx(leftPageTemplate.marginTop),
-        right: convertToPx(leftPageTemplate.marginRight),
-        bottom: convertToPx(leftPageTemplate.marginBottom),
-        left: convertToPx(leftPageTemplate.marginLeft),
-      }
-      const leftPageDimensions = {
-        height: convertFloatFixed(leftPageData.dimensions.height - leftPageMargins.top - leftPageMargins.bottom, 3),
-        width: convertFloatFixed(leftPageData.dimensions.width - leftPageMargins.left - leftPageMargins.right, 3),
-        x: minimumMargin + leftPageMargins.left,
-        y: minimumMargin + leftPageMargins.top,
-      }
-
-      setLeftPageData({
-        ...leftPageData,
-        active: true,
-        dimensions: leftPageDimensions,
-        margins: leftPageMargins,
-        pageId: leftPageId,
-        side: "left",
-        svg: leftPageTemplate.svg,
-      })
-      
-    }
-    else {
-      const leftPageId = isFirstPage ? null : canvasPages[selectedPage - 2].pageId
-      const rightPageId = canvasPages[selectedPage - 1].pageId
-      const leftPageTemplate = canvasPageTemplates[leftPageId]
-      const rightPageTemplate = canvasPageTemplates[rightPageId]
-      let leftPageMargins = {}
-      let leftPageDimensions = {}
-
-      if (leftPageId) {
-        leftPageMargins = {
-          top: convertToPx(leftPageTemplate.marginTop),
-          right: convertToPx(leftPageTemplate.marginRight),
-          bottom: convertToPx(leftPageTemplate.marginBottom),
-          left: convertToPx(leftPageTemplate.marginLeft),
-        }
-        leftPageDimensions = {
-          height: convertFloatFixed(leftPageData.dimensions.height - leftPageMargins.top - leftPageMargins.bottom, 3),
-          width: convertFloatFixed(leftPageData.dimensions.width - leftPageMargins.left - leftPageMargins.right, 3),
-          x: minimumMargin + leftPageMargins.left,
-          y: minimumMargin + leftPageMargins.top,
-        }
-
-        setLeftPageData({
-          ...leftPageData,
-          active: false,
-          dimensions: leftPageDimensions,
-          margins: leftPageMargins,
-          pageId: leftPageId,
-          side: "left",
-          svg: leftPageTemplate.svg,
-        })
-      }
-      else {
-        setLeftPageData({
-          ...leftPageData,
-          active: false,
-          side: "left",
-        })
-      }
-
-      const rightPageMargins = {
-        top: convertToPx(rightPageTemplate.marginTop),
-        right: convertToPx(rightPageTemplate.marginRight),
-        bottom: convertToPx(rightPageTemplate.marginBottom),
-        left: convertToPx(rightPageTemplate.marginLeft),
-      }
-      const rightPageDimensions = {
-        height: convertFloatFixed(rightPageData.dimensions.height - rightPageMargins.top - rightPageMargins.bottom, 3),
-        width: convertFloatFixed(rightPageData.dimensions.width - rightPageMargins.left - rightPageMargins.right, 3),
-        x: productData.widthPixel + holesMargin + rightPageMargins.left,
-        y: minimumMargin + rightPageMargins.top,
-      }
-
-      setRightPageData({
-        ...rightPageData,
-        active: true,
-        dimensions: rightPageDimensions,
-        margins: rightPageMargins,
-        pageId: rightPageId,
-        side: "right",
-        svg: rightPageTemplate.svg,
-      })
-    }
-
     let referenceElement = null
     // this is how we know we have the canvas page loaded
     const isCanvasPage = svgLoaded === selectedPage ? true : false
+    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ selectedPage:", selectedPage)
+    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ svgLoaded:", svgLoaded)
+    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ isCanvasPage:", isCanvasPage)
 
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
-      console.log("🚀 ~ file: PageSpread.js:435 ~ useEffect ~ referenceElement:", referenceElement)
-      // pagePosition = {
-      //   x: isLeftPage ? minimumMargin + leftPageMargins.left : svgWidth + holesMargin + rightPageMargins.left,
-      //   y: isLeftPage ? minimumMargin + leftPageMargins.top : minimumMargin + rightPageMargins.top,
-      // }
     }
 
     dispatch({
@@ -544,30 +408,36 @@ function PageSpread({
         selectedPage={selectedPage}
       />
       <CanvasPage
+        canvasPages={canvasPages}
+        canvasPageTemplates={canvasPageTemplates}
         canvasPageRef={canvasPageRef}
-        pageData={leftPageData}
+        currentPageData={leftPageData}
         productData={productData}
+        pageSide="left"
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
         setMax={setMax}
-        setPageData={setLeftPageData}
+        setCurrentPageData={setLeftPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
-        templateData={pageData}
-        setTemplateData={setPageData}
+        setPageData={setPageData}
+        pageData={pageData}
       />
       <CanvasPage
+        canvasPages={canvasPages}
+        canvasPageTemplates={canvasPageTemplates}
         canvasPageRef={canvasPageRef}
-        pageData={rightPageData}
-        setPageData={setRightPageData}
+        currentPageData={rightPageData}
+        pageSide="right"
         productData={productData}
         selectedPage={selectedPage}
         selectedPageSvg={selectedPageSvg}
         setMax={setMax}
+        setCurrentPageData={setRightPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
-        templateData={pageData}
-        setTemplateData={setPageData}
+        setPageData={setPageData}
+        pageData={pageData}
       />
       {canvasState.selectedElements.length > 0 && canvasState.selectionPath && (
         <Selection

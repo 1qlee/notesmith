@@ -69,18 +69,20 @@ const ControlsFooter = styled.div`
 `
 
 function Controls({
+  activePageData,
   activeTab,
   bookData,
   canvasPages,
+  max,
   pageData,
   productData,
   productImages,
-  max,
   selectedPageSvg,
+  setActivePageData,
+  setActiveTab,
   setBookData,
   setPageData,
   setShowModal,
-  setActiveTab,
   toast,
   user,
 }) {
@@ -105,13 +107,9 @@ function Controls({
       setActiveTab(1)
     }
     // else if user is currently drag selecting or done drag selecting elements, show design bar
-    else if (canvasState.selectionBbox && canvasState.selectionPath) {
+    if (canvasState.selectionBbox && canvasState.selectionPath) {
       // show design bar
       setActiveTab(1)
-    }
-    else {
-      // show templates bar
-      setActiveTab(0)
     }
   }, [pageData.template, canvasState.tempSelectedElements, canvasState.selectedElements])
 
@@ -150,10 +148,12 @@ function Controls({
       )}
       {activeTab === 1 && (
         <Designbar
+          activePageData={activePageData}
           handleShowModal={handleShowModal}
           max={max}
           pageData={pageData}
           selectedPageSvg={selectedPageSvg}
+          setActivePageData={setActivePageData}
           setPageData={setPageData}
           setShowModal={setShowModal}
         />
