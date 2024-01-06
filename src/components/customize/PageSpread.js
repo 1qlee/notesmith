@@ -5,6 +5,7 @@ import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, detectMouseInSelection, getAttributes } from "./editor/editor-functions"
 import * as d3 from "d3"
+import { SVG } from '@svgdotjs/svg.js'
 import drag from "./editor/drag"
 import dragSelector from "./editor/drag-selector"
 
@@ -143,15 +144,14 @@ function PageSpread({
       dragAreaInSvgCoordinate,
       dragAreaInInitialSvgCoordinate,
     ).filter(element => {
-      const isANodeHovered = !d3.select("#hover-clone").empty()
-      const hoveredNode = isANodeHovered ? d3.select("#hover-clone") : null
+      const hoveredNode = SVG("#hover-clone")
 
       // if it isn't a drag select (single click event) and there is a hovered node
       // check if the hovered node is the same as the element
-      if (singleClick && isANodeHovered) {
+      if (singleClick && hoveredNode) {
         // all hovered nodes should have a data-for attribute with the id of the element it is hovering
         if (hoveredNode.attr("data-for") === element.getAttribute("id")) {
-          d3.select("#hover-clone").remove()
+          hoveredNode.remove()
           return true
         }
         else {
@@ -202,11 +202,17 @@ function PageSpread({
         x: e.nativeEvent.offsetX - coordsOffset.x,
         y: e.nativeEvent.offsetY - coordsOffset.y,
       }
-      const selectionPath = d3.select("#selection-path")
+      const selectionPath = SVG("#selection-path")
       
       // if there is a selection path, check if the mouse is within the path so that we can drag the entire group
-      if (!selectionPath.empty()) {
-        const pathBox = selectionPath.node().getBoundingClientRect()
+      if (selectionPath) {
+        const boundingBox = selectionPath.rbox()
+        const pathBox = {
+          left: boundingBox.x,
+          right: boundingBox.x2,
+          top: boundingBox.y,
+          bottom: boundingBox.y2,
+        }
         const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
 
         if (isMouseInSelection) {
@@ -224,7 +230,7 @@ function PageSpread({
       }
 
       let subject = null
-      let nodes = d3.select(canvasPageRef.current).selectChildren()
+      let nodes = SVG(canvasPageRef.current).children()
 
       if (nodes) {
         // find the closest node to the current position of the cursor
@@ -233,31 +239,36 @@ function PageSpread({
 
       // create a hover-clone element which sits on top of the hovered element
       // creating an illusion of hovered effect (blue border effect)
-      if (canvasPageRef.current && canvasPageRef.current.contains(subject)) {
-        const node = d3.select(subject)
+      if (subject && canvasPageRef.current && SVG(canvasPageRef.current).has(subject)) {
+        const node = subject
 
         // if the node is not our cloned hover node, create one
         // we only create these for single node selections
         // look for nodes that are not selected or is a selection group
-        if (node.attr("data-selected") === null) {
-          d3.selectAll("[data-hovered]").attr("data-hovered", null)
+        if (!node.attr("[data-selected]")) {
+          SVG(canvasPageRef.current).find("[data-hovered]").attr("data-hovered", null)
 
           // exit if we are hovering the same node repeatedly
-          if (hoverClone && hoverClone.isSameNode(subject)) {
+          if (hoverClone && hoverClone.isSameNode(subject.node)) {
             return
           }
 
           // remove existing hover clone node
-          d3.select("#hover-clone").remove()
+          if (SVG("#hover-clone")) {
+            SVG("#hover-clone").remove()
+            setHoverClone(null)
+          }
 
           // slightly thicker stroke width so it shows over the original
-          const nodeStrokeWidth = Number(node.style("stroke-width").slice(0, -2)) + 1
+          const nodeStrokeWidth = Number(node.attr("stroke-width")) + 1
 
           // if the node is a group, add an invisible rectangle to the cloned node
-          if (subject instanceof SVGGElement) {
-            const nodeBBox = subject.getBBox()
-            d3.select(canvasPageRef.current).append("rect")
-              .raise()
+          if (subject.node instanceof SVGGElement) {
+            console.log("🚀 ~ file: PageSpread.js:267 ~ handleMouseMove ~ subject:", node.attr("id"))
+            const nodeBBox = subject.bbox()
+            SVG("<rect></rect>")
+              .addTo(SVG(canvasPageRef.current))
+              .front()
               .attr("id", "hover-clone")
               .attr("stroke-width", nodeStrokeWidth)
               .attr("stroke", colors.blue.sixHundred)
@@ -265,22 +276,23 @@ function PageSpread({
               .attr("height", convertFloatFixed(nodeBBox.height, 3))
               .attr("fill", "transparent")
               .attr("data-for", node.attr("id"))
-              .style("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
-              .style("pointer-events", "none")
+              .css("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
+              .css("pointer-events", "none")
 
             setHoverClone(subject)
           }
           else {
             node.clone()
-              .raise()
+              .addTo(SVG(canvasPageRef.current))
+              .front()
               .attr("id", "hover-clone")
               .attr("stroke-width", nodeStrokeWidth)
               .attr("fill", "transparent")
               .attr("stroke", colors.blue.sixHundred)
               .attr("data-for", node.attr("id"))
-              .style("pointer-events", "none")
+              .css("pointer-events", "none")
 
-            setHoverClone(subject)
+            setHoverClone(subject.node)
           }
         }
       }
@@ -296,9 +308,6 @@ function PageSpread({
     let referenceElement = null
     // this is how we know we have the canvas page loaded
     const isCanvasPage = svgLoaded === selectedPage ? true : false
-    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ selectedPage:", selectedPage)
-    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ svgLoaded:", svgLoaded)
-    console.log("🚀 ~ file: PageSpread.js:299 ~ useEffect ~ isCanvasPage:", isCanvasPage)
 
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current

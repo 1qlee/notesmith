@@ -54,20 +54,21 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
   // Iterate through nodes and calculate the distance to each node.
   for (const node of nodesArray) {
     // don't return the hover-clone node ever
-    if (node.getAttribute("id") === "hover-clone") {
+    if (node.attr("id") === "hover-clone") {
       continue
     }
     // calculate the targetable area for each node in the canvas
     // then detect if the mouse cursor is within that area
-    let strokeWidth = node.getAttribute("stroke-width")
+    let strokeWidth = node.attr("stroke-width")
     let convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-    let rect = node.getBoundingClientRect()
-    const nodeIsNotLine = !(node instanceof SVGLineElement)
+    let rect = node.rbox()
+    const nodeIsNotLine = !(node.node instanceof SVGLineElement)
 
     // If the node is a group, check the last child node for a stroke width
     // this will create a better targetable area
-    if (node instanceof SVGGElement) {
-      const { childNodes } = node
+    if (node.node instanceof SVGGElement) {
+      const childNodes = node.children()
+      console.log("🚀 ~ file: editor-functions.js:71 ~ findClosestNode ~ childNodes:", childNodes)
       const { length } = childNodes
       const lastNode = childNodes[length - 1]
 
@@ -76,7 +77,7 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
       }
     }
 
-    if (node instanceof SVGPathElement) {
+    if (node.node instanceof SVGPathElement) {
       // basically if the cursor is near the perimeter of the path
       if (findEnclosedPoint(node, adjustedCoords, distance, convertedStrokeWidth)) {
         return node
@@ -89,10 +90,10 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
     }
     else {
       let nodeBox = {
-        left: nodeIsNotLine ? rect.left - convertedStrokeWidth : rect.left,
-        right: nodeIsNotLine ? rect.right + convertedStrokeWidth : rect.right,
-        top: rect.top - convertedStrokeWidth,
-        bottom: rect.bottom + convertedStrokeWidth,
+        left: nodeIsNotLine ? rect.x - convertedStrokeWidth : rect.x,
+        right: nodeIsNotLine ? rect.x2 + convertedStrokeWidth : rect.x2,
+        top: rect.y - convertedStrokeWidth,
+        bottom: rect.y2 + convertedStrokeWidth,
       }
 
       const isMouseInSelection = detectMouseInSelection(coords, nodeBox, distance)
