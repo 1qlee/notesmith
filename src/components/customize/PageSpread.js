@@ -4,7 +4,6 @@ import { colors } from "../../styles/variables"
 import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, detectMouseInSelection, getAttributes } from "./editor/editor-functions"
-import * as d3 from "d3"
 import { SVG } from '@svgdotjs/svg.js'
 import drag from "./editor/drag"
 import dragSelector from "./editor/drag-selector"
@@ -263,23 +262,15 @@ function PageSpread({
           const nodeStrokeWidth = Number(node.attr("stroke-width")) + 1
 
           // if the node is a group, add an invisible rectangle to the cloned node
-          if (subject.node instanceof SVGGElement) {
-            console.log("🚀 ~ file: PageSpread.js:267 ~ handleMouseMove ~ subject:", node.attr("id"))
-            const nodeBBox = subject.bbox()
-            SVG("<rect></rect>")
+          if (node.node instanceof SVGGElement) {
+            const nodeBBox = node.bbox()
+            console.log("🚀 ~ file: PageSpread.js:267 ~ handleMouseMove ~ nodeBBox:", nodeBBox)
+
+            SVG(`<rect id="hover-clone" stroke="${colors.blue.sixHundred}" fill="transparent" width="${convertFloatFixed(nodeBBox.width, 3)}" height="${convertFloatFixed(nodeBBox.height, 3)}" style="pointer-events:none;transform:translate(${nodeBBox.x}px, ${nodeBBox.y}px)"></rect>`)
               .addTo(SVG(canvasPageRef.current))
               .front()
-              .attr("id", "hover-clone")
-              .attr("stroke-width", nodeStrokeWidth)
-              .attr("stroke", colors.blue.sixHundred)
-              .attr("width", convertFloatFixed(nodeBBox.width, 3))
-              .attr("height", convertFloatFixed(nodeBBox.height, 3))
-              .attr("fill", "transparent")
-              .attr("data-for", node.attr("id"))
-              .css("transform", `translate(${nodeBBox.x}px, ${nodeBBox.y}px)`)
-              .css("pointer-events", "none")
 
-            setHoverClone(subject)
+            setHoverClone(node.node)
           }
           else {
             node.clone()
@@ -292,14 +283,17 @@ function PageSpread({
               .attr("data-for", node.attr("id"))
               .css("pointer-events", "none")
 
-            setHoverClone(subject.node)
+            setHoverClone(node.node)
           }
         }
       }
       else {
         setHoverClone(null)
-        d3.selectAll("[data-hovered]").attr("data-hovered", null)
-        d3.select("#hover-clone").remove()
+        SVG(canvasPageRef.current).find("[data-hovered]").attr("data-hovered", null)
+        
+        if (SVG("#hover-clone")) {
+          SVG("#hover-clone").remove()
+        }
       }
     }
   }, 50)
@@ -390,10 +384,10 @@ function PageSpread({
         }
       })
 
-      if (canvasRef.current && referenceElement) {
-        d3.select(canvasRef.current)
-          .call(drag(dispatch))
-      }
+      // if (canvasRef.current && referenceElement) {
+      //   d3.select(canvasRef.current)
+      //     .call(drag(dispatch))
+      // }
 
       return () => {
         cancel()

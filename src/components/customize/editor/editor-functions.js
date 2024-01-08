@@ -1,5 +1,5 @@
 import { convertFloatFixed } from "../../../utils/helper-functions"
-import * as d3 from "d3"
+import { SVG } from '@svgdotjs/svg.js'
 import { convertToMM, consolidateMixedObjects, convertToPx, processStringNumbers } from "../../../utils/helper-functions"
 
 const findEnclosedPoint = (node, coords, distance, stroke) => {
@@ -68,7 +68,6 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
     // this will create a better targetable area
     if (node.node instanceof SVGGElement) {
       const childNodes = node.children()
-      console.log("🚀 ~ file: editor-functions.js:71 ~ findClosestNode ~ childNodes:", childNodes)
       const { length } = childNodes
       const lastNode = childNodes[length - 1]
 
@@ -106,8 +105,8 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
 }
 
 const parseAttributes = (ele) => {
-  const element = d3.select(ele)
-  const type = element.node().tagName
+  const element = SVG(ele)
+  const type = element.node.tagName
   const fill = element.attr("fill") || "none"
   const strokeOpacity = element.attr("stroke-opacity") || 1
   const fillOpacity = element.attr("fill-opacity") || 1
@@ -132,19 +131,21 @@ const parseAttributes = (ele) => {
 const getAttributes = (element) => {
   const attributes = {}
 
-  d3.select(element).each(function () {
-    const node = d3.select(this)
-    const attrNames = node.node().getAttributeNames()
+  console.log(SVG(element))
 
-    attrNames.forEach((name) => {
-      const value = node.attr(name)
-      if (!isNaN(value)) {
-        attributes[name] = convertFloatFixed(value, 3)
-      } else {
-        attributes[name] = value
-      }
-    })
-  })
+  // SVG(element).each(function () {
+  //   const node = SVG(this)
+  //   const attrNames = node.node().getAttributeNames()
+
+  //   attrNames.forEach((name) => {
+  //     const value = node.attr(name)
+  //     if (!isNaN(value)) {
+  //       attributes[name] = convertFloatFixed(value, 3)
+  //     } else {
+  //       attributes[name] = value
+  //     }
+  //   })
+  // })
 
   return attributes
 }
