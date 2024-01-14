@@ -5,7 +5,7 @@ import { throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, detectMouseInSelection, getAttributes } from "./editor/editor-functions"
 import { SVG } from '@svgdotjs/svg.js'
-import drag from "./editor/drag"
+import drag from "./editor/helpers/drag"
 import dragSelector from "./editor/drag-selector"
 
 import CoverPage from "./pageComponents/CoverPage"
@@ -38,8 +38,13 @@ function PageSpread({
   const canvasPageRef = useRef(null)
   const canvasState = useEditorContext()
   const dispatch = useEditorDispatch()
+  const [dragCanvas, setDragCanvas] = useState({
+    canvas: false,
+    ref: null,
+  })
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
+  const distance = 2
   let coordsOffset = {
     x: isLeftPage ? pageData.x + convertToPx(pageData.marginLeft) : pageData.x + convertToPx(pageData.marginLeft),
     y: isLeftPage ? pageData.y + convertToPx(pageData.marginTop) : pageData.y + convertToPx(pageData.marginTop),
@@ -92,24 +97,24 @@ function PageSpread({
         return false
       }
 
+      // bbox for the selection box
+      // with conditions where selection was just a click (a single point)
+      const selectionBox = {
+        x1: convertFloatFixed(dragCoords.x, 3),
+        y1: convertFloatFixed(dragCoords.y, 3),
+        x2: convertFloatFixed(singleClick ?
+          dragCoords.x
+          : dragCoords.x + areaInSvgCoordinate.width, 3),
+        y2: convertFloatFixed(singleClick ?
+          dragCoords.y
+          : dragCoords.y + areaInSvgCoordinate.height, 3),
+      }
+
       // If the element is a line, check it for a stroke width
       if (nodeIsLine) {
         if (bbox.height === 0) {
           bbox.height = strokeWidth
         }
-      }
-
-      // bbox for the selection's box
-      // with conditions where selection was just a click (a single point)
-      const selectionBox = {
-        x1: convertFloatFixed(dragCoords.x, 3),
-        y1: convertFloatFixed(dragCoords.y, 3),
-        x2: convertFloatFixed(singleClick ? 
-          dragCoords.x 
-          : dragCoords.x + areaInSvgCoordinate.width , 3),
-        y2: convertFloatFixed(singleClick ? 
-          dragCoords.y  
-          : dragCoords.y + areaInSvgCoordinate.height, 3),
       }
 
       // bbox for the element's box
@@ -133,7 +138,7 @@ function PageSpread({
 
     var getIntersections = function (svg, referenceElement, areaInSvgCoordinate, areaInInitialSvgCoordinate) {
       return collectElements([], svg, referenceElement || svg, function (element) {
-        return intersects(areaInSvgCoordinate, element, 2)
+        return intersects(areaInSvgCoordinate, element, distance)
       })
     };
 
@@ -145,17 +150,8 @@ function PageSpread({
     ).filter(element => {
       const hoveredNode = SVG("#hover-clone")
 
-      // if it isn't a drag select (single click event) and there is a hovered node
-      // check if the hovered node is the same as the element
-      if (singleClick && hoveredNode) {
-        // all hovered nodes should have a data-for attribute with the id of the element it is hovering
-        if (hoveredNode.attr("data-for") === element.getAttribute("id")) {
-          hoveredNode.remove()
-          return true
-        }
-        else {
-          return false
-        }
+      if (hoveredNode) {
+        hoveredNode.remove()
       }
 
       // the element that the pointer event raised is considered to intersect.
@@ -164,8 +160,8 @@ function PageSpread({
       }
 
       // strictly check only <path>s.
-      if (!(element instanceof SVGPathElement)) {
-        return true
+      if (!(element instanceof SVGPathElement) && !(element instanceof SVGLineElement)) {
+        return true;
       }
 
       const attributes = getAttributes(element)
@@ -177,22 +173,21 @@ function PageSpread({
         let { x, y } = element.getPointAtLength(i)
 
         if (
-          dragCoords.x <= x + 2 &&
-          x - 2 <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-          dragCoords.y <= y + 2 &&
-          y - 2 <= dragCoords.y + dragAreaInSvgCoordinate.height
+          dragCoords.x <= x + distance &&
+          x - distance <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+          dragCoords.y <= y + distance &&
+          y - distance <= dragCoords.y + dragAreaInSvgCoordinate.height
         ) {
           return true
         }
       }
       return false
     })
-
   }
 
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
-    if (!canvasState.selecting) {
+    if (!canvasState.selecting && !pageData.template) {
       let coords = {
         x: e.clientX,
         y: e.clientY,
@@ -215,7 +210,13 @@ function PageSpread({
         const isMouseInSelection = detectMouseInSelection(coords, pathBox, 2)
 
         if (isMouseInSelection) {
-          return dispatch({
+          // remove existing hover clone node
+          if (SVG("#hover-clone")) {
+            SVG("#hover-clone").remove()
+            setHoverClone(null)
+          }
+          
+          dispatch({
             type: "change-mode",
             mode: "drag",
           })
@@ -228,71 +229,75 @@ function PageSpread({
         }
       }
 
-      let subject = null
-      let nodes = SVG(canvasPageRef.current).children()
+      if (canvasState.mode !== "drag") {
+        let subject = null
+        let nodes = SVG(canvasPageRef.current).children()
 
-      if (nodes) {
-        // find the closest node to the current position of the cursor
-        subject = findClosestNode(nodes, coords, 2, canvasPageRef.current, adjustedCoords)
-      }
+        if (nodes) {
+          // find the closest node to the current position of the cursor
+          subject = findClosestNode(nodes, coords, 2, canvasPageRef.current, adjustedCoords)
+        }
 
-      // create a hover-clone element which sits on top of the hovered element
-      // creating an illusion of hovered effect (blue border effect)
-      if (subject && canvasPageRef.current && SVG(canvasPageRef.current).has(subject)) {
-        const node = subject
+        // create a hover-clone element which sits on top of the hovered element
+        // creating an illusion of hovered effect (blue border effect)
+        if (subject && canvasPageRef.current && SVG(canvasPageRef.current).has(subject)) {
+          const node = subject
+          const nodeIsSelected = node.attr("data-selected") === ""
 
-        // if the node is not our cloned hover node, create one
-        // we only create these for single node selections
-        // look for nodes that are not selected or is a selection group
-        if (!node.attr("[data-selected]")) {
-          SVG(canvasPageRef.current).find("[data-hovered]").attr("data-hovered", null)
+          // if the node is not our cloned hover node, create one
+          // we only create these for single node selections
+          // look for nodes that are not selected or is a selection group
+          if (!nodeIsSelected) {
+            SVG(canvasPageRef.current).find("data-hovered").attr("data-hovered", null)
 
-          // exit if we are hovering the same node repeatedly
-          if (hoverClone && hoverClone.isSameNode(subject.node)) {
-            return
-          }
+            // exit if we are hovering the same node repeatedly
+            if (hoverClone && hoverClone.isSameNode(subject.node)) {
+              return
+            }
 
-          // remove existing hover clone node
-          if (SVG("#hover-clone")) {
-            SVG("#hover-clone").remove()
-            setHoverClone(null)
-          }
+            // remove existing hover clone node
+            if (SVG("#hover-clone")) {
+              SVG("#hover-clone").remove()
+              setHoverClone(null)
+            }
 
-          // slightly thicker stroke width so it shows over the original
-          const nodeStrokeWidth = Number(node.attr("stroke-width")) + 1
+            // slightly thicker stroke width so it shows over the original
+            const nodeStrokeWidth = Number(node.attr("stroke-width")) + 1
 
-          // if the node is a group, add an invisible rectangle to the cloned node
-          if (node.node instanceof SVGGElement) {
-            const nodeBBox = node.bbox()
-            console.log("🚀 ~ file: PageSpread.js:267 ~ handleMouseMove ~ nodeBBox:", nodeBBox)
+            // if the node is a group, add an invisible rectangle to the cloned node
+            if (node.node instanceof SVGGElement) {
+              const nodeBBox = node.bbox()
 
-            SVG(`<rect id="hover-clone" stroke="${colors.blue.sixHundred}" fill="transparent" width="${convertFloatFixed(nodeBBox.width, 3)}" height="${convertFloatFixed(nodeBBox.height, 3)}" style="pointer-events:none;transform:translate(${nodeBBox.x}px, ${nodeBBox.y}px)"></rect>`)
-              .addTo(SVG(canvasPageRef.current))
-              .front()
+              SVG(`<rect id="hover-clone" stroke="${colors.blue.sixHundred}" fill="transparent" width="${convertFloatFixed(nodeBBox.width, 3)}" height="${convertFloatFixed(nodeBBox.height, 3)}" style="pointer-events:none;transform:translate(${nodeBBox.x}px, ${nodeBBox.y}px)"></rect>`)
+                .addTo(SVG(canvasPageRef.current))
+                .front()
 
-            setHoverClone(node.node)
-          }
-          else {
-            node.clone()
-              .addTo(SVG(canvasPageRef.current))
-              .front()
-              .attr("id", "hover-clone")
-              .attr("stroke-width", nodeStrokeWidth)
-              .attr("fill", "transparent")
-              .attr("stroke", colors.blue.sixHundred)
-              .attr("data-for", node.attr("id"))
-              .css("pointer-events", "none")
+              setHoverClone(node.node)
+            }
+            else {
+              const clone = node.clone()
+            
+              clone.addTo(SVG(canvasPageRef.current))
+                .front()
+                .attr("id", "hover-clone")
+                .attr("stroke-width", nodeStrokeWidth)
+                .attr("fill", "transparent")
+                .attr("stroke", colors.blue.sixHundred)
+                .attr("data-for", node.attr("id"))
 
-            setHoverClone(node.node)
+              clone.css("pointer-events", "none")
+
+              setHoverClone(node.node)
+            }
           }
         }
-      }
-      else {
-        setHoverClone(null)
-        SVG(canvasPageRef.current).find("[data-hovered]").attr("data-hovered", null)
-        
-        if (SVG("#hover-clone")) {
-          SVG("#hover-clone").remove()
+        else {
+          setHoverClone(null)
+          SVG(canvasPageRef.current).find("data-hovered").attr("data-hovered", null)
+
+          if (SVG("#hover-clone")) {
+            SVG("#hover-clone").remove()
+          }
         }
       }
     }
@@ -305,6 +310,30 @@ function PageSpread({
 
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
+
+      if (!dragCanvas.canvas) {
+        const canvas = SVG(canvasRef.current)
+
+        setDragCanvas({
+          ref: referenceElement,
+          canvas: canvas,
+        })
+        drag(dispatch, canvas, referenceElement)
+      }
+      else {
+        if (!dragCanvas.ref.isSameNode(referenceElement)) {
+          SVG(canvasRef.current).draggable(false)
+          SVG(canvasRef.current).off()
+
+          const canvas = SVG(canvasRef.current)
+
+          setDragCanvas({
+            canvas: canvas,
+            ref: referenceElement,
+          })
+          drag(dispatch, canvas, referenceElement)
+        }
+      }
     }
 
     dispatch({
@@ -335,6 +364,7 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           cancel,                   // cancel() cancels.
         }) {
+          console.log('starting selection')
           // for example: handles mouse left button only.
           if (pointerEvent.button !== 0) {
             cancel()
@@ -383,11 +413,6 @@ function PageSpread({
           })
         }
       })
-
-      // if (canvasRef.current && referenceElement) {
-      //   d3.select(canvasRef.current)
-      //     .call(drag(dispatch))
-      // }
 
       return () => {
         cancel()

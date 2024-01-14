@@ -1,9 +1,9 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
 import * as d3 from "d3"
 import { SVG } from '@svgdotjs/svg.js'
-import '@svgdotjs/svg.draggable.js'
-import '../editor/selectize/svg.select.js'
-import '../editor/resize/svg.resize.js'
+import '../editor/helpers/svg.drag.js'
+import '../editor/helpers/svg.select.js'
+import '../editor/helpers/svg.resize.js'
 
 import { parseSelection } from "../editor/editor-functions"
 import Toastify from "../../ui/Toastify";
@@ -105,20 +105,18 @@ const setCanvasState = (state, action) => {
       // remove data-selected from newly deselected elements
       if (newlyDeselectedElements && newlyDeselectedElements.length > 0) {
         newlyDeselectedElements.forEach(element => {
-          d3.select(element).attr("data-selected", null)
+          SVG(element).attr("data-selected", null)
         })
       }
 
       // add data-selected to newly selected elements
       newlySelectedElements.forEach((element) => {
-        const node = d3.select(element)
+        const node = SVG(element)
         const nodeId = node.attr("id")
 
         if (nodeId !== "hover-clone") {
           node.attr('data-selected', '')
-          // var rect = SVG(element).selectize().resize()
-
-          // rect.draggable()
+          // SVG(element).selectize().resize()
         }
       })
 
@@ -182,7 +180,7 @@ const setCanvasState = (state, action) => {
 
       return {
         ...state,
-        [action.setting]: action.value || !state[action.setting],
+        [action.setting]: action.value,
       }
     case "remove":
       // log(`removing state: ${action.setting}...`)

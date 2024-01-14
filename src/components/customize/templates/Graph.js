@@ -135,6 +135,7 @@ function Graph({
       <>
         {lineRows && lineRows.map((line, index) => (
           <line
+            id={`svg_${index + 1}_row`}
             key={index}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
@@ -150,6 +151,7 @@ function Graph({
       <>
         {lineColumns && lineColumns.map((line, index) => (
           <line
+            id={`svg_${index + 1}_col`}
             key={index}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}

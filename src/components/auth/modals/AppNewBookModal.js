@@ -74,6 +74,8 @@ function NewBookModal({
         marginRight: 0,
         marginBottom: 0,
         marginLeft: 0,
+        svgHeight: bookData.heightPixel,
+        svgWidth: bookData.widthPixel,
       })
       const pagesArray = []
 

@@ -15,11 +15,11 @@ function Seyes({
   const sideMarginSpacing = convertToPx(columnSpacing)
   const lineSpacing = convertToPx(spacing)
   const lineStrokeWidth = convertToPx(strokeWidth)
-  const halfLineStrokeWidth = lineStrokeWidth / 2
-  const dividerStrokeWidth = lineStrokeWidth * 1.5 // the bold lines that occur every 4 lines
-  const halfDividerStrokeWidth = dividerStrokeWidth / 2
-  const verticalLineStrokeWidth = lineStrokeWidth * 2
-  const halfVerticalLineStrokeWidth = verticalLineStrokeWidth / 2
+  const halfLineStrokeWidth = convertFloatFixed(lineStrokeWidth / 2, 3)
+  const dividerStrokeWidth = convertFloatFixed(lineStrokeWidth * 1.5, 3) // the bold lines that occur every 4 lines
+  const halfDividerStrokeWidth = convertFloatFixed(dividerStrokeWidth / 2, 3)
+  const verticalLineStrokeWidth = convertFloatFixed(lineStrokeWidth * 2, 3)
+  const halfVerticalLineStrokeWidth = convertFloatFixed(verticalLineStrokeWidth / 2, 3)
   // const maxRows = Math.floor((height - headerSpacing) / (lineStrokeWidth + lineSpacing))
   // const maxCols = Math.floor((width - sideMarginSpacing) / (lineSpacing * 4 + verticalLineStrokeWidth)) + 1
   const maxRows = 191

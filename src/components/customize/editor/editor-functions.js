@@ -2,6 +2,7 @@ import { convertFloatFixed } from "../../../utils/helper-functions"
 import { SVG } from '@svgdotjs/svg.js'
 import { convertToMM, consolidateMixedObjects, convertToPx, processStringNumbers } from "../../../utils/helper-functions"
 
+// checks cursor location to see if it is within the path perimeter
 const findEnclosedPoint = (node, coords, distance, stroke) => {
   // check if there is at least one enclosed point in the path.
   for (let i = 0, len = node.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
@@ -53,20 +54,22 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
   
   // Iterate through nodes and calculate the distance to each node.
   for (const node of nodesArray) {
+    const domNode = node.node
     // don't return the hover-clone node ever
     if (node.attr("id") === "hover-clone") {
       continue
     }
+
     // calculate the targetable area for each node in the canvas
     // then detect if the mouse cursor is within that area
     let strokeWidth = node.attr("stroke-width")
     let convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
     let rect = node.rbox()
-    const nodeIsNotLine = !(node.node instanceof SVGLineElement)
+    const nodeIsNotLine = !(domNode instanceof SVGLineElement)
 
     // If the node is a group, check the last child node for a stroke width
     // this will create a better targetable area
-    if (node.node instanceof SVGGElement) {
+    if (domNode instanceof SVGGElement) {
       const childNodes = node.children()
       const { length } = childNodes
       const lastNode = childNodes[length - 1]
@@ -76,14 +79,20 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
       }
     }
 
-    if (node.node instanceof SVGPathElement) {
+    if (domNode instanceof SVGPathElement) {
       // basically if the cursor is near the perimeter of the path
-      if (findEnclosedPoint(node, adjustedCoords, distance, convertedStrokeWidth)) {
+      if (findEnclosedPoint(domNode, adjustedCoords, distance, convertedStrokeWidth)) {
         return node
       }
 
       // otherwise, check if the cursor is inside the fill area of the path
-      if (isMouseInFill(node, adjustedCoords, canvas)) {
+      if (isMouseInFill(domNode, adjustedCoords, canvas)) {
+        return node
+      }
+    }
+    else if (domNode instanceof SVGLineElement) {
+      // basically if the cursor is near the perimeter of the line
+      if (findEnclosedPoint(domNode, adjustedCoords, distance, convertedStrokeWidth)) {
         return node
       }
     }
@@ -130,22 +139,20 @@ const parseAttributes = (ele) => {
 
 const getAttributes = (element) => {
   const attributes = {}
+  const node = SVG(element)
+  const nodeAttributes = node.attr()
 
-  console.log(SVG(element))
-
-  // SVG(element).each(function () {
-  //   const node = SVG(this)
-  //   const attrNames = node.node().getAttributeNames()
-
-  //   attrNames.forEach((name) => {
-  //     const value = node.attr(name)
-  //     if (!isNaN(value)) {
-  //       attributes[name] = convertFloatFixed(value, 3)
-  //     } else {
-  //       attributes[name] = value
-  //     }
-  //   })
-  // })
+  for (const key in nodeAttributes) {
+    if (nodeAttributes.hasOwnProperty(key)) {
+      const value = nodeAttributes[key];
+      // Do something with the key-value pair
+      if (!isNaN(value)) {
+        attributes[key] = convertFloatFixed(value, 3)
+      } else {
+        attributes[key] = value
+      }
+    }
+  }
 
   return attributes
 }
