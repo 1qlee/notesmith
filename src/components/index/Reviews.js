@@ -7,7 +7,6 @@ import Content from "../ui/Content"
 import { Flexbox } from "../layout/Flexbox"
 import { Container, Row, Col } from "react-grid-system"
 
-
 const ReviewBox = styled.div`
   position: relative;
   background-color: transparent;
@@ -65,11 +64,12 @@ function Reviews() {
             </Content>
             <Content
               padding="0 16px 16px"
+              paragraphcolor={colors.gray.sixHundred}
             >
               <Flexbox
                 justify="flex-end"
               >
-                <p><i>Ruled Ryder</i></p>
+                <p>- Ruled Ryder</p>
               </Flexbox>
             </Content>
           </ReviewBox>
@@ -85,11 +85,13 @@ function Reviews() {
             </Content>
             <Content
               padding="0 16px 16px"
+              paragraphcolor={colors.gray.sixHundred}
             >
               <Flexbox
                 justify="flex-end"
+                paragraphcolor={colors.gray.sixHundred}
               >
-                <p><i>Penny Paperweight</i></p>
+                <p><i>- Penny Paperweight</i></p>
               </Flexbox>
             </Content>
           </ReviewBox>
@@ -107,11 +109,12 @@ function Reviews() {
             </Content>
             <Content
               padding="0 16px 16px"
+              paragraphcolor={colors.gray.sixHundred}
             >
               <Flexbox
                 justify="flex-end"
               >
-                <p><i>Pat Papyrophiliac</i></p>
+                <p><i>- Pat Papyrophiliac</i></p>
               </Flexbox>
             </Content>
           </ReviewBox>
@@ -127,11 +130,12 @@ function Reviews() {
             </Content>
             <Content
               padding="0 16px 16px"
+              paragraphcolor={colors.gray.sixHundred}
             >
               <Flexbox
                 justify="flex-end"
               >
-                <p><i>Callie Grapher</i></p>
+                <p><i>- Callie Grapher</i></p>
               </Flexbox>
             </Content>
           </ReviewBox>

@@ -16,7 +16,6 @@ function DemoTemplate({
   pageData,
   setPageData,
 }) {
-  console.log(pageDimensions)
   const [max, setMax] = useState({
     rows: 200,
     columns: 200,

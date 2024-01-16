@@ -1,14 +1,11 @@
 import React, { useState } from "react"
 import { Link, graphql } from "gatsby"
-import { Star, ArrowRight, WarningCircle, NoteBlank, ArrowBendRightDown } from "@phosphor-icons/react"
+import { Star, ArrowRight, WarningCircle, ArrowBendRightDown, Note, Quotes } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
 import RandomLine from "../components/misc/Lines" 
 
-import { Flexbox } from "../components/layout/Flexbox"
-import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
-import { Tabs } from "../components/ui/Tabs"
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
 import Content from "../components/ui/Content"
@@ -16,6 +13,7 @@ import DemoControls from "../components/index/DemoControls"
 import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Materials from "../components/index/Materials"
+import Notification from "../components/ui/Notification"
 import PageDemoCarousel from "../components/index/PageDemoCarousel"
 import PageIcons from "../components/customize/PageIcons"
 import Progress from "../components/ui/Progress"
@@ -24,8 +22,11 @@ import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import TextLink from "../components/ui/TextLink"
+import { Flexbox } from "../components/layout/Flexbox"
 import { Patterns, Pattern } from "../components/misc/Patterns"
+import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { StyledLabel } from "../components/form/FormComponents"
+import { Tabs } from "../components/ui/Tabs"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -119,47 +120,36 @@ const IndexPage = ({ data }) => {
                     <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
-                  <Content
-                    paragraphmargin="0"
-                    h2margin="0"
-                    h2fontsize="1.25rem"
-                    headingfontfamily={fonts.secondary}
-                    paragraphfontsize="1.25rem"
-                    padding="16px"
-                    border={colors.borders.black}
-                    boxshadow={colors.shadow.layered}
-                    backgroundcolor={colors.white}
+                  <Notification
+                    backgroundcolor={colors.gray.oneHundred}
+                    borderradius="16px"
+                    padding="0"
                   >
-                    <Flexbox
-                      align="center"
-                      justify="space-between"
-                      margin="0 0 16px"
+                    <Content
+                      paragraphmargin="0"
+                      h2fontsize="1.25rem"
+                      h2margin="0 0 16px"
+                      headingfontfamily={fonts.secondary}
+                      paragraphfontsize="1.25rem"
+                      padding="32px"
                     >
                       <h2>Join the early access and pre-order sale!</h2>
-                      <Tag
-                        padding="3px 6px"
-                        backgroundcolor={colors.yellow.twoHundred}
-                        border={colors.borders.black}
-                        color={colors.gray.nineHundred}
+                      <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
+                      <StyledLabel
+                        htmlFor="register-form-input"
+                        margin="0"
                       >
-                        New
-                      </Tag>
-                    </Flexbox>
-                    <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
-                    <StyledLabel
-                      htmlFor="register-form-input"
-                      margin="0"
-                    >
-                      Sign up to join
-                    </StyledLabel>
-                    <RegisterForm
-                      border
-                      fontsize="1rem"
-                      margin="8px 0 0"
-                      top="12px"
-                      color={colors.gray.nineHundred}
-                    />
-                  </Content>
+                        Sign up to join
+                      </StyledLabel>
+                      <RegisterForm
+                        border
+                        fontsize="1rem"
+                        margin="8px 0 0"
+                        top="12px"
+                        color={colors.gray.nineHundred}
+                      />
+                    </Content>
+                  </Notification>
                 </Col>
                 <Col xl={8} lg={8}>
                   <PageDemoCarousel />
@@ -269,7 +259,8 @@ const IndexPage = ({ data }) => {
                       data={pageData}
                       iconMargin="0 24px 16px 0"
                       isProductPage={true}
-                      hideNone={true}
+                      hideNone
+                      hideBlank
                       leftPageData={leftPageData}
                       rightPageData={rightPageData}
                       setData={setPageData}
@@ -280,27 +271,28 @@ const IndexPage = ({ data }) => {
                     pageData={pageData}
                     setPageData={setPageData}
                   />
-                  <Flexbox
-                    flex="flex"
-                    align="center"
-                    justify="center"
-                    margin="0 0 32px"
-                  >
-                    <Button
-                      backgroundcolor={colors.white}
-                      color={colors.gray.nineHundred}
-                      border={`1px solid ${colors.gray.nineHundred}`}
-                      padding="16px"
-                      margin="0 16px 0 0"
-                      width="50%"
-                      onClick={() => setPageData({
-                        ...pageData,
-                        template: null,
-                      })}
+                  {pageData.template && (
+                    <Flexbox
+                      flex="flex"
+                      align="center"
+                      justify="center"
+                      margin="0 0 32px"
                     >
-                      Hide layout
-                    </Button>
-                    {/* <Button
+                      <Button
+                        backgroundcolor={colors.white}
+                        color={colors.gray.nineHundred}
+                        border={`1px solid ${colors.gray.nineHundred}`}
+                        padding="16px"
+                        margin="0 16px 0 0"
+                        width="50%"
+                        onClick={() => setPageData({
+                          ...pageData,
+                          template: null,
+                        })}
+                      >
+                        Hide layout
+                      </Button>
+                      {/* <Button
                       backgroundcolor={colors.gray.nineHundred}
                       color={colors.gray.oneHundred}
                       border={`1px solid ${colors.gray.nineHundred}`}
@@ -313,24 +305,30 @@ const IndexPage = ({ data }) => {
                     >
                       Reset layout
                     </Button> */}
-                  </Flexbox>
+                    </Flexbox>
+                  )}
                   <hr />
-                  <Flexbox
-                    flex="flex"
-                    align="flex-start"
-                    margin="16px 0 0" 
+                  <Notification
+                    backgroundcolor={colors.gray.oneHundred}
+                    borderradius="16px"
                   >
-                    <Icon margin="4px 0 0">
-                      <WarningCircle color={colors.gray.nineHundred} />
-                    </Icon>
-                    <Content
-                      margin="0 0 0 4px"
-                      smallmargin="0"
-                      smallfontsize="1rem"
+                    <Flexbox
+                      flex="flex"
+                      align="flex-start"
+                      margin="0"
                     >
-                      <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
-                    </Content>
-                  </Flexbox>
+                      <Icon margin="0 0 0">
+                        <Note size={24} weight="light" color={colors.gray.sixHundred} />
+                      </Icon>
+                      <Content
+                        margin="0 0 0 8px"
+                        smallmargin="0"
+                        smallfontsize="1rem"
+                      >
+                        <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
+                      </Content>
+                    </Flexbox>
+                  </Notification>
                 </Col>
               </Row>
             </Container>
@@ -567,22 +565,26 @@ const IndexPage = ({ data }) => {
                     </Flexbox>
                   </div>
                   <hr />
-                  <Flexbox
-                    flex="flex"
-                    center="flex-start"
-                    margin="16px 0"
+                  <Notification
+                    backgroundcolor={colors.gray.oneHundred}
+                    borderradius="16px"
                   >
-                    <Icon>
-                      <WarningCircle color={colors.gray.nineHundred} size={16} />
-                    </Icon>
-                    <Content
-                      margin="0 0 0 4px"
-                      smallmargin="0"
-                      smallfontsize="1rem"
+                    <Flexbox
+                      flex="flex"
+                      center="flex-start"
                     >
-                      <small>Results are from a survey conducted on early test users.</small>
-                    </Content>
-                  </Flexbox>
+                      <Icon>
+                        <Note color={colors.gray.sixHundred} weight="light" size={20} />
+                      </Icon>
+                      <Content
+                        margin="0 0 0 8px"
+                        smallmargin="0"
+                        smallfontsize="1rem"
+                      >
+                        <small>Results are from a survey conducted on early test users.</small>
+                      </Content>
+                    </Flexbox>
+                  </Notification>
                 </Col>
                 <Col lg={8}>
                   <Flexbox
@@ -621,22 +623,26 @@ const IndexPage = ({ data }) => {
                     <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />
-                  <Flexbox
-                    flex="flex"
-                    align="center"
-                    margin="16px 0"
+                  <Notification
+                    backgroundcolor={colors.gray.oneHundred}
+                    borderradius="16px"
                   >
-                    <Icon>
-                      <NoteBlank color={colors.gray.nineHundred} size={16} />
-                    </Icon>
-                    <Content
-                      margin="0 0 0 4px"
-                      smallmargin="0"
-                      smallfontsize="1rem"
+                    <Flexbox
+                      flex="flex"
+                      align="flex-start"
                     >
-                      <small>Quotes represent real words from real users with fake names.</small>
-                    </Content>
-                  </Flexbox>
+                      <Icon>
+                        <Note color={colors.gray.sixHundred} weight="light" size={20} />
+                      </Icon>
+                      <Content
+                        margin="0 0 0 8px"
+                        smallmargin="0"
+                        smallfontsize="1rem"
+                      >
+                        <small>Quotes represent real words from real users with fake names.</small>
+                      </Content>
+                    </Flexbox>
+                  </Notification>
                 </Col>
                 <Col md={6} lg={6} xl={8}>
                   <Reviews />

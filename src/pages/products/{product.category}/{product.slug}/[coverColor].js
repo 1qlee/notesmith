@@ -14,7 +14,6 @@ import ProductControls from "../../../../components/customize/product/ProductCon
 import ProductDescription from "../../../../components/customize/product/ProductDescription"
 import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
-import Seo from "../../../../components/layout/Seo"
 
 const ProductPage = ({ data, params }) => {
   const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
