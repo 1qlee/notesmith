@@ -11,15 +11,12 @@ const StyledCanvas = styled.div`
   align-items: center;
   position: relative;
   background-color: ${colors.white};
-  height: ${props => props.height + "px" || "100%"};
-  width: ${props => props.width  + "px" || "100%"};
 `
 
 function Canvas({
   productData,
   canvasPages,
   canvasPageTemplates,
-  canvasSize,
   pageData,
   selectedPage,
   selectedPageSvg,
@@ -34,13 +31,9 @@ function Canvas({
   return (
     <>
       <Workspace>
-        <StyledCanvas
-          height={canvasSize.height}
-          width={canvasSize.width}
-        >
+        <StyledCanvas>
           <PageSpread
             productData={productData}
-            canvasSize={canvasSize}
             canvasPages={canvasPages}
             canvasPageTemplates={canvasPageTemplates}
             pageData={pageData}

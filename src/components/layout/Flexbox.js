@@ -25,6 +25,12 @@ const Flexbox = styled.div`
   &.has-border-top {
     border-top: ${colors.borders.black};
   }
+  &.has-border-left {
+    border-left: ${colors.borders.black};
+  }
+  &.has-border-right {
+    border-right: ${colors.borders.black};
+  }
 `
 
 const FlexboxButtons = styled.div`

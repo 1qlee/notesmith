@@ -29,12 +29,8 @@ const Table = styled.table`
     padding: 16px;
   }
   tr {
-    &:hover {
-      background-color: ${colors.gray.oneHundred};
-      cursor: pointer;
-    }
     &.is-selected {
-      background-color: ${colors.gray.twoHundred};
+      background-color: ${colors.gray.oneHundred};
     }
   }
 `

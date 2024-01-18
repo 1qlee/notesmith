@@ -15,7 +15,6 @@ import CanvasPage from "./editor/CanvasPage"
 function PageSpread({
   canvasPageTemplates,
   canvasPages,
-  canvasSize,
   leftPageData,
   pageData,
   productData,
@@ -30,10 +29,6 @@ function PageSpread({
 }) {
   // constants
   const isLeftPage = selectedPage % 2 === 0
-  const spreadPosition = {
-    x: (canvasSize.width - productData.widthPixel * 2) / 2,
-    y: (canvasSize.height - productData.heightPixel) / 2,
-  }
   const canvasRef = useRef(null)
   const canvasPageRef = useRef(null)
   const canvasState = useEditorContext()
@@ -427,8 +422,6 @@ function PageSpread({
       xmlns="http://www.w3.org/2000/svg"
       height={productData.heightPixel + 2}
       width={productData.widthPixel * 2 + 3}
-      x={spreadPosition.x}
-      y={spreadPosition.y}
       onMouseMove={e => handleMouseMove(e)}
     >
       <CoverPage

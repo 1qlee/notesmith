@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useRef } from "react"
 import { colors, widths } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
-import { get, ref, set, push, query, orderByChild, equalTo } from "firebase/database"
+import { get, ref, set, push, query, orderByChild, equalTo, onValue } from "firebase/database"
 import { isBrowser } from "../../utils/helper-functions"
-import { ArrowLeft, Check } from "@phosphor-icons/react"
+import { ArrowLeft, Check, WarningCircle } from "@phosphor-icons/react"
 
-import { Row, Col } from "react-grid-system"
 import AuthLayout from "./components/AuthLayout"
+import Button from "../ui/Button"
 import Content from "../ui/Content"
+import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
 import Notification from "../ui/Notification"
-import { Flexbox } from "../layout/Flexbox"
-import { StyledLabel, StyledInput } from "../form/FormComponents"
 import TextLink from "../ui/TextLink"
-import Button from "../ui/Button"
-import Icon from "../ui/Icon"
-
+import { Flexbox } from "../layout/Flexbox"
+import { Row, Col } from "react-grid-system"
+import { StyledLabel, StyledInput } from "../form/FormComponents"
+import Progress from "../ui/Progress"
 
 const UserDashboard = () => {
   const { loading, user, firebaseDb } = useFirebaseContext()
@@ -25,6 +25,7 @@ const UserDashboard = () => {
     status: false,
     text: "Copy",
   })
+  const [quantitySold, setQuantitySold] = useState(0)
   // const launchDate = new Date("2023-12-15")
   const singleRef = useRef(null)
 
@@ -65,6 +66,17 @@ const UserDashboard = () => {
               createSingleRefferalCode(uid, true)
             }
           }
+        }
+      })
+
+      onValue(ref(firebaseDb, "orderItems"), (snapshot) => {
+        if (snapshot.exists()) {
+          const orderItems = Object.values(snapshot.val())
+          const quantitySold = orderItems.reduce((acc, orderItem) => {
+            return acc + orderItem.quantity
+          }, 0)
+
+          setQuantitySold(quantitySold)
         }
       })
     }
@@ -141,29 +153,66 @@ const UserDashboard = () => {
       <AuthLayout page="Dashboard">
         <Row>
           <Col md={6}>
+            <Content
+              h1fontsize="2rem"
+              h3fontsize="1.5rem"
+              h3margin="0 0 16px"
+              margin="32px 0"
+              maxwidth={widths.content.normal}
+            >
+              <h3>Welcome to Notesmith!</h3>
+              <p>
+                Click on the "Books" tab above to get started. From there, click on the "New book" button to create the book which will then appear in your Books Table. Double-click on any book in the table to open it in the editor.
+              </p>
+              <p>Currently, we will ship orders in batches. We cannot provide an accurate timeline or guarantee for fulfillment at this time. We hope to wait until Batch #1 fills its quota, but we will also consider shipping before it does if fulfillment is taking too long. You can expect constant communication and updates from Notesmith during this time.</p>
+              <p><b>Reminder: </b>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
+            </Content>
             <Notification
-              backgroundcolor={colors.green.twoHundred}
-              color={colors.green.nineHundred}
+              backgroundcolor={colors.gray.oneHundred}
+              color={colors.gray.nineHundred}
+              borderradius="16px"
+              padding="32px"
               margin="32px 0 16px"
             >
+              <Icon
+                className="is-pulsating"
+                margin="0 8px 0 0"
+              >
+                <WarningCircle 
+                  size={24}
+                />
+              </Icon>
               <Content
                 linktextdecoration="underline"
               >
-                <p><b>Reminder:</b> Notesmith is in active development. New features are continuously being added. Now is the best time to make any suggestions or provide your feedback! If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a>.</p>
+                <p>New features are continuously being added to Notesmith. Now is the best time to make any suggestions or provide your feedback. If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a> – your input can truly make a difference in shaping the future of Notesmith!</p>
               </Content>
             </Notification>
-            <Content
-              h1fontsize="2rem"
-              margin="16px 0"
-              maxwidth={widths.content.normal}
-            >
-              <p>
-                Click on the "Books" tab above to get started. When you create a book you will be able to give it a name, after which it will appear in your Books table. Double-click on any book in the table to open it in the editor.
-              </p>
-              <p>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
-            </Content>
           </Col>
           <Col md={6}>
+            <Content
+              h3fontsize="1.5rem"
+              h3margin="0 0 16px"
+              margin="32px 0 16px"
+            >
+              <h3>Batch #1</h3>
+              <p>This first batch will ship 200 notebooks total. There might be some leeway for some extra books (maybe between 25 and 75) if there is demand for them. Once the batch fulfills, we will immediately begin production and shipments should start within 2 to 4 weeks of fulfillment.</p>
+            </Content>
+            <Flexbox
+              justify="space-between"
+              padding="0"
+              margin="0 0 8px"
+              width="100%"
+            >
+              <p><b>{quantitySold} books sold</b></p>
+              <p style={{color: colors.gray.sixHundred}}>{200 - quantitySold} books left</p>
+            </Flexbox>
+            <Progress
+              barcolor={colors.gray.nineHundred}
+              width="100%"
+              completion={(quantitySold / 200) * 100}
+              wrappercolor={colors.gray.oneHundred}
+            />
             {referralCode && (
               <>
                 <Content
@@ -197,6 +246,7 @@ const UserDashboard = () => {
                     onClick={e => handleReferral(e)}
                     fontsize="1rem"
                     borderradius="4px 0 0 4px"
+                    readOnly
                   />
                   <Button
                     borderradius="0 4px 4px 0"

@@ -174,11 +174,9 @@ function BooksContainer({
       >
         <Table>
           <thead>
-            <tr>
-              <th>Title</th>
-              <th>Date created</th>
-              <th></th>
-            </tr>
+            <th>Title</th>
+            <th>Date created</th>
+            <th></th>
           </thead>
           <tbody style={{ position: 'relative' }}>
             {userBooks && userBooks.map(book => (

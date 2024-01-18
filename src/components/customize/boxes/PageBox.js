@@ -34,9 +34,6 @@ const IconWrapper = styled.div`
   top: 14.5px;
   left: ${props => props.left || null};
   right: ${props => props.right || null};
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 function PageBox({
@@ -96,7 +93,7 @@ function PageBox({
       >
         <Button
           onClick={() => validatePageChange(selectedPage - 1)}
-          padding="0"
+          padding="4px"
           backgroundcolor={colors.white}
           color={colors.gray.nineHundred}
           hoverbackgroundcolor={colors.gray.oneHundred}
@@ -123,7 +120,7 @@ function PageBox({
       >
         <Button
           onClick={() => validatePageChange(selectedPage + 1)}
-          padding="0"
+          padding="4px"
           backgroundcolor={colors.white}
           color={colors.gray.nineHundred}
           hoverbackgroundcolor={colors.gray.oneHundred}

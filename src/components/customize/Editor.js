@@ -11,9 +11,11 @@ import { isBrowser, convertToMM } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
 
 import { Controls } from "./Controls"
+import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import Functionsbar from "./bars/Functionsbar"
+import Toolbar from "./bars/Toolbar"
 import Loader from "../misc/Loader"
 import Pagebar from "./bars/Pagebar"
 import Book404 from "./Book404"
@@ -21,7 +23,7 @@ import Seo from "../layout/Seo"
 
 const StyledEditor = styled.div`
   display: flex;
-  height: calc(100% - 59px);
+  height: calc(100% - 49px);
   justify-content: space-between;
   width: 100%;
   overflow-y: hidden;
@@ -66,10 +68,6 @@ const Editor = ({
       x: minimumMargin,
     },
     side: "right",
-  })
-  const [canvasSize, setCanvasSize] = useState({
-    width: 1456,
-    height: 916,
   })
   const [selectedPage, setSelectedPage] = useState(1)
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
@@ -246,21 +244,23 @@ const Editor = ({
             toast={toast}
           />
           <StyledEditor>
-            <Pagebar
-              activeTab={activeTab}
-              canvasPageTemplates={canvasPageTemplates}
-              canvasPages={canvasPages}
-              pageData={pageData}
-              productData={productData}
-              selectedPage={selectedPage}
-              setActiveTab={setActiveTab}
-              setPageData={setPageData}
-              setSelectedPage={setSelectedPage}
-            />
+            <Flexbox>
+              <Pagebar
+                activeTab={activeTab}
+                canvasPageTemplates={canvasPageTemplates}
+                canvasPages={canvasPages}
+                pageData={pageData}
+                productData={productData}
+                selectedPage={selectedPage}
+                setActiveTab={setActiveTab}
+                setPageData={setPageData}
+                setSelectedPage={setSelectedPage}
+              />
+              <Toolbar />
+            </Flexbox>
             <Canvas
               canvasPageTemplates={canvasPageTemplates}
               canvasPages={canvasPages}
-              canvasSize={canvasSize}
               leftPageData={leftPageData}
               rightPageData={rightPageData}
               setLeftPageData={setLeftPageData}

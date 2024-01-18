@@ -6,13 +6,13 @@ export default async function sendEmailVerification(userEmail) {
     },
     body: JSON.stringify({
       userEmail: userEmail,
-      redirectUrl: "https://notesmithbooks.com",
+      redirectUrl: process.env.NODE_ENV === "production" ? "https://notesmithbooks.com" : "http://localhost:8888",
     })
   }).then(res => {
     return res.json()
   }).then(async data => {
     if (data.error) {
-      return data.error || "There was an error sending the verification email, please try again."
+      throw("There was an error sending the verification email, please try again.")
     }
     else {
       return null

@@ -6,14 +6,14 @@ const ProgressWrapper = styled.div`
   height: ${props => props.height || "8px"};
   margin: ${props => props.margin || "0 0 0.5rem"};
   background-color: ${props => props.wrappercolor};
-  border-radius: 0.25rem;
+  border-radius: 16px;
   position: relative;
 `
 
 const ProgressBar = styled.div`
   height: 100%;
   background-color: ${props => props.barcolor};
-  border-radius: 0.25rem;
+  border-radius: 16px;
   transition: ${props => props.animate && "width 100ms"};
   z-index: 99;
 `

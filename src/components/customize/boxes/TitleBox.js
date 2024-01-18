@@ -3,10 +3,10 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { useFirebaseContext } from "../../../utils/auth"
 import { ref, get, update } from "firebase/database"
+import { useEditorContext, useEditorDispatch } from '../context/editorContext'
 
 const StyledTitleBox = styled.div`
   background-color: ${colors.white};
-  flex: 1 1 33%;
   padding: 1rem;
   position: relative;
   transition: background-color 0.2s;
@@ -31,12 +31,20 @@ const StyledTitleBox = styled.div`
 `
 
 const TitleInput = styled.input`
-  border:none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  border: none;
   background-color: transparent;
   padding: 0;
   text-align: center;
-  height: 100%;
-  width: 100%;
+  font-size: 16px;
+  height: 16px;
+  line-height: 16px;
+  margin: 0;
   &:focus {
     outline: none;
   }
@@ -51,16 +59,20 @@ function TitleBox({
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [showTitleInput, setShowTitleInput] = useState(false)
-  const titleInput = useRef(null)
+  const titleInput = useRef("")
+  const dispatch = useEditorDispatch()
 
   function validateBookTitle(title) {
     const trimmedTitle = title.trim()
 
     if (!trimmedTitle) {
-      toast.error("Please enter a title.")
+      toast.error("Could not change book title.")
     }
     else if (trimmedTitle.length > 255) {
       toast.error("Title is too long!")
+    }
+    else if (trimmedTitle === bookData.title) {
+      return
     }
     else {
       return trimmedTitle
@@ -124,10 +136,22 @@ function TitleBox({
           type="text"
           defaultValue={bookData.title}
           onBlur={e => {
+            dispatch({
+              type: "toggle",
+              setting: "deletionAllowed",
+              value: true,
+            })
             setNewBookTitle(e.target.value)
             setShowTitleInput(false)
           }}
-          onFocus={e => e.target.select()}
+          onFocus={e => {
+            dispatch({
+              type: "toggle",
+              setting: "deletionAllowed",
+              value: false,
+            })
+            e.target.select()
+          }}
           onKeyDown={e => submitNewBookTitle(e)}
           disabled={loading}
         />

@@ -7,6 +7,7 @@ import { AuthFormWrapper } from "../form/FormComponents"
 import { Section, SectionMain } from "../layout/Section"
 import Layout from "../layout/Layout"
 import Content from "../ui/Content"
+import Button from "../ui/Button"
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
   const isBrowser = typeof window !== "undefined"
@@ -47,6 +48,12 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
   }
   if (user && !user.emailVerified) {
     return (
+      <Layout
+        loading={loading || !user}
+        seoDetails={{
+          title: "Dashboard",
+        }}
+      >
       <SectionMain
         className="has-max-height"
       >
@@ -73,7 +80,14 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
                 ) : (
                   <>
                     <h1>Validate your email address</h1>
-                    <p>Check your inbox or spam folder for an email with a verification link inside. If you can't find it, <a onClick={() => handleSendVerificationEmail()}>click here to resend the verification email</a>.</p>
+                    <p>Check your inbox or spam folder for an email with a verification link inside. If you cannot find the email, please click the button below to re-send it.</p>
+                    <Button
+                      onClick={() => handleSendVerificationEmail()}
+                      padding="16px"
+                      width="100%"
+                    >
+                      Re-send verification email
+                    </Button>
                   </>
                 )}
               </Content>
@@ -81,6 +95,7 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
           </AuthFormWrapper>
         </Section>
       </SectionMain>
+      </Layout>
     )
   }
 

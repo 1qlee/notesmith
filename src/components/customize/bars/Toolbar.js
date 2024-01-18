@@ -7,20 +7,22 @@ import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"
 
 const ToolItem = styled.div`
-  padding: 1rem;
+  padding: 14px 16px 13px;
   transition: box-shadow 0.2s, background-color 0.2s;
+  margin: -1px;
+  border: ${colors.borders.black};
+  &:not(:last-child) {
+    border-bottom: none;
+  }
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.primary.hover};
+      background-color: ${colors.gray.oneHundred};
     }
-  }
-  &.is-active {
-    background-color: ${colors.primary.active};
   }
 `
 
-function ToolBox() {
+function Toolbar() {
   const [selectedTool, setSelectedTool] = useState("cursor")
 
   const selectTool = e => {
@@ -31,7 +33,7 @@ function ToolBox() {
     <Flexbox
       flex="flex"
       align="center"
-      flexprop="1 1 33%"
+      flexdirection="column"
     >
       <ToolItem
         data-tool="cursor"
@@ -40,9 +42,8 @@ function ToolBox() {
       >
         <Icon>
           <Cursor
-            size="1.25rem"
-            weight={selectedTool === "cursor" ? "fill" : "duotone"}
-            color={selectedTool === "cursor" ? colors.gray.nineHundred : colors.gray.sixHundred}
+            weight={selectedTool === "cursor" ? "fill" : "regular"}
+            color={colors.gray.nineHundred}
           />
         </Icon>
       </ToolItem>
@@ -53,8 +54,7 @@ function ToolBox() {
       >
         <Icon>
           <Pencil
-            size="1.25rem"
-            weight={selectedTool === "pencil" ? "fill" : "duotone"}
+            weight={selectedTool === "pencil" ? "fill" : "regular"}
             color={selectedTool === "pencil" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
@@ -66,8 +66,7 @@ function ToolBox() {
       >
         <Icon>
           <LineSegment
-            size="1.25rem"
-            weight={selectedTool === "line" ? "fill" : "duotone"}
+            weight={selectedTool === "line" ? "fill" : "regular"}
             color={selectedTool === "line" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
@@ -79,8 +78,7 @@ function ToolBox() {
       >
         <Icon>
           <Rectangle
-            size="1.25rem"
-            weight={selectedTool === "rectangle" ? "fill" : "duotone"}
+            weight={selectedTool === "rectangle" ? "fill" : "regular"}
             color={selectedTool === "rectangle" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
@@ -92,8 +90,7 @@ function ToolBox() {
       >
         <Icon>
           <Circle
-            size="1.25rem"
-            weight={selectedTool === "circle" ? "fill" : "duotone"}
+            weight={selectedTool === "circle" ? "fill" : "regular"}
             color={selectedTool === "circle" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
@@ -105,8 +102,7 @@ function ToolBox() {
       >
         <Icon>
           <TextT
-            size="1.25rem"
-            weight={selectedTool === "text" ? "fill" : "duotone"}
+            weight={selectedTool === "text" ? "fill" : "regular"}
             color={selectedTool === "text" ? colors.gray.nineHundred : colors.gray.sixHundred}
           />
         </Icon>
@@ -115,4 +111,4 @@ function ToolBox() {
   )
 }
 
-export default ToolBox
+export default Toolbar

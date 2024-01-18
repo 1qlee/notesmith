@@ -80,12 +80,10 @@ function ShoppingCart() {
           </Content>
           <Table>
             <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th style={{textAlign:"right"}}>Total</th>
-              </tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th style={{textAlign:"right"}}>Total</th>
             </thead>
             <tbody>
               {cartItems.map((item, index) => (
@@ -127,10 +125,11 @@ function ShoppingCart() {
                               margin="0 8px 0 0"
                               padding="3px 6px"
                               onClick={() => handleViewDetails(item.id)}
-                              backgroundcolor={colors.gray.twoHundred}
+                              border={colors.borders.black}
+                              backgroundcolor={colors.white}
                               color={colors.gray.nineHundred}
                             >
-                              <span>View details</span>
+                              <span>Details</span>
                               <Icon margin="0 0 0 2px">
                                 {activeItemIds[item.id] ? (
                                   <CaretUp size="0.75rem" />
@@ -144,7 +143,8 @@ function ShoppingCart() {
                             fontsize="0.75rem"
                             padding="3px 6px"
                             onClick={() => removeItem(item.id)}
-                            backgroundcolor={colors.gray.twoHundred}
+                            border={colors.borders.black}
+                            backgroundcolor={colors.white}
                             color={colors.gray.nineHundred}
                           >
                             <span>Remove</span>
@@ -205,7 +205,8 @@ function ShoppingCart() {
                                         fontsize="0.75rem"
                                         padding="2px 4px"
                                         onClick={() => handleViewDetails(item.id)}
-                                        backgroundcolor={colors.gray.twoHundred}
+                                        border={colors.borders.black}
+                                        backgroundcolor={colors.white}
                                         color={colors.gray.nineHundred}
                                         as={Link}
                                         to={`/customize/${item.slug}/${item.bookId}`}

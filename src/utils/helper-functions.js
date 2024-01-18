@@ -183,9 +183,9 @@ function formatDollars(value) {
   }).format(value)
 }
 
-function applyDiscounts(price, quantity) {
+function applyDiscounts(price, quantity, rate) {
   let totalAmount = price * quantity
-  let discountRate = 0.25
+  let discountRate = rate ? rate : 0.25
   let discountPrice = price * (1 - discountRate)
   let discountPct = discountRate * 100
   let discountAmount = discountPrice * quantity

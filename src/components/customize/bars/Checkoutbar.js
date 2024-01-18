@@ -30,7 +30,7 @@ function Checkoutbar({
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
-  let discount = applyDiscounts(bookData.price, +itemQuantity)
+  let discount = applyDiscounts(bookData.price, +itemQuantity, 0.25)
   let discountRate = discount.rate || 0
   let discountPrice = discount.price || 0
   let discountSaved = discount.saved || 0

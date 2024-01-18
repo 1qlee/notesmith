@@ -3,7 +3,6 @@ import styled from "styled-components"
 const AuthSection = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
 `
 
 const AuthContentBox = styled.div`
