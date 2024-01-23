@@ -228,9 +228,9 @@ const Invite = ({ inviteId }) => {
                         h1fontsize="2rem"
                         margin="0 0 32px"
                       >
-                        <h1>You've been invited to join early access!</h1>
-                        <p>We're thrilled to have you on board as one of our valued pioneers, getting a sneak peek into the exciting platform we're building. Your feedback and insights will play a crucial role in shaping what's to come.</p>
-                        <p>Additionally, enjoy <b>25% off</b> notebooks and <b>free shipping</b> (to the U.S. only) during our pre-order period.</p>
+                        <h1>You've been invited to join Early Access!</h1>
+                        <p>We're thrilled to have you on board as an Early Access user getting a sneak peek into the platform we're building. We greatly appreciate your participation and are looking forward to hearing your feedback.</p>
+                        <p>Please note that during the Early Access pre-order sale, all notebooks are <b>25% off</b>. We will be fulfilling orders in batches, with the first batch having a quantity of 200 units.</p>
                       </Content>
                       <form
                         id="signup-form"

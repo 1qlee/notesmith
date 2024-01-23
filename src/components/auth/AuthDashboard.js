@@ -25,8 +25,7 @@ const UserDashboard = () => {
     status: false,
     text: "Copy",
   })
-  const [quantitySold, setQuantitySold] = useState(0)
-  // const launchDate = new Date("2023-12-15")
+  const [quantitySold, setQuantitySold] = useState(null)
   const singleRef = useRef(null)
 
   useEffect(() => {
@@ -90,8 +89,11 @@ const UserDashboard = () => {
     setTimeout(() => {
       // prevents code from being generated too many times in a row
       setGenerating(false)
-      singleRef.current.style.cursor = "pointer"
-      singleRef.current.style.opacity = "1"
+     
+      if (singleRef) {
+        singleRef.current.style.cursor = "pointer"
+        singleRef.current.style.opacity = "1"
+      }
     }, 3000)
   }
 
@@ -198,21 +200,28 @@ const UserDashboard = () => {
               <h3>Batch #1</h3>
               <p>This first batch will ship 200 notebooks total. There might be some leeway for some extra books (maybe between 25 and 75) if there is demand for them. Once the batch fulfills, we will immediately begin production and shipments should start within 2 to 4 weeks of fulfillment.</p>
             </Content>
-            <Flexbox
-              justify="space-between"
-              padding="0"
-              margin="0 0 8px"
-              width="100%"
-            >
-              <p><b>{quantitySold} books sold</b></p>
-              <p style={{color: colors.gray.sixHundred}}>{200 - quantitySold} books left</p>
-            </Flexbox>
-            <Progress
-              barcolor={colors.gray.nineHundred}
-              width="100%"
-              completion={(quantitySold / 200) * 100}
-              wrappercolor={colors.gray.oneHundred}
-            />
+            {quantitySold && (
+              <>
+                <Flexbox
+                  justify="space-between"
+                  padding="0"
+                  margin="0 0 8px"
+                  width="100%"
+                >
+                  <p><b>{quantitySold} books sold</b></p>
+                  <p style={{ color: colors.gray.sixHundred }}>{200 - quantitySold} books left</p>
+                </Flexbox>
+                <Progress
+                  barcolor={colors.gray.nineHundred}
+                  width="100%"
+                  completion={(quantitySold / 200) * 100}
+                  wrappercolor={colors.gray.oneHundred}
+                  animate
+                />
+              </>
+            )
+
+            }
             {referralCode && (
               <>
                 <Content

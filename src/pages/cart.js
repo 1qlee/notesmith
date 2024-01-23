@@ -1,7 +1,6 @@
 import React from "react"
 import { spacing } from "../styles/variables"
 
-import Seo from "../components/layout/Seo"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
 import ShoppingCart from "../components/shop/ShoppingCart"
 import Layout from "../components/layout/Layout"

@@ -61,6 +61,9 @@ function CheckoutForm({
       return setProcessing(false)
     }
 
+    // purchase the shipping label first so we can reference the shipment in paymentIntent metadata
+    const shipment = await purchaseShippingLabel()
+
     const payment = await stripe.confirmPayment({
       elements,
       clientSecret,
@@ -87,84 +90,111 @@ function CheckoutForm({
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
-      const createdDate = payment.paymentIntent.created
 
-      purchaseShippingLabel(createdDate)
+      if (shipment.error) {
+        // redirect the user to the orders summary page including the error
+        navigate(
+          `/orders/${shipment.orderId}?key=${shipment.authKey}`,
+          {
+            state: {
+              orderData: shipment.orderData,
+              cartItems: cartItems,
+              error: "Your payment was successful, however there was an error saving your order to our database. We are aware of this issue, but please still contact us to make sure everything is OK.",
+              clearCart: true,
+            }
+          }
+        )
+      }
+      else {
+        // redirect the user to the orders summary page
+        navigate(
+          `/orders/${shipment.orderId}?key=${shipment.authKey}`,
+          {
+            state: {
+              error: null,
+              clearCart: true,
+            }
+          }
+        )
+      }
     }
   }
 
-  const createTaxRecord = () => {
-    fetch("/.netlify/functions/create-tax-record", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
-        tax: tax,
+  const createTaxRecord = async () => {
+    try {
+      const response = await fetch("/.netlify/functions/create-tax-record", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pid: pid,
+          tax: tax,
+        }),
       })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
+
+      const data = await response.json()
+
       if (data.error) {
         throw data.error
       }
-    }).catch(err => {
+    } catch (err) {
       console.log(err)
-    })
+    }
   }
 
   // fetch easypost api to purchase a shipping label
   // takes options arg to save to orders (database)
-  const purchaseShippingLabel = (createdDate) => {
-
-    // all purchase info is in the paymentIntent, so just send pid
-    fetch("/.netlify/functions/create-shipment", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
+  const purchaseShippingLabel = async () => {
+    try {
+      const response = await fetch("/.netlify/functions/create-shipment", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pid: pid,
+        }),
       })
-    }).then(res => {
-      return res.json()
-    }).then(async data => {
+
+      const data = await response.json()
+
       if (data.error) {
         throw data
       }
 
-      // extract data
+      // Extract data
       const trackingCode = data.shippingLabel.tracking_code
-      const { trackingUrl, amount, authKey, tax, shipping, shipmentId, taxId, rateId } = data
+      const { trackingUrl, amount, authKey, tax, shipping, shipmentId, taxId, rateId, id, datePaid } = data
       const orderData = {
-        address: address,
         amount: amount,
         authKey: authKey,
-        created: createdDate,
+        datePaid: datePaid,
         customer: customer,
+        id: id,
         rateId: rateId,
         shipmentId: shipmentId,
         shipping: shipping,
         tax: tax,
         taxId: taxId,
         shipped: false,
-        tracking:  {
+        tracking: {
           code: trackingCode,
-          url: trackingUrl
+          url: trackingUrl,
         },
       }
 
-      await saveOrderItems(cartItems, orderData)
-    }).catch(async data => {
+      const responseFromSaveOrderItems = await saveOrderItems(cartItems, orderData)
+      return responseFromSaveOrderItems
+    } catch (data) {
+      // Handle errors
       await sendShippingErrorEmail("Payment was successful, but we could not purchase the shipping label.")
-      // if we have an error here that means the order was created but the shipping label was not purchased
-      // we need to have a failsafe so that we know this occured
-      const { amount, authKey, tax, shipping, error, taxId, shipmentId, rateId } = data
+
+      const { amount, authKey, tax, shipping, error, taxId, shipmentId, rateId, id, datePaid } = data
       const orderData = {
-        address: address,
-        created: createdDate,
+        datePaid: datePaid,
         amount: amount,
+        id: id,
         tax: tax,
         taxId: taxId,
         shipmentId: shipmentId,
@@ -175,68 +205,88 @@ function CheckoutForm({
         shipped: false,
       }
 
-      await saveOrderItems(cartItems, orderData)
-    })
+      const responseFromSaveOrderItems = await saveOrderItems(cartItems, orderData)
+      return responseFromSaveOrderItems;
+    }
   }
 
   // save each order item to the database
   // save the entire order to the database
   const saveOrderItems = async (cartItems, orderData) => {
-    let cartItemsObject = {}
+    let orderItems = {}
     const cartItemsLength = cartItems.length
+    const newOrderKey = push(ref(firebaseDb, 'orders/')).key
+    const { authKey } = orderData
+    
+    try {
+      // add all order items to db
+      for (let i = 0; i < cartItemsLength; i++) {
+        const orderItemKey = push(ref(firebaseDb, 'orderItems/')).key
+        orderItems[orderItemKey] = true
 
-    for (let i = 0; i < cartItemsLength; i++) {
-      const orderItemKey = push(ref(firebaseDb, 'orderItems/')).key
-      cartItemsObject[orderItemKey] = true
-
-      // if this set fails, then we won't have a saved order item
-      // this will make fulfillment very difficult, so we must handle the error here
-      set(ref(firebaseDb, `/orderItems/${orderItemKey}`), {
-        ...cartItems[i],
-        pid: pid,
-        id: orderItemKey,
-      }).then(async () => {
-        await set(ref(firebaseDb, `/orders/${pid}`), {
-          ...orderData,
+        await set(ref(firebaseDb, `/orderItems/${orderItemKey}`), {
+          ...cartItems[i],
           pid: pid,
-          orderItems: cartItemsObject,
+          id: orderItemKey,
+        }).catch(async () => {
+          setError(null)
+          // send the team an email to notify them of the error
+          await sendOrderErrorEmail("Payment was successful, but there was an error adding order items to the database.")
+
+          throw {
+            error: "Could not add order item to database.",
+          }
         })
-      }).then(() => {
-        setError(null)
+      }
 
-        // redirect the user to the orders summary page
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              error: null,
-              clearCart: true,
-            }
-          }
-        )
-      }).catch(async error => {
-        setError(null)
-        // send the team an email to notify them of the error
-        await sendOrderErrorEmail("Payment was successful, but we could not save the order to the database.")
+      // add the order itself to db
+      await set(ref(firebaseDb, `/orders/${newOrderKey}`), {
+        ...orderData,
+        pid: pid,
+        orderItems: orderItems,
+      }).then(async () => {
+        const response = await fetch("/.netlify/functions/update-payment", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pid: pid,
+            data: { orderKey: newOrderKey },
+          }),
+        })
 
-        // redirect the user to the orders summary page including the error
-        navigate(
-          `/orders/${pid}?key=${authKey}`,
-          {
-            state: {
-              orderData: orderData,
-              cartItems: cartItems,
-              error: "There was an error saving your order. Please contact us at",
-              clearCart: true,
-            }
-          }
-        )
+        const data = await response.json()
+
+        if (data.error) {
+          throw data.error
+        }
+      }).catch(async () => {
+        await sendOrderErrorEmail("Payment was successful, but there was an error adding order to the database.")
+
+        throw {
+          error: "Could not add order to database.",
+        }
       })
+
+      return {
+        orderId: newOrderKey,
+        authKey: authKey,
+        error: null,
+      }
+    } catch (error) {
+      return {
+        error: error.error,
+        orderId: newOrderKey,
+        orderData: orderData,
+        authKey: authKey,
+      }
     }
   }
 
+
   const sendOrderErrorEmail = async (error) => {
-    fetch("/.netlify/functions/send-email-order-error", {
+    await fetch("/.netlify/functions/send-email-order-error", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -250,7 +300,7 @@ function CheckoutForm({
   }
 
   const sendShippingErrorEmail = async (error) => {
-    fetch("/.netlify/functions/send-email-shipping-error", {
+    await fetch("/.netlify/functions/send-email-shipping-error", {
       method: "post",
       headers: {
         "Content-Type": "application/json"

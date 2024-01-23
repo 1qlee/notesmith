@@ -72,8 +72,9 @@ const CheckoutSteps = ({
               backgroundcolor={status.color}
               color={colors.white}
               border={`1px solid ${status.color}`}
-              fontweight="700"
-              padding="2px"
+              borderradius="16px"
+              fontweight="400"
+              padding="4px 8px"
               margin="0 8px"
             >
               {status.msg}

@@ -49,7 +49,7 @@ function svgToObjects(svgNode, indexTracker) {
 }
 
 function convertUnix(timestamp) {
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   const options = {
     month: 'long',
     year: 'numeric',

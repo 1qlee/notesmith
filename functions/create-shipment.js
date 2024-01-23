@@ -3,23 +3,45 @@ const easypostApi = require('@easypost/api');
 const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
 // will have to update the paymentIntent metadata object with tracking information
-const updatePaymentIntent = async (pid, shippingLabel) => {
+const updatePaymentIntent = async (pid, shippingLabel, orderId, datePaid) => {
   const { tracking_code, public_url } = shippingLabel.tracker;
-  console.log("[Netlify] Updating payment intent with tracking information.")
+  console.log("[Stripe] Updating payment intent with tracking information.")
   await stripe.paymentIntents.update(
     pid,
     {
       metadata: {
         tracking: tracking_code, // carrier tracking code
         trackingUrl: public_url, // easypost URL
+        orderId: orderId,
+        datePaid: datePaid,
       }
     }
   );
 }
 
+const generateOrderId = (date) => {
+  const randomValue = Math.floor(date * Math.random());
+  let resultString = String(randomValue);
+
+  // Pad with random characters if the length is less than 12
+  while (resultString.length < 12) {
+    const randomDigit = Math.floor(Math.random() * 10);
+    resultString += randomDigit;
+  }
+
+  // Truncate to exactly 12 characters
+  resultString = resultString.substring(0, 12);
+
+  return resultString;
+}
+
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
   const { pid } = body;
+
+  // create an order id using the current time
+  const datePaid = Date.now()
+  const orderId = generateOrderId(datePaid)
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
@@ -33,13 +55,15 @@ exports.handler = async (event) => {
     console.log(`[Easypost] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information
-    updatePaymentIntent(pid, shippingLabel);
+    updatePaymentIntent(pid, shippingLabel, orderId, datePaid);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         amount: amount,
         authKey: authKey,
+        datePaid: datePaid,
+        id: orderId,
         rateId: rateId,
         shipmentId: shipmentId,
         shipping: shipping,
@@ -57,7 +81,9 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         amount: amount,
         authKey: authKey,
+        datePaid: datePaid,
         error: "shipping",
+        id: orderId,
         rateId: rateId,
         shipmentId: shipmentId,
         shipping: shipping,

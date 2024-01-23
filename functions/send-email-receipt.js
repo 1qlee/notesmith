@@ -21,13 +21,16 @@ exports.handler = async ({ body, headers }) => {
       console.log("[Stripe Webhook] Payment Intent succeeded... Calling webhook...")
       const { data } = stripeEvent;
       const { object } = data;
-      const { amount, id, metadata, created } = object;
-      const { tax, authKey, shipping, subtotal, email } = metadata;
+      const { amount, metadata, created, latest_charge } = object;
+      const { tax, authKey, shipping, subtotal, email, orderId, orderKey } = metadata;
       const { address } = object.shipping;
-      // the date the payment was succeeded
       const date = new Date(created * 1000);
+      
+      const charge = await stripe.charges.retrieve(latest_charge);
+      const { payment_method_details } = charge;
+      const paymentType = payment_method_details.type;
 
-      const templateData = {
+      let templateData = {
         template_id: "d-abcd18cd57cd41aa8d857ccdfd01da92",
         from: {
           email: "general@notesmithbooks.com",
@@ -45,19 +48,24 @@ exports.handler = async ({ body, headers }) => {
               }
             ],
             dynamic_template_data: {
-              orderId: id,
               address: address,
+              authKey: authKey,
               date: date.toLocaleString(),
-              subtotal: convertToDecimal(subtotal, 2),
+              english: true,
+              orderId: orderId,
+              orderKey: orderKey,
+              paymentType: paymentType,
               shippingRate: convertToDecimal(shipping, 2),
+              subtotal: convertToDecimal(subtotal, 2),
               taxRate: tax ? convertToDecimal(tax, 2) : "0",
               totalAmount: convertToDecimal(amount, 2),
-              authKey: authKey,
-              last4: "****",
-              english: true
             }
           }
         ]
+      }
+
+      if (payment_method_details.card) {
+        templateData.personalizations[0].dynamic_template_data.last4 = payment_method_details.card.last4;
       }
 
       await sendgridMail.send(templateData);

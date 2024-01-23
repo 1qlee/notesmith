@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useFirebaseContext } from "../../utils/auth"
 import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth"
+import sendEmailTemplate from "../../functions/sendEmailTemplate"
 
 import { Link } from "gatsby"
 import { AuthFormWrapper } from "../../components/form/FormComponents"
@@ -10,7 +11,7 @@ import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
 
 function Auth({ location }) {
-  const { firebaseAuth } = useFirebaseContext()
+  const { firebaseAuth, user } = useFirebaseContext()
   const params = new URLSearchParams(location.search)
   const mode = params.get("mode")
   const actionCode = params.get("oobCode")
@@ -42,12 +43,16 @@ function Auth({ location }) {
       //   handleRecoverEmail(mode, actionCode)
       //   break;
       case 'verifyEmail':
-        applyActionCode(firebaseAuth, actionCode).then(res => {
+        applyActionCode(firebaseAuth, actionCode).then(() => {
+          sendEmailTemplate({
+            to: user.email,
+            templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
+          })
           setAuthModeVerified(true)
           setAuthMode(mode)
           setLoading(false)
         }).catch(error => {
-          console.log(error)
+          console.log("🚀 ~ applyActionCode ~ error:", error)
           setAuthModeVerified(false)
           setAuthMode(mode)
           setLoading(false)

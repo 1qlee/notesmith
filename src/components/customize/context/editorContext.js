@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react"
-import * as d3 from "d3"
 import { SVG } from '@svgdotjs/svg.js'
 import '../editor/helpers/svg.drag.js'
 import '../editor/helpers/svg.select.js'
@@ -86,9 +85,6 @@ const setCanvasState = (state, action) => {
     case "reset":
       log("Resetting...")
 
-      d3.selectAll("[data-selected]").attr("data-selected", null)
-      d3.selectAll("[data-hovered]").attr("data-hovered", null)
-
       return {
         ...state,
         canvas: null,
@@ -96,6 +92,7 @@ const setCanvasState = (state, action) => {
         selectedElements: [],
         selectionBbox: {},
         selectionPath: "",
+        deletionAllowed: true,
       }
     case "change-selection": {
       log("changing selection...")
@@ -135,7 +132,7 @@ const setCanvasState = (state, action) => {
         }
       }
       else {
-        d3.selectAll("[data-selected]").attr("data-selected", null)
+        SVG("#page-spread").find("[data-selected]").attr("data-selected", null)
 
         return {
           ...state,
@@ -150,7 +147,7 @@ const setCanvasState = (state, action) => {
     case "ungroup-selection": {
       log("ungrouping all selections...")
 
-      d3.selectAll("[data-selected]").attr("data-selected", null)
+      SVG("#page-spread").find("[data-selected]").attr("data-selected", null)
 
       return {
         ...state,

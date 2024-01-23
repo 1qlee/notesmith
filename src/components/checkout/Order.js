@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors, fonts, spacing, widths } from "../../styles/variables"
+import { colors, fonts, spacing } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ArrowSquareOut, CircleNotch } from "@phosphor-icons/react"
 import { convertUnix, convertToDecimal } from "../../utils/helper-functions"
@@ -35,8 +35,8 @@ const Order = ({ location, orderId }) => {
   const { clearCart } = useShoppingCart()
   const params = new URLSearchParams(location.search)
   const urlAuthKey = params.get("key")
-  const {state} = location
-  const {loading, firebaseDb} = useFirebaseContext()
+  const { state } = location
+  const { loading, firebaseDb } = useFirebaseContext()
   const [retrieving, setRetrieving] = useState(true)
   const [orderInfo, setOrderInfo] = useState({
     address: {
@@ -88,9 +88,27 @@ const Order = ({ location, orderId }) => {
         else {
           // check if authkeys match, and show info if it does
           if (value.authKey === urlAuthKey) {
+
+            // get order address from paymentIntent
+            await fetch("/.netlify/functions/retrieve-payment", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                pid: value.pid,
+              })
+            })
+            .then(res => res.json())
+            .then(data => {
+              setOrderInfo({
+                ...value,
+                address: data.paymentIntent.shipping.address
+              })
+            })
+
             // save order info to state
             setShowInfo(true)
-            setOrderInfo(value)
             const orderItemsArray = []
 
             for (const orderItem in value.orderItems) {
@@ -160,7 +178,6 @@ const Order = ({ location, orderId }) => {
       })
       setProcessing(false)
     }).catch(error => {
-      console.log(error)
       setProcessing(false)
     })
   }
@@ -181,15 +198,26 @@ const Order = ({ location, orderId }) => {
               {orderNotFound ? (
                 <Row>
                   <Col xl={6} lg={6} xxl={6} md={6}>
-                    <Content
-                      margin="0 0 32px"
-                      paragraphfontsize="1.25rem"
-                    >
-                      <h1>Order not found</h1>
-                      <p>We couldn't find this order for you. Please try following the link in your email receipt again.
-                      </p>
-                      <p>If you require further assistance please <b><TextLink fontsize="1.25rem" href={`mailto:general@notesmithbooks.com?subject=Regarding Order: ${orderId ? orderId : "Unknown order ID"}`}>send us an email</TextLink></b>.</p>
-                    </Content>
+                    {checkoutError ? (
+                      <Content
+                        margin="0 0 32px"
+                        paragraphfontsize="1.25rem"
+                      >
+                        <h1>Error occured during checkout</h1>
+                        <p>{checkoutError.error}</p>
+                        <p>Please <b><TextLink fontsize="1.25rem" href={`mailto:support@notesmithbooks.com?subject=Error occured during checkout Order #${orderId ? orderId : "Unknown order ID"}`}>send us an email</TextLink></b> regarding this issue.</p>
+                      </Content>
+                    ) : (
+                      <Content
+                        margin="0 0 32px"
+                        paragraphfontsize="1.25rem"
+                      >
+                        <h1>Order not found</h1>
+                        <p>We couldn't find this order for you. Please try following the link in your email receipt again.
+                        </p>
+                          <p>If you require further assistance please <b><TextLink fontsize="1.25rem" href={`mailto:support@notesmithbooks.com?subject=Regarding Order: ${orderId ? orderId : "Unknown order ID"}`}>send us an email</TextLink></b>.</p>
+                      </Content>
+                    )}
                   </Col>
                 </Row>
               ) : (
@@ -226,7 +254,7 @@ const Order = ({ location, orderId }) => {
                           >
                             <h5>Order date</h5>
                             {showInfo ? (
-                              <p>{convertUnix(orderInfo.created)}</p>
+                              <p>{convertUnix(orderInfo.datePaid)}</p>
                             ) : (
                               <PlaceholderLine width="4rem" />
                             )}
@@ -241,7 +269,7 @@ const Order = ({ location, orderId }) => {
                             {showInfo ? (
                               <>
                                 <p>{orderInfo.address.line1 || orderInfo.address.street1} {orderInfo.address.line2 || orderInfo.address.street2}
-                                <span>{orderInfo.address.city}, {orderInfo.address.state} {orderInfo.address.postal_code || orderInfo.address.zip}</span>
+                                  <span>{orderInfo.address.city}, {orderInfo.address.state} {orderInfo.address.postal_code || orderInfo.address.zip}</span>
                                 </p>
                               </>
                             ) : (
@@ -369,9 +397,9 @@ const Order = ({ location, orderId }) => {
                             >
                               <p>Total</p>
                               <Content
-                                  paragraphmargin="0"
-                                  paragraphfontsize="1.25rem"
-                                  paragraphlineheight="1"
+                                paragraphmargin="0"
+                                paragraphfontsize="1.25rem"
+                                paragraphlineheight="1"
                               >
                                 <p>${convertToDecimal(orderInfo.amount, 2)}</p>
                               </Content>
@@ -393,9 +421,10 @@ const Order = ({ location, orderId }) => {
                       </Box>
                       {!showInfo && (
                         <Notification
-                          backgroundcolor={colors.yellow.oneHundred}
-                          margin="0 0 2rem"
-                          padding="16px"
+                          backgroundcolor={colors.gray.oneHundred}
+                          borderradius="16px"
+                          margin="32px 0"
+                          padding="32px"
                         >
                           <Content>
                             <p>Can't see your order details? Try checking your email for your order confirmation receipt and click the button inside. If you've lost the email, enter the email address associated with this order and we'll send you another one.</p>
@@ -407,15 +436,18 @@ const Order = ({ location, orderId }) => {
                                 className="is-vertical"
                                 margin="16px 0"
                               >
-                                <StyledLabel>Email</StyledLabel>
+                                <StyledLabel
+                                  htmlFor="resend-input"
+                                >
+                                  Email
+                                </StyledLabel>
                                 <Flexbox
                                   flex="flex"
-                                  width="100%"
                                 >
                                   <StyledInput
                                     placeholder="Email address associated with this order"
                                     className={error.success ? null : "is-error"}
-                                    id="email"
+                                    id="resend-input"
                                     type="email"
                                     name="email"
                                     autocomplete="email"

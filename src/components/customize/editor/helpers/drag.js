@@ -126,11 +126,6 @@ function drag(dispatch, canvas, ref) {
 
   function dragEnd(e) {
     console.log("drag end")
-    // const { subject } = event
-
-    // for (let i = 0, length = subject.length; i < length; i++) {
-    //   d3.select(subject[i]).attr("data-selected", "")
-    // }
 
     dispatch({
       type: "parse-selection",

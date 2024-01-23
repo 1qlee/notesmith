@@ -209,7 +209,7 @@ function SettingsForm() {
     e.preventDefault()
 
 
-    await fetch("/.netlify/functions/send-email-generic", {
+    await fetch("/.netlify/functions/send-email-template", {
       method: "post",
       headers: {
         "Content-type": "application/json"
