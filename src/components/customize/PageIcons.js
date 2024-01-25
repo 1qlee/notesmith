@@ -12,13 +12,15 @@ import CalligraphyIcon from "../../assets/calligraphy.svg"
 import { Flexbox } from "../layout/Flexbox"
 import Icon from "../ui/Icon"
 
-const StyledPage = styled.a`
+const StyledPage = styled.button`
   align-items: center;
   display: flex;
   flex-direction: column;
   margin: ${props => props.margin};
-  position: relative;
-
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
   p {
     padding: 0.25rem;
     transition: 0.2s background-color, 0.2s color;
@@ -61,9 +63,10 @@ const StyledPage = styled.a`
   }
 `
 
-const PageBadge = styled.span`
+const PageBadge = styled.button`
   align-items: center;
-  background-color: ${colors.yellow.threeHundred};
+  background-color: ${colors.white};
+  border: ${colors.borders.black};
   border-radius: 20px;
   color: ${colors.gray.nineHundred};
   display: flex;
@@ -77,7 +80,18 @@ const PageBadge = styled.span`
   position: absolute;
   right: ${props => props.right};
   top: -0.5rem;
+  transition: color 0.2s, background-color 0.2s;
   z-index: 9;
+  &.is-active {
+    background-color: ${colors.gray.nineHundred};
+    color: ${colors.gray.oneHundred};
+  }
+  &:hover {
+    &:not(.is-active) {
+      cursor: pointer;
+      background-color: ${colors.gray.oneHundred};
+    }
+  }
 `
 
 const PageOutline = styled.div`
@@ -137,6 +151,13 @@ const PageLabel = styled.p`
   color: ${colors.gray.sevenHundred};
 `
 
+const PageWrapper = styled.div`
+  position: relative;
+  width: 30px;
+  height: 40px;
+  margin: 0 24px 24px 0;
+`
+
 function Page({
   children,
   className,
@@ -149,33 +170,39 @@ function Page({
   setData,
 }) {
   return (
-    <StyledPage
-      onClick={() => setData(data)}
-      className={isActive ? `is-active ${className}` : className}
-      onKeyDown={e => {
-        if (e.key === 'Enter') {
-          setData(data)
-        }
-      }}
-      margin={margin}
-      tabIndex="0"
-    >
+    <PageWrapper>
+      <StyledPage
+        onClick={() => setData({ ...data, activeTemplate: null })}
+        className={isActive ? `is-active ${className}` : className}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            setData(data)
+          }
+        }}
+        margin={margin}
+        tabIndex="0"
+      >
+        {children}
+      </StyledPage>
       {(isProductPage && leftPageData.template === data.template) && (
         <PageBadge
-          left="-0.5rem"
+          left="-8px"
+          onClick={() => setData({ ...leftPageData.pageData, activeTemplate: "left" })}
+          className={data.activeTemplate === "left" ? "is-active" : ""}
         >
           L
         </PageBadge>
       )}
       {(isProductPage && rightPageData.template === data.template) && (
         <PageBadge
-          right="-0.5rem"
+          right="-8px"
+          onClick={() => setData({ ...rightPageData.pageData, activeTemplate: "right" })}
+          className={data.activeTemplate === "right" ? "is-active" : ""}
         >
           R
         </PageBadge>
       )}
-      {children}
-    </StyledPage>
+    </PageWrapper>
   )
 }
 
@@ -550,7 +577,7 @@ function IsometricPageIcon({
     borderData: {
       sync: true,
       toggle: false,
-      thickness: 0.088,
+      strokeWidth: 0.088,
       opacity: 1,
     },
     show: isProductPage ? true : false,

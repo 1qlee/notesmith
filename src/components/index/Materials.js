@@ -12,7 +12,7 @@ const qualities = {
     },
     {
       heading: "Weight",
-      text: "80# (~105gsm) text"
+      text: "70# (~105gsm) text"
     },
     {
       heading: "Type",

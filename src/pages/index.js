@@ -40,14 +40,14 @@ const IndexPage = ({ data }) => {
     borderData: {
       sync: true,
       toggle: true,
-      thickness: 0.088,
+      strokeWidth: 0.088,
       opacity: 1,
     },
     columns: 99,
     columnSpacing: 5,
     dashedLineData: {
       sync: true,
-      thickness: 0.088,
+      strokeWidth: 0.088,
       opacity: 1,
       dashArray: "2 4 4 2",
       dashOffset: 0,

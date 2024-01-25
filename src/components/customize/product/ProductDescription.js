@@ -40,7 +40,7 @@ const ProductDescription = ({
               <Content
                 headingfontfamily={fonts.secondary}
                 paragraphfontsize="1.25rem"
-                margin="0 0 32px"
+                margin="16px 0 32px"
               >
                 <p>{bookData.longDescription}</p>
               </Content>

@@ -11,6 +11,7 @@ function BorderControls({
   setPageData,
 }) {
   const { borderData } = pageData
+  console.log("🚀 ~ borderData:", borderData)
 
   function handleBorderSync() {
     if (!borderData.sync) {
@@ -144,7 +145,7 @@ function BorderControls({
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
                 step={0.001}
-                width="4.25rem"
+                width="4.5rem"
               />
             </ControlFlexChild>
             <ControlFlexChild

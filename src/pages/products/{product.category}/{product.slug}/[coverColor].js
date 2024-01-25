@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { graphql, navigate } from "gatsby"
-import { colors, spacing, pageMargins } from "../../../../styles/variables"
+import { colors, spacing, pageMargins, pageDataConfig } from "../../../../styles/variables"
 import { toast } from 'react-toastify'
-import { convertToPx } from "../../../../utils/helper-functions"
 
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
@@ -19,65 +18,17 @@ const ProductPage = ({ data, params }) => {
   const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = product
-  const svgHeight = heightPixel
-  const svgWidth = widthPixel
   const [bookData, setBookData] = useState({
     ...product,
     coverColor: coverColor,
   })
   const defaultPageData = {
-    alignmentHorizontal: "center",
-    alignmentVertical: "top",
-    angle: 30,
-    ascSpacing: 5,
-    borderData: {
-      sync: true,
-      toggle: true,
-      thickness: 0.088,
-      opacity: 1,
-    },
-    columns: 27,
-    columnSpacing: 5,
-    dashedLineData: {
-      sync: true,
-      thickness: 0.088,
-      opacity: 1,
-      dashArray: "2 4 4 2",
-      dashOffset: 0,
-    },
-    dscSpacing: 5,
-    hexagonRadius: 1,
-    lineWidth: 100,
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 0,
-    maxContentHeight: svgHeight - pageMargins.vertical,
-    maxContentWidth: svgWidth - pageMargins.horizontal,
-    opacity: 1,
-    radius: 0.1,
-    rows: 42,
-    rowSpacing: 5,
-    show: false,
-    crossSize: 1,
-    slantAngle: 55,
-    slants: 20,
-    slantSpacing: 5,
-    spacing: 5,
-    staffSpacing: 5,
-    staves: 9,
-    svgHeight: svgHeight,
-    svgWidth: svgWidth,
-    template: "",
-    thickness: 0.088,
-    xHeight: 5,
+    ...pageDataConfig,
+    maxContentHeight: heightPixel - pageMargins.vertical,
+    maxContentWidth: widthPixel - pageMargins.horizontal,
+    activeTemplate: null,
   }
   const [pageData, setPageData] = useState(defaultPageData)
-  const [svgSize, setSvgData] = useState({
-    height: bookData.heightPixel - pageMargins.vertical,
-    width: bookData.widthPixel - pageMargins.horizontal,
-  })
-  const [maxSvgSize, setMaxSvgSize] = useState({})
   const [currentPageSide, setCurrentPageSide] = useState("both")
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
   const [leftPageData, setLeftPageData] = useState({})
@@ -87,6 +38,7 @@ const ProductPage = ({ data, params }) => {
     rows: 200,
     columns: 200,
   })
+  const [svgLoaded, setSvgLoaded] = useState(false)
 
   useEffect(() => {
     // if there is no coverColor or coverColor does not exist
@@ -103,12 +55,7 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
-
-    setMaxSvgSize({
-      height: pageData.maxContentHeight - convertToPx(pageData.marginTop) - convertToPx(pageData.marginBottom),
-      width: pageData.maxContentWidth - convertToPx(pageData.marginLeft) - convertToPx(pageData.marginRight),
-    })
-  }, [product, bookData, coverColor, pageData])
+  }, [product, bookData, coverColor])
 
   return (
     <Layout
@@ -135,20 +82,18 @@ const ProductPage = ({ data, params }) => {
                         setLeftPageData={setLeftPageData}
                         setPageData={setPageData}
                         setRightPageData={setRightPageData}
-                        svgSize={svgSize}
                         toast={toast}
                       />
                     </Col>
                     <Col id="product-template">
                       <ProductTemplate
                         bookData={bookData}
-                        maxSvgSize={maxSvgSize}
                         currentPageSide={currentPageSide}
                         pageData={pageData}
                         setPageData={setPageData}
                         setMax={setMax}
                         setSelectedPageSvg={setSelectedPageSvg}
-                        setSvgData={setSvgData}
+                        setSvgLoaded={setSvgLoaded}
                       />
                     </Col>
                   </>

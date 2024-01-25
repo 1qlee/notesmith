@@ -6,6 +6,7 @@ function Graph({
   pageData, 
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [lineRows, setLineRows] = useState([])
   const [lineColumns, setLineColumns] = useState([])
@@ -128,6 +129,7 @@ function Graph({
       rows: maxRows,
       columns: maxCols,
     })
+    setSvgLoaded(true)
   }, [pageData])
 
   return (

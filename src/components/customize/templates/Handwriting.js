@@ -6,6 +6,7 @@ function Handwriting({
   pageData,
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [writingRows, setWritingRows] = useState([])
   const { opacity, rows, spacing, staffSpacing, strokeWidth, dashedLineData } = pageData
@@ -94,6 +95,7 @@ function Handwriting({
     setMax({
       rows: maxRows,
     })
+    setSvgLoaded(true)
   }, [pageData, dashedLineData])
 
   return (

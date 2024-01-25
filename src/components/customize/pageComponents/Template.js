@@ -101,6 +101,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "dot" && (
@@ -109,6 +110,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "graph" && (
@@ -117,6 +119,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "hexagon" && (
@@ -125,6 +128,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "isometric" && (
@@ -133,6 +137,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "seyes" && (
@@ -141,6 +146,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "music" && (
@@ -149,6 +155,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "handwriting" && (
@@ -157,6 +164,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "cross" && (
@@ -165,6 +173,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "calligraphy" && (
@@ -173,6 +182,7 @@ const Template = ({
           pageData={pageData}
           setPageData={setPageData}
           setMax={setMax}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
     </svg>

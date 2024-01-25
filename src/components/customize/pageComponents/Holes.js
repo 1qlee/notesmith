@@ -21,7 +21,7 @@ function Holes({
       const hole = {
         width: holeSize,
         height: holeSize,
-        fill: colors.gray.oneHundred,
+        fill: colors.white,
         strokeWidth: 1,
         stroke: colors.gray.threeHundred,
         x: currentPageSide === "left" ? leftHolesXPosition : rightHolesXPosition,
@@ -46,6 +46,8 @@ function Holes({
           width={hole.width}
           height={hole.height}
           fill={hole.fill}
+          stroke={hole.stroke}
+          strokeWidth={hole.strokeWidth}
           x={hole.x}
           y={hole.y}
         >

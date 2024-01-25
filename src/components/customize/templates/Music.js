@@ -6,6 +6,7 @@ function Music({
   pageData,
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [staves, setStaves] = useState([])
   const { opacity, spacing, strokeWidth} = pageData
@@ -64,6 +65,7 @@ function Music({
     setMax({
       staves: maxStaves,
     })
+    setSvgLoaded(true)
   }, [pageData])
 
   return (

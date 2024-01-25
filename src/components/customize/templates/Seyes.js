@@ -6,6 +6,7 @@ function Seyes({
   pageData,
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [horizontalLines, setHorizontalLines] = useState([])
   const [verticalLines, setVerticalLines] = useState([])
@@ -120,6 +121,8 @@ function Seyes({
       rows: maxRows,
       columns: maxCols,
     })
+
+    setSvgLoaded(true)
   }, [pageData])
 
   return (

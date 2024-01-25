@@ -239,25 +239,26 @@ const ProductInfo = ({
             </Button>
           </Flexbox>
           <Notification
-            backgroundcolor={colors.yellow.twoHundred}
+            backgroundcolor={colors.gray.oneHundred}
+            borderradius="16px"
+            padding="16px"
           >
             <Icon
               className="is-pulsating"
               margin="2px 0 0"
-              pulseColor={colors.yellow.sixHundred}
+              pulseColor={colors.gray.sixHundred}
             >
               <Info
-                color={colors.yellow.nineHundred}
+                color={colors.gray.sixHundred}
                 size={20}
               />
             </Icon>
             <Content
               margin="0 0 0 8px"
               paragraphmargin="0"
-              paragraphcolor={colors.yellow.nineHundred}
               paragraphfontsize="1rem"
             >
-              <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.yellow.nineHundred}>accounts page</TextLink></Link>.</p>
+              <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.gray.nineHundred}>accounts page</TextLink></Link>.</p>
             </Content>
           </Notification>
         </>

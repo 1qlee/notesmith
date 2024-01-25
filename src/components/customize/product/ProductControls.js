@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, breakpoints } from "../../../styles/variables"
 import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
-import { CircleNotch, SlidersHorizontal, CaretCircleLeft } from "@phosphor-icons/react"
+import { CircleNotch } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import Icon from "../../ui/Icon"
@@ -19,6 +19,8 @@ import MusicControls from "../templateControls/MusicControls"
 import HandwritingControls from "../templateControls/HandwritingControls"
 import CrossGridControls from "../templateControls/CrossGridControls"
 import CalligraphyControls from "../templateControls/CalligraphyControls"
+import MarginControls from "../templateControls/components/MarginControls"
+import AlignmentControls from "../templateControls/components/AlignmentControls"
 
 const StyledTemplatesBar = styled.div`
   background-color: ${colors.white};
@@ -131,13 +133,12 @@ function ProductControls({
   setLeftPageData,
   setPageData,
   setRightPageData,
-  svgSize,
   toast,
 }) {
   const [loading, setLoading] = useState(false)
   const [showControls, setShowControls] = useState(true)
-  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.pageHeight) - pageData.strokeWidth, 3)
-  const maximumMarginWidth = convertFloatFixed(convertToMM(pageData.pageWidth), 3)
+  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.strokeWidth, 3)
+  const maximumMarginWidth = convertToMM(pageData.svgWidth)
 
   function handleSetTemplate() {
     setLoading(true)
@@ -219,7 +220,7 @@ function ProductControls({
                     h5fontweight="700"
                     margin="0 0 1rem 0"
                   >
-                    <h5>Page side</h5>
+                    <h5>Apply to {currentPageSide} page{currentPageSide === "both" && "s"}</h5>
                     <PageButtonWrapper>
                       <PageButton
                         onClick={() => setCurrentPageSide("left")}
@@ -243,11 +244,23 @@ function ProductControls({
                   </Content>
                   {pageData.template !== "blank" && pageData.template !== "none" && (
                     <>
+                      {selectedPageSvg && (
+                        <>
+                          <MarginControls
+                            pageData={pageData}
+                            setPageData={setPageData}
+                            maximumMarginHeight={maximumMarginHeight}
+                            maximumMarginWidth={maximumMarginWidth}
+                          />
+                          <AlignmentControls
+                            pageData={pageData}
+                            setPageData={setPageData}
+                            selectedPageSvg={selectedPageSvg}
+                          />
+                        </>
+                      )}
                       {pageData.template === "ruled" && (
                         <RuledControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -255,9 +268,6 @@ function ProductControls({
                       )}
                       {pageData.template === "dot" && (
                         <DotControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -265,9 +275,6 @@ function ProductControls({
                       )}
                       {pageData.template === "graph" && (
                         <GraphControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -275,9 +282,6 @@ function ProductControls({
                       )}
                       {pageData.template === "hexagon" && (
                         <HexagonControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -285,9 +289,6 @@ function ProductControls({
                       )}
                       {pageData.template === "isometric" && (
                         <IsometricControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -295,9 +296,6 @@ function ProductControls({
                       )}
                       {pageData.template === "seyes" && (
                         <SeyesControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -305,9 +303,6 @@ function ProductControls({
                       )}
                       {pageData.template === "music" && (
                         <MusicControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -315,9 +310,6 @@ function ProductControls({
                       )}
                       {pageData.template === "handwriting" && (
                         <HandwritingControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -325,9 +317,6 @@ function ProductControls({
                       )}
                       {pageData.template === "cross" && (
                         <CrossGridControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}
@@ -335,9 +324,6 @@ function ProductControls({
                       )}
                       {pageData.template === "calligraphy" && (
                         <CalligraphyControls
-                          svgSize={svgSize}
-                          maximumMarginHeight={maximumMarginHeight}
-                          maximumMarginWidth={maximumMarginWidth}
                           pageData={pageData}
                           setPageData={setPageData}
                           max={max}

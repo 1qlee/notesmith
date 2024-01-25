@@ -6,6 +6,7 @@ function Ruled({
   pageData,
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [lines, setLines] = useState([])
   const { strokeWidth, spacing, opacity, rows } = pageData
@@ -57,6 +58,7 @@ function Ruled({
     setMax({
       rows: maxRows,
     })
+    setSvgLoaded(true)
   }, [pageData])
 
   return (

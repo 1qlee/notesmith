@@ -51,6 +51,7 @@ function AlignmentControls({
   switch(pageData.template) {
     case "ruled":
       verticalTrim = strokeWidth
+      horizontalTrim = 0
       break
     case "graph":
       verticalTrim = strokeWidth
@@ -62,9 +63,11 @@ function AlignmentControls({
       break
     case "music":
       verticalTrim = strokeWidth
+      horizontalTrim = 0
       break
     case "handwriting":
       verticalTrim = strokeWidth
+      horizontalTrim = 0
       break
     case "cross":
       verticalTrim = 0.333
@@ -75,20 +78,22 @@ function AlignmentControls({
       horizontalTrim = 0
       break
     case "isometric":
-      horizontalTrim = strokeWidth / 2
+      pageData.borderData.toggle ? horizontalTrim = 0 : horizontalTrim = strokeWidth / 2
+      verticalTrim = 0
       break
     default:
       verticalTrim = 0
       horizontalTrim = 0
       break
   }
-
   let horizontalSpace = convertFloatFixed(convertToMM(maxContentWidth - contentWidth) - horizontalTrim, 3)
   if (horizontalSpace < 0) {
     horizontalSpace = 0
   }
   const horizontalCenter = convertFloatFixed(horizontalSpace / 2, 3)
+
   let verticalSpace = convertFloatFixed(convertToMM(maxContentHeight - contentHeight) - verticalTrim, 3)
+  
   if (verticalSpace < 0) {
     verticalSpace = 0
   }

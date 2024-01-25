@@ -6,6 +6,7 @@ function Dot({
   pageData, 
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const [dots, setDots] = useState([])
   const { radius, columns, rows, opacity, rowSpacing, columnSpacing } = pageData
@@ -76,6 +77,7 @@ function Dot({
       rows: maxRows,
       columns: maxCols,
     })
+    setSvgLoaded(true)
   }, [pageData])
 
   return (

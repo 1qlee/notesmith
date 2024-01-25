@@ -6,6 +6,7 @@ function Hexagon({
   pageData,
   setPageData,
   setMax,
+  setSvgLoaded,
 }) {
   const { hexagonRadius, strokeWidth, rows, opacity, columns } = pageData
   const { width, height } = maxSvgSize
@@ -108,6 +109,8 @@ function Hexagon({
       columns: maxColumns,
       rows: maxRows,
     })
+
+    setSvgLoaded(true)
   }, [pageData])
 
   return (
