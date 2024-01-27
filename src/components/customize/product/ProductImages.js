@@ -3,6 +3,8 @@ import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
+import { Container, Row, Col } from "react-grid-system"
+
 const StyledProductImages = styled.div`
   width: 100%;
   height: 100%;
@@ -75,6 +77,7 @@ function ProductImages({
         imagesDummyArray.push({
           main: img,
           thumbnail: filteredThumbnails[index],
+          alt: img.name,
         })
       })
 
@@ -93,8 +96,8 @@ function ProductImages({
   }
 
   return (
-    <StyledProductImages>
-      <ThumbnailRow>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+      {/* <ThumbnailRow>
         {allImages.map((image, index) => (
           <Thumbnail
             key={index}
@@ -107,14 +110,18 @@ function ProductImages({
             />
           </Thumbnail>
         ))}
-      </ThumbnailRow>
-      <MainProductImage>
-        <GatsbyImage 
-          image={getImage(activeImageData)}
-          alt=""
-        />
-      </MainProductImage>
-    </StyledProductImages>
+      </ThumbnailRow> */}
+      {allImages.map((image, index) => (
+        <MainProductImage
+          key={index}
+        >
+          <GatsbyImage
+            image={getImage(image.main)}
+            alt={image.alt}
+          />
+        </MainProductImage>
+      ))}
+    </div>
   )
 }
 

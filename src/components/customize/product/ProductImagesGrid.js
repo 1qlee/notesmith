@@ -11,32 +11,55 @@ const ImageModalBackground = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${colors.primary.shadow};
-  height: 100%;
+  height: 100vh;
   left: 0;
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
   z-index: 9000;
 `
 
 const ImageModal = styled.dialog`
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   margin: auto;
   padding: 16px;
   background-color: ${colors.white};
   border-radius: 8px;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  .gatsby-image-wrapper {
+    width: ${props => +props.width / 2}px;
+    height: auto;
+    position: absolute;
+    cursor: zoom-in;
+  }
+  &.is-zoomed {
+    .gatsby-image-wrapper {
+      cursor: zoom-out;
+      width: auto;
+    }
+  }
 `
 
 const ImageCloseButton = styled(Button)`
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  position: fixed;
+  top: 16px;
+  right: 32px;
 ` 
 
-const ProductImagesGrid = ({ images }) => {
-  const sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
+const ProductImagesGrid = ({ images, main, filter }) => {
+  let sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
+
+  if (main) {
+    const filteredImages = images.nodes.filter(img => img.name.split("-")[0] === filter)
+    sortedImages = filteredImages
+  }
   const [modalImage, setModalImage] = useState(null)
+  const [isZoomed, setIsZoomed] = useState(true)
   const modalRef = useRef(null)
   const buttonRef = useRef(null)
 
@@ -65,13 +88,15 @@ const ProductImagesGrid = ({ images }) => {
           break
         case "ArrowLeft":
           if (modalImage) {
-            setModalImage(images.nodes[images.nodes.indexOf(modalImage) - 1])
+            const index = sortedImages.indexOf(modalImage)
+
+            if (index !== 0) {
+              setModalImage(sortedImages[sortedImages.indexOf(modalImage) - 1])
+            }
           }
           break
         case "ArrowRight":
-          if (modalImage) {
-            setModalImage(images.nodes[images.nodes.indexOf(modalImage) + 1])
-          }
+          setModalImage(sortedImages[sortedImages.indexOf(modalImage) + 1])
           break
         case "Escape":
           setModalImage(null)
@@ -80,8 +105,10 @@ const ProductImagesGrid = ({ images }) => {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener("keydown", handleKeyPress)
+    if (modalImage) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("keydown", handleKeyPress)
+    }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
@@ -90,16 +117,34 @@ const ProductImagesGrid = ({ images }) => {
   }, [modalRef, modalImage])
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: sortedImages.length > 1 ? 'repeat(2, 1fr)' : '1fr',
+      gap: '8px' 
+    }}>
       {sortedImages.map((image, index) => (
         <div key={index} onClick={() => handleImageClick(image)}>
-          <GatsbyImage image={getImage(image)} alt={`pro wired notebook a5 close-up ${index + 1}`} style={{ width: '100%', height: 'auto', cursor: 'pointer' }} />
+          <GatsbyImage 
+            image={getImage(image)} 
+            alt={`pro wired notebook a5 close-up ${index + 1}`} 
+            style={{ width: '100%', height: 'auto', cursor: 'pointer' }} 
+          />
         </div>
       ))}
       {modalImage && (
         <ImageModalBackground>
-          <ImageModal ref={modalRef} role="dialog" aria-modal="true">
-            <GatsbyImage image={getImage(modalImage)} alt={`pro wired notebook a5 close-up`} style={{ width: '100%', height: '100%' }} />
+          <ImageModal 
+            width={modalImage.childImageSharp.gatsbyImageData.width}
+            className={isZoomed ? "is-zoomed" : ""}
+            ref={modalRef} 
+            role="dialog" 
+            aria-modal="true"
+            onClick={() => setIsZoomed(!isZoomed)}
+          >
+            <GatsbyImage 
+              image={getImage(modalImage)} 
+              alt={`pro wired notebook a5 close-up`} 
+            />
             <ImageCloseButton 
               onClick={handleCloseModal}
               backgroundcolor={colors.white}

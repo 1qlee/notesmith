@@ -28,8 +28,8 @@ const Waitlist = () => {
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h1>Get early access!</h1>
-                    <p>Join the waitlist to get early access to the Notesmith platform. You will get access to all Notesmith features and you will be able to purchase notebooks at a discounted price.</p>
+                    <h1>Get early access</h1>
+                    <p>Join the waitlist to get early access to the Notesmith platform. You will get access to all Notesmith features and you will be able to purchase notebooks at a 25% discounted price.</p>
                     <p>Sign up below to join the waitlist to create your own custom-made notebook!</p>
                   </Content>
                   <StyledLabel>

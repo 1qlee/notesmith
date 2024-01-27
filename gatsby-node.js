@@ -31,20 +31,20 @@ const products = [
         alt: "Close-up of black ink fountain pen writing on notebook paper"
       },
       {
-        heading: "Double-sided cover lamination",
-        text: "The cover is laminated on both sides and acts as a water-resistant layer.",
+        heading: "Sand-matte cover lamination",
+        text: "The cover is laminated with a sand-matte film which acts as a water-resistant layer while also providing extra grip and texture.",
         alt: "Close-up of notebook cover with water droplet, showing water resistance"
-      },
-      {
-        heading: "Available in two cover colors",
-        text: "Notebooks are currently available in white or black.",
-        alt: "Close-up of a stack of notebooks"
       },
       {
         heading: "Gold colored wire binding",
         text: "Gold colored wire binding and print on the back cover only.",
         alt: "Close-up of the back-side cover"
-      }
+      },
+      {
+        heading: "140 pages of 70lb paper",
+        text: "Each notebook is filled with 140 pages of bright-white, ultra-smooth 70lb paper.",
+        alt: "Close-up of the inside of the notebook, showing the paper"
+      },
     ],
     hero: {
       heading: "Expertly crafted notebooks",

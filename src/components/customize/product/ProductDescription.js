@@ -30,12 +30,7 @@ const ProductDescription = ({
               </Col>
             </Row>
           )}
-          <Row>
-            <Col sm={6}>
-              <ProductImagesGrid 
-                images={images}
-              />
-            </Col>
+          <Row gutterWidth={64}>
             <Col sm={6}>
               <Content
                 headingfontfamily={fonts.secondary}
@@ -52,6 +47,11 @@ const ProductDescription = ({
                   index={index}
                 />
               ))}
+            </Col>
+            <Col sm={6}>
+              <ProductImagesGrid
+                images={images}
+              />
             </Col>
           </Row>
         </Container>

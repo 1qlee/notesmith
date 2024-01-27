@@ -13,6 +13,7 @@ import ProductControls from "../../../../components/customize/product/ProductCon
 import ProductDescription from "../../../../components/customize/product/ProductDescription"
 import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
+import ProductImagesGrid from "../../../../components/customize/product/ProductImagesGrid"
 
 const ProductPage = ({ data, params }) => {
   const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
@@ -99,11 +100,10 @@ const ProductPage = ({ data, params }) => {
                   </>
                 ) : (
                   <Col md={8}>
-                    <ProductImages
-                      coverColor={coverColor}
-                      productImages={productImages}
-                      productThumbnails={productThumbnails}
-                      setCartThumbnail={setCartThumbnail}
+                    <ProductImagesGrid
+                      images={productImages}
+                      filter={coverColor}
+                      main
                     />
                   </Col>
                 )}
@@ -192,7 +192,7 @@ export const pageQuery = graphql`
         childImageSharp {
           gatsbyImageData(
             width: 1500
-            quality: 80
+            quality: 100
           )
         }
       }
@@ -202,8 +202,8 @@ export const pageQuery = graphql`
         name
         childImageSharp {
           gatsbyImageData(
-            width: 870
-            quality: 80
+            width: 1750
+            quality: 100
           )
         }
       }

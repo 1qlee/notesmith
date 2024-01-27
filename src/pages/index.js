@@ -83,6 +83,7 @@ const IndexPage = ({ data }) => {
   const rightPageData = {
     template: ""
   }
+  const [svgLoaded, setSvgLoaded] = useState(false)
 
   return (
     <Layout
@@ -207,6 +208,8 @@ const IndexPage = ({ data }) => {
                   <Book3d 
                     pageData={pageData}
                     setPageData={setPageData}
+                    svgLoaded={svgLoaded}
+                    setSvgLoaded={setSvgLoaded}
                   />
                 </Col>
                 <Col lg={4}>

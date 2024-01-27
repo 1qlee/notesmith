@@ -167,6 +167,7 @@ const StyledBook3d = styled.div`
 function Book3d({
   pageData,
   setPageData,
+  setSvgLoaded,
 }) {
   const [hovered, setHovered] = useState(false)
   const [showBackCover, setShowBackCover] = useState(false)
@@ -224,6 +225,7 @@ function Book3d({
                         pageDimensions={pageDimensions}
                         pageData={pageData}
                         setPageData={setPageData}
+                        setSvgLoaded={setSvgLoaded}
                       />
                     </StyledDemoTemplate>
                   )}

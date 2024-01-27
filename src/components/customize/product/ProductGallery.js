@@ -3,7 +3,7 @@ import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { spacing } from "../../../styles/variables"
 
-import { Container, Col, Row } from "react-grid-system"
+import { Container } from "react-grid-system"
 import { Section, SectionContent, SectionHeading } from "../../layout/Section"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import Content from "../../ui/Content"

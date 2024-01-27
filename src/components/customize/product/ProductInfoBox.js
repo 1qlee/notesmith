@@ -28,9 +28,10 @@ function ProductInfoBox({
       >
         <Content
           margin="0"
-          h5fontsize="1.25rem"
+          h5fontsize="1rem"
           h5margin="0 8px 0 0"
           headinglineheight="1.75"
+          h5color={colors.gray.sevenHundred}
         >
           <h5>{heading}</h5>
         </Content>
@@ -39,7 +40,7 @@ function ProductInfoBox({
         flex="2"
       >
         <Content
-          paragraphfontsize="1.25rem"
+          paragraphcolor={colors.gray.sevenHundred}
         >
           <p>{text}</p>
         </Content>

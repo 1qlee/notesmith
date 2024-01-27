@@ -15,6 +15,7 @@ function DemoTemplate({
   pageDimensions,
   pageData,
   setPageData,
+  setSvgLoaded,
 }) {
   const [max, setMax] = useState({
     rows: 200,
@@ -39,6 +40,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "dot" && (
@@ -47,6 +49,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "graph" && (
@@ -55,6 +58,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "hexagon" && (
@@ -63,6 +67,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "isometric" && (
@@ -71,6 +76,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "seyes" && (
@@ -79,6 +85,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "music" && (
@@ -87,6 +94,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "handwriting" && (
@@ -95,6 +103,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "cross" && (
@@ -103,6 +112,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
       {pageData.template === "calligraphy" && (
@@ -111,6 +121,7 @@ function DemoTemplate({
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}
+          setSvgLoaded={setSvgLoaded}
         />
       )}
     </svg>
