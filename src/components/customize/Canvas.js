@@ -9,7 +9,10 @@ const StyledCanvas = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 32px 64px;
   background-color: ${colors.white};
 `
 

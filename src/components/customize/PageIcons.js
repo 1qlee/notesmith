@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts, pageDataConfig } from "../../styles/variables"
-import { convertToMM  } from "../../utils/helper-functions"
 import { Plus, X } from "@phosphor-icons/react"
 import { Tooltip } from "react-tooltip"
 import IsoPageIcon from "../../assets/iso-grid.svg"
@@ -12,7 +11,14 @@ import CalligraphyIcon from "../../assets/calligraphy.svg"
 import { Flexbox } from "../layout/Flexbox"
 import Icon from "../ui/Icon"
 
-const StyledPage = styled.button`
+const PageWrapper = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+`
+
+const StyledPage = styled.a`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -21,9 +27,10 @@ const StyledPage = styled.button`
   outline: none;
   background-color: transparent;
   padding: 0;
+  display: flex;
   p {
     padding: 0.25rem;
-    transition: 0.2s background-color, 0.2s color;
+    transition: 0.2s background-color;
   }
   .page-outline {
     transition: transform 0.2s;
@@ -149,13 +156,6 @@ const PageLabel = styled.p`
   margin-top: 8px;
   border-radius: 4px;
   color: ${colors.gray.sevenHundred};
-`
-
-const PageWrapper = styled.div`
-  position: relative;
-  width: 30px;
-  height: 40px;
-  margin: 0 24px 24px 0;
 `
 
 function Page({

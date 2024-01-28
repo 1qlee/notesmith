@@ -42,12 +42,13 @@ const Footer = () => {
             </Col>
           </Row>
           <Row>
-            <Divider margin="32px" backgroundcolor={colors.gray.sixHundred} />
+            <Divider margin="32px 0" backgroundcolor={colors.gray.sixHundred} />
           </Row>
           <Row>
             <Col lg={4}>
               <Content
                 paragraphcolor={colors.gray.oneHundred}
+                margin="16px 0"
               >
                 <Link
                   to="/"
@@ -64,6 +65,7 @@ const Footer = () => {
                 linkcolor={colors.gray.oneHundred}
                 h5margin="0 0 8px"
                 h5color={colors.gray.oneHundred}
+                margin="16px 0"
               >
                 <h5>Support</h5>
                 <Box>
@@ -83,6 +85,7 @@ const Footer = () => {
                 linkcolor={colors.gray.oneHundred}
                 h5margin="0 0 8px"
                 h5color={colors.gray.oneHundred}
+                margin="16px 0"
               >
                 <h5>Products</h5>
                 <Box>
@@ -102,6 +105,7 @@ const Footer = () => {
                 linkcolor={colors.gray.oneHundred}
                 h5margin="0 0 8px"
                 h5color={colors.gray.oneHundred}
+                margin="16px 0"
               >
                 <h5>Account</h5>
                 {user ? (

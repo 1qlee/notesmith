@@ -11,6 +11,11 @@ const ToolItem = styled.div`
   transition: box-shadow 0.2s, background-color 0.2s;
   margin: -1px;
   border: ${colors.borders.black};
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 44;
+  background-color: ${colors.white};
   &:not(:last-child) {
     border-bottom: none;
   }

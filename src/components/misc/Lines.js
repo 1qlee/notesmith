@@ -19,12 +19,7 @@ function RandomLine() {
     height: "100%"
   }
   const lines = [
-    <Line1 style={lineStyle} />,
-    <Line2 style={lineStyle} />,
-    <Line3 style={lineStyle} />,
     <Line4 style={lineStyle} />,
-    <Line5 style={lineStyle} />,
-    <Line6 style={lineStyle} />,
   ]
 
   useEffect(() => {

@@ -31,17 +31,19 @@ const ImageModal = styled.dialog`
   align-items: flex-start;
   justify-content: center;
   position: relative;
-  .gatsby-image-wrapper {
-    width: ${props => +props.width / 2}px;
-    height: auto;
-    position: absolute;
-    cursor: zoom-in;
-  }
   &.is-zoomed {
     .gatsby-image-wrapper {
       cursor: zoom-out;
-      width: auto;
+      width: ${props => +props.width}px;
+      height: auto;
+      position: absolute;
     }
+  }
+  .gatsby-image-wrapper {
+    width: ${props => +props.width / 2}px;
+    height: 100%;
+    position: absolute;
+    cursor: zoom-in;
   }
 `
 
@@ -59,12 +61,13 @@ const ProductImagesGrid = ({ images, main, filter }) => {
     sortedImages = filteredImages
   }
   const [modalImage, setModalImage] = useState(null)
-  const [isZoomed, setIsZoomed] = useState(true)
+  const [isZoomed, setIsZoomed] = useState(false)
   const modalRef = useRef(null)
   const buttonRef = useRef(null)
 
   const handleImageClick = (image) => {
     setModalImage(image)
+    setIsZoomed(false)
   }
 
   const handleCloseModal = () => {
@@ -135,7 +138,7 @@ const ProductImagesGrid = ({ images, main, filter }) => {
         <ImageModalBackground>
           <ImageModal 
             width={modalImage.childImageSharp.gatsbyImageData.width}
-            className={isZoomed ? "is-zoomed" : ""}
+            className={isZoomed && "is-zoomed"}
             ref={modalRef} 
             role="dialog" 
             aria-modal="true"

@@ -4,7 +4,7 @@ import { colors } from "../../styles/variables"
 const Workspace = styled.div`
   background-color: ${colors.white};
   height: 100%;
-  left: 213px;
+  left: 165px;
   overflow: auto;
   position: absolute;
   right: 300px;
