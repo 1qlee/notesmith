@@ -397,7 +397,7 @@ const IndexPage = ({ data }) => {
                 </Col>
                 <Col md={5} push={{ md: 1 }}>
                   <Content
-                    paragraphcolor={colors.gray.oneHundred}
+                    paragraphcolor={colors.gray.fourHundred}
                     paragraphfontsize="1.25rem"
                   >
                     <p>

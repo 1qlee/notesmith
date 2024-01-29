@@ -13,7 +13,6 @@ import Seo from "./Seo"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
-  height: 100%;
   overflow-x: hidden;
   position: relative;
   min-height: 600px;

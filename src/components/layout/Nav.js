@@ -218,6 +218,8 @@ const NavMenu = styled.ul`
   }
   &.is-active {
     transform: translateX(0);
+    border-top-width: 0;
+    margin-top: 1px;
     @media only screen and (max-width: ${breakpoints.xs}) {
       opacity: 1;
       visibility: visible;
