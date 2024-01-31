@@ -281,7 +281,7 @@ const Nav = ({ auth, hideNavbar }) => {
   return (
     <StyledNav>
       <Banner 
-        text="Join the waitlist for Early Access to try out our new platform."
+        text="Join the waitlist for Early Access to try out our platform."
         link={{
           to: "/waitlist",
           text: "Join"

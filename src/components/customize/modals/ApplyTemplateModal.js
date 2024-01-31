@@ -163,13 +163,13 @@ function ApplyTemplateModal({
         for (let i = lowerPageBound; i <= upperPageBound; i++) {
           // check if a frequency is checked
           switch(frequency) {
-            case "even":
+            case "left":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].pageId = newPageId
               }
               break
-            case "odd":
+            case "right":
               if (i % 2 !== 0) {
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].pageId = newPageId
@@ -193,13 +193,13 @@ function ApplyTemplateModal({
         for (let i = 1; i <= totalPages; i++) {
           // for if a frequency is checked
           switch(frequency) {
-            case "even":
+            case "left":
               if (i % 2 === 0) {
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].pageId = newPageId
               }
               break
-            case "odd":
+            case "right":
               if (i % 2 !== 0) {
                 // change the corresponding page's svg in our cloned array
                 canvasPagesClone[i - 1].pageId = newPageId
@@ -497,42 +497,42 @@ function ApplyTemplateModal({
                   margin="0 0 8px 0"
                 >
                   <input
-                    id="apply-even"
-                    name="apply-even"
+                    id="apply-left"
+                    name="apply-left"
                     type="radio"
-                    value="apply-even"
-                    onClick={e => handleFrequencySelect("even")}
+                    value="apply-left"
+                    onClick={e => handleFrequencySelect("left")}
                   />
-                  <label htmlFor="apply-even">
+                  <label htmlFor="apply-left">
                     <Icon margin="0 8px 0 0">
-                      {frequency === "even" ? (
+                      {frequency === "left" ? (
                         <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                       ) : (
                         <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                       )}
                     </Icon>
-                    <span>Even pages</span>
+                    <span>Left-side pages</span>
                   </label>
                 </RadioInput>
                 <RadioInput
                   margin="0 0 8px 0"
                 >
                   <input
-                    id="apply-odd"
-                    name="apply-odd"
+                    id="apply-right"
+                    name="apply-right"
                     type="radio"
-                    value="apply-odd"
-                    onClick={e => handleFrequencySelect("odd")}
+                    value="apply-right"
+                    onClick={e => handleFrequencySelect("right")}
                   />
-                  <label htmlFor="apply-odd">
+                  <label htmlFor="apply-right">
                     <Icon margin="0 8px 0 0">
-                      {frequency === "odd" ? (
+                      {frequency === "right" ? (
                         <RadioButton weight="fill" color={colors.gray.nineHundred} size={18} />
                       ) : (
                         <Circle weight="regular" color={colors.gray.nineHundred} size={18} />
                       )}
                     </Icon>
-                    <span>Odd pages</span>
+                    <span>Right-side pages</span>
                   </label>
                 </RadioInput>
                 <RadioInput

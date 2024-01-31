@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import { colors, fonts, spacing } from "../../styles/variables"
-import RandomLine from "../misc/Lines"
 
 const SectionMain = styled.main`
   background-color: ${colors.white};
@@ -20,8 +19,8 @@ const SectionMain = styled.main`
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
-  background-image: url(${props => props.backgroundimage});
   position: relative;
+  height: ${props => props.height};
   width: 100%;
 `
 
@@ -29,6 +28,7 @@ const SectionContent = styled.div`
   background-color: ${props => props.backgroundcolor};
   padding: ${props => props.padding ? props.padding : `${spacing.section} 0`};
   position: relative;
+  height: ${props => props.height};
   &.has-border-top {
     border-top: 1px solid ${colors.gray.nineHundred};
   }

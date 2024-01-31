@@ -16,6 +16,7 @@ import { Flexbox } from "../layout/Flexbox"
 import { Row, Col } from "react-grid-system"
 import { StyledLabel, StyledInput } from "../form/FormComponents"
 import Progress from "../ui/Progress"
+import Box from "../ui/Box"
 
 const UserDashboard = () => {
   const { loading, user, firebaseDb } = useFirebaseContext()
@@ -187,7 +188,7 @@ const UserDashboard = () => {
               <Content
                 linktextdecoration="underline"
               >
-                <p>New features are continuously being added to Notesmith. Now is the best time to make any suggestions or provide your feedback. If you have anything to share, feel free to <a href="mailto:general@notesmithbooks.com">send us an email</a> – your input can truly make a difference in shaping the future of Notesmith!</p>
+                <p>If you have any feedback, suggestions, bug reports, etc. to share, please <a href="mailto:general@notesmithbooks.com">send us an email</a> – your input can truly make a difference in shaping the future of Notesmith!</p>
               </Content>
             </Notification>
           </Col>
@@ -227,7 +228,7 @@ const UserDashboard = () => {
                 <Content
                   h3fontsize="1.5rem"
                   h3margin="0 0 16px"
-                  margin="32px 0"
+                  margin="32px 0 16px"
                 >
                   <h3>Invite someone to early access</h3>
                   <p>Anyone you invite to early access will be able to bypass the wailist and gain access to Notesmith instantly. This is an exclusive perk for early users like you - but don't worry, you can invite as many people as you wish!</p>

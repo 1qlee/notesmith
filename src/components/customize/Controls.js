@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { colors, widths } from "../../styles/variables"
 import { useEditorContext, useEditorDispatch } from "./context/editorContext"
+import { useSettingsContext } from "./context/settingsContext"
 
 import Designbar from "./bars/Designbar"
 import Templatesbar from "./bars/Templatesbar"
@@ -14,6 +15,9 @@ const StyledControls = styled.div`
   flex-direction: column;
   height: 100%;
   width: ${widths.sidebar};
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: 8;
 `
 
@@ -86,6 +90,7 @@ function Controls({
   toast,
   user,
 }) {
+  const settingsState = useSettingsContext()
   const dispatch = useEditorDispatch()
   const canvasState = useEditorContext()
 
@@ -112,6 +117,10 @@ function Controls({
       setActiveTab(1)
     }
   }, [pageData.template, canvasState.tempSelectedElements, canvasState.selectedElements])
+
+  if (!settingsState.view_controls) {
+    return
+  }
 
   return (
     <StyledControls>

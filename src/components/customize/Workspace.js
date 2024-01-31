@@ -1,17 +1,17 @@
+import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
-const Workspace = styled.div`
+import { useSettingsContext } from "./context/settingsContext"
+
+const StyledWorkspace = styled.div`
   background-color: ${colors.white};
   height: 100%;
-  left: 165px;
+  left: ${props => props.showPageBar ? "165px" : "0"};
   overflow: auto;
   position: absolute;
-  right: 300px;
+  right: ${props => props.showControls ? "300px" : "0"};
   top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -20,5 +20,18 @@ const Workspace = styled.div`
     background-color: ${colors.gray.threeHundred};
   }
 `
+
+const Workspace = ({ children }) => {
+  const settingsState = useSettingsContext()
+
+  return (
+    <StyledWorkspace
+      showPageBar={settingsState.view_pages}
+      showControls={settingsState.view_controls}
+    >
+      {children}
+    </StyledWorkspace>
+  )
+}
 
 export default Workspace

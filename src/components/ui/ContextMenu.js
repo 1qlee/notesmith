@@ -34,7 +34,7 @@ const ContextMenuLink = styled.a`
 
 const ContextMenuDivider = styled.hr`
   height: 0;
-  border-top: 1px dotted #212121;
+  border-top: 1px dashed ${colors.gray.threeHundred};
   margin: 0.5rem 0;
 `
 

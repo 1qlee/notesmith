@@ -76,14 +76,12 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
 const setCanvasState = (state, action) => {
   switch (action.type) {
     case "initialize":
-      log("Initializing canvas...")
 
       return {
         ...state,
         canvas: action.canvas,
       }
     case "reset":
-      log("Resetting...")
 
       return {
         ...state,
@@ -95,7 +93,6 @@ const setCanvasState = (state, action) => {
         deletionAllowed: true,
       }
     case "change-selection": {
-      log("changing selection...")
       const { newlyDeselectedElements, newlySelectedElements, selectedElements } = action
       const numOfElements = selectedElements.length
 
@@ -145,7 +142,6 @@ const setCanvasState = (state, action) => {
       }
     }
     case "ungroup-selection": {
-      log("ungrouping all selections...")
 
       SVG("#page-spread").find("[data-selected]").attr("data-selected", null)
 
@@ -159,7 +155,6 @@ const setCanvasState = (state, action) => {
       }
     }
     case "parse-selection": {
-      log("parsing selection...")
 
       const results = parseSelection(state.selectedElements)
       const { selectionBbox, selectionAttributes, selectionPath } = results
@@ -173,21 +168,18 @@ const setCanvasState = (state, action) => {
       }
     }
     case "toggle":
-      log(`toggling setting: ${action.setting} to ${action.value}...`)
 
       return {
         ...state,
         [action.setting]: action.value,
       }
     case "remove":
-      // log(`removing state: ${action.setting}...`)
 
       return {
         ...state,
         [action.setting]: action.value || null,
       }
     case "bulk-update":
-      log(`bulk updating state...`)
 
       return {
         ...state,

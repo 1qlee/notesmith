@@ -1,6 +1,7 @@
 import React from "react"
 
 import { Flexbox } from "../../layout/Flexbox"
+import ToolBox from "../boxes/ToolBox"
 import TitleBox from "../boxes/TitleBox"
 
 function Functionsbar({
@@ -13,14 +14,16 @@ function Functionsbar({
   return (
     <Flexbox
       className="has-border-bottom"
-      justify="center"
+      justify="space-between"
     >
+      <ToolBox />
       <TitleBox
         bookData={bookData}
         setBookData={setBookData}
         bookId={bookId}
         toast={toast}
       />
+      <div></div>
     </Flexbox>
   )
 }

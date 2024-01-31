@@ -78,7 +78,7 @@ function ShoppingCart() {
           >
             <h1>Cart</h1>
           </Content>
-          <Table>
+          <Table className="is-mobile">
             <thead>
               <th>Product</th>
               <th>Price</th>
@@ -288,8 +288,7 @@ function ShoppingCart() {
                         {item.discount ? (
                           <p>
                             <StrikeText
-                              color={colors.green.nineHundred}
-                              backgroundcolor={colors.green.oneHundred}
+                              color={colors.gray.sixHundred}
                             >
                               ${convertToDecimal(item.originalPrice, 2)}
                             </StrikeText>

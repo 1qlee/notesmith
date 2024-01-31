@@ -56,7 +56,7 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
-  }, [product, bookData, coverColor])
+  }, [product, bookData, coverColor, svgLoaded])
 
   return (
     <Layout
@@ -86,7 +86,10 @@ const ProductPage = ({ data, params }) => {
                         toast={toast}
                       />
                     </Col>
-                    <Col id="product-template">
+                    <Col 
+                      id="product-template"
+                      style={{overflowX: "auto"}}
+                    >
                       <ProductTemplate
                         bookData={bookData}
                         currentPageSide={currentPageSide}
@@ -101,6 +104,8 @@ const ProductPage = ({ data, params }) => {
                 ) : (
                   <Col md={8}>
                     <ProductImagesGrid
+                      setCartThumbnail={setCartThumbnail}
+                      thumbnails={productThumbnails}
                       images={productImages}
                       filter={coverColor}
                       main

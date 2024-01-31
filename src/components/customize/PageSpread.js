@@ -168,10 +168,10 @@ function PageSpread({
         let { x, y } = element.getPointAtLength(i)
 
         if (
-          dragCoords.x <= x + distance &&
-          x - distance <= dragCoords.x + dragAreaInSvgCoordinate.width &&
-          dragCoords.y <= y + distance &&
-          y - distance <= dragCoords.y + dragAreaInSvgCoordinate.height
+          dragCoords.x <= x + distance + convertedStrokeWidth &&
+          x - distance - convertedStrokeWidth <= dragCoords.x + dragAreaInSvgCoordinate.width &&
+          dragCoords.y <= y + distance + convertedStrokeWidth  &&
+          y - distance - convertedStrokeWidth <= dragCoords.y + dragAreaInSvgCoordinate.height
         ) {
           return true
         }
@@ -359,7 +359,6 @@ function PageSpread({
           // (in case of Safari, a `MouseEvent` or a `TouchEvent` is used instead.)
           cancel,                   // cancel() cancels.
         }) {
-          console.log('starting selection')
           // for example: handles mouse left button only.
           if (pointerEvent.button !== 0) {
             cancel()

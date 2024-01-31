@@ -21,7 +21,7 @@ exports.handler = async (event) => {
   let shippingRateCarrier = "";
 
   if (userRate) {
-    console.log(`[Netlify] Found user's selected rate: ${userRate}`)
+    console.log(`[Netlify] Found user's selected rate: ${userRate.rate}`)
     shippingCost = ((Math.ceil(userRate.rate) * 100) / 100) * 100;
     shippingRateId = userRate.id;
     shippingRateCarrier = userRate.carrier;

@@ -26,7 +26,6 @@ function AddressForm({
   shippingValidated,
   toast,
 }) {
-  const allowedCountries = ['US', 'CA']
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
@@ -44,7 +43,6 @@ function AddressForm({
         required: "always",
       }
     },
-    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -66,7 +64,6 @@ function AddressForm({
     fields: {
       phone: "never",
     },
-    allowedCountries: allowedCountries,
     defaultValues: {
       name: customer.name,
       address: {
@@ -271,7 +268,6 @@ function AddressForm({
       </StyledFieldset>
       <AddressElement
         options={isInternational ? intlAddressOptions : domesticAddressOptions}
-        allowedCountries={['US', 'CA']}
         onChange={e => handleAddressChange(e)}
       />
       <Flexbox

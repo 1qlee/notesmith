@@ -64,7 +64,8 @@ const EmailInput = styled(StyledInput)`
   border-radius: 4px;
   font-size: ${props => props.fontsize};
   &.has-value {
-    width: calc(100% - 36px);
+    padding: 24px 76px 8px 16px;
+    width: 100%;
   }
   &:focus {
     box-shadow: none;
@@ -233,19 +234,13 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
               margin="0 0 0 2px"
               top={top}
             >
-              <Icon>
-                {loading ? (
+              {loading ? (
+                <Icon>
                   <CircleNotch size={16} />
-                ) : (
-                  <>
-                    {emailSent && emailCd ? (
-                      <Check size={16} weight="bold" />
-                    ) : (
-                      <PaperPlaneRight size={16} color={colors.gray.oneHundred} weight="fill" />
-                    )}
-                  </>
-                )}
-              </Icon>
+                </Icon>
+              ) : (
+                "Submit"
+              )}
             </InputButton>
           )}
         </InputLabel>

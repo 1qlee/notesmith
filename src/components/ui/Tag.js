@@ -4,7 +4,7 @@ import { colors, fonts } from "../../styles/variables"
 const Tag = styled.span`
   align-items: center;
   background-color: ${props => props.backgroundcolor ? props.backgroundcolor : colors.gray.nineHundred};
-  border-radius: ${props => props.borderradius || "0px"};
+  border-radius: ${props => props.borderradius || "8px"};
   border: ${props => props.border};
   color: ${props => props.color ? props.color : colors.white};
   display: inline-flex;

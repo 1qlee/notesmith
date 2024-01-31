@@ -38,10 +38,25 @@ exports.handler = async (event) => {
   let newShipment;
 
   try {
+    let customParcel = {}
+
+    // assuming one type of product
+    if (isInternational) {
+      customParcel = {
+        length: 9,
+        width: 6,
+        height: 4,
+        weight: totalWeight,
+      }
+    }
+    else {
+      customParcel = {
+        weight: totalWeight,
+      }
+    }
+    
     // physical package size
-    const parcel = await easypost.Parcel.create({
-      weight: totalWeight,  // assumption that there is only one product
-    });
+    const parcel = await easypost.Parcel.create(customParcel);
     const userAddress = {
       name: customer.name,
       street1: address.line1,
@@ -83,6 +98,7 @@ exports.handler = async (event) => {
         carrier_accounts: [
           "ca_4e24400a695c4f3dae90c0d45f465436", // UPS
           "ca_c1a5ccb5ccca4344b654fb98612fa8a9", // DHL
+          "ca_d8375b6672b94b6aa47efb01624097b6", // USPS
         ]
       });
 
@@ -112,29 +128,31 @@ exports.handler = async (event) => {
     }
 
     let cheapestRate = {}
+    console.log(newShipment.rates)
 
     if (newShipment.rates && newShipment.rates.length > 0) {
-      const cheapestUpsRate = newShipment.rates
-        .filter(rate => rate.carrier === "UPS")
-        .sort((a, b) => a.rate - b.rate)[0];
-        
-      if (cheapestUpsRate) {
-        cheapestRate = cheapestUpsRate;
+      if (isInternational) {
+        // look thru all carriers for best intl rate
+        cheapestRate = newShipment.rates
+          .filter(rate => rate.carrier === "UPS" || rate.carrier === "DHL" || rate.carrier === "DHLExpress" || rate.carrier === "USPS")
+          .sort((a, b) => a.rate - b.rate)[0];
       }
       else {
-        if (isInternational) {
-          const cheapestDhlRate = newShipment.rates
-            .filter(rate => rate.carrier === "DHL" || rate.carrier === "DHLExpress")
-            .sort((a, b) => a.rate - b.rate)[0];
+        // otherwise, just use UPS for domestic
+        const cheapestUPSRate = newShipment.rates
+          .filter(rate => rate.carrier === "UPS")
+          .sort((a, b) => a.rate - b.rate)[0];
 
-          cheapestRate = cheapestDhlRate;
-        }
-        else {
-          const cheapestUspsRate = newShipment.rates
+        // if UPS is not available, use USPS
+        if (!cheapestUPSRate) {
+          const cheapestUSPSRate = newShipment.rates
             .filter(rate => rate.carrier === "USPS")
             .sort((a, b) => a.rate - b.rate)[0];
 
-          cheapestRate = cheapestUspsRate;
+          cheapestRate = cheapestUSPSRate;
+        }
+        else {
+          cheapestRate = cheapestUPSRate;
         }
       }
 

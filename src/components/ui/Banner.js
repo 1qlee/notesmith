@@ -8,7 +8,6 @@ import TextLink from "./TextLink"
 
 const StyledBanner = styled.div`
   background-color: ${colors.gray.nineHundred};
-  color: ${colors.gray.oneHundred};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +21,11 @@ const StyledBanner = styled.div`
 const Banner = ({ text, link }) => {
   return (
     <StyledBanner>
-      <p>{text}</p>
+      <Content
+        paragraphcolor={colors.gray.oneHundred}
+      >
+        <p>{text}</p>
+      </Content>
       <Content
         margin="0 8px"
       >

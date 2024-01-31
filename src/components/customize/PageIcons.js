@@ -84,6 +84,7 @@ const PageBadge = styled.button`
   padding: 4px;
   height: 1rem;
   width: 1rem;
+  line-height: 22px;
   position: absolute;
   right: ${props => props.right};
   top: -0.5rem;
@@ -195,7 +196,7 @@ function Page({
       )}
       {(isProductPage && rightPageData.template === data.template) && (
         <PageBadge
-          right="-8px"
+          left="22px"
           onClick={() => setData({ ...rightPageData.pageData, activeTemplate: "right" })}
           className={data.activeTemplate === "right" ? "is-active" : ""}
         >

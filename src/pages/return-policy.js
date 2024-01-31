@@ -41,11 +41,11 @@ const ReturnsPage = () => {
                     <p>The conditions for a return are as follows:</p>
                     <ul>
                       <li>Sent back to us within 14 days of delivery date (day you received the package).</li>
-                      <li>Products are unused - no writings, markings, or any other applications. Exemptions are made for notebooks with pages designated for testing.</li>
+                      <li>Products are unused - no writings, markings, or any other applications except on included pages that were designated for testing.</li>
                       <li>Original materials must be included - any containers, bags, branded materials, etc. that were included with the package.</li>
                     </ul>
                     <p><b>Return process:</b></p>
-                    <p>1. Contact us by email at service@notesmithbooks.com to request your return shipping label for US orders. All return labels are to be paid for by the sender.</p>
+                    <p>1. Contact us by email at <a mailto="service@notesmithbooks.com">service@notesmithbooks.com</a> to request your return shipping label for US orders. All return labels are to be paid for by the sender.</p>
                     <p>2. Follow the packing instructions provided with your return label to send the package back to us. If packing instructions are not followed and a second return label is required a fee of $15 will be applied.</p>
                     <p>3. Returns made in accordance with these conditions will be credited to the original payment method within 5-10 business days from receipt of return.</p>
                     <p>For additional assistance, please contact us at <a mailto="service@notesmithbooks.com">service@notesmithbooks.com</a>.</p>

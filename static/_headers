@@ -1,0 +1,5 @@
+/apple-app-site-association
+  Content-Type: application/json
+
+/apple-developer-merchantid-domain-association
+  Content-Type: application/json

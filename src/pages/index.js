@@ -113,44 +113,33 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
                     margin="0 0 32px"
-                    padding="0 0 32px"
                     h1margin="0 0 32px"
-                    className="has-border-bottom"
                     style={{ clipPath: `url(#pattern-26)` }}
                   >
                     <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
                   </Content>
-                  <Notification
-                    backgroundcolor={colors.gray.oneHundred}
-                    borderradius="16px"
-                    padding="0"
+                  <hr />
+                  <Content
+                    paragraphmargin="0"
+                    h3fontsize="1rem"
+                    h3margin="0 0 16px"
+                    margin="32px 0"
+                    headingfontfamily={fonts.secondary}
+                    paragraphfontsize="1rem"
                   >
-                    <Content
-                      paragraphmargin="0"
-                      h2fontsize="1.25rem"
-                      h2margin="0 0 16px"
-                      headingfontfamily={fonts.secondary}
-                      paragraphfontsize="1.25rem"
-                      padding="32px"
-                    >
-                      <h2>Join the early access and pre-order sale!</h2>
-                      <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
-                      <StyledLabel
-                        htmlFor="register-form-input"
-                        margin="0"
-                      >
-                        Sign up to join
-                      </StyledLabel>
-                      <RegisterForm
-                        border
-                        fontsize="1rem"
-                        margin="8px 0 0"
-                        top="12px"
-                        color={colors.gray.nineHundred}
-                      />
-                    </Content>
-                  </Notification>
+                    <h3>
+                      Join the waitlist for Early Access
+                    </h3>                    <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
+
+                    <RegisterForm
+                      border
+                      fontsize="1rem"
+                      margin="8px 0 0"
+                      top="12px"
+                      color={colors.gray.nineHundred}
+                    />
+                  </Content>
                 </Col>
                 <Col xl={8} lg={8}>
                   <PageDemoCarousel />
@@ -567,27 +556,6 @@ const IndexPage = ({ data }) => {
                       </Tag>
                     </Flexbox>
                   </div>
-                  <hr />
-                  <Notification
-                    backgroundcolor={colors.gray.oneHundred}
-                    borderradius="16px"
-                  >
-                    <Flexbox
-                      flex="flex"
-                      center="flex-start"
-                    >
-                      <Icon>
-                        <Note color={colors.gray.sixHundred} weight="light" size={20} />
-                      </Icon>
-                      <Content
-                        margin="0 0 0 8px"
-                        smallmargin="0"
-                        smallfontsize="1rem"
-                      >
-                        <small>Results are from a survey conducted on early test users.</small>
-                      </Content>
-                    </Flexbox>
-                  </Notification>
                 </Col>
                 <Col lg={8}>
                   <Flexbox

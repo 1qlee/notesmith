@@ -9,22 +9,19 @@ import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { isBrowser, convertToMM } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
+import { SettingsProvider } from "./context/settingsContext"
 
 import { Controls } from "./Controls"
-import { Flexbox } from "../layout/Flexbox"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
 import Canvas from "./Canvas"
 import Functionsbar from "./bars/Functionsbar"
-import Toolbar from "./bars/Toolbar"
 import Loader from "../misc/Loader"
 import Pagebar from "./bars/Pagebar"
 import Book404 from "./Book404"
 import Seo from "../layout/Seo"
 
 const StyledEditor = styled.div`
-  display: flex;
-  height: calc(100% - 49px);
-  justify-content: space-between;
+  height: calc(100% - 56px);
   width: 100%;
   overflow-y: hidden;
   position: relative;
@@ -234,7 +231,7 @@ const Editor = ({
       {noExistingBook ? (
         <Book404 />
       ) : (
-        <>
+        <SettingsProvider>
           <Functionsbar
             selectedPage={selectedPage}
             setSelectedPage={setSelectedPage}
@@ -244,20 +241,17 @@ const Editor = ({
             toast={toast}
           />
           <StyledEditor>
-            <Flexbox>
-              <Pagebar
-                activeTab={activeTab}
-                canvasPageTemplates={canvasPageTemplates}
-                canvasPages={canvasPages}
-                pageData={pageData}
-                productData={productData}
-                selectedPage={selectedPage}
-                setActiveTab={setActiveTab}
-                setPageData={setPageData}
-                setSelectedPage={setSelectedPage}
-              />
-              <Toolbar />
-            </Flexbox>
+            <Pagebar
+              activeTab={activeTab}
+              canvasPageTemplates={canvasPageTemplates}
+              canvasPages={canvasPages}
+              pageData={pageData}
+              productData={productData}
+              selectedPage={selectedPage}
+              setActiveTab={setActiveTab}
+              setPageData={setPageData}
+              setSelectedPage={setSelectedPage}
+            />
             <Canvas
               canvasPageTemplates={canvasPageTemplates}
               canvasPages={canvasPages}
@@ -292,7 +286,7 @@ const Editor = ({
               user={user}
             />
           </StyledEditor>
-        </>
+        </SettingsProvider>
       )}
       <>
         {(showModal.show && showModal.type === "template") && (

@@ -7,12 +7,16 @@ import styled from "styled-components"
 import SVG from "react-inlinesvg"
 
 import PageBox from "../boxes/PageBox"
+import { useSettingsContext } from "../context/settingsContext"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
   border-right: ${colors.borders.black};
   height: 100%;
   width: 164px;
+  position: absolute;
+  left: 0;
+  top: 0;
   z-index: 8;
 `
 
@@ -129,11 +133,16 @@ function Pagebar({
   setSelectedPage,
   setActiveTab,
 }) {
+  const settingsState = useSettingsContext()
   const itemData = createItemData(canvasPages, canvasPageTemplates, pageData, selectedPage, setSelectedPage, setPageData, setActiveTab)
   const pagebarRef = useRef(null)
 
   function handleScrollToItem(values) {
     pagebarRef.current.scrollToItem(values);
+  }
+
+  if (!settingsState.view_pages) {
+    return
   }
 
   return (

@@ -4,7 +4,6 @@ import { useFirebaseContext } from "../utils/auth"
 import { get, ref, set } from "firebase/database"
 
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import { Container, Row, Col } from "react-grid-system"
 import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
 import Box from "../components/ui/Box"
@@ -32,8 +31,8 @@ const Subscription = ({ location }) => {
         if (data.id === key) {
           // if the email is already subscribed, show an error
           if (data.subscribed) {
-            setError("You have already been subscribed to the mailing list.")
             setProcessing(false)
+            throw new Error("You have already been subscribed to the mailing list.")
           }
           else {
             // otherwise let's subscribe them to the mailing list
@@ -42,8 +41,7 @@ const Subscription = ({ location }) => {
         }
       })
       .catch((error) => {
-        console.log(error)
-        setError("There was an error subscribing you to the mailing list. The link in your email may have expired. Please try signing up again.")
+        setError(error ? error.message : "There was an error subscribing you to the mailing list. The link in your email may have expired. Please try signing up again.")
       })
     }
 
@@ -95,47 +93,42 @@ const Subscription = ({ location }) => {
         className="has-max-height"
       >
         <Section>
-          <SectionContent>
-            <Container xl lg md sm xs>
-              <Row>
-                <Col>
-                  <Box
-                    padding="16px"
-                    margin="0 auto"
-                    className="has-border no-border-top"
-                    width={widths.form}
+          <SectionContent padding="0">
+            <Box
+              padding="64px"
+              margin="0 auto"
+              className="has-border no-border-top"
+              width={widths.form}
+            >
+              {subscribed ? (
+                <>
+                  <Content
+                    paragraphfontsize="1.25rem"
+                    margin="0 0 32px"
+                    headingtextalign="center"
                   >
-                    {subscribed ? (
-                      <>
-                        <Content
-                          h1fontsize="2rem"
-                          headingtextalign="center"
-                        >
-                          <h1>Thanks for subscribing!</h1>
-                        </Content>
-                        <Notification
-                          backgroundcolor={colors.gray.twoHundred}
-                          color={colors.gray.nineHundred}
-                        >
-                          <p>Welcome to the Notesmith community! You are now subscribed to our mailing list for marketing and general updates.</p>
-                        </Notification>
-                      </>
-                    ) : (
-                      <>
-                        {error && (
-                          <Notification
-                            backgroundcolor={colors.gray.twoHundred}
-                            color={colors.gray.nineHundred}
-                          >
-                            <p>{error}</p>
-                          </Notification>
-                        )}
-                      </>
-                    )}
-                  </Box>
-                </Col>
-              </Row>
-            </Container>
+                    <h1>Thanks for subscribing!</h1>
+                    <p>Welcome to the Notesmith community! You have been successfully added to the waiting list for Early Access. Please look out for a follow-up email from us in the near future as availability opens up.</p>
+                  </Content>
+                </>
+              ) : (
+                <>
+                  {error && (
+                    <Notification
+                      backgroundcolor={colors.red.twoHundred}
+                      color={colors.red.nineHundred}
+                    >
+                      <Content
+                        linktextdecoration="underline"
+                      >
+                        <p>{error}</p>
+                        <p>If you require more assistance, please <a mailto="support@notesmithbooks.com">send us an email</a>.</p>
+                      </Content>
+                    </Notification>
+                  )}
+                </>
+              )}
+            </Box>
           </SectionContent>
         </Section>
       </SectionMain>

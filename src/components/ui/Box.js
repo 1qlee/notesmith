@@ -11,6 +11,7 @@ const Box = styled.div`
   width: ${props => props.width};
   max-width: ${props => props.maxwidth};
   height: ${props => props.height};
+  overflow: ${props => props.overflow};
   &.has-border {
     border: ${colors.borders.black};
   }

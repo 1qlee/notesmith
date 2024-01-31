@@ -12,7 +12,6 @@ import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } 
 import Button from "../ui/Button"
 import Content from "../ui/Content"
 import Icon from "../ui/Icon"
-import Seo from "../layout/Seo"
 
 const SignupForm = () => {
   const { signUp, firebaseDb } = useFirebaseContext()

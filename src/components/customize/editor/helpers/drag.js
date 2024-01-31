@@ -67,11 +67,9 @@ function drag(dispatch, canvas, ref) {
 
   function beforeDrag(e) {
     if (!SVG("#selection-path")) {
-      console.log("Blocking drag")
       e.preventDefault()
     }
     else {
-      console.log("Allowing drag")
       
       dispatch({
         type: "toggle",
@@ -82,7 +80,6 @@ function drag(dispatch, canvas, ref) {
   }
   
   function dragStart(e) {
-    console.log("drag start")
     const { event } = e.detail
 
     coords = {
@@ -97,7 +94,6 @@ function drag(dispatch, canvas, ref) {
   }
 
   const dragMove = throttle((e) => {
-    console.log("dragging")
     const { event } = e.detail
     const selectedElements = SVG(ref).find("[data-selected]")
     const dx = event.clientX - coords.dx
@@ -125,7 +121,6 @@ function drag(dispatch, canvas, ref) {
   }, 0)
 
   function dragEnd(e) {
-    console.log("drag end")
 
     dispatch({
       type: "parse-selection",

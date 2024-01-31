@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { X } from '@phosphor-icons/react'
-import { colors } from '../../../styles/variables'
+import { colors, breakpoints } from '../../../styles/variables'
 import { getImage, GatsbyImage } from 'gatsby-plugin-image'
 import Button from '../../ui/Button'
 import Icon from '../../ui/Icon'
@@ -31,6 +31,9 @@ const ImageModal = styled.dialog`
   align-items: flex-start;
   justify-content: center;
   position: relative;
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    justify-content: flex-start;
+  }
   &.is-zoomed {
     .gatsby-image-wrapper {
       cursor: zoom-out;
@@ -53,12 +56,19 @@ const ImageCloseButton = styled(Button)`
   right: 32px;
 ` 
 
-const ProductImagesGrid = ({ images, main, filter }) => {
+const ProductImagesGrid = ({ 
+  images, 
+  main, 
+  filter,
+  setCartThumbnail,
+  thumbnails,
+}) => {
   let sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
+  let sortedThumbnails = main && thumbnails.nodes.sort((a, b) => a.name.localeCompare(b.name))
 
   if (main) {
-    const filteredImages = images.nodes.filter(img => img.name.split("-")[0] === filter)
-    sortedImages = filteredImages
+    sortedImages = images.nodes.filter(img => img.name.split("-")[0] === filter)
+    sortedThumbnails = thumbnails.nodes.filter(img => img.name.split("-")[0] === filter)
   }
   const [modalImage, setModalImage] = useState(null)
   const [isZoomed, setIsZoomed] = useState(false)
@@ -75,6 +85,10 @@ const ProductImagesGrid = ({ images, main, filter }) => {
   }
 
   useEffect(() => {
+    if (main) {
+      setCartThumbnail(sortedThumbnails[0])
+    }
+
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalImage(null)
