@@ -40,6 +40,8 @@ const ImageModal = styled.dialog`
       width: ${props => +props.width}px;
       height: auto;
       position: absolute;
+      left: 0;
+      top: 0;
     }
   }
   .gatsby-image-wrapper {

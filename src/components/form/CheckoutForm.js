@@ -10,21 +10,14 @@ import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 import Notification from "../ui/Notification"
-import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 
 function CheckoutForm({
   address,
-  authKey,
   cartItems,
   clientSecret,
-  coupon,
   customer,
   pid,
-  setCoupon,
   setPaymentProcessing,
-  setSelectedRate,
-  setSubtotal,
-  setTax,
   tax,
   toast,
 }) {
@@ -67,11 +60,6 @@ function CheckoutForm({
     const payment = await stripe.confirmPayment({
       elements,
       clientSecret,
-      confirmParams: {
-        // Return URL where the customer should be redirected after the authorization
-        return_url: `https://www.notesmithbooks.com/checkout/payment`
-      },
-      redirect: "if_required",
     })
 
     if (payment.error) {
@@ -314,81 +302,6 @@ function CheckoutForm({
     })
   }
 
-  const handleChangeCoupon = (value) => {
-    setCoupon({
-      ...coupon,
-      loading: false,
-      code: value.trim(),
-      error: "",
-    })
-  }
-
-  const handleCoupon = async () => {
-    if (!coupon.code) {
-      setCoupon({
-        ...coupon,
-        loading: false,
-        error: "Please enter a coupon code.",
-      })
-    }
-    else {
-      setCoupon({
-        ...coupon,
-        loading: true,
-        error: "",
-      })
-
-      fetch("/.netlify/functions/apply-coupon", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          pid: pid,
-          cartItems: cartItems,
-          coupon: coupon.code,
-        })
-      }).then(res => {
-        return res.json()
-      }).then(data => {
-
-        if (data.error) {
-          throw data.error
-        }
-
-        const pi = data.paymentIntent
-        const coupon = data.coupon
-
-        if (pi) {
-          setSelectedRate({
-            rateId: pi.metadata.rateId,
-            rate: pi.metadata.shipping,
-          })
-          setTax({
-            amount: pi.metadata.tax,
-            id: pi.metadata.taxId,
-          })
-          setSubtotal(pi.amount)
-        }
-
-        if (coupon) {
-          setCoupon({
-            ...coupon,
-            applied: true,
-            text: data.coupon && "Super mega discount",
-            loading: false,
-          })
-        }
-      }).catch(error => {
-        setCoupon({
-          ...coupon,
-          loading: false,
-          error: error,
-        })
-      })
-    }
-  }
-
   return (
     <form
       onSubmit={submitPaymentForm}
@@ -407,58 +320,6 @@ function CheckoutForm({
         options={paymentOptions}
         onChange={() => setError("")}
       />
-      <StyledLabel
-        htmlFor="coupon-input"
-        margin="16px 0 8px"
-      >
-        Coupon
-      </StyledLabel>
-      <Flexbox
-        justify="space-between"
-        align="flex-start"
-        width="100%"
-      >
-        <StyledFieldset
-          margin="0 8px 0 0"
-        >
-          <StyledInput
-            id="coupon-input"
-            onChange={e => handleChangeCoupon(e.target.value)}
-            placeholder="Coupon code"
-            className={coupon.error && "is-error"}
-            type="text"
-            value={coupon.code}
-            fontsize="1rem"
-            margin="0 8px 0 0"
-          />
-          {coupon.error && (
-            <ErrorLine
-              color={colors.red.sixHundred}
-            >
-              {coupon.error}
-            </ErrorLine>
-          )}
-        </StyledFieldset>
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          color={colors.gray.oneHundred}
-          padding="20px"
-          width="100px"
-          htmlFor="coupon-input"
-          type="button"
-          onClick={() => handleCoupon()}
-          className={coupon.loading ? "is-loading" : null}
-          disabled={coupon.loading}
-        >
-          {coupon.loading ? (
-            <Icon>
-              <CircleNotch size={16} color={colors.white} />
-            </Icon>
-          ) : (
-            "Apply"
-          )}
-        </Button>
-      </Flexbox>
       <Flexbox
         flex="flex"
         justify="flex-end"

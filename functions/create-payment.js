@@ -27,7 +27,10 @@ exports.handler = async (event) => {
     // else create a new paymentIntent
     paymentIntent = await stripe.paymentIntents.create({
       amount: subtotal,
-      currency: "usd",
+      currency: "usd", 
+      automatic_payment_methods: {
+        "enabled": true
+      },
       metadata: {
         subtotal: subtotal
       }

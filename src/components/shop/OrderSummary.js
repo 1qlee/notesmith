@@ -3,11 +3,15 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import { convertToDecimal } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
+import { CircleNotch } from "@phosphor-icons/react"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
 import Box from "../ui/Box"
 import StrikeText from "../misc/StrikeText"
+import Button from "../ui/Button"
+import Icon from "../ui/Icon"
+import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 
 const Orders = styled.div`
   background-color: ${colors.white};
@@ -36,7 +40,12 @@ const CapitalizedWord = styled.span`
 function OrderSummary({ 
   cartItems,
   coupon,
+  pid,
   selectedRate, 
+  setCoupon,
+  setSelectedRate,
+  setSubtotal,
+  setTax,
   subtotal,
   tax,
 }) {
@@ -52,6 +61,81 @@ function OrderSummary({
     }
 
     return convertToDecimal(calculatedPrice, 2) // converts to a float value
+  }
+
+  const handleChangeCoupon = (value) => {
+    setCoupon({
+      ...coupon,
+      loading: false,
+      code: value.trim(),
+      error: "",
+    })
+  }
+
+  const handleCoupon = async () => {
+    if (!coupon.code) {
+      setCoupon({
+        ...coupon,
+        loading: false,
+        error: "Please enter a coupon code.",
+      })
+    }
+    else {
+      setCoupon({
+        ...coupon,
+        loading: true,
+        error: "",
+      })
+
+      fetch("/.netlify/functions/apply-coupon", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          pid: pid,
+          cartItems: cartItems,
+          coupon: coupon.code,
+        })
+      }).then(res => {
+        return res.json()
+      }).then(data => {
+
+        if (data.error) {
+          throw data.error
+        }
+
+        const pi = data.paymentIntent
+        const coupon = data.coupon
+
+        if (pi) {
+          setSelectedRate({
+            rateId: pi.metadata.rateId,
+            rate: pi.metadata.shipping,
+          })
+          setTax({
+            amount: pi.metadata.tax,
+            id: pi.metadata.taxId,
+          })
+          setSubtotal(pi.amount)
+        }
+
+        if (coupon) {
+          setCoupon({
+            ...coupon,
+            applied: true,
+            text: data.coupon && "Super mega discount",
+            loading: false,
+          })
+        }
+      }).catch(error => {
+        setCoupon({
+          ...coupon,
+          loading: false,
+          error: error,
+        })
+      })
+    }
   }
 
   return (
@@ -121,7 +205,7 @@ function OrderSummary({
         </OrderSection>
         <OrderSection>
           <Flexbox
-            margin="0 0 16px"
+            margin="16px 0"
             flex="flex"
             justify="space-between"
           >
@@ -141,7 +225,7 @@ function OrderSummary({
             )}
           </Flexbox>
           <Flexbox
-            margin="0"
+            margin="0 0 16px"
             flex="flex"
             justify="space-between"
           >
@@ -163,21 +247,74 @@ function OrderSummary({
               )}
             </Flexbox>
           )}
-        </OrderSection>
-        <Flexbox
-          padding="16px 0"
-          flex="flex"
-          justify="space-between"
-          align="center"
-        >
-          <p>Total</p>
-          <Content
-            paragraphmargin="0"
-            paragraphfontsize="1.25rem"
-            paragraphlineheight="1"
+          <Flexbox
+            flex="flex"
+            justify="space-between"
+            align="center"
+            margin="8px 0"
           >
-            <p>${calculateTotalPrice()}</p>
-          </Content>
+            <p>Total</p>
+            <Content
+              paragraphmargin="0"
+              paragraphfontsize="1.25rem"
+              paragraphlineheight="1"
+            >
+              <p>${calculateTotalPrice()}</p>
+            </Content>
+          </Flexbox>
+        </OrderSection>
+        <StyledLabel
+          htmlFor="coupon-input"
+          margin="16px 0 4px"
+        >
+          Coupon
+        </StyledLabel>
+        <Flexbox
+          justify="space-between"
+          align="flex-start"
+          width="100%"
+          margin="0 0 16px"
+        >
+          <StyledFieldset
+            margin="0 8px 0 0"
+          >
+            <StyledInput
+              id="coupon-input"
+              onChange={e => handleChangeCoupon(e.target.value)}
+              placeholder="Coupon code"
+              className={coupon.error && "is-error"}
+              type="text"
+              padding="8px"
+              value={coupon.code}
+              margin="0 8px 0 0"
+            />
+            {coupon.error && (
+              <ErrorLine
+                color={colors.red.sixHundred}
+              >
+                {coupon.error}
+              </ErrorLine>
+            )}
+          </StyledFieldset>
+          <Button
+            backgroundcolor={colors.gray.nineHundred}
+            color={colors.gray.oneHundred}
+            padding="12px"
+            width="100px"
+            htmlFor="coupon-input"
+            type="button"
+            onClick={() => handleCoupon()}
+            className={coupon.loading ? "is-loading" : null}
+            disabled={coupon.loading}
+          >
+            {coupon.loading ? (
+              <Icon>
+                <CircleNotch size={16} color={colors.white} />
+              </Icon>
+            ) : (
+              "Apply"
+            )}
+          </Button>
         </Flexbox>
       </Orders>
     </>

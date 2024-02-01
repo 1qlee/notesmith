@@ -54,7 +54,7 @@ exports.handler = async (event) => {
         weight: totalWeight,
       }
     }
-    
+
     // physical package size
     const parcel = await easypost.Parcel.create(customParcel);
     const userAddress = {
@@ -84,7 +84,7 @@ exports.handler = async (event) => {
       newShipment = await easypost.Shipment.create({
         to_address: toAddress,
         from_address: {
-          company: 'Notesmith LLC',
+          company: 'Notesmith',
           street1: '971 Stewart Ave',
           city: 'Garden City',
           state: 'NY',
@@ -110,7 +110,7 @@ exports.handler = async (event) => {
       newShipment = await easypost.Shipment.create({
         to_address: toAddress,
         from_address: {
-          company: 'Notesmith LLC',
+          company: 'Notesmith',
           street1: '971 Stewart Ave',
           city: 'Garden City',
           state: 'NY',
@@ -128,7 +128,7 @@ exports.handler = async (event) => {
     }
 
     let cheapestRate = {}
-    console.log(newShipment.rates)
+    console.log(newShipment)
 
     if (newShipment.rates && newShipment.rates.length > 0) {
       if (isInternational) {
@@ -140,7 +140,7 @@ exports.handler = async (event) => {
       else {
         // otherwise, just use UPS for domestic
         const cheapestUPSRate = newShipment.rates
-          .filter(rate => rate.carrier === "UPS")
+          .filter(rate => rate.carrier === "UPSDAP")
           .sort((a, b) => a.rate - b.rate)[0];
 
         // if UPS is not available, use USPS

@@ -52,6 +52,7 @@ function Checkoutbar({
       coverColor: coverColor,
       currency: "USD",
       custom: productData.custom,
+      discount: discountSaved,
       height: productData.heightPixel,
       id: uuidv4(),
       image: getImageThumbnail(),

@@ -428,6 +428,11 @@ const Checkout = () => {
                           selectedRate={selectedRate}
                           subtotal={subtotal}
                           tax={tax}
+                          pid={pid}
+                          setCoupon={setCoupon}
+                          setSelectedRate={setSelectedRate}
+                          setSubtotal={setSubtotal}
+                          setTax={setTax}
                         />
                       </Col>
                     </Row>
