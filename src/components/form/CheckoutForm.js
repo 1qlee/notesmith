@@ -54,12 +54,15 @@ function CheckoutForm({
       return setProcessing(false)
     }
 
-    // purchase the shipping label first so we can reference the shipment in paymentIntent metadata
-    const shipment = await purchaseShippingLabel()
-
+    // attempt to make the payment
     const payment = await stripe.confirmPayment({
       elements,
-      clientSecret,
+      clientSecret, 
+      confirmParams: {
+        // Return URL where the customer should be redirected after the authorization
+        return_url: `https://www.notesmithbooks.com/checkout/payment`
+      },
+      redirect: "if_required",
     })
 
     if (payment.error) {
@@ -69,12 +72,21 @@ function CheckoutForm({
       // details incomplete)
       setError(error.message)
       setProcessing(false)
-    } else {
+    } 
+    else {
+      // this will show larger loading screen
       setPaymentProcessing(true)
       
+      // purchase the shipping label
+      const shipment = await purchaseShippingLabel()
+
+      // create a tax record in Stripe
       if (tax.amount) {
         createTaxRecord()
       }
+
+      sendReceiptEmail()
+
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
@@ -105,29 +117,6 @@ function CheckoutForm({
           }
         )
       }
-    }
-  }
-
-  const createTaxRecord = async () => {
-    try {
-      const response = await fetch("/.netlify/functions/create-tax-record", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          pid: pid,
-          tax: tax,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (data.error) {
-        throw data.error
-      }
-    } catch (err) {
-      console.log(err)
     }
   }
 
@@ -272,6 +261,28 @@ function CheckoutForm({
     }
   }
 
+  const createTaxRecord = async () => {
+    try {
+      const response = await fetch("/.netlify/functions/create-tax-record", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pid: pid,
+          tax: tax,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.error) {
+        throw data.error
+      }
+    } catch (err) {
+      return err
+    }
+  }
 
   const sendOrderErrorEmail = async (error) => {
     await fetch("/.netlify/functions/send-email-order-error", {
@@ -298,6 +309,18 @@ function CheckoutForm({
         error: error,
         address: address,
         cartItems: cartItems,
+      })
+    })
+  }
+
+  const sendReceiptEmail = async () => {
+    await fetch("/.netlify/functions/send-email-receipt", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pid: pid,
       })
     })
   }

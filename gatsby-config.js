@@ -69,7 +69,6 @@ module.exports = {
 
           //       break
           //   }
-          //   console.log(newPage)
           //   // Use the extractedString variable as needed
           //   return newPage
           // });

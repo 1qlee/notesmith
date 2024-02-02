@@ -5,7 +5,7 @@ const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 // will have to update the paymentIntent metadata object with tracking information
 const updatePaymentIntent = async (pid, shippingLabel, orderId, datePaid) => {
   const { tracking_code, public_url } = shippingLabel.tracker;
-  console.log("[Stripe] Updating payment intent with tracking information.")
+  console.log("[Stripe - create-shipment] Updating payment intent with tracking information.")
   await stripe.paymentIntents.update(
     pid,
     {
@@ -52,7 +52,7 @@ exports.handler = async (event) => {
     const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);
     // buy the shipping label from easypost
     const shippingLabel = await easypost.Shipment.buy(userShipment.id, userShippingRate);
-    console.log(`[Easypost] Bought shipping label for: ${pid}`)
+    console.log(`[Easypost - create-shipment] Bought shipping label for: ${pid}`)
 
     // update the payment intent with shipping label tracking information
     updatePaymentIntent(pid, shippingLabel, orderId, datePaid);
@@ -74,7 +74,7 @@ exports.handler = async (event) => {
       })
     }
   } catch(error) {
-    console.error(`[Easypost] Something went wrong when buying shipping label: ${error}`)
+    console.error(`[Easypost - create-shipment] Something went wrong when buying shipping label: ${error}`)
 
     return {
       statusCode: 400,

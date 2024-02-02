@@ -52,7 +52,6 @@ function Auth({ location }) {
           setAuthMode(mode)
           setLoading(false)
         }).catch(error => {
-          console.log("🚀 ~ applyActionCode ~ error:", error)
           setAuthModeVerified(false)
           setAuthMode(mode)
           setLoading(false)

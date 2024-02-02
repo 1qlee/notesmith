@@ -39,6 +39,7 @@ const ProductPage = ({ data, params }) => {
     rows: 200,
     columns: 200,
   })
+  const [hideScroll, setHideScroll] = useState(false)
   const [svgLoaded, setSvgLoaded] = useState(false)
 
   useEffect(() => {
@@ -60,6 +61,7 @@ const ProductPage = ({ data, params }) => {
 
   return (
     <Layout
+      hideScroll={hideScroll}
       seoDetails={{
         title: `${product.name}`,
         description: product.description,
@@ -108,6 +110,7 @@ const ProductPage = ({ data, params }) => {
                       thumbnails={productThumbnails}
                       images={productImages}
                       filter={coverColor}
+                      setHideScroll={setHideScroll}
                       main
                     />
                   </Col>
@@ -134,6 +137,7 @@ const ProductPage = ({ data, params }) => {
         <ProductDescription 
           bookData={bookData}
           images={descriptionImages}
+          setHideScroll={setHideScroll}
         />
         <ProductHero
           bookData={bookData}

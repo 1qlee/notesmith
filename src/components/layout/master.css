@@ -692,3 +692,7 @@ rect.overlay {
   fill-opacity:0.1;
   pointer-events:none;
 }
+
+.hide-scroll-y {
+  overflow-y: hidden;
+}

@@ -11,6 +11,7 @@ const ProductDescription = ({
   bookData,
   headingText,
   images,
+  setHideScroll,
 }) => {
   return (
     <Section>
@@ -51,6 +52,7 @@ const ProductDescription = ({
             <Col sm={6}>
               <ProductImagesGrid
                 images={images}
+                setHideScroll={setHideScroll}
               />
             </Col>
           </Row>

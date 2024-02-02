@@ -256,7 +256,7 @@ const ShippingForm = ({
                   )}
                 </h5>
                 {rate.carrier && (
-                  <small>({rate.carrier})</small>
+                  <small>({rate.carrier === "UPSDAP" ? "UPS" : rate.carrier})</small>
                 )}
                 {rate.delivery_days ? (
                   <small>{rate.delivery_days} to {rate.delivery_days + 3} business days</small>

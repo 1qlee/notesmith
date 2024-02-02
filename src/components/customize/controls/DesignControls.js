@@ -95,7 +95,6 @@ const DesignControls = () => {
             if (property === "width") {
               const currentWidth = +ele.getBBox().width
               const shift = Math.abs(convertFloatFixed(convertedValue - currentWidth, 3))
-              console.log("🚀 ~ file: DesignControls.js:98 ~ elements.forEach ~ shift:", shift)
               const isAdding = shift > 0 ? true : false
               const d = ele.getAttribute("d")
               let leftMostX = Infinity
@@ -111,10 +110,7 @@ const DesignControls = () => {
                 return x
               })
 
-              console.log(leftMostX)
-
               let modifiedD = d.replace(/([MmLlHhVvCcSsQqTtAaZz])\s*([-+]?\d*\.?\d+)\s*([-+]?\d*\.?\d+)/g, (_, command, x, y) => {
-                console.log(x)
                 return `${command} ${x} ${y}`
               })
 
@@ -148,7 +144,6 @@ const DesignControls = () => {
   }
   
   const handleUpdateAttr = (value, property) => {
-    console.log("🚀 ~ file: DesignControls.js:105 ~ handleUpdateAttr ~ value:", value)
     if (selectedElements) {
       // loop through selected elements and perform mutation
       selectedElements.forEach((ele) => {

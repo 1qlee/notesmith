@@ -7,21 +7,27 @@ const convertToDecimal = (num, places) => {
 }
 
 // email the customer a digital receipt
-exports.handler = async (event) => {
-  const body = JSON.parse(event.body);
-  const { pid } = body;
-
+exports.handler = async ({ body, headers }) => {
   try {
-    const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    const { status, metadata, amount } = paymentIntent;
+    // check the webhook to make sure it’s valid
+    const stripeEvent = stripe.webhooks.constructEvent(
+      body,
+      headers['stripe-signature'],
+      process.env.GATSBY_STRIPE_WEBHOOK_SECRET
+    );
 
-    if (status === "succeeded") {
-      const { latest_charge } = paymentIntent;
-      const { tax, authKey, shipping, subtotal, email, orderId, orderKey, datePaid, trackingUrl } = metadata;
-      const { address } = paymentIntent.shipping;
-      const date = new Date(+datePaid).toLocaleString()
+    // we're only checking for the event where payment intent succeeded (aka was paid for)
+    if (stripeEvent.type === 'payment_intent.succeeded') {
+      console.log("[Stripe Webhook] Payment Intent succeeded... Calling webhook...")
+      const { data } = stripeEvent;
+      const { object } = data;
+      const { amount, metadata, created, latest_charge } = object;
+      const { tax, authKey, shipping, subtotal, email, orderId, orderKey } = metadata;
+      const { address } = object.shipping;
+      const date = new Date(created * 1000);
+      
       const charge = await stripe.charges.retrieve(latest_charge);
-      const { payment_method_details, created } = charge;
+      const { payment_method_details } = charge;
       const paymentType = payment_method_details.type;
 
       let templateData = {
@@ -44,7 +50,7 @@ exports.handler = async (event) => {
             dynamic_template_data: {
               address: address,
               authKey: authKey,
-              date: date,
+              date: date.toLocaleString(),
               english: true,
               orderId: orderId,
               orderKey: orderKey,
@@ -53,7 +59,6 @@ exports.handler = async (event) => {
               subtotal: convertToDecimal(subtotal, 2),
               taxRate: tax ? convertToDecimal(tax, 2) : "0",
               totalAmount: convertToDecimal(amount, 2),
-              trackingUrl: trackingUrl,
             }
           }
         ]
@@ -63,15 +68,14 @@ exports.handler = async (event) => {
         templateData.personalizations[0].dynamic_template_data.last4 = payment_method_details.card.last4;
       }
 
-      console.log("[Stripe - send-email-receipt] Sending email receipt...")
       await sendgridMail.send(templateData);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ received: true }),
-      };
     }
-  } catch (error) {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ received: true }),
+    };
+  } catch(error) {
     console.log(`[Netlify] Stripe webhook failed with ${error}`);
 
     return {

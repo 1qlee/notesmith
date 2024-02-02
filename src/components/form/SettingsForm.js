@@ -155,9 +155,6 @@ function SettingsForm() {
           process: "changePassword"
         })
       }
-      else {
-        console.log(error.message)
-      }
       setLoading(false)
     })
   }

@@ -187,7 +187,6 @@ const Checkout = () => {
 
           // if shipping information exists, fill the form
           if (shipping) {
-            console.log("🚀 ~ file: checkout.js:187 ~ retrievePaymentIntent ~ shipping:", shipping)
             const { email } = metadata.paymentIntent
 
             setAddress(shipping.address)

@@ -66,10 +66,8 @@ const ToolBox = () => {
   }, [selectedTool])
 
   const handleSelectTool = (tool) => { 
-    console.log("🚀 ~ handleSelectTool ~ tool:", tool)
 
     if (tool === selectedTool) {
-      console.log("same")
       setSelectedTool("")
     }
     else {

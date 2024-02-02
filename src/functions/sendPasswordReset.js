@@ -10,7 +10,6 @@ export default async function sendPasswordReset(userEmail) {
     })
   }).then(async res => {
     const data = await res.json()
-    console.log(data)
 
     if (data.error) {
       return data.error || "There was an error sending the verification email, please try again."

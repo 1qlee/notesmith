@@ -43,7 +43,6 @@ function Music({
 
         // break the loop if we are past the height of the page
         if (posY1 + halfLineStrokeWidth > height) {
-          console.log("🚀 ~ file: Music.js:47 ~ createStaves ~ posY1:", posY1)
           
           return setPageData({
             ...pageData,

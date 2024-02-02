@@ -2,7 +2,7 @@ import React from "react"
 import Helmet from "react-helmet"
 import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 
-function Seo({ details }) {
+function Seo({ details, hideScroll }) {
   const { title: defaultTitle, description: defaultDescription, image: defaultImage, siteUrl: defaultUrl } = useSiteMetadata()
   const { title, description, image, url } = details || {}
 
@@ -15,6 +15,9 @@ function Seo({ details }) {
 
   return (
     <Helmet
+      bodyAttributes={hideScroll && {
+        class: "hide-scroll-y",
+      }}
       htmlAttributes={{
         lang: "en",
       }}

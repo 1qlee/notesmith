@@ -6,50 +6,48 @@ import { getImage, GatsbyImage } from 'gatsby-plugin-image'
 import Button from '../../ui/Button'
 import Icon from '../../ui/Icon'
 
-const ImageModalBackground = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  background-color: ${colors.primary.shadow};
-  height: 100vh;
+const ImageModalWrapper = styled.div`
+  background: ${colors.white};
+  bottom: 0;
   left: 0;
+  padding: 0;
   position: fixed;
+  right: 0;
   top: 0;
-  width: 100vw;
-  z-index: 9000;
+  z-index: 1000;
 `
 
 const ImageModal = styled.dialog`
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  padding: 16px;
-  background-color: ${colors.white};
-  border-radius: 8px;
-  overflow-y: auto;
+  align-items: center;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  overflow: hidden;
   position: relative;
+  z-index: 1;
   @media only screen and (max-width: ${breakpoints.sm}) {
     justify-content: flex-start;
   }
   &.is-zoomed {
     .gatsby-image-wrapper {
       cursor: zoom-out;
-      width: ${props => +props.width}px;
-      height: auto;
-      position: absolute;
-      left: 0;
-      top: 0;
+      transform: scale(1.25);
     }
   }
   .gatsby-image-wrapper {
-    width: ${props => +props.width / 2}px;
-    height: 100%;
     position: absolute;
     cursor: zoom-in;
+    transform: scale(0.75);
   }
+`
+
+const ImageWrapper = styled.div`
+  align-items: flex-start;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  width: 100vw;
 `
 
 const ImageCloseButton = styled(Button)`
@@ -64,6 +62,7 @@ const ProductImagesGrid = ({
   filter,
   setCartThumbnail,
   thumbnails,
+  setHideScroll,
 }) => {
   let sortedImages = images.nodes.sort((a, b) => a.name.localeCompare(b.name))
   let sortedThumbnails = main && thumbnails.nodes.sort((a, b) => a.name.localeCompare(b.name))
@@ -78,12 +77,14 @@ const ProductImagesGrid = ({
   const buttonRef = useRef(null)
 
   const handleImageClick = (image) => {
+    setHideScroll(true)
     setModalImage(image)
     setIsZoomed(false)
   }
 
   const handleCloseModal = () => {
     setModalImage(null)
+    setHideScroll(false)
   }
 
   useEffect(() => {
@@ -94,6 +95,7 @@ const ProductImagesGrid = ({
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalImage(null)
+        setHideScroll(false)
       }
     }
 
@@ -119,6 +121,7 @@ const ProductImagesGrid = ({
           break
         case "Escape":
           setModalImage(null)
+          setHideScroll(false)
         default:
           break
       }
@@ -151,30 +154,34 @@ const ProductImagesGrid = ({
         </div>
       ))}
       {modalImage && (
-        <ImageModalBackground>
-          <ImageModal 
-            width={modalImage.childImageSharp.gatsbyImageData.width}
-            className={isZoomed && "is-zoomed"}
-            ref={modalRef} 
-            role="dialog" 
-            aria-modal="true"
-            onClick={() => setIsZoomed(!isZoomed)}
-          >
-            <GatsbyImage 
-              image={getImage(modalImage)} 
-              alt={`pro wired notebook a5 close-up`} 
-            />
-            <ImageCloseButton 
-              onClick={handleCloseModal}
-              backgroundcolor={colors.white}
-              ref={buttonRef}
+        <ImageModalWrapper>
+          <div style={{position: 'relative'}}>
+            <ImageModal
+              width={modalImage.childImageSharp.gatsbyImageData.width}
+              className={isZoomed && "is-zoomed"}
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              onClick={() => setIsZoomed(!isZoomed)}
             >
-              <Icon>
-                <X size={24} color={colors.gray.nineHundred} />
-              </Icon>
-            </ImageCloseButton>
-          </ImageModal>
-        </ImageModalBackground>
+              <ImageWrapper>
+                <GatsbyImage
+                  image={getImage(modalImage)}
+                  alt={`pro wired notebook a5 close-up`}
+                />
+              </ImageWrapper>
+              <ImageCloseButton
+                onClick={handleCloseModal}
+                backgroundcolor={colors.white}
+                ref={buttonRef}
+              >
+                <Icon>
+                  <X size={24} color={colors.gray.nineHundred} />
+                </Icon>
+              </ImageCloseButton>
+            </ImageModal>
+          </div>
+        </ImageModalWrapper>
       )}
     </div>
   )

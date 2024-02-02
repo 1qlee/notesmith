@@ -11,7 +11,6 @@ function BorderControls({
   setPageData,
 }) {
   const { borderData } = pageData
-  console.log("🚀 ~ borderData:", borderData)
 
   function handleBorderSync() {
     if (!borderData.sync) {

@@ -254,7 +254,7 @@ const Order = ({ location, orderId }) => {
                           >
                             <h5>Order date</h5>
                             {showInfo ? (
-                              <p>{convertUnix(orderInfo.datePaid)}</p>
+                              <p>{new Date(orderInfo.datePaid).toLocaleString()}</p>
                             ) : (
                               <PlaceholderLine width="4rem" />
                             )}

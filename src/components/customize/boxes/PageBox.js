@@ -72,8 +72,6 @@ function PageBox({
     const rowIndex = Math.ceil(pageNumber / 2)
     const columnIndex = pageNumber % 2 === 0 ? 2 : 1
 
-    console.log(rowIndex, columnIndex)
-
     handleScrollToItem({
       align: "smart",
       rowIndex: rowIndex,

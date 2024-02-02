@@ -167,7 +167,7 @@ const UserDashboard = () => {
               <p>
                 Click on the "Books" tab above to get started. From there, click on the "New book" button to create the book which will then appear in your Books Table. Double-click on any book in the table to open it in the editor.
               </p>
-              <p>Currently, we will ship orders in batches. We cannot provide an accurate timeline or guarantee for fulfillment at this time. We hope to wait until Batch #1 fills its quota, but we will also consider shipping before it does if fulfillment is taking too long. You can expect constant communication and updates from Notesmith during this time.</p>
+              <p>Currently, we are shipping orders in batches. The first batch (Batch #1) will run until March 1 or until the maximum quantity (200 units) is fulfilled. You can expect constant communication and updates from Notesmith during this time.</p>
               <p><b>Reminder: </b>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
             </Content>
             <Notification
@@ -198,8 +198,8 @@ const UserDashboard = () => {
               h3margin="0 0 16px"
               margin="32px 0 16px"
             >
-              <h3>Batch #1</h3>
-              <p>This first batch will ship 200 notebooks total. There might be some leeway for some extra books (maybe between 25 and 75) if there is demand for them. Once the batch fulfills, we will immediately begin production and shipments should start within 2 to 4 weeks of fulfillment.</p>
+              <h3>Current batch: Batch #1</h3>
+              <p>This first batch will ship 200 notebooks total. There might be some leeway for some extra books (maybe between 25 and 75) if there is demand for them. Orders for Batch #1 will close on March 1.</p>
             </Content>
             {quantitySold && (
               <>

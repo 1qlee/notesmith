@@ -75,7 +75,6 @@ function BooksContainer({
 
   function handleRenameBook(e) {
     e.preventDefault()
-    console.log(newBookTitle, selectedBookTitle)
 
     if (newBookTitle) {
       // db function from props
