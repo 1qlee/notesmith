@@ -87,7 +87,7 @@ const FrontFakeCover = styled.div`
   left: 30px;
   position: absolute;
   top: 0;
-  transform: translateZ(20px);
+  transform: translateZ(19px);
   transition: box-shadow 0.4s;
   width: calc(100% - 30px);
   z-index: 1;
@@ -101,7 +101,7 @@ const BackFakeCover = styled.div`
   left: 32px;
   position: absolute;
   top: 0;
-  transform: translateZ(-20px);
+  transform: translateZ(-24px);
   transition: box-shadow 0.4s;
   width: calc(100% - 32px);
   z-index: 1;
@@ -124,7 +124,7 @@ const BackCover = styled.div`
   left: 0;
   content: "";
   z-index: 2;
-  transform: translateZ(-20px) rotateY(180deg);
+  transform: translateZ(-28px) rotateY(180deg);
   transform-style: preserve-3d;
 `
 

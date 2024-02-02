@@ -616,7 +616,7 @@ rect.overlay {
 } */
 @font-face {
   font-family: 'Jost';
-  font-style: italic;
+  font-style: normal;
   font-display: swap;
   font-weight: 400 700;
   src: url('/fonts/jost-var.woff2') format('woff2');
