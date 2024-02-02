@@ -12,11 +12,17 @@ import CrossGrid from "../customize/templates/CrossGrid"
 import Calligraphy from "../customize/templates/Calligraphy"
 
 function DemoTemplate({
+  hovered,
   pageDimensions,
   pageData,
   setPageData,
   setSvgLoaded,
 }) {
+  console.log("🚀 ~ pageDimensions:", pageDimensions)
+  let adjustedDimensions = {
+    height: pageDimensions.height,
+    width: pageDimensions.width,
+  }
   const [max, setMax] = useState({
     rows: 200,
     columns: 200,
@@ -36,7 +42,7 @@ function DemoTemplate({
       )}
       {pageData.template === "ruled" && (
         <Ruled
-          maxSvgSize={pageDimensions}
+          maxSvgSize={adjustedDimensions}
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}

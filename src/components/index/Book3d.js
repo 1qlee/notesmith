@@ -35,10 +35,14 @@ const gradient = `linear-gradient(90deg,
 const StyledDemoTemplate = styled.div`
   position: absolute;
   top: 12px;
+  width: calc(100% - 68px);
   left: 56px;
   z-index: 5;
-  width: calc(100% - 68px);
   height: calc(100% - 24px);
+  @media only screen and (max-width: 1548px) {    
+    left: 44px;
+    width: calc(100% - 56px);
+  }
 `
 
 const initAnimation = keyframes`
@@ -147,11 +151,11 @@ const StyledBook3d = styled.div`
   transition: 1s ease;
   animation: 1s ease 0s 1 ${initAnimation};
   height: 100%;
-  transform: rotate3d(0,1,0,-30deg);
+  transform: rotate3d(0,0,0,0);
   width: 100%;
   will-change: transform;
   &:not(.is-active) {
-    transform: ${props => props.hovered ? "rotate3d(0,0,0,0)" : null};
+    transform: ${props => props.hovered ? "rotate3d(0,1,0,-30deg)" : null};
   }
   &.is-active {
     transform: rotate3d(0,1,0,-180deg);
@@ -212,8 +216,8 @@ function Book3d({
                       columns: 200,
                     })
                     setPageDimensions({
-                      height: contentRect.bounds.height - 24,
-                      width: contentRect.bounds.width + 45,
+                      height: contentRect.bounds.height,
+                      width: contentRect.bounds.width,
                     })
                   }}
                 >
@@ -222,6 +226,7 @@ function Book3d({
                       ref={measureRef}
                     >
                       <DemoTemplate
+                        hovered={hovered}
                         pageDimensions={pageDimensions}
                         pageData={pageData}
                         setPageData={setPageData}
