@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { colors } from "../../styles/variables"
@@ -34,6 +34,15 @@ function CheckoutForm({
       }
     }
   }
+
+  useEffect(() => {
+    async function getUpdate() {
+      const response = await elements.fetchUpdates()
+      console.log(response)
+    }
+
+    getUpdate()
+  }, [])
 
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
