@@ -115,60 +115,68 @@ const ShippingForm = ({
   }, [address, customer, activeCheckoutSteps])
 
   const setShippingInfo = async () => {
-    await fetch("/.netlify/functions/set-shipping-info", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pid: pid, // need pid from localStorage to update the corresponding paymentIntent
-        rate: selectedRate,
+    try {
+      const response = await fetch("/.netlify/functions/set-shipping-info", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pid: pid, // need pid from localStorage to update the corresponding paymentIntent
+          rate: selectedRate,
+        })
       })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
+
+      const data = await response.json()
+
       if (data.error) {
         throw data.error
       }
-
-      setAuthKey(data.authKey)
-      createTax()
-    }).catch(error => {
+      else {
+        setAuthKey(data.authKey)
+        await createTax()
+      }
+    }
+    catch(error) {
       toast.error(error)
       setProcessing(false)
-    })
+    }
   }
 
   const createTax = async () => {
-    fetch("/.netlify/functions/create-tax", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pid: pid,
-        cartItems: cartItems,
-        address: address,
-        shippingRate: selectedRate,
+    try {
+      const response = await fetch("/.netlify/functions/create-tax", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pid: pid,
+          cartItems: cartItems,
+          address: address,
+          shippingRate: selectedRate,
+        })
       })
-    }).then(res => {
-      return res.json()
-    }).then(data => {
+
+      const data = await response.json()
+
       if (data.error) {
         throw data.error
       }
-
-      // we will get back tax and taxId
-      setTax(data)
-      setActiveCheckoutSteps("payment")
-      setMethodValidated(true)
-      setMethodStatus({
-        msg: "Done",
-        color: colors.green.sixHundred,
-      })
-      setLoading(false)
-      setProcessing(false)
-    }).catch(error => {
+      else {
+        // we will get back tax and taxId
+        setTax(data)
+        setActiveCheckoutSteps("payment")
+        setMethodValidated(true)
+        setMethodStatus({
+          msg: "Done",
+          color: colors.green.sixHundred,
+        })
+        setLoading(false)
+        setProcessing(false)
+      }
+    }
+    catch (error) {
       setLoading(false)
       setTax({
         amount: 0,
@@ -176,7 +184,7 @@ const ShippingForm = ({
       })
       toast.error(error)
       setProcessing(false)
-    })
+    }
   }
 
   const handleSelectRate = () => {

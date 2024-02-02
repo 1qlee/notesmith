@@ -400,22 +400,24 @@ const Checkout = () => {
                             onClick={setActiveCheckoutSteps}
                             activeCheckoutSteps={activeCheckoutSteps}
                           >
-                            <CheckoutForm
-                              address={address}
-                              authKey={authKey}
-                              cartItems={cartItems}
-                              clientSecret={clientSecret}
-                              coupon={coupon}
-                              customer={customer}
-                              pid={pid}
-                              setCoupon={setCoupon}
-                              setPaymentProcessing={setPaymentProcessing}
-                              setSelectedRate={setSelectedRate}
-                              setSubtotal={setSubtotal}
-                              setTax={setTax}
-                              tax={tax}
-                              toast={toast}
-                            />
+                            {activeCheckoutSteps === "payment" && (
+                              <CheckoutForm
+                                address={address}
+                                authKey={authKey}
+                                cartItems={cartItems}
+                                clientSecret={clientSecret}
+                                coupon={coupon}
+                                customer={customer}
+                                pid={pid}
+                                setCoupon={setCoupon}
+                                setPaymentProcessing={setPaymentProcessing}
+                                setSelectedRate={setSelectedRate}
+                                setSubtotal={setSubtotal}
+                                setTax={setTax}
+                                tax={tax}
+                                toast={toast}
+                              />
+                            )}
                           </CheckoutSteps>
                         </Box>
                       </Col>

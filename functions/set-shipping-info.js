@@ -55,7 +55,7 @@ exports.handler = async (event) => {
      return {
        statusCode: 400,
        body: JSON.stringify({
-         error: "Something went wrong when updating shipping information."
+         error: "Something went wrong when updating shipping information. Please refresh the page and try again."
        })
      }
    }

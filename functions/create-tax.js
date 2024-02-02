@@ -76,10 +76,6 @@ exports.handler = async (event) => {
       pid,
       {
         amount: amountBeforeTax,
-        metadata: {
-          amount: 0,
-          id: null,
-        }
       }
     )
 
