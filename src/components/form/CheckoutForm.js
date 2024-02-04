@@ -5,6 +5,8 @@ import { colors } from "../../styles/variables"
 import { CircleNotch } from "@phosphor-icons/react"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, set, push } from "firebase/database"
+import updatePaymentIntent from "../../functions/updatePaymentIntent"
+import sendEmailTemplate from "../../functions/sendEmailTemplate"
 
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
@@ -37,12 +39,13 @@ function CheckoutForm({
 
   useEffect(() => {
     async function getUpdate() {
-      const response = await elements.fetchUpdates()
-      console.log(response)
+      if (elements) {
+        await elements.fetchUpdates()
+      }
     }
 
     getUpdate()
-  }, [])
+  }, [elements])
 
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {
@@ -170,8 +173,7 @@ function CheckoutForm({
         },
       }
 
-      const responseFromSaveOrderItems = await saveOrderItems(cartItems, orderData)
-      return responseFromSaveOrderItems
+      return await updateOrders(cartItems, orderData)
     } catch (data) {
       // Handle errors
       await sendShippingErrorEmail("Payment was successful, but we could not purchase the shipping label.")
@@ -191,14 +193,13 @@ function CheckoutForm({
         shipped: false,
       }
 
-      const responseFromSaveOrderItems = await saveOrderItems(cartItems, orderData)
-      return responseFromSaveOrderItems;
+      return await updateOrders(cartItems, orderData)
     }
   }
 
   // save each order item to the database
   // save the entire order to the database
-  const saveOrderItems = async (cartItems, orderData) => {
+  const updateOrders = async (cartItems, orderData) => {
     let orderItems = {}
     const cartItemsLength = cartItems.length
     const newOrderKey = push(ref(firebaseDb, 'orders/')).key
@@ -214,14 +215,15 @@ function CheckoutForm({
           ...cartItems[i],
           pid: pid,
           id: orderItemKey,
-        }).catch(async () => {
+        }).catch(async (error) => {
           setError(null)
           // send the team an email to notify them of the error
-          await sendOrderErrorEmail("Payment was successful, but there was an error adding order items to the database.")
-
-          throw {
-            error: "Could not add order item to database.",
-          }
+          await sendEmailTemplate({
+            templateId: "d-929f322693bb41879356ddcd9c897d70",
+            pid: pid,
+            error: error,
+            cartItems: cartItems,
+          })
         })
       }
 
@@ -231,30 +233,20 @@ function CheckoutForm({
         pid: pid,
         orderItems: orderItems,
       }).then(async () => {
-        const response = await fetch("/.netlify/functions/update-payment", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pid: pid,
-            data: { orderKey: newOrderKey },
-          }),
+        const updatePayment = await updatePaymentIntent(pid, { metadata: { orderKey: newOrderKey } })
+
+        if (updatePayment.error) {
+          throw new Error(updatePayment.error)
+        }
+      }).catch(async (error) => {
+        await sendEmailTemplate({
+          templateId: "d-929f322693bb41879356ddcd9c897d70",
+          pid: pid,
+          error: error,
+          cartItems: cartItems,
         })
-
-        const data = await response.json()
-
-        if (data.error) {
-          throw data.error
-        }
-      }).catch(async () => {
-        await sendOrderErrorEmail("Payment was successful, but there was an error adding order to the database.")
-
-        throw {
-          error: "Could not add order to database.",
-        }
       })
-
+    
       return {
         orderId: newOrderKey,
         authKey: authKey,
@@ -291,20 +283,6 @@ function CheckoutForm({
     } catch (err) {
       return err
     }
-  }
-
-  const sendOrderErrorEmail = async (error) => {
-    await fetch("/.netlify/functions/send-email-order-error", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
-        error: error,
-        cartItems: cartItems,
-      })
-    })
   }
 
   const sendShippingErrorEmail = async (error) => {

@@ -7,7 +7,7 @@ exports.handler = async (event) => {
 
   try {
     const templateData = {
-      template_id: templateId,
+      template_id: templateId || "d-7eab66ed51c74eceb1061b1781e07a51", // generic template
       from: {
         email: from || "general@notesmithbooks.com",
         name: "Notesmith"

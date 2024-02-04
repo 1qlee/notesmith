@@ -100,6 +100,8 @@ const ProductImagesGrid = ({
     }
 
     const handleKeyPress = (event) => {
+      const index = sortedImages.indexOf(modalImage)
+
       switch(event.key) {
         case "Tab":
           if (modalImage) {
@@ -109,15 +111,17 @@ const ProductImagesGrid = ({
           break
         case "ArrowLeft":
           if (modalImage) {
-            const index = sortedImages.indexOf(modalImage)
-
             if (index !== 0) {
-              setModalImage(sortedImages[sortedImages.indexOf(modalImage) - 1])
+              setModalImage(sortedImages[index - 1])
             }
           }
           break
         case "ArrowRight":
-          setModalImage(sortedImages[sortedImages.indexOf(modalImage) + 1])
+          setModalImage(sortedImages[index + 1])
+
+          if (!sortedImages[index + 1]) {
+            setHideScroll(false)
+          }
           break
         case "Escape":
           setModalImage(null)

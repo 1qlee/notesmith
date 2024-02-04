@@ -92,9 +92,9 @@ const Content = styled.div`
     line-height: ${props => props.paragraphlineheight || "1.75"};
     text-align: ${props => props.paragraphtextalign};
     text-transform: ${props => props.paragraphtexttransform};
-    margin-bottom: ${props => props.paragraphmargin};
+    margin: ${props => props.paragraphmargin};
     &:not(:last-child) {
-      margin-bottom: ${props => props.paragraphmarginbottom || "16px"};
+      margin: ${props => props.paragraphmargin || "0 0 16px"};
     }
   }
   small {

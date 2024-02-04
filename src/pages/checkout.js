@@ -6,7 +6,8 @@ import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "../components/cart/context/cartContext"
 import { Container, Row, Col } from "react-grid-system"
 import { toast } from 'react-toastify'
-import { isBrowser, convertToDecimal } from "../utils/helper-functions"
+import { isBrowser } from "../utils/helper-functions"
+import updatePaymentIntent from "../functions/updatePaymentIntent"
 
 import CheckoutSteps from "../components/checkout/CheckoutSteps"
 import { Flexbox } from "../components/layout/Flexbox"
@@ -17,7 +18,6 @@ import Breadcrumb from "../components/ui/Breadcrumb"
 import CheckoutForm from "../components/form/CheckoutForm"
 import AddressForm from "../components/form/AddressForm"
 import Layout from "../components/layout/Layout"
-import Seo from "../components/layout/Seo"
 import ShippingForm from "../components/form/ShippingForm"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
@@ -247,26 +247,17 @@ const Checkout = () => {
   }, [cartDetails])
 
   // when user wants to use their inputted address versus Easypost api suggestion
-  function forceAddressSubmit() {
+  async function forceAddressSubmit() {
     // hide the error modal
     setProcessing(true)
-    // update the paymentIntent with shipping form data
-    fetch("/.netlify/functions/update-address", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
-        address: address,
-        name: customer.name,
-        email: customer.email,
-      })
-    }).then(res => res.json()
-    ).then(data => {
-      // throw any errors!
-      if (data.error) {
-        throw data.error
+    
+    try {
+      console.log("Force address submit")
+      // update the paymentIntent with shipping form data
+      const response = await updatePaymentIntent(pid, { metadata: { email: customer.email }, receipt_email: customer.email })
+
+      if (response.error) {
+        throw response.error
       }
 
       setActiveCheckoutSteps("method")
@@ -277,11 +268,12 @@ const Checkout = () => {
       })
       setProcessing(false)
       setShowModal({ show: false })
-    }).catch(error => {
+    }
+    catch(error) {
       setProcessing(false)
       setShowModal({ show: false })
       toast.error(error)
-    })
+    }
   }
 
   return (
@@ -400,24 +392,22 @@ const Checkout = () => {
                             onClick={setActiveCheckoutSteps}
                             activeCheckoutSteps={activeCheckoutSteps}
                           >
-                            {activeCheckoutSteps === "payment" && (
-                              <CheckoutForm
-                                address={address}
-                                authKey={authKey}
-                                cartItems={cartItems}
-                                clientSecret={clientSecret}
-                                coupon={coupon}
-                                customer={customer}
-                                pid={pid}
-                                setCoupon={setCoupon}
-                                setPaymentProcessing={setPaymentProcessing}
-                                setSelectedRate={setSelectedRate}
-                                setSubtotal={setSubtotal}
-                                setTax={setTax}
-                                tax={tax}
-                                toast={toast}
-                              />
-                            )}
+                            <CheckoutForm
+                              address={address}
+                              authKey={authKey}
+                              cartItems={cartItems}
+                              clientSecret={clientSecret}
+                              coupon={coupon}
+                              customer={customer}
+                              pid={pid}
+                              setCoupon={setCoupon}
+                              setPaymentProcessing={setPaymentProcessing}
+                              setSelectedRate={setSelectedRate}
+                              setSubtotal={setSubtotal}
+                              setTax={setTax}
+                              tax={tax}
+                              toast={toast}
+                            />
                           </CheckoutSteps>
                         </Box>
                       </Col>

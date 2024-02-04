@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { colors, regex } from "../../styles/variables"
 import { CircleNotch } from "@phosphor-icons/react"
 import { AddressElement, useElements } from "@stripe/react-stripe-js"
+import updatePaymentIntent from "../../functions/updatePaymentIntent"
 
 import { Flexbox } from "../layout/Flexbox"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "./FormComponents"
@@ -90,6 +91,7 @@ function AddressForm({
         phone: phone,
       })
     })
+    
     const data = await response.json()
 
     if (data.errors) {
@@ -108,24 +110,6 @@ function AddressForm({
         errors: null,
         isValid: true,
       }
-    }
-  }
-
-  async function updateReceiptEmail() {
-    const response = await fetch("/.netlify/functions/update-receipt-email", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({
-        pid: pid,
-        email: customer.email,
-      })
-    })
-    const data = await response.json()
-
-    if (data.errors) {
-      toast.error(data.errors)
     }
   }
 
@@ -169,14 +153,22 @@ function AddressForm({
       const isAddressValid = await validateAddress(address, name, phone)
 
       if (isAddressValid.isValid) {
-        await updateReceiptEmail()
-        setActiveCheckoutSteps("method")
-        setShippingValidated(true)
-        setAddressStatus({
-          msg: "Done",
-          color: colors.green.sixHundred,
-        })
+        const updateEmail = await updatePaymentIntent(pid, { metadata: { email: customer.email }, receipt_email: customer.email })
+
+        if (updateEmail.error) {
+          toast.error(updateEmail.error)
+          setEmailError("There was an error when inputting your email address.")
+        }
+        else {
+          setActiveCheckoutSteps("method")
+          setShippingValidated(true)
+          setAddressStatus({
+            msg: "Done",
+            color: colors.green.sixHundred,
+          })
+        }
       }
+
       setLoading(false)
     }
     else {
@@ -257,6 +249,7 @@ function AddressForm({
           fontsize="1rem"
           type="email"
           value={customer.email}
+          autoComplete="email"
         />
         {emailError && (
           <ErrorLine

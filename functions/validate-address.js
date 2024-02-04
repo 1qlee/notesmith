@@ -17,7 +17,7 @@ exports.handler = async (event) => {
       phone: phone,
     });
 
-    console.log("[EASYPOST] Address verification was successful.");
+    console.log("[Easypost] Address verification was successful.");
 
     return {
       statusCode: 200,
@@ -32,7 +32,7 @@ exports.handler = async (event) => {
     }
   }
   catch(error) {
-    console.error("[EASYPOST] Address verification error: ", error.code);
+    console.error("[Easypost] Address verification error: ", error.code);
 
     if (error.errors) {
       return {
@@ -47,7 +47,7 @@ exports.handler = async (event) => {
         statusCode: 400,
         body: JSON.stringify({
           errors: [{
-            message: "We could not verify your address. Please check your inputs."
+            message: "We could not verify your address. Please check your inputs again."
           }]
         })
       }

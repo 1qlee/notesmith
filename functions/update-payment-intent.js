@@ -7,9 +7,7 @@ exports.handler = async (event) => {
 
   try {
     // Update the payment intent
-    const paymentIntent = await stripe.paymentIntents.update(pid, {
-      metadata: data
-    });
+    const paymentIntent = await stripe.paymentIntents.update(pid, data);
     // Handle the updated payment intent
     console.log('[Stripe] Payment intent updated:', paymentIntent);
 
@@ -20,12 +18,12 @@ exports.handler = async (event) => {
       })
     }
   } catch (error) {
-    console.error(`[Stripe] Could not update paymentIntent: ${pid}`);
+    console.error(`[Stripe] Could not update paymentIntent: ${pid}. Returned error: `, error);
 
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: "There was an error updating our systems. Please try again.",
+        error: "There was an error processing your request. Please try again. If this problem persists, please contact us.",
       })
     }
   }

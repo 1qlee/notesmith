@@ -27,24 +27,24 @@ function ValidateAddressModal({
         <Notification
           backgroundcolor={colors.red.twoHundred}
           bordercolor={colors.red.twoHundred}
+          borderradius="8px"
           margin="0 0 16px"
           padding="1rem"
           justify="flex-start"
           align="flex-start"
         >
           <Icon
-            backgroundcolor={colors.red.twoHundred}
             borderradius="100%"
             margin="0 1rem 0 0"
             className="is-pulsating"
-            pulseColor={colors.red.threeHundred}
+            pulseColor={colors.red.fourHundred}
           >
             <WarningCircle size="1.5rem" weight="fill" color={colors.red.sixHundred} />
           </Icon>
           <Content
             licolor={colors.red.nineHundred}
-            lifontsize="0.75rem"
             h5margin="0 0 4px"
+            h5color={colors.red.nineHundred}
           >
             <h5>Errors</h5>
             <ul>
@@ -57,10 +57,9 @@ function ValidateAddressModal({
         <Content
           paragraphlineheight="1.5"
           paragraphmargin="0"
-          paragraphfontsize="0.875rem"
           h5margin="0 0 4px"
         >
-          <h5>Address</h5>
+          <h5>You inputted:</h5>
           <p>{address.line1}, {address.line2}</p>
           <p>{address.city}, {address.state} {address.postal_code}</p>
         </Content>
@@ -83,7 +82,7 @@ function ValidateAddressModal({
         <Button
           className={processing ? "is-loading" : null}
           disabled={processing}
-          onClick={forceAddressSubmit}
+          onClick={async () => await forceAddressSubmit()}
         >
           {processing ? (
             <Icon>
