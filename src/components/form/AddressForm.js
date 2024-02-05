@@ -153,7 +153,7 @@ function AddressForm({
       const isAddressValid = await validateAddress(address, name, phone)
 
       if (isAddressValid.isValid) {
-        const updateEmail = await updatePaymentIntent(pid, { metadata: { email: customer.email }, receipt_email: customer.email })
+        const updateEmail = await updatePaymentIntent(pid, { metadata: { email: customer.email } })
 
         if (updateEmail.error) {
           toast.error(updateEmail.error)

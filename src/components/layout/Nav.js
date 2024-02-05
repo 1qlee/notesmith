@@ -232,7 +232,6 @@ const Nav = ({ auth, hideNavbar }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const navMenuRef = useRef(null)
   const userMenuRef = useRef(null)
-  let hideDashboard = false
 
   if (isBrowser) {
     // get pathnames
@@ -241,10 +240,6 @@ const Nav = ({ auth, hideNavbar }) => {
     // get the first part of the pathname
     const pathArray = path.split("/")
     const firstPath = pathArray[1]
-
-    if (firstPath === "account") {
-      hideDashboard = true
-    }
   }
 
   const { user, signOut, loading } = useFirebaseContext()
@@ -339,16 +334,14 @@ const Nav = ({ auth, hideNavbar }) => {
                     </NavHeading>
                     {user ? (
                       <>
-                        {!hideDashboard && (
-                          <NavItem>
-                            <NavLink
-                              to="/account/dashboard"
-                              color={colors.gray.nineHundred}
-                            >
-                              Dashboard
-                            </NavLink>
-                          </NavItem>
-                        )}
+                        <NavItem>
+                          <NavLink
+                            to="/account/dashboard"
+                            color={colors.gray.nineHundred}
+                          >
+                            Dashboard
+                          </NavLink>
+                        </NavItem>
                         <NavItem>
                           <NavLink
                             as="a"
@@ -470,15 +463,13 @@ const Nav = ({ auth, hideNavbar }) => {
                 <NavHeading>Account</NavHeading>
                 {user ? (
                   <>
-                    {!hideDashboard && (
-                      <NavItem>
-                        <NavLink
-                          to="/account/dashboard"
-                        >
-                          Dashboard
-                        </NavLink>
-                      </NavItem>
-                    )}
+                    <NavItem>
+                      <NavLink
+                        to="/account/dashboard"
+                      >
+                        Dashboard
+                      </NavLink>
+                    </NavItem>
                     <NavItem>
                       <NavLink
                         as="a"

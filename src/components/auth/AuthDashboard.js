@@ -174,7 +174,7 @@ const UserDashboard = () => {
               backgroundcolor={colors.gray.oneHundred}
               color={colors.gray.nineHundred}
               borderradius="16px"
-              padding="32px"
+              padding="16px"
               margin="32px 0 16px"
             >
               <Icon

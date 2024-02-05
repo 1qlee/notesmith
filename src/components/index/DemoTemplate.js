@@ -18,7 +18,6 @@ function DemoTemplate({
   setPageData,
   setSvgLoaded,
 }) {
-  console.log("🚀 ~ pageDimensions:", pageDimensions)
   let adjustedDimensions = {
     height: pageDimensions.height,
     width: pageDimensions.width,

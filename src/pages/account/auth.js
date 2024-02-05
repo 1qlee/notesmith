@@ -9,6 +9,7 @@ import { Section, SectionMain } from "../../components/layout/Section"
 import ResetPwForm from "../../components/form/ResetPwForm"
 import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
+import addEmailToLists from "../../functions/addEmailToLists"
 
 function Auth({ location }) {
   const { firebaseAuth, user } = useFirebaseContext()
@@ -39,15 +40,13 @@ function Auth({ location }) {
             setLoading(false)
           })
         break;
-      // case 'recoverEmail':
-      //   handleRecoverEmail(mode, actionCode)
-      //   break;
       case 'verifyEmail':
-        applyActionCode(firebaseAuth, actionCode).then(() => {
-          sendEmailTemplate({
+        applyActionCode(firebaseAuth, actionCode).then(async () => {
+          await sendEmailTemplate({
             to: user.email,
             templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
           })
+          await addEmailToLists(user.email, ["d3e320ae-078e-40bd-b3e1-8e53ab6af71b"])
           setAuthModeVerified(true)
           setAuthMode(mode)
           setLoading(false)
@@ -60,7 +59,7 @@ function Auth({ location }) {
       default:
         setAuthMode(null)
     }
-  }, [location, mode, actionCode, firebaseAuth])
+  }, [location, mode, actionCode, firebaseAuth, authModeVerified])
 
   async function handleResetPassword(e, actionCode, password) {
     e.preventDefault()
@@ -84,14 +83,6 @@ function Auth({ location }) {
       }
     })
   }
-
-  // function handleRecoverEmail() {
-
-  // }
-
-  // function handleVerifyEmail() {
-
-  // }
 
   return (
     <Layout

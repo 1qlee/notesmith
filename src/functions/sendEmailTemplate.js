@@ -8,7 +8,7 @@ export default async function sendEmailTemplate(emailData) {
       body: JSON.stringify(emailData)
     })
 
-    const data = response.json()
+    const data = await response.json()
 
     if (data.error) {
       throw ("There was an error sending the email, please try again.")
