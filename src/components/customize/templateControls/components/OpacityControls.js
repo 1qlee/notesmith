@@ -14,7 +14,7 @@ function OpacityControls({
       inputProps={{
         min: 0.5,
         max: 1,
-        step: 0.01,
+        step: 0.1,
       }}
       pageData={pageData}
       setPageData={setPageData}

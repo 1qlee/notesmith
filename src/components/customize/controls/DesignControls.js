@@ -328,7 +328,7 @@ const DesignControls = () => {
                       max={50}
                       min={0.088}
                       property="strokeWidth"
-                      step={0.01}
+                      step={0.1}
                       value={selectionAttributes.strokeWidth}
                       onFocus={handleDeletionAllowed}
                     />
@@ -343,7 +343,7 @@ const DesignControls = () => {
                       max={1}
                       min={0.5}
                       property="strokeOpacity"
-                      step={0.01}
+                      step={0.1}
                       value={selectionAttributes.strokeOpacity}
                       onFocus={handleDeletionAllowed}
                     />
@@ -467,7 +467,7 @@ const DesignControls = () => {
                     max={1}
                     min={0.5}
                     property="fillOpacity"
-                    step={0.01}
+                    step={0.1}
                     value={selectionAttributes.fillOpacity}
                     onFocus={handleDeletionAllowed}
                   />

@@ -10,7 +10,7 @@ const StyledCanvas = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 52px;
+  top: 28px;
   left: 0;
   padding-bottom: 32px;
   background-color: ${colors.white};

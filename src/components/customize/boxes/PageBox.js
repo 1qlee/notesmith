@@ -18,7 +18,7 @@ const StyledPageBox = styled.div`
   }
   input {
     border: none;
-    padding: 14.5px 8px;
+    padding: 4px 66px;
     text-align: center;
     -moz-appearance: textfield;
     &::-webkit-outer-spin-button,
@@ -31,7 +31,7 @@ const StyledPageBox = styled.div`
 
 const IconWrapper = styled.div`
   position: absolute;
-  top: 14.5px;
+  top: 6px;
   left: ${props => props.left || null};
   right: ${props => props.right || null};
 `
@@ -97,7 +97,7 @@ function PageBox({
           hoverbackgroundcolor={colors.gray.oneHundred}
         >
           <Icon>
-            <CaretDown />
+            <CaretDown size={12} />
           </Icon>
         </Button>
       </IconWrapper>
@@ -124,7 +124,7 @@ function PageBox({
           hoverbackgroundcolor={colors.gray.oneHundred}
         >
           <Icon>
-            <CaretUp />
+            <CaretUp size={12} />
           </Icon>
         </Button>
       </IconWrapper>

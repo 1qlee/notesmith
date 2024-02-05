@@ -46,19 +46,18 @@ const ControlsTabs = styled.ul`
   width: 100%;
 `
 
-const ControlsTab = styled.li`
+const ControlsTab = styled.button`
   background-color: ${colors.white};
   color: ${colors.gray.sixHundred};
-  padding: 16px 0;
+  padding: 4px 16px;
   transition: color 0.2s, background-color 0.2s;
   height: 100%;
   font-size: 0.875rem;
-  font-weight: 700;
-  text-align: center;
+  border: none;
+  font-weight: 400;
   flex: 1;
   &.is-active {
-    background-color: ${colors.gray.nineHundred};
-    color: ${colors.gray.oneHundred};
+    color: ${colors.gray.nineHundred};
   }
   &:hover {
     cursor: pointer;
@@ -126,12 +125,14 @@ function Controls({
     <StyledControls>
       <ControlsTabs>
         <ControlsTab
+        tabIndex="0"
           className={activeTab === 0 && "is-active"}
           onClick={() => setActiveTab(0)}
         >
           Templates
         </ControlsTab>
         <ControlsTab
+        tabIndex="0"
           className={activeTab === 1 && "is-active"}
           onClick={() => setActiveTab(1)}
         >
@@ -139,6 +140,7 @@ function Controls({
         </ControlsTab>
         {user && (
           <ControlsTab
+          tabIndex="0"
             className={activeTab === 2 && "is-active"}
             onClick={() => setActiveTab(2)}
           >

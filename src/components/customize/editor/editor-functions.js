@@ -3,17 +3,35 @@ import { SVG } from '@svgdotjs/svg.js'
 import { convertToMM, consolidateMixedObjects, convertToPx, processStringNumbers } from "../../../utils/helper-functions"
 
 // checks cursor location to see if it is within the path perimeter
-const findEnclosedPoint = (node, coords, distance, stroke) => {
+const findEnclosedPoint = (node, coords, distance, stroke, isLine) => {
+  let xOffset = isLine ? 0 : stroke
+  let yOffset = isLine ? 0 : stroke
+
+  if (isLine) {
+    const x1 = node.getAttribute("x1")
+    const x2 = node.getAttribute("x2")
+    const y1 = node.getAttribute("y1")
+    const y2 = node.getAttribute("y2")
+
+    // if the line is vertical
+    if (x1 === x2) {
+      xOffset = stroke
+    }
+    // if the line is horizontal
+    else if (y1 === y2) {
+      yOffset = stroke
+    }
+  }
   // check if there is at least one enclosed point in the path.
   for (let i = 0, len = node.getTotalLength(); i <= len; i += 4 /* arbitrary */) {
     let { x, y } = node.getPointAtLength(i)
 
     // Create an object representing the space around the point
     const areaAroundPoint = {
-      x1: x - distance - stroke,
-      x2: x + distance + stroke,
-      y1: y - distance - stroke,
-      y2: y + distance + stroke,
+      x1: x - distance - xOffset,
+      x2: x + distance + xOffset,
+      y1: y - distance - yOffset,
+      y2: y + distance + yOffset,
     }
     const { x1, x2, y1, y2 } = areaAroundPoint
 
@@ -91,8 +109,7 @@ const findClosestNode = (nodes, coords, distance, canvas, adjustedCoords) => {
       }
     }
     else if (domNode instanceof SVGLineElement) {
-      // basically if the cursor is near the perimeter of the line
-      if (findEnclosedPoint(domNode, adjustedCoords, distance, convertedStrokeWidth)) {
+      if (findEnclosedPoint(domNode, adjustedCoords, distance, convertedStrokeWidth, true)) {
         return node
       }
     }
@@ -226,17 +243,6 @@ const parseSelection = (elements) => {
         eleBbox.x = convertFloatFixed(eleBbox.x - strokeOffset, 3)
         eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
         eleBbox.x2 = convertFloatFixed(eleBbox.x2 + strokeOffset, 3)
-        eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
-        break
-      case isLine:
-        // const { x1, x2, y1, y2 } = attributes
-
-        // if there is only one line element selected and it is diagonal
-        // give it a different selection path
-        // if (elements.length === 1 && (y1 !== y2)) {
-        //   path = createPath({ x: x1, y: y1 }, { x: x2, y: y2 })
-        // }
-        eleBbox.y = convertFloatFixed(eleBbox.y - strokeOffset, 3)
         eleBbox.y2 = convertFloatFixed(eleBbox.y2 + strokeOffset, 3)
         break
       case isPath:

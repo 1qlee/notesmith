@@ -86,7 +86,8 @@ function PageSpread({
       const attributes = getAttributes(element)
       const strokeWidth = attributes["stroke-width"]
       convertedStrokeWidth = strokeWidth ? convertFloatFixed(strokeWidth / 2, 3) : 0
-      const offset = nodeIsLine ? 0 : convertedStrokeWidth
+      let xOffset = nodeIsLine ? 0 : convertedStrokeWidth
+      let yOffset = nodeIsLine ? 0 : convertedStrokeWidth
 
       if (element.getAttribute("id") === "hover-clone") {
         return false
@@ -107,17 +108,24 @@ function PageSpread({
 
       // If the element is a line, check it for a stroke width
       if (nodeIsLine) {
+        // horizontal line
         if (bbox.height === 0) {
           bbox.height = strokeWidth
+          yOffset = convertedStrokeWidth
+        }
+        // vertical line
+        else if (bbox.width === 0) {
+          bbox.width = strokeWidth
+          xOffset = convertedStrokeWidth
         }
       }
 
       // bbox for the element's box
       elementBox = {
-        x1: convertFloatFixed(bbox.x - distance - offset, 3),
-        y1: convertFloatFixed(bbox.y - convertedStrokeWidth - distance, 3),
-        x2: convertFloatFixed(bbox.x + bbox.width + distance + offset, 3),
-        y2: convertFloatFixed(bbox.y + bbox.height - convertedStrokeWidth + distance + offset * 2, 3),
+        x1: convertFloatFixed(bbox.x - distance - xOffset, 3),
+        y1: convertFloatFixed(bbox.y - distance - yOffset, 3),
+        x2: convertFloatFixed(bbox.x + bbox.width + distance + xOffset, 3),
+        y2: convertFloatFixed(bbox.y + bbox.height + distance + yOffset, 3),
       }
 
       // check if the element's box is within the selection's box
