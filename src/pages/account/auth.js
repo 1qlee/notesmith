@@ -12,7 +12,7 @@ import Layout from "../../components/layout/Layout"
 import addEmailToLists from "../../functions/addEmailToLists"
 
 function Auth({ location }) {
-  const { firebaseAuth, user } = useFirebaseContext()
+  const { firebaseAuth } = useFirebaseContext()
   const params = new URLSearchParams(location.search)
   const mode = params.get("mode")
   const actionCode = params.get("oobCode")
@@ -42,18 +42,16 @@ function Auth({ location }) {
             })
           break;
         case 'verifyEmail':
-          applyActionCode(firebaseAuth, actionCode).then(async () => {
-            await sendEmailTemplate({
-              to: user.email,
-              templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
-            })
-            await addEmailToLists(user.email, ["d3e320ae-078e-40bd-b3e1-8e53ab6af71b"])
+          applyActionCode(firebaseAuth, actionCode).then(async data => {
+            console.log(data)
+            // await sendEmailTemplate({
+            //   to: user.email,
+            //   templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
+            // })
+            // await addEmailToLists(user.email, ["d3e320ae-078e-40bd-b3e1-8e53ab6af71b"])
             setAuthModeVerified(true)
             setAuthMode(mode)
             setLoading(false)
-          }).then(data => {
-            console.log(data)
-            console.log(data.json())
           }).catch(error => {
             console.log("🚀 ~ applyActionCode ~ error:", error)
 
@@ -66,7 +64,7 @@ function Auth({ location }) {
           setAuthMode(null)
       }
     }
-  }, [location, user, mode, actionCode, firebaseAuth])
+  }, [location, mode, actionCode, firebaseAuth])
 
   async function handleResetPassword(e, actionCode, password) {
     e.preventDefault()
