@@ -51,6 +51,9 @@ function Auth({ location }) {
             setAuthModeVerified(true)
             setAuthMode(mode)
             setLoading(false)
+          }).then(data => {
+            console.log(data)
+            console.log(data.json())
           }).catch(error => {
             console.log("🚀 ~ applyActionCode ~ error:", error)
 
@@ -63,7 +66,7 @@ function Auth({ location }) {
           setAuthMode(null)
       }
     }
-  }, [location, mode, actionCode, firebaseAuth])
+  }, [location, user, mode, actionCode, firebaseAuth])
 
   async function handleResetPassword(e, actionCode, password) {
     e.preventDefault()
