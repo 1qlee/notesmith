@@ -85,6 +85,7 @@ function CheckoutForm({
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
       setError(error.message)
+      toast.error(error.message)
       setProcessing(false)
     } 
     else {
@@ -321,8 +322,9 @@ function CheckoutForm({
     >
       {error && (
         <Notification 
-          backgroundcolor={colors.red.sixHundred}
-          color={colors.red.oneHundred}
+          backgroundcolor={colors.red.twoHundred}
+          borderradius="8px"
+          color={colors.red.nineHundred}
         >
           <p>{error}</p>
         </Notification>

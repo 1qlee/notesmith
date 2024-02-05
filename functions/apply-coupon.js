@@ -28,9 +28,9 @@ exports.handler = async (event) => {
       // const totalAmount = await calcOrderAmount(cartItems);
 
       await stripe.paymentIntents.update(pid, {
-        amount: 50,
+        amount: 100,
         metadata: {
-          subtotal: 50,
+          subtotal: 100,
           tax: 0,
           shipping: 0,
           coupon: coupon,
