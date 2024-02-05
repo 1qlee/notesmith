@@ -10,6 +10,7 @@ import ResetPwForm from "../../components/form/ResetPwForm"
 import Content from "../../components/ui/Content"
 import Layout from "../../components/layout/Layout"
 import addEmailToLists from "../../functions/addEmailToLists"
+import Button from "../../components/ui/Button"
 
 function Auth({ location }) {
   const { firebaseAuth, user } = useFirebaseContext()
@@ -125,8 +126,15 @@ function Auth({ location }) {
                     )}
                     {authMode === "verifyEmail" && (
                       <>
-                        <h1>Your email is now verified</h1>
-                        <p>You may now <Link to="/account/dashboard">access your account</Link> or <Link to="/signin">sign in</Link>.</p>
+                        <h1>Your email is now verified!</h1>
+                        <p>You may now <a href="www.notesmithbooks.com/account/dashboard">access your account</a>. You can find instructions on how to get started in your account's dashboard. Additionally, we have sent you an email with similar information as well.</p>
+                        <Button
+                          as="a"
+                          href="/account/dashboard"
+                          padding="16px"
+                        >
+                          Go to my account
+                        </Button>
                       </>
                     )}
                     {error && (
