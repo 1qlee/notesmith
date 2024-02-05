@@ -26,40 +26,44 @@ function Auth({ location }) {
   useEffect(() => {
     setLoading(true)
 
-    switch (mode) {
-      case 'resetPassword':
-        verifyPasswordResetCode(firebaseAuth, actionCode)
-          .then(() => {
+    if (firebaseAuth) {
+      switch (mode) {
+        case 'resetPassword':
+          verifyPasswordResetCode(firebaseAuth, actionCode)
+            .then(() => {
+              setAuthModeVerified(true)
+              setAuthMode(mode)
+              setLoading(false)
+            })
+            .catch(() => {
+              setAuthModeVerified(false)
+              setAuthMode(mode)
+              setLoading(false)
+            })
+          break;
+        case 'verifyEmail':
+          applyActionCode(firebaseAuth, actionCode).then(async () => {
+            await sendEmailTemplate({
+              to: user.email,
+              templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
+            })
+            await addEmailToLists(user.email, ["d3e320ae-078e-40bd-b3e1-8e53ab6af71b"])
             setAuthModeVerified(true)
             setAuthMode(mode)
             setLoading(false)
-          })
-          .catch(() => {
+          }).catch(error => {
+            console.log("🚀 ~ applyActionCode ~ error:", error)
+
             setAuthModeVerified(false)
             setAuthMode(mode)
             setLoading(false)
           })
-        break;
-      case 'verifyEmail':
-        applyActionCode(firebaseAuth, actionCode).then(async () => {
-          await sendEmailTemplate({
-            to: user.email,
-            templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
-          })
-          await addEmailToLists(user.email, ["d3e320ae-078e-40bd-b3e1-8e53ab6af71b"])
-          setAuthModeVerified(true)
-          setAuthMode(mode)
-          setLoading(false)
-        }).catch(error => {
-          setAuthModeVerified(false)
-          setAuthMode(mode)
-          setLoading(false)
-        })
-        break;
-      default:
-        setAuthMode(null)
+          break;
+        default:
+          setAuthMode(null)
+      }
     }
-  }, [location, mode, actionCode, firebaseAuth, authModeVerified])
+  }, [location, mode, actionCode, firebaseAuth])
 
   async function handleResetPassword(e, actionCode, password) {
     e.preventDefault()

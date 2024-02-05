@@ -1,12 +1,10 @@
 import React from "react"
-import { spacing } from "../styles/variables"
 import { navigate } from "gatsby"
 import { useFirebaseContext } from "../utils/auth"
 
-import { SectionMain, Section, SectionContent } from "../components/layout/Section"
+import { SectionMain, Section } from "../components/layout/Section"
 import ForgotForm from "../components/form/ForgotForm"
 import Layout from "../components/layout/Layout"
-import Seo from "../components/layout/Seo"
 
 const Forgot = () => {
   const { user, loading } = useFirebaseContext()
@@ -28,11 +26,7 @@ const Forgot = () => {
         className="has-max-height"
       >
         <Section>
-          <SectionContent
-            padding={spacing.normal}
-          >
-            <ForgotForm />
-          </SectionContent>
+          <ForgotForm />
         </Section>
       </SectionMain>
     </Layout>

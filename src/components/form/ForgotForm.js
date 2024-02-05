@@ -7,7 +7,6 @@ import { AuthFormWrapper, StyledFieldset, StyledLabel, StyledInput, ErrorLine } 
 import Content from "../ui/Content"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import Seo from "../layout/Seo"
 
 const ForgotForm = () => {
   const [loading, setLoading] = useState(false)
@@ -50,7 +49,6 @@ const ForgotForm = () => {
 
   return (
     <AuthFormWrapper>
-      <Seo title="Sign In" />
       {emailSent ? (
         <Content
           h1fontsize="2rem"
