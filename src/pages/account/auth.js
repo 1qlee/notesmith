@@ -118,7 +118,7 @@ function Auth({ location }) {
                 <>
                   <Content
                     h1fontsize="2rem"
-                    margin="0 0 32px"
+                    margin="0 0 16px"
                     linktextdecoration="underline"
                   >
                     {authMode === "resetPassword" && (
@@ -127,20 +127,21 @@ function Auth({ location }) {
                     {authMode === "verifyEmail" && (
                       <>
                         <h1>Your email is now verified!</h1>
-                        <p>You may now <a href="www.notesmithbooks.com/account/dashboard">access your account</a>. You can find instructions on how to get started in your account's dashboard. Additionally, we have sent you an email with similar information as well.</p>
-                        <Button
-                          as="a"
-                          href="/account/dashboard"
-                          padding="16px"
-                        >
-                          Go to my account
-                        </Button>
+                        <p>You may now <a href="www.notesmithbooks.com/account/dashboard">access your account</a>. You can find instructions on how to get started in your account's dashboard. Additionally, we have sent you an email with more information.</p>
                       </>
                     )}
                     {error && (
                       <p>{error}</p>
                     )}
                   </Content>
+                  <Button
+                    as="a"
+                    href="/account/dashboard"
+                    padding="16px"
+                    width="100%"
+                  >
+                    Go to my account
+                  </Button>
                   {authMode === "resetPassword" && (
                     <ResetPwForm
                       processing={processing}
