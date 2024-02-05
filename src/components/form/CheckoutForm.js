@@ -19,6 +19,7 @@ function CheckoutForm({
   clientSecret,
   customer,
   pid,
+  selectedRate,
   setPaymentProcessing,
   tax,
   toast,
@@ -40,12 +41,13 @@ function CheckoutForm({
   useEffect(() => {
     async function getUpdate() {
       if (elements) {
+        console.log("updating payment")
         await elements.fetchUpdates()
       }
     }
 
     getUpdate()
-  }, [elements])
+  }, [elements, tax, selectedRate])
 
   // handle submitting the Stripe elements form
   const submitPaymentForm = async e => {

@@ -400,6 +400,7 @@ const Checkout = () => {
                               coupon={coupon}
                               customer={customer}
                               pid={pid}
+                              selectedRate={selectedRate}
                               setCoupon={setCoupon}
                               setPaymentProcessing={setPaymentProcessing}
                               setSelectedRate={setSelectedRate}

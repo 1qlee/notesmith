@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
 
 import Logo from "../../assets/logo-animated.svg"
-import Notification from "../ui/Notification"
+import Content from "../ui/Content"
 
 // const loading = keyframes`
 //   20%,
@@ -44,7 +44,7 @@ const LoaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
+  position: absolute;
   flex-direction: column;
   top: 0;
   left: 0;
@@ -59,7 +59,8 @@ const LoaderWrapper = styled.div`
     left: 0;
   }
   &.has-banner {
-    top: 120px;
+    top: 124px;
+    height: calc(100vh - 124px);
   }
   .mask {
     fill: none;
@@ -143,13 +144,9 @@ function Loader({ className, msg }) {
       <LoaderContent className={className}>
         <Logo height="96" width="300" />
         {msg && (
-          <Notification
-            backgroundcolor={colors.white}
-            color={colors.gray.nineHundred}
-            border={colors.borders.black}
-          >
+          <Content>
             <p>{msg}</p>
-          </Notification>
+          </Content>
         )}
       </LoaderContent>
     </LoaderWrapper>

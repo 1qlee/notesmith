@@ -173,7 +173,7 @@ function OrderSummary({
                     <Content
                       smallcolor={colors.gray.sevenHundred}
                       smallmargin="0"
-                      paragraphmarginbottom="0 0 4px"
+                      paragraphmargin="0"
                     >
                       <p>{item.name}</p>
                       {item.category === "notebooks" && (

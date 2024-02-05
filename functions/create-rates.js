@@ -138,22 +138,10 @@ exports.handler = async (event) => {
           .sort((a, b) => a.rate - b.rate)[0];
       }
       else {
-        // otherwise, just use UPS for domestic
-        const cheapestUPSRate = newShipment.rates
-          .filter(rate => rate.carrier === "UPSDAP")
+        // otherwise, use UPS or USPS for domestic
+        cheapestRate = newShipment.rates
+          .filter(rate => rate.carrier === "USPS" || rate.carrier === "UPSDAP")
           .sort((a, b) => a.rate - b.rate)[0];
-
-        // if UPS is not available, use USPS
-        if (!cheapestUPSRate) {
-          const cheapestUSPSRate = newShipment.rates
-            .filter(rate => rate.carrier === "USPS")
-            .sort((a, b) => a.rate - b.rate)[0];
-
-          cheapestRate = cheapestUSPSRate;
-        }
-        else {
-          cheapestRate = cheapestUPSRate;
-        }
       }
 
       console.log(`[Netlify: create-rates] Found the cheapest rate: ${JSON.stringify(cheapestRate)}`);
