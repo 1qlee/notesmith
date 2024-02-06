@@ -252,7 +252,6 @@ const Checkout = () => {
     setProcessing(true)
     
     try {
-      console.log("Force address submit")
       // update the paymentIntent with shipping form data
       const response = await updatePaymentIntent(pid, { metadata: { email: customer.email } })
 

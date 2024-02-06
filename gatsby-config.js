@@ -8,7 +8,7 @@ module.exports = {
     description: `Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts.`,
     username: `@notesmithbooks`,
     siteUrl: `https://www.notesmithbooks.com`,
-    image: "/stacked-books.jpg"
+    image: "/meta-image.jpg"
   },
   plugins: [
     {

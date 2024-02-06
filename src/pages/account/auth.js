@@ -44,7 +44,6 @@ function Auth({ location }) {
           break;
         case 'verifyEmail':
           applyActionCode(firebaseAuth, actionCode).then(async () => {
-            console.log(user)
             await sendEmailTemplate({
               to: user.email,
               templateId: "d-9ef563c7ed1147858ebfb788d30f5b2f",
@@ -54,8 +53,6 @@ function Auth({ location }) {
             setAuthMode(mode)
             setLoading(false)
           }).catch(error => {
-            console.log("🚀 ~ applyActionCode ~ error:", error)
-
             setAuthModeVerified(false)
             setAuthMode(mode)
             setLoading(false)
