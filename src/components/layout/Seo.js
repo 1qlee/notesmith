@@ -9,7 +9,7 @@ function Seo({ details, hideScroll }) {
   const seo = {
     title: title || defaultTitle,
     description: description || defaultDescription,
-    image: image ? `www.notesmithbooks.com/${image}` : `www.notesmithbooks.com${defaultImage}`,
+    image: image ? `https://www.notesmithbooks.com/${image}` : `https://www.notesmithbooks.com${defaultImage}`,
     url: url ? `${url}` : defaultUrl,
   }
 
