@@ -264,25 +264,26 @@ const ProductInfo = ({
         </>
       ) : (
         <Notification
-          backgroundcolor={colors.yellow.twoHundred}
+          backgroundcolor={colors.gray.twoHundred}
+          borderradius="16px"
         >
           <Icon
             className="is-pulsating"
             margin="2px 0 0"
-            pulseColor={colors.yellow.sixHundred}
+            pulseColor={colors.gray.sixHundred}
           >
             <Info
-              color={colors.yellow.nineHundred}
+              color={colors.gray.nineHundred}
               size={20}
             />
           </Icon>
           <Content
             margin="0 0 0 8px"
             paragraphmargin="0"
-            paragraphcolor={colors.yellow.nineHundred}
+            paragraphcolor={colors.gray.nineHundred}
             paragraphfontsize="1rem"
           >
-              <p>Purchases are currently only available to users in our early access. If you would like to join us, please <Link to="/waitlist"><TextLink color={colors.yellow.nineHundred}>sign up</TextLink></Link> for the waitlist.</p>
+              <p>Purchases are currently only available to users in our early access. If you would like to join us, please <Link to="/waitlist"><TextLink color={colors.gray.nineHundred}>sign up</TextLink></Link> for the waitlist.</p>
           </Content>
         </Notification>
       )}

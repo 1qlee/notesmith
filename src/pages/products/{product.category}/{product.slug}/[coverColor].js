@@ -96,6 +96,7 @@ const ProductPage = ({ data, params }) => {
                         bookData={bookData}
                         currentPageSide={currentPageSide}
                         pageData={pageData}
+                        svgLoaded={svgLoaded}
                         setPageData={setPageData}
                         setMax={setMax}
                         setSelectedPageSvg={setSelectedPageSvg}

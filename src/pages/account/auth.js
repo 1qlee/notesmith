@@ -127,7 +127,7 @@ function Auth({ location }) {
                     {authMode === "verifyEmail" && (
                       <>
                         <h1>Your email is now verified!</h1>
-                        <p>You may now <a href="www.notesmithbooks.com/account/dashboard">access your account</a>. You can find instructions on how to get started in your account's dashboard. Additionally, we have sent you an email with more information.</p>
+                        <p>You may now sign into your Notesmith account. You can find instructions on how to get started in your account's dashboard. Additionally, we have sent you an email with more information.</p>
                       </>
                     )}
                     {error && (

@@ -5,22 +5,24 @@ import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
 import { CircleNotch } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
-import Icon from "../../ui/Icon"
-import Content from "../../ui/Content"
-import Button from "../../ui/Button"
-import { Flexbox } from "../../layout/Flexbox"
-import DotControls from "../templateControls/DotControls"
-import RuledControls from "../templateControls/RuledControls"
-import GraphControls from "../templateControls/GraphControls"
-import HexagonControls from "../templateControls/HexagonControls"
-import IsometricControls from "../templateControls/IsometricControls"
-import SeyesControls from "../templateControls/SeyesControls"
-import MusicControls from "../templateControls/MusicControls"
-import HandwritingControls from "../templateControls/HandwritingControls"
-import CrossGridControls from "../templateControls/CrossGridControls"
-import CalligraphyControls from "../templateControls/CalligraphyControls"
-import MarginControls from "../templateControls/components/MarginControls"
 import AlignmentControls from "../templateControls/components/AlignmentControls"
+import Button from "../../ui/Button"
+import CalligraphyControls from "../templateControls/CalligraphyControls"
+import CrossGridControls from "../templateControls/CrossGridControls"
+import DotControls from "../templateControls/DotControls"
+import GraphControls from "../templateControls/GraphControls"
+import HandwritingControls from "../templateControls/HandwritingControls"
+import HexagonControls from "../templateControls/HexagonControls"
+import Icon from "../../ui/Icon"
+import IsometricControls from "../templateControls/IsometricControls"
+import MarginControls from "../templateControls/components/MarginControls"
+import MusicControls from "../templateControls/MusicControls"
+import PageNumberControls from "../templateControls/components/PageNumberControls"
+import RuledControls from "../templateControls/RuledControls"
+import SeyesControls from "../templateControls/SeyesControls"
+import ToggleControls from "../templateControls/components/ToggleControls"
+import { Flexbox } from "../../layout/Flexbox"
+import { StyledInput, StyledLabel } from "../../form/FormComponents"
 
 const StyledTemplatesBar = styled.div`
   background-color: ${colors.white};
@@ -92,36 +94,6 @@ const TemplatesHeader = styled.div`
 const TemplatesFooter = styled.div`
   padding: 1rem;
   border-top: ${colors.borders.black};
-`
-
-const PageButtonWrapper = styled.div`
-  display: flex;
-  border: 1px solid ${colors.gray.nineHundred};
-  background-color: ${colors.white};
-  border-radius: 0.25rem;
-  padding: 0.25rem;
-  margin-bottom: 1rem;
-`
-
-const PageButton = styled(Button)`
-  background-color: ${colors.white};
-  color: ${colors.gray.nineHundred};
-  font-size: 0.875rem;
-  padding: 0.25rem;
-  flex: 1;
-  position: relative;
-  &:not(:last-child) {
-    margin-right: 2px;
-  }
-  &:hover,
-  &:focus {
-    box-shadow: none;
-    background-color: ${colors.gray.twoHundred};
-  }
-  &.is-active {
-    color: ${colors.gray.oneHundred};
-    background-color: ${colors.gray.nineHundred};
-  }
 `
 
 function ProductControls({
@@ -214,34 +186,18 @@ function ProductControls({
                   >
                     <small>All values shown in mm</small>
                   </Flexbox>
-                  <Content
-                    h5fontsize="0.875rem"
-                    h5margin="0 0 8px 0"
-                    h5fontweight="700"
-                    margin="0 0 1rem 0"
-                  >
-                    <h5>Apply to {currentPageSide} page{currentPageSide === "both" && "s"}</h5>
-                    <PageButtonWrapper>
-                      <PageButton
-                        onClick={() => setCurrentPageSide("left")}
-                        className={currentPageSide === "left" ? "is-active" : null}
-                      >
-                        <span>Left</span>
-                      </PageButton>
-                      <PageButton
-                        onClick={() => setCurrentPageSide("both")}
-                        className={currentPageSide === "both" ? "is-active" : null}
-                      >
-                        <span>Both</span>
-                      </PageButton>
-                      <PageButton
-                        onClick={() => setCurrentPageSide("right")}
-                        className={currentPageSide === "right" ? "is-active" : null}
-                      >
-                        <span>Right</span>
-                      </PageButton>
-                    </PageButtonWrapper>
-                  </Content>
+                  <StyledLabel>Apply to {currentPageSide} pages</StyledLabel>
+                  <ToggleControls 
+                    value={currentPageSide}
+                    data={[
+                      { name: "left" },
+                      { name: "both" },
+                      { name: "right" },
+                    ]}
+                    setData={setCurrentPageSide}
+                  />
+                  {/* <StyledLabel>Page numbers</StyledLabel> */}
+                  {/* <PageNumberControls /> */}
                   {pageData.template !== "blank" && pageData.template !== "none" && (
                     <>
                       {selectedPageSvg && (

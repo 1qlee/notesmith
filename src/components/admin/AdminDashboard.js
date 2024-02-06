@@ -62,9 +62,9 @@ const AdminDashboard = () => {
   };
 
   // this function will run once per orderItem and will download all the pages for that orderItem
-  const zipCustomBook = async (pages, values, dimension, bookNum, booksZip, bookPdf, finalPage) => {
+  const zipCustomBook = async (pages, pageData, dimension, bookNum, booksZip, bookPdf, finalPage) => {
     console.log("Generating a custom book pdf...")
-    const { numOfPages, width, quantity } = values
+    const { numOfPages, width, quantity } = pageData
     const { bookWidth, bookHeight, svgWidth, svgHeight, bookWidthInch, bookHeightInch } = dimension
     const widthOffset = convertToMM(width)
     let queriedPages = {}
@@ -194,12 +194,12 @@ const AdminDashboard = () => {
     )
   }
 
-  const zipStandardBook = async (numOfPages, values, dimension, bookNum, booksZip, bookPdf) => {
-    const { id, pid } = values
+  const zipStandardBook = async (numOfPages, pageData, dimension, bookNum, booksZip, bookPdf) => {
+    const { id, pid } = pageData
     const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
 
-    const leftPage = values.leftPageData.svg
-    const rightPage = values.rightPageData.svg
+    const leftPage = pageData.leftPageData.svg
+    const rightPage = pageData.rightPageData.svg
     // turn svg strings into DOM nodes
     const leftPageNode = parseSvgNode(leftPage)
     const rightPageNode = parseSvgNode(rightPage)
@@ -262,9 +262,12 @@ const AdminDashboard = () => {
     const timerInterval = setInterval(countTime, 1000);
 
     // query the db for all unprinted order items
+    console.log("Getting all unprinted order items...")
+
     get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo(false))).then(async snapshot => { 
       if (snapshot.exists()) {
         const unprintedOrders = snapshot.val()
+        console.log("🚀 ~ get ~ unprintedOrders:", unprintedOrders)
         // filter orders by activeBookSize
         const filteredOrders = Object.values(unprintedOrders).filter(order => order.size === size)
         const numOfOrders = filteredOrders.length
@@ -272,8 +275,8 @@ const AdminDashboard = () => {
 
         // loop through each order and create a pdf for each
         for (let i = 0; i < numOfOrders; i++) {
-          const values = filteredOrders[i]
-          const { numOfPages, height, width, pages, pid } = values
+          const pageData = filteredOrders[i]
+          const { numOfPages, height, width, pages, pid } = pageData
           const dimension = {
             svgWidth: convertFloatFixed(convertToMM(width) - 13.335, 2),
             svgHeight: convertFloatFixed(convertToMM(height) - 6.35, 2),
@@ -293,12 +296,12 @@ const AdminDashboard = () => {
           bookPdf.setPage(1)
 
           // if there is a bookId, there are custom pages we have to fetch
-          if (values.bookId) {
+          if (pageData.bookId) {
             // query the db for the book's page ids
-            await zipCustomBook(pages, values, dimension, i, booksZip, bookPdf, slipPageNode)
+            await zipCustomBook(pages, pageData, dimension, i, booksZip, bookPdf, slipPageNode)
           }
           else {
-            // await zipStandardBook(numOfPages, values, dimension, i, booksZip, bookPdf)
+            await zipStandardBook(numOfPages, pageData, dimension, i, booksZip, bookPdf)
           }
         }
 
