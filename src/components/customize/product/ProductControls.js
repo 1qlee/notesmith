@@ -196,8 +196,8 @@ function ProductControls({
                     ]}
                     setData={setCurrentPageSide}
                   />
-                  {/* <StyledLabel>Page numbers</StyledLabel> */}
-                  {/* <PageNumberControls /> */}
+                  <StyledLabel>Page numbers</StyledLabel>
+                  <PageNumberControls />
                   {pageData.template !== "blank" && pageData.template !== "none" && (
                     <>
                       {selectedPageSvg && (
