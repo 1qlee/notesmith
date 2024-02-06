@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { Cursor, List, TextT, Rectangle, Circle, LineSegment } from "@phosphor-icons/react"
-import { useEditorContext, useEditorDispatch } from "../context/editorContext"
+import { Cursor, List, Pencil, Rectangle, Circle, TextT, LineSegment } from "@phosphor-icons/react"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"
@@ -33,10 +32,7 @@ const tools = [
     name: "list",
   },
   {
-    name: "select",
-  },
-  {
-    name: "text"
+    name: "cursor",
   }
 ]
 
@@ -49,16 +45,9 @@ const ToolIcon = ({ name, weight, color }) => {
           color={color}
         />
       )
-    case "select":
+    case "cursor":
       return (
         <Cursor
-          weight={weight}
-          color={color}
-        />
-      )
-    case "text":
-      return (
-        <TextT
           weight={weight}
           color={color}
         />
@@ -67,35 +56,16 @@ const ToolIcon = ({ name, weight, color }) => {
 }
 
 const ToolBox = () => {
-  const canvasState = useEditorContext()
-  const dispatch = useEditorDispatch()
-  const [selectedTool, setSelectedTool] = useState("select")
+  const [selectedTool, setSelectedTool] = useState("cursor")
   const toolRef = useRef(null)
 
   useEffect(() => {
     if (!selectedTool) {
-      setSelectedTool("select")
-
-      dispatch({
-        type: "change-mode",
-        mode: "select",
-      })
+      setSelectedTool("cursor")
     }
   }, [selectedTool])
 
   const handleSelectTool = (tool) => { 
-    if (tool === "list" || !tool) {
-      dispatch({
-        type: "change-mode",
-        mode: "select",
-      })
-    }
-    else {
-      dispatch({
-        type: "change-mode",
-        mode: tool,
-      })
-    }
 
     if (tool === selectedTool) {
       setSelectedTool("")
@@ -112,7 +82,6 @@ const ToolBox = () => {
     >
       {tools.map((tool) => (
         <ToolItem
-          key={tool.name}
           id={`tool-${tool.name}`}
           onClick={() => handleSelectTool(tool.name)}
           className={selectedTool === tool.name ? "is-active" : null}
@@ -121,7 +90,7 @@ const ToolBox = () => {
           <Icon>
             <ToolIcon 
               name={tool.name} 
-              weight="bold"
+              weight={selectedTool === tool.name ? "fill" : "regular"}
               color={selectedTool === tool.name ? colors.gray.oneHundred : colors.gray.nineHundred}
             />
           </Icon>

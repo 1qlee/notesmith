@@ -22,7 +22,7 @@ import RuledControls from "../templateControls/RuledControls"
 import SeyesControls from "../templateControls/SeyesControls"
 import ToggleControls from "../templateControls/components/ToggleControls"
 import { Flexbox } from "../../layout/Flexbox"
-import { StyledInput, StyledLabel } from "../../form/FormComponents"
+import { StyledLabel } from "../../form/FormComponents"
 
 const StyledTemplatesBar = styled.div`
   background-color: ${colors.white};
@@ -196,8 +196,8 @@ function ProductControls({
                     ]}
                     setData={setCurrentPageSide}
                   />
-                  <StyledLabel>Page numbers</StyledLabel>
-                  <PageNumberControls />
+                  {/* <StyledLabel>Page numbers</StyledLabel>
+                  <PageNumberControls /> */}
                   {pageData.template !== "blank" && pageData.template !== "none" && (
                     <>
                       {selectedPageSvg && (
