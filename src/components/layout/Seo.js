@@ -5,7 +5,6 @@ import { useSiteMetadata } from "../../hooks/useSiteMetadata"
 function Seo({ details, hideScroll }) {
   const { title: defaultTitle, description: defaultDescription, image: defaultImage, siteUrl: defaultUrl } = useSiteMetadata()
   const { title, description, image, url } = details || {}
-  console.log("🚀 ~ Seo ~ details:", details)
 
   const seo = {
     title: title || defaultTitle,
@@ -13,7 +12,6 @@ function Seo({ details, hideScroll }) {
     image: image ? `www.notesmithbooks.com/${image}` : `www.notesmithbooks.com${defaultImage}`,
     url: url ? `${url}` : defaultUrl,
   }
-  console.log("🚀 ~ Seo ~ seo:", seo)
 
   return (
     <Helmet
@@ -47,7 +45,7 @@ function Seo({ details, hideScroll }) {
         },
         {
           property: `og:image`,
-          content: `${seo.url}${image}`,
+          content: `${seo.image}`,
         },
         {
           name: `twitter:card`,
@@ -59,7 +57,7 @@ function Seo({ details, hideScroll }) {
         },
         {
           name: `twitter:image`,
-          content: `${seo.url}${image}`,
+          content: `${seo.image}`,
         },
         {
           name: `twitter:title`,
