@@ -186,6 +186,7 @@ const setCanvasState = (state, action) => {
         ...action.state,
       }
     case "change-mode":
+      log(`Changing mode to ${action.mode}`)
 
       const { mode } = action
 

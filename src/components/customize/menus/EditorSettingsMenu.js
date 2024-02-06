@@ -33,7 +33,6 @@ const EditorSettingsMenu = ({ setSelectedTool, toolRef }) => {
         if (toolRef && toolRef.current) {
           if (toolRef.current.contains(event.target)) {
             return
-          
           }
         }
         setSelectedTool("")

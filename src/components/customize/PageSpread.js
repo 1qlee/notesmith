@@ -190,7 +190,10 @@ function PageSpread({
 
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
-    if (!canvasState.selecting && !pageData.template) {
+    if (canvasState.mode === "text") {
+      console.log(canvasState.mode)
+    }
+    else if (!canvasState.selecting && !pageData.template) {
       let coords = {
         x: e.clientX,
         y: e.clientY,
@@ -203,6 +206,7 @@ function PageSpread({
       
       // if there is a selection path, check if the mouse is within the path so that we can drag the entire group
       if (selectionPath) {
+        console.log(canvasState.mode)
         const boundingBox = selectionPath.rbox()
         const pathBox = {
           left: boundingBox.x,
