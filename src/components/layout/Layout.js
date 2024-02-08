@@ -22,33 +22,36 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ 
-  loading, 
-  children, 
-  className, 
-  backgroundcolor, 
-  loaderClassName, 
-  loaderMsg, 
-  seoDetails, 
-  hideScroll, 
+const Layout = ({
+  loading,
+  children,
+  className,
+  backgroundcolor,
+  loaderClassName,
+  loaderMsg,
+  seoDetails,
+  hideScroll,
 }) => {
   const { isClient, key } = useIsClient()
-  if (!isClient) return null;
-
-  return (
-    <StyledLayout 
-      key={key} 
-      className={className} 
-      backgroundcolor={backgroundcolor}
-    >
-      <Seo 
+  if (!isClient) {
+    return (
+      <Seo
         details={seoDetails}
         hideScroll={hideScroll}
       />
+    )
+  };
+
+  return (
+    <StyledLayout
+      key={key}
+      className={className}
+      backgroundcolor={backgroundcolor}
+    >
       <Nav />
       {children}
       {loading && (
-        <Loader 
+        <Loader
           msg={loaderMsg}
           className={loaderClassName}
         />
