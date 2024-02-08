@@ -49,6 +49,10 @@ const Layout = ({
       backgroundcolor={backgroundcolor}
     >
       <Nav />
+      <Seo
+        details={seoDetails}
+        hideScroll={hideScroll}
+      />
       {children}
       {loading && (
         <Loader
