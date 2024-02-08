@@ -5,9 +5,10 @@ import AutoSizer from "react-virtualized-auto-sizer"
 import memoizeOne from "memoize-one"
 import styled from "styled-components"
 import SVG from "react-inlinesvg"
+import { useEditorDispatch } from "../context/editorContext"
+import { useSettingsContext } from "../context/settingsContext"
 
 import PageBox from "../boxes/PageBox"
-import { useSettingsContext } from "../context/settingsContext"
 
 const PagebarWrapper = styled.div`
   background-color: ${colors.white};
@@ -83,6 +84,7 @@ const Page = memo(props => {
     setPageData,
     setActiveTab,
   } = data
+  const dispatch = useEditorDispatch()
   const columnCount = 2
   // current page based on index of canvasPages calculated from WindowsGrid row and column values
   const currentPage = canvasPages[parseInt(rowIndex * columnCount + columnIndex)]
@@ -96,6 +98,10 @@ const Page = memo(props => {
     })
     setActiveTab(0)
     setSelectedPage(pageNumber)
+    dispatch({
+      type: "change-mode",
+      mode: "select",
+    })
   }
 
   return (

@@ -32,6 +32,7 @@ function CoverPage({
           y={pageHeight / 2}
           width={pageWidth}
           fill={colors.gray.nineHundred}
+          style={{pointerEvents: "none", userSelect: "none"}}
         >
           Front cover
         </text>
@@ -65,6 +66,7 @@ function CoverPage({
           y={pageHeight / 2}
           width={pageWidth}
           fill={colors.gray.nineHundred}
+          style={{ pointerEvents: "none", userSelect: "none" }}
         >
           Back cover
         </text>

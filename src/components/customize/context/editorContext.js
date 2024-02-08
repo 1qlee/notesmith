@@ -11,6 +11,7 @@ const initialState = {
   canvas: null,
   context: null,
   deletionAllowed: true,
+  dragging: false,
   hoveredElement: null,
   layerName: '',
   lastNode: null,
@@ -21,6 +22,8 @@ const initialState = {
   selectionBbox: {},
   selectionPath: "",
   selecting: false,
+  showSettingsMenu: false,
+  tool: "select",
   updated: false,
   zoom: 100,
 }
@@ -168,10 +171,11 @@ const setCanvasState = (state, action) => {
       }
     }
     case "toggle":
+      const { updates } = action
 
       return {
         ...state,
-        [action.setting]: action.value,
+        ...updates,
       }
     case "remove":
 
@@ -186,17 +190,29 @@ const setCanvasState = (state, action) => {
         ...action.state,
       }
     case "change-mode":
+      log(`Changing mode to ${action.mode}`)
 
       const { mode } = action
 
-      if (mode !== state.mode) {
-        return {
-          ...state,
-          mode: mode,
+      function getTool() {
+        switch (mode) {
+          case "select":
+            return "select"
+          case "text":
+            return "text"
+          case "drag":
+            return "select"
+          default:
+            return "select"
         }
       }
-      else {
-        return state
+
+      const tool = getTool()
+
+      return {
+        ...state,
+        mode: mode,
+        tool: tool,
       }
     default:
       return state;

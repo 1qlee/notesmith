@@ -1,13 +1,10 @@
-import React, { useEffect, useRef } from "react"
-import { SVG } from '@svgdotjs/svg.js'
+import React, { useRef } from "react"
 
 const Selection = ({
   position,
   path,
 }) => {
   const selectionPathRef = useRef(null)
-
-
 
   return (
     <g 

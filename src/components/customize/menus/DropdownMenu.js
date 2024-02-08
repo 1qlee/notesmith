@@ -73,7 +73,12 @@ const DropdownMenu = ({ groups, ...props }) => {
       return navigate(item.link)
     }
     else {
-      dispatchSettings({ type: "toggle", value: item.value })
+      dispatchSettings({ 
+        type: "toggle", 
+        updates: {
+          [item.value]: !settingsState[item.value],
+        }
+      })
     }
   }
 
@@ -84,8 +89,8 @@ const DropdownMenu = ({ groups, ...props }) => {
       className={props.className}
       showMenu={showMenu}
     >
-      {groups.map(group => (
-        <MenuGroup>
+      {groups.map((group, index) => (
+        <MenuGroup key={index}>
           {group.map(item => (
             <MenuItem
               key={item.value}

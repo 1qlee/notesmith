@@ -52,27 +52,6 @@ module.exports = {
         resolvePages: ({
           allSitePage: { nodes: allPages },
         }) => {
-
-          // allPages.forEach(page => {
-          //   const pathElements = page.path.split('/');
-          //   const lastElement = pathElements[pathElements.length - 1];
-          //   const regex = /\[(.*?)\]$/;
-          //   const match = lastElement.match(regex);
-          //   const extractedString = match ? match[1].replace(/\[|\]/g, '') : null;
-          //   const newPage = { ...page, path: extractedString ? extractedString : page.path }
-
-          //   switch (extractedString) {
-          //     case "name":
-          //       newPage.path = "/name/"
-          //       break
-          //     case "coverColor":
-
-          //       break
-          //   }
-          //   // Use the extractedString variable as needed
-          //   return newPage
-          // });
-
           return allPages.map(page => {
             return { ...page }
           })

@@ -137,8 +137,9 @@ function TitleBox({
           onBlur={e => {
             dispatch({
               type: "toggle",
-              setting: "deletionAllowed",
-              value: true,
+              updates: {
+                deletionAllowed: true,
+              }
             })
             setNewBookTitle(e.target.value)
             setShowTitleInput(false)
@@ -146,8 +147,9 @@ function TitleBox({
           onFocus={e => {
             dispatch({
               type: "toggle",
-              setting: "deletionAllowed",
-              value: false,
+              updates: {
+                deletionAllowed: false,
+              }
             })
             e.target.select()
           }}

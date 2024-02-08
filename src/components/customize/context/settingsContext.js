@@ -25,7 +25,7 @@ const setSettingsState = (state, action) => {
     case "toggle":
       return {
         ...state,
-        [action.value]: !state[action.value],
+        ...action.updates,
       }
   }
 }

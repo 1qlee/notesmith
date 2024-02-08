@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useRef } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
-import { Cursor, List, Pencil, Rectangle, Circle, TextT, LineSegment } from "@phosphor-icons/react"
+import { Cursor, List, TextT, Rectangle, Circle, LineSegment } from "@phosphor-icons/react"
+import { useEditorContext, useEditorDispatch } from "../context/editorContext"
 
 import { Flexbox } from "../../layout/Flexbox"
 import Icon from "../../ui/Icon"
@@ -29,25 +30,25 @@ const ToolItem = styled.div`
 
 const tools = [
   {
-    name: "list",
+    name: "select",
   },
   {
-    name: "cursor",
+    name: "text"
   }
 ]
 
 const ToolIcon = ({ name, weight, color }) => {
   switch (name) {
-    case "list":
+    case "select":
       return (
-        <List
+        <Cursor
           weight={weight}
           color={color}
         />
       )
-    case "cursor":
+    case "text":
       return (
-        <Cursor
+        <TextT
           weight={weight}
           color={color}
         />
@@ -56,23 +57,30 @@ const ToolIcon = ({ name, weight, color }) => {
 }
 
 const ToolBox = () => {
-  const [selectedTool, setSelectedTool] = useState("cursor")
+  const canvasState = useEditorContext()
+  const dispatch = useEditorDispatch()
   const toolRef = useRef(null)
+  const showList = canvasState.showSettingsMenu
+  console.log(canvasState.tool)
 
-  useEffect(() => {
-    if (!selectedTool) {
-      setSelectedTool("cursor")
-    }
-  }, [selectedTool])
+  const handleSelectTool = (tool) => {
+    dispatch({
+      type: "change-mode",
+      mode: tool,
+    })
+  }
 
-  const handleSelectTool = (tool) => { 
-
-    if (tool === selectedTool) {
-      setSelectedTool("")
-    }
-    else {
-      setSelectedTool(tool)
-    }
+  const handleToggleList = () => {
+    dispatch({
+      type: "toggle",
+      updates: {
+        showSettingsMenu: !showList,
+      }
+    })
+    dispatch({
+      type: "change-mode",
+      mode: "select",
+    })
   }
 
   return (
@@ -80,25 +88,37 @@ const ToolBox = () => {
       flex="flex"
       align="center"
     >
+      <ToolItem
+        id="tool-list"
+        onClick={() => handleToggleList()}
+        className={showList ? "is-active" : null}
+        ref={toolRef}
+      >
+        <Icon>
+          <List
+            weight="bold"
+            color={showList ? colors.gray.oneHundred : colors.gray.nineHundred}
+          />
+        </Icon>
+      </ToolItem>
       {tools.map((tool) => (
         <ToolItem
+          key={tool.name}
           id={`tool-${tool.name}`}
           onClick={() => handleSelectTool(tool.name)}
-          className={selectedTool === tool.name ? "is-active" : null}
-          ref={tool.name === "list" ? toolRef : null}
+          className={(canvasState.tool === tool.name && !showList) ? "is-active" : null}
         >
           <Icon>
-            <ToolIcon 
-              name={tool.name} 
-              weight={selectedTool === tool.name ? "fill" : "regular"}
-              color={selectedTool === tool.name ? colors.gray.oneHundred : colors.gray.nineHundred}
+            <ToolIcon
+              name={tool.name}
+              weight="bold"
+              color={(canvasState.tool === tool.name && !showList) ? colors.gray.oneHundred : colors.gray.nineHundred}
             />
           </Icon>
         </ToolItem>
       ))}
-      {selectedTool === "list" && (
+      {showList && (
         <EditorSettingsMenu
-          setSelectedTool={handleSelectTool}
           toolRef={toolRef}
         />
       )}

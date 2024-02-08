@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react"
+import { useEditorDispatch } from "../context/editorContext"
 
 import DropdownMenu from "./DropdownMenu"
 
-const EditorSettingsMenu = ({ setSelectedTool, toolRef }) => {
+const EditorSettingsMenu = ({ toolRef }) => {
+  const dispatch = useEditorDispatch()
   const menuRef = useRef(null)
   const groups = [
     [
@@ -28,15 +30,23 @@ const EditorSettingsMenu = ({ setSelectedTool, toolRef }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         if (toolRef && toolRef.current) {
           if (toolRef.current.contains(event.target)) {
             return
-          
           }
         }
-        setSelectedTool("")
+
+        dispatch({
+          type: "toggle",
+          updates: {
+            showSettingsMenu: false,
+          }
+        })
+        dispatch({
+          type: "change-mode",
+          mode: "select",
+        })
       }
     }
 
@@ -54,7 +64,6 @@ const EditorSettingsMenu = ({ setSelectedTool, toolRef }) => {
       <DropdownMenu
         groups={groups}
         className="is-main"
-        setTrigger={setSelectedTool}
       />
     </div>
   )

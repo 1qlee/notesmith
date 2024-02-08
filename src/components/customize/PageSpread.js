@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import { convertToPx, convertFloatFixed } from "../../utils/helper-functions"
 import { colors } from "../../styles/variables"
-import { throttle } from "lodash"
+import { stubFalse, throttle } from "lodash"
 import { useEditorContext, useEditorDispatch } from './context/editorContext'
 import { findClosestNode, detectMouseInSelection, getAttributes } from "./editor/editor-functions"
 import { SVG } from '@svgdotjs/svg.js'
@@ -9,8 +9,9 @@ import drag from "./editor/helpers/drag"
 import dragSelector from "./editor/drag-selector"
 
 import CoverPage from "./pageComponents/CoverPage"
-import Selection from "./Selection"
+import Selection from "./pageComponents/Selection"
 import CanvasPage from "./editor/CanvasPage"
+import DragArea from "./pageComponents/DragArea"
 
 function PageSpread({
   canvasPageTemplates,
@@ -39,6 +40,7 @@ function PageSpread({
   })
   const [svgLoaded, setSvgLoaded] = useState(false)
   const [hoverClone, setHoverClone] = useState(undefined)
+  const [dragCoords, setDragCoords] = useState({})
   const distance = 2
   let coordsOffset = {
     x: isLeftPage ? pageData.x + convertToPx(pageData.marginLeft) : pageData.x + convertToPx(pageData.marginLeft),
@@ -188,19 +190,67 @@ function PageSpread({
     })
   }
 
+  const handleMouseDown = e => {
+    let initialCoords = {
+      x: e.nativeEvent.offsetX - coordsOffset.x,
+      y: e.nativeEvent.offsetY - coordsOffset.y,
+    }
+
+    if (canvasState.mode === "text") {
+      dispatch({
+        type: "toggle",
+        updates: {
+          selecting: false,
+          dragging: true,
+        }
+      })
+
+      setDragCoords({
+        initialX: initialCoords.x,
+        initialY: initialCoords.y,
+      })
+    }
+
+    // if (e.button === 0) {
+    //   if (canvasState.mode === "text") {
+    //     // const text = SVG(canvasPageRef.current).text("Hello, World!").attr("fill", "black")
+    //     // text.attr({ x: adjustedCoords.x, y: adjustedCoords.y })
+    //     const textGroup = SVG(canvasPageRef.current).group()
+    //     const textWrapper = textGroup.foreignObject().attr({ x: adjustedCoords.x, y: adjustedCoords.y, width: 200, height: 200 })
+    //     let txt = document.createElement('textarea');
+    //     txt.autofocus = true
+    //     textWrapper.node.appendChild(txt);
+
+    //     // turn mode back to select so we don't accidentally create more text nodes
+    //     dispatch({
+    //       type: "change-mode",
+    //       mode: "select",
+    //     })
+    //   }
+    // }
+  }
+
   // give hover "effect" to elements to aid with selection
   const handleMouseMove = throttle(e => {
-    if (!canvasState.selecting && !pageData.template) {
+    let adjustedCoords = {
+      x: e.nativeEvent.offsetX - coordsOffset.x,
+      y: e.nativeEvent.offsetY - coordsOffset.y,
+    }
+
+    if (canvasState.mode === "text") {
+      setDragCoords({
+        ...dragCoords,
+        endX: adjustedCoords.x,
+        endY: adjustedCoords.y,
+      })
+    }
+    else if (!canvasState.selecting && !pageData.template) {
       let coords = {
         x: e.clientX,
         y: e.clientY,
       }
-      let adjustedCoords = {
-        x: e.nativeEvent.offsetX - coordsOffset.x,
-        y: e.nativeEvent.offsetY - coordsOffset.y,
-      }
       const selectionPath = SVG("#selection-path")
-      
+
       // if there is a selection path, check if the mouse is within the path so that we can drag the entire group
       if (selectionPath) {
         const boundingBox = selectionPath.rbox()
@@ -218,21 +268,28 @@ function PageSpread({
             SVG("#hover-clone").remove()
             setHoverClone(null)
           }
-          
-          dispatch({
-            type: "change-mode",
-            mode: "drag",
-          })
+
+          // Start a new timer
+          if (canvasState.mode !== "drag") {
+            console.log("drag");
+            dispatch({
+              type: "change-mode",
+              mode: "drag",
+            });
+          }
         }
         else {
-          dispatch({
-            type: "change-mode",
-            mode: "select",
-          })
+          if (canvasState.mode !== "select") {
+            dispatch({
+              type: "change-mode",
+              mode: "select",
+            })
+          }
         }
       }
 
-      if (canvasState.mode !== "drag") {
+      // add hover state to hovered nodes
+      if (canvasState.mode === "select") {
         let subject = null
         let nodes = SVG(canvasPageRef.current).children()
 
@@ -279,7 +336,7 @@ function PageSpread({
             }
             else {
               const clone = node.clone()
-            
+
               clone.addTo(SVG(canvasPageRef.current))
                 .front()
                 .attr("id", "hover-clone")
@@ -306,6 +363,18 @@ function PageSpread({
     }
   }, 50)
 
+  function handleMouseUp(e) {
+    let endCoords = {
+      x: e.nativeEvent.offsetX - coordsOffset.x,
+      y: e.nativeEvent.offsetY - coordsOffset.y,
+    }
+
+    setDragCoords({
+      endX: endCoords.x,
+      endY: endCoords.y,
+    })
+  }
+
   useEffect(() => {
     let referenceElement = null
     // this is how we know we have the canvas page loaded
@@ -314,6 +383,7 @@ function PageSpread({
     if (isCanvasPage) {
       referenceElement = canvasPageRef.current
 
+      // intialize the drag canvas if there isn't already one
       if (!dragCanvas.canvas) {
         const canvas = SVG(canvasRef.current)
 
@@ -324,10 +394,24 @@ function PageSpread({
         drag(dispatch, canvas, referenceElement)
       }
       else {
+        // remove drag from the canvas unless we are in select or drag mode
+        if (canvasState.mode !== "select" && canvasState.mode !== "drag") {
+          console.log("Not select or drag")
+          SVG(dragCanvas.canvas).draggable(false)
+          SVG(dragCanvas.canvas).off()
+
+          setDragCanvas({
+            ...dragCanvas,
+            canvas: null,
+          })
+        }
+
+        // otherwise create a new drag canvas (occurs when the page is changed)
         if (!dragCanvas.ref.isSameNode(referenceElement)) {
+          console.log("new canvas")
           SVG(canvasRef.current).draggable(false)
           SVG(canvasRef.current).off()
-
+          
           const canvas = SVG(canvasRef.current)
 
           setDragCanvas({
@@ -379,8 +463,9 @@ function PageSpread({
 
           dispatch({
             type: "toggle",
-            setting: "selecting",
-            value: true,
+            updates: {
+              selecting: true,
+            }
           })
         },
 
@@ -410,8 +495,9 @@ function PageSpread({
         }) {
           dispatch({
             type: "toggle",
-            setting: "selecting",
-            value: false,
+            updates: {
+              selecting: stubFalse,
+            }
           })
         }
       })
@@ -422,6 +508,17 @@ function PageSpread({
     }
   }, [canvasState.mode, canvasState.canvas, canvasPageRef, svgLoaded, selectedPage])
 
+  const setCursor = () => {
+    switch(canvasState.mode) {
+      case "select":
+        return { cursor: "default" }
+      case "text":
+        return { cursor: "crosshair" }
+      default:
+        return { cursor: "default" }
+    }
+  }
+
   return (
     <svg
       id="page-spread"
@@ -429,7 +526,10 @@ function PageSpread({
       xmlns="http://www.w3.org/2000/svg"
       height={productData.heightPixel + 2}
       width={productData.widthPixel * 2 + 3}
+      onMouseUp={e => handleMouseUp(e)}
       onMouseMove={e => handleMouseMove(e)}
+      onMouseDown={e => handleMouseDown(e)}
+      style={setCursor()}
     >
       <CoverPage
         productData={productData}
@@ -471,6 +571,11 @@ function PageSpread({
         <Selection
           position={coordsOffset}
           path={canvasState.selectionPath}
+        />
+      )}
+      {(dragCoords.endX || dragCoords.endY) && (
+        <DragArea
+          coords={dragCoords}
         />
       )}
     </svg>

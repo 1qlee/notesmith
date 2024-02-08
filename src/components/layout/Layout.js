@@ -33,7 +33,14 @@ const Layout = ({
   hideScroll, 
 }) => {
   const { isClient, key } = useIsClient()
-  if (!isClient) return null;
+  if (!isClient) {
+    return (
+      <Seo
+        details={seoDetails}
+        hideScroll={hideScroll}
+      />
+    )
+  };
 
   return (
     <StyledLayout 
@@ -41,10 +48,6 @@ const Layout = ({
       className={className} 
       backgroundcolor={backgroundcolor}
     >
-      <Seo 
-        details={seoDetails}
-        hideScroll={hideScroll}
-      />
       <Nav />
       {children}
       {loading && (

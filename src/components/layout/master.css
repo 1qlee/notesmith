@@ -696,3 +696,7 @@ rect.overlay {
 .hide-scroll-y {
   overflow-y: hidden;
 }
+
+#editor-textarea {
+
+}

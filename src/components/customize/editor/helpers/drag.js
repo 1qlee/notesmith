@@ -66,20 +66,22 @@ function drag(dispatch, canvas, ref) {
   }
 
   function beforeDrag(e) {
-    if (!SVG("#selection-path")) {
+    if (!SVG("#selection-path") ) {
       e.preventDefault()
     }
     else {
-      
       dispatch({
         type: "toggle",
-        setting: "selecting",
-        value: false,
+        updates: {
+          showSettingsMenu: false,
+          selecting: false,
+        }
       })
     }
   }
   
   function dragStart(e) {
+    console.log('drag start')
     const { event } = e.detail
 
     coords = {
@@ -121,9 +123,13 @@ function drag(dispatch, canvas, ref) {
   }, 0)
 
   function dragEnd(e) {
-
+    console.log('drag end')
     dispatch({
       type: "parse-selection",
+    })
+    dispatch({
+      type: "change-mode",
+      mode: "select",
     })
   }
 
