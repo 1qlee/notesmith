@@ -8,7 +8,7 @@ import { jsPDF } from 'jspdf'
 import JSZip from "jszip"
 import ceach from "concurrent-each"
 import { saveAs } from 'file-saver'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import 'svg2pdf.js'
 
 import { Section, SectionMain, SectionContent } from "../../components/layout/Section"
@@ -18,7 +18,6 @@ import Progress from "../ui/Progress"
 import { Modal, ModalContent, ModalHeader, ModalFooter } from "../ui/Modal"
 import Content from "../ui/Content"
 import Layout from "../layout/Layout"
-import Toastify from "../ui/Toastify"
 
 const notebookSizes = [
   "A5",
@@ -454,7 +453,6 @@ const AdminDashboard = () => {
             )}
           </SectionContent>
         </Section>
-        <Toastify />
       </SectionMain>
     </Layout>
   )

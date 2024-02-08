@@ -7,8 +7,8 @@ import "./master.css"
 import Nav from "./Nav"
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
-import Toastify from "../ui/Toastify"
 import Seo from "./Seo"
+import Toast from "../ui/Toast"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
@@ -60,7 +60,7 @@ const Layout = ({
         />
       )}
       <Footer />
-      <Toastify />
+      <Toast />
     </StyledLayout>
   )
 }

@@ -6,10 +6,12 @@ import { pageMargins } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, get, onValue } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
+import Toast from "../ui/Toast"
 import { isBrowser, convertToMM } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
 import { SettingsProvider } from "./context/settingsContext"
+import "../../styles/editor.css"
 
 import { Controls } from "./Controls"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
@@ -307,6 +309,7 @@ const Editor = ({
           />
         )}
       </>
+      <Toast />
     </EditorProvider>
   )
 }
