@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "../components/cart/context/cartContext"
 import { Container, Row, Col } from "react-grid-system"
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import { isBrowser } from "../utils/helper-functions"
 import updatePaymentIntent from "../functions/updatePaymentIntent"
 

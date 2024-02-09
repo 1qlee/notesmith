@@ -5,7 +5,6 @@ import '../editor/helpers/svg.select.js'
 import '../editor/helpers/svg.resize.js'
 
 import { parseSelection } from "../editor/editor-functions"
-import Toastify from "../../ui/Toastify";
 
 const initialState = {
   canvas: null,
@@ -71,7 +70,6 @@ export function EditorProvider({ bookDimensions, children, setSelectedPageSvg })
       <EditorDispatchContext.Provider value={dispatch}>
         {children}
       </EditorDispatchContext.Provider>
-      <Toastify />
     </EditorContext.Provider>
   );
 }

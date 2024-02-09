@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { widths, colors } from "../../styles/variables"
-import { toast } from "react-toastify"
+import toast from "react-hot-toast"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, query, orderByChild, equalTo, update, remove, onValue, get, set, push } from "firebase/database"
 

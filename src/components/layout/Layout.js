@@ -1,15 +1,13 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import useIsClient from "../../hooks/useIsClient"
-import 'react-toastify/dist/ReactToastify.css'
 import "./master.css"
 
 import Nav from "./Nav"
 import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
-import Toastify from "../ui/Toastify"
 import Seo from "./Seo"
+import Toast from "../ui/Toast"
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
@@ -22,42 +20,35 @@ const StyledLayout = styled.div`
   }
 `
 
-const Layout = ({ 
-  loading, 
-  children, 
-  className, 
-  backgroundcolor, 
-  loaderClassName, 
-  loaderMsg, 
-  seoDetails, 
-  hideScroll, 
+const Layout = ({
+  loading,
+  children,
+  className,
+  backgroundcolor,
+  loaderClassName,
+  loaderMsg,
+  seoDetails,
+  hideScroll,
 }) => {
-  const { isClient, key } = useIsClient()
-  if (!isClient) {
-    return (
+  return (
+    <StyledLayout
+      className={className}
+      backgroundcolor={backgroundcolor}
+    >
+      <Nav />
       <Seo
         details={seoDetails}
         hideScroll={hideScroll}
       />
-    )
-  };
-
-  return (
-    <StyledLayout 
-      key={key} 
-      className={className} 
-      backgroundcolor={backgroundcolor}
-    >
-      <Nav />
       {children}
       {loading && (
-        <Loader 
+        <Loader
           msg={loaderMsg}
           className={loaderClassName}
         />
       )}
       <Footer />
-      <Toastify />
+      <Toast />
     </StyledLayout>
   )
 }

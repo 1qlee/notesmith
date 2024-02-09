@@ -1,0 +1,95 @@
+
+.window-grid::-webkit-scrollbar {
+  width: 0.5rem;
+}
+.window-grid::-webkit-scrollbar-thumb {
+  background-color: #E0E0E0;
+}
+.svg-drag-select-area-overlay {
+  border: 1px solid #1a73e8;
+  background-color: rgba(26, 115, 232, 0.1);
+}
+rect.selection {
+  stroke: #1a73e8;
+  fill: rgba(26, 115, 232, 0.1);
+}
+rect.overlay {
+  cursor: default;
+}
+[data-selected] {
+  stroke: #1a73e8;
+}
+#selection-path {
+  stroke: #1a73e8;
+  stroke-width: 1px;
+  fill: none;
+  pointer-events: none;
+}
+/* For selection */
+.selection_border {
+  fill: none;
+  stroke: black;
+  stroke-width: 1;
+}
+
+.selection_handle_shear {
+  fill: white;
+  stroke: black;
+  stroke-width: 1;
+}
+
+.selection_handle_lt {
+  cursor: nw-resize;
+}
+
+.selection_handle_rt {
+  cursor: ne-resize;
+}
+
+.selection_handle_rb {
+  cursor: se-resize;
+}
+
+.selection_handle_lb {
+  cursor: sw-resize;
+}
+
+.selection_handle_t {
+  cursor: n-resize;
+}
+
+.selection_handle_r {
+  cursor: e-resize;
+}
+
+.selection_handle_b {
+  cursor: s-resize;
+}
+
+.selection_handle_l {
+  cursor: w-resize;
+}
+
+.selection_handle_rot {
+  stroke-width: 1;
+  stroke: #1a73e8;
+  fill: #F9FFED;
+}
+
+.svg_select_points_point {
+  cursor: move;
+}
+
+.selection_border {
+  stroke-width: 1;
+  fill: gray;
+  stroke-dasharray: 10 10;
+  stroke: #1a73e8;
+  stroke-opacity: 0.8;
+  fill-opacity: 0.1;
+  pointer-events: none;
+}
+
+.hide-scroll-y {
+  overflow-y: hidden;
+}

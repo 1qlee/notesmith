@@ -5,7 +5,7 @@ import { Link } from "gatsby"
 import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
 import { colors, widths, marketingLists } from "../../../styles/variables"
 import { set, get, ref, update } from "firebase/database"
-import { toast } from "react-toastify"
+import toast from "react-hot-toast"
 import { useFirebaseContext } from "../../../utils/auth"
 
 import Box from "../../ui/Box"
