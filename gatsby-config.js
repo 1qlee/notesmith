@@ -4,13 +4,14 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Notesmith`,
-    description: `Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts.`,
+    title: `Notesmith custom-made notebooks`,
+    description: `Made-to-order custom notebooks crafted with your custom-made pages and layouts`,
     username: `@notesmithbooks`,
     siteUrl: `https://www.notesmithbooks.com`,
     image: "/meta-image.jpg"
   },
   plugins: [
+    `gatsby-plugin-react-helmet`,
     {
       resolve: 'gatsby-plugin-robots-txt',
       options: {
@@ -141,6 +142,5 @@ module.exports = {
     `gatsby-plugin-styled-components`,
     `gatsby-plugin-webpack-bundle-analyser-v2`,
     `gatsby-plugin-git-lastmod`,
-    `gatsby-plugin-react-helmet`,
   ],
 }

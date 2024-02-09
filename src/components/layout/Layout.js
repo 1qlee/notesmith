@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import useIsClient from "../../hooks/useIsClient"
 import "./master.css"
 
 import Nav from "./Nav"
@@ -31,19 +30,8 @@ const Layout = ({
   seoDetails,
   hideScroll,
 }) => {
-  const { isClient, key } = useIsClient()
-  if (!isClient) {
-    return (
-      <Seo
-        details={seoDetails}
-        hideScroll={hideScroll}
-      />
-    )
-  };
-
   return (
     <StyledLayout
-      key={key}
       className={className}
       backgroundcolor={backgroundcolor}
     >

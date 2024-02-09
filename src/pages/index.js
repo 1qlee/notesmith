@@ -25,7 +25,6 @@ import TextLink from "../components/ui/TextLink"
 import { Flexbox } from "../components/layout/Flexbox"
 import { Patterns, Pattern } from "../components/misc/Patterns"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
-import { StyledLabel } from "../components/form/FormComponents"
 import { Tabs } from "../components/ui/Tabs"
 
 const IndexPage = ({ data }) => {
