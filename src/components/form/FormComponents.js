@@ -656,7 +656,7 @@ const ErrorLine = styled.div`
   color: ${props => props.color};
   font-size: 0.875rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   span + span {
     margin-left: 4px;
   }

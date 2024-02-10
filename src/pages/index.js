@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { Link, graphql } from "gatsby"
-import { Star, ArrowRight, WarningCircle, ArrowBendRightDown, Note, Quotes } from "@phosphor-icons/react"
+import { Star, ArrowRight, ArrowBendRightDown, Note, MegaphoneSimple } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
-import RandomLine from "../components/misc/Lines" 
+import heroImage from "../images/index/hero.jpg"
 
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
@@ -14,10 +14,9 @@ import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Materials from "../components/index/Materials"
 import Notification from "../components/ui/Notification"
-import PageDemoCarousel from "../components/index/PageDemoCarousel"
+import CircledText from "../components/misc/CircledText"
 import PageIcons from "../components/customize/PageIcons"
 import Progress from "../components/ui/Progress"
-import RegisterForm from "../components/form/RegisterForm"
 import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
@@ -94,58 +93,78 @@ const IndexPage = ({ data }) => {
         color={colors.gray.oneHundred} 
       />
       <SectionMain>
-        <Section>
+        <Section
+          backgroundimage={heroImage}
+          height="calc(100vh - 109.5px)"
+        >
           <SectionContent
             padding={`${spacing.xlarge} 0`}
           >
-            <Pattern
-              pattern={26}
-              height="calc(100% - 32px)"
-              width="calc(100% - 32px)"
-              top={32}
-              left={32}
-            />
             <Container xl lg md sm xs>
-              <Row>
-                <Col xl={4} lg={4} offset={{ sm: 2, lg: 0 }} sm={8}>
+              <Row justify="center">
+                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
                   <Content
                     paragraphfontsize="1.25rem"
                     smallfontsize="0.8rem"
-                    margin="0 0 32px"
+                    margin="112px 0 0"
                     h1margin="0 0 32px"
-                    style={{ clipPath: `url(#pattern-26)` }}
+                    headingtextalign="center"
+                    paragraphtextalign="center"
+                    textalign="center"
                   >
-                    <h1>Design <span style={{position: 'relative', display: "inline-block"}}><RandomLine />custom</span> notebooks</h1>
+                    <h1>Made-to-order<br /><CircledText text="custom" /><span>&nbsp;notebooks</span></h1>
                     <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
+                    <Button
+                      as={Link}
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                      padding="16px 32px"
+                      margin="16px 0"
+                      fontsize="1.25rem"
+                    >
+                      <span>Shop notebooks</span>
+                      <Icon
+                        margin="0 0 0 4px"
+                      >
+                        <ArrowRight 
+                          color={colors.gray.oneHundred} 
+                          weight="bold"
+                        />
+                      </Icon>
+                    </Button>
                   </Content>
-                  <hr />
-                  <Content
-                    paragraphmargin="0"
-                    h3fontsize="1rem"
-                    h3margin="0 0 16px"
-                    margin="32px 0"
-                    headingfontfamily={fonts.secondary}
-                    paragraphfontsize="1rem"
-                  >
-                    <h3>
-                      Join the waitlist for Early Access
-                    </h3>                    <p>You can now sign up for the waitlist to join early access and the pre-order sale of our notebooks at an exclusive 25% discounted price.</p>
-
-                    <RegisterForm
-                      border
-                      fontsize="1rem"
-                      margin="8px 0 0"
-                      top="12px"
-                      color={colors.gray.nineHundred}
-                    />
-                  </Content>
-                </Col>
-                <Col xl={8} lg={8}>
-                  <PageDemoCarousel />
                 </Col>
               </Row>
             </Container>
           </SectionContent>
+          <Notification
+            backgroundcolor={colors.yellow.threeHundred}
+            color={colors.gray.nineHundred}
+            className="is-pulsating"
+            borderradius="16px"
+            padding="16px"
+            boxshadow={colors.shadow.layeredLarge}
+            align="center"
+            justify="center"
+            as={Link}
+            to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+            style={{
+              position: 'absolute',
+              left: "50%",
+              transform: "translateX(-50%)",
+              bottom: "-5%",
+            }}
+          >
+            <Icon
+              margin="0 8px 0 0"
+            >
+              <MegaphoneSimple
+                size={20}
+                weight="duotone"
+                color={colors.yellow.sixHundred}
+              />
+            </Icon>
+            <span><b>Early Access Sale! Get 25% off all notebooks for a limited time.</b></span>
+          </Notification>
         </Section>
         <Section>
           <SectionContent>
@@ -169,28 +188,25 @@ const IndexPage = ({ data }) => {
                     margin="0 0 32px"
                   >
                     <h2>Custom layouts on <i>every single page</i></h2>
-                    <p>With Notesmith, you can customize every single page to your needs. Use our editor to simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
+                    <p>With Notesmith, you can customize every single page to your needs. Simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
-                  <Flexbox
-                    flex="flex"
-                    align="center"
+                  <Button
+                    className="has-icon"
+                    fontsize="1.25rem"
+                    padding="16px 32px"
+                    as={Link}
+                    to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
                   >
-                    <TextLink
-                      className="has-icon"
-                      color={colors.gray.nineHundred}
-                      fontweight="700"
-                      fontsize="1.25rem"
-                      as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                    <span>Shop now</span>
+                    <Icon
+                      margin="0 0 0 4px"
                     >
-                      <span>Browse</span>
-                      <Icon
-                        margin="0 0 0 4px"
-                      >
-                        <ArrowRight color={colors.gray.nineHundred} />
-                      </Icon>
-                    </TextLink>
-                  </Flexbox>
+                      <ArrowRight 
+                        color={colors.gray.oneHundred} 
+                        weight="bold"
+                      />
+                    </Icon>
+                  </Button>
                 </Col>
                 <Col md={6} lg={4}>
                   <Book3d 
@@ -370,54 +386,42 @@ const IndexPage = ({ data }) => {
           backgroundcolor={colors.gray.nineHundred}
         >
           <SectionContent
-            padding={`${spacing.large} 0`}
+            padding={`${spacing.xlarge} 0`}
           >
-            <Container sm xs>
-              <Row>
-                <Col md={5} push={{md: 1}}>
+            <Container xl lg md sm xs>
+              <Row justify="center">
+                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
                   <Content
                     h3fontsize="2rem"
                     h3color={colors.gray.oneHundred}
                     h3margin="0 0 16px"
-                  >
-                    <h3>Join the waitlist to get early access to all of Notesmith's features and notebooks</h3>
-                  </Content>
-                </Col>
-                <Col md={5} push={{ md: 1 }}>
-                  <Content
                     paragraphcolor={colors.gray.fourHundred}
                     paragraphfontsize="1.25rem"
+                    textalign="center"
                   >
+                    <h3>Early Access Sale is now live!</h3>
                     <p>
-                      In early access, all notebooks will be sold at a discounted price. Please sign up to participate in this limited time offer and come celebrate our launch together! Users will be granted access in batches.
+                      During the Early Access Sale, all notebooks are 25% off! You can create your custom notebook by going to the link below.
                     </p>
-                  </Content>
-                  <Flexbox
-                    flex="flex"
-                    align="center"
-                    margin="16px 0 0"
-                  >
-                    <TextLink
-                      className="has-icon"
-                      color={colors.gray.oneHundred}
-                      fontsize="1.25rem"
-                      underlinecolor={colors.gray.oneHundred}
-                      hovercolor={colors.gray.nineHundred}
+                    <Button
                       as={Link}
-                      to="/waitlist"
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                      padding="16px 32px"
+                      margin="16px 0"
+                      fontsize="1.25rem"
+                      border={`1px solid ${colors.gray.oneHundred}`}
                     >
-                      <span>Join the waitlist</span>
+                      <span>Shop notebooks</span>
                       <Icon
-                        margin="0 0 0 8px"
+                        margin="0 0 0 4px"
                       >
-                        <ArrowRight 
-                          size="1rem" 
-                          color={colors.gray.oneHundred} 
+                        <ArrowRight
+                          color={colors.gray.oneHundred}
                           weight="bold"
                         />
                       </Icon>
-                    </TextLink>
-                  </Flexbox>
+                    </Button>
+                  </Content>
                 </Col>
               </Row>
             </Container>

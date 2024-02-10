@@ -26,52 +26,39 @@ const SignupForm = () => {
     e.preventDefault()
     setLoading(true)
 
-    get(query(ref(firebaseDb, "earlyAccess"), orderByChild('email'), equalTo(email))).then((snapshot) => {
-      if (snapshot.exists()) {
-        setEmailError(null)
+    signUp(email, password).then(async userObject => {
+      const { user } = userObject
+      // Record new user in the db
+      await set(ref(firebaseDb, 'users/' + user.uid), {
+        dateCreated: new Date().valueOf(),
+        earlyAccess: true,
+        email: user.email,
+        id: user.uid,
+        referrer: true,
+      })
 
-        signUp(email, password).then(async userObject => {
-          const { user } = userObject
-          // Record new user in the db
-          await set(ref(firebaseDb, 'users/' + user.uid), {
-            dateCreated: new Date().valueOf(),
-            earlyAccess: true,
-            email: user.email,
-            id: user.uid,
-            referrer: true,
-          })
+      return user
+    }).then(async user => {
+      // Send the user a verification email
+      await sendEmailVerification(user.email)
+      await addEmailToLists(user.email, marketingLists)
 
-          return user
-        }).then(async user => {
-          // Send the user a verification email
-          await sendEmailVerification(user.email)
-          await addEmailToLists(user.email, marketingLists)
+      setLoading(false)
+    }).catch(error => {
+      setLoading(false)
 
-          setLoading(false)
-        }).catch(error => {
-          setLoading(false)
-
-          switch (error.code) {
-            case "auth/email-already-in-use":
-              setEmailError("This email is already in use.")
-              break
-            case "auth/invalid-email":
-              setEmailError("Email was in an invalid format.")
-              break
-            case "auth/operation-not-allowed":
-              setEmailError("Sorry, our server is busy.")
-              break
-            default:
-              setEmailError("Something went wrong.")
-          }
-        })
-
-        return true
-      }
-      else {
-        setEmailError("This email does not have early access yet!")
-        setLoading(false)
-        return false
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setEmailError("This email is already in use.")
+          break
+        case "auth/invalid-email":
+          setEmailError("Email was in an invalid format.")
+          break
+        case "auth/operation-not-allowed":
+          setEmailError("An error occurred. Please try again. If this problem persists, please contact us.")
+          break
+        default:
+          setEmailError("Something went wrong.")
       }
     })
   }
@@ -103,9 +90,10 @@ const SignupForm = () => {
         h1fontsize="2rem"
         margin="0 0 32px"
         linktextdecoration="underline"
+        headingtextalign="center"
       >
         <h1>Create your account</h1>
-        <p>Only users who have been granted early access may create an account at this time. If you would like to get early access please <Link to="/waitlist">sign up for the waitlist</Link>.</p>
+        <p>An account allows you to access our editor which provides you with more tools to create custom layouts. You can also save your layouts and keep track of orders.</p>
       </Content>
       <form
         id="signup-form"

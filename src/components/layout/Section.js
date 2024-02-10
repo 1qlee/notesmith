@@ -6,6 +6,7 @@ const SectionMain = styled.main`
   background-color: ${colors.white};
   position: relative;
   padding: 0;
+  margin-top: 108px;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;
   }
@@ -13,12 +14,15 @@ const SectionMain = styled.main`
     padding: 0;
   }
   &.has-max-height {
-    min-height: calc(100vh - 105px);
+    min-height: calc(100vh - 109.5px);
   }
 `
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
+  background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
+  background-size: cover;
+  background-position: top center;
   position: relative;
   height: ${props => props.height};
   width: 100%;

@@ -274,7 +274,7 @@ dd {
 }
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
-  font-family: 'Nanum Myeongjo', Georgia, serif;
+  font-family: 'Jost', Georgia, serif;
 }
 p {
   font-size: 1rem;
@@ -555,7 +555,7 @@ select:-webkit-autofill:focus {
   font-weight: 400 700;
   src: url('/fonts/jost-var.woff2') format('woff2');
 }
-@font-face {
+/* @font-face {
   font-family: 'Nanum Myeongjo';
   font-style: normal;
   font-display: swap;
@@ -568,4 +568,4 @@ select:-webkit-autofill:focus {
   font-display: swap;
   font-weight: 700;
   src: url('/fonts/nm-700-normal.woff2') format('woff2');
-}
+} */

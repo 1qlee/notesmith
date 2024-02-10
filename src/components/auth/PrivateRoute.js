@@ -71,6 +71,7 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
               <Content
                 h1fontsize="2rem"
                 linktextdecoration="underline"
+                headingtextalign="center"
               >
                 {processing ? (
                   <>

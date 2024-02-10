@@ -28,7 +28,7 @@ function TabImagesCaption({
         <p>Double mounted 125# cover stock.</p>
       )}
       {activeTab === 2 && (
-        <p>Lamination film on both sides of each cover.</p>
+        <p>Lamination film on front side of each cover.</p>
       )}
       {activeTab === 3 && (
         <p>Gold colored Wire-O binding.</p>

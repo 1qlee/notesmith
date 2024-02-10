@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 const AuthSection = styled.div`
   position: relative;
+  margin-top: 108px;
   width: 100%;
 `
 

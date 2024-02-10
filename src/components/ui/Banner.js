@@ -15,6 +15,7 @@ const StyledBanner = styled.div`
   width: 100%;
   p, a {
     font-size: 0.875rem;
+    line-height: 1;
   }
 `
 

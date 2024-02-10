@@ -15,13 +15,13 @@ import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 
 const StyledNav = styled.nav`
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   border-bottom: ${colors.borders.black};
   background-color: ${colors.white};
-  z-index: 33;
+  z-index: 99;
   &.has-shadow {
     box-shadow: 0 2px 0 ${colors.shadow.float};
   }
@@ -95,7 +95,7 @@ const Navbar = styled.div`
 `
 
 const NavLogo = styled.div`
-  width: ${widths.logo};
+  height: 60px;
   padding: 1rem 0;
   transition: background-color 0.1s;
 `
@@ -162,7 +162,7 @@ const DropdownMenu = styled.ul`
   left: 50%;
   list-style: none;
   position: absolute;
-  top: calc(100% + 19px);
+  top: calc(100% + 12px);
   transform: translateX(-50%);
   padding: 16px 4px;
   border: ${colors.borders.black};
@@ -203,7 +203,7 @@ const NavMenu = styled.ul`
   position: absolute;
   padding: 16px 4px;
   right: -16px;
-  top: 74px;
+  top: 60px;
   transform: translateX(100%);
   transition: transform 0.2s, opacity 0.4s, visibility 1s;
   visibility: hidden;
@@ -276,10 +276,10 @@ const Nav = ({ auth, hideNavbar }) => {
   return (
     <StyledNav>
       <Banner 
-        text="Join the waitlist for Early Access to try out our platform."
+        text="Early Access Sale! 25% off all notebooks."
         link={{
-          to: "/waitlist",
-          text: "Join"
+          to: "/products/notebooks/pro-wired-notebook-a5-custom/white",
+          text: "Shop"
         }}
       />
       <Container xl lg md sm xs>

@@ -14,6 +14,18 @@ const slideInDown = keyframes`
   }
 `
 
+const pulsate = pulseColor => keyframes`
+  0% {
+    box-shadow: 0 0 12px 0 ${pulseColor};
+  }
+  50% {
+    box-shadow: 0 0 12px 24px rgba(0, 0, 0, 0);
+  }
+  100% {
+		box-shadow: 0 0 12px 6px rgba(0, 0, 0, 0);
+  }
+`
+
 const loading = keyframes`
   0% {
     background-position: 0 0;
@@ -29,6 +41,7 @@ const StyledNotification = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
   border: ${props => props.border};
   border-radius: ${props => props.borderradius || "0"};
+  box-shadow: ${props => props.boxshadow || "0 0 0 0"};
   color: ${props => props.color};
   display: ${props => props.display || "flex"};
   justify-content: ${props => props.justify || "space-between"};
@@ -36,7 +49,8 @@ const StyledNotification = styled.div`
   padding: ${props => props.padding || "16px"};
   transition: background-color 0.2s, color 0.2s;
   max-width: ${props => props.maxwidth};
-  z-index: 8000;
+  text-align: ${props => props.textalign || "left"};
+  z-index: ${props => props.zindex || "1"};
   &.is-submitting {
     background: radial-gradient(circle, #ffd08f 0%, rgba(253,180,78,1) 80%);
     animation: ${loading} 1s infinite;
@@ -44,6 +58,9 @@ const StyledNotification = styled.div`
   &.has-no-style {
     border: none;
     box-shadow: none;
+  }
+  &.is-pulsating {
+    animation: ${props => pulsate(props.backgroundcolor)} 2s linear infinite;
   }
   p {
     color: ${props => props.color};

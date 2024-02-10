@@ -76,6 +76,7 @@ const SigninForm = () => {
       <Content
         h1fontsize="2rem"
         margin="0 0 32px"
+        headingtextalign="center"
       >
         <h1>Sign into your account</h1>
       </Content>
