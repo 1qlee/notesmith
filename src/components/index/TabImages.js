@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 
 const StyledTabImages = styled.div`
-  padding: 16px 0;
+  padding-bottom: 16px;
 `
 
 function TabImages({

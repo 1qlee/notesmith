@@ -14,15 +14,14 @@ import Icon from "../components/ui/Icon"
 import Layout from "../components/layout/Layout"
 import Materials from "../components/index/Materials"
 import Notification from "../components/ui/Notification"
-import CircledText from "../components/misc/CircledText"
+import HeroContent from "../components/index/HeroContent"
+import HeroNotification from "../components/index/HeroNotification"
 import PageIcons from "../components/customize/PageIcons"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
-import TextLink from "../components/ui/TextLink"
 import { Flexbox } from "../components/layout/Flexbox"
-import { Patterns, Pattern } from "../components/misc/Patterns"
 import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { Tabs } from "../components/ui/Tabs"
 
@@ -89,82 +88,20 @@ const IndexPage = ({ data }) => {
         title: "Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts",
       }}
     >
-      <Patterns 
-        color={colors.gray.oneHundred} 
-      />
       <SectionMain>
         <Section
           backgroundimage={heroImage}
-          height="calc(100vh - 109.5px)"
+          minheight="calc(100vh - 109.5px)"
+          style={{display: "flex", alignItems: "center", justifyContent: "center"}}
         >
           <SectionContent
             padding={`${spacing.xlarge} 0`}
           >
             <Container xl lg md sm xs>
-              <Row justify="center">
-                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
-                  <Content
-                    paragraphfontsize="1.25rem"
-                    smallfontsize="0.8rem"
-                    margin="112px 0 0"
-                    h1margin="0 0 32px"
-                    headingtextalign="center"
-                    paragraphtextalign="center"
-                    textalign="center"
-                  >
-                    <h1>Made-to-order<br /><CircledText text="custom" /><span>&nbsp;notebooks</span></h1>
-                    <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
-                    <Button
-                      as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
-                      padding="16px 32px"
-                      margin="16px 0"
-                      fontsize="1.25rem"
-                    >
-                      <span>Shop notebooks</span>
-                      <Icon
-                        margin="0 0 0 4px"
-                      >
-                        <ArrowRight 
-                          color={colors.gray.oneHundred} 
-                          weight="bold"
-                        />
-                      </Icon>
-                    </Button>
-                  </Content>
-                </Col>
-              </Row>
+              <HeroContent />
             </Container>
           </SectionContent>
-          <Notification
-            backgroundcolor={colors.yellow.threeHundred}
-            color={colors.gray.nineHundred}
-            className="is-pulsating"
-            borderradius="16px"
-            padding="16px"
-            boxshadow={colors.shadow.layeredLarge}
-            align="center"
-            justify="center"
-            as={Link}
-            to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
-            style={{
-              position: 'absolute',
-              left: "50%",
-              transform: "translateX(-50%)",
-              bottom: "-5%",
-            }}
-          >
-            <Icon
-              margin="0 8px 0 0"
-            >
-              <MegaphoneSimple
-                size={20}
-                weight="duotone"
-                color={colors.yellow.sixHundred}
-              />
-            </Icon>
-            <span><b>Early Access Sale! Get 25% off all notebooks for a limited time.</b></span>
-          </Notification>
+          <HeroNotification />
         </Section>
         <Section>
           <SectionContent>
@@ -347,92 +284,6 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Materials
-                  </SectionHeading>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={4}>
-                  <Content
-                    h2margin="0 0 2rem"
-                    paragraphfontsize="1.25rem"
-                    paragraphmargin="0 0 16px"
-                    margin="0 0 32px"
-                  >
-                    <h2>Only the best, guaranteed</h2>
-                    <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
-                  </Content>
-                  <Materials 
-                    tab={tabList[activeTab]}
-                  />
-                </Col>
-                <Col lg={8}>
-                  <Tabs 
-                    tabList={tabList}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    fontsize="1rem"
-                  />
-                  <TabContent
-                    activeTab={activeTab}
-                    tabImages={tabImages.nodes}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </SectionContent>
-        </Section>
-        <Section
-          backgroundcolor={colors.gray.nineHundred}
-        >
-          <SectionContent
-            padding={`${spacing.xlarge} 0`}
-          >
-            <Container xl lg md sm xs>
-              <Row justify="center">
-                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
-                  <Content
-                    h3fontsize="2rem"
-                    h3color={colors.gray.oneHundred}
-                    h3margin="0 0 16px"
-                    paragraphcolor={colors.gray.fourHundred}
-                    paragraphfontsize="1.25rem"
-                    textalign="center"
-                  >
-                    <h3>Early Access Sale is now live!</h3>
-                    <p>
-                      During the Early Access Sale, all notebooks are 25% off! You can create your custom notebook by going to the link below.
-                    </p>
-                    <Button
-                      as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
-                      padding="16px 32px"
-                      margin="16px 0"
-                      fontsize="1.25rem"
-                      border={`1px solid ${colors.gray.oneHundred}`}
-                    >
-                      <span>Shop notebooks</span>
-                      <Icon
-                        margin="0 0 0 4px"
-                      >
-                        <ArrowRight
-                          color={colors.gray.oneHundred}
-                          weight="bold"
-                        />
-                      </Icon>
-                    </Button>
-                  </Content>
-                </Col>
-              </Row>
-            </Container>
-          </SectionContent>
-        </Section>
-        <Section>
-          <SectionContent>
-            <Container xl lg md sm xs>
-              <Row>
-                <Col>
-                  <SectionHeading>
                     Paper
                   </SectionHeading>
                 </Col>
@@ -445,7 +296,7 @@ const IndexPage = ({ data }) => {
                     h2margin="0 0 2rem 0"
                   >
                     <h2>Fountain pen friendly paper</h2>
-                    <p>After conducting tests on more than 50 types of paper, we chose the one that exhibited the best performance with various inks. Our white, ultra-smooth paper received top ratings from early users in bleeding, ghosting, and feathering assessments.</p>
+                    <p>After conducting tests on more than 50 types of paper, we chose the one with the best performance with various inks. Our white, ultra-smooth paper received top ratings from users in early assessments.</p>
                   </Content>
                   <div>
                     <Flexbox
@@ -582,6 +433,47 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
+                    Materials
+                  </SectionHeading>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={4}>
+                  <Content
+                    h2margin="0 0 2rem"
+                    paragraphfontsize="1.25rem"
+                    paragraphmargin="0 0 16px"
+                    margin="0 0 32px"
+                  >
+                    <h2>Made with high quality materials</h2>
+                    <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
+                  </Content>
+                  <Materials 
+                    tab={tabList[activeTab]}
+                  />
+                </Col>
+                <Col lg={8}>
+                  <Tabs 
+                    tabList={tabList}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    fontsize="1rem"
+                  />
+                  <TabContent
+                    activeTab={activeTab}
+                    tabImages={tabImages.nodes}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section>
+          <SectionContent>
+            <Container xl lg md sm xs>
+              <Row>
+                <Col>
+                  <SectionHeading>
                     Reviews
                   </SectionHeading>
                 </Col>
@@ -620,6 +512,51 @@ const IndexPage = ({ data }) => {
                 </Col>
                 <Col md={6} lg={6} xl={8}>
                   <Reviews />
+                </Col>
+              </Row>
+            </Container>
+          </SectionContent>
+        </Section>
+        <Section
+          backgroundcolor={colors.gray.nineHundred}
+        >
+          <SectionContent
+            padding={`${spacing.xlarge} 0`}
+          >
+            <Container xl lg md sm xs>
+              <Row justify="center">
+                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
+                  <Content
+                    h3fontsize="2rem"
+                    h3color={colors.gray.oneHundred}
+                    h3margin="0 0 16px"
+                    paragraphcolor={colors.gray.fourHundred}
+                    paragraphfontsize="1.25rem"
+                    textalign="center"
+                  >
+                    <h3>Early Access Sale is now live!</h3>
+                    <p>
+                      During the Early Access Sale, all notebooks are 25% off! You can create your custom notebook by going to the link below.
+                    </p>
+                    <Button
+                      as={Link}
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                      padding="16px 32px"
+                      margin="16px 0"
+                      fontsize="1.25rem"
+                      border={`1px solid ${colors.gray.oneHundred}`}
+                    >
+                      <span>Shop notebooks</span>
+                      <Icon
+                        margin="0 0 0 4px"
+                      >
+                        <ArrowRight
+                          color={colors.gray.oneHundred}
+                          weight="bold"
+                        />
+                      </Icon>
+                    </Button>
+                  </Content>
                 </Col>
               </Row>
             </Container>

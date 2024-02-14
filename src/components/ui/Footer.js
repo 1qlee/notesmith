@@ -30,7 +30,7 @@ const Footer = () => {
                 paragraphcolor={colors.gray.oneHundred}
                 paragraphfontsize="1.25rem"
               >
-                <p>Join the waitlist to get early access to all of Notesmith's features and notebooks</p>
+                <p>Subscribe to our mailing list and stay updated on all updates, promotions, and much more!</p>
               </Content>
             </Col>
             <Col md={4} push={{ md: 2 }}>
@@ -90,12 +90,7 @@ const Footer = () => {
                 <h5>Products</h5>
                 <Box>
                   <Link to="/products/notebooks/pro-wired-notebook-a5-custom/white/">
-                    Custom notebooks
-                  </Link>
-                </Box>
-                <Box>
-                  <Link to="/waitlist">
-                    Early access
+                    Custom Notebooks
                   </Link>
                 </Box>
               </Content>

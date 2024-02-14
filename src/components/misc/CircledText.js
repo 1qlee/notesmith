@@ -13,14 +13,15 @@ const CircleWrapper = styled.div`
   position: relative;
   svg {
     position: absolute;
-    left: -24px;
+    left: -20px;
     top: -18px;
-    width: calc(100% + 48px);
+    width: calc(100% + 40px);
     height: calc(100% + 36px);
     .path-1,
     .path-2 {
       stroke-dasharray: 1000;
       stroke-dashoffset: 1000;
+      stroke: ${props => props.color};
     }
     .path-1 {
       animation: ${draw} 3s linear forwards;
@@ -35,9 +36,9 @@ const CircleWrapper = styled.div`
   }
 `
 
-function CircledText({ text }) {
+function CircledText({ color, text }) {
   return (
-    <CircleWrapper>
+    <CircleWrapper color={color}>
       <Circle />
       <span>{text}</span>
     </CircleWrapper>

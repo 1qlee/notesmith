@@ -103,6 +103,7 @@ const Subscription = ({ location }) => {
               {subscribed ? (
                 <>
                   <Content
+                    h1fontsize="2rem"
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                     headingtextalign="center"
@@ -114,17 +115,17 @@ const Subscription = ({ location }) => {
               ) : (
                 <>
                   {error && (
-                    <Notification
-                      backgroundcolor={colors.red.twoHundred}
-                      color={colors.red.nineHundred}
+                    <Content
+                      h1fontsize="2rem"
+                      paragraphfontsize="1.25rem"
+                      margin="0 0 32px"
+                      headingtextalign="center"
+                      linktextdecoration="underline"
                     >
-                      <Content
-                        linktextdecoration="underline"
-                      >
-                        <p>{error}</p>
-                        <p>If you require more assistance, please <a mailto="support@notesmithbooks.com">send us an email</a>.</p>
-                      </Content>
-                    </Notification>
+                      <h1>Something went wrong</h1>
+                      <p>{error}</p>
+                      <p>If you require more assistance, please <a mailto="support@notesmithbooks.com">send us an email</a>.</p>
+                    </Content>
                   )}
                 </>
               )}

@@ -3,6 +3,7 @@ import { colors, fonts } from "../../styles/variables"
 
 import Content from "../ui/Content"
 import { Flexbox } from "../layout/Flexbox"
+import Box from "../ui/Box"
 
 const qualities = {
   paper: [
@@ -47,8 +48,8 @@ const qualities = {
       text: "Textured"
     },
     {
-      heading: "Applied",
-      text: "Double-sided both covers"
+      heading: "Feature",
+      text: "Water resistant"
     },
   ],
   binding: [
@@ -70,22 +71,26 @@ const Materials = ({ tab }) => {
       <Content
         headingfontfamily={fonts.secondary}
         h3fontsize="1.25rem"
-        margin="0 0 32px"
+        h3margin="0"
+        margin="0 0 16px"
       >
         <h3>{tab}</h3>
       </Content>
-      {qualities[tab.toLowerCase()].map((quality, index) => (
-        <>
+      <Box
+        margin="0 0 16px"
+      >
+        {qualities[tab.toLowerCase()].map((quality, index) => (
           <Flexbox
             flex="flex"
             align="center"
             justify="space-between"
             bordercolor={colors.gray.nineHundred}
             className="has-border-bottom"
-            padding="16px 0"
+            padding="0 0 16px"
+            margin="0 0 16px"
           >
             <Content
-              paragraphfontsize="1.25rem"
+              paragraphfontsize="1rem"
               margin="0"
             >
               <p>
@@ -93,17 +98,16 @@ const Materials = ({ tab }) => {
               </p>
             </Content>
             <Content
-              paragraphfontsize="1.25rem"
+              paragraphfontsize="1rem"
               margin="0"
             >
               <p>
                 {quality.text}
               </p>
             </Content>
-
           </Flexbox>
-        </>
-      ))}
+        ))}
+      </Box>
     </>
   )
 }

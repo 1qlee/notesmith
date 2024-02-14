@@ -3,12 +3,26 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const StyledHighlight = styled.span`
-  background-image: linear-gradient(60deg, transparent 0%,${colors.highlighter} 12%, ${colors.highlighter} 88%, transparent 100%);
+  position: relative;
+  z-index: 1;
+  &::before {
+    content: "";
+    position: absolute;
+    top: -16px;
+    left: -32px;
+    width: 100%;
+    height: calc(100% + 32px);
+    background-image: linear-gradient(75deg, transparent 0%, ${props => props.color} 10%, ${props => props.color} 50%, transparent 100%);
+    transform: skew(15deg);
+    z-index: -1;
+  }
 `
 
-function Highlight({ children }) {
+function Highlight({ color, children }) {
   return (
-    <StyledHighlight>
+    <StyledHighlight
+      color={color}
+    >
       {children}
     </StyledHighlight>
   )

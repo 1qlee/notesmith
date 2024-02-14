@@ -58,7 +58,6 @@ const TemplatesButton = styled(Button)`
   height: 24px;
   border-radius: 4px 4px 0 0;
   font-size: 0.875rem;
-  width: 64px;
   z-index: 9;
   &.is-active {
     left: 48px;
@@ -100,6 +99,7 @@ function ProductControls({
   currentPageSide,
   pageData,
   max,
+  dimensions,
   selectedPageSvg,
   setCurrentPageSide,
   setLeftPageData,
@@ -108,9 +108,8 @@ function ProductControls({
   toast,
 }) {
   const [loading, setLoading] = useState(false)
-  const [showControls, setShowControls] = useState(true)
-  const maximumMarginHeight = convertFloatFixed(convertToMM(pageData.svgHeight) - pageData.strokeWidth, 3)
-  const maximumMarginWidth = convertToMM(pageData.svgWidth)
+  const maximumMarginHeight = convertFloatFixed(convertToMM(dimensions.svgHeight) - pageData.strokeWidth, 3)
+  const maximumMarginWidth = convertToMM(dimensions.svgWidth)
 
   function handleSetTemplate() {
     setLoading(true)
@@ -158,22 +157,25 @@ function ProductControls({
 
         return (
           <StyledTemplatesBar
-            className={!showControls ? "is-collapsed" : null}
+            className={!pageData.showControls ? "is-collapsed" : null}
           >
             <TemplatesButton
-              onClick={() => setShowControls(!showControls)}
-              className={!showControls && !isMobile ? "is-active" : null}
+              onClick={() => setPageData({
+                ...pageData,
+                showControls: !pageData.showControls,
+              })}
+              className={!pageData.showControls && !isMobile ? "is-active" : null}
             >
-              {showControls ? (
-                "Hide"
+              {pageData.showControls ? (
+                "Hide controls"
               ) : (
-                "Edit"
+                "Edit template"
               )}
             </TemplatesButton>
-            {showControls && (
+            {pageData.showControls && (
               <>
                 <TemplatesHeader
-                  className={!showControls ? "is-collapsed" : null}
+                  className={!pageData.showControls ? "is-collapsed" : null}
                 >
                   <span>
                     Edit template

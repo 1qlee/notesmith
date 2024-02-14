@@ -22,6 +22,7 @@ function ProductTemplate({
   setSelectedPageSvg,
   setMax,
   setSvgLoaded,
+  setDimensions,
 }) {
   const dependencies = [
     pageData.template,
@@ -61,27 +62,18 @@ function ProductTemplate({
   }
   const templateRef = useRef(null)
 
-  // const templateRef = useCallback(node => {
-  //   if (node !== null) {
-  //     setNode(node)
-  //     setSelectedPageSvg(node)
-  //   }
-  // }, [])
-
   useEffect(() => {
-    setSvgLoaded(false)
-
     if (templateRef && templateRef.current) {
       setSelectedPageSvg(templateRef.current)
-      setPageData({
-        ...pageData,
+      setDimensions({
         svgHeight: templateData.size.height,
         svgWidth: templateData.size.width,
         x: templateData.position.x,
         y: templateData.position.y,
       })
+      setPageData({...pageData}) // needed to force a proper re-render for some reason - nifty workaround!
     }
-  }, [...dependencies, templateRef, templateRef.current])
+  }, [...dependencies, templateRef])
 
   if (pageData.show) {
     return (

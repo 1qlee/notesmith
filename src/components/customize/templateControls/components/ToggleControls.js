@@ -44,6 +44,7 @@ const Toggle = ({
     <ToggleWrapper>
       {data.map((item, index) => (
         <ToggleButton
+          key={item.name}
           className={item.name === value ? "is-active" : null}
           onClick={() => setData(item.name)}
         >

@@ -25,12 +25,12 @@ exports.handler = async (event) => {
           }
         ],
         dynamic_template_data: {
-          subject: "Join the waitlist for early access",
-          preheader: "You have signed up to join Notesmith's waitlist for early access.",
+          subject: "Confirm your subscription to Notesmith",
+          preheader: "Confirm your subscription by clicking on the button in the email.",
           heading: "Confirm your subscription",
-          text: "Please confirm your subscription to the waitlist for early access to Notesmith. During early access, you will have full access to our platform and you will be able to purchase our custom notebooks at a discounted price. If you didn't subscribe to this list or you're not sure why you received this email, you can delete it. You will not be subscribed if you don't click on the link below.",
-          button_text: "Join the waitlist",
-          button_url: `https://www.notesmithbooks.com/subscription/?list=e05a027d-da7d-4bec-8f5b-184e99ea112d&list=cc2979e2-1ea6-4706-bc25-f51d1221b20b&list=b8f3fbcd-10dc-44c6-98f3-64ec7901f960&key=${id}`,
+          text: "Please confirm your subscription to Notesmith's mailing list by clicking on the button below. If you didn't subscribe to this list or you're not sure why you received this email, you can delete it. You will not be subscribed if you don't click on the button.",
+          button_text: "Confirm subscription",
+          button_url: `https://www.notesmithbooks.com/subscription/?list=cc2979e2-1ea6-4706-bc25-f51d1221b20b&list=e05a027d-da7d-4bec-8f5b-184e99ea112d&key=${id}`,
           english: true
         }
       }

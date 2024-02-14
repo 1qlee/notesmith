@@ -2,7 +2,7 @@ import React from "react"
 import { spacing, fonts } from "../../../styles/variables"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent } from "../../layout/Section"
+import { Section, SectionContent, SectionHeading } from "../../layout/Section"
 import Content from "../../ui/Content"
 import ProductInfoBox from "./ProductInfoBox"
 import ProductImagesGrid from "./ProductImagesGrid"
@@ -21,15 +21,9 @@ const ProductDescription = ({
       >
         <Container xs sm md lg xl>
           {headingText && (
-            <Row>
-              <Col>
-                <Content
-                  margin="0 0 32px"
-                >
-                  <h3>{headingText}</h3>
-                </Content>
-              </Col>
-            </Row>
+            <SectionHeading>
+              {headingText}
+            </SectionHeading>
           )}
           <Row gutterWidth={64}>
             <Col sm={6}>

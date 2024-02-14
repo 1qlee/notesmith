@@ -6,6 +6,13 @@ html {
   height: 100%;
   width: 100%;
 }
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  html {
+    font-size: 14px;
+    /* Adjust font size for smaller screens */
+  }
+}
 #gatsby-focus-wrapper,
 #___gatsby {
   width: 100%;

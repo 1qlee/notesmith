@@ -17,6 +17,8 @@ import { Flexbox } from "../../layout/Flexbox"
 import { Info } from "@phosphor-icons/react"
 import { Link } from "gatsby"
 import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
+import StrikeText from "../../misc/StrikeText"
+import ProductQuickControls from "./ProductQuickControls"
 
 const ProductInfo = ({
   bookData,
@@ -24,11 +26,11 @@ const ProductInfo = ({
   leftPageData,
   pageData,
   rightPageData,
+  selectedPageSvg,
   setBookData,
   setPageData,
   toast,
 }) => {
-  const { user } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
@@ -144,31 +146,32 @@ const ProductInfo = ({
         >
           <h5>Page layout</h5>
         </Content>
-        <Content
-          linktextdecoration="underline"
-        >
-          <a
-            align="center"
-            fontweight="400"
-            onClick={() => setPageData({
-              ...pageData,
-              show: !pageData.show,
-            })}
+        {pageData.template && (
+          <Content
+            linktextdecoration="underline"
           >
-            {pageData.show ? (
-              "Back to images"
-            ) : (
-              "Back to editing"
-            )}
-          </a>
-        </Content>
+            <a
+              align="center"
+              fontweight="400"
+              onClick={() => setPageData({
+                ...pageData,
+                show: !pageData.show,
+              })}
+            >
+              {pageData.show ? (
+                "Back to images"
+              ) : (
+                "Back to template"
+              )}
+            </a>
+          </Content>
+        )}
       </Flexbox>
       <Flexbox
         flex="flex"
         flexwrap="wrap"
         justify="flex-start"
         align="center"
-        margin="0 0 16px"
       >
         <PageIcons
           checkActiveVar={pageData.template}
@@ -182,116 +185,96 @@ const ProductInfo = ({
           showLabels={false}
         />
       </Flexbox>
-      {user ? (
-        <>
-          <Flexbox
-            flex="flex"
-            justify="space-between"
-          >
-            <StyledLabel
-              htmlFor="quantity-tracker"
-              margin="0 0 8px"
-              fontsize="1rem"
-              fontweight="700"
-            >
-              Quantity
-            </StyledLabel>
-            {discountSaved !== 0 && (
-              <Content
-                paragraphmargin="0 0 8px"
-                paragraphcolor={colors.green.sixHundred}
-                paragraphfontweight="700"
-              >
-                <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
-              </Content>
-            )}
-          </Flexbox>
-          <Flexbox
-            flex="flex"
-            margin="0 0 16px"
-          >
-            <QuantityTracker
-              id="quantity-tracker"
-              buttonwidth="1rem"
-              buttonheight="1rem"
-              counterwidth="100%"
-              counterpadding="1rem"
-              counterfontsize="1rem"
-              iconsize="0.625rem"
-              setItemQuantity={setItemQuantity}
-            />
-            <Button
-              backgroundcolor={colors.gray.nineHundred}
-              border={`1px solid ${colors.gray.nineHundred}`}
-              color={colors.gray.oneHundred}
-              id="cart-button"
-              margin="0 0 0 1rem"
-              padding="1rem"
-              onClick={() => handleAddCartButton(bookData)}
-              disabled={!validateCartButton()}
-              width="100%"
-            >
-              {itemAdded ? (
-                <span>Added to cart!</span>
-              ) : (
-                <span>Add to cart - {formatDollars(discountAmount / 100)}</span>
-              )}
-            </Button>
-          </Flexbox>
-          <Notification
-            backgroundcolor={colors.gray.oneHundred}
-            borderradius="16px"
-            padding="16px"
-          >
-            <Icon
-              className="is-pulsating"
-              margin="2px 0 0"
-              pulseColor={colors.gray.sixHundred}
-            >
-              <Info
-                color={colors.gray.sixHundred}
-                size={20}
-              />
-            </Icon>
-            <Content
-              margin="0 0 0 8px"
-              paragraphmargin="0"
-              paragraphfontsize="1rem"
-            >
-              <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.gray.nineHundred}>accounts page</TextLink></Link>.</p>
-            </Content>
-          </Notification>
-        </>
-      ) : (
-        <Notification
-          backgroundcolor={colors.gray.twoHundred}
-          borderradius="16px"
-        >
-          <Icon
-            className="is-pulsating"
-            margin="2px 0 0"
-            pulseColor={colors.gray.sixHundred}
-          >
-            <Info
-              color={colors.gray.nineHundred}
-              size={20}
-            />
-          </Icon>
-          <Content
-            margin="0 0 0 8px"
-            paragraphmargin="0"
-            paragraphcolor={colors.gray.nineHundred}
-            paragraphfontsize="1rem"
-          >
-              <p>Purchases are currently only available to users in our early access. If you would like to join us, please <Link to="/waitlist"><TextLink color={colors.gray.nineHundred}>sign up</TextLink></Link> for the waitlist.</p>
-          </Content>
-        </Notification>
+      {(pageData.template && pageData.template !== "blank") && (
+        <ProductQuickControls 
+          pageData={pageData}
+          selectedPageSvg={selectedPageSvg}
+          setPageData={setPageData}
+        />
       )}
+      <Flexbox
+        flex="flex"
+        justify="space-between"
+      >
+        <StyledLabel
+          htmlFor="quantity-tracker"
+          margin="0 0 8px"
+          fontsize="1rem"
+          fontweight="700"
+        >
+          Quantity
+        </StyledLabel>
+        {discountSaved !== 0 && (
+          <Content
+            paragraphmargin="0 0 8px"
+            paragraphcolor={colors.green.sixHundred}
+            paragraphfontweight="700"
+          >
+            <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
+          </Content>
+        )}
+      </Flexbox>
+      <Flexbox
+        flex="flex"
+        margin="0 0 16px"
+      >
+        <QuantityTracker
+          id="quantity-tracker"
+          buttonwidth="1rem"
+          buttonheight="1rem"
+          counterwidth="100%"
+          counterpadding="1rem"
+          counterfontsize="1rem"
+          iconsize="0.625rem"
+          setItemQuantity={setItemQuantity}
+        />
+        <Button
+          backgroundcolor={colors.gray.nineHundred}
+          border={`1px solid ${colors.gray.nineHundred}`}
+          color={colors.gray.oneHundred}
+          id="cart-button"
+          margin="0 0 0 1rem"
+          padding="1rem"
+          onClick={() => handleAddCartButton(bookData)}
+          disabled={!validateCartButton()}
+          width="100%"
+        >
+          {itemAdded ? (
+            <span>Added to cart!</span>
+          ) : (
+            <span>Add to cart - {formatDollars(discountAmount / 100)} <StrikeText>{formatDollars(bookData.price / 100)}</StrikeText></span>
+          )}
+        </Button>
+      </Flexbox>
+      <Notification
+        backgroundcolor={colors.gray.oneHundred}
+        borderradius="16px"
+        padding="16px"
+      >
+        <Icon
+          className="is-pulsating"
+          margin="2px 0 0"
+          pulseColor={colors.gray.sixHundred}
+        >
+          <Info
+            color={colors.gray.sixHundred}
+            size={20}
+          />
+        </Icon>
+        <Content
+          margin="0 0 0 8px"
+          paragraphmargin="0"
+          paragraphfontsize="1rem"
+        >
+          <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.gray.nineHundred}>accounts page</TextLink></Link>.</p>
+        </Content>
+      </Notification>
       <Tooltip 
         anchorSelect="#discount-text"
         content={`${discountPct}% discount.`}
         place="top"
         variant="success"
+        style={{backgroundColor: colors.green.sixHundred}}
       />
       {!validateCartButton() && (
         <Tooltip

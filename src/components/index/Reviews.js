@@ -69,7 +69,7 @@ function Reviews() {
               <Flexbox
                 justify="flex-end"
               >
-                <p>- Ruled Ryder</p>
+                <p><i>- Ruled Ryder</i></p>
               </Flexbox>
             </Content>
           </ReviewBox>

@@ -25,6 +25,7 @@ const Section = styled.section`
   background-position: top center;
   position: relative;
   height: ${props => props.height};
+  min-height: ${props => props.minheight};
   width: 100%;
 `
 

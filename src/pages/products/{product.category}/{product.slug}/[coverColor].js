@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
-import ProductImages from "../../../../components/customize/product/ProductImages"
 import ProductInfo from "../../../../components/customize/product/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
@@ -28,10 +27,12 @@ const ProductPage = ({ data, params }) => {
     maxContentHeight: heightPixel - pageMargins.vertical,
     maxContentWidth: widthPixel - pageMargins.horizontal,
     activeTemplate: null,
+    showControls: false,
   }
   const [pageData, setPageData] = useState(defaultPageData)
   const [currentPageSide, setCurrentPageSide] = useState("both")
   const [selectedPageSvg, setSelectedPageSvg] = useState("")
+  const [dimensions, setDimensions] = useState({})
   const [leftPageData, setLeftPageData] = useState({})
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
@@ -78,8 +79,9 @@ const ProductPage = ({ data, params }) => {
                     <Col md="content" id="product-controls">
                       <ProductControls
                         currentPageSide={currentPageSide}
-                        pageData={pageData}
+                        dimensions={dimensions}
                         max={max}
+                        pageData={pageData}
                         selectedPageSvg={selectedPageSvg}
                         setCurrentPageSide={setCurrentPageSide}
                         setLeftPageData={setLeftPageData}
@@ -96,11 +98,12 @@ const ProductPage = ({ data, params }) => {
                         bookData={bookData}
                         currentPageSide={currentPageSide}
                         pageData={pageData}
-                        svgLoaded={svgLoaded}
-                        setPageData={setPageData}
+                        setDimensions={setDimensions}
                         setMax={setMax}
+                        setPageData={setPageData}
                         setSelectedPageSvg={setSelectedPageSvg}
                         setSvgLoaded={setSvgLoaded}
+                        svgLoaded={svgLoaded}
                       />
                     </Col>
                   </>
@@ -124,6 +127,7 @@ const ProductPage = ({ data, params }) => {
                     rightPageData={rightPageData}
                     defaultPageData={defaultPageData}
                     pageData={pageData}
+                    selectedPageSvg={selectedPageSvg}
                     setLeftPageData={setLeftPageData}
                     setRightPageData={setRightPageData}
                     setBookData={setBookData}
@@ -139,6 +143,7 @@ const ProductPage = ({ data, params }) => {
           bookData={bookData}
           images={descriptionImages}
           setHideScroll={setHideScroll}
+          headingText="Specs"
         />
         <ProductHero
           bookData={bookData}

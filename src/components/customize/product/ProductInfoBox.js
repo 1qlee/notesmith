@@ -8,6 +8,7 @@ const StyledProductInfoBox = styled.div`
   border-bottom: ${colors.borders.black};
   display: flex;
   padding: ${props => props.index === 0 ? "0 0 16px" : "16px 0"};
+  margin-bottom: 16px;
 `
 
 const InfoBoxItem = styled.div`

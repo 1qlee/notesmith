@@ -54,7 +54,7 @@ const InputLabel = styled.label`
 const InputButton = styled(Button)`
   position: absolute;
   right: 8px;
-  top: ${props => props.top || "8px"};
+  top: ${props => props.top || "12px"};
 `
 
 const EmailInput = styled(StyledInput)`
@@ -78,9 +78,8 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
   const { firebaseDb } = useFirebaseContext()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
-  const [emailSent, setEmailSent] = useState(false)
   const [emailCd, setEmailCd] = useState(false)
-  const [emailError, setEmailError] = useState({
+  const [inputMsg, setInputMsg] = useState({
     msg: "",
     color: colors.red.sixHundred
   })
@@ -88,13 +87,13 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
   const sendRegisterEmail = async (newSignupKey, customMsg) => {
     if (emailCd) {
       setLoading(false)
-      setEmailError({
+      setInputMsg({
         msg: "Please wait a few seconds before trying again.",
         color: colors.red.sixHundred
       })
     } 
     else {
-      const response = await fetch("/.netlify/functions/register-signup", {
+      const response = await fetch("/.netlify/functions/send-email-register", {
         method: "put",
         headers: {
           "Content-Type": "application/json"
@@ -108,23 +107,22 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
 
       if (data.error) {
         setLoading(false)
-        setEmailError({
+        setInputMsg({
           msg: "Please double-check your inputted email address.",
           color: colors.red.sixHundred
         })
       }
       else {
-        setEmailSent(true)
         setEmailCd(true)
         setLoading(false)
-        setEmailError({
+        setInputMsg({
           msg: customMsg || data.msg,
-          color: color || colors.gray.oneHundred
+          color: colors.green.sixHundred,
         })
         setTimeout(() => {
           setEmailCd(false)
-          setEmailError({
-            ...emailError,
+          setInputMsg({
+            ...inputMsg,
             msg: "",
           })
         }, 5000)
@@ -132,18 +130,10 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
     }
   }
 
-  const wipeMsg = () => {
-    setEmailError({
-      msg: "",
-      color: colors.gray.nineHundred
-    })
-  }
-
-
   const registerEmail = e => {
     e.preventDefault()
     setLoading(true)
-    setEmailError({
+    setInputMsg({
       msg: "",
       color: color || colors.gray.oneHundred
     })
@@ -159,7 +149,7 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
         }
 
         if (signup.subscribed) {
-          setEmailError({
+          setInputMsg({
             msg: "This email is already registered.",
             color: colors.red.sixHundred
           })
@@ -181,7 +171,7 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
           sendRegisterEmail(newSignupKey)
         }).catch(() => {
           setLoading(false)
-          setEmailError({
+          setInputMsg({
             msg: "An error occured. Please try again.",
             color: colors.red.sixHundred
           })
@@ -203,7 +193,7 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
           border={border}
         >
           <EmailInput
-            onFocus={() => setEmailError({
+            onFocus={() => setInputMsg({
               msg: "",
               color: colors.red.sixHundred
             })}
@@ -245,9 +235,9 @@ function RegisterForm({ id, border, margin, fontsize, top, color }) {
           )}
         </InputLabel>
       </InputWrapper>
-      {emailError.msg && (
-        <ErrorLine color={emailError.color}>
-          <span>{emailError.msg}</span>
+      {inputMsg.msg && (
+        <ErrorLine color={inputMsg.color}>
+          <span>{inputMsg.msg}</span>
         </ErrorLine>
       )}
     </form>
