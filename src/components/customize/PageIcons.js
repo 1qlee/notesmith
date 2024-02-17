@@ -182,6 +182,7 @@ function Page({
         }}
         margin={margin}
         tabIndex="0"
+        aria-label={data.template}
       >
         {children}
       </StyledPage>

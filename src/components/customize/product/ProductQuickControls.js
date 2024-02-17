@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef, useMemo } from "react"
 import styled from "styled-components"
-import { colors, fonts, spacing } from "../../../styles/variables"
+import { colors } from "../../../styles/variables"
+import { convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
 import { CaretDown } from "@phosphor-icons/react"
 
 import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon, StyledInput, NumberInput } from "../../form/FormComponents"
@@ -17,7 +18,7 @@ const CustomInput = styled.input`
   padding: 16px;
   position: absolute;
   top: 0;
-  width: calc(100% - 32px);
+  width: 80px;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -30,29 +31,127 @@ const CustomInputLabel = styled.label`
   left: ${props => `${props.left}px`};
   top: 16px;
   user-select: none;
+  &:hover {
+    cursor: text;
+  }
 `
 
 const ProductQuickControls = ({
   pageData,
   setPageData,
   selectedPageSvg,
+  dimensions,
 }) => {
+  const dependencies = [
+    pageData.spacing,
+    pageData.columnSpacing,
+    pageData.rowSpacing,
+    pageData.slantSpacing,
+    pageData.staffSpacing,
+    pageData.dscSpacing,
+    pageData.ascSpacing,
+    pageData.rows,
+    pageData.columns,
+    pageData.staves,
+    pageData.slants,
+  ]
+  const { maxContentHeight, maxContentWidth, strokeWidth, radius } = pageData
   const customInputRef = useRef(null)
   const [customInput, setCustomInput] = useState("")
   const [customValue, setCustomValue] = useState("")
   const [labelOffset, setLabelOffset] = useState(32)
 
   useEffect(() => {
-    if (customInputRef?.current) {
+    if (customInput === "spacing") {
       customInputRef.current.focus()
     }
-  }, [customInputRef, customInput])
+  }, [customInput, customInputRef])
+
+  const calcTemplateDimensions = (spacing) => {
+    let maxRows = 0;
+    let maxCols = 0;
+    let marginLeft = 0;
+    let marginTop = 0;
+    let marginRight = 0;
+    let marginBottom = 0;
+    let centeredMargin = 0;
+    let templateHeight = maxContentHeight
+    let templateWidth = maxContentWidth
+    const convertedSpacing = convertToPx(spacing)
+    const radiusOffset = convertToPx(radius)
+    const strokeOffset = convertToPx(strokeWidth)
+    const halfStrokeOffset = strokeOffset / 2
+
+    switch (pageData.template) {
+      case "ruled":
+        maxRows = Math.floor(maxContentHeight / (convertedSpacing + strokeOffset)) + 1 // the one accounts for the very first line
+        templateHeight = (convertedSpacing + strokeOffset) * (maxRows - 1)
+        centeredMargin = convertToMM((maxContentHeight - templateHeight - strokeOffset) / 2)
+        marginTop = centeredMargin
+        marginBottom = centeredMargin
+        break
+      case "dot":
+        let diameter = radiusOffset * 2
+        maxRows = Math.floor((maxContentHeight - diameter) / (convertedSpacing + diameter)) + 1
+        templateHeight = (convertedSpacing + diameter) * (maxRows - 1) + diameter
+        centeredMargin = convertToMM((maxContentHeight - templateHeight) / 2)
+        marginTop = centeredMargin
+        marginBottom = centeredMargin
+        break
+      // case "graph":
+      //   verticalOffset = strokeOffset
+      //   horizontalOffset = strokeOffset * 2
+      //   break
+      // case "hexagon":
+      //   verticalOffset = strokeOffset
+      //   horizontalOffset = strokeOffset
+      //   break
+      // case "music":
+      //   verticalOffset = strokeOffset
+      //   horizontalOffset = 0
+      //   break
+      // case "handwriting":
+      //   verticalOffset = strokeOffset
+      //   horizontalOffset = 0
+      //   break
+      // case "cross":
+      //   verticalOffset = 0.333
+      //   horizontalOffset = strokeOffset * 2
+      //   break
+      // case "calligraphy":
+      //   verticalOffset = 0.333
+      //   horizontalOffset = 0
+      //   break
+      // case "isometric":
+      //   pageData.borderData.toggle ? horizontalOffset = 0 : horizontalOffset = strokeOffset / 2
+      //   verticalOffset = 0
+      //   break
+      default:
+        maxRows = 0
+        maxCols = 0
+        break
+    }
+
+    return {
+      maxRows: maxRows,
+      maxCols: maxCols,
+      margins: {
+        top: marginTop,
+        right: marginRight,
+        bottom: marginBottom,
+        left: marginLeft,
+      }
+    }
+  }
 
   const handleCustomInput = value => {
     const numberValue = +value
 
-    if (numberValue === 0) {
+    if (numberValue === 0 || !numberValue) {
       setCustomValue("")
+    }
+    else if (numberValue.length > 3) {
+      return
     }
     else {
       setCustomValue(numberValue)
@@ -61,6 +160,11 @@ const ProductQuickControls = ({
   }
   
   const handleValueChange = (value, type, isSelect) => {
+    const numberValue = value ? +value : 1
+    const maxValues = calcTemplateDimensions(numberValue)
+    const { maxRows, maxCols, margins } = maxValues
+    console.log("🚀 ~ handleValueChange ~ maxRows:", maxRows)
+
     switch (type) {
       case "spacing":
         if (value === "custom") {
@@ -71,7 +175,11 @@ const ProductQuickControls = ({
             setCustomInput("")
           }
 
-          const numberValue = +value
+          if (numberValue === 1) {
+            setCustomValue(1)
+          }
+
+          console.log('Changing value')
           setPageData({
             ...pageData,
             spacing: numberValue,
@@ -81,13 +189,27 @@ const ProductQuickControls = ({
             staffSpacing: numberValue,
             dscSpacing: numberValue,
             ascSpacing: numberValue,
-            rows: 200,
-            columns: 200,
+            rows: maxRows,
+            marginTop: margins.top,
+            marginBottom: margins.bottom,
+            marginLeft: margins.left,
+            marginRight: margins.right,
           })
         }
         break
       default:
         break
+    }
+  }
+
+  const handleKeydown = (e, type) => {
+    const numberValue = +e.target.value
+
+    if (type === "spacing") {
+      if (e.key === "Enter") {
+        handleValueChange(+numberValue, "spacing")
+        e.target.blur()
+      }
     }
   }
 
@@ -104,7 +226,8 @@ const ProductQuickControls = ({
                 value={customValue}
                 onChange={e => handleCustomInput(e.target.value)}
                 onBlur={() => handleValueChange(customValue, "spacing")}
-                onKeyDown={e => e.key === "Enter" && handleValueChange(customValue, "spacing")}
+                onKeyDown={e => handleKeydown(e, "spacing")}
+                onFocus={e => e.target.select()}
                 ref={customInputRef}
               />
               <CustomInputLabel left={labelOffset} htmlFor="custom-input">mm</CustomInputLabel>

@@ -12,7 +12,7 @@ function OpacityControls({
       propertyName="Opacity"
       propertyObj={{}}
       inputProps={{
-        min: 0.5,
+        min: 0.3,
         max: 1,
         step: 0.1,
       }}

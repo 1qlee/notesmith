@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Dot({ 
@@ -18,7 +18,7 @@ function Dot({
   const maxRows = Math.floor((height + dotRowSpacing) / (dotDiameter + dotRowSpacing))
   const maxCols = Math.floor((width + dotColumnSpacing) / (dotDiameter + dotColumnSpacing))
 
-  function createDots() {
+  const memoCreateDots = useMemo(() => function createDots() {
     // placeholder array for dots
     const dotsArray = []
 
@@ -68,11 +68,11 @@ function Dot({
     }
 
     setDots(dotsArray)
-  }
+  }, [pageData])
 
 
   useEffect(() => {
-    createDots()
+    memoCreateDots()
     setMax({
       rows: maxRows,
       columns: maxCols,

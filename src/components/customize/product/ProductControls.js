@@ -50,43 +50,16 @@ const StyledTemplatesBar = styled.div`
   }
 `
 
-const TemplatesButton = styled(Button)`
-  position: absolute;
-  top: -24px;
-  left: 16px;
-  padding: 4px 8px;
-  height: 24px;
-  border-radius: 4px 4px 0 0;
-  font-size: 0.875rem;
-  z-index: 9;
-  &.is-active {
-    left: 48px;
-  }
-  @media only screen and (max-width: 1388px) {
-    left: -1px;
-  }
-`
-
 const TemplatesContent = styled.div`
   overflow-y: auto;
   padding: 1rem;
-  max-height: 677px;
+  max-height: 725px;
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
   }
   &::-webkit-scrollbar-thumb {
     background-color: ${colors.gray.threeHundred};
-  }
-`
-const TemplatesHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom: ${colors.borders.black};
-  &.is-collapsed {
-    border-bottom: none;
   }
 `
 
@@ -108,8 +81,7 @@ function ProductControls({
   toast,
 }) {
   const [loading, setLoading] = useState(false)
-  const maximumMarginHeight = convertFloatFixed(convertToMM(dimensions.svgHeight) - pageData.strokeWidth, 3)
-  const maximumMarginWidth = convertToMM(dimensions.svgWidth)
+  const { maximumMarginHeight, maximumMarginWidth } = dimensions
 
   function handleSetTemplate() {
     setLoading(true)
@@ -156,31 +128,11 @@ function ProductControls({
         const isMobile = ["xs", "sm", "md", "lg"].includes(screenClass)
 
         return (
-          <StyledTemplatesBar
-            className={!pageData.showControls ? "is-collapsed" : null}
-          >
-            <TemplatesButton
-              onClick={() => setPageData({
-                ...pageData,
-                showControls: !pageData.showControls,
-              })}
-              className={!pageData.showControls && !isMobile ? "is-active" : null}
-            >
-              {pageData.showControls ? (
-                "Hide controls"
-              ) : (
-                "Edit template"
-              )}
-            </TemplatesButton>
+          <>
             {pageData.showControls && (
-              <>
-                <TemplatesHeader
-                  className={!pageData.showControls ? "is-collapsed" : null}
-                >
-                  <span>
-                    Edit template
-                  </span>
-                </TemplatesHeader>
+              <StyledTemplatesBar
+                className={!pageData.showControls ? "is-collapsed" : null}
+              >
                 <TemplatesContent>
                   <Flexbox
                     justify="flex-end"
@@ -309,9 +261,9 @@ function ProductControls({
                     )}
                   </Button>
                 </TemplatesFooter>
-              </>
+              </StyledTemplatesBar>
             )}
-          </StyledTemplatesBar>
+          </>
         )
       }}
     />

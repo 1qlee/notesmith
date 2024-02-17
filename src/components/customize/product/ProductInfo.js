@@ -3,7 +3,6 @@ import { colors,  } from "../../../styles/variables"
 import { useShoppingCart } from '../../cart/context/cartContext'
 import { applyDiscounts, formatDollars } from "../../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
-import { useFirebaseContext } from "../../../utils/auth"
 import { Tooltip } from "react-tooltip"
 
 import Button from "../../ui/Button"
@@ -23,6 +22,7 @@ import ProductQuickControls from "./ProductQuickControls"
 const ProductInfo = ({
   bookData,
   cartThumbnail,
+  dimensions,
   leftPageData,
   pageData,
   rightPageData,
@@ -188,6 +188,7 @@ const ProductInfo = ({
       {(pageData.template && pageData.template !== "blank") && (
         <ProductQuickControls 
           pageData={pageData}
+          dimensions={dimensions}
           selectedPageSvg={selectedPageSvg}
           setPageData={setPageData}
         />

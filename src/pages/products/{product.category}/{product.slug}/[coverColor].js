@@ -58,7 +58,7 @@ const ProductPage = ({ data, params }) => {
       // else navigate to appropriate coverColor
       navigate(`/products/${bookData.category}/${bookData.slug}/${bookData.coverColor}`, { replace: true })
     }
-  }, [product, bookData, coverColor, svgLoaded])
+  }, [product, bookData, coverColor])
 
   return (
     <Layout
@@ -73,26 +73,34 @@ const ProductPage = ({ data, params }) => {
         <Section>
           <SectionContent padding={`${spacing.large} 0`}>
             <Container xs sm md lg xl>
-              <Row justify="start" gutterWidth={32}>
+              <Row 
+                justify="start" 
+                gutterWidth={32}
+                style={{ overflowAnchor: "none" }}
+              >
                 {pageData.show ? (
                   <>
-                    <Col md="content" id="product-controls">
-                      <ProductControls
-                        currentPageSide={currentPageSide}
-                        dimensions={dimensions}
-                        max={max}
-                        pageData={pageData}
-                        selectedPageSvg={selectedPageSvg}
-                        setCurrentPageSide={setCurrentPageSide}
-                        setLeftPageData={setLeftPageData}
-                        setPageData={setPageData}
-                        setRightPageData={setRightPageData}
-                        toast={toast}
-                      />
-                    </Col>
+                    {pageData.showControls && (
+                      <Col
+                        id="product-controls"
+                        md="content"
+                      >
+                        <ProductControls
+                          currentPageSide={currentPageSide}
+                          dimensions={dimensions}
+                          max={max}
+                          pageData={pageData}
+                          selectedPageSvg={selectedPageSvg}
+                          setCurrentPageSide={setCurrentPageSide}
+                          setLeftPageData={setLeftPageData}
+                          setPageData={setPageData}
+                          setRightPageData={setRightPageData}
+                          toast={toast}
+                        />
+                      </Col>
+                    )}
                     <Col 
                       id="product-template"
-                      style={{overflowX: "auto"}}
                     >
                       <ProductTemplate
                         bookData={bookData}
@@ -125,7 +133,7 @@ const ProductPage = ({ data, params }) => {
                     cartThumbnail={cartThumbnail}
                     leftPageData={leftPageData}
                     rightPageData={rightPageData}
-                    defaultPageData={defaultPageData}
+                    dimensions={dimensions}
                     pageData={pageData}
                     selectedPageSvg={selectedPageSvg}
                     setLeftPageData={setLeftPageData}

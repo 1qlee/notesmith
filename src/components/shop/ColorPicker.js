@@ -56,18 +56,22 @@ function ColorPicker({
   return (
     <>
       {data.map(color => (
-        <ColorOption
-          data-tip={color.name}
-          aria-label={`Select ${color.name} colored cover`}
-          key={color.name}
-          color={color.hex}
-          className={color.slug === selectedColor && "is-active"}
-          onClick={() => cbFunction(color.slug)}
-        />
+        <>
+          <ColorOption
+            data-tip={color.name}
+            aria-label={`${color.name} cover`}
+            key={color.name}
+            color={color.hex}
+            className={color.slug === selectedColor ? `picker-${color.slug} is-active` : `picker-${color.slug}`}
+            onClick={() => cbFunction(color.slug)}
+          />
+          <Tooltip
+            anchorSelect={`.picker-${color.slug}`}
+            content={color.name}
+            place="top"
+          />
+        </>
       ))}
-      <Tooltip
-        effect="solid"
-      />
     </>
   )
 }

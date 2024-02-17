@@ -24,7 +24,7 @@ const StyledMarginInput = styled.div`
   }
   .icon {
     position: absolute;
-    top: 13px;
+    top: .75rem;
     left: 8px;
     z-index: 9;
   }
