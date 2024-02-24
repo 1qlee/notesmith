@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { colors, marketingLists } from "../../styles/variables"
+import { colors } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
-import { get, ref, set, query, orderByChild, equalTo } from "firebase/database"
+import { ref, set } from "firebase/database"
 import sendEmailVerification from "../../functions/sendEmailVerification"
 import validatePassword from "../../functions/validatePassword"
 import addEmailToLists from "../../functions/addEmailToLists"
@@ -41,7 +41,7 @@ const SignupForm = () => {
     }).then(async user => {
       // Send the user a verification email
       await sendEmailVerification(user.email)
-      await addEmailToLists(user.email, marketingLists)
+      await addEmailToLists(user.email)
 
       setLoading(false)
     }).catch(error => {

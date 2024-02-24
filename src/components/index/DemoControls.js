@@ -204,7 +204,7 @@ function DemoControls({
           )}
           {showStrokeWidth && (
             <DemoInput
-              min={0.088}
+              min={0.1}
               step={0.001}
               max={3}
               label="Stroke width"

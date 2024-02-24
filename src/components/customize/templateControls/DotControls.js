@@ -45,9 +45,9 @@ function DotControls({
         setPageData={setPageData}
       />
       <RadiusControls 
-        step={0.01}
+        step={0.05}
         max={50}
-        min={0.1}
+        min={0.25}
         pageData={pageData}
         setPageData={setPageData}
       />

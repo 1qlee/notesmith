@@ -3,7 +3,7 @@ import sendEmailVerification from "../../../functions/sendEmailVerification"
 import validatePassword from "../../../functions/validatePassword"
 import { Link } from "gatsby"
 import { WarningCircle, CircleNotch } from "@phosphor-icons/react"
-import { colors, widths, marketingLists } from "../../../styles/variables"
+import { colors, widths } from "../../../styles/variables"
 import { set, get, ref, update } from "firebase/database"
 import toast from "react-hot-toast"
 import { useFirebaseContext } from "../../../utils/auth"
@@ -74,7 +74,7 @@ const Invite = ({ inviteId }) => {
             })
             // Send the user a verification email
             await sendEmailVerification(user.email)
-            await addEmailToLists(user.email, marketingLists)
+            await addEmailToLists(user.email)
 
             toast("Success! Check your email for a verification link.")
 

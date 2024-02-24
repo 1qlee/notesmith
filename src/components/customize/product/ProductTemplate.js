@@ -40,12 +40,14 @@ function ProductTemplate({
   setDimensions,
 }) {
   const dependencies = [
+    pageData.template,
     pageData.marginTop,
     pageData.marginRight,
     pageData.marginBottom,
     pageData.marginLeft,
     pageData.rows,
     pageData.columns,
+    pageData.staves,
     pageData.rowSpacing,
     pageData.columnSpacing,
     pageData.slantSpacing,
@@ -90,7 +92,7 @@ function ProductTemplate({
       })
       setPageData({...pageData}) // needed to force a proper re-render for some reason - nifty workaround!
     }
-  }, [...dependencies])
+  }, [...dependencies, templateRef])
 
   return (
     <ScreenClassRender

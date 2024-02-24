@@ -256,7 +256,7 @@ const DesignControls = () => {
                   handler={handleUpdateBbox}
                   input="Width"
                   max={1000}
-                  min={0.088}
+                  min={0.1}
                   property="width"
                   step={1}
                   value={selectionBbox.width}
@@ -327,7 +327,7 @@ const DesignControls = () => {
                       handler={handleUpdateAttr}
                       input="Width"
                       max={50}
-                      min={0.088}
+                      min={0.1}
                       property="strokeWidth"
                       step={0.1}
                       value={selectionAttributes.strokeWidth}

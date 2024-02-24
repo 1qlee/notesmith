@@ -4,7 +4,7 @@ const products = [
     category: "notebooks",
     custom: true,
     description: "One signature, custom-printed Notesmith wired notebook in A5 (8.5 x 5.5 inches) with 140 pages, 70lb fountain pen friendly paper, and a laminated, extra thick cover stock.",
-    longDescription: "Our notebooks are made only with high-quality materials and are manufactured in our factory in New York. All custom notebooks are made-to-order according to your custom specifications.",
+    longDescription: "All notebooks are made with high-quality materials in our factory in New York. Our custom notebooks are made-to-order with your custom layouts printed onto fountain pen friendly paper.",
     heightInch: "8.5",
     heightPixel: 816,
     name: "Pro Wired Notebook A5 (Custom)",

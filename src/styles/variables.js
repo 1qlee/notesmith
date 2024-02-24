@@ -180,15 +180,15 @@ const pageDataConfig = {
   borderData: {
     sync: true,
     toggle: true,
-    strokeWidth: 0.088,
-    opacity: 1,
+    strokeWidth: 0.1,
+    opacity: 100,
   },
   columns: 27,
   columnSpacing: 5,
   dashedLineData: {
     sync: true,
-    strokeWidth: 0.088,
-    opacity: 1,
+    strokeWidth: 0.1,
+    opacity: 100,
     dashArray: "2 4 4 2",
     dashOffset: 0,
   },
@@ -200,8 +200,8 @@ const pageDataConfig = {
   marginLeft: 0,
   marginRight: 0,
   marginTop: 0,
-  opacity: 1,
-  radius: 0.1,
+  opacity: 100,
+  radius: 0.25,
   rows: 42,
   rowSpacing: 5,
   show: false,
@@ -212,23 +212,16 @@ const pageDataConfig = {
   staffSpacing: 5,
   staves: 9,
   template: "",
-  strokeWidth: 0.088,
+  strokeWidth: 0.1,
   xHeight: 5,
   x: 12,
   y: 12,
 }
 
-const marketingLists = [
-  "e05a027d-da7d-4bec-8f5b-184e99ea112d",
-  "cc2979e2-1ea6-4706-bc25-f51d1221b20b",
-  "b8f3fbcd-10dc-44c6-98f3-64ec7901f960",
-]
-
 export { 
   breakpoints,
   colors, 
   fonts,
-  marketingLists,
   pageDataConfig,
   pageMargins,
   regex, 

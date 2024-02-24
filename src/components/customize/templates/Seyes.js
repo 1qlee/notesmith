@@ -21,10 +21,8 @@ function Seyes({
   const halfDividerStrokeWidth = convertFloatFixed(dividerStrokeWidth / 2, 3)
   const verticalLineStrokeWidth = convertFloatFixed(lineStrokeWidth * 2, 3)
   const halfVerticalLineStrokeWidth = convertFloatFixed(verticalLineStrokeWidth / 2, 3)
-  // const maxRows = Math.floor((height - headerSpacing) / (lineStrokeWidth + lineSpacing))
-  // const maxCols = Math.floor((width - sideMarginSpacing) / (lineSpacing * 4 + verticalLineStrokeWidth)) + 1
-  const maxRows = 191
-  const maxCols = 31
+  const maxRows = Math.floor((height - headerSpacing) / (lineStrokeWidth * 1.125 + lineSpacing)) + 1
+  const maxCols = Math.floor((width - sideMarginSpacing) / (lineSpacing * 4 + verticalLineStrokeWidth)) + 1
 
   function createHorizontalLines() {
     const linesArray = []
@@ -59,7 +57,7 @@ function Seyes({
       const line = {
         stroke: "#000",
         strokeWidth: currentLineStrokeWidth, // every 4th line should be thicker when option is checked
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: convertFloatFixed(posX1, 3),
         x2: convertFloatFixed(posX2, 3),
         y1: convertFloatFixed(posY, 3),
@@ -93,7 +91,7 @@ function Seyes({
       const line = {
         stroke: "#000000",
         strokeWidth: verticalLineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: convertFloatFixed(posX, 3),
         x2: convertFloatFixed(posX, 3),
         y1: convertFloatFixed(posY1, 3),

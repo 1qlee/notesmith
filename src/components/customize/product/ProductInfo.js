@@ -16,20 +16,22 @@ import { Flexbox } from "../../layout/Flexbox"
 import { Info } from "@phosphor-icons/react"
 import { Link } from "gatsby"
 import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
-import StrikeText from "../../misc/StrikeText"
 import ProductQuickControls from "./ProductQuickControls"
 
 const ProductInfo = ({
-  bookData,
   cartThumbnail,
   dimensions,
-  leftPageData,
-  pageData,
-  rightPageData,
-  selectedPageSvg,
-  setBookData,
-  setPageData,
+  max,
   toast,
+  bookData,
+  setBookData,
+  pageData,
+  setPageData,
+  leftPageData,
+  setLeftPageData,
+  rightPageData,
+  setRightPageData,
+  selectedPageSvg,
 }) => {
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
@@ -181,7 +183,10 @@ const ProductInfo = ({
           hideNone
           leftPageData={leftPageData}
           rightPageData={rightPageData}
+          setLeftPageData={setLeftPageData}
+          setRightPageData={setRightPageData}
           setData={setPageData}
+          selectedPageSvg={selectedPageSvg}
           showLabels={false}
         />
       </Flexbox>
@@ -189,6 +194,7 @@ const ProductInfo = ({
         <ProductQuickControls 
           pageData={pageData}
           dimensions={dimensions}
+          max={max}
           selectedPageSvg={selectedPageSvg}
           setPageData={setPageData}
         />
@@ -205,15 +211,6 @@ const ProductInfo = ({
         >
           Quantity
         </StyledLabel>
-        {discountSaved !== 0 && (
-          <Content
-            paragraphmargin="0 0 8px"
-            paragraphcolor={colors.green.sixHundred}
-            paragraphfontweight="700"
-          >
-            <p id="discount-text">{formatDollars(discountSaved / 100)} off.</p>
-          </Content>
-        )}
       </Flexbox>
       <Flexbox
         flex="flex"
@@ -243,7 +240,7 @@ const ProductInfo = ({
           {itemAdded ? (
             <span>Added to cart!</span>
           ) : (
-            <span>Add to cart - {formatDollars(discountAmount / 100)} <StrikeText>{formatDollars(bookData.price / 100)}</StrikeText></span>
+            <span>Add to cart - {formatDollars(bookData.price / 100)}</span>
           )}
         </Button>
       </Flexbox>

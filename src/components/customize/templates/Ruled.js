@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { convertToPx, convertFloatFixed } from "../../../utils/helper-functions"
 
 function Ruled({
@@ -14,9 +14,9 @@ function Ruled({
   const lineStrokeWidth = convertToPx(strokeWidth)
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const lineSpacing = convertToPx(spacing)
-  const maxRows = Math.floor((height + lineSpacing) / (lineSpacing))
+  const maxRows = Math.floor(height / (lineSpacing + lineStrokeWidth)) + 1
 
-  function createLines() {
+  const memoCreateLines = useMemo(() => function createLines() {
     const linesArray = []
 
     for (let row = 0; row < rows; row++) {
@@ -29,7 +29,7 @@ function Ruled({
       const line = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: convertFloatFixed(lineX1, 3),
         x2: convertFloatFixed(lineX2, 3),
         y1: convertFloatFixed(lineY, 3),
@@ -37,7 +37,8 @@ function Ruled({
       }
 
       // loop will exit if the last line has passed the height of the page
-      if (lineY > height) {
+      // 0.002 is a small buffer to account for rounding errors
+      if (lineY + halfLineStrokeWidth - 0.002 > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,
@@ -51,10 +52,10 @@ function Ruled({
     }
 
     setLines(linesArray)
-  }
+  }, [pageData])
 
   useEffect(() => {
-    createLines()
+    memoCreateLines()
     setMax({
       rows: maxRows,
     })

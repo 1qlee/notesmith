@@ -16,7 +16,7 @@ function Music({
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const staffSpacing = convertToPx(pageData.staffSpacing)
   const staffHeight = lineSpacing * 4 + lineStrokeWidth * 4 // staff always has 5 lines, but multiply by 4 since first line doesn't count
-  const maxStaves = Math.floor((height + staffSpacing - halfLineStrokeWidth) / (staffHeight + staffSpacing))
+  const maxStaves = Math.floor((height + staffSpacing + halfLineStrokeWidth) / (staffHeight + staffSpacing + lineStrokeWidth))
 
   function createStaves() {
     const stavesArray = []
@@ -34,7 +34,7 @@ function Music({
         const lineProps = {
           stroke: "#000000",
           strokeWidth: lineStrokeWidth,
-          opacity: opacity,
+          opacity: `${opacity}%`,
           x1: convertFloatFixed(posX1, 3),
           x2: convertFloatFixed(posX2, 3),
           y1: convertFloatFixed(posY1, 3),
@@ -70,7 +70,7 @@ function Music({
   return (
     <>
       {staves.map((staff, index) => (
-        <g key={index}>
+        <React.Fragment key={index}>
           {staff.map((line, index) => (
             <line
               key={index}
@@ -83,7 +83,7 @@ function Music({
               y2={line.y2}
             />
           ))}
-        </g>
+        </React.Fragment>
       ))}
     </>
   )

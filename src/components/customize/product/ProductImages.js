@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
-
-import { Container, Row, Col } from "react-grid-system"
+import { Carousel } from "react-responsive-carousel"
 
 const StyledProductImages = styled.div`
   width: 100%;
@@ -96,21 +95,30 @@ function ProductImages({
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-      {/* <ThumbnailRow>
-        {allImages.map((image, index) => (
-          <Thumbnail
-            key={index}
-            className={activeImage === index ? "is-active" : null}
-            onClick={() => handleSelectImage(image.main, index)}
-          >
-            <GatsbyImage
-              image={getImage(image.thumbnail)}
-              alt=""
-            />
-          </Thumbnail>
-        ))}
-      </ThumbnailRow> */}
+    <Carousel
+      centerMode={false}
+      autoPlay={false}
+      showArrows={false}
+      showStatus={false}
+      showIndicators={false}
+      showThumbs={true}
+      infiniteLoop={false}
+      swipeable={true}
+      swipeScrollTolerance={50}
+      emulateTouch={true}
+      renderThumbs={() => {return allImages.map((image, index) => (
+        <div
+          key={index}
+          className={activeImage === index ? "is-active" : null}
+          onClick={() => handleSelectImage(image.main, index)}
+        >
+          <GatsbyImage
+            image={getImage(image.thumbnail)}
+            alt=""
+          />
+        </div>
+      ))}}
+    >
       {allImages.map((image, index) => (
         <MainProductImage
           key={index}
@@ -121,7 +129,7 @@ function ProductImages({
           />
         </MainProductImage>
       ))}
-    </div>
+    </Carousel>
   )
 }
 

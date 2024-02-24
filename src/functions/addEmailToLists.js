@@ -1,11 +1,10 @@
-export default async function addEmailToLists(email, lists) {
+export default async function addEmailToLists(email) {
   await fetch("/.netlify/functions/add-email-to-lists", {
     method: "put",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      lists: lists,
       email: email,
     })
   }).then(res => {

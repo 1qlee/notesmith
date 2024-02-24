@@ -5,7 +5,12 @@ sendgridClient.setApiKey(process.env.GATSBY_SENDGRID_API_KEY)
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { lists, email } = body;
+  const { email } = body;
+  const lists = [
+    "e05a027d-da7d-4bec-8f5b-184e99ea112d",
+    "cc2979e2-1ea6-4706-bc25-f51d1221b20b",
+    "b8f3fbcd-10dc-44c6-98f3-64ec7901f960",
+  ]
 
   try {
     const request = {

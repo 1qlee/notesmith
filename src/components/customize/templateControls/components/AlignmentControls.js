@@ -1,16 +1,18 @@
 import React from "react"
-import { convertFloatFixed, convertToMM } from "../../../../utils/helper-functions"
+import { convertFloatFixed, convertToMM, convertToPx } from "../../../../utils/helper-functions"
 
 import { StyledLabel } from "../../../form/FormComponents"
 import ToggleControls from "./ToggleControls"
 
 function AlignmentControls({ 
+  dimensions,
   pageData, 
   setPageData,
   selectedPageSvg,
 }) {
-  const { maxContentHeight, maxContentWidth, strokeWidth } = pageData
+  const { maxContentHeight, maxContentWidth, strokeWidth, hexagonRadius } = pageData
   let pageBbox = selectedPageSvg.getBBox()
+  const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
   const contentHeight = convertFloatFixed(pageBbox.height, 3)
   const contentWidth = convertFloatFixed(pageBbox.width, 3)
@@ -21,16 +23,20 @@ function AlignmentControls({
       verticalTrim = strokeWidth
       horizontalTrim = 0
       break
+    case "dot":
+      verticalTrim = 0
+      horizontalTrim = 0
+      break
     case "graph":
       verticalTrim = strokeWidth
       horizontalTrim = strokeWidth * 2
       break
     case "hexagon":
-      verticalTrim = strokeWidth
+      verticalTrim = yStrokeOffset
       horizontalTrim = strokeWidth
       break
     case "music":
-      verticalTrim = strokeWidth
+      verticalTrim = strokeWidth * 2
       horizontalTrim = 0
       break
     case "handwriting":
@@ -59,7 +65,6 @@ function AlignmentControls({
     horizontalSpace = 0
   }
   const horizontalCenter = convertFloatFixed(horizontalSpace / 2, 3)
-
   let verticalSpace = convertFloatFixed(convertToMM(maxContentHeight - contentHeight) - verticalTrim, 3)
   
   if (verticalSpace < 0) {

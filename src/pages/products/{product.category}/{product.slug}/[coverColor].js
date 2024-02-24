@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { graphql, navigate } from "gatsby"
+import { graphql, navigate,  } from "gatsby"
 import { colors, spacing, pageMargins, pageDataConfig } from "../../../../styles/variables"
 import toast from 'react-hot-toast'
 
@@ -12,7 +12,7 @@ import ProductControls from "../../../../components/customize/product/ProductCon
 import ProductDescription from "../../../../components/customize/product/ProductDescription"
 import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
-import ProductImagesGrid from "../../../../components/customize/product/ProductImagesGrid"
+import ProductImages from "../../../../components/customize/product/ProductImages"
 
 const ProductPage = ({ data, params }) => {
   const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
@@ -37,8 +37,8 @@ const ProductPage = ({ data, params }) => {
   const [rightPageData, setRightPageData] = useState({})
   const [cartThumbnail, setCartThumbnail] = useState([])
   const [max, setMax] = useState({
-    rows: 200,
-    columns: 200,
+    rows: 0,
+    columns: 0,
   })
   const [hideScroll, setHideScroll] = useState(false)
   const [svgLoaded, setSvgLoaded] = useState(false)
@@ -117,13 +117,11 @@ const ProductPage = ({ data, params }) => {
                   </>
                 ) : (
                   <Col md={8}>
-                    <ProductImagesGrid
+                    <ProductImages 
+                      coverColor={coverColor}
+                      productImages={productImages}
+                      productThumbnails={productThumbnails}
                       setCartThumbnail={setCartThumbnail}
-                      thumbnails={productThumbnails}
-                      images={productImages}
-                      filter={coverColor}
-                      setHideScroll={setHideScroll}
-                      main
                     />
                   </Col>
                 )}
@@ -135,6 +133,7 @@ const ProductPage = ({ data, params }) => {
                     rightPageData={rightPageData}
                     dimensions={dimensions}
                     pageData={pageData}
+                    max={max}
                     selectedPageSvg={selectedPageSvg}
                     setLeftPageData={setLeftPageData}
                     setRightPageData={setRightPageData}

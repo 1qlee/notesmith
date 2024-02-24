@@ -17,7 +17,7 @@ const ToggleButton = styled(Button)`
   background-color: ${colors.white};
   color: ${colors.gray.nineHundred};
   font-size: 0.875rem;
-  padding: 0.25rem;
+  padding: 6px;
   flex: 1;
   position: relative;
   text-transform: capitalize;

@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { colors, widths, breakpoints } from "../../../styles/variables"
-import { convertFloatFixed, convertToMM } from "../../../utils/helper-functions"
 import { CircleNotch } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
@@ -54,6 +53,9 @@ const TemplatesContent = styled.div`
   overflow-y: auto;
   padding: 1rem;
   max-height: 725px;
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    max-height: 600px;
+  }
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -163,6 +165,7 @@ function ProductControls({
                             maximumMarginWidth={maximumMarginWidth}
                           />
                           <AlignmentControls
+                            dimensions={dimensions}
                             pageData={pageData}
                             setPageData={setPageData}
                             selectedPageSvg={selectedPageSvg}

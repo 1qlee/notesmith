@@ -136,7 +136,7 @@ const parseAttributes = (ele) => {
   const fill = element.attr("fill") || "none"
   const strokeOpacity = element.attr("stroke-opacity") || 1
   const fillOpacity = element.attr("fill-opacity") || 1
-  const strokeWidth = convertToMM(element.attr("stroke-width")) || 0.088
+  const strokeWidth = convertToMM(element.attr("stroke-width")) || 0.1
   const stroke = element.attr("stroke") || (type !== "line" ? "none" : "#000")
   const strokeDasharray = element.attr("stroke-dasharray") !== undefined ? processStringNumbers(element.attr("stroke-dasharray"), convertToMM) : ""
   const strokeStyle = element.attr("strokeStyle") || "Solid"

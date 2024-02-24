@@ -19,8 +19,8 @@ function BorderControls({
         borderData: {
           ...borderData,
           sync: true,
-          opacity: 1,
-          strokeWidth: 0.088,
+          opacity: 100,
+          strokeWidth: 0.1,
         }
       })
     }
@@ -93,7 +93,7 @@ function BorderControls({
             >
               <NumberInput
                 value={borderData.opacity}
-                min={0.5}
+                min={0.3}
                 max={1}
                 onChange={value => setPageData({
                   ...pageData,
@@ -103,7 +103,7 @@ function BorderControls({
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                step={0.01}
+                step={0.1}
                 width="4.25rem"
               />
             </ControlFlexChild>
@@ -111,8 +111,8 @@ function BorderControls({
               flex={3}
             >
               <RangeInput
-                min={0.5}
-                step={0.01}
+                min={0.3}
+                step={0.1}
                 max={1}
                 value={borderData.opacity}
                 onChange={e => setPageData({
@@ -133,8 +133,8 @@ function BorderControls({
             >
               <NumberInput
                 value={borderData.strokeWidth}
-                min={0.088}
-                max={3}
+                min={0.1}
+                max={1}
                 onChange={value => setPageData({
                   ...pageData,
                   borderData: {
@@ -143,7 +143,7 @@ function BorderControls({
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                step={0.001}
+                step={0.05}
                 width="4.5rem"
               />
             </ControlFlexChild>
@@ -151,9 +151,9 @@ function BorderControls({
               flex={3}
             >
               <RangeInput
-                min="0.088"
-                step="0.001"
-                max="3"
+                min={0.1}
+                step={0.05}
+                max={1}
                 value={borderData.strokeWidth}
                 onChange={e => setPageData({
                   ...pageData,

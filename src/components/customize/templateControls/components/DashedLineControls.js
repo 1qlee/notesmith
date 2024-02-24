@@ -21,8 +21,8 @@ function DashedLineControls({
         dashedLineData: {
           ...dashedLineData,
           sync: true,
-          opacity: 1,
-          strokeWidth: 0.088,
+          opacity: 100,
+          strokeWidth: 0.1,
         }
       })
     }
@@ -162,7 +162,7 @@ function DashedLineControls({
             >
               <NumberInput
                 value={dashedLineData.strokeWidth}
-                min={0.088}
+                min={0.1}
                 max={3}
                 onChange={value => setPageData({
                   ...pageData,
@@ -183,7 +183,7 @@ function DashedLineControls({
               <RangeInput
                 margin="0 0 0 0.5rem"
                 width="100%"
-                min={0.088}
+                min={0.1}
                 step={0.001}
                 max={3}
                 value={dashedLineData.strokeWidth}

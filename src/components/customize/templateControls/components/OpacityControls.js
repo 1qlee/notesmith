@@ -12,9 +12,9 @@ function OpacityControls({
       propertyName="Opacity"
       propertyObj={{}}
       inputProps={{
-        min: 0.3,
-        max: 1,
-        step: 0.1,
+        min: 30,
+        max: 100,
+        step: 1,
       }}
       pageData={pageData}
       setPageData={setPageData}

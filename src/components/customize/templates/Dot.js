@@ -15,8 +15,8 @@ function Dot({
   const dotDiameter = dotRadius * 2
   const dotColumnSpacing = convertToPx(columnSpacing)
   const dotRowSpacing = convertToPx(rowSpacing)
-  const maxRows = Math.floor((height + dotRowSpacing) / (dotDiameter + dotRowSpacing))
-  const maxCols = Math.floor((width + dotColumnSpacing) / (dotDiameter + dotColumnSpacing))
+  const maxRows = Math.floor((height - dotDiameter) / (dotColumnSpacing + dotDiameter)) + 1
+  const maxCols = Math.floor((width - dotDiameter) / (dotColumnSpacing + dotDiameter)) + 1
 
   const memoCreateDots = useMemo(() => function createDots() {
     // placeholder array for dots
@@ -30,7 +30,7 @@ function Dot({
         x: 0,
       }
       // loop will exit if the dots have passed the height of the page
-      if (dotPos.y > height) {
+      if (dotPos.y + dotRadius - 0.002 > height) {
         // this essentially caps the number of total rows at the "exceeding" value
         return setPageData({
           ...pageData,
@@ -46,7 +46,7 @@ function Dot({
         const dot = {
           fill: "#000000",
           radius: dotRadius,
-          opacity: opacity,
+          opacity: `${opacity}%`,
           cx: convertFloatFixed(dotPos.x, 3),
           cy: convertFloatFixed(dotPos.y, 3),
           row: i,
@@ -54,7 +54,7 @@ function Dot({
         }
 
         // loop will exit if the dots have passed the width of the page
-        if (dotPos.x > width) {
+        if (dotPos.x + dotRadius - 0.002 > width) {
           // this essentially caps the number of dots in a row at the "exceeding" value
           return setPageData({
             ...pageData,

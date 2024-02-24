@@ -638,14 +638,20 @@ const StyledSelect = styled.select`
   &.is-error {
     border-color: ${colors.red.sixHundred};
   }
+  &:focus {
+    box-shadow: ${colors.shadow.focus};
+    border-color: transparent;
+    outline: none;
+  }
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray.oneHundred};
+    &:not(:focus) {
+      background-color: ${colors.gray.oneHundred};
+    }
   }
-  &:active,
-  &:focus {
-    border-color: ${colors.gray.nineHundred};
-    outline: none;
+  &::placeholder {
+    color: ${colors.gray.fiveHundred};
+    opacity: 1;
   }
 `
 

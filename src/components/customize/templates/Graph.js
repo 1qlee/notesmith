@@ -16,8 +16,8 @@ function Graph({
   const lineRowSpacing = convertToPx(rowSpacing)
   const lineStrokeWidth = convertToPx(strokeWidth)
   const lineOffset = convertFloatFixed(lineStrokeWidth / 2, 3)
-  const maxRows = Math.floor((height + lineRowSpacing - lineOffset) / (lineStrokeWidth + lineRowSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
-  const maxCols = Math.floor((width + lineColumnSpacing - lineOffset) / (lineStrokeWidth + lineColumnSpacing)) - 1 // have to subtract one because the first line does not count as a row/col
+  const maxRows = Math.floor(height / (lineRowSpacing + lineStrokeWidth)) // have to subtract one because the first line does not count as a row/col
+  const maxCols = Math.floor(width / (lineColumnSpacing + lineStrokeWidth))
 
   function createColumns() {
     // placeholder array
@@ -32,7 +32,7 @@ function Graph({
       const firstColumnLine = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: convertFloatFixed(lineXFirst, 3),
         x2: convertFloatFixed(lineXFirst, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -40,9 +40,9 @@ function Graph({
       }
       // line object that holds line properties
       const line = {
-        stroke: "#000000",
+        stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: convertFloatFixed(lineX, 3),
         x2: convertFloatFixed(lineX, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -55,8 +55,7 @@ function Graph({
 
       // break the loop if columns break past the right side margin
       // add the offset because lineX is the start point of the line, not where it ends
-      if (lineX + lineOffset > width) {
-        
+      if ((lineX + lineOffset) > width) {
         return setPageData({
           ...pageData,
           columns: column,
@@ -84,7 +83,7 @@ function Graph({
       const firstRowLine = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: lineX1,
         x2: lineX2,
         y1: lineYFirst,
@@ -94,7 +93,7 @@ function Graph({
       const line = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: opacity,
+        opacity: `${opacity}%`,
         x1: lineX1,
         x2: lineX2,
         y1: lineY,
