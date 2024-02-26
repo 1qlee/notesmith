@@ -13,7 +13,7 @@ function StrokeWidthControls({
       propertyObj={{ alignmentVertical: "", alignmentHorizontal: "" }}
       inputProps={{
         min: 0.1,
-        max: 1,
+        max: 5,
         step: 0.05,
       }}
       pageData={pageData}

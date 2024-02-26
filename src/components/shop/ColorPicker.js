@@ -5,45 +5,27 @@ import styled from "styled-components"
 
 const ColorOption = styled.button`
   background-color: ${props => props.color};
-  border-radius: 100%;
-  border: 1px solid ${colors.gray.sixHundred};
-  height: 1.5rem;
+  border-radius: 4px;
+  border: 1px solid ${colors.gray.nineHundred};
+  height: 40px;
   position: relative;
-  width: 1.5rem;
-  &::before {
-    background: transparent;
-    border-radius: 100%;
-    border: 2px solid transparent;
-    content: "";
-    height: calc(100% + 0.5rem);
-    left: -0.25rem;
-    position: absolute;
-    top: -0.25rem;
-    transition: border-color 0.2s;
-    width: calc(100% + 0.5rem);
-  }
+  width: 30px;
+  &:focus,
   &.is-active {
-    &::before {
-      border-color: ${colors.gray.nineHundred}
+    box-shadow: ${colors.shadow.focus};
+    border-color: transparent;
+    outline: none;
+  }
+  &:hover {
+    cursor: pointer;
+    &:not(.is-active) {
+      &:not(:focus) {
+        box-shadow: ${colors.shadow.focus};
+      }
     }
   }
   &:not(:last-child) {
     margin-right: 1rem;
-  }
-  &:focus {
-    &::before {
-      border-color: ${colors.gray.sixHundred};
-    }
-  }
-  &:hover,
-  &:focus {
-    cursor: pointer;
-    outline: none;
-    &:not(.is-active) {
-      &::before {
-        border-color: ${colors.gray.threeHundred};
-      }
-    }
   }
 `
 

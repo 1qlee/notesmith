@@ -38,7 +38,7 @@ function Ruled({
 
       // loop will exit if the last line has passed the height of the page
       // 0.002 is a small buffer to account for rounding errors
-      if (lineY + halfLineStrokeWidth - 0.002 > height) {
+      if (lineY + halfLineStrokeWidth - 0.004 > height) {
         // change the number of rows displayed
         setPageData({
           ...pageData,

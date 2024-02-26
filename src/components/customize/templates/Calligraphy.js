@@ -10,13 +10,13 @@ function Calligraphy({
 }) {
   const [lineRows, setLineRows] = useState([])
   const [slantRows, setSlantRows] = useState([])
-  const { opacity, rows, staffSpacing, strokeWidth, slantAngle, slants } = pageData
+  const { opacity, rows, strokeWidth, slantAngle, slants } = pageData
   const { height, width } = maxSvgSize
   const ascSpacing = convertToPx(pageData.ascSpacing)
   const dscSpacing = convertToPx(pageData.dscSpacing)
   const xHeight = convertToPx(pageData.xHeight)
   const slantSpacing = convertToPx(pageData.slantSpacing)
-  const rowSpacing = convertToPx(staffSpacing)
+  const rowSpacing = convertToPx(pageData.rowSpacing)
   const lineStrokeWidth = convertToPx(strokeWidth)
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const rowHeight = ascSpacing + dscSpacing + xHeight + lineStrokeWidth * 3
@@ -32,10 +32,10 @@ function Calligraphy({
     const compSlantAngle = 90 - slantAngle
 
     for (let slant = 0; slant < slants; slant++) {
-      const slantOffset = slant * slantSpacing
+      const slantOffset = slant * (slantSpacing + lineStrokeWidth)
       let posX1 = slantOffset
-      let posX2 = slant * slantSpacing - getTan(compSlantAngle) * rowHeight
-      let posY1 = spaceBtwnRows + strokeWidth
+      let posX2 = slant * (slantSpacing + lineStrokeWidth) - getTan(compSlantAngle) * rowHeight
+      let posY1 = spaceBtwnRows + halfLineStrokeWidth
       let posY2 = posY1 + rowHeight
 
       // if the bottom of the lines exceed the maximum X position, restrict num of slants
@@ -111,7 +111,7 @@ function Calligraphy({
       }
 
       // break the loop if we are past the height of the page
-      if (posY1 > height) {
+      if (posY1 + halfLineStrokeWidth > height) {
         return row
       }
       else {

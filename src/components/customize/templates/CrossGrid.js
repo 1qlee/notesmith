@@ -93,17 +93,17 @@ function CrossGrid({
   return (
     <>
       {crosses.map((cross, index) => (
-        <g key={index}>
+        <React.Fragment key={index}>
           {cross.map((cross, index) => (
             <path
               d={`M ${cross.x1} ${cross.y1} L ${cross.x2} ${cross.y2} M ${cross.x3} ${cross.y3} L ${cross.x4} ${cross.y4}`}
               key={`cross-${index}`}
               opacity={cross.opacity}
-              strokeWidth={0.333}
+              strokeWidth={0.378}
               stroke={cross.stroke}
             />
           ))}
-        </g>
+        </React.Fragment>
       ))}
     </>
   )

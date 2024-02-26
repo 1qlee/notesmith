@@ -10,17 +10,18 @@ function AlignmentControls({
   setPageData,
   selectedPageSvg,
 }) {
-  const { maxContentHeight, maxContentWidth, strokeWidth, hexagonRadius } = pageData
+  const { maxContentHeight, maxContentWidth, strokeWidth, crossSize } = pageData
   let pageBbox = selectedPageSvg.getBBox()
   const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
   const contentHeight = convertFloatFixed(pageBbox.height, 3)
   const contentWidth = convertFloatFixed(pageBbox.width, 3)
   let verticalTrim, horizontalTrim = 0
+  const roundingError = 0.002
 
   switch(pageData.template) {
     case "ruled":
-      verticalTrim = strokeWidth
+      verticalTrim = strokeWidth + roundingError
       horizontalTrim = 0
       break
     case "dot":
@@ -28,27 +29,27 @@ function AlignmentControls({
       horizontalTrim = 0
       break
     case "graph":
-      verticalTrim = strokeWidth
-      horizontalTrim = strokeWidth * 2
+      verticalTrim = strokeWidth + roundingError
+      horizontalTrim = strokeWidth * 2 + roundingError
       break
     case "hexagon":
       verticalTrim = yStrokeOffset
-      horizontalTrim = strokeWidth
+      horizontalTrim = strokeWidth + roundingError
       break
     case "music":
       verticalTrim = strokeWidth * 2
       horizontalTrim = 0
       break
     case "handwriting":
-      verticalTrim = strokeWidth
+      verticalTrim = strokeWidth + roundingError
       horizontalTrim = 0
       break
     case "cross":
-      verticalTrim = 0.333
-      horizontalTrim = strokeWidth * 2
+      verticalTrim = strokeWidth * 4
+      horizontalTrim = strokeWidth * 4
       break
     case "calligraphy":
-      verticalTrim = 0.333
+      verticalTrim = strokeWidth + roundingError
       horizontalTrim = 0
       break
     case "isometric":

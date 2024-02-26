@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef, useMemo } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
 import { CaretDown } from "@phosphor-icons/react"
 
-import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon, StyledInput, NumberInput } from "../../form/FormComponents"
+import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon } from "../../form/FormComponents"
 import { Flexbox } from "../../layout/Flexbox"
 
 const CustomInput = styled.input`
@@ -63,7 +63,6 @@ const ProductCustomInput = ({ label, inputs, type, initialValue, onBlur, onKeyDo
 
   useEffect(() => {
     if (inputs.includes(type)) {
-      console.log("showing input")
       if (inputRef.current) {
         inputRef.current.focus()
       }
@@ -101,8 +100,8 @@ const ProductQuickControls = ({
 }) => {
   const { maxContentHeight, maxContentWidth } = pageData
   const [customInputs, setCustomInputs] = useState([])
-  const spacingTemplates = ["ruled", "dot", "graph", "isometric", "seyes", "music", "handwriting", "cross", "caligraphy"]
-  const isMusicTemplate =pageData.template === "music" ? pageData.staffSpacing : pageData.spacing
+  const spacingTemplates = ["ruled", "dot", "graph", "isometric", "seyes", "music", "handwriting", "cross", "calligraphy"]
+  const isMusicTemplate = pageData.template === "music" ? pageData.staffSpacing : pageData.spacing
 
   useEffect(() => {
     setCustomInputs([])
@@ -119,15 +118,8 @@ const ProductQuickControls = ({
     let horizontalCenter = 0
     let templateHeight = maxContentHeight
     let templateWidth = maxContentWidth
-    const rowSpacing = convertToPx(pageData.rowSpacing)
-    const columnSpacing = convertToPx(pageData.columnSpacing)
     const convertedSpacing = convertToPx(value)
-    const radius = convertToPx(pageData.radius)
-    const diameter = radius * 2
     const strokeWidth = convertToPx(pageData.strokeWidth)
-    const hexRadius = convertToPx(value)
-    const hexWidth = Math.sqrt(3) * hexRadius
-    const hexYOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
     switch (pageData.template) {
       case "ruled":
@@ -137,6 +129,9 @@ const ProductQuickControls = ({
         marginTop = verticalCenter
         break
       case "dot":
+        const radius = convertToPx(pageData.radius)
+        const diameter = radius * 2
+
         maxRows = Math.floor((maxContentHeight - diameter) / (convertedSpacing + diameter)) + 1
         maxCols = Math.floor((maxContentWidth - diameter) / (convertedSpacing + diameter)) + 1
         templateHeight = (convertedSpacing + diameter) * (maxRows - 1) + diameter
@@ -157,8 +152,12 @@ const ProductQuickControls = ({
         marginLeft = horizontalCenter
         break
       case "hexagon":
+        const hexRadius = convertToPx(value)
+        const hexWidth = Math.sqrt(3) * hexRadius
+        const hexYOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
         const oddColsMax = Math.floor(maxContentWidth / hexWidth)
         const evenColsMax = Math.floor((maxContentWidth - hexWidth / 2) / hexWidth)
+
         maxRows = Math.floor((maxContentHeight - (hexRadius / 2)) / (hexRadius * 1.5))
         maxCols = oddColsMax + evenColsMax
         templateHeight = maxRows * hexRadius * 1.5 + (hexRadius / 2)
@@ -169,34 +168,48 @@ const ProductQuickControls = ({
         marginLeft = horizontalCenter
         break
       case "seyes":
-        maxRows = Math.floor((maxContentHeight - rowSpacing) / (strokeWidth * 1.125 + convertedSpacing)) + 1
-        maxCols = Math.floor((maxContentWidth - columnSpacing) / (convertedSpacing * 4 + strokeWidth * 2)) + 1
+        maxRows = Math.floor((maxContentHeight - convertedSpacing) / (strokeWidth * 1.125 + convertedSpacing)) + 1
+        maxCols = Math.floor((maxContentWidth - convertedSpacing) / (convertedSpacing * 4 + strokeWidth * 2)) + 1
         marginTop = verticalCenter
         marginLeft = horizontalCenter
         break
       case "music":
-        const staffHeight = convertToPx(pageData.spacing) * 4 + strokeWidth * 4
+        const staffHeight = convertToPx(2) * 4 + strokeWidth * 4
         maxRows = Math.floor((maxContentHeight + convertedSpacing + (strokeWidth / 2)) / (staffHeight + convertedSpacing + strokeWidth))
-        templateHeight = maxRows * (staffHeight + convertedSpacing + strokeWidth) - convertedSpacing - strokeWidth
+        templateHeight = maxRows * (staffHeight + convertedSpacing + strokeWidth) - convertedSpacing + strokeWidth
         verticalCenter = convertToMM((maxContentHeight - templateHeight) / 2)
         marginTop = verticalCenter
         break
-      // case "handwriting":
-      //   verticalOffset = strokeWidth
-      //   horizontalOffset = 0
-      //   break
-      // case "cross":
-      //   verticalOffset = 0.333
-      //   horizontalOffset = strokeWidth * 2
-      //   break
-      // case "calligraphy":
-      //   verticalOffset = 0.333
-      //   horizontalOffset = 0
-      //   break
-      // case "isometric":
-      //   pageData.borderData.toggle ? horizontalOffset = 0 : horizontalOffset = strokeWidth / 2
-      //   verticalOffset = 0
-      //   break
+      case "handwriting":
+        const rowHeight = convertedSpacing * 2 + strokeWidth * 2
+        maxRows = Math.floor((maxContentHeight + 3.78 + (strokeWidth / 2)) / (3.78 + rowHeight + strokeWidth))
+        templateHeight = maxRows * (rowHeight + 3.78 + strokeWidth) - 3.78 + strokeWidth
+        verticalCenter = convertToMM((maxContentHeight - templateHeight) / 2)
+        marginTop = verticalCenter
+        break
+      case "cross":
+        const crossSize = convertToPx(1)
+        const crossStrokeOffset = .2
+        maxRows = Math.floor((maxContentHeight + convertedSpacing) / (crossSize + convertedSpacing))
+        maxCols = Math.floor((maxContentWidth + convertedSpacing) / (crossSize + convertedSpacing))
+        templateHeight = maxRows * (crossSize + convertedSpacing) - convertedSpacing 
+        templateWidth = maxCols * (crossSize + convertedSpacing) - convertedSpacing
+        verticalCenter = convertFloatFixed(convertToMM((maxContentHeight - templateHeight) / 2) - crossStrokeOffset, 3)
+        horizontalCenter = convertFloatFixed(convertToMM((maxContentWidth - templateWidth) / 2) - crossStrokeOffset, 3)
+        marginTop = verticalCenter
+        marginLeft = horizontalCenter
+        break
+      case "calligraphy": {
+        const rowSpacing = convertToPx(1)
+        const rowHeight = (convertedSpacing + strokeWidth) * 3
+
+        maxCols = 137
+        maxRows = Math.floor((maxContentHeight + rowSpacing) / (rowSpacing + rowHeight + strokeWidth))
+        templateHeight = maxRows * (rowHeight + rowSpacing + strokeWidth) - rowSpacing - strokeWidth
+        verticalCenter = convertToMM((maxContentHeight - templateHeight) / 2)
+        marginTop = verticalCenter
+        break
+      }
       default:
         maxRows = 0
         maxCols = 0
@@ -223,7 +236,7 @@ const ProductQuickControls = ({
     if (value === "custom") {
       const updatedCustomInputs = customInputs.includes(type) ? customInputs : [...customInputs, type]
       setCustomInputs(updatedCustomInputs)
-    } 
+    }
     else {
       if (isSelect) {
         // Remove value from customInputs array if it exists
@@ -254,8 +267,10 @@ const ProductQuickControls = ({
             break
           case "dot":
           case "graph":
+          case "cross":
             setPageData({
               ...pageData,
+              spacing: numberValue,
               columnSpacing: numberValue,
               rowSpacing: numberValue,
               alignmentHorizontal: "center",
@@ -276,6 +291,39 @@ const ProductQuickControls = ({
               alignmentHorizontal: "center",
               alignmentVertical: "middle",
               staves: maxRows,
+              marginTop: margins.top,
+              marginBottom: margins.bottom,
+              marginLeft: margins.left,
+              marginRight: margins.right,
+            })
+            break
+          case "handwriting":
+            setPageData({
+              ...pageData,
+              spacing: numberValue,
+              rowSpacing: 1,
+              alignmentHorizontal: "center",
+              alignmentVertical: "middle",
+              rows: maxRows,
+              columns: maxCols,
+              marginTop: margins.top,
+              marginBottom: margins.bottom,
+              marginLeft: margins.left,
+              marginRight: margins.right,
+            })
+          case "calligraphy":
+            setPageData({
+              ...pageData,
+              ascSpacing: numberValue,
+              dscSpacing: numberValue,
+              xHeight: numberValue,
+              slantSpacing: numberValue,
+              spacing: numberValue,
+              rowSpacing: 1,
+              alignmentHorizontal: "center",
+              alignmentVertical: "middle",
+              slants: maxCols,
+              rows: maxRows,
               marginTop: margins.top,
               marginBottom: margins.bottom,
               marginLeft: margins.left,

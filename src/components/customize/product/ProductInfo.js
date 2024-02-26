@@ -221,9 +221,9 @@ const ProductInfo = ({
           buttonwidth="1rem"
           buttonheight="1rem"
           counterwidth="100%"
-          counterpadding="1rem"
+          counterpadding="14px"
           counterfontsize="1rem"
-          iconsize="0.625rem"
+          iconsize="0.75rem"
           setItemQuantity={setItemQuantity}
         />
         <Button

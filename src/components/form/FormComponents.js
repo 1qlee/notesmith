@@ -82,7 +82,7 @@ function QuantityTracker(props) {
         padding={props.counterpadding}
         width={props.buttonwidth}
       >
-        <Icon style={{width:"100%", height: "100%"}}>
+        <Icon>
           <Minus
             size={props.iconsize}
             color={quantity === 1 ? colors.gray.nineHundred : colors.gray.nineHundred}
@@ -356,12 +356,15 @@ const QuantityButton = styled.button`
   background-color: transparent;
   border: none;
   padding: 0;
+  display: flex;
+  align-items: center;
   width: ${props => props.width};
   height: ${props => props.height};
   position: absolute;
-  top: ${props => props.padding};
-  left: ${props => props.left ? "0.875rem" : null};
-  right: ${props => props.right ? "0.875rem" : null};
+  top: 50%;
+  transform: translateY(-50%);
+  left: ${props => props.left ? "12px" : null};
+  right: ${props => props.right ? "12px" : null};
   z-index: 99;
   &:hover {
     cursor: pointer;
@@ -632,7 +635,6 @@ const StyledSelect = styled.select`
   font-size: ${props => props.fontsize || "0.875rem"};
   padding: ${props => props.padding || "16px 64px 16px 16px"};
   height: ${props => props.height};
-  line-height: ${props => props.lineheight || "21px"};
   width: ${props => props.width};
   appearance: none;
   &.is-error {

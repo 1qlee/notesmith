@@ -5,7 +5,7 @@ import CalligraphySpacingControls from "./components/CalligraphySpacingControls"
 import OpacityControls from "./components/OpacityControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
 import SlantControls from "./components/SlantControls"
-import StaffSpacingControls from "./components/StaffSpacingControls"
+import RowSpacingControls from "./components/RowSpacingControls"
 import { ControlWrapper } from "./components/TemplateComponents"
 
 function CalligraphyControls({
@@ -32,7 +32,7 @@ function CalligraphyControls({
         pageData={pageData}
         setPageData={setPageData}
       />
-      <StaffSpacingControls
+      <RowSpacingControls
         name="Row spacing"
         pageData={pageData}
         setPageData={setPageData}

@@ -5,14 +5,13 @@ import RowControls from "./components/RowControls"
 import SpacingControls from "./components/SpacingControls"
 import OpacityControls from "./components/OpacityControls"
 import StrokeWidthControls from "./components/StrokeWidthControls"
-import StaffSpacingControls from "./components/StaffSpacingControls"
+import RowSpacingControls from "./components/RowSpacingControls"
 import DashedLineControls from "./components/DashedLineControls"
 
 function HandwritingControls({
   max,
   pageData,
   setPageData,
-  svgData,
 }) {
   return (
     <>
@@ -32,7 +31,7 @@ function HandwritingControls({
         pageData={pageData}
         setPageData={setPageData} 
       />
-      <StaffSpacingControls
+      <RowSpacingControls
         name="Row spacing"
         pageData={pageData}
         setPageData={setPageData}

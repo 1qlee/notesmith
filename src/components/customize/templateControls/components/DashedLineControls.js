@@ -120,8 +120,8 @@ function DashedLineControls({
             >
               <NumberInput
                 value={dashedLineData.opacity}
-                min={0.5}
-                max={1}
+                min={30}
+                max={100}
                 onChange={value => setPageData({
                   ...pageData,
                   dashedLineData: {
@@ -130,7 +130,7 @@ function DashedLineControls({
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                step={0.01}
+                step={1}
                 width="4.25rem"
               />
             </ControlFlexChild>
@@ -140,9 +140,9 @@ function DashedLineControls({
               <RangeInput
                 margin="0 0 0 0.5rem"
                 width="100%"
-                min={0.5}
-                step={0.01}
-                max={1}
+                min={30}
+                step={1}
+                max={100}
                 value={dashedLineData.opacity}
                 onChange={e => setPageData({
                   ...pageData,
@@ -163,7 +163,7 @@ function DashedLineControls({
               <NumberInput
                 value={dashedLineData.strokeWidth}
                 min={0.1}
-                max={3}
+                max={1}
                 onChange={value => setPageData({
                   ...pageData,
                   dashedLineData: {
@@ -173,7 +173,7 @@ function DashedLineControls({
                   }
                 })}
                 padding="0.5rem 1.5rem 0.5rem 0.5rem"
-                step={0.001}
+                step={0.05}
                 width="4.25rem"
               />
             </ControlFlexChild>
@@ -184,8 +184,8 @@ function DashedLineControls({
                 margin="0 0 0 0.5rem"
                 width="100%"
                 min={0.1}
-                step={0.001}
-                max={3}
+                step={0.05}
+                max={1}
                 value={dashedLineData.strokeWidth}
                 onChange={e => setPageData({
                   ...pageData,
