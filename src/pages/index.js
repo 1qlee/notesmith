@@ -4,7 +4,7 @@ import { Star, ArrowRight, ArrowBendRightDown, Note, MegaphoneSimple } from "@ph
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
-import heroImage from "../images/index/hero.jpg"
+import heroImage from "../images/index/hero-2.jpg"
 
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
@@ -15,7 +15,6 @@ import Layout from "../components/layout/Layout"
 import Materials from "../components/index/Materials"
 import Notification from "../components/ui/Notification"
 import HeroContent from "../components/index/HeroContent"
-import HeroNotification from "../components/index/HeroNotification"
 import PageIcons from "../components/customize/PageIcons"
 import Progress from "../components/ui/Progress"
 import Reviews from "../components/index/Reviews"
@@ -85,7 +84,7 @@ const IndexPage = ({ data }) => {
   return (
     <Layout
       seoDetails={{
-        title: "Made-to-order custom notebooks crafted with your unique, custom printed pages and layouts",
+        title: "Custom notebooks with your custom layouts and fountain pen friendly paper",
       }}
     >
       <SectionMain>
@@ -101,7 +100,6 @@ const IndexPage = ({ data }) => {
               <HeroContent />
             </Container>
           </SectionContent>
-          <HeroNotification />
         </Section>
         <Section>
           <SectionContent>
@@ -109,7 +107,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Our signature
+                    Custom Notebook Layouts
                   </SectionHeading>
                 </Col>
               </Row>
@@ -124,7 +122,7 @@ const IndexPage = ({ data }) => {
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
-                    <h2>Custom layouts on <i>every single page</i></h2>
+                    <h2>Custom layouts on every page</h2>
                     <p>With Notesmith, you can customize every single page to your needs. Simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
                   <Button
@@ -132,7 +130,7 @@ const IndexPage = ({ data }) => {
                     fontsize="1.25rem"
                     padding="16px 32px"
                     as={Link}
-                    to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                    to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
                   >
                     <span>Shop now</span>
                     <Icon
@@ -284,7 +282,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Paper
+                    Ink friendly paper
                   </SectionHeading>
                 </Col>
               </Row>
@@ -296,7 +294,7 @@ const IndexPage = ({ data }) => {
                     h2margin="0 0 2rem 0"
                   >
                     <h2>Fountain pen friendly paper</h2>
-                    <p>After conducting tests on more than 50 types of paper, we chose the one with the best performance with various inks. Our white, ultra-smooth paper received top ratings from users in early assessments.</p>
+                    <p>After conducting tests on more than 50 types of paper, we chose the one with the best performance with various inks. Our writing paper received top ratings from users in early assessments.</p>
                   </Content>
                   <div>
                     <Flexbox
@@ -433,7 +431,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Materials
+                    Quality Guaranteed
                   </SectionHeading>
                 </Col>
               </Row>
@@ -446,7 +444,7 @@ const IndexPage = ({ data }) => {
                     margin="0 0 32px"
                   >
                     <h2>Made with high quality materials</h2>
-                    <p>From the beginning, our only goal was to create an outstanding notebook - nothing more, nothing less. From cover to cover, our notebooks are built with high quality materials only.</p>
+                    <p>From cover to cover, our notebooks are built with high quality materials sourced from American vendors and are manufactured entirely in New York.</p>
                   </Content>
                   <Materials 
                     tab={tabList[activeTab]}
@@ -474,7 +472,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Reviews
+                    Early Test Reviews
                   </SectionHeading>
                 </Col>
               </Row>
@@ -540,7 +538,7 @@ const IndexPage = ({ data }) => {
                     </p>
                     <Button
                       as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+                      to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
                       padding="16px 32px"
                       margin="16px 0"
                       fontsize="1.25rem"

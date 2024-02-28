@@ -25,19 +25,26 @@ const Template = ({
 }) => {
   const dependencies = [
     pageData.template,
-    pageData.marginTop, 
+    pageData.marginTop,
     pageData.marginRight,
     pageData.marginBottom,
     pageData.marginLeft,
-    pageData.rows, 
+    pageData.rows,
     pageData.columns,
+    pageData.staves,
+    pageData.ascSpacing,
+    pageData.dscSpacing,
+    pageData.xHeight,
     pageData.rowSpacing,
     pageData.columnSpacing,
+    pageData.hexagonRadius,
     pageData.slantSpacing,
     pageData.staffSpacing,
+    pageData.crossSize,
     pageData.spacing,
     pageData.strokeWidth,
     pageData.angle,
+    pageData.borderData,
   ]
   const holesMargin = pageMargins.holes
   const templateMargins = {

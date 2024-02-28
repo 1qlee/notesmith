@@ -144,6 +144,7 @@ const widths = {
   desktop: "1440px",
   widescreen: "2560px",
   content: {
+    small: "400px",
     index: "608px",
     normal: "700px",
   },

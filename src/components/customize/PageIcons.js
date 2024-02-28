@@ -32,7 +32,7 @@ const StyledPage = styled.a`
     transition: 0.2s background-color;
   }
   .page-outline {
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
   &.is-active {
     p {
@@ -53,6 +53,11 @@ const StyledPage = styled.a`
       }
       div {
         border-color: ${colors.gray.nineHundred};
+      }
+      .page-outline {
+        border-color: ${colors.gray.nineHundred};
+        box-shadow: 0 0 0 2px ${colors.gray.nineHundred};
+        transform: translateY(-2px);
       }
     }
   }

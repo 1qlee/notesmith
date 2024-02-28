@@ -53,6 +53,7 @@ function ProductTemplate({
     pageData.xHeight,
     pageData.rowSpacing,
     pageData.columnSpacing,
+    pageData.hexagonRadius,
     pageData.slantSpacing,
     pageData.staffSpacing,
     pageData.crossSize,

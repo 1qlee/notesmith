@@ -278,7 +278,7 @@ const Nav = ({ auth, hideNavbar }) => {
       <Banner 
         text="Early Access Sale! 25% off all notebooks."
         link={{
-          to: "/products/notebooks/pro-wired-notebook-a5-custom/white",
+          to: "/products/notebooks/hardcover-wired-notebook-a5-custom/white",
           text: "Shop"
         }}
       />
@@ -304,7 +304,7 @@ const Nav = ({ auth, hideNavbar }) => {
           >
             <NavItem>
               <NavLink
-                to="/products/notebooks/pro-wired-notebook-a5-custom/white"
+                to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
                 color={colors.gray.nineHundred}
               >
                 Shop
@@ -440,7 +440,7 @@ const Nav = ({ auth, hideNavbar }) => {
                 <NavHeading>Shop</NavHeading>
                 <NavItem>
                   <NavLink
-                    to="/products/notebooks/pro-wired-notebook-a5-custom/white"
+                    to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
                   >
                     Notebooks
                   </NavLink>

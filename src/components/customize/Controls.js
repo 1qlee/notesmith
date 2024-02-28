@@ -79,7 +79,7 @@ function Controls({
   max,
   pageData,
   productData,
-  productImages,
+  productThumbnails,
   selectedPageSvg,
   setActivePageData,
   setActiveTab,
@@ -175,7 +175,7 @@ function Controls({
           pageData={pageData}
           canvasPages={canvasPages}
           productData={productData}
-          productImages={productImages}
+          productThumbnails={productThumbnails}
           setBookData={setBookData}
           toast={toast}
         />

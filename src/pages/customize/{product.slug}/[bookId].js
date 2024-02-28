@@ -7,7 +7,7 @@ const EditorPage = ({ data, params }) => {
     <Editor
       bookId={params.bookId}
       productData={data.product}
-      productImages={data.productImages}
+      productThumbnails={data.productThumbnails}
     />
   )
 }
@@ -39,7 +39,7 @@ export const pageQuery = graphql`
         slug
       }
     }
-    productImages: allFile(filter: { relativeDirectory: { eq: $slug}}) {
+    productThumbnails: allFile(filter: { relativeDirectory: { eq: $slug}}) {
       nodes {
         name
         childImageSharp {

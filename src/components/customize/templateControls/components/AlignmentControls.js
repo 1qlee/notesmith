@@ -12,6 +12,7 @@ function AlignmentControls({
 }) {
   const { maxContentHeight, maxContentWidth, strokeWidth, crossSize } = pageData
   let pageBbox = selectedPageSvg.getBBox()
+  console.log("🚀 ~ pageBbox:", pageBbox)
   const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
   const contentHeight = convertFloatFixed(pageBbox.height, 3)
@@ -33,11 +34,11 @@ function AlignmentControls({
       horizontalTrim = strokeWidth * 2 + roundingError
       break
     case "hexagon":
-      verticalTrim = yStrokeOffset
+      verticalTrim = yStrokeOffset + roundingError
       horizontalTrim = strokeWidth + roundingError
       break
     case "music":
-      verticalTrim = strokeWidth * 2
+      verticalTrim = strokeWidth + roundingError
       horizontalTrim = 0
       break
     case "handwriting":

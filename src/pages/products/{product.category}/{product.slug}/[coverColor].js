@@ -9,13 +9,12 @@ import Layout from "../../../../components/layout/Layout"
 import ProductInfo from "../../../../components/customize/product/ProductInfo"
 import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
 import ProductControls from "../../../../components/customize/product/ProductControls"
-import ProductDescription from "../../../../components/customize/product/ProductDescription"
-import ProductGallery from "../../../../components/customize/product/ProductGallery"
 import ProductHero from "../../../../components/customize/product/ProductHero"
 import ProductImages from "../../../../components/customize/product/ProductImages"
+import ProductFiftyFifty from "../../../../components/customize/product/ProductFiftyFifty"
 
 const ProductPage = ({ data, params }) => {
-  const { product, productImages, descriptionImages, productThumbnails, galleryImages } = data
+  const { product, productImages, productThumbnails, fiftyFiftyImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = product
   const [bookData, setBookData] = useState({
@@ -146,20 +145,18 @@ const ProductPage = ({ data, params }) => {
             </Container>
           </SectionContent>
         </Section>
-        <ProductDescription 
-          bookData={bookData}
-          images={descriptionImages}
-          setHideScroll={setHideScroll}
-          headingText="Specs"
-        />
+        {fiftyFiftyImages.nodes.map((image, index) => (
+          <ProductFiftyFifty
+            key={index}
+            image={image}
+            direction={index % 2 === 0 ? "left" : "right"}
+            bookData={bookData}
+          />
+        ))}
+
         <ProductHero
           bookData={bookData}
           backgroundColor={colors.gray.nineHundred}
-        />
-        <ProductGallery 
-          images={galleryImages}
-          bookData={bookData}
-          heading="Gallery"
         />
       </SectionMain>
     </Layout>
@@ -189,7 +186,7 @@ export const pageQuery = graphql`
       weight
       widthInch
       widthPixel
-      galleryTexts {
+      fiftyFiftyTexts {
         heading
         text
         alt
@@ -230,7 +227,7 @@ export const pageQuery = graphql`
         }
       }
     }
-    galleryImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "gallery*" }}) {
+    fiftyFiftyImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "fiftyfifty*" }}) {
       nodes {
         name
         childImageSharp {

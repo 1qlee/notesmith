@@ -215,9 +215,9 @@ function DemoControls({
             />
           )}
           <DemoInput
-            min={0.5}
-            step={0.1}
-            max={1}
+            min={30}
+            step={1}
+            max={100}
             label="Opacity"
             property="opacity"
             value={pageData.opacity}

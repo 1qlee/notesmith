@@ -22,7 +22,7 @@ const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
   background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
   background-size: cover;
-  background-position: top center;
+  background-position: center center;
   position: relative;
   height: ${props => props.height};
   min-height: ${props => props.minheight};

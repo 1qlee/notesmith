@@ -121,6 +121,11 @@ const Content = styled.div`
   blockquote {
     font-size: ${props => props.blockquotefontsize};
   }
+  caption {
+    display: block;
+    margin: ${props => props.captionmargin};
+    font-size: ${props => props.captionfontsize};
+  }
 `
 
 export default Content

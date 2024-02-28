@@ -8,15 +8,12 @@ import { Tooltip } from "react-tooltip"
 import Button from "../../ui/Button"
 import ColorPicker from "../../shop/ColorPicker"
 import Content from "../../ui/Content"
-import Icon from "../../ui/Icon"
-import Notification from "../../ui/Notification"
 import PageIcons from "../PageIcons"
-import TextLink from "../../ui/TextLink"
 import { Flexbox } from "../../layout/Flexbox"
-import { Info } from "@phosphor-icons/react"
-import { Link } from "gatsby"
 import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
+import StrikeText from "../../misc/StrikeText"
 import ProductQuickControls from "./ProductQuickControls"
+import ProductDescription from "./ProductDescription"
 
 const ProductInfo = ({
   cartThumbnail,
@@ -116,12 +113,6 @@ const ProductInfo = ({
         h1fontsize="3rem"
       >
         <h1>{bookData.name}</h1>
-      </Content>
-      <Content
-        paragraphfontsize="1.25rem"
-        margin="0 0 32px"
-      >
-        <p>{bookData.description}</p>
       </Content>
       <Content
         margin="32px 0"
@@ -240,33 +231,19 @@ const ProductInfo = ({
           {itemAdded ? (
             <span>Added to cart!</span>
           ) : (
-            <span>Add to cart - {formatDollars(bookData.price / 100)}</span>
+              <span>Add to cart - <StrikeText>{formatDollars(bookData.price / 100)}</StrikeText>{formatDollars(discountAmount / 100)}</span>
           )}
         </Button>
       </Flexbox>
-      <Notification
-        backgroundcolor={colors.gray.oneHundred}
-        borderradius="16px"
-        padding="16px"
+      <Content
+        paragraphfontsize="0.875rem"
+        margin="32px 0 16px"
       >
-        <Icon
-          className="is-pulsating"
-          margin="2px 0 0"
-          pulseColor={colors.gray.sixHundred}
-        >
-          <Info
-            color={colors.gray.sixHundred}
-            size={20}
-          />
-        </Icon>
-        <Content
-          margin="0 0 0 8px"
-          paragraphmargin="0"
-          paragraphfontsize="1rem"
-        >
-          <p>You can access more advanced editing features when you create a book from your <Link to="/account/books"><TextLink color={colors.gray.nineHundred}>accounts page</TextLink></Link>.</p>
-        </Content>
-      </Notification>
+        <p>{bookData.longDescription}</p>
+      </Content>
+      <ProductDescription 
+        bookData={bookData}
+      />
       <Tooltip 
         anchorSelect="#discount-text"
         content={`${discountPct}% discount.`}
@@ -277,7 +254,7 @@ const ProductInfo = ({
       {!validateCartButton() && (
         <Tooltip
           anchorSelect="#cart-button"
-          content="You must apply templates to both left and right pages before adding to cart."
+          content="You must choose a page layout first."
           place="top"
           variant="error"
         />

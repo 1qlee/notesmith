@@ -388,7 +388,7 @@ function ShoppingCart() {
             <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
           <Link
-            to="/products/notebooks/pro-wired-notebook-a5-custom"
+            to="/products/notebooks/hardcover-wired-notebook-a5-custom"
           >
             <Button
               to="/products"

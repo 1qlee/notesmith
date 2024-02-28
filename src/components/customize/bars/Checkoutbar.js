@@ -22,7 +22,7 @@ function Checkoutbar({
   bookData,
   canvasPages,
   productData,
-  productImages,
+  productThumbnails,
   setBookData,
   toast,
 }) {
@@ -39,7 +39,7 @@ function Checkoutbar({
 
   function getImageThumbnail() {
     // this is an exact match for "color-0"
-    const filteredImage = productImages.nodes.filter(img => img.name === `${bookData.coverColor}-0`)
+    const filteredImage = productThumbnails.nodes.filter(img => img.name === `${bookData.coverColor}-0`)
     return filteredImage[0]
   }
 

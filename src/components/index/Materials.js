@@ -17,11 +17,11 @@ const qualities = {
     },
     {
       heading: "Type",
-      text: "Coated (ultra smooth)"
+      text: "Smooth (coated)"
     },
     {
       heading: "Color",
-      text: "Bright white"
+      text: "White"
     }
   ],
   cover: [

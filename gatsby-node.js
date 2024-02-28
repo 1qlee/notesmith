@@ -1,20 +1,20 @@
 const products = [
   {
-    camelName: "proWiredNotebookA5Custom",
+    camelName: "hardcoverWiredNotebookA5Custom",
     category: "notebooks",
     custom: true,
-    description: "One signature, custom-printed Notesmith wired notebook in A5 (8.5 x 5.5 inches) with 140 pages, 70lb fountain pen friendly paper, and a laminated, extra thick cover stock.",
-    longDescription: "All notebooks are made with high-quality materials in our factory in New York. Our custom notebooks are made-to-order with your custom layouts printed onto fountain pen friendly paper.",
+    description: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated hardcover and fountain pen friendly paper.",
+    longDescription: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated hardcover. The notebook is filled with fountain pen friendly writing paper that works well with fountain pen inks without feathering or bleed-through, and minimal show-through (ghosting). All notebooks are made with high quality materials sourced from American vendors and are manufactured in our factory in New York.",
     heightInch: "8.5",
     heightPixel: 816,
-    name: "Pro Wired Notebook A5 (Custom)",
+    name: "Hardcover Wired Notebook A5 (Custom)",
     numOfPages: 140,
-    paperColor: "Bright white",
-    paperTooth: "Ultra smooth",
+    paperColor: "White",
+    paperTooth: "Smooth",
     paperWeight: "70lb",
     price: 3000,
     size: "A5",
-    slug: "pro-wired-notebook-a5-custom",
+    slug: "hardcover-wired-notebook-a5-custom",
     stripePriceId: process.env.NODE_ENV === "production" ? "price_1NzQ0pIN24Fw2SWdKJJKETku" : "price_1IbAlnIN24Fw2SWdOVRXdimr",
     weight: 9.6,
     widthInch: "5.5",
@@ -24,26 +24,21 @@ const products = [
       "High quality, bright white and ultra-smooth writing paper",
       "Laminated covers with extra thick cover stock"
     ],
-    galleryTexts: [
+    fiftyFiftyTexts: [
       {
-        heading: "Fountain pen friendly",
-        text: "A close-up shot of Pilot Iroshizuku Take-sumi (black fountain pen ink) on our 70lb paper.",
-        alt: "Close-up of black ink fountain pen writing on notebook paper"
+        heading: "Fountain pen friendly writing paper",
+        text: "Our paper is designed to work well with fountain pen inks without feathering or bleed-through, and minimal show-through (ghosting).",
+        alt: "Written using Pilot Iroshizuku Take-sumi (black) ink with a fine sized nib (Pilot VP)."
       },
       {
-        heading: "Sand-matte cover lamination",
-        text: "The cover is laminated with a sand-matte film which acts as a water-resistant layer while also providing extra grip and texture.",
-        alt: "Close-up of notebook cover with water droplet, showing water resistance"
+        heading: "Custom layouts on every page",
+        text: "Customize your notebook's layout with different templates or create your own design.",
+        alt: "A notebook with custom layouts on different pages."
       },
       {
-        heading: "Gold colored wire binding",
-        text: "Gold colored wire binding and print on the back cover only.",
-        alt: "Close-up of the back-side cover"
-      },
-      {
-        heading: "140 pages of 70lb paper",
-        text: "Each notebook is filled with 140 pages of bright-white, ultra-smooth 70lb paper.",
-        alt: "Close-up of the inside of the notebook, showing the paper"
+        heading: "Laminated, extra thick covers",
+        text: "Two thick cover stock sheets are pressed together and then laminated for extra durability.",
+        alt: "Close-up of a water droplet resting on the cover."
       },
     ],
     hero: {
@@ -52,20 +47,28 @@ const products = [
     },
     infoBoxes: [
       {
-        heading: "Materials",
-        text: "70lb text paper, double-mounted 125lb coated cover stock with lamination, gold wire binding"
+        heading: "Size",
+        text: "A5: 5.5 x 8.5 inches (page size), 6 x 8.5 inches (book size)"
       },
       {
-        heading: "Size",
-        text: "5.5 x 8.5 inches (page size), 6 x 8.5 inches (book size)"
+        heading: "Cover",
+        text: "250# (double-mounted) cover stock"
       },
       {
         heading: "Pages",
-        text: "70 sheets (140 pages total)"
+        text: "140 total pages"
       },
       {
-        heading: "Returns",
-        text: "Returns within 14 days of purchase"
+        heading: "Paper",
+        text: "White, smooth finish, 70# (104 gsm) text"
+      },
+      {
+        heading: "Binding",
+        text: "Gold colored wire"
+      },
+      {
+        heading: "Lamination",
+        text: "Sand-matte textured film"
       }
     ],
     colors: [

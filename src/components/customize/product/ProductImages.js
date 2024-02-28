@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { colors } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel"
 
 const StyledProductImages = styled.div`
@@ -110,7 +111,7 @@ function ProductImages({
         <div
           key={index}
           className={activeImage === index ? "is-active" : null}
-          onClick={() => handleSelectImage(image.main, index)}
+          
         >
           <GatsbyImage
             image={getImage(image.thumbnail)}

@@ -25,11 +25,11 @@ const HeroContent = () => {
       textalign="center"
       maxwidth={widths.content.index}
     >
-      <h1><CircledText text="Custom" />&nbsp;notebooks,<br />page by page</h1>
-      <p>Fully customize the layout of every page - from dot thickness to line spacing - and create your own unique, custom-made notebook.</p>
+      <h1><CircledText text="Custom" />&nbsp;notebooks,<br />custom layouts</h1>
+      <p>Fully customize the layout of every page and create your own custom-made notebook with high quality, fountain pen friendly paper.</p>
       <Button
         as={Link}
-        to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
+        to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
         padding="16px 32px"
         margin="16px 0"
         fontsize="1.25rem"

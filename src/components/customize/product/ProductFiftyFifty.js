@@ -1,17 +1,18 @@
 import React from "react"
-import { spacing, colors } from "../../../styles/variables"
+import { spacing, colors, widths } from "../../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { ScreenClassRender } from "react-grid-system"
 
 import { Container, Row, Col } from "react-grid-system"
 import { Section, SectionContent } from "../../layout/Section"
-import { Flexbox } from "../../layout/Flexbox"
+import Box from "../../ui/Box"
 import Content from "../../ui/Content"
 
-const ProductHalfandHalf = ({ image, direction, bookData }) => {
-  // halfandhalf index from products.json
+const ProductFiftyFifty = ({ image, direction, bookData }) => {
+  // fiftyfifty index from products.json
   const index = image.name.split("-")[1]
   const hasImageLeft = direction === "left"
+  const imageData = bookData.fiftyFiftyTexts[index]
 
   return (
     <ScreenClassRender
@@ -22,25 +23,32 @@ const ProductHalfandHalf = ({ image, direction, bookData }) => {
           <Section>
             <SectionContent
               padding={`${spacing.large} 0`}
-              backgroundcolor={hasImageLeft ? colors.gray.oneHundred : null}
             >
               <Container xs sm>
                 <Row align="center" direction={hasImageLeft ? null : "row-reverse"}>
                   <Col sm={6}>
-                    <Flexbox
+                    <Box
                       width="100%"
                       margin={isMobile && "0 0 32px"}
                     >
                       <GatsbyImage image={getImage(image)} alt="Product splash image" />
-                    </Flexbox>
+                      <Content
+                        captionmargin="8px auto"
+                        captionfontsize="0.75rem"
+                      >
+                        <caption>{imageData.alt}</caption>
+                      </Content>
+                    </Box>
                   </Col>
                   <Col sm={6}>
                     <Content
                       paragraphfontsize="1.25rem"
                       h3margin="0 0 32px"
+                      maxwidth={widths.content.small}
+                      margin="0 auto"
                     >
-                      <h3>{bookData.halfandhalf[index].heading}</h3>
-                      <p>{bookData.halfandhalf[index].text}</p>
+                      <h3>{imageData.heading}</h3>
+                      <p>{imageData.text}</p>
                     </Content>
                   </Col>
                 </Row>
@@ -53,4 +61,4 @@ const ProductHalfandHalf = ({ image, direction, bookData }) => {
   )
 }
 
-export default ProductHalfandHalf
+export default ProductFiftyFifty

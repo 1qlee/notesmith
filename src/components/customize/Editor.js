@@ -32,7 +32,7 @@ const StyledEditor = styled.div`
 const Editor = ({ 
   bookId, 
   productData, 
-  productImages,
+  productThumbnails,
 }) => {
   const minimumMargin = convertToMM(pageMargins.minimum)
   const { loading, user, firebaseDb } = useFirebaseContext()
@@ -277,7 +277,7 @@ const Editor = ({
               max={max}
               pageData={pageData}
               productData={productData}
-              productImages={productImages}
+              productThumbnails={productThumbnails}
               selectedPageSvg={selectedPageSvg}
               setActivePageData={setActivePageData}
               setActiveTab={setActiveTab}

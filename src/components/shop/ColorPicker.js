@@ -38,7 +38,7 @@ function ColorPicker({
   return (
     <>
       {data.map(color => (
-        <>
+        <React.Fragment key={color.name}>
           <ColorOption
             data-tip={color.name}
             aria-label={`${color.name} cover`}
@@ -52,7 +52,7 @@ function ColorPicker({
             content={color.name}
             place="top"
           />
-        </>
+        </React.Fragment>
       ))}
     </>
   )
