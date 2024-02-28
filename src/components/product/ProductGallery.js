@@ -1,13 +1,13 @@
 import React from "react"
-import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { spacing } from "../../../styles/variables"
+import Carousel from 'react-multi-carousel'
+import 'react-multi-carousel/lib/styles.css'
+import { spacing } from "../../styles/variables"
 
 import { Container } from "react-grid-system"
-import { Section, SectionContent, SectionHeading } from "../../layout/Section"
+import { Section, SectionContent, SectionHeading } from "../layout/Section"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
-import Content from "../../ui/Content"
-import Box from "../../ui/Box"
+import Content from "../ui/Content"
+import Box from "../ui/Box"
 
 const ProductGallery = ({ 
   images,
@@ -28,16 +28,19 @@ const ProductGallery = ({
             {heading}
           </SectionHeading>
             <Carousel
-              centerMode={true}
+              swipeable={false}
+              draggable={false}
+              showDots={true}
+              ssr={true} // means to render carousel on server-side.
+              infinite={true}
               autoPlay={false}
-              showArrows={false}
-              showStatus={false}
-              showIndicators={false}
-              showThumbs={false}
-              infiniteLoop={false}
-              swipeable={true}
-              swipeScrollTolerance={50}
-              emulateTouch={true}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
             >
               {sortedImages.map((image, index) => (
                 <Box

@@ -21,7 +21,7 @@ export const onRenderBody = ({
     helmet.script.toComponent(),
     helmet.style.toComponent(),
     <meta name="description" content="Made-to-order custom notebooks with your custom layouts and fountain pen friendly paper. - Notesmith"></meta>,
-    <meta property="og:title" content="Notesmith custom-made notebooks"></meta>,
+    <meta property="og:title" content="Custom notebooks fountain pen friendly custom layouts"></meta>,
     <meta property="og:description" content="Made-to-order custom notebooks with your custom layouts and fountain pen friendly paper. - Notesmith"></meta>,
     <meta property="og:image" content="https://www.notesmithbooks.com/meta-image.jpg"></meta>,
     <meta property="og:url" content="https://www.notesmithbooks.com"></meta>,

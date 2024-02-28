@@ -1,17 +1,17 @@
 import React, { useState } from "react"
-import { colors,  } from "../../../styles/variables"
-import { useShoppingCart } from '../../cart/context/cartContext'
-import { applyDiscounts, formatDollars } from "../../../utils/helper-functions"
+import { colors,  } from "../../styles/variables"
+import { useShoppingCart } from '../cart/context/cartContext'
+import { applyDiscounts, formatDollars } from "../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 
-import Button from "../../ui/Button"
-import ColorPicker from "../../shop/ColorPicker"
-import Content from "../../ui/Content"
-import PageIcons from "../PageIcons"
-import { Flexbox } from "../../layout/Flexbox"
-import { QuantityTracker, StyledLabel } from "../../form/FormComponents"
-import StrikeText from "../../misc/StrikeText"
+import Button from "../ui/Button"
+import ColorPicker from "../shop/ColorPicker"
+import Content from "../ui/Content"
+import PageIcons from "../customize/PageIcons"
+import { Flexbox } from "../layout/Flexbox"
+import { QuantityTracker, StyledLabel } from "../form/FormComponents"
+import StrikeText from "../misc/StrikeText"
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
 
@@ -160,27 +160,20 @@ const ProductInfo = ({
           </Content>
         )}
       </Flexbox>
-      <Flexbox
-        flex="flex"
-        flexwrap="wrap"
-        justify="flex-start"
-        align="center"
-      >
-        <PageIcons
-          checkActiveVar={pageData.template}
-          data={pageData}
-          iconMargin="0 24px 24px 0"
-          isProductPage={true}
-          hideNone
-          leftPageData={leftPageData}
-          rightPageData={rightPageData}
-          setLeftPageData={setLeftPageData}
-          setRightPageData={setRightPageData}
-          setData={setPageData}
-          selectedPageSvg={selectedPageSvg}
-          showLabels={false}
-        />
-      </Flexbox>
+      <PageIcons
+        checkActiveVar={pageData.template}
+        data={pageData}
+        iconMargin="0"
+        isProductPage={true}
+        hideNone
+        leftPageData={leftPageData}
+        rightPageData={rightPageData}
+        setLeftPageData={setLeftPageData}
+        setRightPageData={setRightPageData}
+        setData={setPageData}
+        selectedPageSvg={selectedPageSvg}
+        showLabels={true}
+      />
       {(pageData.template && pageData.template !== "blank") && (
         <ProductQuickControls 
           pageData={pageData}

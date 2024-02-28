@@ -1,9 +1,24 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
+import { colors } from "../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel"
+import Carousel from 'react-multi-carousel'
+import 'react-multi-carousel/lib/styles.css'
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  }
+};
 
 const StyledProductImages = styled.div`
   width: 100%;
@@ -97,28 +112,32 @@ function ProductImages({
 
   return (
     <Carousel
+      additionalTransfrom={0}
+      arrows
+      autoPlaySpeed={3000}
       centerMode={false}
-      autoPlay={false}
-      showArrows={false}
-      showStatus={false}
-      showIndicators={false}
-      showThumbs={true}
-      infiniteLoop={false}
-      swipeable={true}
-      swipeScrollTolerance={50}
-      emulateTouch={true}
-      renderThumbs={() => {return allImages.map((image, index) => (
-        <div
-          key={index}
-          className={activeImage === index ? "is-active" : null}
-          
-        >
-          <GatsbyImage
-            image={getImage(image.thumbnail)}
-            alt=""
-          />
-        </div>
-      ))}}
+      className=""
+      containerClass="container"
+      dotListClass=""
+      draggable
+      focusOnSelect={false}
+      infinite
+      itemClass=""
+      keyBoardControl
+      minimumTouchDrag={80}
+      pauseOnHover
+      responsive={responsive}
+      renderArrowsWhenDisabled={false}
+      renderButtonGroupOutside={false}
+      renderDotsOutside={false}
+      rewind={false}
+      rewindWithAnimation={false}
+      rtl={false}
+      shouldResetAutoplay
+      showDots
+      sliderClass=""
+      slidesToSlide={1}
+      swipeable
     >
       {allImages.map((image, index) => (
         <MainProductImage

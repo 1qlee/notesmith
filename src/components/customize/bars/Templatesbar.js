@@ -24,21 +24,13 @@ function Templatesbar({
   return (
     <>
       <ControlsContent>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:"repeat(auto-fit, minmax(60px, 1fr))",
-            gap:"16px",
-          }}
-        >
-          <PageIcons
-            checkActiveVar={pageData.template}
-            isProductPage={false}
-            setData={handleTemplateChange}
-            data={pageData}
-            showLabels={true}
-          />
-        </div>
+        <PageIcons
+          checkActiveVar={pageData.template}
+          isProductPage={false}
+          setData={handleTemplateChange}
+          data={pageData}
+          showLabels={true}
+        />
       </ControlsContent>
       <ControlsFooter>
         <Button

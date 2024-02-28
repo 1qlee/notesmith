@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { X } from '@phosphor-icons/react'
-import { colors, breakpoints } from '../../../styles/variables'
+import { colors, breakpoints } from '../../styles/variables'
 import { getImage, GatsbyImage } from 'gatsby-plugin-image'
-import Button from '../../ui/Button'
-import Icon from '../../ui/Icon'
+
+import Button from '../ui/Button'
+import Icon from '../ui/Icon'
 
 const ImageModalWrapper = styled.div`
   background: ${colors.white};

@@ -11,6 +11,13 @@ import CalligraphyIcon from "../../assets/calligraphy.svg"
 import { Flexbox } from "../layout/Flexbox"
 import Icon from "../ui/Icon"
 
+const IconsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+`
+
 const PageWrapper = styled.div`
   position: relative;
   display: flex;
@@ -27,6 +34,7 @@ const StyledPage = styled.a`
   background-color: transparent;
   padding: 0;
   display: flex;
+  position: relative;
   p {
     padding: 0.25rem;
     transition: 0.2s background-color;
@@ -62,14 +70,10 @@ const StyledPage = styled.a`
     }
   }
   &:focus {
-    p {
-      background-color: ${colors.gray.nineHundred};
-      color: ${colors.gray.oneHundred};
-    }
     .page-outline {
       border-color: ${colors.gray.nineHundred};
-      box-shadow: ${colors.shadow.layeredSmall}
-      transform: scale(1.05);
+      box-shadow: 0 0 0 2px ${colors.gray.nineHundred};
+      transform: translateY(-2px);
     }
   }
 `
@@ -84,15 +88,16 @@ const PageBadge = styled.button`
   font-family: ${fonts.secondary};
   font-size: 0.625rem;
   justify-content: center;
-  left: ${props => props.left};
+  left: ${props => props.left && "50%"};
   padding: 4px;
   height: 1rem;
   width: 1rem;
   line-height: 22px;
   position: absolute;
-  right: ${props => props.right};
+  right: ${props => props.right && "50%"};
   top: -0.5rem;
   transition: color 0.2s, background-color 0.2s;
+  transform: ${props => props.left ? "translateX(-150%)" : "translateX(150%)"};
   z-index: 9;
   &.is-active {
     background-color: ${colors.gray.nineHundred};
@@ -212,26 +217,27 @@ function Page({
         tabIndex="0"
         aria-label={data.template}
       >
+        {(isProductPage && leftPageData.template === data.template) && (
+          <PageBadge
+            left={true}
+            onClick={() => setData({ ...leftPageData.pageData, activeTemplate: "left" })}
+            className={data.activeTemplate === "left" ? "is-active" : ""}
+          >
+            L
+          </PageBadge>
+        )}
+        {(isProductPage && rightPageData.template === data.template) && (
+          <PageBadge
+            right={true}
+            onClick={() => setData({ ...rightPageData.pageData, activeTemplate: "right" })}
+            className={data.activeTemplate === "right" ? "is-active" : ""}
+          >
+            R
+          </PageBadge>
+        )}
         {children}
       </StyledPage>
-      {(isProductPage && leftPageData.template === data.template) && (
-        <PageBadge
-          left="-8px"
-          onClick={() => setData({ ...leftPageData.pageData, activeTemplate: "left" })}
-          className={data.activeTemplate === "left" ? "is-active" : ""}
-        >
-          L
-        </PageBadge>
-      )}
-      {(isProductPage && rightPageData.template === data.template) && (
-        <PageBadge
-          left="22px"
-          onClick={() => setData({ ...rightPageData.pageData, activeTemplate: "right" })}
-          className={data.activeTemplate === "right" ? "is-active" : ""}
-        >
-          R
-        </PageBadge>
-      )}
+      
     </PageWrapper>
   )
 }
@@ -401,7 +407,7 @@ function DotPageIcon({
         </Flexbox>
       </PageOutline>
       {showLabels ? (
-        <PageLabel margin="0.5rem 0 0 0">Dot grid</PageLabel>
+        <PageLabel margin="0.5rem 0 0 0">Dots</PageLabel>
       ) : (
         <Tooltip
           anchorSelect=".dot-tooltip"
@@ -1139,7 +1145,7 @@ function CrossGridPageIcon({
         </Flexbox>
       </PageOutline>
       {showLabels ? (
-        <PageLabel margin="0.5rem 0 0 0">Cross grid</PageLabel>
+        <PageLabel margin="0.5rem 0 0 0">Crosses</PageLabel>
       ) : (
         <Tooltip
           anchorSelect=".cross-tooltip"
@@ -1217,7 +1223,7 @@ function PageIcons({
   selectedPageSvg,
 }) {
   return (
-    <>
+    <IconsWrapper>
       {!hideNone && (
         <NonePageIcon
           data={data}
@@ -1389,7 +1395,7 @@ function PageIcons({
         setData={setData}
         showLabels={showLabels}
       />
-    </>
+    </IconsWrapper>
   )
 }
 

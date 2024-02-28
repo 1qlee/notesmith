@@ -1,7 +1,6 @@
 import React from "react"
 
-import { Flexbox } from "../../layout/Flexbox"
-import Content from "../../ui/Content"
+import Content from "../ui/Content"
 
 function ProductInfoBox({
   heading,

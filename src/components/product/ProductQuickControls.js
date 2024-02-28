@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import { colors } from "../../../styles/variables"
-import { convertFloatFixed, convertToMM, convertToPx } from "../../../utils/helper-functions"
+import { colors } from "../../styles/variables"
+import { convertFloatFixed, convertToMM, convertToPx } from "../../utils/helper-functions"
 import { CaretDown } from "@phosphor-icons/react"
 
-import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon } from "../../form/FormComponents"
-import { Flexbox } from "../../layout/Flexbox"
+import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon } from "../form/FormComponents"
+import { Flexbox } from "../layout/Flexbox"
 
 const CustomInput = styled.input`
   -moz-appearance: textfield;

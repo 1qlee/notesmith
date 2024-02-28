@@ -1,12 +1,12 @@
 import React from "react"
-import { spacing, colors, widths } from "../../../styles/variables"
+import { spacing, widths } from "../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { ScreenClassRender } from "react-grid-system"
 
 import { Container, Row, Col } from "react-grid-system"
-import { Section, SectionContent } from "../../layout/Section"
-import Box from "../../ui/Box"
-import Content from "../../ui/Content"
+import { Section, SectionContent } from "../layout/Section"
+import Box from "../ui/Box"
+import Content from "../ui/Content"
 
 const ProductFiftyFifty = ({ image, direction, bookData }) => {
   // fiftyfifty index from products.json

@@ -6,12 +6,12 @@ import toast from 'react-hot-toast'
 import { Container, Row, Col } from 'react-grid-system'
 import { SectionMain, Section, SectionContent } from "../../../../components/layout/Section"
 import Layout from "../../../../components/layout/Layout"
-import ProductInfo from "../../../../components/customize/product/ProductInfo"
-import ProductTemplate from "../../../../components/customize/product/ProductTemplate"
-import ProductControls from "../../../../components/customize/product/ProductControls"
-import ProductHero from "../../../../components/customize/product/ProductHero"
-import ProductImages from "../../../../components/customize/product/ProductImages"
-import ProductFiftyFifty from "../../../../components/customize/product/ProductFiftyFifty"
+import ProductInfo from "../../../../components/product/ProductInfo"
+import ProductTemplate from "../../../../components/product/ProductTemplate"
+import ProductControls from "../../../../components/product/ProductControls"
+import ProductHero from "../../../../components/product/ProductHero"
+import ProductImages from "../../../../components/product/ProductImages"
+import ProductFiftyFifty from "../../../../components/product/ProductFiftyFifty"
 
 const ProductPage = ({ data, params }) => {
   const { product, productImages, productThumbnails, fiftyFiftyImages } = data
