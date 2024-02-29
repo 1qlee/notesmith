@@ -33,10 +33,11 @@ const ProductFiftyFifty = ({ image, direction, bookData }) => {
                     >
                       <GatsbyImage image={getImage(image)} alt="Product splash image" />
                       <Content
-                        captionmargin="8px auto"
-                        captionfontsize="0.75rem"
+                        paragraphmargin="8px auto"
+                        paragraphfontsize="0.75rem"
+                        textalign="center"
                       >
-                        <caption>{imageData.alt}</caption>
+                        <p>{imageData.alt}</p>
                       </Content>
                     </Box>
                   </Col>

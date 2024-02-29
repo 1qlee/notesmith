@@ -576,3 +576,9 @@ select:-webkit-autofill:focus {
   font-weight: 700;
   src: url('/fonts/nm-700-normal.woff2') format('woff2');
 } */
+.carousel {
+  margin-bottom: 32px;
+}
+.carousel-dots {
+  margin-bottom: 8px !important;
+}

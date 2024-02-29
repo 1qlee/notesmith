@@ -5,13 +5,11 @@ import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 
+import { Arrow, Dot } from "../ui/Carousel"
+
 const responsive = {
   desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
+    breakpoint: { max: 3000, min: 464 },
     items: 1,
   },
   mobile: {
@@ -114,26 +112,20 @@ function ProductImages({
     <Carousel
       additionalTransfrom={0}
       arrows
-      autoPlaySpeed={3000}
       centerMode={false}
       className=""
-      containerClass="container"
-      dotListClass=""
+      customLeftArrow={<Arrow side="left" />}
+      customRightArrow={<Arrow side="right" />}
+      containerClass="carousel"
+      removeArrowOnDeviceType={["tablet", "mobile"]}
+      dotListClass="carousel-dots"
       draggable
       focusOnSelect={false}
       infinite
-      itemClass=""
       keyBoardControl
       minimumTouchDrag={80}
       pauseOnHover
       responsive={responsive}
-      renderArrowsWhenDisabled={false}
-      renderButtonGroupOutside={false}
-      renderDotsOutside={false}
-      rewind={false}
-      rewindWithAnimation={false}
-      rtl={false}
-      shouldResetAutoplay
       showDots
       sliderClass=""
       slidesToSlide={1}
@@ -146,6 +138,7 @@ function ProductImages({
           <GatsbyImage
             image={getImage(image.main)}
             alt={image.alt}
+            draggable={false}
           />
         </MainProductImage>
       ))}

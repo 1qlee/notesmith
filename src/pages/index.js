@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link, graphql } from "gatsby"
-import { Star, ArrowRight, ArrowBendRightDown, Note, MegaphoneSimple } from "@phosphor-icons/react"
+import { Star, ArrowRight, ArrowBendRightDown, Note } from "@phosphor-icons/react"
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
@@ -191,24 +191,18 @@ const IndexPage = ({ data }) => {
                       <ArrowBendRightDown size={20} weight="bold" color={colors.gray.nineHundred} />
                     </Icon>
                   </Flexbox>
-                  <Flexbox
-                    flex="flex"
-                    flexwrap="wrap"
-                    margin="0 0 16px"
-                  >
-                    <PageIcons
-                      checkActiveVar={pageData.template}
-                      data={pageData}
-                      iconMargin="0 24px 16px 0"
-                      isProductPage={true}
-                      hideNone
-                      hideBlank
-                      leftPageData={leftPageData}
-                      rightPageData={rightPageData}
-                      setData={setPageData}
-                      showLabels={false}
-                    />
-                  </Flexbox>
+                  <PageIcons
+                    checkActiveVar={pageData.template}
+                    data={pageData}
+                    iconMargin="0 24px 16px 0"
+                    isProductPage={true}
+                    hideNone
+                    hideBlank
+                    leftPageData={leftPageData}
+                    rightPageData={rightPageData}
+                    setData={setPageData}
+                    showLabels={true}
+                  />
                   <DemoControls
                     pageData={pageData}
                     setPageData={setPageData}

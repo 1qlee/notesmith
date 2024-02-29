@@ -115,7 +115,7 @@ const ProductPage = ({ data, params }) => {
                     </Col>
                   </>
                 ) : (
-                  <Col md={8}>
+                  <Col lg={8}>
                     <ProductImages 
                       coverColor={coverColor}
                       productImages={productImages}
