@@ -183,9 +183,9 @@ function DemoControls({
           )}
           {template === "calligraphy" && (
             <DemoInput
-              min={0.5}
-              step={0.01}
-              max={20}
+              min={1}
+              step={0.1}
+              max={10}
               label="Spacing"
               property="spacing"
               onChangeCb={value => setPageData({
@@ -205,8 +205,8 @@ function DemoControls({
           {showStrokeWidth && (
             <DemoInput
               min={0.1}
-              step={0.001}
-              max={3}
+              step={0.05}
+              max={0.5}
               label="Stroke width"
               property="strokeWidth"
               value={pageData.strokeWidth}

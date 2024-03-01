@@ -7,6 +7,7 @@ const PickerWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, 48px);
   gap: 16px;
   margin: 16px 8px 32px;
+  justify-content: ${props => props.center ? `center` : `flex-start`};
 `
 
 const ColorOption = styled.button`
@@ -80,10 +81,13 @@ const ColorIcon = styled.div`
 function ColorPicker({
   data,
   selectedColor,
-  cbFunction
+  cbFunction,
+  center,
 }) {
   return (
-    <PickerWrapper>
+    <PickerWrapper
+      center={center}
+    >
       {data.map(color => (
         <React.Fragment key={color.name}>
           <ColorOption

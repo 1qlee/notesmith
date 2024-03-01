@@ -287,19 +287,12 @@ function Book3d({
           </BackCover>
         </StyledBook3d>
       </Book3dWrapper>
-      <Flexbox
-        flex="flex"
-        align="center"
-        justify="center"
-        margin="32px 0"
-        flexwrap="wrap"
-      >
-        <ColorPicker 
-          data={covers}
-          selectedColor={coverColor}
-          cbFunction={color => setCoverColor(color)}
-        />
-      </Flexbox>
+      <ColorPicker 
+        data={covers}
+        selectedColor={coverColor}
+        cbFunction={color => setCoverColor(color)}
+        center
+      />
     </>
   )
 }

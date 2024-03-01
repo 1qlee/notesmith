@@ -247,19 +247,17 @@ const IndexPage = ({ data }) => {
                   <Notification
                     backgroundcolor={colors.gray.oneHundred}
                     borderradius="16px"
+                    padding="8px"
                   >
                     <Flexbox
                       flex="flex"
                       align="flex-start"
                       margin="0"
                     >
-                      <Icon margin="0 0 0">
-                        <Note size={24} weight="light" color={colors.gray.sixHundred} />
-                      </Icon>
                       <Content
                         margin="0 0 0 8px"
                         smallmargin="0"
-                        smallfontsize="1rem"
+                        smallfontsize="0.75rem"
                       >
                         <small>This demo is only a quick example. Our editor has more advanced features and options.</small>
                       </Content>

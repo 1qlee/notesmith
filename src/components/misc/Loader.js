@@ -53,14 +53,14 @@ const LoaderWrapper = styled.div`
   overflow: hidden;
   z-index: 999;
   &.has-nav {
-    height: calc(100vh - 105px);
+    height: calc(100vh - 60px);
     width: calc(100% + 4px);
-    top: 70px;
+    top: 60px;
     left: 0;
   }
   &.has-banner {
-    top: 124px;
-    height: calc(100vh - 124px);
+    top: 110px;
+    height: calc(100vh - 110px);
   }
   .mask {
     fill: none;

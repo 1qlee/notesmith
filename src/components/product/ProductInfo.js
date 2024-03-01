@@ -30,7 +30,7 @@ const ProductInfo = ({
   setRightPageData,
   selectedPageSvg,
 }) => {
-  const { addItem } = useShoppingCart()
+  const { addItem, handleCartClick } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
   let discount = applyDiscounts(bookData.price, +itemQuantity)
@@ -77,6 +77,7 @@ const ProductInfo = ({
         weight: bookData.weight,
         width: bookData.widthPixel,
       }, { count: itemQuantity })
+      handleCartClick()
     }
   }
 
@@ -176,7 +177,9 @@ const ProductInfo = ({
           dimensions={dimensions}
           max={max}
           selectedPageSvg={selectedPageSvg}
+          setLeftPageData={setLeftPageData}
           setPageData={setPageData}
+          setRightPageData={setRightPageData}
         />
       )}
       <Flexbox

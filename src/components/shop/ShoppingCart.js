@@ -21,7 +21,7 @@ function ShoppingCart() {
     cartDetails,
     setItemQuantity,
     removeItem,
-    formattedTotalPrice
+    formattedTotalPrice,
   } = useShoppingCart()
   const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
@@ -387,18 +387,15 @@ function ShoppingCart() {
             <h1>Your cart is empty</h1>
             <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
-          <Link
-            to="/products/notebooks/hardcover-wired-notebook-a5-custom"
+          <Button
+            backgroundcolor={colors.gray.nineHundred}
+            color={colors.gray.oneHundred}
+            padding="16px 32px"
+            as={Link}
+            to="/checkout"
           >
-            <Button
-              to="/products"
-              backgroundcolor={colors.gray.nineHundred}
-              color={colors.gray.oneHundred}
-              padding="16px 32px"
-            >
-              Shop notebooks
-            </Button>
-          </Link>
+            Shop notebooks
+          </Button>
         </Box>
       )}
     </>

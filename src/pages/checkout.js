@@ -23,7 +23,7 @@ import ValidateAddressModal from "../components/checkout/modals/ValidateAddressM
 
 const Checkout = () => {
   const [stripe, setStripe] = useState(null)
-  const { cartDetails, totalPrice } = useShoppingCart()
+  const { cartDetails, totalPrice, handleCloseCart } = useShoppingCart()
   // array to store cartItems
   const cartItems = []
 
@@ -146,6 +146,7 @@ const Checkout = () => {
   }
 
   useEffect(() => {
+    handleCloseCart()
     setStripe(loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY))
     // to get an existing paymentIntent from Stripe
     function retrievePaymentIntent() {

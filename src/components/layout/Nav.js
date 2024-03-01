@@ -14,6 +14,8 @@ import Tag from "../ui/Tag"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 import ShoppingCart from "../shop/ShoppingCart"
+import { X } from "@phosphor-icons/react/dist/ssr"
+import { Flexbox } from "./Flexbox"
 
 const StyledNav = styled.nav`
   position: fixed;
@@ -266,7 +268,7 @@ const Nav = ({ auth, hideNavbar }) => {
   }
 
   const { user, signOut, loading } = useFirebaseContext()
-  const { cartCount, clearCart, handleCartClick, shouldDisplayCart } = useShoppingCart()
+  const { cartCount, clearCart, handleCartClick, shouldDisplayCart, handleCloseCart } = useShoppingCart()
 
   const handleSignOut = () => {
     clearCart()
@@ -301,9 +303,24 @@ const Nav = ({ auth, hideNavbar }) => {
       <CartDrawer
         className={shouldDisplayCart ? "is-active" : ""}
       >
-        <Button
-          onClick={() => handleCartClick()}
-        >close</Button>
+        <Flexbox
+          justify="flex-end"
+          align="center"
+          margin="0 0 16px 0"
+        >
+          <Button
+            onClick={() => handleCloseCart()}
+            borderradius="50%"
+            backgroundcolor={colors.white}
+            color={colors.gray.nineHundred}
+            border={colors.borders.black}
+            padding="8px"
+          >
+            <Icon>
+              <X />
+            </Icon>
+          </Button>
+        </Flexbox>
         <ShoppingCart />
       </CartDrawer>
       <Banner 
