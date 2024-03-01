@@ -8,9 +8,8 @@ import { StyledSelect, StyledLabel, StyledFieldset, SelectWrapper, SelectIcon } 
 import { Flexbox } from "../layout/Flexbox"
 
 const CustomInput = styled.input`
-  -moz-appearance: textfield;
   -webkit-appearance: none;
-  appearance: none;
+  appearance: textfield;
   border-radius: 4px 0 0 4px;
   border: ${colors.borders.black};
   height: 100%;
@@ -30,18 +29,16 @@ const CustomInput = styled.input`
 const CustomInputLabel = styled.label`
   position: absolute;
   left: ${props => `${props.left}px`};
-  top: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   user-select: none;
   font-size: 1rem;
   &:hover {
     cursor: text;
   }
-  @media only screen and (max-width: 768px) {
-    top: 17px;
-  }
 `
 
-const ProductCustomInput = ({ label, inputs, type, initialValue, onBlur, onKeyDown }) => {
+const ProductCustomInput = ({ label, pageData, inputs, type, initialValue, onBlur, onKeyDown }) => {
   const [inputValue, setInputValue] = useState("")
   const [labelOffset, setLabelOffset] = useState(32)
   const inputRef = useRef(null)
@@ -72,7 +69,7 @@ const ProductCustomInput = ({ label, inputs, type, initialValue, onBlur, onKeyDo
         setLabelOffset((initialValue.toString().length * 8) + 22)
       }
     }
-  }, [inputRef.current])
+  }, [inputRef.current, pageData])
 
   return (
     <>
@@ -381,6 +378,7 @@ const ProductQuickControls = ({
               onKeyDown={handleKeydown}
               inputs={customInputs}
               initialValue={isMusicTemplate}
+              pageData={pageData}
               type="spacing"
             />
             <StyledSelect
@@ -416,6 +414,7 @@ const ProductQuickControls = ({
               onKeyDown={handleKeydown}
               inputs={customInputs}
               initialValue={pageData.hexagonRadius}
+              pageData={pageData}
               type="hexagonRadius"
             />
             <StyledSelect
@@ -450,6 +449,7 @@ const ProductQuickControls = ({
               onKeyDown={handleKeydown}
               inputs={customInputs}
               initialValue={pageData.angle}
+              pageData={pageData}
               label="°"
               type="angle"
             />
@@ -484,6 +484,7 @@ const ProductQuickControls = ({
             onKeyDown={handleKeydown}
             inputs={customInputs}
             initialValue={pageData.opacity}
+            pageData={pageData}
             label="%"
             type="opacity"
           />

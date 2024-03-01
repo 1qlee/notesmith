@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import { colors, widths, breakpoints } from "../../styles/variables"
-import { CircleNotch } from "@phosphor-icons/react"
+import { CircleNotch, X } from "@phosphor-icons/react"
 import { ScreenClassRender } from "react-grid-system"
 
 import AlignmentControls from "../customize/templateControls/components/AlignmentControls"
@@ -16,19 +16,29 @@ import Icon from "../ui/Icon"
 import IsometricControls from "../customize/templateControls/IsometricControls"
 import MarginControls from "../customize/templateControls/components/MarginControls"
 import MusicControls from "../customize/templateControls/MusicControls"
-import PageNumberControls from "../customize/templateControls/components/PageNumberControls"
 import RuledControls from "../customize/templateControls/RuledControls"
 import SeyesControls from "../customize/templateControls/SeyesControls"
 import ToggleControls from "../customize/templateControls/components/ToggleControls"
 import { Flexbox } from "../layout/Flexbox"
 import { StyledLabel } from "../form/FormComponents"
 
+const slideIn = keyframes`
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`
+
 const StyledTemplatesBar = styled.div`
+  animation: ${slideIn} 0.3s ease;
   background-color: ${colors.white};
   border: ${colors.borders.black};
   max-height: 816px;
+  position: relative;
   width: ${widths.sidebar};
-  z-index: 2;
+  z-index: 25;
   &.is-collapsed {
     top: 0px;
     border: none;
@@ -36,25 +46,30 @@ const StyledTemplatesBar = styled.div`
     height: 0;
   }
   @media only screen and (max-width: 1388px) {
-    position: absolute;
-    left: 48px;
-    top: 0;
     box-shadow: ${colors.shadow.drawer};
-  }
-  @media only screen and (max-width: ${breakpoints.md}) {
-    position: absolute;
-    left: 16px;
-    top: 0;
+    position: fixed;
+    left: -1px;
+    top: 107px;
     box-shadow: ${colors.shadow.drawer};
+    height: calc(100vh - 106px);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `
 
 const TemplatesContent = styled.div`
+  background-color: ${colors.white};
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem;
   max-height: 725px;
   @media only screen and (max-width: ${breakpoints.sm}) {
     max-height: 600px;
+  }
+  @media only screen and (max-width: ${breakpoints.xs}) {
+    max-height: calc(100% - 71px);
   }
   &::-webkit-scrollbar {
     height: 0.5rem;
@@ -63,6 +78,17 @@ const TemplatesContent = styled.div`
   &::-webkit-scrollbar-thumb {
     background-color: ${colors.gray.threeHundred};
   }
+`
+
+const TemplatesCloseButton = styled(Button)`
+  position: absolute;
+  background-color: ${colors.white};
+  border: ${colors.borders.black};
+  color: ${colors.gray.nineHundred};
+  right: -12px;
+  top: -12px;
+  padding: 4px;
+  border-radius: 100%;
 `
 
 const TemplatesFooter = styled.div`
@@ -135,6 +161,16 @@ function ProductControls({
               <StyledTemplatesBar
                 className={!pageData.showControls ? "is-collapsed" : null}
               >
+                <TemplatesCloseButton
+                  onClick={() => setPageData({
+                    ...pageData,
+                    showControls: false,
+                  })}
+                >
+                  <Icon>
+                    <X />
+                  </Icon>
+                </TemplatesCloseButton>
                 <TemplatesContent>
                   <Flexbox
                     justify="flex-end"
@@ -152,8 +188,6 @@ function ProductControls({
                     ]}
                     setData={setCurrentPageSide}
                   />
-                  <StyledLabel>Page numbers</StyledLabel>
-                  <PageNumberControls />
                   {pageData.template !== "blank" && pageData.template !== "none" && (
                     <>
                       {selectedPageSvg && (
@@ -260,7 +294,7 @@ function ProductControls({
                         <CircleNotch size="1rem" />
                       </Icon>
                     ) : (
-                      <span>Apply template</span>
+                      <span>Apply changes</span>
                     )}
                   </Button>
                 </TemplatesFooter>

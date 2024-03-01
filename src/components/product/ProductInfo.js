@@ -119,7 +119,7 @@ const ProductInfo = ({
         h5fontweight="700"
         h5margin="0 0 8px"
       >
-        <h5>Cover color</h5>
+        <h5>Select cover color</h5>
         <ColorPicker
           data={bookData.colors}
           selectedColor={bookData.coverColor}
@@ -131,33 +131,29 @@ const ProductInfo = ({
       </Content>
       <Flexbox
         justify="space-between"
+        align="center"
         margin="0 0 16px"
       >
         <Content
           h5fontweight="700"
-          h5margin="0 0 8px"
+          h5margin="0"
         >
-          <h5>Page layout</h5>
+          <h5>Select layout</h5>
         </Content>
-        {pageData.template && (
-          <Content
-            linktextdecoration="underline"
+        {pageData.template && pageData.show && (
+          <Button
+            padding="4px 8px"
+            backgroundcolor={colors.white}
+            color={colors.gray.nineHundred}
+            border={colors.borders.black}
+            fontsize="0.75rem"
+            onClick={() => setPageData({
+              ...pageData,
+              showControls: !pageData.showControls,
+            })}
           >
-            <a
-              align="center"
-              fontweight="400"
-              onClick={() => setPageData({
-                ...pageData,
-                show: !pageData.show,
-              })}
-            >
-              {pageData.show ? (
-                "Back to images"
-              ) : (
-                "Back to template"
-              )}
-            </a>
-          </Content>
+            {pageData.showControls ? "Hide" : "Advanced"} options
+          </Button>
         )}
       </Flexbox>
       <PageIcons
@@ -209,6 +205,7 @@ const ProductInfo = ({
           counterfontsize="1rem"
           iconsize="0.75rem"
           setItemQuantity={setItemQuantity}
+          wrapperminwidth="100px"
         />
         <Button
           backgroundcolor={colors.gray.nineHundred}

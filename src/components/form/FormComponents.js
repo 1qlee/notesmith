@@ -72,6 +72,7 @@ function QuantityTracker(props) {
     <QuantityWrapper
       padding={props.wrapperpadding}
       boxshadow={props.wrapperboxshadow}
+      minwidth={props.wrapperminwidth}
       width={props.wrapperwidth}
     >
       <QuantityButton
@@ -350,6 +351,7 @@ const QuantityWrapper = styled.div`
   position: relative;
   display: inline-block;
   width: ${props => props.width};
+  min-width: ${props => props.minwidth};
 `
 
 const QuantityButton = styled.button`

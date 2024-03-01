@@ -12,7 +12,6 @@ function AlignmentControls({
 }) {
   const { maxContentHeight, maxContentWidth, strokeWidth, crossSize } = pageData
   let pageBbox = selectedPageSvg.getBBox()
-  console.log("🚀 ~ pageBbox:", pageBbox)
   const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
   const contentHeight = convertFloatFixed(pageBbox.height, 3)

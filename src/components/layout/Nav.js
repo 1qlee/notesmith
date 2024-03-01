@@ -13,6 +13,7 @@ import Logo from "../misc/Logo"
 import Tag from "../ui/Tag"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
+import ShoppingCart from "../shop/ShoppingCart"
 
 const StyledNav = styled.nav`
   position: fixed;
@@ -227,6 +228,28 @@ const NavMenu = styled.ul`
   }
 `
 
+const CartDrawer = styled.div`
+  opacity: 0;
+  right: 0;
+  padding: 1rem;
+  position: fixed;
+  border-left: ${colors.borders.black};
+  top: 0;
+  transition: transform 0.2s, opacity .5s, visibility .5s;
+  background-color: ${colors.white};
+  width: ${widths.sidebar};
+  visibility: hidden;
+  transform: translateX(100%);
+  height: 100%;
+  z-index: 10000;
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    right: 0;
+  }
+`
+
 const Nav = ({ auth, hideNavbar }) => {
   const [showMenu, setShowMenu] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -243,7 +266,7 @@ const Nav = ({ auth, hideNavbar }) => {
   }
 
   const { user, signOut, loading } = useFirebaseContext()
-  const { cartCount, clearCart } = useShoppingCart()
+  const { cartCount, clearCart, handleCartClick, shouldDisplayCart } = useShoppingCart()
 
   const handleSignOut = () => {
     clearCart()
@@ -275,6 +298,14 @@ const Nav = ({ auth, hideNavbar }) => {
 
   return (
     <StyledNav>
+      <CartDrawer
+        className={shouldDisplayCart ? "is-active" : ""}
+      >
+        <Button
+          onClick={() => handleCartClick()}
+        >close</Button>
+        <ShoppingCart />
+      </CartDrawer>
       <Banner 
         text="Early Access Sale! 25% off all notebooks."
         link={{
@@ -403,9 +434,8 @@ const Nav = ({ auth, hideNavbar }) => {
               </NavGroup>
               <NavGroup>
                 <NavButton
-                  as={Link}
-                  to="/cart"
-                  aria-label="Go to cart"
+                  aria-label="Open cart"
+                  onClick={() => handleCartClick()}
                 >
                   <Icon>
                     <ShoppingCartSimple size={20} weight="bold" />
@@ -443,6 +473,13 @@ const Nav = ({ auth, hideNavbar }) => {
                     to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
                   >
                     Notebooks
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    to="/cart"
+                  >
+                    Cart
                   </NavLink>
                 </NavItem>
                 <NavHeading>Support</NavHeading>

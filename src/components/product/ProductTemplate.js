@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import styled from "styled-components"
 import { pageMargins, colors } from "../../styles/variables"
 import { convertToPx, convertFloatFixed, convertToMM } from "../../utils/helper-functions"
 import { ScreenClassRender } from "react-grid-system"
+import { X } from "@phosphor-icons/react"
 
 import Holes from "../customize/pageComponents/Holes"
 import Ruled from "../customize/templates/Ruled"
@@ -17,16 +18,17 @@ import CrossGrid from "../customize/templates/CrossGrid"
 import Calligraphy from "../customize/templates/Calligraphy"
 import Button from "../ui/Button"
 import Box from "../ui/Box"
+import Icon from "../ui/Icon"
 
-const TemplatesButton = styled(Button)`
+const TemplatesHideButton = styled(Button)`
   position: absolute;
-  top: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 4px 8px;
-  height: 24px;
-  font-size: 0.875rem;
-  z-index: 9;
+  background-color: ${colors.white};
+  border: ${colors.borders.black};
+  color: ${colors.gray.nineHundred};
+  right: -12px;
+  top: -12px;
+  padding: 4px;
+  border-radius: 100%;
 `
 
 function ProductTemplate({
@@ -107,26 +109,20 @@ function ProductTemplate({
           <Box
             position="relative"
           >
-            <TemplatesButton
-              backgroundcolor={colors.white}
-              border={colors.borders.black}
-              color={colors.gray.nineHundred}
+            <TemplatesHideButton
               onClick={() => setPageData({
                 ...pageData,
-                showControls: !pageData.showControls,
+                show: !pageData.show,
               })}
-              className={!pageData.showControls && !isMobile ? "is-active" : null}
             >
-              {pageData.showControls ? (
-                "Hide options"
-              ) : (
-                "Advanced options"
-              )}
-            </TemplatesButton>
+              <Icon>
+                <X />
+              </Icon>
+            </TemplatesHideButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="100%"
-              height={isMobile ? "100%" : bookData.heightPixel}
+              height="100%"
               viewBox={`0 0 ${bookData.widthPixel} ${bookData.heightPixel}`}
             >
               <svg

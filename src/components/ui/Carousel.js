@@ -12,7 +12,7 @@ const ArrowButton = styled(Button)`
   right: ${props => props.side === "right" && "8px"};
   transform: translateY(-50%);
   padding: 4px;
-  background-color: ${colors.gray.threeHundred};
+  background-color: rgba(238, 238, 238, 0.5);
   border: ${colors.borders.black};
   border-radius: 50%;
   color: ${colors.gray.nineHundred};
