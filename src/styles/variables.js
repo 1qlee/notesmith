@@ -2,6 +2,7 @@ import { convertToPx } from "../utils/helper-functions"
 
 const colors = {
   gray: {
+    transparent: "rgba(238, 238, 238, 0.5)",
     oneHundred: "#F5F5F5",
     twoHundred: "#EEEEEE",
     threeHundred: "#E0E0E0",
@@ -137,6 +138,7 @@ const widths = {
   sidebar: "300px",
   caption: "300px",
   input: "300px",
+  drawer: "450px",
   notification: "450px",
   modal: "480px",
   form: "600px",

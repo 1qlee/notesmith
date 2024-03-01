@@ -7,9 +7,11 @@ const Box = styled.div`
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: ${props => props.position};
+  flex: ${props => props.flex};
   margin: ${props => props.margin};
   width: ${props => props.width};
   max-width: ${props => props.maxwidth};
+  max-height: ${props => props.maxheight};
   height: ${props => props.height};
   overflow: ${props => props.overflow};
   &.has-border {

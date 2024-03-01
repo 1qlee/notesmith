@@ -19,7 +19,7 @@ const StyledModal = styled.dialog`
 `
 
 const ModalBackground = styled.div`
-  background-color: ${colors.primary.shadow};
+  background-color: ${colors.gray.threeHundred};
   height: 100vh;
   left: 0;
   position: fixed;

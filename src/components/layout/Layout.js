@@ -1,6 +1,7 @@
-import React from "react"
-import styled from "styled-components"
+import React, { useState } from "react"
+import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
+import { useShoppingCart } from '../cart/context/cartContext'
 import "./master.css"
 
 import Nav from "./Nav"
@@ -8,6 +9,15 @@ import Loader from "../misc/Loader"
 import Footer from "../ui/Footer"
 import Seo from "./Seo"
 import Toast from "../ui/Toast"
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`
 
 const StyledLayout = styled.div`
   background-color: ${props => props.backgroundcolor || colors.white};
@@ -20,6 +30,17 @@ const StyledLayout = styled.div`
   }
 `
 
+const GrayArea = styled.div`
+  animation: ${fadeIn} 0.3s ease-in-out;
+  background-color: ${colors.gray.transparent};
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 99;
+`
+
 const Layout = ({
   loading,
   children,
@@ -28,17 +49,33 @@ const Layout = ({
   loaderClassName,
   loaderMsg,
   seoDetails,
-  hideScroll,
+  noScroll,
 }) => {
+  const { handleCloseCart, shouldDisplayCart } = useShoppingCart()
+  const [showGrayArea, setShowGrayArea] = useState(false)
+  const [hideScroll, setHideScroll] = useState(false)
+
   return (
     <StyledLayout
       className={className}
       backgroundcolor={backgroundcolor}
     >
-      <Nav />
+      {(showGrayArea || shouldDisplayCart) && 
+        <GrayArea 
+          onClick={() => {
+            setShowGrayArea(false)
+            setHideScroll(false)
+            handleCloseCart()
+          }}
+        />
+      }
+      <Nav 
+        setShowGrayArea={setShowGrayArea}
+        setHideScroll={setHideScroll}
+      />
       <Seo
         details={seoDetails}
-        hideScroll={hideScroll}
+        hideScroll={hideScroll || shouldDisplayCart}
       />
       {children}
       {loading && (

@@ -126,6 +126,9 @@ const Content = styled.div`
     margin: ${props => props.captionmargin};
     font-size: ${props => props.captionfontsize};
   }
+  span {
+    text-transform: ${props => props.spantexttransform};
+  }
 `
 
 export default Content

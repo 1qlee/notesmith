@@ -4,8 +4,7 @@ import { colors, fonts, widths, breakpoints } from "../../styles/variables"
 import { Link } from "gatsby"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "../cart/context/cartContext"
-import { isBrowser } from "../../utils/helper-functions"
-import { ShoppingCartSimple, User } from "@phosphor-icons/react"
+import { ShoppingCartSimple, User, X } from "@phosphor-icons/react"
 
 import { Container } from "react-grid-system"
 import Banner from "../ui/Banner"
@@ -14,8 +13,8 @@ import Tag from "../ui/Tag"
 import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 import ShoppingCart from "../shop/ShoppingCart"
-import { X } from "@phosphor-icons/react/dist/ssr"
 import { Flexbox } from "./Flexbox"
+import Content from "../ui/Content"
 
 const StyledNav = styled.nav`
   position: fixed;
@@ -24,7 +23,7 @@ const StyledNav = styled.nav`
   width: 100%;
   border-bottom: ${colors.borders.black};
   background-color: ${colors.white};
-  z-index: 99;
+  z-index: 50;
   &.has-shadow {
     box-shadow: 0 2px 0 ${colors.shadow.float};
   }
@@ -94,7 +93,7 @@ const Navbar = styled.div`
   position: relative;
   justify-content: space-between;
   width: 100%;
-  z-index: 999;
+  z-index: 50;
 `
 
 const NavLogo = styled.div`
@@ -233,17 +232,18 @@ const NavMenu = styled.ul`
 const CartDrawer = styled.div`
   opacity: 0;
   right: 0;
-  padding: 1rem;
   position: fixed;
   border-left: ${colors.borders.black};
   top: 0;
   transition: transform 0.2s, opacity .5s, visibility .5s;
   background-color: ${colors.white};
-  width: ${widths.sidebar};
+  width: ${widths.drawer};
   visibility: hidden;
   transform: translateX(100%);
   height: 100%;
-  z-index: 10000;
+  z-index: 102;
+  display: flex;
+  flex-direction: column;
   &.is-active {
     opacity: 1;
     visibility: visible;
@@ -252,21 +252,15 @@ const CartDrawer = styled.div`
   }
 `
 
-const Nav = ({ auth, hideNavbar }) => {
+const Nav = ({ 
+  setShowGrayArea,
+  hideNavbar,
+  setHideScroll,
+}) => {
   const [showMenu, setShowMenu] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const navMenuRef = useRef(null)
   const userMenuRef = useRef(null)
-
-  if (isBrowser) {
-    // get pathnames
-    const path = window.location.pathname
-
-    // get the first part of the pathname
-    const pathArray = path.split("/")
-    const firstPath = pathArray[1]
-  }
-
   const { user, signOut, loading } = useFirebaseContext()
   const { cartCount, clearCart, handleCartClick, shouldDisplayCart, handleCloseCart } = useShoppingCart()
 
@@ -299,17 +293,21 @@ const Nav = ({ auth, hideNavbar }) => {
   }, [userMenuRef, navMenuRef])
 
   return (
-    <StyledNav>
+    <>
       <CartDrawer
         className={shouldDisplayCart ? "is-active" : ""}
       >
         <Flexbox
           justify="flex-end"
           align="center"
-          margin="0 0 16px 0"
+          margin="16px"
         >
           <Button
-            onClick={() => handleCloseCart()}
+            onClick={() => {
+              setShowGrayArea(false)
+              setHideScroll(false)
+              handleCloseCart()
+            }}
             borderradius="50%"
             backgroundcolor={colors.white}
             color={colors.gray.nineHundred}
@@ -321,245 +319,255 @@ const Nav = ({ auth, hideNavbar }) => {
             </Icon>
           </Button>
         </Flexbox>
-        <ShoppingCart />
+        <ShoppingCart 
+          drawer
+          setShowGrayArea={setShowGrayArea}
+          setHideScroll={setHideScroll}
+        />
       </CartDrawer>
-      <Banner 
-        text="Early Access Sale! 25% off all notebooks."
-        link={{
-          to: "/products/notebooks/hardcover-wired-notebook-a5-custom/white",
-          text: "Shop"
-        }}
-      />
-      <Container xl lg md sm xs>
-        <Navbar hideNavbar={hideNavbar}>
-          <NavSection>
-            <Link 
-              to="/"
-              aria-label="Go to home page"
-            >
-              <NavLogo>
-                <Logo 
-                  width="100%" 
-                  height="100%" 
-                  color={colors.gray.nineHundred} 
-                />
-              </NavLogo>
-            </Link>
-          </NavSection>
-          <NavSection
-            justify="center"
-            className="remove-on-mobile"
-          >
-            <NavItem>
-              <NavLink
-                to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
-                color={colors.gray.nineHundred}
+      <StyledNav>
+        <Banner 
+          text="Early Access Sale! 25% off all notebooks."
+          link={{
+            to: "/products/notebooks/hardcover-wired-notebook-a5-custom/white",
+            text: "Shop"
+          }}
+        />
+        <Container xl lg md sm xs>
+          <Navbar hideNavbar={hideNavbar}>
+            <NavSection>
+              <Link 
+                to="/"
+                aria-label="Go to home page"
               >
-                Shop
-              </NavLink>
-            </NavItem>
-          </NavSection>
-          {!loading && (
-            <NavSection
-              justify="flex-end"
-            >
-              <NavGroup
-                className="remove-on-mobile"
-              >
-                <NavButton
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                >
-                  <Icon>
-                    <User size={20} weight="bold" />
-                  </Icon>
-                </NavButton>
-                {showUserMenu && (
-                  <DropdownMenu
-                    ref={userMenuRef}
-                  >
-                    <NavHeading>
-                      Account
-                    </NavHeading>
-                    {user ? (
-                      <>
-                        <NavItem>
-                          <NavLink
-                            to="/account/dashboard"
-                            color={colors.gray.nineHundred}
-                          >
-                            Dashboard
-                          </NavLink>
-                        </NavItem>
-                        <NavItem>
-                          <NavLink
-                            as="a"
-                            tabIndex={0}
-                            onClick={() => handleSignOut()}
-                            color={colors.gray.nineHundred}
-                          >
-                            Sign out
-                          </NavLink>
-                        </NavItem>
-                      </>
-                    ) : (
-                      <>
-                        <NavItem>
-                          <NavLink
-                            to="/signin"
-                            color={colors.gray.nineHundred}
-                          >
-                            Sign in
-                          </NavLink>
-                        </NavItem>
-                        <NavItem
-                          className="last-item"
-                        >
-                          <NavLink
-                            to="/signup"
-                            color={colors.gray.nineHundred}
-                          >
-                            Sign up
-                          </NavLink>
-                        </NavItem>
-                      </>
-                    )}
-                    <NavHeading>
-                      Support
-                    </NavHeading>
-                    <NavItem
-                      className="last-item"
-                    >
-                      <NavLink
-                        to="/faq"
-                        color={colors.gray.nineHundred}
-                      >
-                        FAQ
-                      </NavLink>
-                    </NavItem>
-                    <NavItem
-                      className="last-item"
-                    >
-                      <NavLink
-                        to="/return-policy"
-                        color={colors.gray.nineHundred}
-                      >
-                        Return policy
-                      </NavLink>
-                    </NavItem>
-                  </DropdownMenu>
-                )}
-              </NavGroup>
-              <NavGroup>
-                <NavButton
-                  aria-label="Open cart"
-                  onClick={() => handleCartClick()}
-                >
-                  <Icon>
-                    <ShoppingCartSimple size={20} weight="bold" />
-                  </Icon>
-                  {cartCount > 0 && (
-                    <CartBadge
-                      borderradius="50%"
-                      top={cartCount > 9 ? "-2px" : "0px"}
-                      right={cartCount > 9 ? "-2px" : "0px"}
-                      padding={cartCount > 9 ? "4px 3px" : "2px 4px"}
-                    >
-                      {cartCount}
-                    </CartBadge>
-                  )}
-                </NavButton>
-              </NavGroup>
-              <NavMenuButton
-                id="nav-menu-button"
-                aria-label="Toggle nav menu"
-                onClick={() => setShowMenu(!showMenu)}
-                showMenu={showMenu}
-              >
-                <NavMenuIcon 
-                  showMenu={showMenu} 
-                  onClick={e => e.stopPropagation()}
-                />
-              </NavMenuButton>
-              <NavMenu
-                className={showMenu ? "is-active" : ""}
-                ref={navMenuRef}
-              >
-                <NavHeading>Shop</NavHeading>
-                <NavItem>
-                  <NavLink
-                    to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
-                  >
-                    Notebooks
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    to="/cart"
-                  >
-                    Cart
-                  </NavLink>
-                </NavItem>
-                <NavHeading>Support</NavHeading>
-                <NavItem>
-                  <NavLink
-                    to="/faq"
-                  >
-                    FAQ
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    to="/return-policy"
-                  >
-                    Return policy
-                  </NavLink>
-                </NavItem>
-                <NavHeading>Account</NavHeading>
-                {user ? (
-                  <>
-                    <NavItem>
-                      <NavLink
-                        to="/account/dashboard"
-                      >
-                        Dashboard
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        as="a"
-                        tabIndex={0}
-                        onClick={() => handleSignOut()}
-                      >
-                        Sign out
-                      </NavLink>
-                    </NavItem>
-                  </>
-                ) : (
-                  <>
-                    <NavItem>
-                      <NavLink
-                        to="/signin"
-                      >
-                        Sign in
-                      </NavLink>
-                    </NavItem>
-                    <NavItem
-                      className="last-item"
-                    >
-                      <NavLink
-                        to="/signup"
-                      >
-                        Sign up
-                      </NavLink>
-                    </NavItem>
-                  </>
-                )}
-              </NavMenu>
+                <NavLogo>
+                  <Logo 
+                    width="100%" 
+                    height="100%" 
+                    color={colors.gray.nineHundred} 
+                  />
+                </NavLogo>
+              </Link>
             </NavSection>
-          )}
-        </Navbar>
-      </Container>
-    </StyledNav>
+            <NavSection
+              justify="center"
+              className="remove-on-mobile"
+            >
+              <NavItem>
+                <NavLink
+                  to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
+                  color={colors.gray.nineHundred}
+                >
+                  Shop
+                </NavLink>
+              </NavItem>
+            </NavSection>
+            {!loading && (
+              <NavSection
+                justify="flex-end"
+              >
+                <NavGroup
+                  className="remove-on-mobile"
+                >
+                  <NavButton
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                  >
+                    <Icon>
+                      <User size={20} weight="bold" />
+                    </Icon>
+                  </NavButton>
+                  {showUserMenu && (
+                    <DropdownMenu
+                      ref={userMenuRef}
+                    >
+                      <NavHeading>
+                        Account
+                      </NavHeading>
+                      {user ? (
+                        <>
+                          <NavItem>
+                            <NavLink
+                              to="/account/dashboard"
+                              color={colors.gray.nineHundred}
+                            >
+                              Dashboard
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              as="a"
+                              tabIndex={0}
+                              onClick={() => handleSignOut()}
+                              color={colors.gray.nineHundred}
+                            >
+                              Sign out
+                            </NavLink>
+                          </NavItem>
+                        </>
+                      ) : (
+                        <>
+                          <NavItem>
+                            <NavLink
+                              to="/signin"
+                              color={colors.gray.nineHundred}
+                            >
+                              Sign in
+                            </NavLink>
+                          </NavItem>
+                          <NavItem
+                            className="last-item"
+                          >
+                            <NavLink
+                              to="/signup"
+                              color={colors.gray.nineHundred}
+                            >
+                              Sign up
+                            </NavLink>
+                          </NavItem>
+                        </>
+                      )}
+                      <NavHeading>
+                        Support
+                      </NavHeading>
+                      <NavItem
+                        className="last-item"
+                      >
+                        <NavLink
+                          to="/faq"
+                          color={colors.gray.nineHundred}
+                        >
+                          FAQ
+                        </NavLink>
+                      </NavItem>
+                      <NavItem
+                        className="last-item"
+                      >
+                        <NavLink
+                          to="/return-policy"
+                          color={colors.gray.nineHundred}
+                        >
+                          Return policy
+                        </NavLink>
+                      </NavItem>
+                    </DropdownMenu>
+                  )}
+                </NavGroup>
+                <NavGroup>
+                  <NavButton
+                    aria-label="Open cart"
+                    onClick={() => {
+                      setShowGrayArea(true)
+                      setHideScroll(true)
+                      handleCartClick()
+                    }}
+                  >
+                    <Icon>
+                      <ShoppingCartSimple size={20} weight="bold" />
+                    </Icon>
+                    {cartCount > 0 && (
+                      <CartBadge
+                        borderradius="50%"
+                        top={cartCount > 9 ? "-2px" : "0px"}
+                        right={cartCount > 9 ? "-2px" : "0px"}
+                        padding={cartCount > 9 ? "4px 3px" : "2px 4px"}
+                      >
+                        {cartCount}
+                      </CartBadge>
+                    )}
+                  </NavButton>
+                </NavGroup>
+                <NavMenuButton
+                  id="nav-menu-button"
+                  aria-label="Toggle nav menu"
+                  onClick={() => setShowMenu(!showMenu)}
+                  showMenu={showMenu}
+                >
+                  <NavMenuIcon 
+                    showMenu={showMenu} 
+                    onClick={e => e.stopPropagation()}
+                  />
+                </NavMenuButton>
+                <NavMenu
+                  className={showMenu ? "is-active" : ""}
+                  ref={navMenuRef}
+                >
+                  <NavHeading>Shop</NavHeading>
+                  <NavItem>
+                    <NavLink
+                      to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
+                    >
+                      Notebooks
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      to="/cart"
+                    >
+                      Cart
+                    </NavLink>
+                  </NavItem>
+                  <NavHeading>Support</NavHeading>
+                  <NavItem>
+                    <NavLink
+                      to="/faq"
+                    >
+                      FAQ
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      to="/return-policy"
+                    >
+                      Return policy
+                    </NavLink>
+                  </NavItem>
+                  <NavHeading>Account</NavHeading>
+                  {user ? (
+                    <>
+                      <NavItem>
+                        <NavLink
+                          to="/account/dashboard"
+                        >
+                          Dashboard
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          as="a"
+                          tabIndex={0}
+                          onClick={() => handleSignOut()}
+                        >
+                          Sign out
+                        </NavLink>
+                      </NavItem>
+                    </>
+                  ) : (
+                    <>
+                      <NavItem>
+                        <NavLink
+                          to="/signin"
+                        >
+                          Sign in
+                        </NavLink>
+                      </NavItem>
+                      <NavItem
+                        className="last-item"
+                      >
+                        <NavLink
+                          to="/signup"
+                        >
+                          Sign up
+                        </NavLink>
+                      </NavItem>
+                    </>
+                  )}
+                </NavMenu>
+              </NavSection>
+            )}
+          </Navbar>
+        </Container>
+      </StyledNav>
+    </>
   )
 }
 

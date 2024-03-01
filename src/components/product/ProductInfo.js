@@ -30,7 +30,7 @@ const ProductInfo = ({
   setRightPageData,
   selectedPageSvg,
 }) => {
-  const { addItem, handleCartClick } = useShoppingCart()
+  const { addItem, handleCartClick, shouldDisplayCart } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
   let discount = applyDiscounts(bookData.price, +itemQuantity)
@@ -77,7 +77,10 @@ const ProductInfo = ({
         weight: bookData.weight,
         width: bookData.widthPixel,
       }, { count: itemQuantity })
-      handleCartClick()
+
+      if (!shouldDisplayCart) {
+        handleCartClick()
+      }
     }
   }
 

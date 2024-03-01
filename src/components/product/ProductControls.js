@@ -52,7 +52,7 @@ const StyledTemplatesBar = styled.div`
     top: 107px;
     box-shadow: ${colors.shadow.drawer};
     height: calc(100vh - 106px);
-    z-index: 999;
+    z-index: 55;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

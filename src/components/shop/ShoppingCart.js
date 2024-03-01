@@ -16,12 +16,18 @@ import Content from "../ui/Content"
 import Icon from "../ui/Icon"
 import StrikeText from "../misc/StrikeText"
 
-function ShoppingCart() {
+function ShoppingCart({
+  drawer,
+  setShowGrayArea,
+  setHideScroll,
+}) {
   const {
     cartDetails,
     setItemQuantity,
     removeItem,
     formattedTotalPrice,
+    handleCartClick,
+    handleCloseCart,
   } = useShoppingCart()
   const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
@@ -65,6 +71,248 @@ function ShoppingCart() {
 
   if (loading) {
     return <Loader />
+  }
+  
+  if (drawer) {
+    return (
+      <>
+        {cartItems.length > 0 ? (
+          <>
+            <Content
+              margin="0 16px 32px"
+              h1fontsize="2rem"
+              h1margin="0"
+            >
+              <h1>Cart</h1>
+            </Content>
+            <Box
+              maxheight="668px"
+              padding="0 16px"
+              overflow="hidden auto"
+            >
+              {cartItems.map((item, index) => (
+                <Flexbox key={index}
+                  margin="0 0 16px"
+                  maxheight=""
+                >
+                  <Link
+                    to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+                  >
+                    <GatsbyImage
+                      image={getImage(item.image)}
+                      alt="product thumbnail"
+                    />
+                  </Link>
+                  <Box
+                    margin="0 0 0 16px"
+                    flex="1"
+                  >
+                    <Content
+                      paragraphmargin="0"
+                      paragraphfontsize="1rem"
+                      margin="0 0 4px"
+                    >
+                      <Link
+                        to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+                      >
+                        <p>{item.name}</p>
+                      </Link>
+                    </Content>
+                    <Box
+                      margin="8px 0 0"
+                    >
+                      {item.category === "notebooks" && (
+                        <>
+                          <Content
+                            paragraphfontsize="0.875rem"
+                            paragraphmargin="0"
+                            paragraphcolor={colors.gray.sevenHundred}
+                            spantexttransform="capitalize"
+                            margin="0"
+                          >
+                            <p>Cover: <span>{item.coverColor}</span></p>
+                            {item.leftPageData && (
+                              <p>Left-side pages: <span>{item.leftPageData.template} ({item.leftPageData.spacing}mm)</span></p>
+                            )}
+                            {item.rightPageData && (
+                              <p>Right-side pages: <span>{item.rightPageData.template} ({item.rightPageData.spacing}mm)</span></p>
+                            )}
+                          </Content>
+                          {item.bookId && (
+                            <Flexbox
+                              flex="flex"
+                              align="center"
+                              justify="space-between"
+                              margin="0 0 0.25rem 0"
+                            >
+                              <Content
+                                headingfontfamily={fonts.secondary}
+                                h3fontsize="0.75rem"
+                                h3margin="0"
+                                margin="0"
+                              >
+                                <h3>Pages</h3>
+                              </Content>
+                              <Content
+                                paragraphfontsize="0.75rem"
+                                paragraphmargin="0"
+                                paragraphtexttransform="capitalize"
+                              >
+                                <Button
+                                  fontsize="0.75rem"
+                                  padding="2px 4px"
+                                  onClick={() => handleViewDetails(item.id)}
+                                  border={colors.borders.black}
+                                  backgroundcolor={colors.white}
+                                  color={colors.gray.nineHundred}
+                                  as={Link}
+                                  to={`/customize/${item.slug}/${item.bookId}`}
+                                >
+                                  <span>View</span>
+                                  <Icon
+                                    margin="0 0 0 2px"
+                                  >
+                                    <ArrowSquareOut size="0.75rem" />
+                                  </Icon>
+                                </Button>
+                              </Content>
+                            </Flexbox>
+                          )}
+                        </>
+                      )}
+                    </Box>
+                    <Flexbox
+                      flex="flex"
+                      align="center"
+                      justify="space-between"
+                      margin="8px 0"
+                    >
+                      <Button
+                        fontsize="0.75rem"
+                        padding="4px 6px"
+                        onClick={() => removeItem(item.id)}
+                        backgroundcolor={colors.gray.oneHundred}
+                        color={colors.gray.nineHundred}
+                      >
+                        <Icon margin="0 4px 0 0">
+                          <Trash size="0.75rem" />
+                        </Icon>
+                        <span>Remove</span>
+                      </Button>
+                    </Flexbox>
+                    <Flexbox
+                      margin="16px 0"
+                      align="center"
+                      justify="space-between"
+                    >
+                      <Content
+                        paragraphmargin="0"
+                      >
+                        {item.discount ? (
+                          <p>
+                            <StrikeText
+                              color={colors.gray.sixHundred}
+                            >
+                              ${convertToDecimal(item.originalPrice, 2)}
+                            </StrikeText>
+                            <span>${convertToDecimal(item.price, 2)}</span>
+                          </p>
+                        ) : (
+                          <p>${convertToDecimal(item.price, 2)}</p>
+                        )}
+                      </Content>
+                      <CartQuantityTracker
+                        counterwidth="6rem"
+                        counterfontsize="0.875rem"
+                        wrapperwidth="6rem"
+                        iconsize={12}
+                        setItemQuantity={setItemQuantity}
+                        product={item}
+                        counterpadding="4px"
+                      />
+                      <Content
+                        paragraphmargin="0"
+                      >
+                        <p>${convertToDecimal(item.value, 2)}</p>
+                      </Content>
+                    </Flexbox>
+                  </Box>
+                </Flexbox>
+              ))}
+            </Box>
+            <hr />
+            <Box>
+              <Flexbox
+                align="flex-end"
+                flex="flex"
+                justify="flex-end"
+                margin="16px 0 0"
+                padding="16px"
+                width="100%"
+              >
+                <Content
+                  margin="0 8px 0 0"
+                  h5margin="0"
+                  headinglineheight="1"
+                >
+                  <h5>Subtotal</h5>
+                </Content>
+                <Content
+                  paragraphmargin="0"
+                  paragraphfontsize="1.25rem"
+                  paragraphlineheight="1"
+                >
+                  <p>{formattedTotalPrice}</p>
+                </Content>
+              </Flexbox>
+              <Flexbox
+                padding="16px"
+                width="100%"
+              >
+                <Button
+                  backgroundcolor={colors.gray.nineHundred}
+                  color={colors.gray.oneHundred}
+                  padding="1rem"
+                  as={Link}
+                  to="/checkout"
+                  width="100%"
+                >
+                  Checkout
+                </Button>
+              </Flexbox>
+            </Box>
+          </>
+        ) : (
+          <Box
+            padding="16px"
+            overflow="hidden auto"
+          >
+            <Content
+              margin="0 0 32px"
+              maxwidth={widths.content.normal}
+              h1fontsize="2rem"
+            >
+              <h1>Your cart is empty</h1>
+              <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
+            </Content>
+            <Button
+              backgroundcolor={colors.gray.nineHundred}
+              color={colors.gray.oneHundred}
+              padding="16px 32px"
+              as={Link}
+              onClick={() => {
+                handleCloseCart()
+                setShowGrayArea(false)
+                setHideScroll(false)
+              }}
+              to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+            >
+              Shop notebooks
+            </Button>
+          </Box>
+        )}
+      </>
+    )
   }
 
   return (
@@ -392,7 +640,7 @@ function ShoppingCart() {
             color={colors.gray.oneHundred}
             padding="16px 32px"
             as={Link}
-            to="/checkout"
+            to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
           >
             Shop notebooks
           </Button>

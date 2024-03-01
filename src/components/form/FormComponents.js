@@ -367,7 +367,7 @@ const QuantityButton = styled.button`
   transform: translateY(-50%);
   left: ${props => props.left ? "12px" : null};
   right: ${props => props.right ? "12px" : null};
-  z-index: 99;
+  z-index: 7;
   &:hover {
     cursor: pointer;
   }
