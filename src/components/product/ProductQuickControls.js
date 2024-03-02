@@ -96,6 +96,7 @@ const ProductQuickControls = ({
   setPageData,
   setLeftPageData,
   setRightPageData,
+  selectedPageSvg,
 }) => {
   const { maxContentHeight, maxContentWidth } = pageData
   const [customInputs, setCustomInputs] = useState([])
@@ -229,8 +230,16 @@ const ProductQuickControls = ({
 
   const handleChangeData = (data) => {
     setPageData(data)
-    setLeftPageData(data)
-    setRightPageData(data)
+    setLeftPageData({
+      pageData: data,
+      template: pageData.template,
+      svg: selectedPageSvg.outerHTML,
+    })
+    setRightPageData({
+      pageData: data,
+      template: pageData.template,
+      svg: selectedPageSvg.outerHTML,
+    })
   }
   
   const handleValueChange = (value, type, defaultValue, isSelect) => {

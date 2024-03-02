@@ -14,7 +14,6 @@ import Icon from "../ui/Icon"
 import Button from "../ui/Button"
 import ShoppingCart from "../shop/ShoppingCart"
 import { Flexbox } from "./Flexbox"
-import Content from "../ui/Content"
 
 const StyledNav = styled.nav`
   position: fixed;
@@ -173,7 +172,7 @@ const DropdownMenu = styled.ul`
   padding: 16px 4px;
   border: ${colors.borders.black};
   width: ${widths.dropdown};
-  z-index: 24;
+  z-index: 99;
   a {
     width: 100%;
   }
@@ -201,7 +200,7 @@ const NavMenu = styled.ul`
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 107px);
   justify-content: flex-start;
   max-width: ${widths.sidebar};
   opacity: 0;
@@ -214,7 +213,7 @@ const NavMenu = styled.ul`
   transition: transform 0.2s, opacity 0.4s, visibility 1s;
   visibility: hidden;
   width: 85vw;
-  z-index: 23;
+  z-index: 99;
   will-change: transform;
   a {
     font-size: 1.25rem;
@@ -239,7 +238,7 @@ const CartDrawer = styled.div`
   position: fixed;
   border-left: ${colors.borders.black};
   top: 0;
-  transition: transform 0.2s, opacity .5s, visibility .5s;
+  transition: transform 0.2s, opacity 0.4s, visibility 1s;
   background-color: ${colors.white};
   width: ${widths.drawer};
   visibility: hidden;

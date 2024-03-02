@@ -5,6 +5,7 @@ import { applyDiscounts, formatDollars } from "../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
+import { isBrowser } from "../../utils/helper-functions"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
@@ -42,7 +43,7 @@ const ProductInfo = ({
     right: buttonFixed && "0",
     borderRadius: buttonFixed && "0",
     margin: buttonFixed && "0",
-    zIndex: buttonFixed && 105,
+    zIndex: buttonFixed && 49,
   }
   let discount = applyDiscounts(bookData.price, +itemQuantity)
   let discountRate = discount.rate || 0
@@ -52,29 +53,31 @@ const ProductInfo = ({
   let discountAmount = discount.amount || 0
 
   useEffect(() => {
-    const isNodeInViewport = (node) => {
-      var rect = node.getBoundingClientRect();
-      return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-      );
+    if (isBrowser()) {
+      const isNodeInViewport = (node) => {
+        var rect = node.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+      }
+
+      const handleScroll = throttle(() => {
+        const cartNode = cartButtonRef.current
+
+        if (document.documentElement.clientWidth < 767 && !isNodeInViewport(cartNode) && !buttonFixed) {
+          setButtonFixed(true)
+        }
+        else {
+          setButtonFixed(false)
+        }
+      }, 50)
+
+
+      document.addEventListener('scroll', handleScroll)
     }
-
-    const handleScroll = throttle(() => {
-      const cartNode = cartButtonRef.current
-
-      if (document.documentElement.clientWidth < 767 && !isNodeInViewport(cartNode) && !buttonFixed) {
-        setButtonFixed(true)
-      }
-      else {
-        setButtonFixed(false)
-      }
-    }, 50)
-
-  
-    document.addEventListener('scroll', handleScroll)
   }, []) 
 
   function handleAddCartButton(bookData) {

@@ -22,13 +22,14 @@ const Footer = () => {
 
   return (
     <Section backgroundcolor={colors.gray.nineHundred}>
-      <SectionContent padding={`${spacing.medium} 0`}>
+      <SectionContent padding={`${spacing.large} 0`}>
         <Container xs sm md lg xl>
           <Row>
             <Col md={4} push={{ md: 2 }}>
               <Content
                 paragraphcolor={colors.gray.oneHundred}
                 paragraphfontsize="1.25rem"
+                margin="0 0 16px"
               >
                 <p>Subscribe to our mailing list and stay updated on all updates, promotions, and much more!</p>
               </Content>

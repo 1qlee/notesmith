@@ -132,10 +132,10 @@ function ShoppingCart({
                           >
                             <p>Cover: <span>{item.coverColor}</span></p>
                             {item.leftPageData && (
-                              <p>Left-side pages: <span>{item.leftPageData.template} ({item.leftPageData.spacing}mm)</span></p>
+                              <p>Left-side pages: <span>{item.leftPageData.template} ({item.leftPageData.pageData.spacing}mm)</span></p>
                             )}
                             {item.rightPageData && (
-                              <p>Right-side pages: <span>{item.rightPageData.template} ({item.rightPageData.spacing}mm)</span></p>
+                              <p>Right-side pages: <span>{item.rightPageData.template} ({item.rightPageData.pageData.spacing}mm)</span></p>
                             )}
                           </Content>
                           {item.bookId && (
@@ -222,9 +222,9 @@ function ShoppingCart({
                         )}
                       </Content>
                       <CartQuantityTracker
-                        counterwidth="6rem"
+                        counterwidth="5rem"
                         counterfontsize="0.875rem"
-                        wrapperwidth="6rem"
+                        wrapperwidth="5rem"
                         iconsize={12}
                         setItemQuantity={setItemQuantity}
                         product={item}

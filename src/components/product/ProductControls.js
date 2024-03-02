@@ -111,7 +111,7 @@ function ProductControls({
   const [loading, setLoading] = useState(false)
   const { maximumMarginHeight, maximumMarginWidth } = dimensions
 
-  function handleSetTemplate() {
+  function handleApplyTemplate() {
     setLoading(true)
 
     if (currentPageSide === "left") {
@@ -287,7 +287,7 @@ function ProductControls({
                     padding="1rem"
                     width="100%"
                     disabled={pageData.template === "none" ? true : false}
-                    onClick={() => handleSetTemplate()}
+                    onClick={() => handleApplyTemplate()}
                   >
                     {loading ? (
                       <Icon>
