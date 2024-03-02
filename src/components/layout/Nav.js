@@ -253,6 +253,9 @@ const CartDrawer = styled.div`
     transform: translateX(0);
     right: 0;
   }
+  @media only screen and (max-width: ${breakpoints.xs}) {
+    width: 100%;
+  }
 `
 
 const Nav = ({ 
