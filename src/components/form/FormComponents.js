@@ -74,6 +74,7 @@ function QuantityTracker(props) {
       boxshadow={props.wrapperboxshadow}
       minwidth={props.wrapperminwidth}
       width={props.wrapperwidth}
+      style={props.style}
     >
       <QuantityButton
         disabled={quantity === 1}

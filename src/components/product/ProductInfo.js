@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
 import { applyDiscounts, formatDollars } from "../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
+import { throttle } from "lodash"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
@@ -30,15 +31,51 @@ const ProductInfo = ({
   setRightPageData,
   selectedPageSvg,
 }) => {
+  const cartButtonRef = useRef(null)
   const { addItem, handleCartClick, shouldDisplayCart } = useShoppingCart()
+  const [buttonFixed, setButtonFixed] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
   const [itemAdded, setItemAdded] = useState(false)
+  const fixedButtonStyle = {
+    position: buttonFixed && "fixed",
+    bottom: buttonFixed && "0",
+    right: buttonFixed && "0",
+    borderRadius: buttonFixed && "0",
+    margin: buttonFixed && "0",
+    zIndex: buttonFixed && 105,
+  }
   let discount = applyDiscounts(bookData.price, +itemQuantity)
   let discountRate = discount.rate || 0
   let discountPrice = discount.price || 0
   let discountSaved = discount.saved || 0
   let discountPct = discount.pct || 0
   let discountAmount = discount.amount || 0
+
+  useEffect(() => {
+    const isNodeInViewport = (node) => {
+      var rect = node.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    }
+
+    const handleScroll = throttle(() => {
+      const cartNode = cartButtonRef.current
+
+      if (document.documentElement.clientWidth < 767 && !isNodeInViewport(cartNode) && !buttonFixed) {
+        setButtonFixed(true)
+      }
+      else {
+        setButtonFixed(false)
+      }
+    }, 50)
+
+  
+    document.addEventListener('scroll', handleScroll)
+  }, []) 
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -201,6 +238,7 @@ const ProductInfo = ({
       <Flexbox
         flex="flex"
         margin="0 0 16px"
+        ref={cartButtonRef}
       >
         <QuantityTracker
           id="quantity-tracker"
@@ -223,6 +261,7 @@ const ProductInfo = ({
           onClick={() => handleAddCartButton(bookData)}
           disabled={!validateCartButton()}
           width="100%"
+          style={fixedButtonStyle}
         >
           {itemAdded ? (
             <span>Added to cart!</span>

@@ -34,7 +34,11 @@ const CartBadge = styled(Tag)`
   transform: translate(50%, 0%);
   top: ${props => props.top};
   right: ${props => props.right};
-  font-size: 0.625rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  height: ${props => props.height};
+  line-height: ${props => props.height};
+  width: ${props => props.width};
   @media only screen and (max-width: ${breakpoints.xs}) {
     transform: translate(50%, 0%) scale(0.75);
   }
@@ -469,7 +473,8 @@ const Nav = ({
                         borderradius="50%"
                         top={cartCount > 9 ? "-2px" : "0px"}
                         right={cartCount > 9 ? "-2px" : "0px"}
-                        padding={cartCount > 9 ? "4px 3px" : "2px 4px"}
+                        width={cartCount > 9 ? "18px" : "16px"}
+                        height={cartCount > 9 ? "18px" : "16px"}
                       >
                         {cartCount}
                       </CartBadge>

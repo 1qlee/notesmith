@@ -49,9 +49,9 @@ const Button = styled.button`
     outline: none;
   }
   &[disabled] {
-    opacity: 0.6;
+    opacity: 0.5;
     &:hover {
-      cursor: auto;
+      cursor: not-allowed;
     }
   }
 `

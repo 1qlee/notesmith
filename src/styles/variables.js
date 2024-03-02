@@ -138,7 +138,7 @@ const widths = {
   sidebar: "300px",
   caption: "300px",
   input: "300px",
-  drawer: "450px",
+  drawer: "400px",
   notification: "450px",
   modal: "480px",
   form: "600px",

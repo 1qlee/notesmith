@@ -232,6 +232,7 @@ function ShoppingCart({
                       />
                       <Content
                         paragraphmargin="0"
+                        margin="0 0 0 8px"
                       >
                         <p>${convertToDecimal(item.value, 2)}</p>
                       </Content>
