@@ -46,7 +46,7 @@ function Dot({
         const dot = {
           fill: "#000000",
           radius: dotRadius,
-          opacity: `${opacity}%`,
+          opacity: opacity / 100,
           cx: convertFloatFixed(dotPos.x, 3),
           cy: convertFloatFixed(dotPos.y, 3),
           row: i,

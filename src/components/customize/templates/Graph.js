@@ -32,7 +32,7 @@ function Graph({
       const firstColumnLine = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: convertFloatFixed(lineXFirst, 3),
         x2: convertFloatFixed(lineXFirst, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -42,7 +42,7 @@ function Graph({
       const line = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: convertFloatFixed(lineX, 3),
         x2: convertFloatFixed(lineX, 3),
         y1: convertFloatFixed(lineY1, 3),
@@ -83,7 +83,7 @@ function Graph({
       const firstRowLine = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: lineX1,
         x2: lineX2,
         y1: lineYFirst,
@@ -93,7 +93,7 @@ function Graph({
       const line = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: lineX1,
         x2: lineX2,
         y1: lineY,

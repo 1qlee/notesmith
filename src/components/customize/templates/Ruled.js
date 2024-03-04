@@ -29,7 +29,7 @@ function Ruled({
       const line = {
         stroke: "#000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: convertFloatFixed(lineX1, 3),
         x2: convertFloatFixed(lineX2, 3),
         y1: convertFloatFixed(lineY, 3),

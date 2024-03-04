@@ -68,7 +68,7 @@ function Isometric({
         y2: adjustedPosY2 || contentHeight,
         stroke: "#000000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
       }
 
       // lines going right to left (diagonally)
@@ -79,7 +79,7 @@ function Isometric({
         y2: adjustedPosY2 || contentHeight,
         stroke: "#000000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
       }
 
       linesArray.push(lineCoordsOne, lineCoordsTwo)
@@ -119,7 +119,7 @@ function Isometric({
         y2: adjustedPosY2 || contentHeight,
         stroke: "#000000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
       }
 
       // lines on right side
@@ -130,7 +130,7 @@ function Isometric({
         y2: adjustedPosY2 || contentHeight,
         stroke: "#000000",
         strokeWidth: lineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
       }
 
       linesArray.push(lineCoordsOne, lineCoordsTwo)

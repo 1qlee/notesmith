@@ -92,7 +92,7 @@ function Hexagon({
               stroke: "#000000",
               strokeWidth: hexStrokeWidth,
               points: points,
-              opacity: `${opacity}%`,
+              opacity: opacity / 100,
             }
 
             hexagonsArray.push(hexagon)

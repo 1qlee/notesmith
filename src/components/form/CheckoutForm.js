@@ -206,7 +206,7 @@ function CheckoutForm({
     let orderItems = {}
     const cartItemsLength = cartItems.length
     const newOrderKey = push(ref(firebaseDb, 'orders/')).key
-    const { authKey } = orderData
+    const { authKey, shipmentId } = orderData
     
     try {
       // add all order items to db
@@ -218,6 +218,9 @@ function CheckoutForm({
           ...cartItems[i],
           pid: pid,
           id: orderItemKey,
+          orderIdDb: newOrderKey, 
+          orderId: orderData.id,
+          shipmentId: shipmentId,
         }).catch(async (error) => {
           setError(null)
           // send the team an email to notify them of the error

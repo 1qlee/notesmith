@@ -57,7 +57,7 @@ function Seyes({
       const line = {
         stroke: "#000",
         strokeWidth: currentLineStrokeWidth, // every 4th line should be thicker when option is checked
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: convertFloatFixed(posX1, 3),
         x2: convertFloatFixed(posX2, 3),
         y1: convertFloatFixed(posY, 3),
@@ -91,7 +91,7 @@ function Seyes({
       const line = {
         stroke: "#000000",
         strokeWidth: verticalLineStrokeWidth,
-        opacity: `${opacity}%`,
+        opacity: opacity / 100,
         x1: convertFloatFixed(posX, 3),
         x2: convertFloatFixed(posX, 3),
         y1: convertFloatFixed(posY1, 3),

@@ -34,7 +34,7 @@ function Music({
         const lineProps = {
           stroke: "#000000",
           strokeWidth: lineStrokeWidth,
-          opacity: `${opacity}%`,
+          opacity: opacity / 100,
           x1: convertFloatFixed(posX1, 3),
           x2: convertFloatFixed(posX2, 3),
           y1: convertFloatFixed(posY1, 3),

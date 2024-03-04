@@ -18,7 +18,6 @@ function Handwriting({
   const halfLineStrokeWidth = lineStrokeWidth / 2
   const rowHeight = lineSpacing * 2 + lineStrokeWidth * 2 // row always has 3 lines, but multiply by 2 because first line doesn't count
   const maxRows = Math.floor((height + rowSpacing + halfLineStrokeWidth) / (rowSpacing + rowHeight + lineStrokeWidth))
-  console.log("🚀 ~ maxRows:", maxRows)
 
   // function parseDashArray(value) {
   //   if (value.length > 0) {
@@ -66,7 +65,7 @@ function Handwriting({
             stroke: "#000000",
             strokeWidth: lineStrokeWidth,
             strokeDasharray: line === 1 && 2,
-            opacity: `${opacity}%`,
+            opacity: opacity / 100,
             x1: convertFloatFixed(posX1, 3),
             x2: convertFloatFixed(posX2, 3),
             y1: convertFloatFixed(posY1, 3),
