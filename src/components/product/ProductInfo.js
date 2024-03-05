@@ -16,6 +16,29 @@ import { QuantityTracker, StyledLabel } from "../form/FormComponents"
 import StrikeText from "../misc/StrikeText"
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
+import Tag from "../ui/Tag"
+
+const ProductInfoLabel = ({ number, label }) => {
+  return (
+    <Flexbox
+      align="center"
+      margin="0 0 8px"
+    >
+      <Tag
+        margin="0 8px 0 0"
+      >
+        {number}
+      </Tag>
+      <Content
+        margin="0"
+        h5fontweight="700"
+        h5margin="0"
+      >
+        <h5>{label}</h5>
+      </Content>
+    </Flexbox>
+  )
+}
 
 const ProductInfo = ({
   cartThumbnail,
@@ -158,32 +181,27 @@ const ProductInfo = ({
       >
         <h1>{bookData.name}</h1>
       </Content>
-      <Content
-        margin="32px 0"
-        h5fontweight="700"
-        h5margin="0 0 8px"
-      >
-        <h5>Select cover color</h5>
-        <ColorPicker
-          data={bookData.colors}
-          selectedColor={bookData.coverColor}
-          cbFunction={color => setBookData({
-            ...bookData,
-            coverColor: color,
-          })}
-        />
-      </Content>
+      <ProductInfoLabel
+        label="Select cover color"
+        number="1"
+      />
+      <ColorPicker
+        data={bookData.colors}
+        selectedColor={bookData.coverColor}
+        cbFunction={color => setBookData({
+          ...bookData,
+          coverColor: color,
+        })}
+      />
       <Flexbox
         justify="space-between"
         align="center"
         margin="0 0 16px"
       >
-        <Content
-          h5fontweight="700"
-          h5margin="0"
-        >
-          <h5>Select layout</h5>
-        </Content>
+        <ProductInfoLabel
+          label="Select layout"
+          number="2"
+        />
         {pageData.template && pageData.show && (
           <Button
             padding="4px 8px"
@@ -213,6 +231,10 @@ const ProductInfo = ({
         setData={setPageData}
         selectedPageSvg={selectedPageSvg}
         showLabels={true}
+      />
+      <ProductInfoLabel
+        label="Adjust template"
+        number="3"
       />
       {(pageData.template && pageData.template !== "blank") && (
         <ProductQuickControls 

@@ -101,6 +101,9 @@ const ProductQuickControls = ({
   const { maxContentHeight, maxContentWidth } = pageData
   const [customInputs, setCustomInputs] = useState([])
   const spacingTemplates = ["ruled", "dot", "graph", "isometric", "seyes", "music", "handwriting", "cross", "calligraphy"]
+  const lineTemplates = ["ruled", "seyes", "isometric", "music", "handwriting", "calligraphy"]
+  const rowTemplates = ["music", "handwriting", "calligraphy"]
+  const gridTemplates = ["dot", "graph", "cross"]
   const isMusicTemplate = pageData.template === "music" ? pageData.staffSpacing : pageData.spacing
 
   useEffect(() => {
@@ -384,11 +387,26 @@ const ProductQuickControls = ({
     }
   }
 
+  const handleSpacingLabel = () => {
+    if (lineTemplates.includes(pageData.template)) {
+      return "Line spacing"
+    }
+    else if (rowTemplates.includes(pageData.template)) {
+      return "Row spacing"
+    }
+    else if (gridTemplates.includes(pageData.template)) {
+      return "Grid spacing"
+    }
+    else {
+      return "Spacing"
+    }
+  }
+
   return (
     <Flexbox>
       {spacingTemplates.includes(pageData.template) && (
         <StyledFieldset>
-          <StyledLabel fontsize="1rem">Spacing</StyledLabel>
+          <StyledLabel>{handleSpacingLabel()}</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
               onBlur={handleValueChange}
@@ -424,7 +442,7 @@ const ProductQuickControls = ({
       )}
       {pageData.template === "hexagon" && (
         <StyledFieldset>
-          <StyledLabel fontsize="1rem">Hexagon radius</StyledLabel>
+          <StyledLabel>Hexagon radius</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
               onBlur={handleValueChange}
@@ -459,7 +477,7 @@ const ProductQuickControls = ({
         <StyledFieldset
           margin="0 0 16px 16px"
         >
-          <StyledLabel fontsize="1rem">Angle</StyledLabel>
+          <StyledLabel>Angle</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
               onBlur={handleValueChange}
@@ -494,7 +512,7 @@ const ProductQuickControls = ({
       <StyledFieldset
         margin="0 0 16px 16px"
       >
-        <StyledLabel fontsize="1rem">Opacity</StyledLabel>
+        <StyledLabel>Opacity</StyledLabel>
         <SelectWrapper>
           <ProductCustomInput
             onBlur={handleValueChange}

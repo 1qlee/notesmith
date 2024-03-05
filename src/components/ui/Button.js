@@ -49,7 +49,10 @@ const Button = styled.button`
     outline: none;
   }
   &[disabled] {
-    opacity: 0.5;
+    background-color: ${colors.gray.threeHundred};
+    p, span {
+      color: ${colors.gray.sixHundred};
+    }
     &:hover {
       cursor: not-allowed;
     }

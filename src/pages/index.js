@@ -90,7 +90,7 @@ const IndexPage = ({ data }) => {
       <SectionMain>
         <Section
           backgroundimage={heroImage}
-          minheight="calc(100vh - 109.5px)"
+          minheight="calc(100vh - 60px)"
           style={{display: "flex", alignItems: "center", justifyContent: "center"}}
         >
           <SectionContent
@@ -507,7 +507,7 @@ const IndexPage = ({ data }) => {
             </Container>
           </SectionContent>
         </Section>
-        <Section
+        {/* <Section
           backgroundcolor={colors.gray.nineHundred}
         >
           <SectionContent
@@ -551,7 +551,7 @@ const IndexPage = ({ data }) => {
               </Row>
             </Container>
           </SectionContent>
-        </Section>
+        </Section> */}
       </SectionMain>
     </Layout>
   )

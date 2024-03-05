@@ -332,13 +332,6 @@ const Nav = ({
         />
       </CartDrawer>
       <StyledNav>
-        <Banner 
-          text="Early Access Sale! 25% off all notebooks."
-          link={{
-            to: "/products/notebooks/hardcover-wired-notebook-a5-custom/white",
-            text: "Shop"
-          }}
-        />
         <Container xl lg md sm xs>
           <Navbar hideNavbar={hideNavbar}>
             <NavSection>

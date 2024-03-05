@@ -6,7 +6,7 @@ const SectionMain = styled.main`
   background-color: ${colors.white};
   position: relative;
   padding: 0;
-  margin-top: 108px;
+  margin-top: 60px;
   &.has-vertical-padding {
     padding: ${spacing.large} 0;
   }
