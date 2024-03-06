@@ -178,6 +178,7 @@ export const pageQuery = graphql`
       paperWeight
       infoList
       price
+      formattedPrice
       size
       slug
       stripePriceId

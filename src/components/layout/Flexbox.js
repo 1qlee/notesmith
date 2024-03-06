@@ -14,6 +14,7 @@ const Flexbox = styled.div`
   flex-wrap: ${props => props.flexwrap};
   flex: ${props => props.flexprop};
   height: ${props => props.height};
+  gap: ${props => props.gap};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: relative;

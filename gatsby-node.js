@@ -4,7 +4,7 @@ const products = [
     category: "notebooks",
     custom: true,
     description: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated hardcover and fountain pen friendly paper.",
-    longDescription: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated hardcover. The notebook is filled with fountain pen friendly writing paper that works well with fountain pen inks without feathering or bleed-through, and minimal show-through (ghosting). All notebooks are made with high quality materials sourced from American vendors and are manufactured in our factory in New York.",
+    longDescription: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated hardcover. The notebook is filled with fountain pen friendly writing paper that works well with fountain pen inks without feathering or bleed-through, and minimal show-through (ghosting). All notebooks are made with high quality materials sourced from American vendors and are made to order in our factory in New York.",
     heightInch: "8.5",
     heightPixel: 816,
     name: "Hardcover Wired Notebook A5 (Custom)",
@@ -13,6 +13,7 @@ const products = [
     paperTooth: "Smooth",
     paperWeight: "70lb",
     price: 3000,
+    formattedPrice: "$30.00",
     size: "A5",
     slug: "hardcover-wired-notebook-a5-custom",
     stripePriceId: process.env.NODE_ENV === "production" ? "price_1NzQ0pIN24Fw2SWdKJJKETku" : "price_1IbAlnIN24Fw2SWdOVRXdimr",
@@ -60,7 +61,7 @@ const products = [
       },
       {
         heading: "Paper",
-        text: "White, smooth finish, 70# (104 gsm) text"
+        text: "White, smooth finish, 70# (104 gsm)"
       },
       {
         heading: "Binding",

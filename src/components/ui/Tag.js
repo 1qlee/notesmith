@@ -21,9 +21,6 @@ const Tag = styled.span`
   text-transform: ${props => props.texttransform};
   white-space: nowrap;
   width: ${props => props.width};
-  &:not(:last-child) {
-    margin: ${props => props.margin ? props.margin : "0 0 0.5rem 0"};
-  }
 `
 
 export default Tag

@@ -31,6 +31,7 @@ const CustomInputLabel = styled.label`
   left: ${props => `${props.left}px`};
   top: 50%;
   transform: translateY(-50%);
+  line-height: 1;
   user-select: none;
   font-size: 1rem;
   &:hover {
@@ -38,29 +39,42 @@ const CustomInputLabel = styled.label`
   }
 `
 
-const ProductCustomInput = ({ label, pageData, inputs, type, initialValue, onBlur, onKeyDown }) => {
+const ProductCustomInput = ({ label, pageData, customInputs, setCustomInputs, type, initialValue, onBlur, onKeyDown }) => {
   const [inputValue, setInputValue] = useState("")
   const [labelOffset, setLabelOffset] = useState(32)
   const inputRef = useRef(null)
 
   const handleInputChange = value => {
-    const numberValue = +value
+    console.log(type)
+    if (!isNaN(value)) {
+      const numberValue = +value
 
-    if (numberValue === 0 || !numberValue) {
-      setInputValue("")
+      switch(type) {
+        case "spacing":
+        case "hexagonRadius":
+          if (numberValue >= 1 && numberValue <= 100) {
+            setInputValue(numberValue)
+            setLabelOffset((numberValue.toString().length * 8) + 22)
+          }
+          else {
+            setInputValue("")
+          }
+          break
+        case "opacity":
+          break
+      }
     }
-    else if (value.length > 2) {
-      return
-    }
-    else {
-      setInputValue(numberValue)
-      setLabelOffset((numberValue.toString().length * 8) + 22)
-    }
+
+
+    // setInputValue(numberValue)
+    // setLabelOffset((numberValue.toString().length * 8) + 22)
   }
 
   useEffect(() => {
-    if (inputs.includes(type)) {
+    handleInputChange(pageData.spacing)
+    if (customInputs.includes(type)) {
       if (inputRef.current) {
+        console.log('focusing')
         inputRef.current.focus()
       }
 
@@ -69,19 +83,27 @@ const ProductCustomInput = ({ label, pageData, inputs, type, initialValue, onBlu
         setLabelOffset((initialValue.toString().length * 8) + 22)
       }
     }
-  }, [inputRef.current, pageData])
+  }, [customInputs, pageData.spacing])
 
   return (
     <>
-      {(inputs.includes(type)) && (
+      {(customInputs.includes(type)) && (
         <>
           <CustomInput
             id="custom-input"
             type="number"
             value={inputValue}
             onChange={e => handleInputChange(e.target.value)}
-            onBlur={() => onBlur(inputValue, type)}
-            onKeyDown={e => onKeyDown(e, type)}
+            onBlur={() => onBlur({
+              value: inputValue, 
+              type: type, 
+              callback: setInputValue
+            })}
+            onKeyDown={e => onKeyDown({
+              event: e,
+              type: type,
+              callback: setInputValue,
+            })}
             ref={inputRef}
           />
           <CustomInputLabel left={labelOffset} htmlFor="custom-input">{label || "mm"}</CustomInputLabel>
@@ -103,12 +125,8 @@ const ProductQuickControls = ({
   const spacingTemplates = ["ruled", "dot", "graph", "isometric", "seyes", "music", "handwriting", "cross", "calligraphy"]
   const lineTemplates = ["ruled", "seyes", "isometric", "music", "handwriting", "calligraphy"]
   const rowTemplates = ["music", "handwriting", "calligraphy"]
-  const gridTemplates = ["dot", "graph", "cross"]
+  const gridTemplates = ["dot", "graph", "hexagon", "cross"]
   const isMusicTemplate = pageData.template === "music" ? pageData.staffSpacing : pageData.spacing
-
-  useEffect(() => {
-    setCustomInputs([])
-  }, [pageData.template])
 
   const calcTemplateDimensions = (value) => {
     let maxRows = 0
@@ -245,8 +263,9 @@ const ProductQuickControls = ({
     })
   }
   
-  const handleValueChange = (value, type, defaultValue, isSelect) => {
-    const numberValue = value !== "custom" ? +value : defaultValue
+  const handleValueChange = (options) => {
+    const { value, type, defaultValue, isSelect, callback } = options
+    let numberValue = value !== "custom" ? +value : defaultValue
     const maxValues = calcTemplateDimensions(numberValue)
     const { maxRows, maxCols, margins } = maxValues
 
@@ -258,12 +277,17 @@ const ProductQuickControls = ({
       if (isSelect) {
         // Remove value from customInputs array if it exists
         const updatedCustomInputs = customInputs.filter(input => input !== type)
+        console.log("🚀 ~ handleValueChange ~ updatedCustomInputs:", updatedCustomInputs)
         setCustomInputs(updatedCustomInputs)
       }
     }
 
     switch (type) {
       case "spacing":
+        if (numberValue === 0) {
+          numberValue = 1
+          callback(1)
+        }
         switch (pageData.template) {
           case "ruled":
           case "hexagon":
@@ -378,40 +402,63 @@ const ProductQuickControls = ({
     }
   }
 
-  const handleKeydown = (e, type) => {
-    const numberValue = +e.target.value
+  const handleKeydown = (options) => {
+    const { event, type, callback } = options
+    const numberValue = +event.target.value
 
-    if (e.key === "Enter") {
-      handleValueChange(+numberValue, type)
-      e.target.blur()
+    if (event.key === "Enter") {
+      handleValueChange({
+        value: numberValue,
+        type: type,
+        callback: callback,
+      })
+      event.target.blur()
     }
   }
 
-  const handleSpacingLabel = () => {
+  const handleLabel = (options) => {
+    const { type } = options
     if (lineTemplates.includes(pageData.template)) {
-      return "Line spacing"
+      return `Line ${type}`
     }
     else if (rowTemplates.includes(pageData.template)) {
-      return "Row spacing"
+      return `Row ${type}`
     }
     else if (gridTemplates.includes(pageData.template)) {
-      return "Grid spacing"
+      if (type === "opacity") {
+        switch (pageData.template) {
+          case "dot":
+            return `Dot opacity`
+          case "graph":
+            return `Line opacity`
+          case "hexagon":
+            return `Hexagon opacity`
+          case "cross":
+            return `Cross opacity`
+        }
+      }
+      else {
+        return `Grid ${type}`
+      }
     }
     else {
-      return "Spacing"
+      return type.charAt(0).toUpperCase() + type.slice(1)
     }
   }
 
   return (
-    <Flexbox>
+    <Flexbox
+      margin="0 0 16px"
+    >
       {spacingTemplates.includes(pageData.template) && (
         <StyledFieldset>
-          <StyledLabel>{handleSpacingLabel()}</StyledLabel>
+          <StyledLabel>{handleLabel({ type: "spacing", })}</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
               onBlur={handleValueChange}
               onKeyDown={handleKeydown}
-              inputs={customInputs}
+              customInputs={customInputs}
+              setCustomInputs={setCustomInputs}
               initialValue={isMusicTemplate}
               pageData={pageData}
               type="spacing"
@@ -419,7 +466,12 @@ const ProductQuickControls = ({
             <StyledSelect
               borderradius="4px"
               width="100%"
-              onChange={(e) => handleValueChange(e.target.value, "spacing", isMusicTemplate, true)}
+              onChange={(e) => handleValueChange({
+                value: e.target.value, 
+                type: "spacing", 
+                defaultValue: isMusicTemplate, 
+                isSelect: true
+              })}
               fontsize="1rem"
               value={isMusicTemplate}
             >
@@ -447,7 +499,8 @@ const ProductQuickControls = ({
             <ProductCustomInput
               onBlur={handleValueChange}
               onKeyDown={handleKeydown}
-              inputs={customInputs}
+              customInputs={customInputs}
+              setCustomInputs={setCustomInputs}
               initialValue={pageData.hexagonRadius}
               pageData={pageData}
               type="hexagonRadius"
@@ -455,7 +508,12 @@ const ProductQuickControls = ({
             <StyledSelect
               borderradius="4px"
               width="100%"
-              onChange={(e) => handleValueChange(e.target.value, "hexagonRadius", pageData.hexagonRadius, true)}
+              onChange={(e) => handleValueChange({
+                value: e.target.value,
+                type: "hexagonRadius",
+                defaultValue: pageData.hexagonRadius,
+                isSelect: true
+              })}
               fontsize="1rem"
               value={pageData.hexagonRadius}
             >
@@ -482,7 +540,8 @@ const ProductQuickControls = ({
             <ProductCustomInput
               onBlur={handleValueChange}
               onKeyDown={handleKeydown}
-              inputs={customInputs}
+              customInputs={customInputs}
+              setCustomInputs={setCustomInputs}
               initialValue={pageData.angle}
               pageData={pageData}
               label="°"
@@ -491,7 +550,12 @@ const ProductQuickControls = ({
             <StyledSelect
               borderradius="4px"
               width="100%"
-              onChange={(e) => handleValueChange(e.target.value, "angle", pageData.angle, true)}
+              onChange={(e) => handleValueChange({
+                value: e.target.value,
+                type: "angle",
+                defaultValue: pageData.angle,
+                isSelect: true
+              })}
               fontsize="1rem"
               value={pageData.angle}
             >
@@ -512,12 +576,13 @@ const ProductQuickControls = ({
       <StyledFieldset
         margin="0 0 16px 16px"
       >
-        <StyledLabel>Opacity</StyledLabel>
+        <StyledLabel>{handleLabel({type: "opacity" })}</StyledLabel>
         <SelectWrapper>
           <ProductCustomInput
             onBlur={handleValueChange}
             onKeyDown={handleKeydown}
-            inputs={customInputs}
+            customInputs={customInputs}
+            setCustomInputs={setCustomInputs}
             initialValue={pageData.opacity}
             pageData={pageData}
             label="%"
@@ -526,7 +591,12 @@ const ProductQuickControls = ({
           <StyledSelect
             borderradius="4px"
             width="100%"
-            onChange={(e) => handleValueChange(e.target.value, "opacity", pageData.opacity, true)}
+            onChange={(e) => handleValueChange({
+              value: e.target.value,
+              type: "opacity",
+              defaultValue: pageData.opacity,
+              isSelect: true
+            })}
             fontsize="1rem"
             value={pageData.opacity}
           >

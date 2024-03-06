@@ -9,7 +9,7 @@ const validateCartItems = async (cartItems) => {
     const stripeProduct = await stripe.prices.retrieve(price_id);
 
     // 25% discount for pre-orders
-    totalAmount += stripeProduct.unit_amount * quantity * .75;
+    totalAmount += stripeProduct.unit_amount * quantity;
   }
 
   console.log(`[Stripe] The total amount for this order is: ${totalAmount}.`)

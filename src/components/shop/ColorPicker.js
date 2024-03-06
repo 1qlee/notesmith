@@ -6,7 +6,7 @@ const PickerWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, 48px);
   gap: 16px;
-  margin: 16px 12px 32px;
+  margin: 16px 10px 32px;
   justify-content: ${props => props.center ? `center` : `flex-start`};
 `
 

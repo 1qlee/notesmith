@@ -1,8 +1,10 @@
 import styled from "styled-components"
+import { spacing } from "../../../styles/variables"
 
 const AuthSection = styled.div`
   position: relative;
-  margin-top: 108px;
+  margin-top: 60px;
+  padding: ${spacing.large};
   width: 100%;
 `
 

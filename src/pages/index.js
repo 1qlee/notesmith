@@ -4,7 +4,7 @@ import { Star, ArrowRight, ArrowBendRightDown, Note } from "@phosphor-icons/reac
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
-import heroImage from "../images/index/hero-2.jpg"
+import heroImage from "../images/index/hero-3.jpg"
 
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
@@ -91,7 +91,9 @@ const IndexPage = ({ data }) => {
         <Section
           backgroundimage={heroImage}
           minheight="calc(100vh - 60px)"
-          style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+          backgroundposition="50% -110%"
+          backgroundsize="inherit"
+          flex
         >
           <SectionContent
             padding={`${spacing.xlarge} 0`}
@@ -435,8 +437,8 @@ const IndexPage = ({ data }) => {
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>Made with high quality materials</h2>
-                    <p>From cover to cover, our notebooks are built with high quality materials sourced from American vendors and are manufactured entirely in New York.</p>
+                    <h2>Made to order with quality materials</h2>
+                    <p>From cover to cover, our notebooks are built with high quality materials sourced entirely from American vendors. Every notebook is made to order in our factory in New York.</p>
                   </Content>
                   <Materials 
                     tab={tabList[activeTab]}
@@ -482,22 +484,14 @@ const IndexPage = ({ data }) => {
                   <Notification
                     backgroundcolor={colors.gray.oneHundred}
                     borderradius="16px"
+                    padding="8px"
                   >
-                    <Flexbox
-                      flex="flex"
-                      align="flex-start"
+                    <Content
+                      margin="0 0 0 8px"
+                      smallmargin="0"
                     >
-                      <Icon>
-                        <Note color={colors.gray.sixHundred} weight="light" size={20} />
-                      </Icon>
-                      <Content
-                        margin="0 0 0 8px"
-                        smallmargin="0"
-                        smallfontsize="1rem"
-                      >
-                        <small>Quotes represent real words from real users with fake names.</small>
-                      </Content>
-                    </Flexbox>
+                      <small>Quotes represent real words from real users with fake names.</small>
+                    </Content>
                   </Notification>
                 </Col>
                 <Col md={6} lg={6} xl={8}>

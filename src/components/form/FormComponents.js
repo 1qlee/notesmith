@@ -79,7 +79,7 @@ function QuantityTracker(props) {
       <QuantityButton
         disabled={quantity === 1}
         height={props.buttonheight}
-        left={true}
+        left={props.buttonleft}
         onClick={e => handleButtonChange(e)}
         padding={props.counterpadding}
         width={props.buttonwidth}
@@ -109,7 +109,7 @@ function QuantityTracker(props) {
         height={props.buttonheight}
         onClick={e => handleButtonChange(e, true)}
         padding={props.counterpadding}
-        right={true}
+        right={props.buttonright}
         width={props.buttonwidth}
       >
         <Icon>
@@ -366,8 +366,8 @@ const QuantityButton = styled.button`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: ${props => props.left ? "12px" : null};
-  right: ${props => props.right ? "12px" : null};
+  left: ${props => props.left};
+  right: ${props => props.right};
   z-index: 7;
   &:hover {
     cursor: pointer;
@@ -574,7 +574,7 @@ const StyledLabel = styled.label`
   color: ${props => props.color || colors.gray.nineHundred};
   display: block;
   font-size: ${props => props.fontsize ? props.fontsize : "0.875rem"};
-  font-weight: ${props => props.fontweight || "700"};
+  font-weight: ${props => props.fontweight || "400"};
   margin: ${props => props.margin || "0 0 8px 0"};
   width: ${props => props.width};
 `

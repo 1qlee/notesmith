@@ -21,9 +21,12 @@ const SectionMain = styled.main`
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
   background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
-  background-size: cover;
-  background-position: center center;
+  background-size: ${props => props.backgroundsize || "cover"};
+  background-position: ${props => props.backgroundposition || "center center"};
   position: relative;
+  display: ${props => props.flex && "flex"};
+  align-items: ${props => props.flex && "center"};
+  justify-content: ${props => props.flex && "center"};
   height: ${props => props.height};
   min-height: ${props => props.minheight};
   width: 100%;

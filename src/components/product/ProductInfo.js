@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import { colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
-import { applyDiscounts, formatDollars } from "../../utils/helper-functions"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
-import { isBrowser } from "../../utils/helper-functions"
+import { isBrowser, formatDollars } from "../../utils/helper-functions"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
@@ -13,19 +12,19 @@ import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import { Flexbox } from "../layout/Flexbox"
 import { QuantityTracker, StyledLabel } from "../form/FormComponents"
-import StrikeText from "../misc/StrikeText"
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
 import Tag from "../ui/Tag"
 
-const ProductInfoLabel = ({ number, label }) => {
+const ProductInfoLabel = ({ number, label, margin }) => {
   return (
     <Flexbox
-      align="center"
-      margin="0 0 8px"
+      align="flex-end"
+      margin={margin || "0"}
+      gap="8px"
     >
       <Tag
-        margin="0 8px 0 0"
+        fontweight="400"
       >
         {number}
       </Tag>
@@ -33,6 +32,7 @@ const ProductInfoLabel = ({ number, label }) => {
         margin="0"
         h5fontweight="700"
         h5margin="0"
+        headinglineheight="1"
       >
         <h5>{label}</h5>
       </Content>
@@ -68,12 +68,6 @@ const ProductInfo = ({
     margin: buttonFixed && "0",
     zIndex: buttonFixed && 49,
   }
-  let discount = applyDiscounts(bookData.price, +itemQuantity)
-  let discountRate = discount.rate || 0
-  let discountPrice = discount.price || 0
-  let discountSaved = discount.saved || 0
-  let discountPct = discount.pct || 0
-  let discountAmount = discount.amount || 0
 
   useEffect(() => {
     if (isBrowser()) {
@@ -123,7 +117,6 @@ const ProductInfo = ({
         coverColor: bookData.coverColor,
         currency: "USD",
         custom: bookData.custom,
-        discount: discountSaved,
         id: uuidv4(), // unique cart item id
         image: cartThumbnail,
         leftPageData: leftPageData,
@@ -131,7 +124,7 @@ const ProductInfo = ({
         name: bookData.name,
         numOfPages: bookData.numOfPages,
         price_id: bookData.stripePriceId,
-        price: discountPrice || bookData.price,
+        price: bookData.price,
         printed: false,
         originalPrice: bookData.price,
         rightPageData: rightPageData,
@@ -193,31 +186,11 @@ const ProductInfo = ({
           coverColor: color,
         })}
       />
-      <Flexbox
-        justify="space-between"
-        align="center"
+      <ProductInfoLabel
+        label="Select layout"
         margin="0 0 16px"
-      >
-        <ProductInfoLabel
-          label="Select layout"
-          number="2"
-        />
-        {pageData.template && pageData.show && (
-          <Button
-            padding="4px 8px"
-            backgroundcolor={colors.white}
-            color={colors.gray.nineHundred}
-            border={colors.borders.black}
-            fontsize="0.75rem"
-            onClick={() => setPageData({
-              ...pageData,
-              showControls: !pageData.showControls,
-            })}
-          >
-            {pageData.showControls ? "Hide" : "Advanced"} options
-          </Button>
-        )}
-      </Flexbox>
+        number="2"
+      />
       <PageIcons
         checkActiveVar={pageData.template}
         data={pageData}
@@ -232,10 +205,35 @@ const ProductInfo = ({
         selectedPageSvg={selectedPageSvg}
         showLabels={true}
       />
-      <ProductInfoLabel
-        label="Adjust template"
-        number="3"
-      />
+      {pageData.template && (
+        <Flexbox
+          justify="space-between"
+          align="center"
+          margin="0 0 16px"
+        >
+          {pageData.template !== "blank" && (
+            <ProductInfoLabel
+              label="Adjust template"
+              number="3"
+            />
+          )}
+          {pageData.show && (
+            <Button
+              padding="4px 8px"
+              backgroundcolor={colors.white}
+              color={colors.gray.nineHundred}
+              border={colors.borders.black}
+              fontsize="0.75rem"
+              onClick={() => setPageData({
+                ...pageData,
+                showControls: !pageData.showControls,
+              })}
+            >
+              {pageData.showControls ? "Hide" : "Advanced"} options
+            </Button>
+          )}
+        </Flexbox>
+      )}
       {(pageData.template && pageData.template !== "blank") && (
         <ProductQuickControls 
           pageData={pageData}
@@ -247,19 +245,16 @@ const ProductInfo = ({
           setRightPageData={setRightPageData}
         />
       )}
-      <Flexbox
-        flex="flex"
-        justify="space-between"
+      <ProductInfoLabel
+        label="Set quantity"
+        number={pageData.template ? "4" : "3"}
+        margin="0 0 16px"
+      />
+      <StyledLabel
+        htmlFor="quantity-tracker"
       >
-        <StyledLabel
-          htmlFor="quantity-tracker"
-          margin="0 0 8px"
-          fontsize="1rem"
-          fontweight="700"
-        >
-          Quantity
-        </StyledLabel>
-      </Flexbox>
+        Quantity
+      </StyledLabel>
       <Flexbox
         flex="flex"
         margin="0 0 16px"
@@ -269,32 +264,34 @@ const ProductInfo = ({
           id="quantity-tracker"
           buttonwidth="1rem"
           buttonheight="1rem"
+          buttonleft="calc(50% - 40px)"
+          buttonright="calc(50% - 40px)"
           counterwidth="100%"
           counterpadding="14px"
           counterfontsize="1rem"
           iconsize="0.75rem"
           setItemQuantity={setItemQuantity}
+          wrapperwidth="100%"
           wrapperminwidth="100px"
         />
-        <Button
-          backgroundcolor={colors.gray.nineHundred}
-          border={`1px solid ${colors.gray.nineHundred}`}
-          color={colors.gray.oneHundred}
-          id="cart-button"
-          margin="0 0 0 1rem"
-          padding="1rem"
-          onClick={() => handleAddCartButton(bookData)}
-          disabled={!validateCartButton()}
-          width="100%"
-          style={fixedButtonStyle}
-        >
-          {itemAdded ? (
-            <span>Added to cart!</span>
-          ) : (
-              <span>Add to cart - <StrikeText>{formatDollars(bookData.price / 100)}</StrikeText>{formatDollars(discountAmount / 100)}</span>
-          )}
-        </Button>
       </Flexbox>
+      <Button
+        backgroundcolor={colors.gray.nineHundred}
+        border={`1px solid ${colors.gray.nineHundred}`}
+        color={colors.gray.oneHundred}
+        id="cart-button"
+        padding="1rem"
+        onClick={() => handleAddCartButton(bookData)}
+        disabled={!validateCartButton()}
+        width="100%"
+        style={fixedButtonStyle}
+      >
+        {itemAdded ? (
+          <span>Added to cart!</span>
+        ) : (
+          <span>Add to cart - {formatDollars((itemQuantity * bookData.price) / 100)}</span>
+        )}
+      </Button>
       <Content
         paragraphfontsize="0.875rem"
         margin="32px 0 16px"
@@ -303,13 +300,6 @@ const ProductInfo = ({
       </Content>
       <ProductDescription 
         bookData={bookData}
-      />
-      <Tooltip 
-        anchorSelect="#discount-text"
-        content={`${discountPct}% discount.`}
-        place="top"
-        variant="success"
-        style={{backgroundColor: colors.green.sixHundred}}
       />
       {!validateCartButton() && (
         <Tooltip

@@ -225,6 +225,8 @@ function ShoppingCart({
                         counterwidth="5rem"
                         counterfontsize="0.875rem"
                         wrapperwidth="5rem"
+                        buttonleft="12px"
+                        buttonright="12px"
                         iconsize={12}
                         setItemQuantity={setItemQuantity}
                         product={item}
@@ -553,6 +555,8 @@ function ShoppingCart({
                     <CartQuantityTracker
                       buttonwidth="1rem"
                       buttonheight="1rem"
+                      buttonleft="12px"
+                      buttonright="12px"
                       counterwidth="6rem"
                       counterfontsize="0.825rem"
                       wrapperwidth="6rem"

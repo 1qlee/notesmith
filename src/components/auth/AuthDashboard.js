@@ -167,8 +167,7 @@ const UserDashboard = () => {
               <p>
                 Click on the "Books" tab above to get started. From there, click on the "New book" button to create the book which will then appear in your Books Table. Double-click on any book in the table to open it in the editor.
               </p>
-              <p>Currently, we are shipping orders in batches. The first batch (Batch #1) will run until March 1 or until the maximum quantity (200 units) is fulfilled. You can expect constant communication and updates from Notesmith during this time.</p>
-              <p><b>Reminder: </b>All notebooks purchased during the pre-order sale are <b>25% off</b>.</p>
+              <p><b>Reminder: </b>The editor is currently a work-in-progress.</p>
             </Content>
             <Notification
               backgroundcolor={colors.gray.oneHundred}
@@ -193,36 +192,6 @@ const UserDashboard = () => {
             </Notification>
           </Col>
           <Col md={6}>
-            <Content
-              h3fontsize="1.5rem"
-              h3margin="0 0 16px"
-              margin="32px 0 16px"
-            >
-              <h3>Current batch: Batch #1</h3>
-              <p>This first batch will ship 200 notebooks total. There might be some leeway for some extra books (maybe between 25 and 75) if there is demand for them. Orders for Batch #1 will close on March 1.</p>
-            </Content>
-            {quantitySold && (
-              <>
-                <Flexbox
-                  justify="space-between"
-                  padding="0"
-                  margin="0 0 8px"
-                  width="100%"
-                >
-                  <p><b>{quantitySold} books sold</b></p>
-                  <p style={{ color: colors.gray.sixHundred }}>{200 - quantitySold} books left</p>
-                </Flexbox>
-                <Progress
-                  barcolor={colors.gray.nineHundred}
-                  width="100%"
-                  completion={(quantitySold / 200) * 100}
-                  wrappercolor={colors.gray.oneHundred}
-                  animate
-                />
-              </>
-            )
-
-            }
             {referralCode && (
               <>
                 <Content
@@ -230,8 +199,8 @@ const UserDashboard = () => {
                   h3margin="0 0 16px"
                   margin="32px 0 16px"
                 >
-                  <h3>Invite someone to early access</h3>
-                  <p>Anyone you invite to early access will be able to bypass the wailist and gain access to Notesmith instantly. This is an exclusive perk for early users like you - but don't worry, you can invite as many people as you wish!</p>
+                  <h3>Invite someone to Notesmith</h3>
+                  <p>This link will take the user directly to the sign up page.</p>
                 </Content>
                 <Flexbox
                   justify="space-between"

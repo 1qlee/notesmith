@@ -6,7 +6,6 @@ import { navigate } from "gatsby"
 import { CircleNotch } from "@phosphor-icons/react"
 import { update, ref } from "firebase/database"
 import { v4 as uuidv4 } from 'uuid'
-import { formatDollars, applyDiscounts } from "../../../utils/helper-functions"
 
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
@@ -16,7 +15,7 @@ import Button from "../../ui/Button"
 import Content from "../../ui/Content"
 import ColorPicker from "../../shop/ColorPicker"
 import Box from "../../ui/Box"
-import StrikeText from "../../misc/StrikeText"
+import { formatDollars } from "../../../utils/helper-functions"
 
 function Checkoutbar({
   bookData,
@@ -30,12 +29,6 @@ function Checkoutbar({
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
-  let discount = applyDiscounts(bookData.price, +itemQuantity, 0.25)
-  let discountRate = discount.rate || 0
-  let discountPrice = discount.price || 0
-  let discountSaved = discount.saved || 0
-  let discountPct = discount.pct || 0
-  let discountAmount = discount.amount || 0
 
   function getImageThumbnail() {
     // this is an exact match for "color-0"
@@ -52,14 +45,13 @@ function Checkoutbar({
       coverColor: coverColor,
       currency: "USD",
       custom: productData.custom,
-      discount: discountSaved,
       height: productData.heightPixel,
       id: uuidv4(),
       image: getImageThumbnail(),
       name: productData.name,
       numOfPages: productData.numOfPages,
       pages: [...canvasPages],
-      price: discountPrice || productData.price,
+      price: productData.price,
       price_id: productData.stripePriceId,
       originalPrice: productData.price,
       printed: false,
@@ -161,6 +153,8 @@ function Checkoutbar({
               <QuantityTracker
                 buttonwidth="1rem"
                 buttonheight="1rem"
+                buttonleft="12px"
+                buttonright="12px"
                 counterwidth="6rem"
                 counterfontsize="0.825rem"
                 iconsize="0.625rem"
@@ -186,7 +180,7 @@ function Checkoutbar({
               <CircleNotch size="1rem" />
             </Icon>
           ) : (
-            <span>Add to cart - <StrikeText color={colors.gray.threeHundred}>{formatDollars(productData.price / 100)}</StrikeText>{formatDollars(discountAmount / 100)}</span>
+            <span>Add to cart - {calculateTotalPrice(bookData.price)}</span>
           )}
         </Button>
       </ControlsFooter>

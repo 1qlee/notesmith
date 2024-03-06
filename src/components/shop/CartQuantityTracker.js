@@ -65,7 +65,7 @@ function CartQuantityTracker(props) {
       <QuantityButton
         disabled={props.product.quantity === 1}
         height={props.buttonheight}
-        left={true}
+        left={props.buttonleft}
         onClick={() => handleButtonChange(false)}
         padding={props.counterpadding}
         width={props.buttonwidth}
@@ -94,7 +94,7 @@ function CartQuantityTracker(props) {
         onClick={() => handleButtonChange(true)}
         height={props.buttonheight}
         padding={props.counterpadding}
-        right={true}
+        right={props.buttonright}
         width={props.buttonwidth}
       >
         <Icon>
