@@ -30,7 +30,7 @@ const CustomInputLabel = styled.label`
   position: absolute;
   left: ${props => `${props.left}px`};
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% + 1px));
   line-height: 1;
   user-select: none;
   font-size: 1rem;
@@ -39,13 +39,12 @@ const CustomInputLabel = styled.label`
   }
 `
 
-const ProductCustomInput = ({ label, pageData, customInputs, setCustomInputs, type, initialValue, onBlur, onKeyDown }) => {
+const ProductCustomInput = ({ activeCustomInput, label, pageData, customInputs, type, initialValue, handleValueChange, onKeyDown }) => {
   const [inputValue, setInputValue] = useState("")
   const [labelOffset, setLabelOffset] = useState(32)
   const inputRef = useRef(null)
 
   const handleInputChange = value => {
-    console.log(type)
     if (!isNaN(value)) {
       const numberValue = +value
 
@@ -54,13 +53,20 @@ const ProductCustomInput = ({ label, pageData, customInputs, setCustomInputs, ty
         case "hexagonRadius":
           if (numberValue >= 1 && numberValue <= 100) {
             setInputValue(numberValue)
-            setLabelOffset((numberValue.toString().length * 8) + 22)
+            setLabelOffset((numberValue.toString().length * 8) + 21)
           }
           else {
             setInputValue("")
           }
           break
         case "opacity":
+          if (numberValue >= 1 && numberValue <= 100) {
+            setInputValue(numberValue)
+            setLabelOffset((numberValue.toString().length * 8) + 21)
+          }
+          else {
+            setInputValue("")
+          }
           break
       }
     }
@@ -71,10 +77,8 @@ const ProductCustomInput = ({ label, pageData, customInputs, setCustomInputs, ty
   }
 
   useEffect(() => {
-    handleInputChange(pageData.spacing)
     if (customInputs.includes(type)) {
-      if (inputRef.current) {
-        console.log('focusing')
+      if (inputRef.current && activeCustomInput === type) {
         inputRef.current.focus()
       }
 
@@ -83,30 +87,30 @@ const ProductCustomInput = ({ label, pageData, customInputs, setCustomInputs, ty
         setLabelOffset((initialValue.toString().length * 8) + 22)
       }
     }
-  }, [customInputs, pageData.spacing])
+  }, [customInputs])
 
   return (
     <>
       {(customInputs.includes(type)) && (
         <>
           <CustomInput
-            id="custom-input"
+            id={`custom-input-${type}`}
             type="number"
             value={inputValue}
             onChange={e => handleInputChange(e.target.value)}
-            onBlur={() => onBlur({
-              value: inputValue, 
-              type: type, 
-              callback: setInputValue
+            onBlur={() => handleValueChange({
+              value: inputValue,
+              type: type,
+              callback: handleInputChange
             })}
             onKeyDown={e => onKeyDown({
               event: e,
               type: type,
-              callback: setInputValue,
+              callback: handleInputChange,
             })}
             ref={inputRef}
           />
-          <CustomInputLabel left={labelOffset} htmlFor="custom-input">{label || "mm"}</CustomInputLabel>
+          <CustomInputLabel left={labelOffset} htmlFor={`custom-input-${type}`}>{label || "mm"}</CustomInputLabel>
         </>
       )}
     </>
@@ -122,11 +126,16 @@ const ProductQuickControls = ({
 }) => {
   const { maxContentHeight, maxContentWidth } = pageData
   const [customInputs, setCustomInputs] = useState([])
+  const [activeCustomInput, setActiveCustomInput] = useState("")
   const spacingTemplates = ["ruled", "dot", "graph", "isometric", "seyes", "music", "handwriting", "cross", "calligraphy"]
   const lineTemplates = ["ruled", "seyes", "isometric", "music", "handwriting", "calligraphy"]
   const rowTemplates = ["music", "handwriting", "calligraphy"]
   const gridTemplates = ["dot", "graph", "hexagon", "cross"]
-  const isMusicTemplate = pageData.template === "music" ? pageData.staffSpacing : pageData.spacing
+  const musicStaffSpacing = pageData.template === "music" ? pageData.staffSpacing : pageData.rowSpacing
+
+  useEffect(() => {
+    setCustomInputs([])
+  }, [pageData.template])
 
   const calcTemplateDimensions = (value) => {
     let maxRows = 0
@@ -272,13 +281,14 @@ const ProductQuickControls = ({
     if (value === "custom") {
       const updatedCustomInputs = customInputs.includes(type) ? customInputs : [...customInputs, type]
       setCustomInputs(updatedCustomInputs)
+      setActiveCustomInput(type)
     }
     else {
       if (isSelect) {
         // Remove value from customInputs array if it exists
         const updatedCustomInputs = customInputs.filter(input => input !== type)
-        console.log("🚀 ~ handleValueChange ~ updatedCustomInputs:", updatedCustomInputs)
         setCustomInputs(updatedCustomInputs)
+        setActiveCustomInput("")
       }
     }
 
@@ -327,8 +337,7 @@ const ProductQuickControls = ({
           case "music":
             handleChangeData({
               ...pageData,
-              spacing: 2,
-              staffSpacing: numberValue,
+              spacing: numberValue,
               alignmentHorizontal: "center",
               alignmentVertical: "middle",
               staves: maxRows,
@@ -387,7 +396,24 @@ const ProductQuickControls = ({
           marginRight: margins.right,
         })
         break
+      case "staffSpacing":
+        handleChangeData({
+          ...pageData,
+          staffSpacing: numberValue,
+          alignmentHorizontal: "center",
+          alignmentVertical: "middle",
+          staves: maxRows,
+          marginTop: margins.top,
+          marginBottom: margins.bottom,
+          marginLeft: margins.left,
+          marginRight: margins.right,
+        })
+        break
       case "opacity":
+        if (numberValue < 30) {
+          numberValue = 30
+          callback(30)
+        }
         handleChangeData({
           ...pageData,
           opacity: numberValue,
@@ -418,6 +444,7 @@ const ProductQuickControls = ({
 
   const handleLabel = (options) => {
     const { type } = options
+
     if (lineTemplates.includes(pageData.template)) {
       return `Line ${type}`
     }
@@ -452,14 +479,15 @@ const ProductQuickControls = ({
     >
       {spacingTemplates.includes(pageData.template) && (
         <StyledFieldset>
-          <StyledLabel>{handleLabel({ type: "spacing", })}</StyledLabel>
+          <StyledLabel htmlFor="test">{handleLabel({ type: "spacing", })}</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
-              onBlur={handleValueChange}
+              activeCustomInput={activeCustomInput}
+              handleValueChange={handleValueChange}
               onKeyDown={handleKeydown}
               customInputs={customInputs}
               setCustomInputs={setCustomInputs}
-              initialValue={isMusicTemplate}
+              initialValue={pageData.spacing}
               pageData={pageData}
               type="spacing"
             />
@@ -469,19 +497,27 @@ const ProductQuickControls = ({
               onChange={(e) => handleValueChange({
                 value: e.target.value, 
                 type: "spacing", 
-                defaultValue: isMusicTemplate, 
+                defaultValue: pageData.spacing, 
                 isSelect: true
               })}
               fontsize="1rem"
-              value={isMusicTemplate}
+              value={pageData.spacing}
+              id="test"
             >
               <option value="custom">Custom</option>
-              {["seyes"].includes(pageData.template) && (
-                <option value="2">2 mm</option>
+              {["seyes", "music"].includes(pageData.template) ? (
+                <>
+                  <option value="1">1 mm</option>
+                  <option value="2">2 mm</option>
+                  <option value="3">3 mm</option>
+                </>
+              ) : (
+                <>
+                  <option value="3">3 mm</option>
+                  <option default value="5">5 mm</option>
+                  <option value="7">7 mm</option>
+                </>
               )}
-              <option value="3">3 mm</option>
-              <option default value="5">5 mm</option>
-              <option value="7">7 mm</option>
             </StyledSelect>
             <SelectIcon
               top="20px"
@@ -497,7 +533,8 @@ const ProductQuickControls = ({
           <StyledLabel>Hexagon radius</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
-              onBlur={handleValueChange}
+              activeCustomInput={activeCustomInput}
+              handleValueChange={handleValueChange}
               onKeyDown={handleKeydown}
               customInputs={customInputs}
               setCustomInputs={setCustomInputs}
@@ -531,6 +568,48 @@ const ProductQuickControls = ({
           </SelectWrapper>
         </StyledFieldset>
       )}
+      {pageData.template === "music" && (
+        <StyledFieldset
+          margin="0 0 16px 16px"
+        >
+          <StyledLabel>Staff spacing</StyledLabel>
+          <SelectWrapper>
+            <ProductCustomInput
+              activeCustomInput={activeCustomInput}
+              handleValueChange={handleValueChange}
+              onKeyDown={handleKeydown}
+              customInputs={customInputs}
+              setCustomInputs={setCustomInputs}
+              initialValue={pageData.staffSpacing}
+              pageData={pageData}
+              type="staffSpacing"
+            />
+            <StyledSelect
+              borderradius="4px"
+              width="100%"
+              onChange={(e) => handleValueChange({
+                value: e.target.value,
+                type: "staffSpacing",
+                defaultValue: pageData.staffSpacing,
+                isSelect: true
+              })}
+              fontsize="1rem"
+              value={pageData.staffSpacing}
+            >
+              <option value="custom">Custom</option>
+              <option value={3}>3 mm</option>
+              <option default value={5}>5 mm</option>
+              <option value={7}>7 mm</option>
+            </StyledSelect>
+            <SelectIcon
+              top="20px"
+              right="8px"
+            >
+              <CaretDown size="1rem" />
+            </SelectIcon>
+          </SelectWrapper>
+        </StyledFieldset>
+      )}
       {pageData.template === "isometric" && (
         <StyledFieldset
           margin="0 0 16px 16px"
@@ -538,7 +617,8 @@ const ProductQuickControls = ({
           <StyledLabel>Angle</StyledLabel>
           <SelectWrapper>
             <ProductCustomInput
-              onBlur={handleValueChange}
+              activeCustomInput={activeCustomInput}
+              handleValueChange={handleValueChange}
               onKeyDown={handleKeydown}
               customInputs={customInputs}
               setCustomInputs={setCustomInputs}
@@ -579,7 +659,8 @@ const ProductQuickControls = ({
         <StyledLabel>{handleLabel({type: "opacity" })}</StyledLabel>
         <SelectWrapper>
           <ProductCustomInput
-            onBlur={handleValueChange}
+            activeCustomInput={activeCustomInput}
+            handleValueChange={handleValueChange}
             onKeyDown={handleKeydown}
             customInputs={customInputs}
             setCustomInputs={setCustomInputs}

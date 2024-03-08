@@ -59,12 +59,8 @@ const MainProductImage = styled.figure`
 function ProductImages({
   coverColor,
   productImages,
-  productThumbnails,
-  setCartThumbnail,
 }) {
   const [allImages, setAllImages] = useState([])
-  const [activeImage, setActiveImage] = useState(0)
-  const [activeImageData, setActiveImageData] = useState(null)
 
   useEffect(() => {
     function sortImages(a, b) {
@@ -76,37 +72,24 @@ function ProductImages({
       }
     }
     // filter images by the specified color
-    function parseImages(images, color, thumbnails) {
+    function parseImages(images, color) {
       const imagesDummyArray = []
       const filteredImages = images.nodes.filter(img => img.name.split("-")[0] === color)
-      const filteredThumbnails = thumbnails.nodes.filter(img => img.name.split("-")[0] === color)
       // sort images into ascending order
       filteredImages.sort(sortImages)
-      filteredThumbnails.sort(sortImages)
-      const firstImage = filteredImages[0]
-      const firstThumbnail = filteredThumbnails[0]
 
-      filteredImages.forEach((img, index) => {
+      filteredImages.forEach(img => {
         imagesDummyArray.push({
           main: img,
-          thumbnail: filteredThumbnails[index],
           alt: img.name,
         })
       })
 
-      setActiveImageData(firstImage)
-      setActiveImage(0)
-      setCartThumbnail(firstThumbnail)
       setAllImages(imagesDummyArray)
     }
 
-    parseImages(productImages, coverColor, productThumbnails)
-  }, [productImages, productThumbnails, coverColor, setCartThumbnail])
-
-  function handleSelectImage(img, index) {
-    setActiveImage(index)
-    setActiveImageData(img)
-  }
+    parseImages(productImages, coverColor)
+  }, [productImages, coverColor])
 
   return (
     <Carousel

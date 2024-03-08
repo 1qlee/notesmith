@@ -29,7 +29,7 @@ const HeroContent = () => {
       <p>Fully customize the layout of every page and create your own custom-made notebook with high quality, fountain pen friendly paper.</p>
       <Button
         as={Link}
-        to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+        to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
         padding="16px 32px"
         margin="16px 0"
         fontsize="1.25rem"

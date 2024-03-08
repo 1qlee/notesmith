@@ -354,7 +354,7 @@ const Nav = ({
             >
               <NavItem>
                 <NavLink
-                  to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
+                  to="/products/notebooks/pro-wired-notebook-a5-custom/white"
                   color={colors.gray.nineHundred}
                 >
                   Shop
@@ -494,7 +494,7 @@ const Nav = ({
                   <NavHeading>Shop</NavHeading>
                   <NavItem>
                     <NavLink
-                      to="/products/notebooks/hardcover-wired-notebook-a5-custom/white"
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white"
                     >
                       Notebooks
                     </NavLink>

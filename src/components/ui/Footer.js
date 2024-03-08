@@ -90,7 +90,7 @@ const Footer = () => {
               >
                 <h5>Products</h5>
                 <Box>
-                  <Link to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/">
+                  <Link to="/products/notebooks/pro-wired-notebook-a5-custom/white/">
                     Custom Notebooks
                   </Link>
                 </Box>

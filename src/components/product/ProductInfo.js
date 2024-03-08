@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import { colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
+import { CaretDown } from "@phosphor-icons/react"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
@@ -11,7 +12,7 @@ import ColorPicker from "../shop/ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import { Flexbox } from "../layout/Flexbox"
-import { QuantityTracker, StyledLabel } from "../form/FormComponents"
+import { QuantityTracker, SelectWrapper, StyledFieldset, StyledLabel, StyledSelect, SelectIcon, SelectLabel } from "../form/FormComponents"
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
 import Tag from "../ui/Tag"
@@ -56,6 +57,7 @@ const ProductInfo = ({
   selectedPageSvg,
 }) => {
   const cartButtonRef = useRef(null)
+  const discountSelectRef = useRef(null)
   const { addItem, handleCartClick, shouldDisplayCart } = useShoppingCart()
   const [buttonFixed, setButtonFixed] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
@@ -68,6 +70,7 @@ const ProductInfo = ({
     margin: buttonFixed && "0",
     zIndex: buttonFixed && 49,
   }
+  let subtotal = calculateSubtotal()
 
   useEffect(() => {
     if (isBrowser()) {
@@ -140,17 +143,6 @@ const ProductInfo = ({
     }
   }
 
-  function handleHoverCartButton(e) {
-    const button = e.target
-
-    if (validateCartButton()) {
-      button.disabled = false
-    }
-    else {
-      button.disabled = true
-    }
-  }
-
   function validateCartButton() {
     if (!leftPageData.template || !rightPageData.template || !itemQuantity || !bookData.coverColor) {
       return false
@@ -164,6 +156,41 @@ const ProductInfo = ({
     setTimeout(() => {
       setItemAdded(false)
     }, 1000)
+  }
+
+  function calculateSubtotal() {
+    let price = bookData.price
+
+    if (itemQuantity >= 5 && itemQuantity < 10) {
+      price = bookData.price * .95 * itemQuantity
+    }
+    else if (itemQuantity >= 10 && itemQuantity < 20) {
+      price = bookData.price * .9 * itemQuantity
+    }
+    else if (itemQuantity >= 20) {
+      price = bookData.price * .85 * itemQuantity
+    }
+    else {
+      price = bookData.price * itemQuantity
+    }
+
+    return formatDollars(price / 100)
+  }
+
+  function calculatePrice(quantity) {
+    let price = bookData.price
+
+    if (quantity >= 5 && quantity < 10) {
+      price = bookData.price * .95
+    }
+    else if (quantity >= 10 && quantity < 20) {
+      price = bookData.price * .9
+    }
+    else if (quantity >= 20) {
+      price = bookData.price * .85
+    }
+
+    return formatDollars(price / 100)
   }
 
   return (
@@ -219,11 +246,12 @@ const ProductInfo = ({
           )}
           {pageData.show && (
             <Button
-              padding="4px 8px"
               backgroundcolor={colors.white}
-              color={colors.gray.nineHundred}
               border={colors.borders.black}
+              color={colors.gray.nineHundred}
               fontsize="0.75rem"
+              id="show-controls"
+              padding="4px 8px"
               onClick={() => setPageData({
                 ...pageData,
                 showControls: !pageData.showControls,
@@ -235,45 +263,110 @@ const ProductInfo = ({
         </Flexbox>
       )}
       {(pageData.template && pageData.template !== "blank") && (
-        <ProductQuickControls 
-          pageData={pageData}
-          dimensions={dimensions}
-          max={max}
-          selectedPageSvg={selectedPageSvg}
-          setLeftPageData={setLeftPageData}
-          setPageData={setPageData}
-          setRightPageData={setRightPageData}
-        />
+        <>
+          {pageData.showControls ? (
+            <Content
+              margin="0 0 16px"
+            >
+              <p>Showing advanced options...</p>
+            </Content>
+          ) : (
+            <ProductQuickControls 
+              pageData = { pageData }
+              dimensions = { dimensions }
+              max = { max }
+              selectedPageSvg = { selectedPageSvg }
+              setLeftPageData = { setLeftPageData }
+              setPageData = { setPageData }
+              setRightPageData = { setRightPageData }
+            />
+          )}
+        </>
       )}
       <ProductInfoLabel
         label="Set quantity"
         number={pageData.template ? "4" : "3"}
         margin="0 0 16px"
       />
-      <StyledLabel
-        htmlFor="quantity-tracker"
-      >
-        Quantity
-      </StyledLabel>
       <Flexbox
         flex="flex"
         margin="0 0 16px"
         ref={cartButtonRef}
       >
-        <QuantityTracker
-          id="quantity-tracker"
-          buttonwidth="1rem"
-          buttonheight="1rem"
-          buttonleft="calc(50% - 40px)"
-          buttonright="calc(50% - 40px)"
-          counterwidth="100%"
-          counterpadding="14px"
-          counterfontsize="1rem"
-          iconsize="0.75rem"
-          setItemQuantity={setItemQuantity}
-          wrapperwidth="100%"
-          wrapperminwidth="100px"
-        />
+        <StyledFieldset
+          flex="0"
+        >
+          <StyledLabel
+            htmlFor="quantity-tracker"
+          >
+            Quantity
+          </StyledLabel>
+          <QuantityTracker
+            id="quantity-tracker"
+            buttonwidth="1rem"
+            buttonheight="1rem"
+            buttonleft="calc(50% - 40px)"
+            buttonright="calc(50% - 40px)"
+            counterwidth="100px"
+            counterpadding="14px"
+            counterfontsize="1rem"
+            iconsize="0.75rem"
+            setItemQuantity={setItemQuantity}
+            itemQuantity={itemQuantity}
+          />
+        </StyledFieldset>
+        <StyledFieldset
+          margin="0 0 0 16px"
+        >
+          <StyledLabel>Volume discounts</StyledLabel>
+          <SelectWrapper>
+            <StyledSelect 
+              fontsize="1rem"
+              width="100%"
+              onChange={(e) => setItemQuantity(+e.target.value)}
+              ref={discountSelectRef}
+              id="yo"
+            >
+              <option value={5}>5 - {calculatePrice(5)} each</option>
+              <option value={10}>10 - {calculatePrice(10)} each</option>
+              <option value={20}>20 - {calculatePrice(20)} each</option>
+            </StyledSelect>
+            <SelectIcon
+              top="20px"
+              right="8px"
+            >
+              <CaretDown size="1rem" />
+            </SelectIcon>
+            <SelectLabel
+              right="32px"
+              htmlFor="yo"
+            >
+              This is a test
+            </SelectLabel>
+          </SelectWrapper>
+        </StyledFieldset>
+      </Flexbox>
+      <Flexbox
+        align="flex-end"
+        justify="space-between"
+        margin="0 0 16px"
+      >
+        <Content
+          pargraphmargin="0"
+          paragraphlineheight="1"
+          paragraphfontweight="700"
+          margin="0 8px 0 0"
+        >
+          <p>Subtotal</p>
+        </Content>
+        <Content
+          h3margin="0"
+          headinglineheight="1"
+          h3fontsize="1.25rem"
+          h3fontweight="400"
+        >
+          <h3>{subtotal}</h3>
+        </Content>
       </Flexbox>
       <Button
         backgroundcolor={colors.gray.nineHundred}
@@ -289,7 +382,7 @@ const ProductInfo = ({
         {itemAdded ? (
           <span>Added to cart!</span>
         ) : (
-          <span>Add to cart - {formatDollars((itemQuantity * bookData.price) / 100)}</span>
+          <span>Add to cart</span>
         )}
       </Button>
       <Content

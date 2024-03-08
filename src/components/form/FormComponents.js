@@ -7,8 +7,12 @@ import { Minus, Plus, CaretUp, CaretDown } from "@phosphor-icons/react"
 import Icon from "../ui/Icon"
 
 function QuantityTracker(props) {
-  const { setItemQuantity, initialQuantity } = props
-  const [quantity, setQuantity] = useState(initialQuantity || 1)
+  const { setItemQuantity, itemQuantity } = props
+  const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    setQuantity(itemQuantity)
+  }, [itemQuantity])
 
   const handleButtonChange = (e, up) => {
     e.preventDefault()
@@ -624,6 +628,22 @@ const SelectWrapper = styled.div`
   width: ${props => props.width ? props.width : "100%"};
 `
 
+const SelectLabel = styled.label`
+  position: absolute;
+  top: ${props => props.top ? props.top : "0.5rem"};
+  left: ${props => props.left};
+  right: ${props => props.right};
+  border-radius: 8px;
+  width: ${props => props.width};
+  height: ${props => props.height ? props.height : "100%"};
+  z-index: 1;
+  padding: 16px;
+  pointer-events: none;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 const SelectIcon = styled.span`
   position: absolute;
   top: ${props => props.top ? props.top : "2.5rem"};
@@ -636,7 +656,7 @@ const StyledSelect = styled.select`
   border-radius: ${props => props.borderradius ? props.borderradius : "4px"};
   border: 1px solid ${colors.gray.nineHundred};
   font-size: ${props => props.fontsize || "0.875rem"};
-  padding: ${props => props.padding || "16px 64px 16px 16px"};
+  padding: ${props => props.padding || "16px 28px 16px 16px"};
   height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;
@@ -685,6 +705,7 @@ export {
   RangeInput,
   SelectIcon,
   SelectWrapper,
+  SelectLabel,
   StyledCheckbox,
   StyledFieldset,
   StyledFloatingLabel,

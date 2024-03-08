@@ -42,6 +42,12 @@ const ProductPage = ({ data, params }) => {
   const [svgLoaded, setSvgLoaded] = useState(false)
 
   useEffect(() => {
+    // set thumbnail image for cart
+    const filteredThumbnails = productThumbnails.nodes.filter(img => img.name.split("-")[0] === coverColor)
+    filteredThumbnails.sort((a,b) => a.name.split("-")[1] < b.name.split("-")[1] ? -1 : 0)
+    const firstThumbnail = filteredThumbnails[0]
+    setCartThumbnail(firstThumbnail)
+    
     // if there is no coverColor or coverColor does not exist
     if (!coverColor || !bookData.colors.find(color => color.slug === coverColor)) {
       const defaultCoverColor = bookData.colors[0].slug
@@ -115,7 +121,7 @@ const ProductPage = ({ data, params }) => {
                 ) : (
                   <Col lg={8}>
                     <ProductImages 
-                      coverColor={coverColor}
+                      coverColor={bookData.coverColor}
                       productImages={productImages}
                       productThumbnails={productThumbnails}
                       setCartThumbnail={setCartThumbnail}

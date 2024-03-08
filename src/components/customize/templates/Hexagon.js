@@ -39,7 +39,6 @@ function Hexagon({
           return { col: col }
         }
         if (pointY > height) {
-          console.log(pointY)
           return { row: row }
         }
         else {

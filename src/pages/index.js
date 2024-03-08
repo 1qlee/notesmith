@@ -132,7 +132,7 @@ const IndexPage = ({ data }) => {
                     fontsize="1.25rem"
                     padding="16px 32px"
                     as={Link}
-                    to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+                    to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
                   >
                     <span>Shop now</span>
                     <Icon
@@ -524,7 +524,7 @@ const IndexPage = ({ data }) => {
                     </p>
                     <Button
                       as={Link}
-                      to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
                       padding="16px 32px"
                       margin="16px 0"
                       fontsize="1.25rem"

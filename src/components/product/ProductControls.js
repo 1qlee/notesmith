@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useRef } from "react"
 import styled, { keyframes } from "styled-components"
-import { colors, widths, breakpoints } from "../../styles/variables"
-import { CircleNotch, X } from "@phosphor-icons/react"
-import { ScreenClassRender } from "react-grid-system"
+import { colors, widths } from "../../styles/variables"
+import { X } from "@phosphor-icons/react"
+import useOutsideClick from "../../hooks/useOutsideClick"
 
 import AlignmentControls from "../customize/templateControls/components/AlignmentControls"
 import Button from "../ui/Button"
@@ -35,7 +35,6 @@ const StyledTemplatesBar = styled.div`
   animation: ${slideIn} 0.3s ease;
   background-color: ${colors.white};
   border: ${colors.borders.black};
-  max-height: 816px;
   position: relative;
   width: ${widths.sidebar};
   z-index: 25;
@@ -49,9 +48,9 @@ const StyledTemplatesBar = styled.div`
     box-shadow: ${colors.shadow.drawer};
     position: fixed;
     left: -1px;
-    top: 107px;
+    top: 60px;
     box-shadow: ${colors.shadow.drawer};
-    height: calc(100vh - 106px);
+    height: calc(100vh - 59px);
     z-index: 55;
     display: flex;
     flex-direction: column;
@@ -61,16 +60,9 @@ const StyledTemplatesBar = styled.div`
 
 const TemplatesContent = styled.div`
   background-color: ${colors.white};
+  padding: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 1rem;
-  max-height: 725px;
-  @media only screen and (max-width: ${breakpoints.sm}) {
-    max-height: 600px;
-  }
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    max-height: calc(100% - 71px);
-  }
   &::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
@@ -89,11 +81,7 @@ const TemplatesCloseButton = styled(Button)`
   top: -12px;
   padding: 4px;
   border-radius: 100%;
-`
-
-const TemplatesFooter = styled.div`
-  padding: 1rem;
-  border-top: ${colors.borders.black};
+  z-index: 56;
 `
 
 function ProductControls({
@@ -106,204 +94,178 @@ function ProductControls({
   setLeftPageData,
   setPageData,
   setRightPageData,
-  toast,
 }) {
-  const [loading, setLoading] = useState(false)
+  const controlsRef = useRef(null)
   const { maximumMarginHeight, maximumMarginWidth } = dimensions
 
-  function handleApplyTemplate() {
-    setLoading(true)
+  useOutsideClick(controlsRef, (id) => {
+    if (id !== "show-controls") {
+      setPageData({
+        ...pageData,
+        showControls: false,
+      })
+    }
+  });
 
+  function handlePageData(data) {
+    setPageData(data)
+    
     if (currentPageSide === "left") {
       setLeftPageData({
         template: pageData.template,
         svg: selectedPageSvg.outerHTML,
-        pageData: pageData,
+        pageData: data,
       })
     }
     else if (currentPageSide === "both") {
       setRightPageData({
         template: pageData.template,
         svg: selectedPageSvg.outerHTML,
-        pageData: pageData,
+        pageData: data,
       })
-      setCurrentPageSide("left")
-
-      setTimeout(() => {
-        setLeftPageData({
-          template: pageData.template,
-          svg: selectedPageSvg.outerHTML,
-          pageData: pageData,
-        })
-        setCurrentPageSide("both")
-      }, 100)
+      setLeftPageData({
+        template: pageData.template,
+        svg: selectedPageSvg.outerHTML,
+        pageData: data,
+      })
     }
     else {
       setRightPageData({
         template: pageData.template,
         svg: selectedPageSvg.outerHTML,
-        pageData: pageData,
+        pageData: data,
       })
     }
-
-    setLoading(false)
-    toast.success(`Applied template to ${currentPageSide} pages!`)
   }
 
   return (
-    <ScreenClassRender
-      render={screenClass => {
-        const isMobile = ["xs", "sm", "md", "lg"].includes(screenClass)
-
-        return (
-          <>
-            {pageData.showControls && (
-              <StyledTemplatesBar
-                className={!pageData.showControls ? "is-collapsed" : null}
-              >
-                <TemplatesCloseButton
-                  onClick={() => setPageData({
-                    ...pageData,
-                    showControls: false,
-                  })}
-                >
-                  <Icon>
-                    <X />
-                  </Icon>
-                </TemplatesCloseButton>
-                <TemplatesContent>
-                  <Flexbox
-                    justify="flex-end"
-                    margin="0 0 4px 0"
-                  >
-                    <small>All values shown in mm</small>
-                  </Flexbox>
-                  <StyledLabel>Apply to {currentPageSide} pages</StyledLabel>
-                  <ToggleControls 
-                    value={currentPageSide}
-                    data={[
-                      { name: "left" },
-                      { name: "both" },
-                      { name: "right" },
-                    ]}
-                    setData={setCurrentPageSide}
+    <>
+      {pageData.showControls && (
+        <StyledTemplatesBar
+          className={!pageData.showControls ? "is-collapsed" : null}
+          ref={controlsRef}
+        >
+          <TemplatesCloseButton
+            onClick={() => setPageData({
+              ...pageData,
+              showControls: false,
+            })}
+          >
+            <Icon>
+              <X />
+            </Icon>
+          </TemplatesCloseButton>
+          <TemplatesContent>
+            <Flexbox
+              justify="flex-end"
+              margin="0 0 4px 0"
+            >
+              <small>All values shown in mm</small>
+            </Flexbox>
+            <StyledLabel>Apply to {currentPageSide} pages</StyledLabel>
+            <ToggleControls 
+              value={currentPageSide}
+              data={[
+                { name: "left" },
+                { name: "both" },
+                { name: "right" },
+              ]}
+              setData={setCurrentPageSide}
+            />
+            {pageData.template !== "blank" && pageData.template !== "none" && (
+              <>
+                {selectedPageSvg && (
+                  <>
+                    <MarginControls
+                      pageData={pageData}
+                      setPageData={handlePageData}
+                      maximumMarginHeight={maximumMarginHeight}
+                      maximumMarginWidth={maximumMarginWidth}
+                    />
+                    <AlignmentControls
+                      dimensions={dimensions}
+                      pageData={pageData}
+                      setPageData={handlePageData}
+                      selectedPageSvg={selectedPageSvg}
+                    />
+                  </>
+                )}
+                {pageData.template === "ruled" && (
+                  <RuledControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
                   />
-                  {pageData.template !== "blank" && pageData.template !== "none" && (
-                    <>
-                      {selectedPageSvg && (
-                        <>
-                          <MarginControls
-                            pageData={pageData}
-                            setPageData={setPageData}
-                            maximumMarginHeight={maximumMarginHeight}
-                            maximumMarginWidth={maximumMarginWidth}
-                          />
-                          <AlignmentControls
-                            dimensions={dimensions}
-                            pageData={pageData}
-                            setPageData={setPageData}
-                            selectedPageSvg={selectedPageSvg}
-                          />
-                        </>
-                      )}
-                      {pageData.template === "ruled" && (
-                        <RuledControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "dot" && (
-                        <DotControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "graph" && (
-                        <GraphControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "hexagon" && (
-                        <HexagonControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "isometric" && (
-                        <IsometricControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "seyes" && (
-                        <SeyesControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "music" && (
-                        <MusicControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "handwriting" && (
-                        <HandwritingControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "cross" && (
-                        <CrossGridControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                      {pageData.template === "calligraphy" && (
-                        <CalligraphyControls
-                          pageData={pageData}
-                          setPageData={setPageData}
-                          max={max}
-                        />
-                      )}
-                    </>
-                  )}
-                </TemplatesContent>
-                <TemplatesFooter>
-                  <Button
-                    backgroundcolor={colors.gray.nineHundred}
-                    className={loading ? "is-loading" : null}
-                    color={colors.gray.oneHundred}
-                    padding="1rem"
-                    width="100%"
-                    disabled={pageData.template === "none" ? true : false}
-                    onClick={() => handleApplyTemplate()}
-                  >
-                    {loading ? (
-                      <Icon>
-                        <CircleNotch size="1rem" />
-                      </Icon>
-                    ) : (
-                      <span>Apply changes</span>
-                    )}
-                  </Button>
-                </TemplatesFooter>
-              </StyledTemplatesBar>
+                )}
+                {pageData.template === "dot" && (
+                  <DotControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "graph" && (
+                  <GraphControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "hexagon" && (
+                  <HexagonControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "isometric" && (
+                  <IsometricControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "seyes" && (
+                  <SeyesControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "music" && (
+                  <MusicControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "handwriting" && (
+                  <HandwritingControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "cross" && (
+                  <CrossGridControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+                {pageData.template === "calligraphy" && (
+                  <CalligraphyControls
+                    pageData={pageData}
+                    setPageData={handlePageData}
+                    max={max}
+                  />
+                )}
+              </>
             )}
-          </>
-        )
-      }}
-    />
+          </TemplatesContent>
+        </StyledTemplatesBar>
+      )}
+    </>
   )
 }
 export default ProductControls

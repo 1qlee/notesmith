@@ -11,7 +11,7 @@ function SpacingControls({
     <RangeControls
       property="spacing"
       propertyName={name || "Spacing"}
-      propertyObj={{}}
+      propertyObj={{ alignmentVertical: "", alignmentHorizontal: "" }}
       inputProps={{
         min: 1,
         max: 255,

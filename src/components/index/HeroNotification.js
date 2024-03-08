@@ -37,7 +37,7 @@ const HeroNotification = () => {
         align="center"
         justify="center"
         as={Link}
-        to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+        to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
       >
         <Icon
           margin="0 8px 0 0"

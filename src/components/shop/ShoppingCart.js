@@ -308,7 +308,7 @@ function ShoppingCart({
                 setShowGrayArea(false)
                 setHideScroll(false)
               }}
-              to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+              to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
             >
               Shop notebooks
             </Button>
@@ -645,7 +645,7 @@ function ShoppingCart({
             color={colors.gray.oneHundred}
             padding="16px 32px"
             as={Link}
-            to="/products/notebooks/hardcover-wired-notebook-a5-custom/white/"
+            to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
           >
             Shop notebooks
           </Button>
