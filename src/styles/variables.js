@@ -107,6 +107,7 @@ const colors = {
     inset: "rgba(0,0,0,0.4)",
     dark: "rgba(0,0,0,0.6)",
     modal: "0 2px 12px rgba(0,0,0,0.25)",
+    hover: "0 0 0 3px #E0E0E0, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff",
     focus: "0 0 0 2px #212121, inset 1px 1px 0px 0px #fff, inset 1px -1px 0px 0px #fff, inset -1px -1px 0px 0px #fff, inset -1px 1px 0px 0px #fff",
     drawer: "4px 0 12px rgba(0,0,0,0.12)"
   },

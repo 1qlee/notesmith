@@ -348,7 +348,7 @@ const NumberInputIcon = styled.div`
   width: ${props => props.width};
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray.oneHundred};
+    box-shadow: ${colors.shadow.hover};
   }
 `
 
@@ -401,7 +401,7 @@ const Counter = styled.input`
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.gray.oneHundred};
+      box-shadow: ${colors.shadow.hover};
     }
   }
 `
@@ -478,7 +478,7 @@ const StyledCheckbox = styled.div`
     font-size: ${props => props.fontsize || "0.875rem"}
   }
   &:hover {
-    background-color: ${colors.gray.twoHundred};
+    box-shadow: ${colors.shadow.hover};
     cursor: pointer;
   }
 `
@@ -614,7 +614,7 @@ const StyledInput = styled.input`
   }
   &:hover {
     &:not(:focus) {
-      background-color: ${colors.gray.oneHundred};
+      box-shadow: ${colors.shadow.hover};
     }
   }
   &::placeholder {
@@ -630,17 +630,18 @@ const SelectWrapper = styled.div`
 
 const SelectLabel = styled.label`
   position: absolute;
-  top: ${props => props.top ? props.top : "0.5rem"};
-  left: ${props => props.left};
-  right: ${props => props.right};
+  top: 1px;
+  left: 1px;
   border-radius: 8px;
-  width: ${props => props.width};
-  height: ${props => props.height ? props.height : "100%"};
+  width: calc(100% - 32px);
+  height: calc(100% - 2px);
   z-index: 1;
   padding: 16px;
   pointer-events: none;
+  background-color: ${colors.white};
   &:hover {
     cursor: pointer;
+    box-shadow: ${colors.shadow.hover};
   }
 `
 
@@ -671,7 +672,7 @@ const StyledSelect = styled.select`
   &:hover {
     cursor: pointer;
     &:not(:focus) {
-      background-color: ${colors.gray.oneHundred};
+      box-shadow: ${colors.shadow.hover};
     }
   }
   &::placeholder {

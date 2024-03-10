@@ -36,7 +36,7 @@ const ColorOption = styled.button`
     }
     .color-picker {
       border-color: ${colors.white};
-      box-shadow: 0 0 0 3px ${colors.gray.nineHundred};
+      box-shadow: ${colors.shadow.focus};
       transform: translateY(-2px);
     }
   }
@@ -51,7 +51,7 @@ const ColorOption = styled.button`
       }
       .color-picker {
         border-color: ${colors.gray.nineHundred};
-        box-shadow: 0 0 0 2px ${colors.gray.nineHundred};
+        box-shadow: ${colors.shadow.hover};
         transform: translateY(-2px);
       }
     }

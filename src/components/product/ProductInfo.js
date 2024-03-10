@@ -16,6 +16,7 @@ import { QuantityTracker, SelectWrapper, StyledFieldset, StyledLabel, StyledSele
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
 import Tag from "../ui/Tag"
+import StrikeText from "../misc/StrikeText"
 
 const ProductInfoLabel = ({ number, label, margin }) => {
   return (
@@ -61,6 +62,7 @@ const ProductInfo = ({
   const { addItem, handleCartClick, shouldDisplayCart } = useShoppingCart()
   const [buttonFixed, setButtonFixed] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [volumeQuantity, setVolumeQuantity] = useState(0)
   const [itemAdded, setItemAdded] = useState(false)
   const fixedButtonStyle = {
     position: buttonFixed && "fixed",
@@ -70,7 +72,9 @@ const ProductInfo = ({
     margin: buttonFixed && "0",
     zIndex: buttonFixed && 49,
   }
-  let subtotal = calculateSubtotal()
+  let originalPrice = formatDollars(bookData.price / 100)
+  let discounts = calculateDiscounts(itemQuantity)
+  let { subtotal, unitPrice, percent } = discounts
 
   useEffect(() => {
     if (isBrowser()) {
@@ -98,7 +102,20 @@ const ProductInfo = ({
 
       document.addEventListener('scroll', handleScroll)
     }
-  }, []) 
+
+    if (itemQuantity < 5) {
+      setVolumeQuantity(0)
+    }
+    else if (itemQuantity >= 5 && itemQuantity < 10) {
+      setVolumeQuantity(5)
+    }
+    else if (itemQuantity >= 10 && itemQuantity < 20) {
+      setVolumeQuantity(10)
+    }
+    else if (itemQuantity >= 20) {
+      setVolumeQuantity(20)
+    }
+  }, [itemQuantity]) 
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -158,39 +175,31 @@ const ProductInfo = ({
     }, 1000)
   }
 
-  function calculateSubtotal() {
-    let price = bookData.price
-
-    if (itemQuantity >= 5 && itemQuantity < 10) {
-      price = bookData.price * .95 * itemQuantity
+  function calculateDiscounts(quantity) {
+    let discounts = {
+      unitPrice: 0,
+      subtotal: 0,
+      percent: 0,
     }
-    else if (itemQuantity >= 10 && itemQuantity < 20) {
-      price = bookData.price * .9 * itemQuantity
-    }
-    else if (itemQuantity >= 20) {
-      price = bookData.price * .85 * itemQuantity
-    }
-    else {
-      price = bookData.price * itemQuantity
-    }
-
-    return formatDollars(price / 100)
-  }
-
-  function calculatePrice(quantity) {
-    let price = bookData.price
 
     if (quantity >= 5 && quantity < 10) {
-      price = bookData.price * .95
+      discounts.unitPrice = bookData.price * .95
     }
     else if (quantity >= 10 && quantity < 20) {
-      price = bookData.price * .9
+      discounts.unitPrice = bookData.price * .9
     }
     else if (quantity >= 20) {
-      price = bookData.price * .85
+      discounts.unitPrice = bookData.price * .85
+    }
+    else {
+      discounts.unitPrice = bookData.price
     }
 
-    return formatDollars(price / 100)
+    discounts.percent = 100 - (discounts.unitPrice / bookData.price * 100)
+    discounts.subtotal = formatDollars((discounts.unitPrice * quantity) / 100)
+    discounts.unitPrice = formatDollars(discounts.unitPrice / 100)
+
+    return discounts
   }
 
   return (
@@ -308,7 +317,7 @@ const ProductInfo = ({
             buttonleft="calc(50% - 40px)"
             buttonright="calc(50% - 40px)"
             counterwidth="100px"
-            counterpadding="14px"
+            counterpadding="16px"
             counterfontsize="1rem"
             iconsize="0.75rem"
             setItemQuantity={setItemQuantity}
@@ -318,18 +327,23 @@ const ProductInfo = ({
         <StyledFieldset
           margin="0 0 0 16px"
         >
-          <StyledLabel>Volume discounts</StyledLabel>
+          <StyledLabel htmlFor="discount-select">Volume discounts</StyledLabel>
           <SelectWrapper>
             <StyledSelect 
               fontsize="1rem"
               width="100%"
-              onChange={(e) => setItemQuantity(+e.target.value)}
+              onChange={(e) => {
+                setItemQuantity(+e.target.value || 1)
+                setVolumeQuantity(+e.target.value)
+              }}
               ref={discountSelectRef}
-              id="yo"
+              value={volumeQuantity}
+              id="discount-select"
             >
-              <option value={5}>5 - {calculatePrice(5)} each</option>
-              <option value={10}>10 - {calculatePrice(10)} each</option>
-              <option value={20}>20 - {calculatePrice(20)} each</option>
+              <option value={0} default>&lt; 5 - {calculateDiscounts(0).unitPrice} each</option>
+              <option value={5}>5 - {calculateDiscounts(5).unitPrice} each</option>
+              <option value={10}>10 - {calculateDiscounts(10).unitPrice} each</option>
+              <option value={20}>20 - {calculateDiscounts(20).unitPrice} each</option>
             </StyledSelect>
             <SelectIcon
               top="20px"
@@ -338,10 +352,29 @@ const ProductInfo = ({
               <CaretDown size="1rem" />
             </SelectIcon>
             <SelectLabel
-              right="32px"
-              htmlFor="yo"
+              htmlFor="discount-select"
             >
-              This is a test
+              <Flexbox
+                justify="space-between"
+                align="center"
+              >
+                <Content>
+                  {itemQuantity >= 5 && (
+                    <StrikeText>{originalPrice}</StrikeText>
+                  )}
+                  <span>{unitPrice} each</span>
+                </Content>
+                {itemQuantity >= 5 && (
+                  <Content
+                    paragraphlineheight="normal"
+                    paragraphmargin="0"
+                    paragraphfontweight="700"
+                    paragraphcolor={colors.green.sixHundred}
+                  >
+                    <p>{percent}% off</p>
+                  </Content>
+                )}
+              </Flexbox>
             </SelectLabel>
           </SelectWrapper>
         </StyledFieldset>
@@ -397,7 +430,7 @@ const ProductInfo = ({
       {!validateCartButton() && (
         <Tooltip
           anchorSelect="#cart-button"
-          content="You must choose a page layout first."
+          content="You must select a layout first."
           place="top"
           variant="error"
         />

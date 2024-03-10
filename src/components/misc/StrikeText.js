@@ -13,7 +13,8 @@ const StrikeText = styled.span`
     width: 100%;
     position: absolute;
     height: 2px;
-    left: 0
+    transform: rotate(-15deg);
+    left: 0;
     white-space: nowrap;
     display: block;
   }
