@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
-import { colors,  } from "../../styles/variables"
+import { breakpoints, colors,  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
 import { CaretDown } from "@phosphor-icons/react"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
 import { isBrowser, formatDollars } from "../../utils/helper-functions"
+import { ScreenClassRender } from "react-grid-system"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
@@ -73,6 +74,7 @@ const ProductInfo = ({
     zIndex: buttonFixed && 49,
   }
   let originalPrice = formatDollars(bookData.price / 100)
+  let originalSubtotal = formatDollars((bookData.price * itemQuantity) / 100)
   let discounts = calculateDiscounts(itemQuantity)
   let { subtotal, unitPrice, percent } = discounts
 
@@ -280,14 +282,14 @@ const ProductInfo = ({
               <p>Showing advanced options...</p>
             </Content>
           ) : (
-            <ProductQuickControls 
-              pageData = { pageData }
-              dimensions = { dimensions }
-              max = { max }
-              selectedPageSvg = { selectedPageSvg }
-              setLeftPageData = { setLeftPageData }
-              setPageData = { setPageData }
-              setRightPageData = { setRightPageData }
+            <ProductQuickControls
+              pageData={pageData}
+              dimensions={dimensions}
+              max={max}
+              selectedPageSvg={selectedPageSvg}
+              setLeftPageData={setLeftPageData}
+              setPageData={setPageData}
+              setRightPageData={setRightPageData}
             />
           )}
         </>
@@ -329,7 +331,7 @@ const ProductInfo = ({
         >
           <StyledLabel htmlFor="discount-select">Volume discounts</StyledLabel>
           <SelectWrapper>
-            <StyledSelect 
+            <StyledSelect
               fontsize="1rem"
               width="100%"
               onChange={(e) => {
@@ -358,11 +360,18 @@ const ProductInfo = ({
                 justify="space-between"
                 align="center"
               >
-                <Content>
+                <Content
+                  hiddenminwidth="991"
+                  hiddenmaxwidth="1060"
+                >
                   {itemQuantity >= 5 && (
-                    <StrikeText>{originalPrice}</StrikeText>
+                    <StrikeText 
+                      hiddenminwidth="991"
+                      hiddenmaxwidth="1240">
+                      {originalPrice}
+                    </StrikeText>
                   )}
-                  <span>{unitPrice} each</span>
+                    <span>{unitPrice} each</span>
                 </Content>
                 {itemQuantity >= 5 && (
                   <Content
@@ -398,7 +407,12 @@ const ProductInfo = ({
           h3fontsize="1.25rem"
           h3fontweight="400"
         >
-          <h3>{subtotal}</h3>
+          <h3>
+            {itemQuantity >= 5 && (
+              <StrikeText>{originalSubtotal}</StrikeText>
+            )}
+            {subtotal}
+          </h3>
         </Content>
       </Flexbox>
       <Button
@@ -424,7 +438,7 @@ const ProductInfo = ({
       >
         <p>{bookData.longDescription}</p>
       </Content>
-      <ProductDescription 
+      <ProductDescription
         bookData={bookData}
       />
       {!validateCartButton() && (

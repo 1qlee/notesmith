@@ -18,6 +18,9 @@ const StrikeText = styled.span`
     white-space: nowrap;
     display: block;
   }
+  @media only screen and (min-width: ${props => props.hiddenminwidth}px) and (max-width: ${props => props.hiddenmaxwidth}px) {
+    display: none;
+  }
 `
 
 export default StrikeText

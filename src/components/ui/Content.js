@@ -14,6 +14,9 @@ const Content = styled.div`
   text-align: ${props => props.textalign};
   word-wrap: normal;
   width: ${props => props.width};
+  @media only screen and (min-width: ${props => props.hiddenminwidth}px) and (max-width: ${props => props.hiddenmaxwidth}px) {
+    display: none;
+  }
   &.has-border-bottom {
     border-bottom: ${colors.borders.black}};
   }
