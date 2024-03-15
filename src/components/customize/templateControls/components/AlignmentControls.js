@@ -8,14 +8,13 @@ function AlignmentControls({
   dimensions,
   pageData, 
   setPageData,
-  selectedPageSvg,
 }) {
-  const { maxContentHeight, maxContentWidth, strokeWidth, crossSize } = pageData
-  let pageBbox = selectedPageSvg.getBBox()
+  const { maxContentHeight, maxContentWidth, strokeWidth } = pageData
+  console.log("ALIGNMENT AAAA")
   const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
-  const contentHeight = convertFloatFixed(pageBbox.height, 3)
-  const contentWidth = convertFloatFixed(pageBbox.width, 3)
+  const contentHeight = convertFloatFixed(dimensions.svgHeight, 3)
+  const contentWidth = convertFloatFixed(dimensions.svgWidth, 3)
   let verticalTrim, horizontalTrim = 0
   const roundingError = 0.002
 

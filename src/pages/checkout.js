@@ -6,13 +6,13 @@ import { Elements } from '@stripe/react-stripe-js'
 import { useShoppingCart } from "../components/cart/context/cartContext"
 import { Container, Row, Col } from "react-grid-system"
 import toast from 'react-hot-toast'
-import { isBrowser } from "../utils/helper-functions"
+import { isBrowser, calculateDiscounts } from "../utils/helper-functions"
 import updatePaymentIntent from "../functions/updatePaymentIntent"
 
 import CheckoutSteps from "../components/checkout/CheckoutSteps"
 import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import { OrderSummary } from "../components/shop/OrderSummary"
+import { OrderBox } from "../components/shop/OrderSummary"
 import Box from "../components/ui/Box"
 import Breadcrumb from "../components/ui/Breadcrumb"
 import CheckoutForm from "../components/form/CheckoutForm"
@@ -24,16 +24,7 @@ import ValidateAddressModal from "../components/checkout/modals/ValidateAddressM
 const Checkout = () => {
   const [stripe, setStripe] = useState(null)
   const { cartDetails, totalPrice, handleCloseCart } = useShoppingCart()
-  // array to store cartItems
-  const cartItems = []
-
-  if (isBrowser()) {
-    // push all product objects in cartDetails to an array
-    for (const cartItem in cartDetails) {
-      cartItems.push(cartDetails[cartItem])
-    }
-  }
-
+  const [cartItems, setCartItems] = useState([])
   const breadcrumbItems = [
     {
       text: "Cart",
@@ -127,7 +118,7 @@ const Checkout = () => {
           borderColor: "transparent",
         },
         ".Input:hover": {
-          backgroundColor: colors.gray.oneHundred,
+          boxShadow: colors.shadow.hover,
         },
         ".Input--invalid": {
           boxShadow: "none"
@@ -138,7 +129,7 @@ const Checkout = () => {
         },
         ".Label": {
           marginBottom: "8px",
-          fontWeight: "700",
+          fontWeight: "400",
           fontSize: "0.875rem",
         }
       }
@@ -161,7 +152,7 @@ const Checkout = () => {
         },
         body: JSON.stringify({
           pid: pid,
-          cartItems: cartItems,
+          cartItems: cartDetails,
           updatePaymentIntent: true,
         })
       }).then(res => res.json()
@@ -213,7 +204,7 @@ const Checkout = () => {
         },
         body: JSON.stringify({
           // send all cart items
-          cartItems: cartItems
+          cartItems: cartDetails
         })
       }).then(res => res.json()
       ).then(data => {
@@ -230,6 +221,33 @@ const Checkout = () => {
         setLoading(false)
         toast.error(error)
       })
+    }
+
+    if (isBrowser()) {
+      // push all product objects in cartDetails to an array
+      let newSubtotal = 0
+      // array to store cartItems
+      const cartItemsArray = []
+      // push all product objects in cartDetails to an array
+      for (const cartItem in cartDetails) {
+        const item = { ...cartDetails[cartItem] }
+        const discounts = calculateDiscounts({
+          quantity: item.quantity,
+          price: item.price,
+          rate: item.discounts.type,
+        })
+        newSubtotal += discounts.subtotal
+
+        item.discounts = {
+          ...item.discounts,
+          ...discounts,
+        }
+
+        cartItemsArray.push(item)
+      }
+
+      setCartItems(cartItemsArray)
+      setSubtotal(newSubtotal)
     }
 
     // if pid exists in localStorage, retrieve it from Stripe
@@ -394,18 +412,13 @@ const Checkout = () => {
                           >
                             <CheckoutForm
                               address={address}
-                              authKey={authKey}
                               cartItems={cartItems}
                               clientSecret={clientSecret}
-                              coupon={coupon}
                               customer={customer}
                               pid={pid}
                               selectedRate={selectedRate}
-                              setCoupon={setCoupon}
                               setPaymentProcessing={setPaymentProcessing}
-                              setSelectedRate={setSelectedRate}
-                              setSubtotal={setSubtotal}
-                              setTax={setTax}
+                              subtotal={subtotal}
                               tax={tax}
                               toast={toast}
                             />
@@ -413,8 +426,8 @@ const Checkout = () => {
                         </Box>
                       </Col>
                       <Col sm={5}>
-                        <OrderSummary
-                          cartItems={cartItems}
+                        <OrderBox
+                          items={cartItems}
                           coupon={coupon}
                           hideButton={true}
                           selectedRate={selectedRate}

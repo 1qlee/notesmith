@@ -35,34 +35,38 @@ function ProductTemplate({
   bookData,
   currentPageSide,
   pageData,
+  svgLoaded,
   setPageData,
+  setLeftPageData,
+  setRightPageData,
   setSelectedPageSvg,
   setMax,
   setSvgLoaded,
   setDimensions,
 }) {
   const dependencies = [
-    pageData.template,
-    pageData.marginTop,
-    pageData.marginRight,
+    pageData.angle,
+    pageData.ascSpacing,
+    pageData.borderData,
+    pageData.columnSpacing,
+    pageData.columns,
+    pageData.crossSize,
+    pageData.dscSpacing,
+    pageData.hexagonRadius,
     pageData.marginBottom,
     pageData.marginLeft,
-    pageData.rows,
-    pageData.columns,
-    pageData.staves,
-    pageData.ascSpacing,
-    pageData.dscSpacing,
-    pageData.xHeight,
+    pageData.marginRight,
+    pageData.marginTop,
+    pageData.opacity,
     pageData.rowSpacing,
-    pageData.columnSpacing,
-    pageData.hexagonRadius,
+    pageData.rows,
     pageData.slantSpacing,
-    pageData.staffSpacing,
-    pageData.crossSize,
     pageData.spacing,
+    pageData.staffSpacing,
+    pageData.staves,
     pageData.strokeWidth,
-    pageData.angle,
-    pageData.borderData,
+    pageData.template,
+    pageData.xHeight,
   ]
   const minimumMargin = pageMargins.minimum
   const holesMargin = pageMargins.holes
@@ -86,9 +90,12 @@ function ProductTemplate({
 
   useEffect(() => {
     if (templateRef && templateRef.current) {
-      
-      const pageBbox = templateRef.current.getBBox()
-      setSelectedPageSvg(templateRef.current)
+      console.log("template changed")
+      console.log(templateRef.current.outerHTML)
+      const template = templateRef.current
+      const pageBbox = template.getBBox()
+
+      setSelectedPageSvg(template)
       setDimensions({
         svgHeight: pageBbox.height,
         svgWidth: pageBbox.width,
@@ -97,9 +104,36 @@ function ProductTemplate({
         x: templateData.position.x,
         y: templateData.position.y,
       })
-      setPageData({...pageData}) // needed to force a proper re-render for some reason - nifty workaround!
+
+      // apply page changes to left or right page
+      if (currentPageSide === "left") {
+        setLeftPageData({
+          template: pageData.template,
+          svg: template.outerHTML,
+          pageData: pageData,
+        })
+      }
+      else if (currentPageSide === "both") {
+        setRightPageData({
+          template: pageData.template,
+          svg: template.outerHTML,
+          pageData: pageData,
+        })
+        setLeftPageData({
+          template: pageData.template,
+          svg: template.outerHTML,
+          pageData: pageData,
+        })
+      }
+      else {
+        setRightPageData({
+          template: pageData.template,
+          svg: template.outerHTML,
+          pageData: pageData,
+        })
+      }
     }
-  }, [...dependencies, templateRef])
+  }, [pageData.template, svgLoaded])
 
   return (
     <ScreenClassRender

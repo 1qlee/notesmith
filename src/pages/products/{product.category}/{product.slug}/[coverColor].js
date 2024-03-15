@@ -111,7 +111,9 @@ const ProductPage = ({ data, params }) => {
                         pageData={pageData}
                         setDimensions={setDimensions}
                         setMax={setMax}
+                        setLeftPageData={setLeftPageData}
                         setPageData={setPageData}
+                        setRightPageData={setRightPageData}
                         setSelectedPageSvg={setSelectedPageSvg}
                         setSvgLoaded={setSvgLoaded}
                         svgLoaded={svgLoaded}
@@ -174,6 +176,7 @@ export const pageQuery = graphql`
       category
       custom
       description
+      discount
       longDescription
       heightInch
       heightPixel

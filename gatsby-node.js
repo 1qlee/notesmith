@@ -2,8 +2,8 @@ const products = [
   {
     camelName: "proWiredNotebookA5Custom",
     category: "notebooks",
-    custom: true,
     description: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated cover and fountain pen friendly paper.",
+    discount: "bulk",
     longDescription: "One signature, custom-printed Notesmith wired notebook in A5 size with laminated cover. The notebook is filled with fountain pen friendly writing paper that works well with fountain pen inks without feathering or bleed-through, and minimal show-through (ghosting). All notebooks are made with high quality materials sourced from American vendors and are made to order in our factory in New York.",
     heightInch: "8.5",
     heightPixel: 816,

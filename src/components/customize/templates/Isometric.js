@@ -143,7 +143,7 @@ function Isometric({
     createLinesTop()
     createLinesSides()
     setMax({})
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

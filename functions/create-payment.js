@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   let paymentIntent;
 
   // if there are no items, return an error
-  if (!cartItems.length) {
+  if (Object.keys(cartItems).length === 0) {
     console.error("[Netlify] There are no cart items.");
 
     return {

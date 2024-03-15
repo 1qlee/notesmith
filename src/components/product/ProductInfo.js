@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
-import { breakpoints, colors,  } from "../../styles/variables"
+import { colors  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
 import { CaretDown } from "@phosphor-icons/react"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
-import { isBrowser, formatDollars } from "../../utils/helper-functions"
-import { ScreenClassRender } from "react-grid-system"
+import { isBrowser, formatDollars, calculateDiscounts } from "../../utils/helper-functions"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
@@ -56,7 +55,6 @@ const ProductInfo = ({
   setLeftPageData,
   rightPageData,
   setRightPageData,
-  selectedPageSvg,
 }) => {
   const cartButtonRef = useRef(null)
   const discountSelectRef = useRef(null)
@@ -74,9 +72,12 @@ const ProductInfo = ({
     zIndex: buttonFixed && 49,
   }
   let originalPrice = formatDollars(bookData.price / 100)
-  let originalSubtotal = formatDollars((bookData.price * itemQuantity) / 100)
-  let discounts = calculateDiscounts(itemQuantity)
-  let { subtotal, unitPrice, percent } = discounts
+  let discounts = calculateDiscounts({
+    price: bookData.price,
+    quantity: itemQuantity,
+    rate: bookData.discount,
+  })
+  let { percent, formattedSubtotal, formattedPrice } = discounts
 
   useEffect(() => {
     if (isBrowser()) {
@@ -103,6 +104,10 @@ const ProductInfo = ({
 
 
       document.addEventListener('scroll', handleScroll)
+
+      return () => {
+        document.removeEventListener('scroll', handleScroll)
+      }
     }
 
     if (itemQuantity < 5) {
@@ -136,9 +141,13 @@ const ProductInfo = ({
       handleItemAdded()
       addItem({
         category: bookData.category,
+        camelName: bookData.camelName,
         coverColor: bookData.coverColor,
         currency: "USD",
         custom: bookData.custom,
+        discounts: {
+          type: bookData.discount,
+        },
         id: uuidv4(), // unique cart item id
         image: cartThumbnail,
         leftPageData: leftPageData,
@@ -148,7 +157,6 @@ const ProductInfo = ({
         price_id: bookData.stripePriceId,
         price: bookData.price,
         printed: false,
-        originalPrice: bookData.price,
         rightPageData: rightPageData,
         slug: bookData.slug,
         size: bookData.size,
@@ -175,33 +183,6 @@ const ProductInfo = ({
     setTimeout(() => {
       setItemAdded(false)
     }, 1000)
-  }
-
-  function calculateDiscounts(quantity) {
-    let discounts = {
-      unitPrice: 0,
-      subtotal: 0,
-      percent: 0,
-    }
-
-    if (quantity >= 5 && quantity < 10) {
-      discounts.unitPrice = bookData.price * .95
-    }
-    else if (quantity >= 10 && quantity < 20) {
-      discounts.unitPrice = bookData.price * .9
-    }
-    else if (quantity >= 20) {
-      discounts.unitPrice = bookData.price * .85
-    }
-    else {
-      discounts.unitPrice = bookData.price
-    }
-
-    discounts.percent = 100 - (discounts.unitPrice / bookData.price * 100)
-    discounts.subtotal = formatDollars((discounts.unitPrice * quantity) / 100)
-    discounts.unitPrice = formatDollars(discounts.unitPrice / 100)
-
-    return discounts
   }
 
   return (
@@ -240,7 +221,6 @@ const ProductInfo = ({
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
         setData={setPageData}
-        selectedPageSvg={selectedPageSvg}
         showLabels={true}
       />
       {pageData.template && (
@@ -286,7 +266,6 @@ const ProductInfo = ({
               pageData={pageData}
               dimensions={dimensions}
               max={max}
-              selectedPageSvg={selectedPageSvg}
               setLeftPageData={setLeftPageData}
               setPageData={setPageData}
               setRightPageData={setRightPageData}
@@ -319,7 +298,7 @@ const ProductInfo = ({
             buttonleft="calc(50% - 40px)"
             buttonright="calc(50% - 40px)"
             counterwidth="100px"
-            counterpadding="16px"
+            counterpadding="14px"
             counterfontsize="1rem"
             iconsize="0.75rem"
             setItemQuantity={setItemQuantity}
@@ -342,10 +321,10 @@ const ProductInfo = ({
               value={volumeQuantity}
               id="discount-select"
             >
-              <option value={0} default>&lt; 5 - {calculateDiscounts(0).unitPrice} each</option>
-              <option value={5}>5 - {calculateDiscounts(5).unitPrice} each</option>
-              <option value={10}>10 - {calculateDiscounts(10).unitPrice} each</option>
-              <option value={20}>20 - {calculateDiscounts(20).unitPrice} each</option>
+              <option value={0} default>&lt; 5 - {calculateDiscounts({price: bookData.price, quantity: 0, rate: bookData.discount}).formattedPrice} each</option>
+              <option value={5}>5 - {calculateDiscounts({price: bookData.price, quantity: 5, rate: bookData.discount}).formattedPrice} each</option>
+              <option value={10}>10 - {calculateDiscounts({price: bookData.price, quantity: 10, rate: bookData.discount}).formattedPrice} each</option>
+              <option value={20}>20 - {calculateDiscounts({price: bookData.price, quantity: 20, rate: bookData.discount}).formattedPrice} each</option>
             </StyledSelect>
             <SelectIcon
               top="20px"
@@ -371,7 +350,7 @@ const ProductInfo = ({
                       {originalPrice}
                     </StrikeText>
                   )}
-                    <span>{unitPrice} each</span>
+                    <span>{formattedPrice} each</span>
                 </Content>
                 {itemQuantity >= 5 && (
                   <Content
@@ -408,10 +387,7 @@ const ProductInfo = ({
           h3fontweight="400"
         >
           <h3>
-            {itemQuantity >= 5 && (
-              <StrikeText>{originalSubtotal}</StrikeText>
-            )}
-            {subtotal}
+            {formattedSubtotal}
           </h3>
         </Content>
       </Flexbox>

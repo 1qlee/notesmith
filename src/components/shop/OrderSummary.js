@@ -1,7 +1,8 @@
 import React from "react"
+import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import { convertToDecimal } from "../../utils/helper-functions"
+import { convertToDecimal, calculateDiscounts } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { CircleNotch } from "@phosphor-icons/react"
 
@@ -13,41 +14,17 @@ import Button from "../ui/Button"
 import Icon from "../ui/Icon"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 
-const Orders = styled.div`
-  background-color: ${colors.white};
-  border: ${colors.borders.black};
-  margin-bottom: 16px;
-  padding: 0 16px;
-  small {
-    font-size: 0.75rem;
-  }
-`
-
-const OrderSection = styled.div`
-  padding: 16px 0 ;
-  border-bottom: ${colors.borders.black};
-`
-
-const OrderContent = styled.div`
-  overflow-y: auto;
-  max-height: 300px;
-`
-
 const CapitalizedWord = styled.span`
   text-transform: capitalize;
 `
 
 function OrderSummary({ 
-  cartItems,
-  coupon,
-  pid,
-  selectedRate, 
-  setCoupon,
-  setSelectedRate,
-  setSubtotal,
-  setTax,
+  items,
+  selectedRate,
   subtotal,
   tax,
+  coupon,
+  totalAmount,
 }) {
   // calculate the total price of the user's cart incl shipping
   function calculateTotalPrice() {
@@ -63,6 +40,213 @@ function OrderSummary({
     return convertToDecimal(calculatedPrice, 2) // converts to a float value
   }
 
+  return (
+    <Box>
+      <Content
+        h5margin="0"
+        h5fontweight="400"
+        h5fontsize="1.25rem"
+        padding="16px"
+        borderbottom={colors.borders.black}
+      >
+        <h5>Order Summary</h5>
+      </Content>
+      <Box
+        padding="16px 0"
+        borderbottom={colors.borders.black}
+      >
+        <Box
+          overflow="hidden auto"
+          maxheight="300px"
+          className="has-styled-scrollbar"
+          padding="0 16px"
+        >
+          {items.length > 0 && items.map(item => (
+            <Flexbox
+              align="flex-start"
+              flex="flex"
+              key={item.id}
+              margin="0 0 16px"
+            >
+              <Link
+                to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+              >
+                <GatsbyImage
+                  image={getImage(item.image)}
+                  alt="product thumbnail"
+                />
+              </Link>
+              <Flexbox
+                margin="0 0 0 8px"
+                flex="flex"
+                justify="space-between"
+                align="flex-start"
+                width="100%"
+              >
+                <Box flex="2">
+                  <Content
+                    smallcolor={colors.gray.sevenHundred}
+                    smallmargin="0"
+                    paragraphmargin="0"
+                    margin="0"
+                  >
+                    <Link
+                      to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
+                    >
+                      <p>{item.name}</p>
+                    </Link>
+                  </Content>
+                  <Content
+                    paragraphfontsize="0.75rem"
+                    paragraphcolor={colors.gray.sevenHundred}
+                    paragraphmargin="0"
+                  >
+                    {item.category === "notebooks" && (
+                      <>
+                        {item.bookId ? (
+                          <>
+                            <p>
+                              Cover: <CapitalizedWord>{item.coverColor}</CapitalizedWord>
+                            </p>
+                            <p>
+                              Pages: Custom
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p>
+                              Cover: <CapitalizedWord>{item.coverColor}</CapitalizedWord>
+                            </p>
+                            <p>
+                              Left-side pages: <CapitalizedWord>{item.leftPageData.template} {item.leftPageData.pageData.template !== "blank" && (`(${item.leftPageData.pageData.spacing}mm)`)}</CapitalizedWord>
+                            </p>
+                            <p>
+                              Right-side pages: <CapitalizedWord>{item.rightPageData.template} {item.rightPageData.pageData.template !== "blank" && (`(${item.rightPageData.pageData.spacing}mm)`)}</CapitalizedWord>
+                            </p>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Content>
+                </Box>
+                <Box
+                  flex="1"
+                >
+                  <Content
+                    paragraphtextalign="center"
+                    margin="0 8px"
+                  >
+                    <p style={{ whiteSpace: "nowrap" }}>x {item.quantity}</p>
+                  </Content>
+                </Box>
+                <Box flex="1">
+                  <Content
+                    paragraphtextalign="right"
+                  >
+                    {item.quantity >= item.discounts.minQuantity ? (
+                      <p>
+                        <StrikeText
+                          color={colors.green.sixHundred}
+                          margin="0"
+                        >
+                          ${convertToDecimal(item.price, 2)}
+                        </StrikeText>
+                        <span style={{ marginLeft: "8px" }}>{item.discounts.formattedPrice}</span>
+                      </p>
+                    ) : (
+                      <p>${convertToDecimal(item.price, 2)}</p>
+                    )}
+                  </Content>
+                </Box>
+              </Flexbox>
+            </Flexbox>
+          ))}
+        </Box>
+      </Box>
+      <Box
+        padding="16px"
+      >
+        <Flexbox
+          margin="16px 0"
+          flex="flex"
+          justify="space-between"
+        >
+          <p>Subtotal</p>
+          <p>${convertToDecimal(subtotal, 2)}</p>
+        </Flexbox>
+        <Flexbox
+          margin="0 0 16px"
+          flex="flex"
+          justify="space-between"
+        >
+          <p>Shipping</p>
+          {selectedRate ? (
+            <p>${convertToDecimal(selectedRate.rate, 2)}</p>
+          ) : (
+            <p>---</p>
+          )}
+        </Flexbox>
+        <Flexbox
+          margin="0 0 16px"
+          flex="flex"
+          justify="space-between"
+        >
+          <p>Taxes</p>
+          {tax.amount ? (
+            <p>${convertToDecimal(tax.amount, 2)}</p>
+          ) : (
+            <p>---</p>
+          )}
+        </Flexbox>
+        {coupon && coupon.applied && (
+          <Flexbox
+            flex="flex"
+            justify="space-between"
+          >
+            <p>Coupon ({coupon.code})</p>
+            {coupon.text && (
+              <p>{coupon.text}</p>
+            )}
+          </Flexbox>
+        )}
+        <Flexbox
+          flex="flex"
+          justify="space-between"
+          align="center"
+          margin="8px 0"
+        >
+          <p>Total</p>
+          <Content
+            paragraphmargin="0"
+            paragraphfontsize="1.25rem"
+            paragraphlineheight="1"
+          >
+            <p>
+              {totalAmount ? (
+                <span>${totalAmount}</span>
+              ) : (
+                <span>${calculateTotalPrice()}</span>
+              )}
+            </p>
+          </Content>
+        </Flexbox>
+      </Box>
+    </Box>
+  )
+}
+
+function OrderBox({ 
+  items,
+  coupon,
+  pid,
+  selectedRate, 
+  setCoupon,
+  setSelectedRate,
+  setSubtotal,
+  setTax,
+  subtotal,
+  tax,
+}) {
   const handleChangeCoupon = (value) => {
     setCoupon({
       ...coupon,
@@ -94,7 +278,7 @@ function OrderSummary({
         },
         body: JSON.stringify({
           pid: pid,
-          cartItems: cartItems,
+          cartItems: items,
           coupon: coupon.code,
         })
       }).then(res => {
@@ -140,144 +324,34 @@ function OrderSummary({
 
   return (
     <>
-      <Orders>
-        <OrderSection>
-          <Content
-            h5margin="0"
-            h5fontweight="400"
-            h5fontsize="1.25rem"
-          >
-            <h5>Order Summary</h5>
-          </Content>
-        </OrderSection>
-        <OrderSection>
-          <OrderContent>
-            {cartItems.length > 0 && cartItems.map(item => (
-              <Flexbox
-                align="center"
-                flex="flex"
-                key={item.id}
-              >
-                <GatsbyImage
-                  image={getImage(item.image)}
-                  alt="product thumbnail"
-                />
-                <Flexbox
-                  margin="0 0 0 8px"
-                  flex="flex"
-                  justify="space-between"
-                  align="center"
-                  width="100%"
-                >
-                  <Box>
-                    <Content
-                      smallcolor={colors.gray.sevenHundred}
-                      smallmargin="0"
-                      paragraphmargin="0"
-                    >
-                      <p>{item.name}</p>
-                      {item.category === "notebooks" && (
-                        <>
-                          {item.bookId ? (
-                            <small>
-                              <CapitalizedWord>{item.coverColor}, Custom</CapitalizedWord>
-                            </small>
-                          ) : (
-                            <small>
-                              <CapitalizedWord>{item.coverColor},</CapitalizedWord> <CapitalizedWord>{item.leftPageData.template} left,</CapitalizedWord> <CapitalizedWord>{item.rightPageData.template} right</CapitalizedWord>
-                            </small>
-                          )}
-                        </>
-                      )}
-                    </Content>
-                  </Box>
-                  <p style={{ whiteSpace: "nowrap", margin: "0 8px" }}>x {item.quantity}</p>
-                  <p>
-                    {item.originalPrice > item.price && (
-                      <StrikeText>${convertToDecimal(item.originalPrice, 2)}</StrikeText>
-                    )}
-                    {item.formattedPrice}
-                  </p>
-                </Flexbox>
-              </Flexbox>
-            ))}
-          </OrderContent>
-        </OrderSection>
-        <OrderSection>
-          <Flexbox
-            margin="16px 0"
-            flex="flex"
-            justify="space-between"
-          >
-            <p>Subtotal</p>
-            <p>${convertToDecimal(subtotal, 2)}</p>
-          </Flexbox>
-          <Flexbox
-            margin="0 0 16px"
-            flex="flex"
-            justify="space-between"
-          >
-            <p>Shipping</p>
-            {selectedRate ? (
-              <p>${convertToDecimal(selectedRate.rate, 2)}</p>
-            ) : (
-              <p>---</p>
-            )}
-          </Flexbox>
-          <Flexbox
-            margin="0 0 16px"
-            flex="flex"
-            justify="space-between"
-          >
-            <p>Taxes</p>
-            {tax.amount ? (
-              <p>${convertToDecimal(tax.amount, 2)}</p>
-            ) : (
-              <p>---</p>
-            )}
-          </Flexbox>
-          {coupon.applied && (
-            <Flexbox
-              flex="flex"
-              justify="space-between"
-            >
-              <p>Coupon ({coupon.code})</p>
-              {coupon.text && (
-                <p>{coupon.text}</p>
-              )}
-            </Flexbox>
-          )}
-          <Flexbox
-            flex="flex"
-            justify="space-between"
-            align="center"
-            margin="8px 0"
-          >
-            <p>Total</p>
-            <Content
-              paragraphmargin="0"
-              paragraphfontsize="1.25rem"
-              paragraphlineheight="1"
-            >
-              <p>${calculateTotalPrice()}</p>
-            </Content>
-          </Flexbox>
-        </OrderSection>
-        <StyledLabel
-          htmlFor="coupon-input"
-          margin="16px 0 4px"
-        >
-          Coupon
-        </StyledLabel>
+      <Box
+        backgroundcolor={colors.white}
+        border={colors.borders.black}
+      >
+        <OrderSummary 
+          items={items}
+          selectedRate={selectedRate}
+          subtotal={subtotal}
+          tax={tax}
+          coupon={coupon}
+        />
         <Flexbox
           justify="space-between"
-          align="flex-start"
+          align="flex-end"
           width="100%"
           margin="0 0 16px"
+          padding="0 16px"
+          className="has-border-top"
         >
           <StyledFieldset
             margin="0 8px 0 0"
           >
+            <StyledLabel
+              htmlFor="coupon-input"
+              margin="16px 0 4px"
+            >
+              Coupon
+            </StyledLabel>
             <StyledInput
               id="coupon-input"
               onChange={e => handleChangeCoupon(e.target.value)}
@@ -316,9 +390,9 @@ function OrderSummary({
             )}
           </Button>
         </Flexbox>
-      </Orders>
+      </Box>
     </>
   )
 }
 
-export { Orders, OrderSection, OrderSummary}
+export { OrderBox, OrderSummary }

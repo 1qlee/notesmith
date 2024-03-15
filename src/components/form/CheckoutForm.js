@@ -21,6 +21,7 @@ function CheckoutForm({
   pid,
   selectedRate,
   setPaymentProcessing,
+  subtotal,
   tax,
   toast,
 }) {
@@ -166,8 +167,8 @@ function CheckoutForm({
         id: id,
         rateId: rateId,
         shipmentId: shipmentId,
-        shipping: shipping,
-        tax: tax,
+        shipping: +shipping,
+        tax: +tax,
         taxId: taxId,
         shipped: false,
         tracking: {
@@ -186,11 +187,11 @@ function CheckoutForm({
         datePaid: datePaid,
         amount: amount,
         id: id,
-        tax: tax,
+        tax: +tax,
         taxId: taxId,
         shipmentId: shipmentId,
         rateId: rateId,
-        shipping: shipping,
+        shipping: +shipping,
         authKey: authKey,
         error: error,
         shipped: false,
@@ -225,7 +226,6 @@ function CheckoutForm({
           setError(null)
           // send the team an email to notify them of the error
           await sendEmailTemplate({
-            templateId: "d-929f322693bb41879356ddcd9c897d70",
             pid: pid,
             error: error,
             cartItems: cartItems,
@@ -238,6 +238,7 @@ function CheckoutForm({
         ...orderData,
         pid: pid,
         orderItems: orderItems,
+        subtotal: subtotal,
       }).then(async () => {
         const updatePayment = await updatePaymentIntent(pid, { metadata: { orderKey: newOrderKey } })
 
@@ -246,7 +247,6 @@ function CheckoutForm({
         }
       }).catch(async (error) => {
         await sendEmailTemplate({
-          templateId: "d-929f322693bb41879356ddcd9c897d70",
           pid: pid,
           error: error,
           cartItems: cartItems,

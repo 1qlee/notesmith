@@ -154,7 +154,7 @@ function Calligraphy({
       rows: maxRows,
       slants: maxSlants,
     })
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

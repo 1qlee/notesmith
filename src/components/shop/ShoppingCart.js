@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { colors, fonts, widths } from "../../styles/variables"
-import { convertToDecimal } from "../../utils/helper-functions"
+import { convertToDecimal, calculateDiscounts, formatDollars } from "../../utils/helper-functions"
 import { useShoppingCart } from "../cart/context/cartContext"
 import { CaretDown, CaretUp, Trash, ArrowSquareOut } from "@phosphor-icons/react"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
@@ -25,27 +25,40 @@ function ShoppingCart({
     cartDetails,
     setItemQuantity,
     removeItem,
-    formattedTotalPrice,
-    handleCartClick,
     handleCloseCart,
   } = useShoppingCart()
   const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
+  const [subtotal, setSubtotal] = useState(0)
 
   useEffect(() => {
     if (cartDetails) {
+      let newSubtotal = 0
       // array to store cartItems
       const cartItemsArray = []
       // push all product objects in cartDetails to an array
       for (const cartItem in cartDetails) {
-        const item = cartDetails[cartItem]
+        const item = {...cartDetails[cartItem]}
+        const discounts = calculateDiscounts({
+          quantity: item.quantity,
+          price: item.price,
+          rate: item.discounts.type,
+        })
+        newSubtotal += discounts.subtotal
+
+        item.discounts = {
+          ...item.discounts,
+          ...discounts,
+        }
 
         cartItemsArray.push(item)
       }
 
       setCartItems(cartItemsArray)
       setLoading(false)
+
+      setSubtotal(newSubtotal)
     }
     else {
       setLoading(false)
@@ -66,7 +79,7 @@ function ShoppingCart({
        ...activeItemIds,
        [itemId]: itemId,
      })
-   }
+    }
   }
 
   if (loading) {
@@ -90,10 +103,9 @@ function ShoppingCart({
               padding="0 16px"
               overflow="hidden auto"
             >
-              {cartItems.map((item, index) => (
+              {cartItems.map((item, index) =>  (
                 <Flexbox key={index}
                   margin="0 0 16px"
-                  maxheight=""
                 >
                   <Link
                     to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
@@ -132,10 +144,19 @@ function ShoppingCart({
                           >
                             <p>Cover: <span>{item.coverColor}</span></p>
                             {item.leftPageData && (
-                              <p>Left-side pages: <span>{item.leftPageData.template} ({item.leftPageData.pageData.spacing}mm)</span></p>
+                              <p>
+                                Left-side pages:&nbsp;
+                                <span>
+                                {item.leftPageData.template} {item.leftPageData.pageData.template !== "blank" && (`(${item.leftPageData.pageData.spacing}mm)`)}
+                                </span>
+                              </p>
                             )}
                             {item.rightPageData && (
-                              <p>Right-side pages: <span>{item.rightPageData.template} ({item.rightPageData.pageData.spacing}mm)</span></p>
+                              <p>Right-side pages:&nbsp; 
+                                <span>
+                                {item.rightPageData.template} {item.rightPageData.pageData.template !== "blank" && (`(${item.rightPageData.pageData.spacing}mm)`)}
+                                </span>
+                              </p>
                             )}
                           </Content>
                           {item.bookId && (
@@ -199,28 +220,6 @@ function ShoppingCart({
                         </Icon>
                         <span>Remove</span>
                       </Button>
-                    </Flexbox>
-                    <Flexbox
-                      margin="16px 0"
-                      align="center"
-                      justify="space-between"
-                    >
-                      <Content
-                        paragraphmargin="0"
-                      >
-                        {item.discount ? (
-                          <p>
-                            <StrikeText
-                              color={colors.gray.sixHundred}
-                            >
-                              ${convertToDecimal(item.originalPrice, 2)}
-                            </StrikeText>
-                            <span>${convertToDecimal(item.price, 2)}</span>
-                          </p>
-                        ) : (
-                          <p>${convertToDecimal(item.price, 2)}</p>
-                        )}
-                      </Content>
                       <CartQuantityTracker
                         counterwidth="5rem"
                         counterfontsize="0.875rem"
@@ -232,23 +231,45 @@ function ShoppingCart({
                         product={item}
                         counterpadding="4px"
                       />
+                    </Flexbox>
+                    <Flexbox
+                      margin="16px 0"
+                      align="center"
+                      justify="space-between"
+                    >
+                      <Content
+                        paragraphmargin="0"
+                      >
+                        {item.quantity >= item.discounts.minQuantity ? (
+                          <p>
+                            <StrikeText
+                              color={colors.green.sixHundred}
+                            >
+                              ${convertToDecimal(item.price, 2)}
+                            </StrikeText>
+                            <span>{item.discounts.formattedPrice}</span>
+                          </p>
+                        ) : (
+                          <p>${convertToDecimal(item.price, 2)}</p>
+                        )}
+                      </Content>
                       <Content
                         paragraphmargin="0"
                         margin="0 0 0 8px"
                       >
-                        <p>${convertToDecimal(item.value, 2)}</p>
+                        <p>{item.discounts.formattedSubtotal}</p>
                       </Content>
                     </Flexbox>
                   </Box>
                 </Flexbox>
-              ))}
+            ))}
             </Box>
             <hr />
             <Box>
               <Flexbox
                 align="flex-end"
                 flex="flex"
-                justify="flex-end"
+                justify="space-between"
                 margin="16px 0 0"
                 padding="16px"
                 width="100%"
@@ -265,7 +286,7 @@ function ShoppingCart({
                   paragraphfontsize="1.25rem"
                   paragraphlineheight="1"
                 >
-                  <p>{formattedTotalPrice}</p>
+                  <p>{formatDollars(subtotal / 100)}</p>
                 </Content>
               </Flexbox>
               <Flexbox
@@ -296,7 +317,7 @@ function ShoppingCart({
               h1fontsize="2rem"
             >
               <h1>Your cart is empty</h1>
-              <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
+              <p>Oh no, it looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
             </Content>
             <Button
               backgroundcolor={colors.gray.nineHundred}
@@ -536,14 +557,14 @@ function ShoppingCart({
                       <Content
                         paragraphmargin="0"
                       >
-                        {item.discount ? (
+                        {item.quantity >= item.discounts.minQuantity ? (
                           <p>
                             <StrikeText
-                              color={colors.gray.sixHundred}
+                              color={colors.green.sixHundred}
                             >
-                              ${convertToDecimal(item.originalPrice, 2)}
+                              ${convertToDecimal(item.price, 2)}
                             </StrikeText>
-                            <span>${convertToDecimal(item.price, 2)}</span>
+                            <span>{item.discounts.formattedPrice}</span>
                           </p>
                         ) : (
                           <p>${convertToDecimal(item.price, 2)}</p>
@@ -576,7 +597,7 @@ function ShoppingCart({
                       <Content
                         paragraphmargin="0"
                       >
-                        <p>${convertToDecimal(item.value, 2)}</p>
+                        <p>{item.discounts.formattedSubtotal}</p>
                       </Content>
                     </Flexbox>
                   </td>
@@ -607,7 +628,7 @@ function ShoppingCart({
                 paragraphfontsize="1.25rem"
                 paragraphlineheight="1"
               >
-                <p>{formattedTotalPrice}</p>
+                <p>{formatDollars(subtotal / 100)}</p>
               </Content>
             </Flexbox>
           </Flexbox>
@@ -638,7 +659,7 @@ function ShoppingCart({
             maxwidth={widths.content.normal}
           >
             <h1>Your cart is empty</h1>
-            <p>Looks like you haven't added any custom notebooks to your cart, yet. You can change that by pressing the button below!</p>
+            <p>Oh no, it looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
           <Button
             backgroundcolor={colors.gray.nineHundred}

@@ -110,7 +110,7 @@ function Hexagon({
       rows: maxRows,
     })
 
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

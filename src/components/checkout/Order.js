@@ -12,6 +12,7 @@ import { Container, Col, Row } from "react-grid-system"
 import { SectionMain, Section, SectionContent } from "../layout/Section"
 import { StyledFieldset, StyledInput, StyledLabel, ErrorLine } from "../form/FormComponents"
 import { Flexbox } from "../layout/Flexbox"
+import { OrderSummary } from "../shop/OrderSummary"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
 import Content from "../ui/Content"
@@ -307,104 +308,19 @@ const Order = ({ location, orderId }) => {
                             )}
                           </Content>
                         </Box>
-                        {showInfo && (
-                          <Box
-                            borderbottom={colors.borders.black}
-                            padding="0 0 16px"
-                          >
-                            <Content
-                              h5margin="0 0 8px"
-                            >
-                              <h5>Items</h5>
-                            </Content>
-                            {orderItems.map(item => (
-                              <Flexbox
-                                flex="flex"
-                                borderradius="0"
-                                justify="space-between"
-                                backgroundcolor={colors.white}
-                                align="center"
-                                key={item.id}
-                              >
-                                <Flexbox
-                                  flex="flex"
-                                  align="center"
-                                >
-                                  <GatsbyImage
-                                    image={getImage(item.image)}
-                                    alt="product thumbnail"
-                                  />
-                                  <p>{item.name}</p>
-                                </Flexbox>
-                                <p>x {item.quantity}</p>
-                                <p>
-                                  {item.originalPrice > item.price && (
-                                    <StrikeText>${convertToDecimal(item.originalPrice, 2)}</StrikeText>
-                                  )}
-                                  {item.formattedPrice}
-                                </p>
-                              </Flexbox>
-                            ))}
-                          </Box>
-                        )}
                         {showInfo ? (
-                          <>
-                            <Box
-                              margin="32px 0 0"
-                              borderbottom={colors.borders.black}
-                              padding="0 0 32px"
-                            >
-                              <Flexbox
-                                margin="0 0 16px"
-                                flex="flex"
-                                justify="space-between"
-                              >
-                                <p>Subtotal</p>
-                                <p>${convertToDecimal((orderInfo.amount - orderInfo.shipping - orderInfo.tax), 2)}</p>
-                              </Flexbox>
-                              <Flexbox
-                                margin="0 0 16px"
-                                flex="flex"
-                                justify="space-between"
-                              >
-                                <p>Shipping</p>
-                                <p>${convertToDecimal(orderInfo.shipping, 2)}</p>
-                              </Flexbox>
-                              <Flexbox
-                                flex="flex"
-                                justify="space-between"
-                              >
-                                <p>Tax</p>
-                                <p>${convertToDecimal(orderInfo.tax, 2)}</p>
-                              </Flexbox>
-                              {orderInfo.coupon && (
-                                <Flexbox
-                                  flex="flex"
-                                  justify="space-between"
-                                  margin="16px 0 0"
-                                >
-                                  <p>Coupon</p>
-                                  <p>${convertToDecimal(orderInfo.coupon, 2)}</p>
-                                </Flexbox>
-                              )}
-                            </Box>
-                            <Flexbox
-                              flex="flex"
-                              justify="space-between"
-                              align="center"
-                              paragraphmargin="0"
-                              margin="32px 0"
-                            >
-                              <p>Total</p>
-                              <Content
-                                paragraphmargin="0"
-                                paragraphfontsize="1.25rem"
-                                paragraphlineheight="1"
-                              >
-                                <p>${convertToDecimal(orderInfo.amount, 2)}</p>
-                              </Content>
-                            </Flexbox>
-                          </>
+                          <Box
+                            border={colors.borders.black}
+                          >
+                            <OrderSummary
+                              items={orderItems}
+                              totalAmount={orderInfo.amount / 100}
+                              subtotal={orderInfo.subtotal}
+                              selectedRate={{ rate: orderInfo.shipping }}
+                              tax={{ amount: orderInfo.tax }}
+                              coupon={orderInfo.coupon}
+                            />
+                          </Box>
                         ) : (
                           <Content
                             margin="16px 0"

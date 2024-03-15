@@ -33,8 +33,9 @@ const CartBadge = styled(Tag)`
   transform: translate(50%, 0%);
   top: ${props => props.top};
   right: ${props => props.right};
-  font-size: 0.7rem;
+  font-size: 0.625rem;
   font-weight: 400;
+  text-align: center;
   height: ${props => props.height};
   line-height: ${props => props.height};
   width: ${props => props.width};

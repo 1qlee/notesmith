@@ -55,11 +55,12 @@ function Ruled({
   }, [pageData])
 
   useEffect(() => {
+    console.log("IM CHAnging!!")
     memoCreateLines()
     setMax({
       rows: maxRows,
     })
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

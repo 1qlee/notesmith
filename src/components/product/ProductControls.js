@@ -91,9 +91,7 @@ function ProductControls({
   dimensions,
   selectedPageSvg,
   setCurrentPageSide,
-  setLeftPageData,
   setPageData,
-  setRightPageData,
 }) {
   const controlsRef = useRef(null)
   const { maximumMarginHeight, maximumMarginWidth } = dimensions
@@ -105,38 +103,7 @@ function ProductControls({
         showControls: false,
       })
     }
-  });
-
-  function handlePageData(data) {
-    setPageData(data)
-    
-    if (currentPageSide === "left") {
-      setLeftPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-    }
-    else if (currentPageSide === "both") {
-      setRightPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-      setLeftPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-    }
-    else {
-      setRightPageData({
-        template: pageData.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-    }
-  }
+  })
 
   return (
     <>
@@ -178,14 +145,14 @@ function ProductControls({
                   <>
                     <MarginControls
                       pageData={pageData}
-                      setPageData={handlePageData}
+                      setPageData={setPageData}
                       maximumMarginHeight={maximumMarginHeight}
                       maximumMarginWidth={maximumMarginWidth}
                     />
                     <AlignmentControls
                       dimensions={dimensions}
                       pageData={pageData}
-                      setPageData={handlePageData}
+                      setPageData={setPageData}
                       selectedPageSvg={selectedPageSvg}
                     />
                   </>
@@ -193,70 +160,70 @@ function ProductControls({
                 {pageData.template === "ruled" && (
                   <RuledControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "dot" && (
                   <DotControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "graph" && (
                   <GraphControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "hexagon" && (
                   <HexagonControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "isometric" && (
                   <IsometricControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "seyes" && (
                   <SeyesControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "music" && (
                   <MusicControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "handwriting" && (
                   <HandwritingControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "cross" && (
                   <CrossGridControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}
                 {pageData.template === "calligraphy" && (
                   <CalligraphyControls
                     pageData={pageData}
-                    setPageData={handlePageData}
+                    setPageData={setPageData}
                     max={max}
                   />
                 )}

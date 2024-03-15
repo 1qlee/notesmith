@@ -2,8 +2,10 @@ import styled from "styled-components"
 import { colors } from "../../styles/variables"
 
 const Box = styled.div`
+  background-color: ${props => props.backgroundcolor};
   border-radius: ${props => props.borderradius};
   border-bottom: ${props => props.borderbottom};
+  border: ${props => props.border};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
   position: ${props => props.position};
@@ -23,6 +25,15 @@ const Box = styled.div`
   &.is-clickable {
     &:hover {
       background-color: ${colors.gray.twoHundred};
+    }
+  }
+  &.has-styled-scrollbar {
+    &::-webkit-scrollbar {
+      height: 0.5rem;
+      width: 0.5rem;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${colors.gray.threeHundred};
     }
   }
 `

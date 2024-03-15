@@ -128,7 +128,7 @@ function Graph({
       rows: maxRows,
       columns: maxCols,
     })
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

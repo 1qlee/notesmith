@@ -15,7 +15,6 @@ import Button from "../../ui/Button"
 import Content from "../../ui/Content"
 import ColorPicker from "../../shop/ColorPicker"
 import Box from "../../ui/Box"
-import { formatDollars } from "../../../utils/helper-functions"
 
 function Checkoutbar({
   bookData,
@@ -44,7 +43,7 @@ function Checkoutbar({
       category: productData.category,
       coverColor: coverColor,
       currency: "USD",
-      custom: productData.custom,
+      custom: true,
       height: productData.heightPixel,
       id: uuidv4(),
       image: getImageThumbnail(),

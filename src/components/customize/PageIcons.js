@@ -55,7 +55,8 @@ const StyledPage = styled.a`
   }
   &:hover {
     cursor: pointer;
-    &:not(.is-active) {
+    &:not(.is-active),
+    &:not(:focus) {
       p {
         color: ${colors.gray.nineHundred};
       }
@@ -180,27 +181,24 @@ function Page({
   margin,
   rightPageData,
   setData,
-  selectedPageSvg,
 }) {
 
   function handleClick() {
     setData({ ...data, activeTemplate: null })
-    if (setLeftPageData) {
-      setLeftPageData({ 
-        ...data, 
-        template: data.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-    }
-    if (setRightPageData) {
-      setRightPageData({
-        ...data,
-        template: data.template,
-        svg: selectedPageSvg.outerHTML,
-        pageData: data,
-      })
-    }
+    // if (setLeftPageData) {
+    //   setLeftPageData({ 
+    //     ...data, 
+    //     template: data.template,
+    //     pageData: data,
+    //   })
+    // }
+    // if (setRightPageData) {
+    //   setRightPageData({
+    //     ...data,
+    //     template: data.template,
+    //     pageData: data,
+    //   })
+    // }
   }
 
   return (
@@ -253,7 +251,6 @@ function RuledPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -285,7 +282,6 @@ function RuledPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -327,7 +323,6 @@ function DotPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -362,7 +357,6 @@ function DotPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -431,7 +425,6 @@ function GraphPageIcon({
   setLeftPageData,
   setRightPageData,
   showLabels,
-  selectedPageSvg,
 }) {
   const newData = {
     ...data,
@@ -464,7 +457,6 @@ function GraphPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -505,7 +497,6 @@ function BlankPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -516,7 +507,7 @@ function BlankPageIcon({
     template: "blank",
     spacing: 5,
     opacity: 100,
-    strokeWidth: 0.175,
+    strokeWidth: 0.333,
     rows: 42,
     columns: 26,
     marginTop: 0,
@@ -537,7 +528,6 @@ function BlankPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline" />
@@ -565,7 +555,6 @@ function HexagonPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -596,7 +585,6 @@ function HexagonPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -636,7 +624,6 @@ function IsometricPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -673,7 +660,6 @@ function IsometricPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -713,7 +699,6 @@ function SeyesPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -746,7 +731,6 @@ function SeyesPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -784,7 +768,6 @@ function MusicPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -815,7 +798,6 @@ function MusicPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -871,7 +853,6 @@ function HandwritingPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -900,7 +881,6 @@ function HandwritingPageIcon({
       leftPageData={leftPageData}
       setLeftPageData={setLeftPageData}
       setRightPageData={setRightPageData}
-      selectedPageSvg={selectedPageSvg}
       margin={iconMargin}
       rightPageData={rightPageData}
       setData={setData}
@@ -981,7 +961,6 @@ function CalligraphyPageIcon({
   rightPageData,
   setLeftPageData,
   setRightPageData,
-  selectedPageSvg,
   showLabels,
 }) {
   const newData = {
@@ -1017,7 +996,6 @@ function CalligraphyPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -1056,7 +1034,6 @@ function CrossGridPageIcon({
   setLeftPageData,
   setRightPageData,
   showLabels,
-  selectedPageSvg,
 }) {
   const newData = {
     ...data,
@@ -1088,7 +1065,6 @@ function CrossGridPageIcon({
       setRightPageData={setRightPageData}
       margin={iconMargin}
       rightPageData={rightPageData}
-      selectedPageSvg={selectedPageSvg}
       setData={setData}
     >
       <PageOutline className="page-outline">
@@ -1221,7 +1197,6 @@ function PageIcons({
   setRightPageData,
   setData,
   showLabels,
-  selectedPageSvg,
 }) {
   return (
     <IconsWrapper>
@@ -1234,7 +1209,6 @@ function PageIcons({
           isProductPage={isProductPage}
           leftPageData={leftPageData}
           rightPageData={rightPageData}
-          selectedPageSvg={selectedPageSvg}
           setData={setData}
           showLabels={showLabels}
         />
@@ -1251,7 +1225,6 @@ function PageIcons({
           setLeftPageData={setLeftPageData}
           setRightPageData={setRightPageData}
           setData={setData}
-          selectedPageSvg={selectedPageSvg}
           showLabels={showLabels}
           tabindex="1"
         />
@@ -1266,7 +1239,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1280,7 +1252,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1294,7 +1265,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1308,7 +1278,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1322,7 +1291,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1336,7 +1304,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1350,7 +1317,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1364,7 +1330,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1378,7 +1343,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />
@@ -1392,7 +1356,6 @@ function PageIcons({
         rightPageData={rightPageData}
         setLeftPageData={setLeftPageData}
         setRightPageData={setRightPageData}
-        selectedPageSvg={selectedPageSvg}
         setData={setData}
         showLabels={showLabels}
       />

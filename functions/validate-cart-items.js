@@ -2,13 +2,24 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY)
 
 const validateCartItems = async (cartItems) => {
   let totalAmount = 0;
-  // iterate through all cart items in cart
-  for (let i = 0; i < cartItems.length; i++) {
-    const { quantity, price_id } = cartItems[i];
-    // retrieve product from stripe by using id
+
+  for (const cartItem in cartItems) {
+    const item = cartItems[cartItem];
+    const { quantity, price_id } = item;
     const stripeProduct = await stripe.prices.retrieve(price_id);
 
-    // 25% discount for pre-orders
+    if (item.discounts.type === "bulk") {
+      if (quantity >= 5 && quantity < 10) {
+        stripeProduct.unit_amount = stripeProduct.unit_amount * 0.95;
+      }
+      else if (quantity >= 10 && quantity < 20) {
+        stripeProduct.unit_amount = stripeProduct.unit_amount * 0.9;
+      }
+      else if (quantity >= 20) {
+        stripeProduct.unit_amount = stripeProduct.unit_amount * 0.85;
+      }
+    }
+
     totalAmount += stripeProduct.unit_amount * quantity;
   }
 

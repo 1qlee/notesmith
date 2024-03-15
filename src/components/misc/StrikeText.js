@@ -4,7 +4,7 @@ import { colors } from "../../styles/variables"
 const StrikeText = styled.span`
   position: relative;
   color: ${props => props.color || colors.gray.sixHundred};
-  margin-right: 8px;
+  margin: ${props => props.margin || "0 8px 0 0"};
   display: inline-block;
   &::before {
     top: calc(50% - 2px);

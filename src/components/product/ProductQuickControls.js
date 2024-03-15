@@ -120,9 +120,6 @@ const ProductCustomInput = ({ activeCustomInput, label, pageData, customInputs, 
 const ProductQuickControls = ({
   pageData,
   setPageData,
-  setLeftPageData,
-  setRightPageData,
-  selectedPageSvg,
 }) => {
   const { maxContentHeight, maxContentWidth } = pageData
   const [customInputs, setCustomInputs] = useState([])
@@ -131,7 +128,6 @@ const ProductQuickControls = ({
   const lineTemplates = ["ruled", "seyes", "isometric", "music", "handwriting", "calligraphy"]
   const rowTemplates = ["music", "handwriting", "calligraphy"]
   const gridTemplates = ["dot", "graph", "hexagon", "cross"]
-  const musicStaffSpacing = pageData.template === "music" ? pageData.staffSpacing : pageData.rowSpacing
 
   useEffect(() => {
     setCustomInputs([])
@@ -257,20 +253,6 @@ const ProductQuickControls = ({
       }
     }
   }
-
-  const handleChangeData = (data) => {
-    setPageData(data)
-    setLeftPageData({
-      pageData: data,
-      template: pageData.template,
-      svg: selectedPageSvg.outerHTML,
-    })
-    setRightPageData({
-      pageData: data,
-      template: pageData.template,
-      svg: selectedPageSvg.outerHTML,
-    })
-  }
   
   const handleValueChange = (options) => {
     const { value, type, defaultValue, isSelect, callback } = options
@@ -303,7 +285,7 @@ const ProductQuickControls = ({
           case "hexagon":
           case "isometric":
           case "seyes":
-            handleChangeData({
+            setPageData({
               ...pageData,
               spacing: numberValue,
               alignmentHorizontal: "center",
@@ -319,7 +301,7 @@ const ProductQuickControls = ({
           case "dot":
           case "graph":
           case "cross":
-            handleChangeData({
+            setPageData({
               ...pageData,
               spacing: numberValue,
               columnSpacing: numberValue,
@@ -335,7 +317,7 @@ const ProductQuickControls = ({
             })
             break
           case "music":
-            handleChangeData({
+            setPageData({
               ...pageData,
               spacing: numberValue,
               alignmentHorizontal: "center",
@@ -348,7 +330,7 @@ const ProductQuickControls = ({
             })
             break
           case "handwriting":
-            handleChangeData({
+            setPageData({
               ...pageData,
               spacing: numberValue,
               rowSpacing: 1,
@@ -362,7 +344,7 @@ const ProductQuickControls = ({
               marginRight: margins.right,
             })
           case "calligraphy":
-            handleChangeData({
+            setPageData({
               ...pageData,
               ascSpacing: numberValue,
               dscSpacing: numberValue,
@@ -383,7 +365,7 @@ const ProductQuickControls = ({
         }
         break
       case "hexagonRadius":
-        handleChangeData({
+        setPageData({
           ...pageData,
           alignmentHorizontal: "center",
           alignmentVertical: "middle",
@@ -397,7 +379,7 @@ const ProductQuickControls = ({
         })
         break
       case "staffSpacing":
-        handleChangeData({
+        setPageData({
           ...pageData,
           staffSpacing: numberValue,
           alignmentHorizontal: "center",
@@ -414,13 +396,13 @@ const ProductQuickControls = ({
           numberValue = 30
           callback(30)
         }
-        handleChangeData({
+        setPageData({
           ...pageData,
           opacity: numberValue,
         })
         break
       case "angle":
-        handleChangeData({
+        setPageData({
           ...pageData,
           angle: numberValue,
         })

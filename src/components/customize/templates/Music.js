@@ -64,7 +64,7 @@ function Music({
     setMax({
       staves: maxStaves,
     })
-    setSvgLoaded(true)
+    setSvgLoaded(Math.random(1))
   }, [pageData])
 
   return (

@@ -183,33 +183,47 @@ function formatDollars(value) {
   }).format(value)
 }
 
-function applyDiscounts(price, quantity, rate) {
-  let totalAmount = price * quantity
-  let discountRate = rate ? rate : 0.25
-  let discountPrice = price * (1 - discountRate)
-  let discountPct = discountRate * 100
-  let discountAmount = discountPrice * quantity
-  let discountSaved = totalAmount * discountRate
-
-  // if (itemQuantity > 1 && itemQuantity < 10) {
-  //   discount = 0.10
-  // } else if (itemQuantity >= 10 && itemQuantity < 20) {
-  //   discount = 0.15
-  // } else if (itemQuantity >= 20) {
-  //   discount = 0.20
-  // }
-
-  return {
-    price: discountPrice,
-    saved: discountSaved,
-    amount: discountAmount,
-    pct: discountPct,
-    rate: discountRate,
+function calculateDiscounts(options) {
+  const { price, quantity, rate } = options
+  let discounts = {
+    price: price,
+    subtotal: price * quantity,
+    percent: 0,
+    minQuantity: null,
   }
+
+  // hard-code bulk discounts - primarily used for notebooks
+  if (rate === "bulk") {
+    // set the minimum quantity for a bulk discount
+    discounts.minQuantity = 5
+
+    if (quantity >= 5 && quantity < 10) {
+      discounts.price = price * .95
+    }
+    else if (quantity >= 10 && quantity < 20) {
+      discounts.price = price * .9
+    }
+    else if (quantity >= 20) {
+      discounts.price = price * .85
+    }
+    else {
+      discounts.price = price
+    }
+  }
+  else {
+    discounts.price = price * (1 - (rate / 100)) // where rate is a whole number (e.g. 5 percent)
+  }
+
+  discounts.percent = 100 - (discounts.price / price * 100)
+  discounts.subtotal = discounts.price * quantity
+  discounts.formattedSubtotal = formatDollars((discounts.subtotal) / 100)
+  discounts.formattedPrice = formatDollars(discounts.price / 100)
+
+  return discounts
 }
 
 export {
-  applyDiscounts,
+  calculateDiscounts,
   consolidateMixedObjects,
   consolidateObjectProps,
   convertFloatFixed,
