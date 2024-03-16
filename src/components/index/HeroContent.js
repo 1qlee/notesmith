@@ -25,7 +25,7 @@ const HeroContent = () => {
       textalign="center"
       maxwidth={widths.content.index}
     >
-      <h1>Create your own <CircledText text="custom" />&nbsp;notebooks</h1>
+      <h1>Premium quality <CircledText text="custom" />&nbsp;notebooks</h1>
       <p>Fully customize the layout of every page and create your own custom-made notebook with high quality, fountain pen friendly paper.</p>
       <Button
         as={Link}

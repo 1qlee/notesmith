@@ -185,6 +185,7 @@ const Order = ({ location, orderId }) => {
 
   return (
     <Layout 
+      loaderClassName="has-nav"
       loading={retrieving}
       seoDetails={{
         title: "Order summary",
@@ -285,22 +286,30 @@ const Order = ({ location, orderId }) => {
                           >
                             <h5>Tracking</h5>
                             {showInfo ? (
-                              <Button
-                                as="a"
-                                href={orderInfo.tracking && orderInfo.tracking.url || "#"}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                color={colors.gray.nineHundred}
-                                backgroundcolor={colors.gray.twoHundred}
-                                padding="3px 6px"
-                              >
-                                <span>
-                                  {orderInfo.tracking && orderInfo.tracking.code ? orderInfo.tracking.code : "Still being updated"}
-                                </span>
-                                <Icon margin="0 0 0 4px">
-                                  <ArrowSquareOut size={16} weight="fill" color={colors.gray.nineHundred} />
-                                </Icon>
-                              </Button>
+                              <>
+                                {orderInfo.tracking && orderInfo.tracking.code ? (
+                                  <Button
+                                    as="a"
+                                    href={orderInfo.tracking && orderInfo.tracking.url || "#"}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    color={colors.gray.nineHundred}
+                                    backgroundcolor={colors.gray.twoHundred}
+                                    padding="3px 6px"
+                                  >
+                                    <span>
+                                      {orderInfo.tracking.code}
+                                    </span>
+                                    <Icon margin="0 0 0 4px">
+                                      <ArrowSquareOut size={16} weight="fill" color={colors.gray.nineHundred} />
+                                    </Icon>
+                                  </Button>
+                                ) : (
+                                  <p>
+                                    Tracking currently not available.
+                                  </p>
+                                )}
+                              </>
                             ) : (
                               <>
                                 <PlaceholderLine width="16rem" />

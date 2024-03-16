@@ -82,6 +82,21 @@ function ShoppingCart({
     }
   }
 
+  function handleSpacingView(data) {
+    const { template } = data
+    const gridTemplate = template === "dot" || template === "graph" || template === "cross"
+
+    if (template === "blank") {
+      return
+    }
+    else if (gridTemplate) {
+      return `(Rows: ${data.rowSpacing}mm, Columns: ${data.columnSpacing}mm)`
+    }
+    else {
+      return `(${data.spacing}mm)`
+    }
+  }
+
   if (loading) {
     return <Loader />
   }
@@ -147,14 +162,14 @@ function ShoppingCart({
                               <p>
                                 Left-side pages:&nbsp;
                                 <span>
-                                {item.leftPageData.template} {item.leftPageData.pageData.template !== "blank" && (`(${item.leftPageData.pageData.spacing}mm)`)}
+                                  {item.leftPageData.template} {handleSpacingView(item.leftPageData.pageData)}
                                 </span>
                               </p>
                             )}
                             {item.rightPageData && (
                               <p>Right-side pages:&nbsp; 
                                 <span>
-                                {item.rightPageData.template} {item.rightPageData.pageData.template !== "blank" && (`(${item.rightPageData.pageData.spacing}mm)`)}
+                                  {item.rightPageData.template} {handleSpacingView(item.rightPageData.pageData)}
                                 </span>
                               </p>
                             )}

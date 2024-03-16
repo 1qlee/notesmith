@@ -44,7 +44,7 @@ const LoaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   flex-direction: column;
   top: 0;
   left: 0;
@@ -53,9 +53,9 @@ const LoaderWrapper = styled.div`
   overflow: hidden;
   z-index: 999;
   &.has-nav {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 61px);
     width: calc(100% + 4px);
-    top: 60px;
+    top: 61px;
     left: 0;
   }
   &.has-banner {

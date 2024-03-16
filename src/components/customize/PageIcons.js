@@ -55,8 +55,7 @@ const StyledPage = styled.a`
   }
   &:hover {
     cursor: pointer;
-    &:not(.is-active),
-    &:not(:focus) {
+    &:not(.is-active) {
       p {
         color: ${colors.gray.nineHundred};
       }

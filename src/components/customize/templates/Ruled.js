@@ -55,7 +55,6 @@ function Ruled({
   }, [pageData])
 
   useEffect(() => {
-    console.log("IM CHAnging!!")
     memoCreateLines()
     setMax({
       rows: maxRows,

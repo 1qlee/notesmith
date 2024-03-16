@@ -44,30 +44,6 @@ function ProductTemplate({
   setSvgLoaded,
   setDimensions,
 }) {
-  const dependencies = [
-    pageData.angle,
-    pageData.ascSpacing,
-    pageData.borderData,
-    pageData.columnSpacing,
-    pageData.columns,
-    pageData.crossSize,
-    pageData.dscSpacing,
-    pageData.hexagonRadius,
-    pageData.marginBottom,
-    pageData.marginLeft,
-    pageData.marginRight,
-    pageData.marginTop,
-    pageData.opacity,
-    pageData.rowSpacing,
-    pageData.rows,
-    pageData.slantSpacing,
-    pageData.spacing,
-    pageData.staffSpacing,
-    pageData.staves,
-    pageData.strokeWidth,
-    pageData.template,
-    pageData.xHeight,
-  ]
   const minimumMargin = pageMargins.minimum
   const holesMargin = pageMargins.holes
   const templateMargins = {
@@ -90,8 +66,6 @@ function ProductTemplate({
 
   useEffect(() => {
     if (templateRef && templateRef.current) {
-      console.log("template changed")
-      console.log(templateRef.current.outerHTML)
       const template = templateRef.current
       const pageBbox = template.getBBox()
 
