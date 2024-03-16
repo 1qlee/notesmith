@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import Measure from "react-measure"
 import styled, { keyframes } from "styled-components"
 import { StaticImage } from "gatsby-plugin-image"
-import { breakpoints, colors, pageDataConfig } from "../../styles/variables"
+import { breakpoints, colors } from "../../styles/variables"
 
-import { Flexbox } from "../layout/Flexbox"
 import ColorPicker from "../shop/ColorPicker"
 import DemoTemplate from "./DemoTemplate"
 

@@ -7,6 +7,7 @@ const PickerWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, 66px);
   gap: 16px;
   margin: 16px 0 32px;
+  justify-content: ${props => props.center ? `center` : `flex-start`};
 `
 
 const ColorOption = styled.button`
