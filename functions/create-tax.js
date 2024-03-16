@@ -2,13 +2,26 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
 const parseCartItems = async (cartItems) => {
   const parsedCartItems = await Promise.all(cartItems.map(async (item) => {
-    const { price_id, id } = item;
+    const { price_id, id, quantity } = item;
     const itemPrice = await stripe.prices.retrieve(price_id);
-    const discountedPrice = +itemPrice.unit_amount * .75;
+    let price = +itemPrice.unit_amount
+
+    if (item.discounts.type === "bulk") {
+      if (quantity >= 5 && quantity < 10) {
+        price = itemPrice.unit_amount * 0.95;
+      }
+      else if (quantity >= 10 && quantity < 20) {
+        price = itemPrice.unit_amount * 0.9;
+      }
+      else if (quantity >= 20) {
+        price = itemPrice.unit_amount * 0.85;
+      }
+    }
 
     return {
-      amount: discountedPrice,
+      amount: price * quantity,
       reference: id,
+      tax_code: "txcd_99999999", // for physical goods
     }
   }));
 
@@ -23,6 +36,9 @@ exports.handler = async (event) => {
   const { shipping, subtotal } = metadata;
   const amountBeforeTax = parseInt(subtotal) + parseInt(shipping)
   const parsedCartItems = await parseCartItems(cartItems);
+  
+  console.log("🚀 ~ exports.handler= ~ shippingRate:", shippingRate)
+  console.log("🚀 ~ exports.handler= ~ parsedCartItems:", parsedCartItems)
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
@@ -44,7 +60,7 @@ exports.handler = async (event) => {
       },
       expand: ['line_items.data.tax_breakdown'],
     })
-
+    console.log(calculateTax.tax_breakdown[0].tax_rate_details)
     const totalTax = calculateTax.tax_breakdown[0]
     const taxAmount = totalTax.amount
     const totalAmount = amountBeforeTax + taxAmount
@@ -54,7 +70,7 @@ exports.handler = async (event) => {
       {
         amount: totalAmount,
         metadata: {
-          tax: taxAmount,
+          tax: +taxAmount,
           taxId: calculateTax.id,
         }
       }

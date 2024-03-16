@@ -52,7 +52,6 @@ function OrderSummary({
         <h5>Order Summary</h5>
       </Content>
       <Box
-        padding="16px 0"
         borderbottom={colors.borders.black}
       >
         <Box
@@ -66,7 +65,7 @@ function OrderSummary({
               align="flex-start"
               flex="flex"
               key={item.id}
-              margin="0 0 16px"
+              padding="16px 0"
             >
               <Link
                 to={`/products/${item.category}/${item.slug}/${item.coverColor}`}
@@ -164,10 +163,10 @@ function OrderSummary({
         </Box>
       </Box>
       <Box
-        padding="16px"
+        padding="0 16px"
       >
         <Flexbox
-          margin="16px 0"
+          padding="16px 0"
           flex="flex"
           justify="space-between"
         >

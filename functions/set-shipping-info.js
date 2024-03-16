@@ -35,7 +35,7 @@ exports.handler = async (event) => {
          metadata: {
            shipmentId: shipmentId,
            rateId: shippingRateId,
-           shipping: shippingCost,
+           shipping: +shippingCost,
            carrier: shippingRateCarrier,
            authKey: `${authKey}`
          }

@@ -7,7 +7,11 @@ exports.handler = async (event) => {
 
   try {
     // Update the payment intent
-    const paymentIntent = await stripe.paymentIntents.update(pid, data);
+    const paymentIntent = await stripe.paymentIntents.update(pid, {
+      metadata: {
+        ...data
+      }
+    });
     // Handle the updated payment intent
     console.log('[Stripe] Payment intent updated:', paymentIntent);
 

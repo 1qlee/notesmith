@@ -272,7 +272,7 @@ const Checkout = () => {
     
     try {
       // update the paymentIntent with shipping form data
-      const response = await updatePaymentIntent(pid, { metadata: { email: customer.email } })
+      const response = await updatePaymentIntent(pid, { email: customer.email })
 
       if (response.error) {
         throw response.error

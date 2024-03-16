@@ -1,17 +1,12 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
-const easypostApi = require('@easypost/api');
-const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
-// will have to update the paymentIntent metadata object with tracking information
-const updatePaymentIntent = async (pid, shippingLabel, orderId, datePaid) => {
-  const { tracking_code, public_url } = shippingLabel.tracker;
-  console.log("[Stripe - create-shipment] Updating payment intent with tracking information.")
+// will have to update the paymentIntent metadata object
+const updatePaymentIntent = async (pid, orderId, datePaid) => {
+  console.log("[Stripe - create-shipment] Updating payment intent with order information.")
   await stripe.paymentIntents.update(
     pid,
     {
       metadata: {
-        tracking: tracking_code, // carrier tracking code
-        trackingUrl: public_url, // easypost URL
         orderId: orderId,
         datePaid: datePaid,
       }
@@ -19,6 +14,7 @@ const updatePaymentIntent = async (pid, shippingLabel, orderId, datePaid) => {
   );
 }
 
+// use the current time to generate a unique order id
 const generateOrderId = (date) => {
   const randomValue = Math.floor(date * Math.random());
   let resultString = String(randomValue);
@@ -45,17 +41,10 @@ exports.handler = async (event) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-    const { rateId, shipmentId, authKey, tax, taxId, shipping } = paymentIntent.metadata;
-    const amount = paymentIntent.amount;
-    // retrieve the existing shipment by its ID
-    const userShipment = await easypost.Shipment.retrieve(shipmentId);
-    const userShippingRate = userShipment.rates.find(rate => rate.id === rateId);
-    // buy the shipping label from easypost
-    const shippingLabel = await easypost.Shipment.buy(userShipment.id, userShippingRate);
-    console.log(`[Easypost - create-shipment] Bought shipping label for: ${pid}`)
+    const { amount, metadata } = paymentIntent;
+    const { rateId, shipmentId, authKey, tax, taxId, shipping } = metadata;
 
-    // update the payment intent with shipping label tracking information
-    updatePaymentIntent(pid, shippingLabel, orderId, datePaid);
+    updatePaymentIntent(pid, orderId, datePaid);
 
     return {
       statusCode: 200,
@@ -63,18 +52,16 @@ exports.handler = async (event) => {
         amount: amount,
         authKey: authKey,
         datePaid: datePaid,
-        id: orderId,
+        orderId: orderId,
         rateId: rateId,
         shipmentId: shipmentId,
         shipping: shipping,
-        shippingLabel: shippingLabel,
         tax: tax,
         taxId: taxId,
-        trackingUrl: shippingLabel.tracker.public_url,
       })
     }
   } catch(error) {
-    console.error(`[Easypost - create-shipment] Something went wrong when buying shipping label: ${error}`)
+    console.error(`[Easypost - create-shipment] Something went wrong when confirming order: ${error}`)
 
     return {
       statusCode: 400,
@@ -83,7 +70,7 @@ exports.handler = async (event) => {
         authKey: authKey,
         datePaid: datePaid,
         error: "shipping",
-        id: orderId,
+        orderId: orderId,
         rateId: rateId,
         shipmentId: shipmentId,
         shipping: shipping,

@@ -15,7 +15,6 @@ export const pageQuery = graphql`
       nodes {
         camelName
         category
-        custom
         description
         heightInch
         heightPixel
