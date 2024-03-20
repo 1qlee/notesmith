@@ -17,7 +17,7 @@ const Table = styled.table`
   th {
     border-color: ${colors.gray.nineHundred};
     border-width: 1px;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 1rem;
     padding: 16px;
   }

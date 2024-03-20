@@ -27,7 +27,7 @@ const StyledTab = styled.li`
   &:hover {
     cursor: pointer;
     &:not(.is-active) {
-      background-color: ${colors.gray.threeHundred};
+      background-color: ${colors.gray.oneHundred};
     }
   }
   &.is-active {

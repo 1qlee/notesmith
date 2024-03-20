@@ -35,25 +35,25 @@ const Content = styled.div`
   h1 {
     font-size: ${props => props.h1fontsize || "4.209rem"};
     color: ${props => props.h1color || colors.gray.nineHundred};
-    font-weight: ${props => props.h1fontweight || "700"};
+    font-weight: ${props => props.h1fontweight || "500"};
     margin: ${props => props.h1margin};
   }
   h2 {
     font-size: ${props => props.h2fontsize || "3.157rem"};
     color: ${props => props.h2color || colors.gray.nineHundred};
-    font-weight: ${props => props.h2fontweight || "700"};
+    font-weight: ${props => props.h2fontweight || "500"};
     margin: ${props => props.h2margin};
   }
   h3 {
     font-size: ${props => props.h3fontsize || "2.369rem"};
     color: ${props => props.h3color || colors.gray.nineHundred};
-    font-weight: ${props => props.h3fontweight || "700"};
+    font-weight: ${props => props.h3fontweight || "500"};
     margin: ${props => props.h3margin};
   }
   h4 {
     font-size: ${props => props.h4fontsize || "1.777rem"};
     color: ${props => props.h4color || colors.gray.nineHundred};
-    font-weight: ${props => props.h4fontweight || "700"};
+    font-weight: ${props => props.h4fontweight || "500"};
     margin: ${props => props.h4margin};
     &.is-column-heading {
       margin-bottom: 0.5rem;
@@ -74,7 +74,7 @@ const Content = styled.div`
   h5 {
     color: ${props => props.h5color || colors.gray.nineHundred};
     font-size: ${props => props.h5fontsize || "1rem"};
-    font-weight: ${props => props.h5fontweight || "700"};
+    font-weight: ${props => props.h5fontweight || "500"};
     font-family: ${fonts.secondary};
     margin: ${props => props.h5margin};
   }

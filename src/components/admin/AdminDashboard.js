@@ -22,6 +22,10 @@ import Layout from "../layout/Layout"
 const notebookSizes = [
   "A5",
 ]
+const { minimum, holes } = pageMargins
+const holesMargin = convertToMM(holes)
+const minimumMargin = convertToMM(minimum)
+const rightPageMargin = convertFloatFixed(holesMargin, 2)
 
 const AdminDashboard = () => {
   const abortRef = useRef(false)
@@ -61,189 +65,33 @@ const AdminDashboard = () => {
     setTimeElapsed(prevSeconds => prevSeconds + 1000);
   };
 
-  // this function will run once per orderItem and will download all the pages for that orderItem
-  const zipCustomBook = async (pages, pageData, dimension, bookPdf) => {
-    console.log("Generating a custom book pdf...")
-    const { numOfPages, width } = pageData
-    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
-    const widthOffset = convertToMM(width)
-    let queriedPages = {}
-    let parsedPages = []
+  const generateSlipText = (data) => {
+    const { coverColor, quantity } = data
+    const abbrv = coverColor.charAt(0).toUpperCase()
 
-    console.log("Parsing custom book's pages...")
-    for (let i = 0; i < numOfPages; i++) {
-      const page = pages[i]
-      const { pageId, pageNumber } = page
-
-      // if we've already parsed this pageId, just add a duplicate to the array
-      if (queriedPages[pageId]) {
-        const queriedPage = queriedPages[pageId]
-        const { svg, margin } = queriedPage
-
-        parsedPages.push({
-          pageId: pageId,
-          pageNumber: pageNumber,
-          svg: svg,
-          margin: {...margin},
-        })
-      }
-      // otherwise we need to query the db for the page's data
-      else {
-        await get(ref(firebaseDb, `pages/${pageId}`)).then(snapshot => {
-          if (snapshot.exists()) {
-            const bookPage = snapshot.val()
-            const { svg, marginBottom, marginLeft, marginRight, marginTop } = bookPage
-
-            queriedPages[pageId] = {
-              pageId: pageId,
-              pageNumber: pageNumber,
-              margin: {
-                bottom: marginBottom,
-                left: marginLeft,
-                right: marginRight,
-                top: marginTop,
-              },
-              svg: svg,
-            }
-
-            parsedPages.push({
-              pageId: pageId,
-              pageNumber: pageNumber,
-              svg: svg,
-            })
-          }
-        })
-      }
-    }
-
-    console.log("Adding pages to pdf...")
-    await ceach.loop(
-      parsedPages,
-      async (page) => {
-        const { pageNumber, svg } = page
-
-        bookPdf.addPage([bookWidth, bookHeight], "portrait")
-        bookPdf.setPage(pageNumber + 2)
-
-        const pageNode = parseSvgNode(svg)
-        const templateSide = pageNode.getAttribute("id").split("-")[0]
-        let coords = {
-          x: convertToMM(pageNode.getAttribute("x")),
-          y: convertToMM(pageNode.getAttribute("y")),
-        }
-        const { minimum, holes } = pageMargins
-        const holesMargin = convertToMM(holes)
-        const minimumMargin = convertToMM(minimum)
-
-        // need to make adjustments to the x coordinates to account for left and right page differences
-        // right-side template's x coordinates have holes offset AND left margin baked in
-        // but they also have been offset by the width of the book
-        if (templateSide === "right") {
-          if (pageNumber % 2 === 0) {
-            // need to offset the x coordinate by the width of the book/page
-            // left pages should have the holes offset removed and the minimum margin added (holes contains min)
-            coords.x = convertFloatFixed(coords.x - widthOffset - holesMargin + minimumMargin, 2)
-          }
-          else {
-            // right pages just need to be offset by the width of the book/page
-            coords.x = convertFloatFixed(coords.x - widthOffset, 2)
-          }
-        }
-        // left-side template's x coordinates have user-inputted left margin and minimum left margin baked in
-        // left pages do not need any adjustments
-        else {
-          // right pages need to swap minimum left margin with holes offset
-          if (pageNumber % 2 !== 0) {
-            coords.x = convertFloatFixed(coords.x - page.marginLeft + holesMargin - minimumMargin, 2)
-          }
-        }
-        
-        const pagePct = convertFloatFixed((pageNumber / numOfPages) * 100)
-
-        await bookPdf.svg(pageNode, {
-          x: convertToMM(pageNode.getAttribute("x")),
-          y: convertToMM(pageNode.getAttribute("y")),
-          width: svgWidth,
-          height: svgHeight,
-        }).then(async () => {
-          setDownloadPct(pagePct)
-          if (abortRef.current) {
-            console.log("Aborting download...")
-            ceach.loop.exit()
-          }
-        })
-      }
-    )
+    return `-${abbrv}-${quantity}`
   }
 
-  const zipStandardBook = async (numOfPages, pageData, dimension, bookPdf) => {
-    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
-
-    const leftPage = pageData.leftPageData.svg
-    const rightPage = pageData.rightPageData.svg
-    // turn svg strings into DOM nodes
-    const leftPageNode = parseSvgNode(leftPage)
-    const rightPageNode = parseSvgNode(rightPage)
-    const leftCoords = {
-      x: convertToMM(leftPageNode.getAttribute("x")),
-      y: convertToMM(leftPageNode.getAttribute("y")),
-    }
-    const rightCoords = {
-      x: convertToMM(rightPageNode.getAttribute("x")),
-      y: convertToMM(rightPageNode.getAttribute("y")),
-    }
-    const pages = Array.from(Array(numOfPages).keys())
-
-    await ceach.forEach(
-      pages,
-      async (page) => {
-        console.log(page)
-        bookPdf.addPage([bookWidth, bookHeight], "portrait")
-        bookPdf.setPage(page + 3)
-        const pagePct = convertFloatFixed((page / numOfPages) * 100)
-
-        if (page % 2 === 0) {
-          await bookPdf.svg(rightPageNode, {
-            x: leftCoords.x,
-            y: leftCoords.y,
-            width: svgWidth,
-            height: svgHeight,
-          }).then(() => {
-            setDownloadPct(pagePct)
-          })
-        }
-        else {
-          await bookPdf.svg(leftPageNode, {
-            x: rightCoords.x,
-            y: rightCoords.y,
-            width: svgWidth,
-            height: svgHeight,
-          }).then(() => {
-            setDownloadPct(pagePct)
-          })
-        }
-      }
-    )
-  }
 
   const zipBooks = async (size) => {
     const booksZip = new JSZip()
     // Start the timer interval
-    const timerInterval = setInterval(countTime, 1000);
+    const timerInterval = setInterval(countTime, 1000)
 
-    // query the db for all unprinted order items
     console.log("Getting all unprinted order items...")
-
-    get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo(false))).then(async snapshot => { 
+    
+    // query the db for all unprinted order items
+    get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo(false))).then(async snapshot => {
       if (snapshot.exists()) {
         const unprintedOrders = snapshot.val()
         console.log("🚀 ~ get ~ unprintedOrders:", unprintedOrders)
-        // filter orders by activeBookSize (A5)
+        // filter orders by activeBookSize
         const filteredOrders = Object.values(unprintedOrders).filter(order => order.size === size)
         // sort orders by date paid
         const sortedOrders = filteredOrders.sort((a, b) => a.datePaid - b.datePaid)
         // total number of orders that need to be zipped and printed
         const numOfOrders = sortedOrders.length
+
         setToBeZipped(numOfOrders)
 
         // loop through all orders and create a pdf for each
@@ -258,47 +106,53 @@ const AdminDashboard = () => {
             bookWidthInch: convertToIn(width),
             bookHeightInch: convertToIn(height),
           }
-          const bookPdf = new jsPDF()
-          const slipPage = `<svg xmlns="http://www.w3.org/2000/svg" id="slip-page" width=${width} height=${height} viewBox="0 0 ${width} ${height}"><text x="12" y=${height - 18} font-size="12">${orderId}</text><rect x=${width - 12} y=${height - 12} width="12" height="12" fill="#000"></rect></svg>`
-          const slipPageNode = parseSvgNode(slipPage)
+          const pageDimensions = [dimension.bookWidth, dimension.bookHeight]
+          const bookPdf = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+          })
+          // delete the page that was added by default
           bookPdf.deletePage(1)
           // add a blank sheet in the beginning of the notebook
-          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
-          // need two pages to make one sheet!
-          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
-          bookPdf.setPage(1)
+          bookPdf.addPage(pageDimensions, "portrait")
+          bookPdf.addPage(pageDimensions, "portrait")
 
           // if there is a bookId, there are custom pages we have to fetch
           if (pageData.bookId) {
             // query the db for the book's page ids
             await zipCustomBook(pages, pageData, dimension, bookPdf)
+            bookPdf.addPage(pageDimensions, "portrait")
           }
           else {
             await zipStandardBook(numOfPages, pageData, dimension, bookPdf)
           }
 
+          // slip page contains text with orderId, coverColor, and quantity
+          // also includes a black box in the bottom right corner
+          // const slipPage = `<svg xmlns="http://www.w3.org/2000/svg" width=${width} height=${height} viewBox="0 0 ${width} ${height}"><text x="12" y=${height - 18} font-size="12">${orderId}${generateSlipText(pageData)}</text><rect x=${width - 12} y=${height - 12} width="12" height="12" fill="#000"></rect></svg>`
+          // const slipPageNode = parseSvgNode(slipPage)
+          // await bookPdf.svg(slipPageNode, {
+          //   x: 0,
+          //   y: 0,
+          //   width: dimension.bookWidth,
+          //   height: dimension.bookHeight,
+          // })
+          const slipPage = bookPdf.addPage(pageDimensions, "portrait").setFontSize(8)
+          slipPage.rect(dimension.bookWidth - 3.175, dimension.bookHeight - 3.175, 3.175, 3.175, "F").fill("#000")
+          slipPage.text(`${orderId}${generateSlipText(pageData)}`, 3.175, dimension.bookHeight - 3.175)
+          console.log("Added slip page to pdf...")
 
-          // add the slip page to the end of the book
-          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
-          bookPdf.addPage([dimension.bookWidth, dimension.bookHeight], "portrait")
-          bookPdf.setPage(numOfPages + 4) 
+          // increment zipped number
+          setZipped(i + 2)
 
-          await bookPdf.svg(slipPageNode, {
-            x: 0,
-            y: 0,
-            width: dimension.bookWidth,
-            height: dimension.bookHeight,
-          }).then(async () => {
-            setZipped(i)
-
-            try {
-              booksZip.file(`${id} - (${quantity}).pdf`, bookPdf.output('blob'))
-              // await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
-            } catch(error) {
-              console.log(`Could not add pdf to zip file: ${id}`)
-              setErroredFiles(prev => [...prev, id])
-            }
-          })
+          try {
+            // add the pdf to the zip file
+            booksZip.file(`${orderId} - (${quantity}).pdf`, bookPdf.output('blob'))
+            // await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
+          } catch (error) {
+            console.log(`Could not add pdf to zip file: ${orderId}`)
+            setErroredFiles(prev => [...prev, id])
+          }
 
         }
 
@@ -316,6 +170,174 @@ const AdminDashboard = () => {
     }).catch(error => {
       console.log(error)
     })
+  }
+
+  // this function will run once per orderItem and will download all the pages for that orderItem
+  const zipCustomBook = async (pages, pageData, dimension, bookPdf) => {
+    console.log("Generating a custom book pdf...")
+    const { numOfPages } = pageData
+    const { bookWidth, bookHeight } = dimension
+    let queriedPages = {}
+    let parsedPages = []
+
+    console.log("Parsing custom book's pages...")
+    for (let i = 0; i < numOfPages; i++) {
+      const page = pages[i]
+      const { pageId, pageNumber } = page
+
+      // if we've already parsed this pageId, just add a duplicate to the array
+      if (queriedPages[pageId]) {
+        const queriedPage = queriedPages[pageId]
+        const { svg, margins } = queriedPage
+
+        parsedPages.push({
+          pageId: pageId,
+          pageNumber: pageNumber,
+          svg: svg,
+          margins: {...margins},
+        })
+      }
+      // otherwise we need to query the db for the page's data
+      else {
+        await get(ref(firebaseDb, `pages/${pageId}`)).then(snapshot => {
+          if (snapshot.exists()) {
+            const bookPage = snapshot.val()
+            const { svg, marginBottom, marginLeft, marginRight, marginTop } = bookPage
+            const margins = {
+              bottom: marginBottom,
+              left: marginLeft,
+              right: marginRight,
+              top: marginTop,
+            }
+
+            queriedPages[pageId] = {
+              pageId: pageId,
+              pageNumber: pageNumber,
+              margins: margins,
+              svg: svg,
+            }
+
+            parsedPages.push({
+              pageId: pageId,
+              pageNumber: pageNumber,
+              svg: svg,
+              margins: margins,
+            })
+          }
+        })
+      }
+    }
+
+    await ceach.loop(
+      parsedPages,
+      async (page) => {
+        const { pageNumber, svg, margins } = page
+        const pagePct = convertFloatFixed((pageNumber / numOfPages) * 100)
+
+        bookPdf.setPage(pageNumber + 2)
+        const currentPdfPage = bookPdf.addPage([bookWidth, bookHeight], "portrait")
+
+        const pageNode = parseSvgNode(svg)
+        const isLeftPage = pageNumber % 2 === 0
+        let pageDimensions = {
+          x: margins.left + (isLeftPage ? minimumMargin : holesMargin),
+          y: margins.top + minimumMargin,
+          width: convertToMM(pageNode.getAttribute("width")),
+          height: convertToMM(pageNode.getAttribute("height")),
+        }
+        
+        await bookPdf.svg(pageNode, {
+          x: pageDimensions.x,
+          y: pageDimensions.y,
+          width: pageDimensions.width,
+          height: pageDimensions.height,
+        }).then(() => {
+          const pageText = String(pageNumber)
+          const textWidth = bookPdf.getTextWidth(pageText)
+
+          currentPdfPage
+            .setFontSize(6)
+            .setFillColor(255,255,255)
+            .rect(isLeftPage ? 3.175 : bookWidth - 3.175 - textWidth, dimension.bookHeight - 4.763, textWidth, 1.588, "F")
+            .setTextColor(158,158,158)
+            .text(String(pageNumber), isLeftPage ? 3.175 : bookWidth - 3.175, bookHeight - 3.969, {
+              align: isLeftPage ? "left" : "right",
+              baseline: "middle",
+            })
+
+          setDownloadPct(pagePct)
+        
+          if (abortRef.current) {
+            console.log("Aborting download...")
+            ceach.loop.exit()
+          }
+        })
+      }
+    )
+
+    console.log("Done creating custom book PDF")
+  }
+
+  const zipStandardBook = async (numOfPages, pageData, dimension, bookPdf) => {
+    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
+    const { leftPageData, rightPageData } = pageData
+    const leftPage = pageData.leftPageData.svg
+    const rightPage = pageData.rightPageData.svg
+    // turn svg strings into DOM nodes
+    const leftPageNode = parseSvgNode(leftPage)
+    const rightPageNode = parseSvgNode(rightPage)
+    const leftDimension = {
+      x: leftPageData.pageData.marginLeft + minimumMargin,
+      y: leftPageData.pageData.marginTop + minimumMargin,
+      width: convertToMM(leftPageNode.getAttribute("width")),
+      height: convertToMM(leftPageNode.getAttribute("height")),
+    }
+    const rightDimension = {
+      x: rightPageData.pageData.marginLeft + rightPageMargin,
+      y: rightPageData.pageData.marginTop + minimumMargin,
+      width: convertToMM(rightPageNode.getAttribute("width")),
+      height: convertToMM(rightPageNode.getAttribute("height")),
+    }
+    const pages = Array.from(Array(numOfPages).keys())
+    // add an additional page because I can't figure out why there's always a blank page at the end
+    const addtlPage = numOfPages + 1
+    pages.push({ addtlPage: addtlPage })
+
+    await ceach.forEach(
+      pages,
+      async (page) => {
+        const realPageNumber = page + 3
+        bookPdf.setPage(page + 2)
+        bookPdf.addPage([bookWidth, bookHeight], "portrait")
+        let pagePct = convertFloatFixed(((page + 1) / numOfPages) * 100)
+        if (isNaN(pagePct)) {
+          pagePct = 100
+        }
+
+        if (realPageNumber % 2 === 0) {
+          await bookPdf.svg(leftPageNode, {
+            x: leftDimension.x,
+            y: leftDimension.y,
+            width: leftDimension.width,
+            height: leftDimension.height,
+          }).then(() => {
+            setDownloadPct(pagePct)
+          })
+        }
+        else {
+          await bookPdf.svg(rightPageNode, {
+            x: rightDimension.x,
+            y: rightDimension.y,
+            width: rightDimension.width,
+            height: rightDimension.height,
+          }).then(() => {
+            setDownloadPct(pagePct)
+          })
+        }
+      }
+    )
+
+    console.log("Done creating book PDF")
   }
 
   // convert ms to hh:mm:ss, removing leading zeros and adding h m s

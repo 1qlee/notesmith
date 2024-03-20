@@ -19,7 +19,7 @@ const StyledModal = styled.dialog`
 `
 
 const ModalBackground = styled.div`
-  background-color: ${colors.gray.threeHundred};
+  background-color: rgba(238, 238, 238, 0.5);
   height: 100vh;
   left: 0;
   position: fixed;
@@ -33,7 +33,7 @@ const ModalHeader = styled.div`
   color: ${props => props.color || colors.gray.nineHundred};
   border-bottom: ${colors.borders.black};
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 500;
   font-family: ${props => props.fontfamily || fonts.secondary};
   padding: 16px 0;
 `

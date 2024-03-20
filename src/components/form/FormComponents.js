@@ -636,7 +636,7 @@ const SelectLabel = styled.label`
   width: calc(100% - 32px);
   height: calc(100% - 2px);
   z-index: 1;
-  padding: 16px;
+  padding: 16px 0 16px 16px;
   pointer-events: none;
   background-color: ${colors.white};
   &:hover {
@@ -661,6 +661,7 @@ const StyledSelect = styled.select`
   height: ${props => props.height};
   width: ${props => props.width};
   appearance: none;
+  transition: box-shadow 0.2s;
   &.is-error {
     border-color: ${colors.red.sixHundred};
   }

@@ -22,6 +22,7 @@ function Canvas({
   productData,
   canvasPages,
   canvasPageTemplates,
+  setDimensions,
   pageData,
   selectedPage,
   selectedPageSvg,
@@ -41,6 +42,7 @@ function Canvas({
             productData={productData}
             canvasPages={canvasPages}
             canvasPageTemplates={canvasPageTemplates}
+            setDimensions={setDimensions}
             pageData={pageData}
             selectedPage={selectedPage}
             selectedPageSvg={selectedPageSvg}

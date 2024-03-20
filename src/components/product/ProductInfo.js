@@ -1,22 +1,20 @@
 import React, { useEffect, useState, useRef } from "react"
 import { colors  } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
-import { CaretDown } from "@phosphor-icons/react"
 import { v4 as uuidv4 } from 'uuid'
 import { Tooltip } from "react-tooltip"
 import { throttle } from "lodash"
-import { isBrowser, formatDollars, calculateDiscounts } from "../../utils/helper-functions"
+import { isBrowser } from "../../utils/helper-functions"
 
 import Button from "../ui/Button"
 import ColorPicker from "../shop/ColorPicker"
 import Content from "../ui/Content"
 import PageIcons from "../customize/PageIcons"
 import { Flexbox } from "../layout/Flexbox"
-import { QuantityTracker, SelectWrapper, StyledFieldset, StyledLabel, StyledSelect, SelectIcon, SelectLabel } from "../form/FormComponents"
 import ProductQuickControls from "./ProductQuickControls"
 import ProductDescription from "./ProductDescription"
 import Tag from "../ui/Tag"
-import StrikeText from "../misc/StrikeText"
+import VolumeQuantitySelect from "../shop/VolumeQuantitySelect"
 
 const ProductInfoLabel = ({ number, label, margin }) => {
   return (
@@ -57,11 +55,11 @@ const ProductInfo = ({
   setRightPageData,
 }) => {
   const cartButtonRef = useRef(null)
-  const discountSelectRef = useRef(null)
   const { addItem, handleCartClick, shouldDisplayCart } = useShoppingCart()
   const [buttonFixed, setButtonFixed] = useState(false)
   const [itemQuantity, setItemQuantity] = useState(1)
   const [volumeQuantity, setVolumeQuantity] = useState(0)
+  const [formattedSubtotal, setFormattedSubtotal] = useState("$30.00")
   const [itemAdded, setItemAdded] = useState(false)
   const fixedButtonStyle = {
     position: buttonFixed && "fixed",
@@ -71,13 +69,6 @@ const ProductInfo = ({
     margin: buttonFixed && "0",
     zIndex: buttonFixed && 49,
   }
-  let originalPrice = formatDollars(bookData.price / 100)
-  let discounts = calculateDiscounts({
-    price: bookData.price,
-    quantity: itemQuantity,
-    rate: bookData.discount,
-  })
-  let { percent, formattedSubtotal, formattedPrice } = discounts
 
   useEffect(() => {
     if (isBrowser()) {
@@ -109,20 +100,7 @@ const ProductInfo = ({
         document.removeEventListener('scroll', handleScroll)
       }
     }
-
-    if (itemQuantity < 5) {
-      setVolumeQuantity(0)
-    }
-    else if (itemQuantity >= 5 && itemQuantity < 10) {
-      setVolumeQuantity(5)
-    }
-    else if (itemQuantity >= 10 && itemQuantity < 20) {
-      setVolumeQuantity(10)
-    }
-    else if (itemQuantity >= 20) {
-      setVolumeQuantity(20)
-    }
-  }, [itemQuantity]) 
+  }, []) 
 
   function handleAddCartButton(bookData) {
     if (!bookData.coverColor) {
@@ -140,26 +118,26 @@ const ProductInfo = ({
     else {
       handleItemAdded()
       addItem({
-        category: bookData.category,
         camelName: bookData.camelName,
+        category: bookData.category,
         coverColor: bookData.coverColor,
         currency: "USD",
         custom: bookData.custom,
         discounts: {
           type: bookData.discount,
         },
+        height: bookData.heightPixel,
         id: uuidv4(), // unique cart item id
         image: cartThumbnail,
         leftPageData: leftPageData,
-        height: bookData.heightPixel,
         name: bookData.name,
         numOfPages: bookData.numOfPages,
-        price_id: bookData.stripePriceId,
         price: bookData.price,
+        price_id: bookData.stripePriceId,
         printed: false,
         rightPageData: rightPageData,
-        slug: bookData.slug,
         size: bookData.size,
+        slug: bookData.slug,
         weight: bookData.weight,
         width: bookData.widthPixel,
       }, { count: itemQuantity })
@@ -283,89 +261,14 @@ const ProductInfo = ({
         margin="0 0 16px"
         ref={cartButtonRef}
       >
-        <StyledFieldset
-          flex="0"
-        >
-          <StyledLabel
-            htmlFor="quantity-tracker"
-          >
-            Quantity
-          </StyledLabel>
-          <QuantityTracker
-            id="quantity-tracker"
-            buttonwidth="1rem"
-            buttonheight="1rem"
-            buttonleft="calc(50% - 40px)"
-            buttonright="calc(50% - 40px)"
-            counterwidth="100px"
-            counterpadding="14px"
-            counterfontsize="1rem"
-            iconsize="0.75rem"
-            setItemQuantity={setItemQuantity}
-            itemQuantity={itemQuantity}
-          />
-        </StyledFieldset>
-        <StyledFieldset
-          margin="0 0 0 16px"
-        >
-          <StyledLabel htmlFor="discount-select">Volume discounts</StyledLabel>
-          <SelectWrapper>
-            <StyledSelect
-              fontsize="1rem"
-              width="100%"
-              onChange={(e) => {
-                setItemQuantity(+e.target.value || 1)
-                setVolumeQuantity(+e.target.value)
-              }}
-              ref={discountSelectRef}
-              value={volumeQuantity}
-              id="discount-select"
-            >
-              <option value={0} default>&lt; 5 - {calculateDiscounts({price: bookData.price, quantity: 0, rate: bookData.discount}).formattedPrice} each</option>
-              <option value={5}>5 - {calculateDiscounts({price: bookData.price, quantity: 5, rate: bookData.discount}).formattedPrice} each</option>
-              <option value={10}>10 - {calculateDiscounts({price: bookData.price, quantity: 10, rate: bookData.discount}).formattedPrice} each</option>
-              <option value={20}>20 - {calculateDiscounts({price: bookData.price, quantity: 20, rate: bookData.discount}).formattedPrice} each</option>
-            </StyledSelect>
-            <SelectIcon
-              top="20px"
-              right="8px"
-            >
-              <CaretDown size="1rem" />
-            </SelectIcon>
-            <SelectLabel
-              htmlFor="discount-select"
-            >
-              <Flexbox
-                justify="space-between"
-                align="center"
-              >
-                <Content
-                  hiddenminwidth="991"
-                  hiddenmaxwidth="1060"
-                >
-                  {itemQuantity >= 5 && (
-                    <StrikeText 
-                      hiddenminwidth="991"
-                      hiddenmaxwidth="1240">
-                      {originalPrice}
-                    </StrikeText>
-                  )}
-                    <span>{formattedPrice} each</span>
-                </Content>
-                {itemQuantity >= 5 && (
-                  <Content
-                    paragraphlineheight="normal"
-                    paragraphmargin="0"
-                    paragraphfontweight="700"
-                    paragraphcolor={colors.green.sixHundred}
-                  >
-                    <p>{percent}% off</p>
-                  </Content>
-                )}
-              </Flexbox>
-            </SelectLabel>
-          </SelectWrapper>
-        </StyledFieldset>
+        <VolumeQuantitySelect
+          volumeQuantity={volumeQuantity}
+          setVolumeQuantity={setVolumeQuantity}
+          itemQuantity={itemQuantity}
+          setItemQuantity={setItemQuantity}
+          setSubtotal={setFormattedSubtotal}
+          bookData={bookData}
+        />
       </Flexbox>
       <Flexbox
         align="flex-end"

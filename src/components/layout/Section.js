@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, fonts, spacing } from "../../styles/variables"
+import { breakpoints, colors, fonts, spacing } from "../../styles/variables"
 
 const SectionMain = styled.main`
   background-color: ${colors.white};
@@ -20,9 +20,6 @@ const SectionMain = styled.main`
 
 const Section = styled.section`
   background-color: ${props => props.backgroundcolor};
-  background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
-  background-size: ${props => props.backgroundsize || "cover"};
-  background-position: ${props => props.backgroundposition || "center center"};
   position: relative;
   display: ${props => props.flex && "flex"};
   align-items: ${props => props.flex && "center"};
@@ -57,6 +54,23 @@ const StyledSectionHeading = styled.div`
   }
 `
 
+const SectionHero = styled.div`
+  background-color: ${props => props.backgroundcolor};
+  background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
+  background-size: ${props => props.backgroundsize || "cover"};
+  background-position: ${props => props.backgroundposition || "center center"};
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: ${props => props.height};
+  min-height: ${props => props.minheight};
+  width: 100%;
+  @media only screen and (max-width: ${breakpoints.xs}) {
+    background-size: inherit;
+    background-position: 900px 530px;
+  }
+`
+
 function SectionHeading({
   children,
   margin,
@@ -77,4 +91,5 @@ export {
   Section,
   SectionContent,
   SectionHeading,
+  SectionHero,
 }

@@ -4,7 +4,7 @@ import { Star, ArrowRight, ArrowBendRightDown, Note } from "@phosphor-icons/reac
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
-import heroImage from "../images/index/hero-3.jpg"
+import heroImage from "../images/index/hero-4.jpg"
 
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
@@ -21,8 +21,9 @@ import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import { Flexbox } from "../components/layout/Flexbox"
-import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
+import { SectionMain, SectionHero, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { Tabs } from "../components/ui/Tabs"
+import Box from "../components/ui/Box"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -88,18 +89,36 @@ const IndexPage = ({ data }) => {
       }}
     >
       <SectionMain>
-        <Section
+        <SectionHero
           backgroundimage={heroImage}
           minheight="calc(100vh - 60px)"
-          backgroundposition="50% -110%"
-          backgroundsize="inherit"
+          backgroundposition="center center"
+          backgroundsize="cover"
           flex
         >
+          <Container style={{flexGrow: "1"}} xl lg md sm xs>
+            <HeroContent />
+          </Container>
+        </SectionHero>
+        <Section>
           <SectionContent
-            padding={`${spacing.xlarge} 0`}
+            padding={`${spacing.section} 0 0`}
           >
             <Container xl lg md sm xs>
-              <HeroContent />
+              <Box
+                margin="0 0 8rem"
+              >
+                <Content
+                  h2margin="0"
+                  h2fontsize="2rem"
+                  textalign="center"
+                  maxwidth={widths.content.large}
+                  margin="0 auto"
+                >
+                  <h2>Notesmith is an American brand that specializes in crafting stationery using premium materials. All of our products are manufactured in-house at our factory in New York.</h2>
+                </Content>
+              </Box>
+              <hr />
             </Container>
           </SectionContent>
         </Section>
@@ -124,7 +143,7 @@ const IndexPage = ({ data }) => {
                     maxwidth={widths.content.index}
                     margin="0 0 32px"
                   >
-                    <h2>Custom layouts on every page</h2>
+                    <h2>Re-imagine conventional layouts</h2>
                     <p>With Notesmith, you can customize every single page to your needs. Simply tweak conventional grid styles to your fancy, or create an entirely new layout that works for you.</p>
                   </Content>
                   <Button
@@ -134,7 +153,7 @@ const IndexPage = ({ data }) => {
                     as={Link}
                     to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
                   >
-                    <span>Shop now</span>
+                    <span>Shop notebooks</span>
                     <Icon
                       margin="0 0 0 4px"
                     >
@@ -159,23 +178,12 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     h5fontsize="1.25rem"
                     h5margin="0"
-                    h5fontweight="700"
                   >
                     <Flexbox
                       margin="0 0 16px"
-                      align="flex-start"
-                      justify="space-between"
+                      align="center"
                     >
-                      <h5>Choose from a template below</h5>
-                      <Tag
-                        padding="3px 6px"
-                        backgroundcolor={colors.white}
-                        border={colors.borders.black}
-                        color={colors.gray.nineHundred}
-                        margin="0 0 0 8px"
-                      >
-                        Demo
-                      </Tag>
+                      <h5>Try out our templating demo</h5>
                     </Flexbox>
                     <p>Just click on any of the template boxes below and the layout of the book will change automatically. Use the controls to make adjustments to the layout.</p>
                   </Content>
@@ -184,13 +192,12 @@ const IndexPage = ({ data }) => {
                     align="flex-end"
                   >
                     <Content
-                      h5fontsize="1.25rem"
                       h5margin="0"
                     >
-                      <h5>Try it out</h5>
+                      <h5>Click on any page template</h5>
                     </Content>
                     <Icon margin="0 0 0 4px">
-                      <ArrowBendRightDown size={20} weight="bold" color={colors.gray.nineHundred} />
+                      <ArrowBendRightDown size={16} weight="bold" color={colors.gray.nineHundred} />
                     </Icon>
                   </Flexbox>
                   <PageIcons
@@ -287,8 +294,8 @@ const IndexPage = ({ data }) => {
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
                   >
-                    <h2>Fountain pen friendly paper</h2>
-                    <p>After conducting tests on more than 50 types of paper, we chose the one with the best performance with various inks. Our writing paper received top ratings from users in early assessments.</p>
+                    <h2>Paper that loves ink as much as you do</h2>
+                    <p>Our smooth paper allows for effortless gliding when writing with your favorite fountain pen or other ink-based pen. Most users experienced zero bleed-through or feathering during early assessments.</p>
                   </Content>
                   <div>
                     <Flexbox
@@ -466,7 +473,7 @@ const IndexPage = ({ data }) => {
               <Row>
                 <Col>
                   <SectionHeading>
-                    Early Test Reviews
+                    Real user feedback
                   </SectionHeading>
                 </Col>
               </Row>
@@ -477,8 +484,8 @@ const IndexPage = ({ data }) => {
                     paragraphfontsize="1.25rem"
                     margin="0 0 32px"
                   >
-                    <h2>Feedback from early users</h2>
-                    <p>We recently ran a test trial where we provided notebooks to over a hundred users. Read what some of them had to say about their experience with Notesmith.</p>
+                    <h2>Feedback from our users</h2>
+                    <p>Read what some of our users have had to say about their experience with Notesmith.</p>
                   </Content>
                   <hr />
                   <Notification

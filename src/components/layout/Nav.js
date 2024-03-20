@@ -187,7 +187,7 @@ const NavHeading = styled.h5`
   letter-spacing: 1px;
   line-height: 1;
   padding: 0 16px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 8px;
   &:not(:first-child) {
     margin-top: 16px;

@@ -10,22 +10,21 @@ function AlignmentControls({
   setPageData,
 }) {
   const { maxContentHeight, maxContentWidth, strokeWidth } = pageData
-  console.log("ALIGNMENT AAAA")
   const yStrokeOffset = Math.sqrt(2 * strokeWidth ** 2) / 2
 
   const contentHeight = convertFloatFixed(dimensions.svgHeight, 3)
   const contentWidth = convertFloatFixed(dimensions.svgWidth, 3)
   let verticalTrim, horizontalTrim = 0
-  const roundingError = 0.002
+  const roundingError = 0.003
 
   switch(pageData.template) {
     case "ruled":
       verticalTrim = strokeWidth + roundingError
-      horizontalTrim = 0
+      horizontalTrim = roundingError
       break
     case "dot":
-      verticalTrim = 0
-      horizontalTrim = 0
+      verticalTrim = roundingError
+      horizontalTrim = roundingError
       break
     case "graph":
       verticalTrim = strokeWidth + roundingError
@@ -37,27 +36,27 @@ function AlignmentControls({
       break
     case "music":
       verticalTrim = strokeWidth + roundingError
-      horizontalTrim = 0
+      horizontalTrim = roundingError
       break
     case "handwriting":
       verticalTrim = strokeWidth + roundingError
-      horizontalTrim = 0
+      horizontalTrim = roundingError
       break
     case "cross":
-      verticalTrim = strokeWidth * 4
-      horizontalTrim = strokeWidth * 4
+      verticalTrim = strokeWidth * 4 + roundingError
+      horizontalTrim = strokeWidth * 4 + roundingError
       break
     case "calligraphy":
       verticalTrim = strokeWidth + roundingError
-      horizontalTrim = 0
+      horizontalTrim = roundingError
       break
     case "isometric":
-      pageData.borderData.toggle ? horizontalTrim = 0 : horizontalTrim = strokeWidth / 2
-      verticalTrim = 0
+      pageData.borderData.toggle ? horizontalTrim = roundingError : horizontalTrim = (strokeWidth / 2) + roundingError
+      verticalTrim = roundingError
       break
     default:
-      verticalTrim = 0
-      horizontalTrim = 0
+      verticalTrim = roundingError
+      horizontalTrim = roundingError
       break
   }
   let horizontalSpace = convertFloatFixed(convertToMM(maxContentWidth - contentWidth) - horizontalTrim, 3)

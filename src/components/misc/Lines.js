@@ -7,16 +7,15 @@ import Line5 from "../../assets/underlines/underline-5.svg"
 import Line6 from "../../assets/underlines/underline-6.svg"
 import { colors } from "../../styles/variables"
 
-function RandomLine() {
+function RandomLine(props) {
   const [randomLine, setRandomLine] = useState(0)
   const lineStyle = {
     position: "absolute",
     fill: colors.gray.nineHundred,
-    stroke: colors.gray.sixHundred,
-    top: "36px",
+    top: "100%",
     left: 0,
     width: "100%",
-    height: "100%"
+    height: "max-content"
   }
   const lines = [
     <Line4 style={lineStyle} />,

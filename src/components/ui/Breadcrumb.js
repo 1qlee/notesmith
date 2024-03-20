@@ -28,7 +28,7 @@ const BreadcrumbItem = styled.li`
   align-items: center;
   &.is-active {
     span {
-      font-weight: 700;
+      font-weight: 500;
       color: ${colors.gray.nineHundred};
     }
   }

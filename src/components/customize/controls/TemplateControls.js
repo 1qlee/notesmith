@@ -13,6 +13,7 @@ import CrossGridControls from "../templateControls/CrossGridControls"
 import CalligraphyControls from "../templateControls/CalligraphyControls"
 
 const TemplateControls = ({
+  dimensions,
   max,
   pageData,
   selectedPageSvg,
@@ -21,6 +22,7 @@ const TemplateControls = ({
   return (
     <>
       <AlignmentControls
+        dimensions={dimensions}
         pageData={pageData}
         setPageData={setPageData}
         selectedPageSvg={selectedPageSvg}

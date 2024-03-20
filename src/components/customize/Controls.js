@@ -57,7 +57,8 @@ const ControlsTab = styled.button`
   font-weight: 400;
   flex: 1;
   &.is-active {
-    color: ${colors.gray.nineHundred};
+    background-color: ${colors.gray.nineHundred};
+    color: ${colors.gray.oneHundred};
   }
   &:hover {
     cursor: pointer;
@@ -76,6 +77,7 @@ function Controls({
   activeTab,
   bookData,
   canvasPages,
+  dimensions,
   max,
   pageData,
   productData,
@@ -160,6 +162,7 @@ function Controls({
       {activeTab === 1 && (
         <Designbar
           activePageData={activePageData}
+          dimensions={dimensions}
           handleShowModal={handleShowModal}
           max={max}
           pageData={pageData}

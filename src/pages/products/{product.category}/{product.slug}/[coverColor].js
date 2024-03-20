@@ -12,6 +12,7 @@ import ProductControls from "../../../../components/product/ProductControls"
 import ProductHero from "../../../../components/product/ProductHero"
 import ProductImages from "../../../../components/product/ProductImages"
 import ProductFiftyFifty from "../../../../components/product/ProductFiftyFifty"
+import Divider from "../../../../components/ui/Divider"
 
 const ProductPage = ({ data, params }) => {
   const { product, productImages, productThumbnails, fiftyFiftyImages } = data
@@ -151,6 +152,9 @@ const ProductPage = ({ data, params }) => {
             </Container>
           </SectionContent>
         </Section>
+        <Divider 
+          margin="32px 0"
+        />
         {fiftyFiftyImages.nodes.map((image, index) => (
           <ProductFiftyFifty
             key={index}

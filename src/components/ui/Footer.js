@@ -31,7 +31,7 @@ const Footer = () => {
                 paragraphfontsize="1.25rem"
                 margin="0 0 16px"
               >
-                <p>Subscribe to our mailing list and stay updated on all updates, promotions, and much more!</p>
+                <p>Subscribe to our mailing list and stay updated on all new products, promotions, and much more!</p>
               </Content>
             </Col>
             <Col md={4} push={{ md: 2 }}>

@@ -9,7 +9,7 @@ html {
 /* Media query for smaller screens */
 @media only screen and (max-width: 768px) {
   html {
-    font-size: 14px;
+    font-size: 16px;
     /* Adjust font size for smaller screens */
   }
 }
@@ -128,7 +128,7 @@ textarea {
   margin: 0;
 }
 optgroup {
-  font-weight: 700;
+  font-weight: 500;
 }
 button,
 input {
@@ -545,14 +545,14 @@ select:-webkit-autofill:focus {
   font-family: 'Jost';
   font-style: normal;
   font-display: swap;
-  font-weight: 700;
+  font-weight: 500;
   src: url('../static/fonts/jost-700-normal.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Jost';
   font-style: italic;
   font-display: swap;
-  font-weight: 700;
+  font-weight: 500;
   src: url('../static/fonts/jost-700-italic.woff2') format('woff2');
 } */
 @font-face {
@@ -573,7 +573,7 @@ select:-webkit-autofill:focus {
   font-family: 'Nanum Myeongjo';
   font-style: normal;
   font-display: swap;
-  font-weight: 700;
+  font-weight: 500;
   src: url('/fonts/nm-700-normal.woff2') format('woff2');
 } */
 .carousel {

@@ -150,6 +150,7 @@ const widths = {
     small: "400px",
     index: "608px",
     normal: "700px",
+    large: "960px",
   },
   breakpoint: {
     index: "936px"

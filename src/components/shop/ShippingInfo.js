@@ -24,7 +24,7 @@ const InfoItemHeading = styled.h3`
   color: ${colors.gray.nineHundred};
   font-family: ${fonts.secondary};
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   flex: 1;
   line-height: 1.5;
 `

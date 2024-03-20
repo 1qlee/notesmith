@@ -18,6 +18,7 @@ export const pageQuery = graphql`
       camelName
       category
       description
+      discount
       heightInch
       heightPixel
       name

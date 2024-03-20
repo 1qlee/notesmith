@@ -15,7 +15,7 @@ function Dot({
   const dotDiameter = dotRadius * 2
   const dotColumnSpacing = convertToPx(columnSpacing)
   const dotRowSpacing = convertToPx(rowSpacing)
-  const maxRows = Math.floor((height - dotDiameter) / (dotColumnSpacing + dotDiameter)) + 1
+  const maxRows = Math.floor((height - dotDiameter) / (dotRowSpacing + dotDiameter)) + 1
   const maxCols = Math.floor((width - dotDiameter) / (dotColumnSpacing + dotDiameter)) + 1
 
   const memoCreateDots = useMemo(() => function createDots() {
@@ -77,6 +77,7 @@ function Dot({
       rows: maxRows,
       columns: maxCols,
     })
+      console.log("🚀 ~ useEffect ~ maxRows:", maxRows)
     setSvgLoaded(Math.random(1))
   }, [pageData])
 

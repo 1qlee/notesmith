@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Flexbox } from "../../layout/Flexbox"
 import { QuantityTracker } from "../../form/FormComponents"
 import { ControlsContent, ControlsFooter } from "../Controls"
+import VolumeQuantitySelect from "../../shop/VolumeQuantitySelect"
 import Icon from "../../ui/Icon"
 import Button from "../../ui/Button"
 import Content from "../../ui/Content"
@@ -27,6 +28,8 @@ function Checkoutbar({
   const { firebaseDb } = useFirebaseContext()
   const { addItem } = useShoppingCart()
   const [itemQuantity, setItemQuantity] = useState(1)
+  const [volumeQuantity, setVolumeQuantity] = useState(0)
+  const [formattedSubtotal, setFormattedSubtotal] = useState("")
   const [loading, setLoading] = useState(false)
 
   function getImageThumbnail() {
@@ -40,10 +43,14 @@ function Checkoutbar({
     // create a promise to add items to cart then redirect user to cart
     addItem({
       bookId: bookData.id,
+      camelName: productData.camelName,
       category: productData.category,
       coverColor: coverColor,
       currency: "USD",
       custom: true,
+      discounts: {
+        type: productData.discount,
+      },
       height: productData.heightPixel,
       id: uuidv4(),
       image: getImageThumbnail(),
@@ -52,7 +59,6 @@ function Checkoutbar({
       pages: [...canvasPages],
       price: productData.price,
       price_id: productData.stripePriceId,
-      originalPrice: productData.price,
       printed: false,
       size: productData.size,
       slug: productData.slug,
@@ -66,21 +72,6 @@ function Checkoutbar({
     }).catch(() => {
       toast.error("Something went wrong! Please try again.")
     })
-  }
-
-  const calculateTotalPrice = (price, dash) => {
-    const totalPrice = (itemQuantity * price) / 100
-
-    if (totalPrice && dash) {
-      return (
-        <span>${totalPrice} -&nbsp;</span>
-      )
-    }
-    else {
-      return (
-        <span>${totalPrice}</span>
-      )
-    }
   }
 
   async function updateBookCoverColor(color) {
@@ -133,33 +124,38 @@ function Checkoutbar({
             </Content>
           </Box>
           <Box>
+            <VolumeQuantitySelect
+              volumeQuantity={volumeQuantity}
+              setVolumeQuantity={setVolumeQuantity}
+              itemQuantity={itemQuantity}
+              setItemQuantity={setItemQuantity}
+              setSubtotal={setFormattedSubtotal}
+              bookData={productData}
+              stacked
+            />
             <Flexbox
-              align="center"
+              align="flex-end"
               justify="space-between"
-              margin="0 0 16px"
-              padding="32px 0 0"
-              className="has-border-top"
+              margin="32px 0 16px"
             >
               <Content
-                padding="0"
-                margin="0"
-                h5margin="0 8px 0 0"
-                h5fontsize="1rem"
-                h5fontweight="700"
+                pargraphmargin="0"
+                paragraphlineheight="1"
+                paragraphfontweight="700"
+                margin="0 8px 0 0"
               >
-                <h5>Quantity</h5>
+                <p>Subtotal</p>
               </Content>
-              <QuantityTracker
-                buttonwidth="1rem"
-                buttonheight="1rem"
-                buttonleft="12px"
-                buttonright="12px"
-                counterwidth="6rem"
-                counterfontsize="0.825rem"
-                iconsize="0.625rem"
-                setItemQuantity={setItemQuantity}
-                counterpadding="0.5rem"
-              />
+              <Content
+                h3margin="0"
+                headinglineheight="1"
+                h3fontsize="1.25rem"
+                h3fontweight="400"
+              >
+                <h3>
+                  {formattedSubtotal}
+                </h3>
+              </Content>
             </Flexbox>
           </Box>
         </Flexbox>
@@ -179,7 +175,7 @@ function Checkoutbar({
               <CircleNotch size="1rem" />
             </Icon>
           ) : (
-            <span>Add to cart - {calculateTotalPrice(bookData.price)}</span>
+            <span>Add to cart</span>
           )}
         </Button>
       </ControlsFooter>

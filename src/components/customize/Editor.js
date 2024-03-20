@@ -44,6 +44,7 @@ const Editor = ({
     coverColor: "",
     title: "",
   })
+  const [dimensions, setDimensions] = useState({})
   // this is basically templateData - when user selects a template, this is the data that is used to create the page
   const [pageData, setPageData] = useState({
     maxContentHeight: productData.heightPixel - pageMargins.vertical,
@@ -102,7 +103,14 @@ const Editor = ({
           else {
             // else redirect the user to the generic editor page (based on the product they had selected)
             setInitializing(false)
-            isBrowser() && navigate(`/customize/${productData.slug}`)
+            if (isBrowser()) {
+              if (productData.slug === "hardcover-wired-notebook-a5-custom") {
+                navigate(`/customize/pro-wired-notebook-a5-custom`)
+              }
+              else {
+                navigate(`/customize/${productData.slug}`)
+              }
+            }
           }
         }
         // if the book doesn't exist
@@ -257,6 +265,7 @@ const Editor = ({
             <Canvas
               canvasPageTemplates={canvasPageTemplates}
               canvasPages={canvasPages}
+              setDimensions={setDimensions}
               leftPageData={leftPageData}
               rightPageData={rightPageData}
               setLeftPageData={setLeftPageData}
@@ -274,6 +283,7 @@ const Editor = ({
               activeTab={activeTab}
               bookData={bookData}
               canvasPages={canvasPages}
+              dimensions={dimensions}
               max={max}
               pageData={pageData}
               productData={productData}

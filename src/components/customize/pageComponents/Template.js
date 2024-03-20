@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { useEditorDispatch } from "../context/editorContext"
-import { convertFloatFixed, convertToPx } from "../../../utils/helper-functions"
+import { convertFloatFixed, convertToPx, convertToMM } from "../../../utils/helper-functions"
 import { pageMargins } from "../../../styles/variables"
 
 import Ruled from "../templates/Ruled"
@@ -18,10 +18,12 @@ const Template = ({
   currentPageSide,
   pageData,
   productData,
+  setDimensions,
   setMax,
   setPageData,
   setSelectedPageSvg,
   setSvgLoaded,
+  svgLoaded,
 }) => {
   const dependencies = [
     pageData.template,
@@ -71,11 +73,14 @@ const Template = ({
 
     if (ref && ref.current) {
       const template = ref.current
+      const pageBbox = template.getBBox()
+
       setSelectedPageSvg(template)
-      setPageData({
-        ...pageData,
-        svgHeight: templateData.size.height,
-        svgWidth: templateData.size.width,
+      setDimensions({
+        svgHeight: pageBbox.height,
+        svgWidth: pageBbox.width,
+        maximumMarginHeight: convertFloatFixed(convertToMM(templateData.size.height) - pageData.strokeWidth, 3),
+        maximumMarginWidth: convertToMM(templateData.size.width),
         x: templateData.position.x,
         y: templateData.position.y,
       })
@@ -85,7 +90,7 @@ const Template = ({
         canvas: template,
       })
     }
-  }, [...dependencies, ref, ref.current])
+  }, [pageData.template, svgLoaded])
 
   return (
     <svg

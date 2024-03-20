@@ -9,6 +9,7 @@ import DesignControls from "../controls/DesignControls"
 import Button from "../../ui/Button"
 
 function Designbar({
+  dimensions,
   handleShowModal,
   pageData,
   max,
@@ -29,6 +30,7 @@ function Designbar({
         />
         {pageData.template && pageData.template !== "blank" && pageData.template !== "none" ? (
           <TemplateControls 
+            dimensions={dimensions}
             max={max}
             pageData={pageData}
             selectedPageSvg={selectedPageSvg}

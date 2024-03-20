@@ -14,6 +14,7 @@ function CanvasPage({
   canvasPageRef,
   canvasPages,
   canvasPageTemplates,
+  setDimensions,
   pageData,
   pageSide,
   productData,
@@ -22,7 +23,7 @@ function CanvasPage({
   setPageData,
   setSelectedPageSvg,
   setSvgLoaded,
-  setCurrentPageData,
+  svgLoaded,
 }) {
   let currentPage, currentPageTemplate, isSelected;
   let isCoverPage = false
@@ -150,10 +151,12 @@ function CanvasPage({
             currentPageSide={pageSide}
             pageData={pageData}
             productData={productData}
+            setDimensions={setDimensions}
             setMax={setMax}
             setPageData={setPageData}
             setSelectedPageSvg={setSelectedPageSvg}
             setSvgLoaded={setSvgLoaded}
+            svgLoaded={svgLoaded}
             suppressContentEditableWarning={true}
           />
         ) : (

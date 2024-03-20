@@ -17,6 +17,7 @@ function PageSpread({
   canvasPageTemplates,
   canvasPages,
   leftPageData,
+  setDimensions,
   pageData,
   productData,
   rightPageData,
@@ -540,6 +541,7 @@ function PageSpread({
         canvasPageTemplates={canvasPageTemplates}
         canvasPageRef={canvasPageRef}
         currentPageData={leftPageData}
+        setDimensions={setDimensions}
         productData={productData}
         pageSide="left"
         selectedPage={selectedPage}
@@ -548,6 +550,7 @@ function PageSpread({
         setCurrentPageData={setLeftPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
+        svgLoaded={svgLoaded}
         setPageData={setPageData}
         pageData={pageData}
       />
@@ -556,6 +559,7 @@ function PageSpread({
         canvasPageTemplates={canvasPageTemplates}
         canvasPageRef={canvasPageRef}
         currentPageData={rightPageData}
+        setDimensions={setDimensions}
         pageSide="right"
         productData={productData}
         selectedPage={selectedPage}
@@ -564,6 +568,7 @@ function PageSpread({
         setCurrentPageData={setRightPageData}
         setSelectedPageSvg={setSelectedPageSvg}
         setSvgLoaded={setSvgLoaded}
+        svgLoaded={svgLoaded}
         setPageData={setPageData}
         pageData={pageData}
       />
