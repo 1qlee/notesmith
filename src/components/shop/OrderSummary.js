@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import { convertToDecimal, calculateDiscounts } from "../../utils/helper-functions"
+import { convertToDecimal, capitalizeString } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { CircleNotch } from "@phosphor-icons/react"
 
@@ -38,6 +38,21 @@ function OrderSummary({
     }
 
     return convertToDecimal(calculatedPrice, 2) // converts to a float value
+  }
+
+  function handleSpacingView(data) {
+    const { template } = data
+    const gridTemplate = template === "dot" || template === "graph" || template === "cross"
+
+    if (template === "blank") {
+      return
+    }
+    else if (gridTemplate) {
+      return `(Rows: ${data.rowSpacing}mm, Columns: ${data.columnSpacing}mm)`
+    }
+    else {
+      return `(${data.spacing}mm)`
+    }
   }
 
   return (
@@ -116,12 +131,21 @@ function OrderSummary({
                             <p>
                               Cover: <CapitalizedWord>{item.coverColor}</CapitalizedWord>
                             </p>
-                            <p>
-                              Left-side pages: <CapitalizedWord>{item.leftPageData.template} {item.leftPageData.pageData.template !== "blank" && (`(${item.leftPageData.pageData.spacing}mm)`)}</CapitalizedWord>
-                            </p>
-                            <p>
-                              Right-side pages: <CapitalizedWord>{item.rightPageData.template} {item.rightPageData.pageData.template !== "blank" && (`(${item.rightPageData.pageData.spacing}mm)`)}</CapitalizedWord>
-                            </p>
+                            {item.leftPageData && (
+                              <p>
+                                Left-side pages:&nbsp;
+                                <span>
+                                  {capitalizeString(item.leftPageData.template)} {handleSpacingView(item.leftPageData.pageData)}
+                                </span>
+                              </p>
+                            )}
+                            {item.rightPageData && (
+                              <p>Right-side pages:&nbsp;
+                                <span>
+                                  {capitalizeString(item.rightPageData.template)} {handleSpacingView(item.rightPageData.pageData)}
+                                </span>
+                              </p>
+                            )}
                           </>
                         )}
                       </>
@@ -219,6 +243,7 @@ function OrderSummary({
             paragraphmargin="0"
             paragraphfontsize="1.25rem"
             paragraphlineheight="1"
+            paragraphfontweight="500"
           >
             <p>
               {totalAmount ? (

@@ -36,7 +36,9 @@ const AdminDashboard = () => {
   const [toBeZipped, setToBeZipped] = useState(0)
   const [activeBookSize, setActiveBookSize] = useState("")
   const [downloadPct, setDownloadPct] = useState(0)
+  const [ordersToShip, setOrdersToShip] = useState([])
   const [erroredFiles, setErroredFiles] = useState([])
+  const [itemsToPrint, setItemsToPrint] = useState([])
   const [showModal, setShowModal] = useState({
     show: false
   })
@@ -84,20 +86,25 @@ const AdminDashboard = () => {
     get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo(false))).then(async snapshot => {
       if (snapshot.exists()) {
         const unprintedOrders = snapshot.val()
-        console.log("🚀 ~ get ~ unprintedOrders:", unprintedOrders)
         // filter orders by activeBookSize
         const filteredOrders = Object.values(unprintedOrders).filter(order => order.size === size)
         // sort orders by date paid
-        const sortedOrders = filteredOrders.sort((a, b) => a.datePaid - b.datePaid)
+        const sortedOrders = filteredOrders.sort((a, b) => a.orderId - b.orderId)
         // total number of orders that need to be zipped and printed
         const numOfOrders = sortedOrders.length
+        let prevOrderItem = {
+          id: "",
+          number: 1,
+        }
+        let newItemsToPrint = []
+        let newOrdersToShip = []
 
         setToBeZipped(numOfOrders)
 
         // loop through all orders and create a pdf for each
         for (let i = 0; i < numOfOrders; i++) {
           const pageData = sortedOrders[i]
-          const { numOfPages, height, width, pages, orderId, quantity, id } = pageData
+          const { numOfPages, height, width, pages, orderId, orderIdDb, rateId, shipmentId, quantity, id } = pageData
           const dimension = {
             svgWidth: convertFloatFixed(convertToMM(width) - 13.335, 2), // subtract margins
             svgHeight: convertFloatFixed(convertToMM(height) - 6.35, 2), // subtract margins
@@ -127,35 +134,49 @@ const AdminDashboard = () => {
             await zipStandardBook(numOfPages, pageData, dimension, bookPdf)
           }
 
-          // slip page contains text with orderId, coverColor, and quantity
-          // also includes a black box in the bottom right corner
-          // const slipPage = `<svg xmlns="http://www.w3.org/2000/svg" width=${width} height=${height} viewBox="0 0 ${width} ${height}"><text x="12" y=${height - 18} font-size="12">${orderId}${generateSlipText(pageData)}</text><rect x=${width - 12} y=${height - 12} width="12" height="12" fill="#000"></rect></svg>`
-          // const slipPageNode = parseSvgNode(slipPage)
-          // await bookPdf.svg(slipPageNode, {
-          //   x: 0,
-          //   y: 0,
-          //   width: dimension.bookWidth,
-          //   height: dimension.bookHeight,
-          // })
           const slipPage = bookPdf.addPage(pageDimensions, "portrait").setFontSize(8)
-          slipPage.rect(dimension.bookWidth - 3.175, dimension.bookHeight - 3.175, 3.175, 3.175, "F").fill("#000")
-          slipPage.text(`${orderId}${generateSlipText(pageData)}`, 3.175, dimension.bookHeight - 3.175)
-          console.log("Added slip page to pdf...")
+          slipPage.setFillColor(0,0,0).rect(dimension.bookWidth - 3.175, dimension.bookHeight - 3.175, 3.175, 3.175, "F")
+          slipPage.setTextColor(158, 158, 158).text(`${orderId}${generateSlipText(pageData)}`, 3.175, dimension.bookHeight - 3.175)
 
           // increment zipped number
-          setZipped(i + 2)
+          setZipped(i + 1)
 
           try {
+            let fileName = `${orderId} - (${quantity})`
+
+            if (prevOrderItem.id === orderId) {
+              fileName = `${orderId}-${prevOrderItem.number} - (${quantity})`
+              prevOrderItem.number++
+            }
+            else {
+              fileName = `${orderId}-1 - (${quantity})`
+              prevOrderItem.id = orderId
+              prevOrderItem.number = 1
+            }
+
             // add the pdf to the zip file
-            booksZip.file(`${orderId} - (${quantity}).pdf`, bookPdf.output('blob'))
-            // await set(ref(firebaseDb, `orderItems/${id}/printed`), true)
+            booksZip.file(`${fileName}.pdf`, bookPdf.output('blob')) 
+
+            // find if an object with {rateId: rateId} equal to rateId exists in newOrdersToShip
+            const orderExists = newOrdersToShip.some(order => order.rateId === rateId)
+
+            // if it doesn't exist, add it to the array
+            if (!orderExists) {
+              newOrdersToShip.push({ rateId: rateId, orderId: orderIdDb, shipmentId: shipmentId})
+            }
+
+            // add the order item to state so we can update the db later
+            newItemsToPrint.push(id)
           } catch (error) {
             console.log(`Could not add pdf to zip file: ${orderId}`)
             setErroredFiles(prev => [...prev, id])
           }
-
         }
 
+        setItemsToPrint(newItemsToPrint)
+        setOrdersToShip(newOrdersToShip)
+
+        // if we've zipped all the orders, download the zip file
         await booksZip.generateAsync({ type: 'blob' }).then(function (content) {
           console.log("Downloading zip file...")
           clearInterval(timerInterval)
@@ -252,18 +273,19 @@ const AdminDashboard = () => {
           width: pageDimensions.width,
           height: pageDimensions.height,
         }).then(() => {
-          const pageText = String(pageNumber)
-          const textWidth = bookPdf.getTextWidth(pageText)
+          // add page numbers
+          // const pageText = String(pageNumber)
+          // const textWidth = bookPdf.getTextWidth(pageText)
 
-          currentPdfPage
-            .setFontSize(6)
-            .setFillColor(255,255,255)
-            .rect(isLeftPage ? 3.175 : bookWidth - 3.175 - textWidth, dimension.bookHeight - 4.763, textWidth, 1.588, "F")
-            .setTextColor(158,158,158)
-            .text(String(pageNumber), isLeftPage ? 3.175 : bookWidth - 3.175, bookHeight - 3.969, {
-              align: isLeftPage ? "left" : "right",
-              baseline: "middle",
-            })
+          // currentPdfPage
+          //   .setFontSize(6)
+          //   .setFillColor(255,255,255)
+          //   .rect(isLeftPage ? 3.175 : bookWidth - 3.175 - textWidth, dimension.bookHeight - 4.763, textWidth, 1.588, "F")
+          //   .setTextColor(158,158,158)
+          //   .text(String(pageNumber), isLeftPage ? 3.175 : bookWidth - 3.175, bookHeight - 3.969, {
+          //     align: isLeftPage ? "left" : "right",
+          //     baseline: "middle",
+          //   })
 
           setDownloadPct(pagePct)
         
@@ -279,7 +301,7 @@ const AdminDashboard = () => {
   }
 
   const zipStandardBook = async (numOfPages, pageData, dimension, bookPdf) => {
-    const { bookWidth, bookHeight, svgWidth, svgHeight } = dimension
+    const { bookWidth, bookHeight } = dimension
     const { leftPageData, rightPageData } = pageData
     const leftPage = pageData.leftPageData.svg
     const rightPage = pageData.rightPageData.svg
@@ -378,6 +400,33 @@ const AdminDashboard = () => {
     }
   }
 
+  const printBooks = () => {
+    console.log("Setting unprinted books to printed...")
+
+    itemsToPrint.forEach(item => {
+      set(ref(firebaseDb, `orderItems/${item}/printed`), true)
+    })
+  }
+
+  const purchaseLabels = async () => {
+    console.log("Purchasing and creating shipping labels...")
+    console.log(ordersToShip)
+
+    await fetch("/.netlify/functions/create-shipping-batch", {
+      method: "POST",
+      body: JSON.stringify({
+        orders: ordersToShip,
+      }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+    })
+    .catch(error => {
+      console.error("Error:", error)
+    })
+  }
+
   return (
     <Layout>
       <SectionMain
@@ -399,15 +448,32 @@ const AdminDashboard = () => {
                     Download unprinted books
                   </Button>
                   <Button
-                    onClick={() => addToEarlyAccess()}
+                    onClick={() => printBooks()}
                     margin="0 16px 0 0"
                   >
-                    Add user to early access
+                    Set unprinted books to printed
+                  </Button>
+                  <Button
+                    onClick={() => purchaseLabels()}
+                    margin="0 16px 0 0"
+                  >
+                    Purchase and create shipping labels
                   </Button>
                 </Col>
               </Row>
               <Row>
                 <Col>
+                  <Content>
+                    {itemsToPrint.length > 0 && (
+                      <>
+                        {itemsToPrint.map(item => (
+                          <p>
+                            {item}
+                          </p>
+                        ))}
+                      </>
+                    )}
+                  </Content>
                 </Col>
               </Row>
             </Container>
@@ -441,7 +507,7 @@ const AdminDashboard = () => {
                       completion={downloadPct}
                     />
                     <p>
-                      {downloadPct}% ({zipped} of {toBeZipped}) {convertTime(timeElapsed)}
+                      {downloadPct}% ({zipped} / {toBeZipped}) {convertTime(timeElapsed)}
                     </p>
                   </Content>
                 )}

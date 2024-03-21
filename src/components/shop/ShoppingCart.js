@@ -204,7 +204,7 @@ function ShoppingCart({
                                   as={Link}
                                   to={`/customize/${item.slug}/${item.bookId}`}
                                 >
-                                  <span>View</span>
+                                  <span>Custom</span>
                                   <Icon
                                     margin="0 0 0 2px"
                                   >
@@ -446,28 +446,6 @@ function ShoppingCart({
                           >
                             {item.category === "notebooks" && (
                               <>
-                                <Flexbox
-                                  flex="flex"
-                                  align="center"
-                                  justify="space-between"
-                                  margin="0 0 4px 0"
-                                >
-                                  <Content
-                                    headingfontfamily={fonts.secondary}
-                                    h3fontsize="0.75rem"
-                                    h3margin="0"
-                                    margin="0"
-                                  >
-                                    <h3>Cover</h3>
-                                  </Content>
-                                  <Content
-                                    paragraphfontsize="0.875rem"
-                                    paragraphmargin="0"
-                                    paragraphtexttransform="capitalize"
-                                  >
-                                    <p>{item.coverColor}</p>
-                                  </Content>
-                                </Flexbox>
                                 {item.bookId && (
                                   <Flexbox
                                     flex="flex"
@@ -510,50 +488,30 @@ function ShoppingCart({
                                 )}
                                 {item.leftPageData && item.rightPageData && (
                                   <>
-                                    <Flexbox
-                                      flex="flex"
-                                      align="center"
-                                      justify="space-between"
-                                      margin="0 0 0.25rem 0"
+                                    <Content
+                                      paragraphfontsize="0.875rem"
+                                      paragraphmargin="0"
+                                      paragraphcolor={colors.gray.sevenHundred}
+                                      spantexttransform="capitalize"
+                                      margin="0"
                                     >
-                                      <Content
-                                        headingfontfamily={fonts.secondary}
-                                        h3fontsize="0.75rem"
-                                        h3margin="0"
-                                        margin="0"
-                                      >
-                                        <h3>Left pages</h3>
-                                      </Content>
-                                      <Content
-                                        paragraphfontsize="0.875rem"
-                                        paragraphmargin="0"
-                                        paragraphtexttransform="capitalize"
-                                      >
-                                        <p>{item.leftPageData.template}</p>
-                                      </Content>
-                                    </Flexbox>
-                                    <Flexbox
-                                      flex="flex"
-                                      align="center"
-                                      justify="space-between"
-                                      margin="0 0 0.25rem 0"
-                                    >
-                                      <Content
-                                        headingfontfamily={fonts.secondary}
-                                        h3fontsize="0.75rem"
-                                        h3margin="0"
-                                        margin="0"
-                                      >
-                                        <h3>Right pages</h3>
-                                      </Content>
-                                      <Content
-                                        paragraphfontsize="0.875rem"
-                                        paragraphmargin="0"
-                                        paragraphtexttransform="capitalize"
-                                      >
-                                        <p>{item.rightPageData.template}</p>
-                                      </Content>
-                                    </Flexbox>
+                                      <p>Cover: <span>{item.coverColor}</span></p>
+                                      {item.leftPageData && (
+                                        <p>
+                                          Left-side pages:&nbsp;
+                                          <span>
+                                            {item.leftPageData.template} {handleSpacingView(item.leftPageData.pageData)}
+                                          </span>
+                                        </p>
+                                      )}
+                                      {item.rightPageData && (
+                                        <p>Right-side pages:&nbsp;
+                                          <span>
+                                            {item.rightPageData.template} {handleSpacingView(item.rightPageData.pageData)}
+                                          </span>
+                                        </p>
+                                      )}
+                                    </Content>
                                   </>
                                 )}
                               </>

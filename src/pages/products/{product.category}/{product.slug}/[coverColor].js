@@ -178,6 +178,7 @@ export const pageQuery = graphql`
     product(id: { eq: $id }) {
       camelName
       category
+      custom
       description
       discount
       longDescription

@@ -222,8 +222,13 @@ function calculateDiscounts(options) {
   return discounts
 }
 
+function capitalizeString(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 export {
   calculateDiscounts,
+  capitalizeString,
   consolidateMixedObjects,
   consolidateObjectProps,
   convertFloatFixed,

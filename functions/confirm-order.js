@@ -2,7 +2,7 @@ const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
 // will have to update the paymentIntent metadata object
 const updatePaymentIntent = async (pid, orderId, datePaid) => {
-  console.log("[Stripe - create-shipment] Updating payment intent with order information.")
+  console.log("[Stripe - confirm-order] Updating payment intent with order information.")
   await stripe.paymentIntents.update(
     pid,
     {

@@ -42,7 +42,6 @@ function CheckoutForm({
   useEffect(() => {
     async function getUpdate() {
       if (elements) {
-        console.log("updating payment")
         await elements.fetchUpdates()
       }
     }
@@ -202,7 +201,7 @@ function CheckoutForm({
     let orderItems = {}
     const cartItemsLength = cartItems.length
     const newOrderKey = push(ref(firebaseDb, 'orders/')).key
-    const { authKey, shipmentId } = orderData
+    const { authKey, shipmentId, rateId } = orderData
     
     try {
       // add all order items to db
@@ -217,6 +216,7 @@ function CheckoutForm({
           orderId: orderData.id,
           pid: pid,
           shipmentId: shipmentId,
+          rateId: rateId,
         }).catch(async (error) => {
           setError(null)
           

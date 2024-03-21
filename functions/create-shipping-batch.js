@@ -3,9 +3,21 @@ const easypost = new easypostApi(process.env.GATSBY_EASYPOST_API);
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { shipments } = body;
+  const { orders } = body;
 
   try {
+    const shipments = await Promise.all(orders.map(async (order) => {
+      const { shipmentId, rateId, orderId } = order
+      // retrieve the existing shipment by its ID
+      const shipment = await easypost.Shipment.retrieve(shipmentId);
+      const shippingRate = shipment.rates.find(rate => rate.id === rateId);
+      // buy the shipping label from easypost
+      await easypost.Shipment.buy(shipment.id, shippingRate);
+      console.log(`[Easypost - create-shipment] Bought shipping label for: ${orderId}`)
+    }));
+
+    console.log(shipments)
+
     const batch = await easypost.Batch.create({
       // expecting array of shipment ids
       // [{ id: 'shp_...' }, { id: 'shp_...' }]
