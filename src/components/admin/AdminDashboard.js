@@ -90,6 +90,7 @@ const AdminDashboard = () => {
         const filteredOrders = Object.values(unprintedOrders).filter(order => order.size === size)
         // sort orders by date paid
         const sortedOrders = filteredOrders.sort((a, b) => a.orderId - b.orderId)
+        console.log("🚀 ~ get ~ sortedOrders:", sortedOrders)
         // total number of orders that need to be zipped and printed
         const numOfOrders = sortedOrders.length
         let prevOrderItem = {
@@ -145,8 +146,8 @@ const AdminDashboard = () => {
             let fileName = `${orderId} - (${quantity})`
 
             if (prevOrderItem.id === orderId) {
-              fileName = `${orderId}-${prevOrderItem.number} - (${quantity})`
               prevOrderItem.number++
+              fileName = `${orderId}-${prevOrderItem.number} - (${quantity})`
             }
             else {
               fileName = `${orderId}-1 - (${quantity})`
@@ -274,18 +275,18 @@ const AdminDashboard = () => {
           height: pageDimensions.height,
         }).then(() => {
           // add page numbers
-          // const pageText = String(pageNumber)
-          // const textWidth = bookPdf.getTextWidth(pageText)
+          const pageText = String(pageNumber)
+          const textWidth = bookPdf.getTextWidth(pageText)
 
-          // currentPdfPage
-          //   .setFontSize(6)
-          //   .setFillColor(255,255,255)
-          //   .rect(isLeftPage ? 3.175 : bookWidth - 3.175 - textWidth, dimension.bookHeight - 4.763, textWidth, 1.588, "F")
-          //   .setTextColor(158,158,158)
-          //   .text(String(pageNumber), isLeftPage ? 3.175 : bookWidth - 3.175, bookHeight - 3.969, {
-          //     align: isLeftPage ? "left" : "right",
-          //     baseline: "middle",
-          //   })
+          currentPdfPage
+            .setFontSize(6)
+            .setFillColor(255,255,255)
+            .rect(isLeftPage ? 3.175 : bookWidth - 3.175 - textWidth, dimension.bookHeight - 4.763, textWidth, 1.588, "F")
+            .setTextColor(158,158,158)
+            .text(String(pageNumber), isLeftPage ? 3.175 : bookWidth - 3.175, bookHeight - 3.969, {
+              align: isLeftPage ? "left" : "right",
+              baseline: "middle",
+            })
 
           setDownloadPct(pagePct)
         
