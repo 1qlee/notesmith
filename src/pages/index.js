@@ -294,8 +294,8 @@ const IndexPage = ({ data }) => {
                     margin="0 0 2rem 0"
                     h2margin="0 0 2rem 0"
                   >
-                    <h2>Paper that loves ink as much as you do</h2>
-                    <p>Our smooth paper allows for effortless gliding when writing with your favorite fountain pen or other ink-based pen. Most users experienced zero bleed-through or feathering during early assessments.</p>
+                    <h2>Incredibly smooth, ink-loving paper</h2>
+                    <p>We make our notebooks with incredibly smooth paper that allows for effortless gliding when writing with your favorite fountain pen or other ink-based pen. Our paper has zero bleed-through or feathering and minimal ghosting.</p>
                   </Content>
                   <div>
                     <Flexbox
@@ -444,8 +444,8 @@ const IndexPage = ({ data }) => {
                     paragraphmargin="0 0 16px"
                     margin="0 0 32px"
                   >
-                    <h2>Made to order with quality materials</h2>
-                    <p>From cover to cover, our notebooks are built with high quality materials sourced entirely from American vendors. Every notebook is made to order in our factory in New York.</p>
+                    <h2>Made to order with premium materials</h2>
+                    <p>From cover to cover, our notebooks are built with premium quality materials sourced entirely from American vendors. Every notebook is made to order in our factory in New York.</p>
                   </Content>
                   <Materials 
                     tab={tabList[activeTab]}
@@ -485,21 +485,8 @@ const IndexPage = ({ data }) => {
                     margin="0 0 32px"
                   >
                     <h2>Feedback from our users</h2>
-                    <p>Read what some of our users have had to say about their experience with Notesmith.</p>
+                    <p>Read what some of our users have had to say about their experience with Notesmith. (Quotes shown are real words from real users with anonymized names.)</p>
                   </Content>
-                  <hr />
-                  <Notification
-                    backgroundcolor={colors.gray.oneHundred}
-                    borderradius="16px"
-                    padding="8px"
-                  >
-                    <Content
-                      margin="0 0 0 8px"
-                      smallmargin="0"
-                    >
-                      <small>Quotes represent real words from real users with fake names.</small>
-                    </Content>
-                  </Notification>
                 </Col>
                 <Col md={6} lg={6} xl={8}>
                   <Reviews />

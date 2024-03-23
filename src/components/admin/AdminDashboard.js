@@ -144,13 +144,14 @@ const AdminDashboard = () => {
 
           try {
             let fileName = `${orderId} - (${quantity})`
+            let fileNameString = `-${dimension.bookWidthInch}x${dimension.bookHeightInch}-(${quantity})`
 
             if (prevOrderItem.id === orderId) {
               prevOrderItem.number++
-              fileName = `${orderId}-${prevOrderItem.number} - (${quantity})`
+              fileName = `${orderId}[${prevOrderItem.number}]${fileNameString})`
             }
             else {
-              fileName = `${orderId}-1 - (${quantity})`
+              fileName = `${orderId}[1]${fileNameString})`
               prevOrderItem.id = orderId
               prevOrderItem.number = 1
             }
@@ -187,10 +188,20 @@ const AdminDashboard = () => {
           setTimeElapsed(0)
           abortRef.current = false
           saveAs(content, `${new Date().toISOString().slice(0, 10)}.zip`);
+        }).then(() => {
+          newItemsToPrint.forEach(item => {
+            set(ref(firebaseDb, `orderItems/${item}/printed`), "printing")
+          })
         })
+      }
+      else {
+        console.log("No unprinted orders found")
+
+        toast.error("No unprinted orders found")
       }
     }).catch(error => {
       console.log(error)
+      toast.error(error)
     })
   }
 
@@ -401,11 +412,28 @@ const AdminDashboard = () => {
     }
   }
 
+  // run this function only when printing books have been printed
   const printBooks = () => {
     console.log("Setting unprinted books to printed...")
 
-    itemsToPrint.forEach(item => {
-      set(ref(firebaseDb, `orderItems/${item}/printed`), true)
+    // query db for all printing order items
+    get(query(ref(firebaseDb, "orderItems/"), orderByChild("printed"), equalTo("printing"))).then(snapshot => {
+      if (snapshot.exists()) {
+        const itemsToPrint = snapshot.val()
+        const orderItems = Object.keys(itemsToPrint)
+
+        orderItems.forEach(item => {
+          set(ref(firebaseDb, `orderItems/${item}/printed`), true)
+        })
+
+        toast.success("Books have been set to printed!")
+      }
+      else {
+        throw "No printing books found."
+      }
+    }).catch(error => {
+      console.log(error)
+      toast.error(error)
     })
   }
 
@@ -452,7 +480,7 @@ const AdminDashboard = () => {
                     onClick={() => printBooks()}
                     margin="0 16px 0 0"
                   >
-                    Set unprinted books to printed
+                    Set printing books to printed
                   </Button>
                   <Button
                     onClick={() => purchaseLabels()}

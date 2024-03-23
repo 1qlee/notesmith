@@ -25,6 +25,7 @@ function TabImages({
       <GatsbyImage
         image={getImage(currentImage)}
         alt="default"
+        quality={100}
       />
     </StyledTabImages>
   )

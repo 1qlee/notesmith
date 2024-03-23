@@ -33,6 +33,15 @@ const Toast = () => {
             secondary: 'black',
           },
         },
+        error: {
+          iconTheme: {
+            primary: colors.red.sixHundred,
+          },
+          theme: {
+            primary: colors.red.sixHundred,
+            secondary: 'black',
+          },
+        },
       }}
     />
   )
