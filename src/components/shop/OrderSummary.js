@@ -169,7 +169,7 @@ function OrderSummary({
                     {item.quantity >= item.discounts.minQuantity ? (
                       <p>
                         <StrikeText
-                          color={colors.green.sixHundred}
+                          color={colors.gray.sixHundred}
                           margin="0"
                         >
                           ${convertToDecimal(item.price, 2)}
@@ -195,7 +195,21 @@ function OrderSummary({
           justify="space-between"
         >
           <p>Subtotal</p>
-          <p>${convertToDecimal(subtotal, 2)}</p>
+          <p>
+            {coupon.applied ? (
+              <span>
+                <StrikeText
+                  color={colors.gray.sixHundred}
+                  margin="0 4px 0 0"
+                >
+                  ${convertToDecimal(coupon.originalSubtotal, 2)}
+                </StrikeText>
+                ${convertToDecimal(subtotal, 2)}
+              </span>
+            ) : (
+              <span>${convertToDecimal(subtotal, 2)}</span>
+            )}
+          </p>
         </Flexbox>
         <Flexbox
           margin="0 0 16px"
@@ -225,10 +239,11 @@ function OrderSummary({
           <Flexbox
             flex="flex"
             justify="space-between"
+            margin="0 0 16px"
           >
-            <p>Coupon ({coupon.code})</p>
+            <p>Coupon</p>
             {coupon.text && (
-              <p>{coupon.text}</p>
+              <p>({coupon.name}) {coupon.text}</p>
             )}
           </Flexbox>
         )}
@@ -260,12 +275,12 @@ function OrderSummary({
 }
 
 function OrderBox({ 
-  items,
+  address,
+  cartItems,
   coupon,
   pid,
   selectedRate, 
   setCoupon,
-  setSelectedRate,
   setSubtotal,
   setTax,
   subtotal,
@@ -280,7 +295,9 @@ function OrderBox({
     })
   }
 
-  const handleCoupon = async () => {
+  const handleCoupon = async (e) => {
+    e.preventDefault()
+
     if (!coupon.code) {
       setCoupon({
         ...coupon,
@@ -289,6 +306,7 @@ function OrderBox({
       })
     }
     else {
+      const originalSubtotal = subtotal
       setCoupon({
         ...coupon,
         loading: true,
@@ -302,41 +320,67 @@ function OrderBox({
         },
         body: JSON.stringify({
           pid: pid,
-          cartItems: items,
+          cartItems: cartItems,
           coupon: coupon.code,
         })
       }).then(res => {
         return res.json()
-      }).then(data => {
+      }).then(async data => {
 
         if (data.error) {
           throw data.error
         }
 
-        const pi = data.paymentIntent
-        const coupon = data.coupon
+        const couponData = data.coupon
 
-        if (pi) {
-          setSelectedRate({
-            rateId: pi.metadata.rateId,
-            rate: pi.metadata.shipping,
-          })
-          setTax({
-            amount: pi.metadata.tax,
-            id: pi.metadata.taxId,
-          })
-          setSubtotal(pi.amount)
-        }
-
-        if (coupon) {
+        if (couponData) {
           setCoupon({
             ...coupon,
             applied: true,
-            text: data.coupon && "Super mega discount",
+            code: "",
             loading: false,
+            name: couponData.code,
+            originalSubtotal: originalSubtotal,
+            text: couponData.text,
           })
+
+          if (data.subtotal) {
+            setSubtotal(data.subtotal)
+          }
+
+          if (tax.amount) {
+            try {
+              const response = await fetch("/.netlify/functions/create-tax", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  pid: pid,
+                  cartItems: cartItems,
+                  address: address,
+                })
+              })
+
+              const data = await response.json()
+
+              if (data.error) {
+                throw data.error
+              }
+              else {
+                setTax(data)
+              }
+            }
+            catch (error) {
+              setTax({
+                amount: 0,
+                id: null,
+              })
+            }
+          }
         }
       }).catch(error => {
+        console.log("🚀 ~ handleCoupon ~ error:", error)
         setCoupon({
           ...coupon,
           loading: false,
@@ -353,67 +397,73 @@ function OrderBox({
         border={colors.borders.black}
       >
         <OrderSummary 
-          items={items}
+          items={cartItems}
           selectedRate={selectedRate}
           subtotal={subtotal}
           tax={tax}
           coupon={coupon}
         />
-        <Flexbox
-          justify="space-between"
-          align="flex-end"
-          width="100%"
-          margin="0 0 16px"
-          padding="0 16px"
-          className="has-border-top"
+        <form
+          id="coupon-form"
+          onSubmit={e => handleCoupon(e)}
         >
-          <StyledFieldset
-            margin="0 8px 0 0"
+          <Flexbox
+            justify="space-between"
+            align="flex-end"
+            width="100%"
+            margin="0 0 16px"
+            padding="0 16px"
+            className="has-border-top"
           >
-            <StyledLabel
-              htmlFor="coupon-input"
-              margin="16px 0 4px"
+            <StyledFieldset
+              margin="0"
             >
-              Coupon
-            </StyledLabel>
-            <StyledInput
-              id="coupon-input"
-              onChange={e => handleChangeCoupon(e.target.value)}
-              placeholder="Coupon code"
-              className={coupon.error && "is-error"}
-              type="text"
-              padding="8px"
-              value={coupon.code}
-              margin="0 8px 0 0"
-            />
-            {coupon.error && (
-              <ErrorLine
-                color={colors.red.sixHundred}
+              <StyledLabel
+                htmlFor="coupon-input"
+                margin="16px 0 4px"
               >
-                {coupon.error}
-              </ErrorLine>
-            )}
-          </StyledFieldset>
-          <Button
-            backgroundcolor={colors.gray.nineHundred}
-            color={colors.gray.oneHundred}
-            padding="12px"
-            width="100px"
-            htmlFor="coupon-input"
-            type="button"
-            onClick={() => handleCoupon()}
-            className={coupon.loading ? "is-loading" : null}
-            disabled={coupon.loading}
-          >
-            {coupon.loading ? (
-              <Icon>
-                <CircleNotch size={16} color={colors.white} />
-              </Icon>
-            ) : (
-              "Apply"
-            )}
-          </Button>
-        </Flexbox>
+                Coupon
+              </StyledLabel>
+              <Flexbox>
+                <StyledInput
+                  id="coupon-input"
+                  onChange={e => handleChangeCoupon(e.target.value)}
+                  placeholder="Coupon code"
+                  className={coupon.error && "is-error"}
+                  type="text"
+                  padding="8px"
+                  value={coupon.code}
+                  margin="0 8px 0 0"
+                />
+                <Button
+                  backgroundcolor={colors.gray.nineHundred}
+                  color={colors.gray.oneHundred}
+                  padding="12px"
+                  width="100px"
+                  htmlFor="coupon-form"
+                  type="submit"
+                  className={coupon.loading ? "is-loading" : null}
+                  disabled={coupon.loading}
+                >
+                  {coupon.loading ? (
+                    <Icon>
+                      <CircleNotch size={16} color={colors.white} />
+                    </Icon>
+                  ) : (
+                    "Apply"
+                  )}
+                </Button>
+              </Flexbox>
+              {coupon.error && (
+                <ErrorLine
+                  color={colors.red.sixHundred}
+                >
+                  {coupon.error}
+                </ErrorLine>
+              )}
+            </StyledFieldset>
+          </Flexbox>
+        </form>
       </Box>
     </>
   )

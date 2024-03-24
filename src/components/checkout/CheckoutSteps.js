@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
-import { CaretDown, CaretUp } from "@phosphor-icons/react"
+import { CaretDown, CaretUp, Check, WarningCircle } from "@phosphor-icons/react"
 import { useCollapse } from "react-collapsed"
 
 import { Flexbox } from "../layout/Flexbox"
@@ -74,10 +74,15 @@ const CheckoutSteps = ({
               border={`1px solid ${status.color}`}
               borderradius="16px"
               fontweight="400"
-              padding="4px 8px"
+              padding="4px 4px"
               margin="0 8px"
             >
-              {status.msg}
+              {status.msg === "Done" && (
+                <Check size={16} weight="bold" />
+              )}
+              {(status.msg === "Required" || status.msg === "Incomplete") && (
+                <WarningCircle size={16} weight="bold" />
+              )}
             </Tag>
           )}
         </Flexbox>

@@ -258,7 +258,7 @@ function ShoppingCart({
                         {item.quantity >= item.discounts.minQuantity ? (
                           <p>
                             <StrikeText
-                              color={colors.green.sixHundred}
+                              color={colors.gray.sixHundred}
                             >
                               ${convertToDecimal(item.price, 2)}
                             </StrikeText>
@@ -533,7 +533,7 @@ function ShoppingCart({
                         {item.quantity >= item.discounts.minQuantity ? (
                           <p>
                             <StrikeText
-                              color={colors.green.sixHundred}
+                              color={colors.gray.sixHundred}
                             >
                               ${convertToDecimal(item.price, 2)}
                             </StrikeText>

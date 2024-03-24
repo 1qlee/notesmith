@@ -1,10 +1,11 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
-const parseCartItems = async (cartItems) => {
+const parseCartItems = async (cartItems, discount) => {
   const parsedCartItems = await Promise.all(cartItems.map(async (item) => {
     const { price_id, id, quantity } = item;
     const itemPrice = await stripe.prices.retrieve(price_id);
     let price = +itemPrice.unit_amount
+    let amount = price * quantity
 
     if (item.discounts.type === "bulk") {
       if (quantity >= 5 && quantity < 10) {
@@ -18,8 +19,15 @@ const parseCartItems = async (cartItems) => {
       }
     }
 
+    if (discount) {
+      amount = price * quantity * discount
+    }
+    else {
+      amount = price * quantity
+    }
+
     return {
-      amount: price * quantity,
+      amount: amount,
       reference: id,
       tax_code: "txcd_99999999", // for physical goods
     }
@@ -30,15 +38,20 @@ const parseCartItems = async (cartItems) => {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body);
-  const { pid, cartItems, address, shippingRate } = body;
+  const { pid, cartItems, address } = body;
   const paymentIntent = await stripe.paymentIntents.retrieve(pid);
-  const { metadata } = paymentIntent;
-  const { shipping, subtotal } = metadata;
-  const amountBeforeTax = parseInt(subtotal) + parseInt(shipping)
-  const parsedCartItems = await parseCartItems(cartItems);
+  const shipping = +paymentIntent.metadata.shipping
+  const subtotal = +paymentIntent.metadata.subtotal
+  const { coupon, discount } = paymentIntent.metadata
+  const amountBeforeTax = subtotal + shipping
+  let parsedCartItems = []
   
-  console.log("🚀 ~ exports.handler= ~ shippingRate:", shippingRate)
-  console.log("🚀 ~ exports.handler= ~ parsedCartItems:", parsedCartItems)
+  if (coupon && discount) {
+    parsedCartItems = await parseCartItems(cartItems, discount);
+  }
+  else {
+    parsedCartItems = await parseCartItems(cartItems);
+  }
 
   try {
     const calculateTax = await stripe.tax.calculations.create({
@@ -56,11 +69,10 @@ exports.handler = async (event) => {
         address_source: 'shipping',
       },
       shipping_cost: {
-        amount: shippingRate.rate,
+        amount: shipping,
       },
       expand: ['line_items.data.tax_breakdown'],
     })
-    console.log(calculateTax.tax_breakdown[0].tax_rate_details)
     const totalTax = calculateTax.tax_breakdown[0]
     const taxAmount = totalTax.amount
     const totalAmount = amountBeforeTax + taxAmount

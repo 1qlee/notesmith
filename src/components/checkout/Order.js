@@ -3,8 +3,6 @@ import styled from "styled-components"
 import { colors, fonts, spacing } from "../../styles/variables"
 import { useFirebaseContext } from "../../utils/auth"
 import { ArrowSquareOut, CircleNotch } from "@phosphor-icons/react"
-import { convertUnix, convertToDecimal } from "../../utils/helper-functions"
-import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { get, ref } from "firebase/database"
 import { useShoppingCart } from "../cart/context/cartContext"
 import { Container, Col, Row } from "react-grid-system"
@@ -20,7 +18,6 @@ import Icon from "../ui/Icon"
 import Layout from "../layout/Layout"
 import Notification from "../ui/Notification"
 import TextLink from "../ui/TextLink"
-import StrikeText from "../misc/StrikeText"
 
 const PlaceholderLine = styled.div`
   background-color: ${colors.gray.threeHundred};

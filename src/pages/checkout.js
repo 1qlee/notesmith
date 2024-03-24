@@ -427,7 +427,8 @@ const Checkout = () => {
                       </Col>
                       <Col sm={5}>
                         <OrderBox
-                          items={cartItems}
+                          address={address}
+                          cartItems={cartItems}
                           coupon={coupon}
                           hideButton={true}
                           selectedRate={selectedRate}
