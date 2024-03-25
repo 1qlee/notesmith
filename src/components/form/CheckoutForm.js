@@ -347,6 +347,7 @@ function CheckoutForm({
           form="checkout-payment-form"
           id="submit"
           padding="1rem"
+          margin="0 0 32px"
           width="200px"
         >
           {processing ? (

@@ -21,7 +21,7 @@ import Layout from "../components/layout/Layout"
 import ShippingForm from "../components/form/ShippingForm"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
-const Checkout = () => {
+const Checkout = ({ location }) => {
   const [stripe, setStripe] = useState(null)
   const { cartDetails, totalPrice, handleCloseCart } = useShoppingCart()
   const [cartItems, setCartItems] = useState([])
@@ -299,6 +299,7 @@ const Checkout = () => {
       loading={loading || paymentProcessing}
       loaderMsg={paymentProcessing && "Processing payment... Do not refresh or close this page!"}
       loaderClassName="has-nav"
+      location={location}
       seoDetails={{
         title: "Checkout",
       }}

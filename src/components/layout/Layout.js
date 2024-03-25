@@ -42,14 +42,15 @@ const GrayArea = styled.div`
 `
 
 const Layout = ({
-  loading,
+  backgroundcolor,
   children,
   className,
-  backgroundcolor,
   loaderClassName,
   loaderMsg,
-  seoDetails,
+  loading,
+  location,
   noScroll,
+  seoDetails,
 }) => {
   const { handleCloseCart, shouldDisplayCart } = useShoppingCart()
   const [showGrayArea, setShowGrayArea] = useState(false)
@@ -72,6 +73,7 @@ const Layout = ({
       <Nav 
         setShowGrayArea={setShowGrayArea}
         setHideScroll={setHideScroll}
+        location={location}
       />
       <Seo
         details={seoDetails}

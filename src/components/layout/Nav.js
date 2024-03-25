@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 import { colors, fonts, widths, breakpoints } from "../../styles/variables"
-import { Link } from "gatsby"
+import { Link, navigate } from "gatsby"
+import { isBrowser } from "../../utils/helper-functions"
 import { useFirebaseContext } from "../../utils/auth"
 import { useShoppingCart } from "../cart/context/cartContext"
 import { ShoppingCartSimple, User, X } from "@phosphor-icons/react"
 
 import { Container } from "react-grid-system"
-import Banner from "../ui/Banner"
 import Logo from "../misc/Logo"
 import Tag from "../ui/Tag"
 import Icon from "../ui/Icon"
@@ -39,9 +39,6 @@ const CartBadge = styled(Tag)`
   height: ${props => props.height};
   line-height: ${props => props.height};
   width: ${props => props.width};
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    transform: translate(50%, 0%) scale(0.75);
-  }
 `
 
 const NavButton = styled(Button)`
@@ -110,10 +107,14 @@ const NavMenuButton = styled.button`
   display: none;
   position: relative;
   background-color: transparent;
+  border-radius: 4px;
   border: none;
   padding: 16px;
+  margin: 0 0 0 8px;
+  transition: background-color 0.2s;
   &:hover {
     cursor: pointer;
+    background-color: ${colors.gray.twoHundred};
   }
   @media (max-width: ${breakpoints.xs}) {
     display: block;
@@ -126,7 +127,7 @@ const NavMenuIcon = styled.span`
   width: ${props => props.showMenu ? "0" : "16px"};
   background-color: ${props => props.showMenu ? "transparent" : colors.gray.nineHundred};
   top: 16px;
-  left: 4px;
+  left: 6px;
   transition: width 0.2s, background-color 0.2s;
   pointer-events: none;
   &::before {
@@ -263,7 +264,9 @@ const Nav = ({
   setShowGrayArea,
   hideNavbar,
   setHideScroll,
+  location,
 }) => {
+
   const [showMenu, setShowMenu] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const navMenuRef = useRef(null)
@@ -274,6 +277,17 @@ const Nav = ({
   const handleSignOut = () => {
     clearCart()
     signOut()
+  }
+
+  const handleCartButton = () => {
+    if (isBrowser() && location && location.pathname === "/checkout/") {
+      navigate("/cart")
+    }
+    else {
+      setShowGrayArea(true)
+      setHideScroll(true)
+      handleCartClick()
+    }
   }
 
   useEffect(() => {
@@ -455,11 +469,7 @@ const Nav = ({
                 <NavGroup>
                   <NavButton
                     aria-label="Open cart"
-                    onClick={() => {
-                      setShowGrayArea(true)
-                      setHideScroll(true)
-                      handleCartClick()
-                    }}
+                    onClick={() => handleCartButton()}
                   >
                     <Icon>
                       <ShoppingCartSimple size={20} weight="bold" />
@@ -468,7 +478,7 @@ const Nav = ({
                       <CartBadge
                         borderradius="50%"
                         top={cartCount > 9 ? "-2px" : "0px"}
-                        right={cartCount > 9 ? "-2px" : "0px"}
+                        right={cartCount > 9 ? "2px" : "3px"}
                         width={cartCount > 9 ? "18px" : "16px"}
                         height={cartCount > 9 ? "18px" : "16px"}
                       >

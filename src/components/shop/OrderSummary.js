@@ -187,16 +187,16 @@ function OrderSummary({
         </Box>
       </Box>
       <Box
-        padding="0 16px"
+        padding="16px"
       >
         <Flexbox
-          padding="16px 0"
+          margin="0 0 16px"
           flex="flex"
           justify="space-between"
         >
           <p>Subtotal</p>
           <p>
-            {coupon.applied ? (
+            {coupon && coupon.applied ? (
               <span>
                 <StrikeText
                   color={colors.gray.sixHundred}
@@ -251,7 +251,6 @@ function OrderSummary({
           flex="flex"
           justify="space-between"
           align="center"
-          margin="8px 0"
         >
           <p>Total</p>
           <Content
