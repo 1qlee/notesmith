@@ -82,7 +82,7 @@ const Footer = () => {
                   </Link>
                 </Box>
                 <Box>
-                  <Link to="/return-policy">
+                  <Link to="/privacy">
                     Privacy Policy
                   </Link>
                 </Box>
