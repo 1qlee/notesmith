@@ -10,6 +10,7 @@ import RegisterForm from "../form/RegisterForm"
 import Content from "../ui/Content"
 import Logo from "../misc/Logo"
 import Box from "./Box"
+import Consent from "./Consent"
 
 function getDate() {
   const d = new Date()
@@ -22,6 +23,7 @@ const Footer = () => {
 
   return (
     <Section backgroundcolor={colors.gray.nineHundred}>
+      <Consent />
       <SectionContent padding={`${spacing.large} 0`}>
         <Container xs sm md lg xl>
           <Row>
@@ -77,6 +79,11 @@ const Footer = () => {
                 <Box>
                   <Link to="/return-policy">
                     Return Policy
+                  </Link>
+                </Box>
+                <Box>
+                  <Link to="/return-policy">
+                    Privacy Policy
                   </Link>
                 </Box>
               </Content>

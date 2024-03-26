@@ -1,6 +1,7 @@
 import React from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
+import { Flexbox } from "../layout/Flexbox"
 
 const slideInDown = keyframes`
   from {
@@ -35,18 +36,13 @@ const loading = keyframes`
   }
 `
 
-const StyledNotification = styled.div`
-  align-items: ${props => props.align || "flex-start"};
+const StyledNotification = styled(Flexbox)`
   animation: ${slideInDown} 0.2s ease-out;
   background-color: ${props => props.backgroundcolor || colors.white};
   border: ${props => props.border};
   border-radius: ${props => props.borderradius || "0"};
   box-shadow: ${props => props.boxshadow || "0 0 0 0"};
   color: ${props => props.color};
-  display: ${props => props.display || "flex"};
-  justify-content: ${props => props.justify || "space-between"};
-  margin: ${props => props.margin || "1rem 0"};
-  padding: ${props => props.padding || "16px"};
   transition: background-color 0.2s, color 0.2s;
   max-width: ${props => props.maxwidth};
   text-align: ${props => props.textalign || "left"};
@@ -61,15 +57,6 @@ const StyledNotification = styled.div`
   }
   &.is-pulsating {
     animation: ${props => pulsate(props.backgroundcolor)} 2s linear infinite;
-  }
-  p {
-    color: ${props => props.color};
-    font-size: ${props => props.fontsize || "1rem"};
-    margin-bottom: 0;
-    line-height: 1.5;
-    &:not(:last-child) {
-      margin-bottom: 16px;
-    }
   }
 `
 
