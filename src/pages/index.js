@@ -24,6 +24,7 @@ import { Flexbox } from "../components/layout/Flexbox"
 import { SectionMain, SectionHero, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { Tabs } from "../components/ui/Tabs"
 import Box from "../components/ui/Box"
+import Divider from "../components/ui/Divider"
 
 const IndexPage = ({ data }) => {
   const { tabImages } = data
@@ -252,7 +253,9 @@ const IndexPage = ({ data }) => {
                     </Button> */}
                     </Flexbox>
                   )}
-                  <hr />
+                  <Divider 
+                    margin="0 0 16px"
+                  />
                   <Notification
                     backgroundcolor={colors.gray.oneHundred}
                     borderradius="16px"
