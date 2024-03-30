@@ -144,14 +144,14 @@ const AdminDashboard = () => {
 
           try {
             let fileName = `${orderId} - (${quantity})`
-            let fileNameString = `-${dimension.bookWidthInch}x${dimension.bookHeightInch}-(${quantity})`
+            let fileNameString = ` ${dimension.bookWidthInch}x${dimension.bookHeightInch} (${quantity})`
 
             if (prevOrderItem.id === orderId) {
               prevOrderItem.number++
-              fileName = `${orderId}[${prevOrderItem.number}]${fileNameString})`
+              fileName = `${orderId}-${prevOrderItem.number}${fileNameString}`
             }
             else {
-              fileName = `${orderId}[1]${fileNameString})`
+              fileName = `${orderId}-1${fileNameString}`
               prevOrderItem.id = orderId
               prevOrderItem.number = 1
             }

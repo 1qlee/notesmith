@@ -20,6 +20,7 @@ export const initialState = {
   totalPrice: 0,
   formattedTotalPrice: '',
   cartDetails: {},
+  cartQuantities: {},
   shouldPersist: true
 }
 

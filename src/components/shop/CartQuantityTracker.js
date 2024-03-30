@@ -44,6 +44,23 @@ function CartQuantityTracker(props) {
     }
   }
 
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      const intQuantity = parseInt(e.target.value)
+  
+      if (!intQuantity) {
+        setItemQuantity(props.product.id, 1)
+        setTrackQuantity(1)
+      }
+      else {
+        setItemQuantity(props.product.id, intQuantity)
+        setTrackQuantity(intQuantity)
+      }
+
+      e.target.blur()
+    }
+  }
+
   function handleButtonChange(up) {
     if (up) {
       setTrackQuantity(trackQuantity + 1)
@@ -86,6 +103,7 @@ function CartQuantityTracker(props) {
         min="1"
         onBlur={e => handleBlur(parseInt(e.target.value))}
         onChange={e => handleQuantityChange(parseInt(e.target.value))}
+        onKeyDown={e => handleKeyDown(e)}
         type="number"
         value={trackQuantity}
         width={props.counterwidth}

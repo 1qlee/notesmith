@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "gatsby"
 import styled from "styled-components"
 import { colors } from "../../styles/variables"
 import { convertToDecimal, capitalizeString } from "../../utils/helper-functions"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { CircleNotch } from "@phosphor-icons/react"
+import { useShoppingCart } from "../cart/context/cartContext"
 
 import { Flexbox } from "../layout/Flexbox"
 import Content from "../ui/Content"
@@ -19,25 +20,26 @@ const CapitalizedWord = styled.span`
 `
 
 function OrderSummary({ 
+  coupon,
+  formattedTotalPrice,
   items,
   selectedRate,
   subtotal,
   tax,
-  coupon,
   totalAmount,
 }) {
   // calculate the total price of the user's cart incl shipping
   function calculateTotalPrice() {
-    let calculatedPrice = subtotal
+    let newTotalPrice = subtotal
 
     if (selectedRate) {
-      calculatedPrice += parseFloat(selectedRate.rate)
+      newTotalPrice += parseFloat(selectedRate.rate)
     }
     if (tax.amount) {
-      calculatedPrice += parseFloat(tax.amount)
+      newTotalPrice += parseFloat(tax.amount)
     }
 
-    return convertToDecimal(calculatedPrice, 2) // converts to a float value
+    return convertToDecimal(newTotalPrice, 2) // converts to a float value
   }
 
   function handleSpacingView(data) {
@@ -166,7 +168,7 @@ function OrderSummary({
                   <Content
                     paragraphtextalign="right"
                   >
-                    {item.quantity >= item.discounts.minQuantity ? (
+                    {item.discounts?.price ? (
                       <p>
                         <StrikeText
                           color={colors.gray.sixHundred}
@@ -202,12 +204,12 @@ function OrderSummary({
                   color={colors.gray.sixHundred}
                   margin="0 4px 0 0"
                 >
-                  ${convertToDecimal(coupon.originalSubtotal, 2)}
+                  {formattedTotalPrice}
                 </StrikeText>
                 ${convertToDecimal(subtotal, 2)}
               </span>
             ) : (
-              <span>${convertToDecimal(subtotal, 2)}</span>
+              <span>{formattedTotalPrice}</span>
             )}
           </p>
         </Flexbox>
@@ -280,11 +282,12 @@ function OrderBox({
   pid,
   selectedRate, 
   setCoupon,
-  setSubtotal,
   setTax,
-  subtotal,
   tax,
 }) {
+  const { totalPrice, formattedTotalPrice } = useShoppingCart()
+  const [subtotal, setSubtotal] = useState(totalPrice)
+
   const handleChangeCoupon = (value) => {
     setCoupon({
       ...coupon,
@@ -305,7 +308,6 @@ function OrderBox({
       })
     }
     else {
-      const originalSubtotal = subtotal
       setCoupon({
         ...coupon,
         loading: true,
@@ -339,7 +341,7 @@ function OrderBox({
             code: "",
             loading: false,
             name: couponData.code,
-            originalSubtotal: originalSubtotal,
+            originalSubtotal: subtotal,
             text: couponData.text,
           })
 
@@ -398,6 +400,8 @@ function OrderBox({
         <OrderSummary 
           items={cartItems}
           selectedRate={selectedRate}
+          totalPrice={totalPrice}
+          formattedTotalPrice={formattedTotalPrice}
           subtotal={subtotal}
           tax={tax}
           coupon={coupon}

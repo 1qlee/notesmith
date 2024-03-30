@@ -123,9 +123,7 @@ const ProductInfo = ({
         coverColor: bookData.coverColor,
         currency: "USD",
         custom: bookData.custom,
-        discounts: {
-          type: bookData.discount,
-        },
+        discountType: bookData.discount,
         height: bookData.heightPixel,
         id: uuidv4(), // unique cart item id
         image: cartThumbnail,
@@ -207,12 +205,10 @@ const ProductInfo = ({
           align="center"
           margin="0 0 16px"
         >
-          {pageData.template !== "blank" && (
-            <ProductInfoLabel
-              label="Adjust template"
-              number="3"
-            />
-          )}
+          <ProductInfoLabel
+            label="Adjust template"
+            number="3"
+          />
           {pageData.show && (
             <Button
               backgroundcolor={colors.white}

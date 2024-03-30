@@ -26,39 +26,23 @@ function ShoppingCart({
     setItemQuantity,
     removeItem,
     handleCloseCart,
+    formattedTotalPrice,
   } = useShoppingCart()
   const [loading, setLoading] = useState(true)
   const [activeItemIds, setActiveItemIds] = useState({})
   const [cartItems, setCartItems] = useState([])
-  const [subtotal, setSubtotal] = useState(0)
 
   useEffect(() => {
     if (cartDetails) {
-      let newSubtotal = 0
       // array to store cartItems
       const cartItemsArray = []
       // push all product objects in cartDetails to an array
       for (const cartItem in cartDetails) {
-        const item = {...cartDetails[cartItem]}
-        const discounts = calculateDiscounts({
-          quantity: item.quantity,
-          price: item.price,
-          rate: item.discounts.type,
-        })
-        newSubtotal += discounts.subtotal
-
-        item.discounts = {
-          ...item.discounts,
-          ...discounts,
-        }
-
-        cartItemsArray.push(item)
+        cartItemsArray.push(cartDetails[cartItem])
       }
 
       setCartItems(cartItemsArray)
       setLoading(false)
-
-      setSubtotal(newSubtotal)
     }
     else {
       setLoading(false)
@@ -255,7 +239,7 @@ function ShoppingCart({
                       <Content
                         paragraphmargin="0"
                       >
-                        {item.quantity >= item.discounts.minQuantity ? (
+                        {item.discounts?.price ? (
                           <p>
                             <StrikeText
                               color={colors.gray.sixHundred}
@@ -272,7 +256,7 @@ function ShoppingCart({
                         paragraphmargin="0"
                         margin="0 0 0 8px"
                       >
-                        <p>{item.discounts.formattedSubtotal}</p>
+                        <p>{item.discounts?.formattedValue || item.formattedValue}</p>
                       </Content>
                     </Flexbox>
                   </Box>
@@ -301,7 +285,7 @@ function ShoppingCart({
                   paragraphfontsize="1.25rem"
                   paragraphlineheight="1"
                 >
-                  <p>{formatDollars(subtotal / 100)}</p>
+                  <p>{formattedTotalPrice}</p>
                 </Content>
               </Flexbox>
               <Flexbox
@@ -332,7 +316,7 @@ function ShoppingCart({
               h1fontsize="2rem"
             >
               <h1>Your cart is empty</h1>
-              <p>Oh no, it looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
+              <p>It looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
             </Content>
             <Button
               backgroundcolor={colors.gray.nineHundred}
@@ -409,12 +393,10 @@ function ShoppingCart({
                           {item.category === "notebooks" && (
                             <Button
                               fontsize="0.75rem"
-                              margin="0 8px 0 0"
-                              padding="3px 6px"
-                              onClick={() => handleViewDetails(item.id)}
-                              border={colors.borders.black}
-                              backgroundcolor={colors.white}
+                              padding="4px 6px"
+                              backgroundcolor={colors.gray.oneHundred}
                               color={colors.gray.nineHundred}
+                              onClick={() => handleViewDetails(item.id)}
                             >
                               <span>Details</span>
                               <Icon margin="0 0 0 2px">
@@ -428,10 +410,9 @@ function ShoppingCart({
                           )}
                           <Button
                             fontsize="0.75rem"
-                            padding="3px 6px"
+                            padding="4px 6px"
                             onClick={() => removeItem(item.id)}
-                            border={colors.borders.black}
-                            backgroundcolor={colors.white}
+                            backgroundcolor={colors.gray.oneHundred}
                             color={colors.gray.nineHundred}
                           >
                             <span>Remove</span>
@@ -468,11 +449,10 @@ function ShoppingCart({
                                     >
                                       <Button
                                         fontsize="0.75rem"
-                                        padding="2px 4px"
-                                        onClick={() => handleViewDetails(item.id)}
-                                        border={colors.borders.black}
-                                        backgroundcolor={colors.white}
+                                        padding="4px 6px"
+                                        backgroundcolor={colors.gray.oneHundred}
                                         color={colors.gray.nineHundred}
+                                        onClick={() => handleViewDetails(item.id)}
                                         as={Link}
                                         to={`/customize/${item.slug}/${item.bookId}`}
                                       >
@@ -530,17 +510,17 @@ function ShoppingCart({
                       <Content
                         paragraphmargin="0"
                       >
-                        {item.quantity >= item.discounts.minQuantity ? (
+                        {item.discounts?.price ? (
                           <p>
                             <StrikeText
                               color={colors.gray.sixHundred}
                             >
-                              ${convertToDecimal(item.price, 2)}
+                              {item.formattedPrice}
                             </StrikeText>
                             <span>{item.discounts.formattedPrice}</span>
                           </p>
                         ) : (
-                          <p>${convertToDecimal(item.price, 2)}</p>
+                          <p>{item.formattedPrice}</p>
                         )}
                       </Content>
                     </Flexbox>
@@ -552,7 +532,7 @@ function ShoppingCart({
                       buttonleft="12px"
                       buttonright="12px"
                       counterwidth="6rem"
-                      counterfontsize="0.825rem"
+                      counterfontsize="0.875rem"
                       wrapperwidth="6rem"
                       iconsize="0.625rem"
                       setItemQuantity={setItemQuantity}
@@ -570,7 +550,11 @@ function ShoppingCart({
                       <Content
                         paragraphmargin="0"
                       >
-                        <p>{item.discounts.formattedSubtotal}</p>
+                        {item.discounts?.formattedValue ? (
+                          <p>{item.discounts.formattedValue}</p>
+                        ) : (
+                          <p>{item.formattedValue}</p>
+                        )}
                       </Content>
                     </Flexbox>
                   </td>
@@ -601,7 +585,7 @@ function ShoppingCart({
                 paragraphfontsize="1.25rem"
                 paragraphlineheight="1"
               >
-                <p>{formatDollars(subtotal / 100)}</p>
+                <p>{formattedTotalPrice}</p>
               </Content>
             </Flexbox>
           </Flexbox>
@@ -632,7 +616,7 @@ function ShoppingCart({
             maxwidth={widths.content.normal}
           >
             <h1>Your cart is empty</h1>
-            <p>Oh no, it looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
+            <p>It looks like you haven't added any items to your cart, yet. You can change that by pressing the button below!</p>
           </Content>
           <Button
             backgroundcolor={colors.gray.nineHundred}

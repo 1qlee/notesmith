@@ -23,7 +23,7 @@ import ValidateAddressModal from "../components/checkout/modals/ValidateAddressM
 
 const Checkout = ({ location }) => {
   const [stripe, setStripe] = useState(null)
-  const { cartDetails, totalPrice, handleCloseCart } = useShoppingCart()
+  const { cartDetails, handleCloseCart } = useShoppingCart()
   const [cartItems, setCartItems] = useState([])
   const breadcrumbItems = [
     {
@@ -46,7 +46,6 @@ const Checkout = ({ location }) => {
     msg: "Required",
     color: colors.red.sixHundred,
   })
-  const [subtotal, setSubtotal] = useState(totalPrice)
   const [shippingValidated, setShippingValidated] = useState(false)
   const [methodValidated, setMethodValidated] = useState(false)
   const [processing, setProcessing] = useState(false)
@@ -223,38 +222,20 @@ const Checkout = ({ location }) => {
       })
     }
 
-    if (isBrowser()) {
-      // push all product objects in cartDetails to an array
-      let newSubtotal = 0
-      // array to store cartItems
-      const cartItemsArray = []
-      // push all product objects in cartDetails to an array
-      for (const cartItem in cartDetails) {
-        const item = { ...cartDetails[cartItem] }
-        const discounts = calculateDiscounts({
-          quantity: item.quantity,
-          price: item.price,
-          rate: item.discounts.type,
-        })
-        newSubtotal += discounts.subtotal
-
-        item.discounts = {
-          ...item.discounts,
-          ...discounts,
-        }
-
-        cartItemsArray.push(item)
-      }
-
-      setCartItems(cartItemsArray)
-      setSubtotal(newSubtotal)
-    }
-
     // if pid exists in localStorage, retrieve it from Stripe
     if (isCartEmpty) {
       navigate("/cart", { replace: true })
     }
     else {
+      // array to store cartItems
+      const cartItemsArray = []
+      // push all product objects in cartDetails to an array
+      for (const cartItem in cartDetails) {
+        cartItemsArray.push(cartDetails[cartItem])
+      }
+
+      setCartItems(cartItemsArray)
+
       if (pid && pid !== "undefined") {
         retrievePaymentIntent()
       }
@@ -419,7 +400,6 @@ const Checkout = ({ location }) => {
                               pid={pid}
                               selectedRate={selectedRate}
                               setPaymentProcessing={setPaymentProcessing}
-                              subtotal={subtotal}
                               tax={tax}
                               toast={toast}
                             />
@@ -433,12 +413,10 @@ const Checkout = ({ location }) => {
                           coupon={coupon}
                           hideButton={true}
                           selectedRate={selectedRate}
-                          subtotal={subtotal}
                           tax={tax}
                           pid={pid}
                           setCoupon={setCoupon}
                           setSelectedRate={setSelectedRate}
-                          setSubtotal={setSubtotal}
                           setTax={setTax}
                         />
                       </Col>

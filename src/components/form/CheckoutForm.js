@@ -5,6 +5,7 @@ import { colors } from "../../styles/variables"
 import { CircleNotch } from "@phosphor-icons/react"
 import { useFirebaseContext } from "../../utils/auth"
 import { ref, set, push } from "firebase/database"
+import { useShoppingCart } from "../cart/context/cartContext"
 import updatePaymentIntent from "../../functions/updatePaymentIntent"
 import sendEmailTemplate from "../../functions/sendEmailTemplate"
 
@@ -21,7 +22,6 @@ function CheckoutForm({
   pid,
   selectedRate,
   setPaymentProcessing,
-  subtotal,
   tax,
   toast,
 }) {
@@ -30,6 +30,7 @@ function CheckoutForm({
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
   const { firebaseDb } = useFirebaseContext()
+  const { totalPrice } = useShoppingCart()
   const paymentOptions = {
     defaultValues: {
       billingDetails: {
@@ -234,7 +235,7 @@ function CheckoutForm({
         ...orderData,
         orderItems: orderItems,
         pid: pid,
-        subtotal: subtotal,
+        subtotal: totalPrice,
       }).then(async () => {
         const updatePayment = await updatePaymentIntent(pid, { orderKey: newOrderKey })
 

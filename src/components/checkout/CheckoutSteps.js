@@ -78,10 +78,10 @@ const CheckoutSteps = ({
               margin="0 8px"
             >
               {status.msg === "Done" && (
-                <Check size={16} weight="bold" />
+                <Check size={12} weight="bold" />
               )}
               {(status.msg === "Required" || status.msg === "Incomplete") && (
-                <WarningCircle size={16} weight="bold" />
+                <WarningCircle size={12} weight="bold" />
               )}
             </Tag>
           )}

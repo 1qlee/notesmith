@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { colors, fonts, spacing } from "../../styles/variables"
+import { formatDollars } from "../../utils/helper-functions"
 import { useFirebaseContext } from "../../utils/auth"
 import { ArrowSquareOut, CircleNotch } from "@phosphor-icons/react"
 import { get, ref } from "firebase/database"
@@ -323,6 +324,7 @@ const Order = ({ location, orderId }) => {
                               totalAmount={orderInfo.amount / 100}
                               subtotal={orderInfo.subtotal}
                               selectedRate={{ rate: orderInfo.shipping }}
+                              formattedTotalPrice={`${formatDollars(orderInfo.subtotal / 100)}`}
                               tax={{ amount: orderInfo.tax }}
                               coupon={orderInfo.coupon}
                             />
