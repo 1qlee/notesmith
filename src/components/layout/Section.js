@@ -58,6 +58,7 @@ const SectionHero = styled.div`
   background-color: ${props => props.backgroundcolor};
   background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
   background-size: ${props => props.backgroundsize || "cover"};
+  background-repeat: no-repeat;
   background-position: ${props => props.backgroundposition || "center center"};
   position: relative;
   display: flex;
@@ -67,7 +68,8 @@ const SectionHero = styled.div`
   width: 100%;
   @media only screen and (max-width: ${breakpoints.xs}) {
     background-size: inherit;
-    background-position: 900px 530px;
+    background-position: 65% -200%;
+    background-color: #f3f3f3;
   }
 `
 

@@ -7,7 +7,6 @@ import { Link } from "gatsby"
 import Content from "../ui/Content"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import RandomLine from "../misc/Lines"
 
 const StyledContent = styled(Content)`
   @media only screen and (max-width: 962px) {
