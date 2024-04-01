@@ -16,7 +16,7 @@ export default ({ element }) => {
         {element}
         <Script
           src="https://js.stripe.com/v3"
-          strategy="off-main-thread"
+          strategy="idle"
         />
       </FirebaseProvider>
     </CartProvider>
