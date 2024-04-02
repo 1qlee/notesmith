@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { breakpoints, colors, fonts, spacing } from "../../styles/variables"
+import { colors, fonts, spacing } from "../../styles/variables"
 
 const SectionMain = styled.main`
   background-color: ${colors.white};
@@ -26,6 +26,7 @@ const Section = styled.section`
   justify-content: ${props => props.flex && "center"};
   height: ${props => props.height};
   min-height: ${props => props.minheight};
+  overflow: hidden;
   width: 100%;
 `
 
@@ -54,25 +55,6 @@ const StyledSectionHeading = styled.div`
   }
 `
 
-const SectionHero = styled.div`
-  background-color: ${props => props.backgroundcolor};
-  background-image: ${props => props.backgroundimage && `url(${props.backgroundimage})`};
-  background-size: ${props => props.backgroundsize || "cover"};
-  background-repeat: no-repeat;
-  background-position: ${props => props.backgroundposition || "center center"};
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: ${props => props.height};
-  min-height: ${props => props.minheight};
-  width: 100%;
-  @media only screen and (max-width: ${breakpoints.xs}) {
-    background-size: inherit;
-    background-position: 65% -200%;
-    background-color: #f3f3f3;
-  }
-`
-
 function SectionHeading({
   children,
   margin,
@@ -93,5 +75,4 @@ export {
   Section,
   SectionContent,
   SectionHeading,
-  SectionHero,
 }

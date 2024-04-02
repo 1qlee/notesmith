@@ -4,7 +4,6 @@ import { Star, ArrowRight, ArrowBendRightDown, Note } from "@phosphor-icons/reac
 import { colors, fonts, spacing, widths } from "../styles/variables"
 import { StaticImage } from "gatsby-plugin-image"
 import { Container, Row, Col } from 'react-grid-system'
-import heroImage from "../images/index/hero-4.jpg"
 
 import Book3d from "../components/index/Book3d"
 import Button from "../components/ui/Button"
@@ -21,7 +20,7 @@ import Reviews from "../components/index/Reviews"
 import TabContent from "../components/index/TabContent"
 import Tag from "../components/ui/Tag"
 import { Flexbox } from "../components/layout/Flexbox"
-import { SectionMain, SectionHero, Section, SectionContent, SectionHeading } from "../components/layout/Section"
+import { SectionMain, Section, SectionContent, SectionHeading } from "../components/layout/Section"
 import { Tabs } from "../components/ui/Tabs"
 import Box from "../components/ui/Box"
 import Divider from "../components/ui/Divider"
@@ -90,17 +89,28 @@ const IndexPage = ({ data }) => {
       }}
     >
       <SectionMain>
-        <SectionHero
-          backgroundimage={heroImage}
-          minheight="calc(100vh - 60px)"
-          backgroundposition="center center"
-          backgroundsize="cover"
-          flex
+        <Section
+          backgroundcolor="#f3f3f3"
         >
-          <Container style={{flexGrow: "1"}} xl lg md sm xs>
-            <HeroContent />
-          </Container>
-        </SectionHero>
+          <SectionContent>
+            <StaticImage
+              src="../images/index/hero.jpg"
+              alt="A custom notebook"
+              placeholder="blurred"
+              loading="eager"
+              quality={80}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                height: "100%",
+              }}
+            />
+            <Container xl lg md sm xs>
+              <HeroContent />
+            </Container>
+          </SectionContent>
+        </Section>
         <Section>
           <SectionContent
             padding={`${spacing.section} 0 0`}
@@ -238,19 +248,6 @@ const IndexPage = ({ data }) => {
                       >
                         Hide layout
                       </Button>
-                      {/* <Button
-                      backgroundcolor={colors.gray.nineHundred}
-                      color={colors.gray.oneHundred}
-                      border={`1px solid ${colors.gray.nineHundred}`}
-                      padding="1rem"
-                      width="50%"
-                      onClick={() => setPageData({
-                        ...config,
-                        template: pageData.template,
-                      })}
-                    >
-                      Reset layout
-                    </Button> */}
                     </Flexbox>
                   )}
                   <Divider 
@@ -420,8 +417,9 @@ const IndexPage = ({ data }) => {
                     <StaticImage
                       src="../images/index/writing-closeup.jpg"
                       alt="Close up of writing done with black ink on our paper"
-                      loading="eager"
-                      quality={50}
+                      loading="lazy"
+                      width={996}
+                      quality={80}
                     />
                   </Flexbox>
                 </Col>
@@ -498,51 +496,6 @@ const IndexPage = ({ data }) => {
             </Container>
           </SectionContent>
         </Section>
-        {/* <Section
-          backgroundcolor={colors.gray.nineHundred}
-        >
-          <SectionContent
-            padding={`${spacing.xlarge} 0`}
-          >
-            <Container xl lg md sm xs>
-              <Row justify="center">
-                <Col xl={5} lg={5} offset={{ sm: 2, lg: 0 }} sm={8}>
-                  <Content
-                    h3fontsize="2rem"
-                    h3color={colors.gray.oneHundred}
-                    h3margin="0 0 16px"
-                    paragraphcolor={colors.gray.fourHundred}
-                    paragraphfontsize="1.25rem"
-                    textalign="center"
-                  >
-                    <h3>Early Access Sale is now live!</h3>
-                    <p>
-                      During the Early Access Sale, all notebooks are 25% off! You can create your custom notebook by going to the link below.
-                    </p>
-                    <Button
-                      as={Link}
-                      to="/products/notebooks/pro-wired-notebook-a5-custom/white/"
-                      padding="16px 32px"
-                      margin="16px 0"
-                      fontsize="1.25rem"
-                      border={`1px solid ${colors.gray.oneHundred}`}
-                    >
-                      <span>Shop notebooks</span>
-                      <Icon
-                        margin="0 0 0 4px"
-                      >
-                        <ArrowRight
-                          color={colors.gray.oneHundred}
-                          weight="bold"
-                        />
-                      </Icon>
-                    </Button>
-                  </Content>
-                </Col>
-              </Row>
-            </Container>
-          </SectionContent>
-        </Section> */}
       </SectionMain>
     </Layout>
   )
@@ -559,7 +512,8 @@ export const pageQuery = graphql`
           }
           gatsbyImageData(
             placeholder: BLURRED
-            quality: 90
+            quality: 100
+            width: 996
           )
         }
       }

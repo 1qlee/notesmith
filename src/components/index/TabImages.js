@@ -1,33 +1,41 @@
 import React, { useState, useEffect } from "react"
-import styled from "styled-components"
 
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
-
-const StyledTabImages = styled.div`
-  padding-bottom: 16px;
-`
+import Box from "../ui/Box"
 
 function TabImages({
   activeTab,
   tabImages,
 }) {
   const [currentImage, setCurrentImage] = useState({})
+  const imageAlts = [
+    "Pages of a notebook",
+    "Close-up of the notebooks' thick cover stock",
+    "Water droplets resting on a notebook's laminated cover",
+    "A notebook's gold colored spiral binding",
+  ]
 
   useEffect(() => {
     if (tabImages) {
       tabImages.sort((a, b) => parseInt(a.childImageSharp.fluid.originalName.slice(4)) - parseInt(b.childImageSharp.fluid.originalName.slice(4)))
-      setCurrentImage(tabImages[activeTab])
+      setCurrentImage({
+        image: tabImages[activeTab],
+        alt: imageAlts[activeTab],
+      })
     }
   }, [activeTab, tabImages])
 
   return (
-    <StyledTabImages>
+    <Box
+      padding="0 0 16px"
+    >
       <GatsbyImage
-        image={getImage(currentImage)}
-        alt="default"
-        quality={100}
+        image={getImage(currentImage.image)}
+        placeholder="blurred"
+        alt={currentImage.alt}
+        loading="lazy"
       />
-    </StyledTabImages>
+    </Box>
   )
 }
 

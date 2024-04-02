@@ -376,7 +376,7 @@ const Nav = ({
                 </NavLink>
               </NavItem>
             </NavSection>
-            {!loading && (
+            {!loading ? (
               <NavSection
                 justify="flex-end"
               >
@@ -573,6 +573,10 @@ const Nav = ({
                     </>
                   )}
                 </NavMenu>
+              </NavSection>
+            ) : (
+              <NavSection>
+                <div></div>
               </NavSection>
             )}
           </Navbar>

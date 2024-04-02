@@ -1,8 +1,9 @@
 import React from "react"
 import styled from "styled-components"
-import { colors, widths } from "../../styles/variables"
+import { colors, widths, breakpoints } from "../../styles/variables"
 import { ArrowRight } from "@phosphor-icons/react"
 import { Link } from "gatsby"
+import { StaticImage } from "gatsby-plugin-image"
 
 import Content from "../ui/Content"
 import Button from "../ui/Button"

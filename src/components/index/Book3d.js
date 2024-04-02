@@ -239,6 +239,7 @@ function Book3d({
                   src="../../images/index/blank-page.jpg"
                   alt="Notebook opened to blank page"
                   quality={80}
+                  loading="lazy"
                 />
               </>
             ) : (
@@ -249,6 +250,7 @@ function Book3d({
                     src="../../images/index/front-cover-white.jpg"
                     alt="White colored cover custom wired notebook, front"
                     quality={80}
+                    loading="lazy"
                   />
                 )}
                 {coverColor === "black" && (
@@ -257,6 +259,7 @@ function Book3d({
                     src="../../images/index/front-cover-black.jpg"
                     alt="Black colored cover custom wired notebook, front"
                     quality={80}
+                    loading="lazy"
                   />
                 )}
               </>
@@ -273,6 +276,7 @@ function Book3d({
                 src="../../images/index/back-cover-white.jpg"
                 alt="White colored cover custom wired notebook, back"
                 quality={80}
+                loading="lazy"
               />
             )}
             {coverColor === "black" && (
@@ -281,6 +285,7 @@ function Book3d({
                 src="../../images/index/back-cover-black.jpg"
                 alt="Black colored cover custom wired notebook, back"
                 quality={80}
+                loading="lazy"
               />
             )}
           </BackCover>
