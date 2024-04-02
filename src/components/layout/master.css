@@ -6,13 +6,6 @@ html {
   height: 100%;
   width: 100%;
 }
-/* Media query for smaller screens */
-@media only screen and (max-width: 768px) {
-  html {
-    font-size: 16px;
-    /* Adjust font size for smaller screens */
-  }
-}
 #gatsby-focus-wrapper,
 #___gatsby {
   width: 100%;
@@ -512,7 +505,7 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #FEF3C7 inset;
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 5000s;
 }
 #product-controls {

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled, { keyframes } from "styled-components"
 import { colors } from "../../styles/variables"
 import { useShoppingCart } from '../cart/context/cartContext'
-import "./master.css"
+import "./master.min.css"
 
 import Nav from "./Nav"
 import Loader from "../misc/Loader"

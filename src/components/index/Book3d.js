@@ -9,26 +9,11 @@ import DemoTemplate from "./DemoTemplate"
 
 const gradient = `linear-gradient(90deg,
   ${colors.gray.oneHundred} 0%,
-  ${colors.gray.threeHundred} 5%,
-  ${colors.gray.oneHundred} 10%,
-  ${colors.gray.threeHundred} 15%,
-  ${colors.gray.oneHundred} 20%,
-  ${colors.gray.threeHundred} 25%,
-  ${colors.gray.oneHundred} 30%,
-  ${colors.gray.threeHundred} 35%,
+  ${colors.gray.threeHundred} 20%,
   ${colors.gray.oneHundred} 40%,
-  ${colors.gray.threeHundred} 45%,
-  ${colors.gray.threeHundred} 50%,
-  ${colors.gray.oneHundred} 55%,
   ${colors.gray.threeHundred} 60%,
-  ${colors.gray.threeHundred} 65%,
-  ${colors.gray.oneHundred} 70%,
-  ${colors.gray.threeHundred} 75%,
   ${colors.gray.oneHundred} 80%,
-  ${colors.gray.threeHundred} 85%,
-  ${colors.gray.oneHundred} 90%,
-  ${colors.gray.threeHundred} 95%,
-  ${colors.gray.oneHundred} 100%
+  ${colors.gray.threeHundred} 100%
 )`
 
 const StyledDemoTemplate = styled.div`
@@ -50,80 +35,43 @@ const initAnimation = keyframes`
   }
 `
 
-const LeftSpinePages = styled.div`
+const SpinePages = styled.div`
   content: '';
   height: 100%;
-  left: 12px;
-  position: absolute;
+  left: ${props => props.left};
   top: 0;
-  transform: rotate3d(0,1,0,90deg);
+  position: absolute;
+  transform: ${props => props.transform};
   width: 36px;
-  z-index: 1;
+  z-index: ${props => props.zIndex};
   background: ${gradient};
   @media only screen and (max-width: 1548px) {
-    left: 0;
+    left: ${props => props.leftMobile};
+    transform: ${props => props.transformMobile};
   }
 `
 
-const RightSpinePages = styled.div`
-  content: '';
-  height: 100%;
-  left: 31px;
-  position: absolute;
-  top: 0;
-  transform: translateX(377px) rotate3d(0,1,0,90deg);
-  width: 36px;
-  background: ${gradient};
-  @media only screen and (max-width: 1548px) {
-    transform: translateX(276px) rotate3d(0,1,0,90deg);
-  }
-`
-
-const FrontFakeCover = styled.div`
-  background-color: #e8eaee;
+const FakeCover = styled.div`
+  background-color: ${colors.gray.oneHundred};
+  box-shadow: ${props => props.boxshadow};
   content: "";
   height: 100%;
-  left: 30px;
+  left: ${props => props.left};
   position: absolute;
   top: 0;
-  transform: translateZ(19px);
+  transform: translateZ(${props => props.transform});
   transition: box-shadow 0.4s;
-  width: calc(100% - 30px);
+  width: calc(100% - ${props => props.width});
   z-index: 1;
 `
 
-const BackFakeCover = styled.div`
-  background-color: #e8eaee;
-  box-shadow: 2px 4px 16px ${colors.shadow.float}, 2px 8px 24px ${colors.shadow.float};
-  content: "";
-  height: 100%;
-  left: 32px;
-  position: absolute;
-  top: 0;
-  transform: translateZ(-24px);
-  transition: box-shadow 0.4s;
-  width: calc(100% - 32px);
-  z-index: 1;
-`
-
-const FrontCover = styled.div`
+const Cover = styled.div`
   position: absolute;
   background-color: white;
-  top: 0;
+  top: ${props => props.top};
   left: 0;
-  z-index: 3;
-  transform: translateZ(20px);
-  transform-style: preserve-3d;
-`
-
-const BackCover = styled.div`
-  position: absolute;
-  background-color: white;
-  top: 2px;
-  left: 0;
-  content: "";
-  z-index: 2;
-  transform: translateZ(-28px) rotateY(180deg);
+  z-index: ${props => props.zIndex};
+  transform: ${props => props.transform};
   transform-style: preserve-3d;
 `
 
@@ -203,7 +151,11 @@ function Book3d({
           hovered={hovered}
           className={showBackCover ? "is-active" : null}
         >
-          <FrontCover>
+          <Cover
+            top="0"
+            zIndex="3"
+            transform="translateZ(20px)"
+          >
             {pageData.template ? (
               <>
                 <Measure
@@ -264,12 +216,36 @@ function Book3d({
                 )}
               </>
             )}
-          </FrontCover>
-          <FrontFakeCover className="front-cover" />
-          <LeftSpinePages />
-          <RightSpinePages />
-          <BackFakeCover className="back-cover" />
-          <BackCover>
+          </Cover>
+          <FakeCover 
+            className="front-cover"
+            left="30px"
+            transform="translateZ(19px)"
+            width="30px"
+          />
+          <SpinePages 
+            left="12px"
+            transform="rotate3d(0,1,0,90deg)"
+            zIndex="1"
+            leftMobile="0"
+          />
+          <SpinePages 
+            left="31px"
+            transform="translateX(377px) rotate3d(0,1,0,90deg)"
+            transformMobile="translateX(276px) rotate3d(0,1,0,90deg)"
+          />
+          <FakeCover 
+            className="back-cover" 
+            left="32px"
+            transform="translateZ(-24px)"
+            width="32px"
+            boxshadow={colors.shadow.layered}
+          />
+          <Cover
+            top="2px"
+            zIndex="2"
+            transform="translateZ(-28px) rotateY(180deg)"
+          >
             {coverColor === "white" && (
               <StaticImage
                 className="image"
@@ -288,7 +264,7 @@ function Book3d({
                 loading="lazy"
               />
             )}
-          </BackCover>
+          </Cover>
         </StyledBook3d>
       </Book3dWrapper>
       <ColorPicker 
