@@ -8,7 +8,7 @@ const validateCartItems = async (cartItems) => {
     const { quantity, price_id } = item;
     const stripeProduct = await stripe.prices.retrieve(price_id);
 
-    if (item.discounts.type === "bulk") {
+    if (item.discountType === "bulk") {
       if (quantity >= 5 && quantity < 10) {
         stripeProduct.unit_amount = stripeProduct.unit_amount * 0.95;
       }

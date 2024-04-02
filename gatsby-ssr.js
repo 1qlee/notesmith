@@ -48,8 +48,19 @@ export const onRenderBody = ({
       crossOrigin="anonymous"
       key="jostFont"
     />,
-    <Script src="https://www.googletagmanager.com/gtag/js?id=G-6P3H5Q84XJ" />,
-    <Script>
+    <Script
+      src="https://js.stripe.com/v3"
+      strategy="off-main-thread"
+    />,
+    <Script 
+      src="https://www.googletagmanager.com/gtag/js?id=G-6P3H5Q84XJ" 
+      strategy="off-main-thread"
+    />,
+    <Script
+      id="gtag-config"
+      strategy="off-main-thread"
+      forward={[`gtag`]}
+    >
       {`
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -59,5 +70,4 @@ export const onRenderBody = ({
       `}
     </Script>
   ])
-}
-
+} 
