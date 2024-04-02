@@ -33,7 +33,15 @@ export const onRenderBody = ({
     <meta property="twitter:creator" content="Notesmith"></meta>,
     <link
       rel="preload"
-      href="/fonts/jost-var.woff2"
+      href="/fonts/jost-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossOrigin="anonymous"
+      key="jostFont"
+    />,
+    <link
+      rel="preload"
+      href="/fonts/jost-500.woff2"
       as="font"
       type="font/woff2"
       crossOrigin="anonymous"

@@ -531,8 +531,15 @@ select:-webkit-autofill:focus {
   font-family: 'Jost';
   font-style: normal;
   font-display: swap;
-  font-weight: 400 500 700;
-  src: url('/fonts/jost-var.woff2') format('woff2');
+  font-weight: 400;
+  src: url('/fonts/jost-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('/fonts/jost-500.woff2') format('woff2');
 }
 .carousel {
   margin-bottom: 32px;
