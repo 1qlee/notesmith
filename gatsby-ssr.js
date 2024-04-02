@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Helmet } from "react-helmet"
+import { Script } from "gatsby"
 
 import wrapProvider from "./wrap-provider"
 
@@ -47,20 +48,23 @@ export const onRenderBody = ({
       crossOrigin="anonymous"
       key="jostFont"
     />,
+    <Script
+      src="https://js.stripe.com/v3"
+      strategy="post-hydrate"
+    />
   ])
 }
 
-// Hack, to reorder the helmet components as first in <head> tag
-// export const onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
-//   const headComponents = getHeadComponents()
-//   console.log("🚀 ~ onPreRenderHTML ~ headComponents:", headComponents)
 
-//   headComponents.sort((a, b) => {
-//     if (a.type === 'meta') {
-//       return 0;
-//     }
-//     return 1;
-//   })
+{/* <Script>
 
-//   replaceHeadComponents(headComponents)
-// }
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6P3H5Q84XJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-6P3H5Q84XJ');
+  </script>
+</Script> */}
