@@ -54,11 +54,11 @@ export const onRenderBody = ({
     />,
     <Script 
       src="https://www.googletagmanager.com/gtag/js?id=G-6P3H5Q84XJ" 
-      strategy="off-main-thread"
+      strategy="post-hydrate"
     />,
     <Script
       id="gtag-config"
-      strategy="off-main-thread"
+      strategy="post-hydrate"
       forward={[`gtag`]}
     >
       {`
