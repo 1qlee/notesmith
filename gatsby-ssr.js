@@ -50,7 +50,7 @@ export const onRenderBody = ({
     />,
     <Script
       src="https://js.stripe.com/v3"
-      strategy="post-hydrate"
+      strategy="off-main-thread"
     />
   ])
 }
