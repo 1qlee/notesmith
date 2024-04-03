@@ -10,6 +10,11 @@ module.exports = {
     siteUrl: `https://www.notesmithbooks.com`,
     image: "/meta-image.jpg"
   },
+  partyTownProxiedURLs: [
+    `https://www.googletagmanager.com/gtag/js?id=${process.env.GTAG}`,
+    `https://www.google-analytics.com/analytics.js`,
+    "https://js.stripe.com/v3",
+  ],
   plugins: [
     {
       resolve: `gatsby-plugin-gdpr-cookies`,
