@@ -71,12 +71,12 @@ const Footer = () => {
                 margin="16px 0"
               >
                 <h5>Support</h5>
-                <Box>
+                <Box margin="0 0 4px">
                   <Link to="/faq">
                     FAQ
                   </Link>
                 </Box>
-                <Box>
+                <Box margin="0 0 4px">
                   <Link to="/return-policy">
                     Return Policy
                   </Link>
@@ -113,7 +113,7 @@ const Footer = () => {
                 <h5>Account</h5>
                 {user ? (
                   <>
-                    <Box>
+                    <Box margin="0 0 4px">
                       <Link to="/account/dashboard">
                         Dashboard
                       </Link>
@@ -126,7 +126,7 @@ const Footer = () => {
                   </>
                 ) : (
                   <>
-                    <Box>
+                    <Box margin="0 0 4px">
                       <Link to="/signin">
                         Sign in
                       </Link>
