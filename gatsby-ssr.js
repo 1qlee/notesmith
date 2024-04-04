@@ -38,7 +38,7 @@ export const onRenderBody = ({
       as="font"
       type="font/woff2"
       crossOrigin="anonymous"
-      key="jostFont"
+      key="Jost"
     />,
     <link
       rel="preload"
@@ -46,7 +46,7 @@ export const onRenderBody = ({
       as="font"
       type="font/woff2"
       crossOrigin="anonymous"
-      key="jostFont"
+      key="Jost"
     />,
     <Script
       src="https://js.stripe.com/v3"

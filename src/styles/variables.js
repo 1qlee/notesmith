@@ -127,10 +127,10 @@ const breakpoints = {
 }
 
 const fonts = {
-  heading: "'Jost', Georgia, serif",
-  text: "'Jost', Georgia, serif",
-  primary: "'Jost', Georgia, serif",
-  secondary: "'Jost', Georgia, serif",
+  heading: "'Jost', Helvetica, serif",
+  text: "'Jost', Helvetica, serif",
+  primary: "'Jost', Helvetica, serif",
+  secondary: "'Jost', Helvetica, serif",
 }
 
 const widths = {

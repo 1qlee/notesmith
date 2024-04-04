@@ -90,7 +90,9 @@ const Checkout = ({ location }) => {
     clientSecret: clientSecret,
     fonts: [
       {
-        cssSrc: "https://fonts.googleapis.com/css?family=Jost:400,500"
+        family: "Jost",
+        src: "https://www.notesmithbooks.com/fonts/jost-400.woff2",
+        weight: "400"
       }
     ],
     appearance: {
