@@ -90,7 +90,7 @@ const Checkout = ({ location }) => {
     clientSecret: clientSecret,
     fonts: [
       {
-        cssSrc: "https://fonts.googleapis.com/css?family=Jost:400,700"
+        cssSrc: "https://fonts.googleapis.com/css?family=Jost:400,500"
       }
     ],
     appearance: {

@@ -236,7 +236,6 @@ const Order = ({ location, orderId }) => {
                             rel="noopener noreferrer"
                             fontfamily={fonts.primary}
                             fontsize="1.25rem"
-                            fontweight="700"
                             color={colors.gray.nineHundred}
                           >
                             send us an email
@@ -248,7 +247,6 @@ const Order = ({ location, orderId }) => {
                           margin="0 0 32px"
                         >
                           <Content
-                            h5fontweight="700"
                             h5margin="0 0 8px"
                             margin="0 0 16px"
                           >
@@ -260,7 +258,6 @@ const Order = ({ location, orderId }) => {
                             )}
                           </Content>
                           <Content
-                            h5fontweight="700"
                             h5margin="0 0 8px"
                             margin="0 0 16px"
                             paragraphmargin="0"
@@ -279,7 +276,6 @@ const Order = ({ location, orderId }) => {
                             )}
                           </Content>
                           <Content
-                            h5fontweight="700"
                             h5margin="0 0 8px"
                           >
                             <h5>Tracking</h5>
@@ -332,7 +328,6 @@ const Order = ({ location, orderId }) => {
                         ) : (
                           <Content
                             margin="16px 0"
-                            h5fontweight="700"
                             h5margin="0 0 8px"
                           >
                             <h5>Items</h5>

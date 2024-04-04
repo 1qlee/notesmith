@@ -138,7 +138,6 @@ function NewBookModal({
       <ModalHeader>
         <Content
           h3fontsize="1.25rem"
-          h3fontweight="700"
           h3margin="0"
           headingfontfamily={fonts.secondary}
         >

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { colors, widths } from "../styles/variables"
+import { widths } from "../styles/variables"
 import { useFirebaseContext } from "../utils/auth"
 import { get, ref, set } from "firebase/database"
 
 import { SectionMain, Section, SectionContent } from "../components/layout/Section"
-import Notification from "../components/ui/Notification"
 import Layout from "../components/layout/Layout"
 import Box from "../components/ui/Box"
 import Content from "../components/ui/Content"

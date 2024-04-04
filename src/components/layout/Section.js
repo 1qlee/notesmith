@@ -40,35 +40,17 @@ const SectionContent = styled.div`
   }
 `
 
-const StyledSectionHeading = styled.div`
+const SectionHeading = styled.h3`
   margin: ${props => props.margin || "0 0 32px 0"};
   display: inline-block;
   position: relative;
   text-transform: uppercase;
   letter-spacing: 1px;
-  h3 {
-    font-size: 0.75rem;
-    padding-bottom: 4px;
-    color: ${props => props.color || colors.gray.fourHundred};
-    font-weight: ${props => props.fontweight || 700};
-    font-family: ${fonts.secondary};
-  }
+  font-size: 0.75rem;
+  padding-bottom: 4px;
+  color: ${props => props.color || colors.gray.sevenHundred};
+  font-family: ${fonts.secondary};
 `
-
-function SectionHeading({
-  children,
-  margin,
-  fontsize,
-}) {
-  return (
-    <StyledSectionHeading
-      margin={margin}
-      fontsize={fontsize}
-    >
-      <h3>{children}</h3>
-    </StyledSectionHeading>
-  )
-}
 
 export {
   SectionMain,

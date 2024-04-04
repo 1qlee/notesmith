@@ -9,7 +9,7 @@ const TextLink = styled.a`
   color: ${props => props.color || colors.gray.nineHundred};
   display: ${props => props.flex || "inline-flex"};
   font-size: ${props => props.fontsize || "1rem"};
-  font-weight: ${props => props.fontweight || "700"};
+  font-weight: ${props => props.fontweight || "500"};
   justify-content: ${props => props.justify};
   line-height: 1;
   margin: ${props => props.margin};

@@ -17,7 +17,6 @@ const StyledTag = ({ children }) => {
       padding="4px 8px"
       fontsize="0.625rem"
       letterspacing="1px"
-      fontweight='700'
       margin="0 0 16px"
     >
       {children}

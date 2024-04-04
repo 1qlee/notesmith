@@ -108,7 +108,6 @@ function Checkoutbar({
             </Content>
             <Content
               padding="0"
-              h5fontweight="700"
               h5fontsize="1rem"
               h5margin="0 0 16px"
             >
@@ -141,7 +140,7 @@ function Checkoutbar({
               <Content
                 pargraphmargin="0"
                 paragraphlineheight="1"
-                paragraphfontweight="700"
+                paragraphfontweight="500"
                 margin="0 8px 0 0"
               >
                 <p>Subtotal</p>

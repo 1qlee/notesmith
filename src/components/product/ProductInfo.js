@@ -30,7 +30,6 @@ const ProductInfoLabel = ({ number, label, margin }) => {
       </Tag>
       <Content
         margin="0"
-        h5fontweight="700"
         h5margin="0"
         headinglineheight="1"
       >
@@ -274,7 +273,7 @@ const ProductInfo = ({
         <Content
           pargraphmargin="0"
           paragraphlineheight="1"
-          paragraphfontweight="700"
+          paragraphfontweight="500"
           margin="0 8px 0 0"
         >
           <p>Subtotal</p>

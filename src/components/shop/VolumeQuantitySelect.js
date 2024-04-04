@@ -122,7 +122,7 @@ const VolumeQuantitySelect = ({
                 <Content
                   paragraphlineheight="normal"
                   paragraphmargin="0"
-                  paragraphfontweight="700"
+                  paragraphfontweight="500"
                   paragraphcolor={colors.green.sixHundred}
                 >
                   <p>{percent}% off</p>
