@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { colors } from "../../styles/variables"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 
-import { Arrow, Dot } from "../ui/Carousel"
+import { Arrow } from "../ui/Carousel"
 
 const responsive = {
   desktop: {
@@ -17,39 +16,6 @@ const responsive = {
     items: 1,
   }
 };
-
-const StyledProductImages = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-`
-
-const ThumbnailRow = styled.div`
-  -webkit-overflow-scrolling: touch;
-`
-
-const Thumbnail = styled.figure`
-  width: 80px;
-  height: 80px;
-  padding: 0.3rem;
-  border: 2px solid ${colors.gray.threeHundred};
-  border-radius: 8px;
-  transition: border 0.3s ease;
-  margin: 0.5rem;
-  &.is-active {
-    border-color: ${colors.gray.nineHundred};
-  }
-  &:not(:last-child) {
-    margin-right: 1rem;
-  }
-  &:hover {
-    cursor: pointer;
-    &:not(.is-active) {
-      border-color: ${colors.gray.sixHundred};
-    }
-  }
-`
 
 const MainProductImage = styled.figure`
   margin-bottom: 1rem;
