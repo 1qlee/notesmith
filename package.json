@@ -25,7 +25,6 @@
     "gatsby-plugin-firebase-v9.0": "^1.0.3",
     "gatsby-plugin-gdpr-cookies": "github:andrezimpel/gatsby-plugin-gdpr-cookies",
     "gatsby-plugin-git-lastmod": "^0.1.2",
-    "gatsby-plugin-google-gtag": "^5.13.1",
     "gatsby-plugin-image": "^3.7.0",
     "gatsby-plugin-manifest": "^5.9.0",
     "gatsby-plugin-netlify": "^5.1.1",
@@ -45,7 +44,6 @@
     "memoize-one": "^6.0.0",
     "react": "^18.2.0",
     "react-collapsed": "^4.0.2",
-    "react-dom": "^18.2.0",
     "react-grid-system": "^8.1.9",
     "react-helmet": "^6.1.0",
     "react-hot-toast": "^2.4.1",
@@ -66,7 +64,8 @@
   "devDependencies": {
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.32",
     "prettier": "^2.3.2",
-    "svg-url-loader": "^8.0.0"
+    "svg-url-loader": "^8.0.0",
+    "react-dom": "^18.2.0"
   },
   "keywords": [
     "gatsby"
