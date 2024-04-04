@@ -11,6 +11,19 @@ import Handwriting from "../customize/templates/Handwriting"
 import CrossGrid from "../customize/templates/CrossGrid"
 import Calligraphy from "../customize/templates/Calligraphy"
 
+const TemplateComponents = {
+  ruled: Ruled,
+  dot: Dot,
+  graph: Graph,
+  hexagon: Hexagon,
+  isometric: Isometric,
+  seyes: Seyes,
+  music: Music,
+  handwriting: Handwriting,
+  cross: CrossGrid,
+  calligraphy: Calligraphy
+}
+
 function DemoTemplate({
   pageDimensions,
   pageData,
@@ -25,6 +38,7 @@ function DemoTemplate({
     rows: 200,
     columns: 200,
   })
+  const TemplateComponent = TemplateComponents[pageData.template]
 
   return (
     <svg
@@ -35,93 +49,9 @@ function DemoTemplate({
       x="0"
       y="0"
     >
-      {pageData.template === "blank" && (
-        null
-      )}
-      {pageData.template === "ruled" && (
-        <Ruled
+      {TemplateComponent && (
+        <TemplateComponent
           maxSvgSize={adjustedDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "dot" && (
-        <Dot
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "graph" && (
-        <Graph
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "hexagon" && (
-        <Hexagon
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "isometric" && (
-        <Isometric
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "seyes" && (
-        <Seyes
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "music" && (
-        <Music
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "handwriting" && (
-        <Handwriting
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "cross" && (
-        <CrossGrid
-          maxSvgSize={pageDimensions}
-          setMax={setMax}
-          pageData={pageData}
-          setPageData={setPageData}
-          setSvgLoaded={setSvgLoaded}
-        />
-      )}
-      {pageData.template === "calligraphy" && (
-        <Calligraphy
-          maxSvgSize={pageDimensions}
           setMax={setMax}
           pageData={pageData}
           setPageData={setPageData}

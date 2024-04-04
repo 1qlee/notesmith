@@ -11,6 +11,7 @@ import Toast from "../ui/Toast"
 import { isBrowser, convertToMM } from "../../utils/helper-functions"
 import { EditorProvider } from "./context/editorContext"
 import { SettingsProvider } from "./context/settingsContext"
+import "../../styles/editor.css"
 
 import { Controls } from "./Controls"
 import ApplyTemplateModal from "./modals/ApplyTemplateModal"
