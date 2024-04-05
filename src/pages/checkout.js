@@ -91,9 +91,9 @@ const Checkout = ({ location }) => {
     fonts: [
       {
         family: "Jost",
-        src: "url(/fonts/jost-400.woff2)",
-        weight: "400"
-      }
+        src: "url(https://www.notesmithbooks.com/fonts/jost-400.woff2)",
+        weight: "400",
+      },
     ],
     appearance: {
       theme: "stripe",
