@@ -121,6 +121,7 @@ module.exports = {
       options: {
         headers: {
           '/fonts/*': [
+            'Access-Control-Allow-Origin: https://js.stripe.com',
             'Cache-Control: public',
             'Cache-Control: max-age=365000000',
             'Cache-Control: immutable',
