@@ -8,11 +8,7 @@
   status = 200
 
 [[headers]]
-  for = "/fonts/jost-400.woff2"
-  [headers.value]
-    Access-Control-Allow-Origin = "https://js.stripe.com"
-
-[[headers]]
   for = "/*"
   [headers.value]
-    Content-Security-Policy = "default-src self; connect-src https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; script-src https://js.stripe.com;"
+    Access-Control-Allow-Origin = "https://js.stripe.com"
+    Content-Security-Policy = "connect-src https://api.stripe.com https://js.stripe.com; frame-src https://connect-js.stripe.com https://js.stripe.com https://hooks.stripe.com; script-src https://js.stripe.com https://connect-js.stripe.com;"
