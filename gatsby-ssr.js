@@ -59,13 +59,13 @@ export const onRenderBody = ({
     <Script
       id="gtag-config"
       strategy="off-main-thread"
-      forward={['gtag']}
+      forward={['dataLayer.push', 'gtag']}
     >
       {`
-        window.dataLayer = window.dataLayer || [];
-        function () {dataLayer.push(arguments);};
-        gtag('js', new Date());
-        gtag('config', "${process.env.GATSBY_GTAG}", { page_path: location ? location.pathname + location.search + location.hash : undefined })
+        dataLayer = window.dataLayer || [];
+        window.gtag = function () {dataLayer.push(arguments);};
+        window.gtag('js', new Date());
+        window.gtag('config', "${process.env.GATSBY_GTAG}", { page_path: location ? location.pathname + location.search + location.hash : undefined })
       `}
     </Script>
   ])
