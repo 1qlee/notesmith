@@ -15,6 +15,21 @@ module.exports = {
     `https://www.google-analytics.com/analytics.js`,
     "https://js.stripe.com/v3",
   ],
+  headers: [
+    {
+      source: `/fonts/*`,
+      headers: [
+        {
+          key: `Access-Control-Allow-Origin`,
+          value: `https://js.stripe.com`,
+        },
+        {
+          key: `Cache-Control`,
+          value: `public, max-age=31536000`,
+        }
+      ]
+    }
+  ],
   plugins: [
     {
       resolve: `gatsby-plugin-gdpr-cookies`,
@@ -115,19 +130,6 @@ module.exports = {
         display: `minimal-ui`,
         icon: `src/images/fav.png`, // This path is relative to the root of the site.
       },
-    },
-    {
-      resolve: `gatsby-plugin-netlify`,
-      options: {
-        headers: {
-          '/fonts/*': [
-            'Access-Control-Allow-Origin: https://js.stripe.com',
-            'Cache-Control: public',
-            'Cache-Control: max-age=365000000',
-            'Cache-Control: immutable',
-          ],
-        }
-      }
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
