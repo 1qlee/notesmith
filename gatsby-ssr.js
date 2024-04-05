@@ -63,9 +63,9 @@ export const onRenderBody = ({
     >
       {`
         dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments)};
-        gtag('js', new Date());
-        gtag('config', ${process.env.GATSBY_GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined })
+        window.gtag = function () {dataLayer.push(arguments);};
+        window.gtag('js', new Date());
+        window.gtag('config', ${process.env.GATSBY_GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined })
       `}
     </Script>
   ])
