@@ -21,8 +21,6 @@ import Layout from "../components/layout/Layout"
 import ShippingForm from "../components/form/ShippingForm"
 import ValidateAddressModal from "../components/checkout/modals/ValidateAddressModal"
 
-const fontPath = isBrowser() && `${window.location.origin}${require('/fonts/jost-400.woff2').default}`
-
 const Checkout = ({ location }) => {
   const [stripe, setStripe] = useState(null)
   const { cartDetails, handleCloseCart } = useShoppingCart()
@@ -93,7 +91,7 @@ const Checkout = ({ location }) => {
     fonts: [
       {
         family: "Jost",
-        src: `url(${fontPath})`,
+        src: "url(/static/fonts/jost-400.woff2)",
         weight: "400",
       },
     ],
