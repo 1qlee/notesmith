@@ -8,6 +8,6 @@
   status = 200
 
 [[headers]]
-  for = "/fonts/jost-400.woff2"
+  for = "/src/static/fonts/jost-400.woff2"
   [headers.value]
     Access-Control-Allow-Origin = "https://js.stripe.com"
