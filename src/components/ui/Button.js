@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components"
-import { colors } from "../../styles/variables"
+import { colors, fonts } from "../../styles/variables"
 
 const rotate = keyframes`
   from {
@@ -18,6 +18,7 @@ const Button = styled.button`
   color: ${props => props.color || colors.gray.oneHundred};
   display: ${props => props.flex ? props.flex : "inline-flex"};
   font-size: ${props => props.fontsize || "1rem"};
+  font-family: ${fonts.text};
   line-height: 1;
   height: ${props => props.height};
   justify-content: center;
