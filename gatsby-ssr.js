@@ -55,15 +55,14 @@ export const onRenderBody = ({
     <Script 
       src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GATSBY_GTAG}`}
       strategy="off-main-thread"
-      forward={[`dataLayer.push`]}
     />,
     <Script
       id="gtag-config"
       strategy="off-main-thread"
-      forward={[`gtag`]}
+      forward={['dataLayer.push', 'gtag']}
     >
       {`
-        window.dataLayer = window.dataLayer || [];
+        dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments)};
         gtag('js', new Date());
         gtag('config', ${process.env.GATSBY_GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined })
