@@ -53,7 +53,7 @@ export const onRenderBody = ({
       strategy="off-main-thread"
     />,
     <Script 
-      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GTAG}`}
+      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GATSBY_GTAG}`}
       strategy="off-main-thread"
       forward={[`dataLayer.push`]}
     />,
@@ -67,7 +67,7 @@ export const onRenderBody = ({
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', ${process.env.GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined }));
+        gtag('config', ${process.env.GATSBY_GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined }));
       `}
     </Script>
   ])

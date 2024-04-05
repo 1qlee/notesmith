@@ -10,5 +10,6 @@
 [[headers]]
   for = "/*"
   [headers.value]
-    Access-Control-Allow-Origin = "https://js.stripe.com"
-    Content-Security-Policy = "connect-src https://api.stripe.com https://js.stripe.com; frame-src https://connect-js.stripe.com https://js.stripe.com https://hooks.stripe.com; script-src https://js.stripe.com https://connect-js.stripe.com;"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Access-Control-Allow-Origin = "https://js.stripe.com/*"
