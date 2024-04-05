@@ -11,7 +11,7 @@ module.exports = {
     image: "/meta-image.jpg"
   },
   partytownProxiedURLs: [
-    `https://www.googletagmanager.com/gtag/js?id=${process.env.GTAG}`,
+    `https://www.googletagmanager.com/gtag/js?id=${process.env.GATSBY_GTAG}`,
     `https://www.google-analytics.com/analytics.js`,
     "https://js.stripe.com/v3",
   ],

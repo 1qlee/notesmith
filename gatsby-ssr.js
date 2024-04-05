@@ -62,11 +62,12 @@ export const onRenderBody = ({
       strategy="off-main-thread"
       forward={[`gtag`]}
     >
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments)}
-      gtag('js', new Date());
-
-      gtag('config', process.env.GATSBY_GTAG);
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments)};
+        gtag('js', new Date());
+        gtag('config', ${process.env.GATSBY_GTAG}, { page_path: location ? location.pathname + location.search + location.hash : undefined })
+      `}
     </Script>
   ])
 } 
