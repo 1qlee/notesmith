@@ -48,6 +48,24 @@ export const onRenderBody = ({
       crossOrigin="anonymous"
       key="Jost"
     />,
+    <link 
+      rel="icon"
+      href="/favicon.ico"
+      sizes="32x32"
+    />,
+    <link
+      rel="icon"
+      href="/icons/icon.svg"
+      type="image/svg+xml"
+    />,
+    <link
+      rel="apple-touch-icon"
+      href="/icons/apple-touch-icon.png"
+    />,
+    <link
+      rel="manifest"
+      href="/manifest.webmanifest"
+    />,
     <Script
       src="https://js.stripe.com/v3"
       strategy="off-main-thread"

@@ -17,6 +17,24 @@ module.exports = {
   ],
   headers: [
     {
+      source: `/.well-known/apple-developer-merchantid-domain-association/`,
+      headers: [
+        {
+          key: `Content-Type`,
+          value: `application/json`,
+        },
+      ]
+    },
+    {
+      source: `/apple-developer-merchantid-domain-association/`,
+      headers: [
+        {
+          key: `Content-Type`,
+          value: `application/json`,
+        },
+      ]
+    },
+    {
       source: `/fonts/*`,
       headers: [
         {
