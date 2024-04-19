@@ -1,13 +1,14 @@
 const stripe = require('stripe')(process.env.GATSBY_STRIPE_SECRET_KEY);
 
 const parseCartItems = async (cartItems, discount) => {
+  console.log("🚀 ~ parseCartItems ~ discount:", discount)
   const parsedCartItems = await Promise.all(cartItems.map(async (item) => {
     const { price_id, id, quantity } = item;
     const itemPrice = await stripe.prices.retrieve(price_id);
     let price = +itemPrice.unit_amount
     let amount = price * quantity
 
-    if (item.discounts.type === "bulk") {
+    if (item.discountType === "bulk") {
       if (quantity >= 5 && quantity < 10) {
         price = itemPrice.unit_amount * 0.95;
       }

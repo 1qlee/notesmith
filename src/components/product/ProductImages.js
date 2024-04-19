@@ -1,97 +1,55 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
-import Carousel from 'react-multi-carousel'
-import 'react-multi-carousel/lib/styles.css'
-
-import { Arrow } from "../ui/Carousel"
-
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 464 },
-    items: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  }
-};
-
-const MainProductImage = styled.figure`
-  margin-bottom: 1rem;
-  width: 100%;
-`
+import useEmblaCarousel from 'embla-carousel-react'
 
 function ProductImages({
   coverColor,
   productImages,
+  additionalImages,
 }) {
-  const [allImages, setAllImages] = useState([])
+  const [emblaRef] = useEmblaCarousel()
+  let allImages = []
+  let filteredImages = productImages.nodes.filter(img => img.name.split("-")[0] === coverColor)
+  let combinedImages = [...filteredImages, ...additionalImages.nodes]
 
-  useEffect(() => {
-    function sortImages(a, b) {
-      if (a.name.split("-")[1] < b.name.split("-")[1]) {
-        return -1
-      }
-      else {
-        return 0
-      }
-    }
-    // filter images by the specified color
-    function parseImages(images, color) {
-      const imagesDummyArray = []
-      const filteredImages = images.nodes.filter(img => img.name.split("-")[0] === color)
-      // sort images into ascending order
-      filteredImages.sort(sortImages)
-
-      filteredImages.forEach(img => {
-        imagesDummyArray.push({
-          main: img,
-          alt: img.name,
-        })
-      })
-
-      setAllImages(imagesDummyArray)
-    }
-
-    parseImages(productImages, coverColor)
-  }, [productImages, coverColor])
+  combinedImages.forEach((img, index) => {
+    allImages.push({
+      main: img,
+      alt: `${coverColor} colored book image ${index + 1}`
+    })
+  })
 
   return (
-    <Carousel
-      additionalTransfrom={0}
-      arrows
-      centerMode={false}
-      className=""
-      customLeftArrow={<Arrow side="left" />}
-      customRightArrow={<Arrow side="right" />}
-      containerClass="carousel"
-      removeArrowOnDeviceType={["tablet", "mobile"]}
-      dotListClass="carousel-dots"
-      draggable
-      focusOnSelect={false}
-      infinite
-      keyBoardControl
-      minimumTouchDrag={80}
-      pauseOnHover
-      responsive={responsive}
-      showDots
-      sliderClass=""
-      slidesToSlide={1}
-      swipeable
+    <div
+      ref={emblaRef}
+      style={{
+        overflow: "hidden",
+        marginBottom: "32px",
+      }}
     >
-      {allImages.map((image, index) => (
-        <MainProductImage
-          key={index}
-        >
-          <GatsbyImage
-            image={getImage(image.main)}
-            alt={image.alt}
-            draggable={false}
-          />
-        </MainProductImage>
-      ))}
-    </Carousel>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        {allImages.map((image, index) => (
+          <div
+            style={{
+              flex: "0 0 100%",
+              minWidth: 0,
+            }}
+            key={index}
+          >
+            <GatsbyImage
+              image={getImage(image.main)}
+              alt={image.alt}
+              loading="eager"
+              draggable={false}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 

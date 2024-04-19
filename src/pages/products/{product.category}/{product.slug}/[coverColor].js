@@ -15,7 +15,7 @@ import ProductFiftyFifty from "../../../../components/product/ProductFiftyFifty"
 import Divider from "../../../../components/ui/Divider"
 
 const ProductPage = ({ data, params }) => {
-  const { product, productImages, productThumbnails, fiftyFiftyImages } = data
+  const { product, productImages, additionalImages, productThumbnails, fiftyFiftyImages } = data
   const { coverColor } = params
   const { heightPixel, widthPixel } = product
   const [bookData, setBookData] = useState({
@@ -86,8 +86,13 @@ const ProductPage = ({ data, params }) => {
                   <>
                     {pageData.showControls && (
                       <Col
-                        id="product-controls"
                         md="content"
+                        style={{
+                          '@media only screen and (max-width: 991px)': {
+                            paddingLeft: "0 !important",
+                            paddingRight: "0 !important",
+                          }
+                        }}
                       >
                         <ProductControls
                           currentPageSide={currentPageSide}
@@ -105,6 +110,11 @@ const ProductPage = ({ data, params }) => {
                     )}
                     <Col 
                       id="product-template"
+                      style={{
+                        '@media only screen and (max-width: 991px)': {
+                          marginBottom: "32px !important",
+                        }
+                      }}
                     >
                       <ProductTemplate
                         bookData={bookData}
@@ -122,11 +132,11 @@ const ProductPage = ({ data, params }) => {
                     </Col>
                   </>
                 ) : (
-                  <Col lg={8}>
+                  <Col>
                     <ProductImages 
                       coverColor={bookData.coverColor}
                       productImages={productImages}
-                      productThumbnails={productThumbnails}
+                      additionalImages={additionalImages}
                       setCartThumbnail={setCartThumbnail}
                     />
                   </Col>
@@ -217,24 +227,31 @@ export const pageQuery = graphql`
         slug
       }
     }
-    descriptionImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "description*" }}) {
+    productImages: allFile(
+      filter: { relativeDirectory: { eq: $slug }}
+      sort: { name: ASC }
+    ) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 1500
-            quality: 100
+            width: 1245
+            quality: 90
+            placeholder: BLURRED
+            formats: [AUTO, WEBP]
           )
         }
       }
     }
-    productImages: allFile(filter: { relativeDirectory: { eq: $slug }}) {
+    additionalImages: allFile(filter: { relativeDirectory: { eq: $slug } name: { glob: "all*" }}) {
       nodes {
         name
         childImageSharp {
           gatsbyImageData(
-            width: 1750
-            quality: 100
+            quality: 90
+            width: 1245,
+            placeholder: BLURRED
+            formats: [AUTO, WEBP]
           )
         }
       }
@@ -244,8 +261,10 @@ export const pageQuery = graphql`
         name
         childImageSharp {
           gatsbyImageData(
-            quality: 80
-            width: 1400,
+            quality: 90
+            width: 740,
+            placeholder: BLURRED
+            formats: [AUTO, WEBP]
           )
         }
       }
@@ -257,7 +276,9 @@ export const pageQuery = graphql`
           gatsbyImageData(
             width: 80
             height: 80
-            quality: 80
+            quality: 100
+            placeholder: BLURRED
+            formats: [AUTO, WEBP]
           )
         }
       }

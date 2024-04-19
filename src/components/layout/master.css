@@ -197,23 +197,6 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  -webkit-box-shadow: 0 0 0px 1000px #F5F5F5 inset;
   transition: background-color 5000s;
-}
-#product-controls {
-  @media only screen and (max-width: 991px) {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-}
-#product-template {
-  @media only screen and (max-width: 991px) {
-    margin-bottom: 32px;
-  }
-}
-.carousel {
-  margin-bottom: 32px;
-}
-.carousel-dots {
-  margin-bottom: 8px !important;
 }
