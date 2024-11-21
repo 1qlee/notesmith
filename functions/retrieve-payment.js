@@ -36,7 +36,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        msg: "We could not retrieve your order information. Please clear your cart and try again."
+        error: "We could not retrieve your order information. Please clear your cart and try again."
       })
     }
   }

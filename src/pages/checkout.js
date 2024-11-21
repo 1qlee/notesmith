@@ -141,55 +141,54 @@ const Checkout = ({ location }) => {
     handleCloseCart()
     setStripe(loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY))
     // to get an existing paymentIntent from Stripe
-    function retrievePaymentIntent() {
-      // show loading screen
-      setLoading(true)
-
-      // call on the retrieve-payment function defined in Netlify
-      fetch("/.netlify/functions/retrieve-payment", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          pid: pid,
-          cartItems: cartDetails,
-          updatePaymentIntent: true,
+    async function retrievePaymentIntent() {
+      try {
+        const retrievePayment = await fetch("/.netlify/functions/retrieve-payment", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            pid: pid,
+            cartItems: cartDetails,
+            updatePaymentIntent: true,
+          })
         })
-      }).then(res => res.json()
-      ).then(data => {
-        // throw any errors!
-        if (data.error) {
-          throw data.error
-        }
 
-        const { isPaymentPaid } = data
-        const { shipping, client_secret, metadata } = data.paymentIntent
+        const paymentInfo = await retrievePayment.json()
 
-        setClientSecret(client_secret)
-
-        // if this pid is old (aka paid already), remove it from localStorage
-        if (isPaymentPaid) {
-          localStorage.removeItem("pid")
-          setLoading(false)
-          // create a fresh paymentIntent
-          createPaymentIntent()
+        if (paymentInfo.error) {
+          throw paymentInfo.error
         }
         else {
-          setLoading(false)
+          const { isPaymentPaid } = paymentInfo
+          const { shipping, client_secret, metadata } = paymentInfo.paymentIntent
 
-          // if shipping information exists, fill the form
-          if (shipping) {
-            const { email } = metadata.paymentIntent
+          setClientSecret(client_secret)
 
-            setAddress(shipping.address)
-            setCustomer({ ...customer, name: shipping.name, email: email })
+          // if this pid is old (aka paid already), remove it from localStorage
+          if (isPaymentPaid) {
+            localStorage.removeItem("pid")
+            setLoading(false)
+            // create a fresh paymentIntent
+            createPaymentIntent()
+          }
+          else {
+            setLoading(false)
+
+            // if shipping information exists, fill the form
+            if (shipping) {
+              const { email } = metadata.paymentIntent
+
+              setAddress(shipping.address)
+              setCustomer({ ...customer, name: shipping.name, email: email })
+            }
           }
         }
-      }).catch(error => {
+      } catch(error) {
         setLoading(false)
         toast.error(error)
-      })
+      }
     }
 
     // to create a new paymentIntent in Stripe
@@ -239,6 +238,7 @@ const Checkout = ({ location }) => {
       setCartItems(cartItemsArray)
 
       if (pid && pid !== "undefined") {
+        setLoading(true)
         retrievePaymentIntent()
       }
       // otherwise, create a new one

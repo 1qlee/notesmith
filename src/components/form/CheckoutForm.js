@@ -12,7 +12,6 @@ import sendEmailTemplate from "../../functions/sendEmailTemplate"
 import { Flexbox } from "../layout/Flexbox"
 import Button from "../ui/Button"
 import Icon from "../ui/Icon"
-import Notification from "../ui/Notification"
 
 function CheckoutForm({
   address,
@@ -28,7 +27,6 @@ function CheckoutForm({
   const stripe = useStripe()
   const elements = useElements()
   const [processing, setProcessing] = useState(false)
-  const [error, setError] = useState("")
   const { firebaseDb } = useFirebaseContext()
   const { totalPrice } = useShoppingCart()
   const paymentOptions = {
@@ -49,45 +47,46 @@ function CheckoutForm({
 
     getUpdate()
   }, [elements, tax, selectedRate])
-
-  // handle submitting the Stripe elements form
-  const submitPaymentForm = async e => {
-    e.preventDefault()
-    setProcessing(true)
-    // show loading UI state
-
-    if (!stripe || !elements) {
-      toast.error("Error occured. Please refresh and try again.")
-      return setProcessing(false)
+  
+  // show the user a toast error and set processing to false
+  const setPaymentError = (error) => {
+    if (!stripe || !elements || error) {
+      toast.error(error.message ? error.message : "Your payment could not be processed. Please correct any errors and try again.")
+      setProcessing(false)
     }
+  }
 
-    // Trigger form validation and wallet collection
-    const { error: submitError } = await elements.submit()
-
-    // form errors will be handled by PaymentElement component so we don't have to explicitly set them here
-    if (submitError) {
-      return setProcessing(false)
-    }
-
-    // attempt to make the payment
-    const payment = await stripe.confirmPayment({
+  const confirmPayment = async () => {
+    return await stripe.confirmPayment({
       elements,
-      clientSecret, 
+      clientSecret,
       confirmParams: {
         // Return URL where the customer should be redirected after the authorization
         return_url: `https://www.notesmithbooks.com/checkout/payment`
       },
       redirect: "if_required",
     })
+  }
+
+  // handle submitting the Stripe elements form
+  const submitPaymentForm = async e => {
+    e.preventDefault()
+    setProcessing(true)
+
+    // Trigger form validation and wallet collection
+    const { error } = await elements.submit()
+
+    // form errors will be handled by PaymentElement component in the UI
+    setPaymentError(error)
+
+    // confirm the payment with Stripe API
+    const payment = await confirmPayment()
 
     if (payment.error) {
       const { error } = payment
       // This point will only be reached if there is an immediate error when
-      // confirming the payment. Show error to your customer (for example, payment
-      // details incomplete)
-      setError(error.message)
-      toast.error(error.message)
-      setProcessing(false)
+      // confirming the payment. Show error to your customer, for example when payment details incomplete
+      setPaymentError(error)
     } 
     else {
       // this will show larger loading screen
@@ -140,7 +139,7 @@ function CheckoutForm({
   const confirmOrder = async () => {
     try {
       // this endpoint will generate an orderId and datePaid prop for the order
-      const response = await fetch("/.netlify/functions/confirm-order", {
+      const generateOrderInfo = await fetch("/.netlify/functions/confirm-order", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -150,29 +149,27 @@ function CheckoutForm({
         }),
       })
 
-      const data = await response.json()
+      const orderInfo = await generateOrderInfo.json()
 
-      if (data.error) {
-        throw data
+      if (orderInfo.error) {
+        throw orderInfo
       }
+      // const orderData = {
+      //   amount: amount,
+      //   authKey: authKey,
+      //   customer: customer,
+      //   datePaid: datePaid,
+      //   id: orderId,
+      //   rateId: rateId,
+      //   shipmentId: shipmentId,
+      //   shipped: false,
+      //   shipping: shipping,
+      //   tax: tax,
+      //   taxId: taxId,
+      // }
 
-      // Extract data
-      const { amount, authKey, tax, shipping, shipmentId, taxId, rateId, orderId, datePaid } = data
-      const orderData = {
-        amount: amount,
-        authKey: authKey,
-        customer: customer,
-        datePaid: datePaid,
-        id: orderId,
-        rateId: rateId,
-        shipmentId: shipmentId,
-        shipped: false,
-        shipping: shipping,
-        tax: tax,
-        taxId: taxId,
-      }
-
-      return await updateOrders(cartItems, orderData)
+      const newOrderItems = await setNewOrderItems(orderInfo)
+      return await setNewOrder(orderInfo, newOrderItems)
     } catch (data) {
       // Handle errors
       await sendShippingErrorEmail("Payment was successful, but we could not purchase the shipping label.")
@@ -196,70 +193,95 @@ function CheckoutForm({
     }
   }
 
+  const setNewOrder = async (orderItems, orderInfo) => {
+    const { newOrderKey, authKey } = orderInfo
+
+    // add the order itself to db
+    await set(ref(firebaseDb, `/orders/${newOrderKey}`), {
+      ...orderInfo,
+      orderItems: orderItems,
+      pid: pid,
+      subtotal: totalPrice,
+    }).then(async () => {
+      const updatePayment = await updatePaymentIntent(pid, { orderKey: newOrderKey })
+
+      if (updatePayment.error) {
+        throw new Error(updatePayment.error)
+      }
+    }).catch(async (error) => {
+      await sendEmailTemplate({
+        pid: pid,
+        error: error,
+        cartItems: cartItems,
+      })
+    })
+
+    return {
+      orderId: newOrderKey,
+      authKey: authKey,
+      error: null,
+    }
+  }
+
+  const setNewOrderItems = async (orderInfo) => {
+    const orderItems = {}
+    const { newOrderKey, orderId, shipmentId, rateId } = orderInfo
+    
+    for (let i = 0; i < cartItems.length; i++) {
+      // create a new unique key for this order item
+      const newOrderItemKey = push(ref(firebaseDb, 'orderItems/')).key
+      // set value in the map
+      orderItems[newOrderItemKey] = true
+
+      await set(ref(firebaseDb, `/orderItems/${newOrderItemKey}`), {
+        ...cartItems[i],
+        id: newOrderItemKey,
+        orderIdDb: newOrderKey,
+        orderId: orderId,
+        pid: pid,
+        shipmentId: shipmentId,
+        rateId: rateId,
+      }).catch(async (error) => {
+        return {
+          error: error,
+          msg: `Error setting order items for order: ${newOrderKey}`
+        }
+      })
+    }
+
+    return orderItems
+  }
+
   // save each order item to the database
   // save the entire order to the database
-  const updateOrders = async (cartItems, orderData) => {
-    let orderItems = {}
-    const cartItemsLength = cartItems.length
+  const updateOrders = async (orderInfo) => {
+    const { authKey, id, rateId, shipmentId } = orderInfo
+    // create a new unique key for this order
     const newOrderKey = push(ref(firebaseDb, 'orders/')).key
-    const { authKey, shipmentId, rateId } = orderData
+    orderInfo.newOrderKey = newOrderKey;
+    const orderItemInfo = {
+      newOrderKey: newOrderKey,
+      orderId: id,
+      shipmentId: shipmentId,
+      rateId: rateId,
+    }
     
     try {
       // add all order items to db
-      for (let i = 0; i < cartItemsLength; i++) {
-        const orderItemKey = push(ref(firebaseDb, 'orderItems/')).key
-        orderItems[orderItemKey] = true
-
-        await set(ref(firebaseDb, `/orderItems/${orderItemKey}`), {
-          ...cartItems[i],
-          id: orderItemKey,
-          orderIdDb: newOrderKey, 
-          orderId: orderData.id,
-          pid: pid,
-          shipmentId: shipmentId,
-          rateId: rateId,
-        }).catch(async (error) => {
-          setError(null)
-          
-          // send the team an email to notify them of the error
-          await sendEmailTemplate({
-            pid: pid,
-            error: error,
-            cartItems: cartItems,
-          })
-        })
-      }
-
-      // add the order itself to db
-      await set(ref(firebaseDb, `/orders/${newOrderKey}`), {
-        ...orderData,
-        orderItems: orderItems,
-        pid: pid,
-        subtotal: totalPrice,
-      }).then(async () => {
-        const updatePayment = await updatePaymentIntent(pid, { orderKey: newOrderKey })
-
-        if (updatePayment.error) {
-          throw new Error(updatePayment.error)
-        }
-      }).catch(async (error) => {
-        await sendEmailTemplate({
-          pid: pid,
-          error: error,
-          cartItems: cartItems,
-        })
-      })
-    
-      return {
-        orderId: newOrderKey,
-        authKey: authKey,
-        error: null,
-      }
+      const orderItems = await setNewOrderItems(orderItemInfo)
+      await setNewOrder(orderItems, orderInfo)
     } catch (error) {
+      // send the team an email to notify them of the error
+      await sendEmailTemplate({
+        pid: pid,
+        error: error,
+        cartItems: cartItems,
+      })
+
       return {
         error: error.error,
         orderId: newOrderKey,
-        orderData: orderData,
+        orderData: orderInfo,
         authKey: authKey,
       }
     }
@@ -320,19 +342,9 @@ function CheckoutForm({
       onSubmit={submitPaymentForm}
       id="checkout-payment-form"
     >
-      {error && (
-        <Notification 
-          backgroundcolor={colors.red.twoHundred}
-          borderradius="8px"
-          color={colors.red.nineHundred}
-        >
-          <p>{error}</p>
-        </Notification>
-      )}
       <PaymentElement
         id="card-element"
         options={paymentOptions}
-        onChange={() => setError("")}
       />
       <Flexbox
         flex="flex"
