@@ -20,7 +20,7 @@
     "date-fns": "^2.30.0",
     "embla-carousel-react": "^8.0.1",
     "file-saver": "^2.0.5",
-    "firebase": "^9.18.0",
+    "firebase": "^11.0.2",
     "firebase-admin": "^11.11.1",
     "gatsby": "^5.14.0",
     "gatsby-adapter-netlify": "^1.1.3",
